@@ -3,6 +3,7 @@ import { spawnSync } from "child_process";
 import { loadLocalApiEnv } from "../src/config/local-env";
 import type { OpportunityCard } from "../src/schema/opportunity-card";
 import type { RadarRequirementSpec } from "../src/schema/radar-requirement-spec";
+import type { FieldEvidenceName, FieldEvidenceStatus } from "../src/schema/radar-mvp-contracts";
 
 let passed = 0;
 let failed = 0;
@@ -34,6 +35,34 @@ function hasMockOrExampleUrl(url: string): boolean {
 
 function titleOf(card: OpportunityCard | undefined): string {
   return String(card?.title ?? "").trim();
+}
+
+const REQUIRED_FIELD_EVIDENCE: FieldEvidenceName[] = [
+  "title",
+  "source_url",
+  "source_domain",
+  "source_type",
+  "registration_or_application_signal",
+  "date_or_deadline",
+  "fee",
+  "eligibility",
+  "contact_or_application_route",
+];
+
+const ALLOWED_FIELD_STATUSES: FieldEvidenceStatus[] = [
+  "verified",
+  "partially_verified",
+  "unverified",
+  "not_found",
+  "failed",
+];
+
+function fieldEvidenceFields(card: OpportunityCard | undefined): string[] {
+  return (card?.field_evidence ?? []).map((item) => item.field);
+}
+
+function fieldEvidenceStatuses(card: OpportunityCard | undefined): string[] {
+  return (card?.field_evidence ?? []).map((item) => item.status);
 }
 
 function setConfirmed(spec: RadarRequirementSpec, now: string): void {
@@ -196,7 +225,7 @@ async function main(): Promise<void> {
         query: scenario.query,
         search_mode: "live",
         max_results: 3,
-        enable_content_fetch: false,
+        enable_content_fetch: true,
       }),
     });
     const searchJson = await searchResponse.json() as {
@@ -207,7 +236,10 @@ async function main(): Promise<void> {
         sourceHintChecks?: unknown[];
         sourceCoverage?: unknown[];
         candidateAccounting?: unknown;
-        executionLog?: { openedUrls?: string[]; queryExecutions?: Array<{ provider: string; status: string; rawResultCount: number }> };
+        executionLog?: {
+          openedUrls?: Array<{ url: string; status: string; errorType?: string; fetchedAt: string }>;
+          queryExecutions?: Array<{ provider: string; status: string; rawResultCount: number }>;
+        };
       };
       error?: { message?: string };
     };
@@ -225,7 +257,16 @@ async function main(): Promise<void> {
     check(`${scenario.label}: opportunity cards are live and not demo`, cards.length > 0 && cards.every((card) => card.data_mode === "live" && card.is_demo_data !== true));
     check(`${scenario.label}: source status stays待复核`, cards.every((card) => card.evidence_status !== "confirmed" && card.verificationStatus !== "verified"));
     check(`${scenario.label}: result has one expected source family`, domains.some((domain) => scenario.expectedDomains.some((expected) => domain.includes(expected))), domains.join(", "));
-    check(`${scenario.label}: no openedUrls without content fetch`, (searchJson.data?.executionLog?.openedUrls ?? []).length === 0);
+    const openedUrls = searchJson.data?.executionLog?.openedUrls ?? [];
+    check(`${scenario.label}: live evidence attempts at most first 3 URLs`, openedUrls.length > 0 && openedUrls.length <= 3, `opened=${openedUrls.length}`);
+    check(`${scenario.label}: openedUrls record fetch outcome`, openedUrls.every((item) => ["succeeded", "partial", "failed"].includes(item.status) && !!item.fetchedAt));
+    const firstCard = cards[0];
+    check(`${scenario.label}: first card has field-level evidence`, (firstCard?.field_evidence ?? []).length >= REQUIRED_FIELD_EVIDENCE.length, fieldEvidenceFields(firstCard).join(", "));
+    check(`${scenario.label}: first card covers required evidence fields`, REQUIRED_FIELD_EVIDENCE.every((field) => fieldEvidenceFields(firstCard).includes(field)), fieldEvidenceFields(firstCard).join(", "));
+    check(`${scenario.label}: field evidence statuses use MVP vocabulary`, fieldEvidenceStatuses(firstCard).every((status) => ALLOWED_FIELD_STATUSES.includes(status as FieldEvidenceStatus)), fieldEvidenceStatuses(firstCard).join(", "));
+    check(`${scenario.label}: search snippets alone are not marked verified for action fields`, (firstCard?.field_evidence ?? [])
+      .filter((item) => ["registration_or_application_signal", "date_or_deadline", "fee", "eligibility", "contact_or_application_route"].includes(item.field))
+      .every((item) => item.status !== "verified"));
 
     const reportResponse = await app.request("/api/reports/generate", {
       method: "POST",
@@ -236,6 +277,8 @@ async function main(): Promise<void> {
         opportunities: cards.slice(0, 3),
         sourceHintChecks: searchJson.data?.sourceHintChecks ?? searchJson.data?.sourceCoverage,
         candidateAccounting: searchJson.data?.candidateAccounting,
+        executionLog: searchJson.data?.executionLog,
+        rawCandidates,
       }),
     });
     const reportJson = await reportResponse.json() as {
@@ -252,6 +295,8 @@ async function main(): Promise<void> {
     check(`${scenario.label}: report separates verified facts`, markdown.includes("### 字段已核验事实"));
     check(`${scenario.label}: report separates model judgment`, markdown.includes("### 模型判断"));
     check(`${scenario.label}: report separates review items`, markdown.includes("### 待复核项"));
+    check(`${scenario.label}: report separates failed sources`, markdown.includes("### 失败来源"));
+    check(`${scenario.label}: report separates unchecked sources`, markdown.includes("### 未检查来源"));
     check(`${scenario.label}: report does not claim demo/mock data`, !markdown.includes("演示 / 测试数据") && !markdown.includes("未真实联网搜索"));
     check(`${scenario.label}: report does not claim verified eligibility or fees`, !/已确认(报名资格|费用|截止日期|版权义务)/.test(markdown));
 

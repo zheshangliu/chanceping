@@ -696,6 +696,8 @@
           opportunities,
           sourceHintChecks: runData.sourceCoverage || runData.sourceHintChecks || [],
           candidateAccounting: runData.candidateAccounting,
+          executionLog: runData.executionLog,
+          rawCandidates: runData.rawCandidates || [],
         });
         const reportId = report.data?.reportId || "";
         if (status) {

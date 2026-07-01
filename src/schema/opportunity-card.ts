@@ -10,7 +10,7 @@
 
 import type { CardVisibleLevel } from "./scoring-rules";
 import type { Feedback, ActionIntent } from "./feedback";
-import type { ActionStatus, EvidenceStatus, OpportunityAssessment, OpportunityKind } from "./radar-mvp-contracts";
+import type { ActionStatus, EvidenceStatus, FieldEvidenceItem, OpportunityAssessment, OpportunityKind } from "./radar-mvp-contracts";
 import { t } from "../i18n/locales";
 
 /** 机会卡片状态（Task 030 扩展：+tracking/missed/expired） */
@@ -116,6 +116,8 @@ export interface OpportunityCard {
   data_mode?: "mock" | "recorded" | "live";
   /** MVP mock-safe：来源说明，尤其用于 mock 模式避免伪装成真实官网。 */
   source_disclaimer?: string;
+  /** Live Evidence MVP：字段级证据状态，只在真实搜索 / 有限读取路径中填充。 */
+  field_evidence?: FieldEvidenceItem[];
 }
 
 // ============================================================

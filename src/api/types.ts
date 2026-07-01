@@ -123,6 +123,10 @@ export interface ReportGenerateRequest {
   sourceHintChecks?: SourceHintCheckResponse[];
   /** Chat-first MVP：本次运行候选统计（可选，只从 run 结果传入） */
   candidateAccounting?: CandidateAccounting;
+  /** Live Evidence MVP：有限网页读取日志（可选，只从 run 结果传入） */
+  executionLog?: SearchExecutionLog;
+  /** Live Evidence MVP：原始候选审计摘要（可选，只从 run 结果传入） */
+  rawCandidates?: RawCandidateAudit[];
 }
 
 /** 机会库添加请求 */

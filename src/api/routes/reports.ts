@@ -176,6 +176,8 @@ export function reportRoutes(ctx: AppContext): Hono {
         profile: body.profile,
         sourceHintChecks: body.sourceHintChecks,
         candidateAccounting: body.candidateAccounting,
+        executionLog: body.executionLog,
+        rawCandidates: body.rawCandidates,
       };
       const result = generateRadarReport(input);
 

@@ -9,7 +9,7 @@ export interface SourceHintSearch {
   sourceUrl: string;
   domain: string;
   query: string;
-  siteFilter: string;
+  siteFilter?: string;
 }
 
 export interface SourceHintCheck {
@@ -22,6 +22,10 @@ export interface SourceHintCheck {
 
 function sourceStrategy(spec: RadarRequirementSpec): SourceStrategy | undefined {
   return spec.source_strategy;
+}
+
+function stripSiteOperators(query: string): string {
+  return query.replace(/\bsite:[^\s]+/gi, "").replace(/\s+/g, " ").trim();
 }
 
 export function extractSourceDomain(sourceUrl: string): string {
@@ -49,6 +53,7 @@ export function buildSourceHintSearches(
   baseQuery: string,
   maxSources = 5,
 ): SourceHintSearch[] {
+  const cleanQuery = stripSiteOperators(baseQuery) || baseQuery;
   return getUserSuppliedUrlSources(spec)
     .slice(0, maxSources)
     .map((source) => {
@@ -58,10 +63,26 @@ export function buildSourceHintSearches(
         sourceName,
         sourceUrl: source.source_url,
         domain,
-        query: `${baseQuery} ${sourceName}`.trim(),
+        query: `${cleanQuery} ${sourceName}`.trim(),
         siteFilter: domain,
       };
     });
+}
+
+export function buildManualSourceSearches(
+  spec: RadarRequirementSpec,
+  baseQuery: string,
+  maxSources = 5,
+): SourceHintSearch[] {
+  const cleanQuery = stripSiteOperators(baseQuery) || baseQuery;
+  return getManualSourceNames(spec)
+    .slice(0, maxSources)
+    .map((sourceName) => ({
+      sourceName,
+      sourceUrl: "",
+      domain: "",
+      query: `${cleanQuery} ${sourceName}`.trim(),
+    }));
 }
 
 export function buildNameOnlySourceChecks(spec: RadarRequirementSpec): SourceHintCheck[] {

@@ -23,7 +23,8 @@ import type { OpportunityCard, OpportunityCardStatus } from "../schema/opportuni
 import type { VisibleLevel } from "../schema/scoring-rules";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { EvidenceItem } from "../schema/evidence-item";
-import type { CandidateAccounting } from "../schema/radar-mvp-contracts";
+import type { CandidateAccounting, FieldEvidenceItem, FieldEvidenceName, SearchExecutionLog } from "../schema/radar-mvp-contracts";
+import type { RawCandidateAudit } from "../search/types";
 import type { SourceHintCheck } from "../search/source-hints";
 import { CONFIDENCE_GRADE_LABELS, SOURCE_TYPE_LABELS } from "../schema/source-candidate";
 import { EVIDENCE_FIELD_LABELS } from "../schema/evidence-item";
@@ -58,6 +59,10 @@ export interface RadarReportInput {
   sourceHintChecks?: SourceHintCheck[];
   /** Chat-first MVP：本次搜索候选统计，只能来自 run 结果。 */
   candidateAccounting?: CandidateAccounting;
+  /** Live Evidence MVP：有限网页读取日志。 */
+  executionLog?: SearchExecutionLog;
+  /** Live Evidence MVP：原始候选审计摘要。 */
+  rawCandidates?: RawCandidateAudit[];
 }
 
 /** 雷达报告生成结果 */
@@ -807,6 +812,83 @@ function buildCandidateAccountingTable(accounting?: CandidateAccounting): string
   return lines;
 }
 
+const FIELD_LABELS: Record<FieldEvidenceName, string> = {
+  title: "标题",
+  source_url: "来源 URL",
+  source_domain: "来源域名",
+  source_type: "来源类型",
+  registration_or_application_signal: "报名 / 申请信号",
+  date_or_deadline: "日期 / 截止时间",
+  fee: "费用",
+  eligibility: "资格 / 适合对象",
+  contact_or_application_route: "联系人 / 行动入口",
+};
+
+const FIELD_STATUS_LABELS: Record<FieldEvidenceItem["status"], string> = {
+  verified: "已读取核验",
+  partially_verified: "正文部分支持",
+  unverified: "未核验",
+  not_found: "正文未找到",
+  failed: "读取失败",
+};
+
+function fieldEvidenceRows(opps: OpportunityCard[]): Array<{ opp: OpportunityCard; item: FieldEvidenceItem }> {
+  return opps.flatMap((opp) => (opp.field_evidence ?? []).map((item) => ({ opp, item })));
+}
+
+function buildVerifiedFieldLines(opps: OpportunityCard[]): string[] {
+  const rows = fieldEvidenceRows(opps)
+    .filter(({ item }) => item.status === "verified" || item.status === "partially_verified")
+    .slice(0, 24);
+  if (rows.length === 0) {
+    return ["- 暂无字段级已核验证据。"];
+  }
+  return [
+    "- 说明：以下只表示有限网页读取取得字段证据；`正文部分支持` 仍需人工复核，不等于最终资格、费用或截止时间确认。",
+    ...rows.map(({ opp, item }) => {
+      const value = item.value ? `：${item.value}` : "";
+      const evidence = item.evidenceText ? `；证据片段：${item.evidenceText.slice(0, 80)}` : "";
+      return `- ${opp.title}｜${FIELD_LABELS[item.field]}${value}（${FIELD_STATUS_LABELS[item.status]}，来源：${item.sourceDomain}${evidence}）`;
+    }),
+  ];
+}
+
+function buildReviewFieldLines(opps: OpportunityCard[]): string[] {
+  const actionFields = new Set<FieldEvidenceName>([
+    "registration_or_application_signal",
+    "date_or_deadline",
+    "fee",
+    "eligibility",
+    "contact_or_application_route",
+  ]);
+  const rows = fieldEvidenceRows(opps)
+    .filter(({ item }) => actionFields.has(item.field) && item.status !== "verified")
+    .slice(0, 24);
+  if (rows.length === 0) {
+    return ["- 暂无。"];
+  }
+  return rows.map(({ opp, item }) =>
+    `- ${opp.title}｜${FIELD_LABELS[item.field]}：${FIELD_STATUS_LABELS[item.status]}。`,
+  );
+}
+
+function buildFailedSourceLines(input: RadarReportInput): string[] {
+  const failed = (input.executionLog?.openedUrls ?? []).filter((item) => item.status === "failed");
+  if (failed.length === 0) return ["- 暂无失败读取来源。"];
+  return failed.map((item) => `- ${item.url}（${item.errorType || "failed"}，读取时间：${item.fetchedAt}）`);
+}
+
+function buildUncheckedSourceLines(input: RadarReportInput): string[] {
+  const opened = new Set((input.executionLog?.openedUrls ?? []).map((item) => item.url));
+  const unchecked = (input.rawCandidates ?? [])
+    .filter((candidate) => candidate.url && !opened.has(candidate.url))
+    .slice(0, 24);
+  if (unchecked.length === 0) {
+    return ["- 暂无未检查来源，或本轮未传入 rawCandidates。"];
+  }
+  return unchecked.map((candidate) => `- ${candidate.title || candidate.url}：${candidate.url}（未进入前 3 个 URL 有限读取范围）`);
+}
+
 function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]): string {
   const checks = input.sourceHintChecks ?? [];
   const hasDemoOpportunity = input.opportunities.some(isDemoOpportunity);
@@ -841,6 +923,8 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
   lines.push("", "### 字段已核验事实", "");
   if (hasDemoOpportunity) {
     lines.push("- 暂无。演示数据没有字段级核验证据。");
+  } else if (input.opportunities.some((opp) => (opp.field_evidence ?? []).length > 0)) {
+    lines.push(...buildVerifiedFieldLines(input.opportunities));
   } else if (hasLiveOpportunity) {
     lines.push("- 暂无。本轮只完成搜索发现，未抓取网页正文或进行字段级事实核验。");
   } else {
@@ -868,6 +952,8 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
   lines.push("", "### 待复核项", "");
   if (hasDemoOpportunity) {
     lines.push("- 演示 / 测试数据未真实核验，所有来源字段均需接入真实搜索后复核。");
+  } else if (input.opportunities.some((opp) => (opp.field_evidence ?? []).length > 0)) {
+    lines.push(...buildReviewFieldLines(input.opportunities));
   } else if (hasLiveOpportunity) {
     lines.push("- 报名资格、费用、截止日期、联系人、版权义务、获奖义务。");
     lines.push("- 搜索结果标题和摘要只代表搜索发现，不代表官方事实确认。");
@@ -878,6 +964,20 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
     lines.push("- 暂无。");
   } else {
     needsReview.forEach((check) => lines.push(`- ${check.sourceName || check.sourceUrl}（${check.status}）`));
+  }
+
+  lines.push("", "### 失败来源", "");
+  if (hasDemoOpportunity) {
+    lines.push("- 演示数据未执行真实网页读取。");
+  } else {
+    lines.push(...buildFailedSourceLines(input));
+  }
+
+  lines.push("", "### 未检查来源", "");
+  if (hasDemoOpportunity) {
+    lines.push("- 演示数据没有真实候选来源。");
+  } else {
+    lines.push(...buildUncheckedSourceLines(input));
   }
   return lines.join("\n");
 }

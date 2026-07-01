@@ -489,10 +489,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
         dataMode: resolvedMode.dataMode,
         opportunityStore: ctx.store, // V1.6-07：传入机会库引用，启用增量标签复用
       });
+      const liveProviderRouting = resolvedMode.dataMode === "live"
+        ? { primary: ["serper"], fallback: [] }
+        : radar.providerRouting;
       const searchResult = await orchestrator.search(
         radar.spec,
         body.query,
-        radar.providerRouting,
+        liveProviderRouting,
         radar.watchRules, // V1.6-06：传入雷达级 Watch Rules
       );
       if (resolvedMode.dataMode === "live") {

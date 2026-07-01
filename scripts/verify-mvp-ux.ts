@@ -80,6 +80,7 @@ check("机会卡片按用户关心顺序渲染", ["为什么适合你", "截止�
 check("机会卡片展示四维状态标签", ["watch-card-meta", "opportunity_kind", "evidence_status", "action_status"].every((text) => watchResultJs.includes(text)));
 check("机会卡片能把 mock 显示为演示来源", watchResultJs.includes("演示来源，未真实核验") && watchResultJs.includes("来源说明"));
 check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_no_results", "not_checked", "invalid_url", "name_only"].every((text) => watchResultJs.includes(text)));
+check("live 失败或结果不足提示可切回演示数据", watchResultJs.includes("Live 真实搜索失败") && watchResultJs.includes("切回演示数据查看流程"));
 check("Markdown 报告默认摘要并可展开", watchResultJs.includes("报告摘要") && watchResultJs.includes("查看完整 Markdown 报告"));
 check("Markdown 支持复制", watchResultJs.includes("复制 Markdown"));
 check("保存按钮文案说明持续盯", watchResultJs.includes("保存为长期雷达，之后持续盯"));
@@ -107,6 +108,7 @@ check("报告模板包含雷达画像", reportGenerator.includes("## 1. 雷达�
 check("报告模板包含指定信号源", reportGenerator.includes("指定信号源"));
 check("报告模板声明 mock 演示数据未真实核验", reportGenerator.includes("演示 / 测试数据") && reportGenerator.includes("未真实核验"));
 check("报告模板区分搜索来源、已核验事实、模型判断、待复核项", ["### 搜索到的来源", "### 字段已核验事实", "### 模型判断", "### 待复核项"].every((text) => reportGenerator.includes(text)));
+check("报告模板区分失败来源和未检查来源", ["### 失败来源", "### 未检查来源"].every((text) => reportGenerator.includes(text)));
 check("结果页样式存在", styles.includes(".watch-result"));
 check("详情页支持历史报告", radarDetailJs.includes("loadReportHistory"));
 check("免费用户可拥有 3 个自定义雷达", userContext.includes("free: 3"));

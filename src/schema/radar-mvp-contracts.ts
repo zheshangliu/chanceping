@@ -21,6 +21,41 @@ export type ActionStatus = "act_now" | "prepare" | "monitor" | "drop";
 
 export type ScoreBasis = "fact" | "model_judgment" | "mixed";
 
+export type FieldEvidenceName =
+  | "title"
+  | "source_url"
+  | "source_domain"
+  | "source_type"
+  | "registration_or_application_signal"
+  | "date_or_deadline"
+  | "fee"
+  | "eligibility"
+  | "contact_or_application_route";
+
+export type FieldEvidenceStatus =
+  | "verified"
+  | "partially_verified"
+  | "unverified"
+  | "not_found"
+  | "failed";
+
+export type FieldEvidenceBasis =
+  | "fetched_content"
+  | "search_result"
+  | "not_checked";
+
+export interface FieldEvidenceItem {
+  field: FieldEvidenceName;
+  status: FieldEvidenceStatus;
+  basis: FieldEvidenceBasis;
+  sourceUrl: string;
+  sourceDomain: string;
+  value?: string;
+  evidenceText?: string;
+  error?: string;
+  checkedAt?: string;
+}
+
 export interface RadarProfileRevisionMeta {
   id: string;
   radarId?: string;
@@ -76,6 +111,8 @@ export interface SearchExecutionLog {
     status: "succeeded" | "partial" | "failed";
     errorType?: string;
     fetchedAt: string;
+    title?: string;
+    wordCount?: number;
   }>;
 }
 

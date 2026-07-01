@@ -59,7 +59,7 @@
       <div class="watch-result-grid">
         <section>
           <h4>机会卡片</h4>
-          ${cards.length === 0 ? renderEmptyState() : cards.map(renderCard).join("")}
+          ${cards.length === 0 ? renderEmptyState(result) : cards.map(renderCard).join("")}
         </section>
         <section>
           <div class="watch-report-title-row">
@@ -81,6 +81,7 @@
     document.getElementById("btn-save-watch-radar")?.addEventListener("click", saveCurrentRadar);
     document.getElementById("btn-view-saved-radar-detail")?.addEventListener("click", viewSavedRadarDetail);
     document.getElementById("btn-back-to-radar-list")?.addEventListener("click", backToSavedRadarList);
+    document.getElementById("btn-switch-demo-mode")?.addEventListener("click", switchBackToDemoMode);
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
       if (window.showRadarProfileDraftFromResult) window.showRadarProfileDraftFromResult(currentResult);
     });
@@ -166,16 +167,18 @@
     return mode === "live" ? { search_mode: "live" } : {};
   }
 
-  function renderEmptyState() {
+  function renderEmptyState(result) {
+    const isLive = result?.searchMode === "live";
     return `
       <div class="watch-empty-state">
-        <p>这次没有找到足够匹配的机会。你可以这样调整：</p>
+        <p>${isLive ? "本次真实搜索结果不足，没有找到足够匹配的机会。" : "这次没有找到足够匹配的机会。"}你可以这样调整：</p>
         <ul>
           <li>放宽地区</li>
           <li>减少排除条件</li>
           <li>增加指定信号源</li>
           <li>保存为长期雷达继续监控</li>
         </ul>
+        ${isLive ? '<button id="btn-switch-demo-mode" class="btn-secondary">切回演示数据查看流程</button><p class="placeholder">演示数据会明确标记为演示 / 测试数据，不代表真实机会。</p>' : ""}
       </div>
     `;
   }
@@ -211,6 +214,7 @@
       const sourceHintChecks = search.data?.sourceCoverage || search.data?.sourceHintChecks || [];
       const candidateAccounting = search.data?.candidateAccounting;
       const rawCandidates = search.data?.rawCandidates || [];
+      const executionLog = search.data?.executionLog;
       const runId = search.data?.run?.id;
       renderLoading(description, "正在生成机会报告");
       const report = await postJson("/api/reports/generate", {
@@ -219,6 +223,8 @@
         opportunities: cards,
         sourceHintChecks,
         candidateAccounting,
+        executionLog,
+        rawCandidates,
         ...(radarId ? { radar_id: radarId, run_id: runId } : {}),
         profile,
       });
@@ -234,14 +240,34 @@
         sourceHintChecks,
         candidateAccounting,
         rawCandidates,
+        executionLog,
         searchMode: getSearchModeRequest().search_mode,
         markdown: report.data.markdown,
       };
       renderResult(currentResult);
     } catch (err) {
       const root = document.getElementById("watch-result-root");
-      if (root) root.innerHTML = `<p class="placeholder">盯机会失败：${escapeHtml(err.message)}</p>`;
+      if (root) {
+        const isLive = getSearchModeRequest().search_mode === "live";
+        root.innerHTML = `
+          <div class="watch-empty-state">
+            <p>${isLive ? "Live 真实搜索失败：" : "盯机会失败："}${escapeHtml(err.message)}</p>
+            ${isLive ? '<button id="btn-switch-demo-mode" class="btn-secondary">切回演示数据查看流程</button><p class="placeholder">演示数据会明确标记为演示 / 测试数据，不会伪装成真实搜索结果。</p>' : ""}
+          </div>
+        `;
+        document.getElementById("btn-switch-demo-mode")?.addEventListener("click", switchBackToDemoMode);
+      }
     }
+  }
+
+  function switchBackToDemoMode() {
+    try {
+      window.localStorage?.removeItem("chanceping_live_search");
+    } catch {
+      // ignore storage failures
+    }
+    if (window.showToast) showToast("已切回演示数据模式", "success");
+    if (window.switchTab) window.switchTab("home");
   }
 
   async function saveCurrentRadar() {
@@ -271,12 +297,15 @@
       const sourceHintChecks = run.data?.sourceCoverage || run.data?.sourceHintChecks || [];
       const candidateAccounting = run.data?.candidateAccounting;
       const rawCandidates = run.data?.rawCandidates || [];
+      const executionLog = run.data?.executionLog;
       const report = await postJson("/api/reports/generate", {
         spec: currentResult.spec,
         radar_type: "custom",
         opportunities: cards,
         sourceHintChecks,
         candidateAccounting,
+        executionLog,
+        rawCandidates,
         radar_id: radarId,
         run_id: runId,
         profile: currentResult.profile,
@@ -289,6 +318,7 @@
         sourceHintChecks,
         candidateAccounting,
         rawCandidates,
+        executionLog,
         markdown: report.data.markdown,
         reportId: report.data.reportId,
         savedMessage: "已保存为长期雷达。本次机会和报告已经绑定到我的雷达。",

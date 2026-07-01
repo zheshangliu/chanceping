@@ -20,6 +20,8 @@ export interface JinaReaderConfig {
   apiKey?: string;
   /** Mock 模式开关，无网络时自动 true */
   mockMode?: boolean;
+  /** 真实抓取超时，毫秒。 */
+  timeoutMs?: number;
 }
 
 /** Jina Reader 端点前缀 */
@@ -153,11 +155,13 @@ const MOCK_GOV_TEXT = `# 2026 年人工智能产业专项扶持政策
 export class JinaReaderFetcher {
   private readonly apiKey: string;
   private readonly mockMode: boolean;
+  private readonly timeoutMs: number;
 
   constructor(config?: Partial<JinaReaderConfig>) {
     this.apiKey = config?.apiKey ?? "";
     // 显式 mockMode 优先，否则默认 Mock（验证脚本不测试真实网络）
     this.mockMode = config?.mockMode ?? true;
+    this.timeoutMs = config?.timeoutMs ?? 15000;
   }
 
   /**
@@ -213,8 +217,10 @@ export class JinaReaderFetcher {
       headers["Authorization"] = `Bearer ${this.apiKey}`;
     }
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
-      const response = await fetch(jinaUrl, { method: "GET", headers });
+      const response = await fetch(jinaUrl, { method: "GET", headers, signal: controller.signal });
 
       if (!response.ok) {
         const errorText = await response.text().catch(() => "");
@@ -241,8 +247,12 @@ export class JinaReaderFetcher {
         main_text: "",
         word_count: 0,
         fetch_success: false,
-        fetch_error: `Jina Reader fetch failed: ${errorMsg}`,
+        fetch_error: err instanceof Error && err.name === "AbortError"
+          ? `Jina Reader fetch timeout after ${this.timeoutMs}ms`
+          : `Jina Reader fetch failed: ${errorMsg}`,
       };
+    } finally {
+      clearTimeout(timeout);
     }
   }
 }

@@ -28,7 +28,7 @@ import type { DataMode } from "../demo/data-mode";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { EvidenceItem } from "../schema/evidence-item";
 import type { OpportunityCard } from "../schema/opportunity-card";
-import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
+import type { CandidateAccounting, FieldEvidenceItem, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
 import type { RadarType, OpportunityStore } from "../agents/opportunity-store";
 import { computeDedupKey } from "../agents/opportunity-store";
 import { normalizeUrl } from "../utils/url-normalizer";
@@ -43,10 +43,15 @@ import { extractEvidenceBatch } from "./evidence-extractor";
 import { mapToCard } from "./opportunity-card-mapper";
 import {
   buildMockSourceHintChecks,
+  buildManualSourceSearches,
   buildNameOnlySourceChecks,
   buildSourceHintSearches,
+  extractSourceDomain,
+  getManualSourceNames,
+  getUserSuppliedUrlSources,
   type SourceHintCheck,
 } from "./source-hints";
+import { buildUnopenedFieldEvidence, fetchLiveEvidence, type LiveEvidenceFetchResult } from "./live-evidence";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -322,14 +327,21 @@ function applyMockSafeCardMark(card: OpportunityCard, result: SearchResult): Opp
   return card;
 }
 
-function applyLiveSearchCardMark(card: OpportunityCard, result: SearchResult): OpportunityCard {
+function applyLiveSearchCardMark(card: OpportunityCard, result: SearchResult, fieldEvidence?: FieldEvidenceItem[]): OpportunityCard {
   if (isMockSearchResult(result)) return card;
   const disclaimer = "搜索发现来源，字段待复核；未确认报名资格、报名费用、截止日期、联系人、版权义务或其他行动条件。";
   card.data_mode = "live";
   card.source_disclaimer = disclaimer;
   card.verificationStatus = "unverified";
   card.evidence_status = "needs_review";
-  card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), "搜索发现", "待复核"]));
+  const hasFetchedEvidence = (fieldEvidence ?? []).some((item) => item.basis === "fetched_content" && item.status !== "failed");
+  card.field_evidence = fieldEvidence ?? buildUnopenedFieldEvidence(result);
+  card.sourceBadges = Array.from(new Set([
+    ...(card.sourceBadges ?? []),
+    "搜索发现",
+    hasFetchedEvidence ? "有限读取" : "待复核",
+    "待复核",
+  ]));
   card.risk_note = card.risk_note || disclaimer;
   card.next_action = card.next_action || "打开搜索发现来源，逐项复核报名资格、费用、截止日期和行动要求。";
   if (card.assessment) {
@@ -350,6 +362,56 @@ function domainOf(url: string): string {
   } catch {
     return "";
   }
+}
+
+function normalizeSourceToken(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/[\/\s_-]+/g, "")
+    .replace(/官方网站|官网|协会|federation|association/gi, "")
+    .trim();
+}
+
+function resultText(result: SearchResult): string {
+  return `${result.title} ${result.snippet} ${domainOf(result.url)}`.toLowerCase();
+}
+
+function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): number {
+  const text = resultText(result);
+  const domain = domainOf(result.url).toLowerCase();
+  const sourceDomains = getUserSuppliedUrlSources(spec).map((source) => extractSourceDomain(source.source_url));
+  const sourceNames = [
+    ...getManualSourceNames(spec),
+    ...((spec.source_strategy?.user_supplied_sources ?? []).map((source) => source.source_name).filter(Boolean)),
+  ];
+  const sourceTokens = sourceNames.map(normalizeSourceToken).filter((token) => token.length >= 2);
+  let score = 0;
+
+  if (sourceDomains.some((sourceDomain) => domain === sourceDomain || domain.endsWith(`.${sourceDomain}`))) {
+    score += 120;
+  }
+  if (sourceNames.some((name) => name && text.includes(name.toLowerCase()))) {
+    score += 80;
+  }
+  if (sourceTokens.some((token) => token && normalizeSourceToken(text).includes(token))) {
+    score += 45;
+  }
+  if (/报名|申报|申请|参赛|赛事|比赛|公开赛|锦标赛|日程|赛程|大会|イベント|棋戦|calendar|event|events|tournament|championship|champions|registration|entry/i.test(text)) {
+    score += 30;
+  }
+  if (/百科|维基|wikipedia|baike|youtube|playlist|规则|历史|history|rules/i.test(text)) {
+    score -= 80;
+  }
+  return score;
+}
+
+function sortLiveResultsBySourcePriority(results: SearchResult[], spec: RadarRequirementSpec): SearchResult[] {
+  return results
+    .map((result, index) => ({ result, index, score: sourcePriorityScore(result, spec) }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map((item) => item.result);
 }
 
 function detectQueryLanguage(query: string): string {
@@ -432,23 +494,56 @@ function buildCandidateAccounting(
   };
 }
 
+function compactTerms(terms: string[], limit: number): string[] {
+  return Array.from(new Set(terms.map((term) => term.trim()).filter(Boolean))).slice(0, limit);
+}
+
+function buildLiveSearchQueries(spec: RadarRequirementSpec, baseQuery: string): string[] {
+  const zh = compactTerms([
+    ...(spec.keyword_strategy?.core_keywords_zh ?? []),
+    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
+  ], 6);
+  const en = compactTerms(spec.keyword_strategy?.core_keywords_en ?? [], 4);
+  const sourceNames = compactTerms([
+    ...(spec.source_strategy?.manual_sources ?? []),
+    ...((spec.source_strategy?.user_supplied_sources ?? []).map((source) => source.source_name)),
+  ], 6);
+  const queries = [
+    baseQuery,
+    zh.length > 0 ? zh.slice(0, 4).join(" ") : "",
+    en.length > 0 ? en.slice(0, 4).join(" ") : "",
+    ...sourceNames.slice(0, 4).map((name) => `${name} ${zh.slice(0, 2).join(" ") || en.slice(0, 2).join(" ")}`.trim()),
+  ];
+  return compactTerms(queries, 6);
+}
+
 /**
  * 构造跳过内容抓取时的 AIFilterItem（relevance 固定 50）。
  */
-function buildSkipFetchItems(results: SearchResult[]): AIFilterItem[] {
+function buildSkipFetchItems(
+  results: SearchResult[],
+  contentsByUrl?: Map<string, CleanedContent>,
+  markUnfetchedAsNotFetched = false,
+): AIFilterItem[] {
   return results.map((result) => {
-    const emptyContent: CleanedContent = {
+    const fetched = contentsByUrl?.get(result.url);
+    const emptyContent: CleanedContent = fetched ?? {
       url: result.url,
       title: result.title,
       main_text: result.snippet ?? "",
       word_count: result.snippet?.length ?? 0,
-      fetch_success: true,
+      fetch_success: !markUnfetchedAsNotFetched,
+      ...(markUnfetchedAsNotFetched ? { fetch_error: "本条未进入有限网页读取范围，只有搜索摘要可参考" } : {}),
     };
     return {
       result,
       content: emptyContent,
       relevance: SKIP_FETCH_RELEVANCE,
-      reason: "跳过内容抓取，固定相关度 50",
+      reason: fetched?.fetch_success
+        ? "Live Evidence MVP：已有限读取网页正文，LLM 仍保持 mock 轻量评估"
+        : markUnfetchedAsNotFetched
+          ? "Live Evidence MVP：未读取正文，仅保留搜索发现并标记待复核"
+          : "跳过内容抓取，固定相关度 50",
     };
   });
 }
@@ -521,6 +616,7 @@ export class SearchOrchestrator {
     const queryExecutions: SearchExecutionLog["queryExecutions"] = [];
     const openedUrls: SearchExecutionLog["openedUrls"] = [];
     let rawProviderResultCount = 0;
+    let liveEvidence: LiveEvidenceFetchResult | undefined;
     // V1.6-08：provider 降级信息（live 模式下由 primary/fallback 逻辑写入）
     let _providerDegradation: SearchOrchestratorResult["providerDegradation"] | undefined;
 
@@ -641,14 +737,17 @@ export class SearchOrchestrator {
 
       // 步骤 2：并行调用各 primary provider 的 search()
       const searchOptions = { max_results: this.maxResultsPerProvider };
+      const liveQueries = this.dataMode === "live" && providerRouting
+        ? buildLiveSearchQueries(spec, searchQuery)
+        : [searchQuery];
 
       const primaryResults = await Promise.all(
-        primaryProviders.map(async (provider) => {
+        primaryProviders.flatMap((provider) => liveQueries.map(async (queryText) => {
           const startedAt = new Date().toISOString();
           try {
-            const results = await provider.search(searchQuery, searchOptions);
+            const results = await provider.search(queryText, searchOptions);
             queryExecutions.push({
-              query: searchQuery,
+              query: queryText,
               provider: provider.name,
               startedAt,
               status: "succeeded",
@@ -659,7 +758,7 @@ export class SearchOrchestrator {
             const errMsg = err instanceof Error ? err.message : String(err);
             const error = `provider ${provider.name} 调用失败: ${errMsg}`;
             queryExecutions.push({
-              query: searchQuery,
+              query: queryText,
               provider: provider.name,
               startedAt,
               status: "failed",
@@ -668,7 +767,7 @@ export class SearchOrchestrator {
             });
             return { provider: provider.name, results: [] as SearchResult[], error };
           }
-        }),
+        })),
       );
       rawProviderResultCount += primaryResults.reduce((sum, item) => sum + item.results.length, 0);
 
@@ -750,7 +849,10 @@ export class SearchOrchestrator {
       }
 
       sourceHintChecks = buildNameOnlySourceChecks(spec);
-      const sourceHintSearches = buildSourceHintSearches(spec, searchQuery);
+      const sourceHintSearches = [
+        ...buildSourceHintSearches(spec, searchQuery),
+        ...(this.dataMode === "live" ? buildManualSourceSearches(spec, searchQuery) : []),
+      ];
       const sourceHintProvider = primaryProviders[0] ?? fallbackProviders[0];
       if (sourceHintSearches.length > 0 && sourceHintProvider) {
         const sourceHintResults = await Promise.all(
@@ -759,7 +861,7 @@ export class SearchOrchestrator {
             try {
               const results = await sourceHintProvider.search(hint.query, {
                 max_results: Math.min(this.maxResultsPerProvider, 5),
-                site_filter: hint.siteFilter,
+                ...(hint.siteFilter ? { site_filter: hint.siteFilter } : {}),
               });
               queryExecutions.push({
                 query: hint.query,
@@ -799,13 +901,25 @@ export class SearchOrchestrator {
           });
         }
 
-        allResults = deduplicateByUrL([
-          ...allResults,
-          ...sourceHintResults.flatMap((item) => item.results),
-        ]);
+        const hintedResults = sourceHintResults.flatMap((item) => item.results);
+        allResults = this.dataMode === "live"
+          ? deduplicateByUrL([...hintedResults, ...allResults])
+          : deduplicateByUrL([...allResults, ...hintedResults]);
+      }
+
+      if (this.dataMode === "live" && providerRouting) {
+        allResults = sortLiveResultsBySourcePriority(allResults, spec);
       }
 
       rawResults = allResults;
+
+      if (this.enableContentFetch && providerRouting) {
+        liveEvidence = await fetchLiveEvidence(rawResults, {
+          maxUrls: 3,
+          timeoutMs: 8000,
+        });
+        openedUrls.push(...liveEvidence.openedUrls);
+      }
 
       // 将 providerDegradation 存入闭包变量，供最终 return 使用
       _providerDegradation = providerDegradation;
@@ -855,7 +969,10 @@ export class SearchOrchestrator {
     let aiPassed: AIFilterItem[];
     let aiFilterSkipped = 0;
     let aiFilterExecuted = 0;
-    if (this.enableContentFetch) {
+    if (this.dataMode === "live" && providerRouting) {
+      aiPassed = buildSkipFetchItems(ruleResult.passed, liveEvidence?.contentsByUrl, this.enableContentFetch);
+      aiFilterExecuted = ruleResult.passed.length;
+    } else if (this.enableContentFetch) {
       if (this.opportunityStore) {
         // V1.6b 自检修复:dedupKey 计算需与入库时一致
         //   入库时 card.guid = scored.guid ?? normalizeUrl(url)
@@ -987,7 +1104,9 @@ export class SearchOrchestrator {
         const card = mapToCard(opp, oppSources, oppEvidence, radarId);
         applyMockSafeCardMark(card, opp.search_result);
         if (this.dataMode === "live") {
-          applyLiveSearchCardMark(card, opp.search_result);
+          const fieldEvidence = liveEvidence?.fieldEvidenceByUrl.get(oppUrl)
+            ?? buildUnopenedFieldEvidence(opp.search_result);
+          applyLiveSearchCardMark(card, opp.search_result, fieldEvidence);
         }
         // V1.6-07：写入 AI 精筛 reason 到 card.ai_analysis（供下次增量复用）
         const aiAnalysis = aiAnalysisByUrl.get(oppUrl);
