@@ -47,6 +47,12 @@ Local secrets rule:
 - Do not load `api.env` by default in production.
 - Do not print API keys in logs, reports, screenshots, or test output.
 
+Anti-hallucination rule:
+
+- LLM must not invent checked sources, official deadlines, eligibility, fees, contacts, BD intent, award obligations, or procurement budget.
+- Without field-level evidence, `EvidenceStatus` cannot be `confirmed`.
+- Model-only reasoning must be marked as `model_judgment`; mixed evidence/model reasoning must be marked as `mixed`.
+
 Branch rule:
 
 - Work on `rescue/mvp-codex` or a `codex/...` child branch.
@@ -55,9 +61,11 @@ Branch rule:
 ## Files Overview
 
 - Create: `src/schema/radar-mvp-contracts.ts`  
-  Shared MVP-only logical contracts for profile summary, profile revision metadata, project readiness snapshot, run audit, source coverage status, opportunity assessment, and report artifact references.
+  Shared MVP-only logical contracts for profile revision metadata, project readiness snapshot, run audit, source coverage status, candidate accounting, opportunity assessment, and report artifact references. This file must not import `RadarRequirementSpec`.
+- Create: `src/schema/radar-profile-summary.ts`
+  Independent customer-visible profile summary type, kept separate to avoid schema import cycles.
 - Modify: `src/schema/radar-requirement-spec.ts`  
-  Add optional profile metadata fields in a backward-compatible way: `primary_subject`, `profile_version`, `risk_policy`, `report_blueprint`, and `scoring_policy`.
+  Add optional long-term profile metadata fields in a backward-compatible way: `primary_subject`, `profile_version`, `profile_summary`, `risk_policy`, `report_blueprint`, and `scoring_policy`. Do not add `OpportunityAssessment` to this schema.
 - Create: `src/agents/radar-profile-summary.ts`  
   Convert a `RadarRequirementSpec` into the customer-visible profile summary.
 - Modify: `src/agents/radar-generator.ts`  
@@ -65,7 +73,7 @@ Branch rule:
 - Modify: `src/api/types.ts`  
   Extend `RadarGenerateResponseData`, `RadarRunResult`, and report input typing without removing existing fields.
 - Modify: `src/api/routes/radars.ts`  
-  Return the expanded generation payload; stop treating `custom` as `ai_competition` for logical kind where possible; attach run audit metadata to manual runs.
+  Return the expanded generation payload; enforce that `custom` radars do not default to `ai_competition`; attach run audit metadata to manual runs.
 - Modify: `src/search/orchestrator.ts`  
   Return real query execution metadata, source coverage statuses, and raw candidate counts using existing provider calls and source hints.
 - Modify: `src/search/types.ts`  
@@ -105,16 +113,17 @@ Branch rule:
 - Modify: `package.json`  
   Add `verify:chat-mvp:contract` and `verify:chat-mvp:api`; include safe mock-mode checks in `verify:all`. Keep live checks out.
 
-## Milestone A: Chat and Radar Profile Contract
+## Milestone 0: Freeze Current Working MVP
 
-This milestone makes the backend response match the approved design and gives the frontend a stable customer-visible summary.
+This milestone freezes the already working MVP path before any chat-first implementation changes. Every later milestone must preserve this baseline.
 
-### Task A0: Baseline Safety Check
+### Task 0.1: Record Baseline State
 
 **Files:**
 - Read: `AGENTS.md`
 - Read: `package.json`
 - Read: `docs/superpowers/specs/2026-07-01-ai-radar-profile-mvp-design.md`
+- Create: `docs/superpowers/plans/2026-07-01-chat-first-radar-mvp-baseline.md`
 - Modify only if needed: `.gitignore`
 
 - [ ] **Step 1: Confirm branch**
@@ -133,7 +142,35 @@ rescue/mvp-codex
 
 If the output is `main`, stop and create/switch to `rescue/mvp-codex` before editing.
 
-- [ ] **Step 2: Confirm `api.env` is ignored**
+- [ ] **Step 2: Record current commit SHA**
+
+Run:
+
+```bash
+git rev-parse HEAD
+```
+
+Write the output into `docs/superpowers/plans/2026-07-01-chat-first-radar-mvp-baseline.md`:
+
+```markdown
+# Chat-First Radar MVP Baseline
+
+Baseline commit: `<sha from git rev-parse HEAD>`
+
+Current working path:
+- Home input or template
+- Radar profile confirmation
+- Search/run result
+- Opportunity cards
+- Markdown report
+- Save as long-term radar
+- My Radar can see bound opportunities and report
+
+Regression rule:
+Every later milestone must keep this path working.
+```
+
+- [ ] **Step 3: Confirm `api.env` is ignored**
 
 Run:
 
@@ -153,13 +190,14 @@ If this fails, patch `.gitignore`:
 +api.env
 ```
 
-- [ ] **Step 3: Record baseline verification**
+- [ ] **Step 4: Record baseline verification**
 
 Run:
 
 ```bash
 npm run typecheck
 npm run verify:v15:e2e
+npm run verify:mvp-ux
 ```
 
 Expected:
@@ -167,6 +205,7 @@ Expected:
 ```text
 typecheck exits 0
 verify:v15:e2e exits 0
+verify:mvp-ux exits 0
 ```
 
 If `npm` is unavailable in a Codex runtime, expose the bundled workspace dependency runtime first, then still run the project scripts or equivalent `npx` commands. Do not write machine-specific absolute paths into this plan or into package scripts.
@@ -174,6 +213,7 @@ If `npm` is unavailable in a Codex runtime, expose the bundled workspace depende
 ```bash
 npm run typecheck
 npm run verify:v15:e2e
+npm run verify:mvp-ux
 ```
 
 Do not continue if either command fails for a new reason. If the known nested `verify-task034` child-output flake appears, run:
@@ -185,19 +225,79 @@ npm run verify:v15:e2e
 
 and continue only if the rerun passes.
 
+- [ ] **Step 5: Run browser smoke when available**
+
+Check whether the script exists:
+
+```bash
+npm pkg get scripts.verify:mvp-browser
+```
+
+If it returns a script value, run:
+
+```bash
+npm run verify:mvp-browser
+```
+
+Expected:
+
+```text
+exit 0, or explicit SKIP because browser automation dependency is unavailable
+```
+
+If it skips, record the manual browser path that must be run before Jason review:
+
+```text
+首页 → 输入“我是乒乓球选手，想了解国内外乒乓球比赛”
+→ 盯机会 → 画像确认 → 确认，开始盯机会
+→ 看到机会卡片 → 看到报告摘要
+→ 展开完整 Markdown → 保存为长期雷达
+→ 我的雷达看到本次机会和报告
+```
+
+- [ ] **Step 6: Commit baseline document**
+
+Run:
+
+```bash
+git add docs/superpowers/plans/2026-07-01-chat-first-radar-mvp-baseline.md .gitignore
+git commit -m "docs: freeze chat MVP baseline"
+```
+
+Only include `.gitignore` if `api.env` had to be added in Step 3.
+
+## Milestone A: Chat and Radar Profile Contract
+
+This milestone makes the backend response match the approved design and gives the frontend a stable customer-visible summary. It must not break the Milestone 0 baseline path.
+
 ### Task A1: Add MVP Logical Contracts
 
 **Files:**
 - Create: `src/schema/radar-mvp-contracts.ts`
+- Create: `src/schema/radar-profile-summary.ts`
 - Modify: `src/schema/radar-requirement-spec.ts`
 
-- [ ] **Step 1: Write contract file**
+- [ ] **Step 1: Write independent profile summary type**
+
+Create `src/schema/radar-profile-summary.ts`:
+
+```ts
+export interface RadarProfileSummary {
+  identity: string;
+  target: string;
+  priorities: string[];
+  regionsAndTime: string;
+  exclusions: string[];
+  sourceHints: string[];
+  assumptions: string[];
+}
+```
+
+- [ ] **Step 2: Write runtime contract file**
 
 Create `src/schema/radar-mvp-contracts.ts`:
 
 ```ts
-import type { RadarRequirementSpec } from "./radar-requirement-spec";
-
 export type SourceCheckStatus =
   | "checked_with_results"
   | "checked_no_results"
@@ -219,17 +319,7 @@ export type EvidenceStatus =
 
 export type ActionStatus = "act_now" | "prepare" | "monitor" | "drop";
 
-export type ScoreBasis = "fact" | "model" | "mixed";
-
-export interface RadarProfileSummary {
-  identity: string;
-  target: string;
-  priorities: string[];
-  regionsAndTime: string;
-  exclusions: string[];
-  sourceHints: string[];
-  assumptions: string[];
-}
+export type ScoreBasis = "fact" | "model_judgment" | "mixed";
 
 export interface RadarProfileRevisionMeta {
   id: string;
@@ -289,6 +379,15 @@ export interface SearchExecutionLog {
   }>;
 }
 
+export interface CandidateAccounting {
+  runId?: string;
+  rawCount: number;
+  deduplicatedCount: number;
+  assessedCount: number;
+  acceptedCount: number;
+  rejectedCount: number;
+}
+
 export interface SourceCoverageItem {
   sourceName: string;
   sourceUrl?: string;
@@ -320,26 +419,17 @@ export interface OpportunityAssessment {
   assessedAt: string;
   supersedes?: string;
 }
-
-export interface RadarGenerateProfilePayload {
-  spec: RadarRequirementSpec;
-  suggestedName: string;
-  completeness: number;
-  requirementConfidence: number;
-  questionsToConfirm: Array<{ id: string; question: string; priority: number }>;
-  profileSummary: RadarProfileSummary;
-}
 ```
 
-- [ ] **Step 2: Add optional fields to `RadarRequirementSpec`**
+- [ ] **Step 3: Add optional long-term fields to `RadarRequirementSpec`**
 
-In `src/schema/radar-requirement-spec.ts`, import the new contract types:
+In `src/schema/radar-requirement-spec.ts`, import only the independent profile summary type:
 
 ```ts
-import type { OpportunityAssessment, RadarProfileSummary } from "./radar-mvp-contracts";
+import type { RadarProfileSummary } from "./radar-profile-summary";
 ```
 
-Then extend `RadarRequirementSpec` with optional fields at the end of the interface:
+Then extend `RadarRequirementSpec` with optional long-term profile fields at the end of the interface:
 
 ```ts
   /** MVP chat-first profile: one radar must have one primary subject. Optional for backward compatibility. */
@@ -365,13 +455,25 @@ Then extend `RadarRequirementSpec` with optional fields at the end of the interf
     dimensions: Array<{ key: string; label: string; weight: number }>;
     thresholds: { S: number; A: number; B: number; C: number };
   };
-  /** Optional latest assessment preview. Full assessment history may live in run/report metadata later. */
-  latest_assessment_preview?: OpportunityAssessment[];
 ```
 
 Expected: existing TypeScript code still compiles because all new fields are optional.
 
-- [ ] **Step 3: Run typecheck**
+- [ ] **Step 4: Confirm assessment is not part of the profile schema**
+
+Run:
+
+```bash
+rg "OpportunityAssessment|latest_assessment_preview" src/schema/radar-requirement-spec.ts
+```
+
+Expected:
+
+```text
+no output
+```
+
+- [ ] **Step 5: Run typecheck**
 
 Run:
 
@@ -385,12 +487,12 @@ Expected:
 exit 0
 ```
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 6: Commit**
 
 Run:
 
 ```bash
-git add src/schema/radar-mvp-contracts.ts src/schema/radar-requirement-spec.ts
+git add src/schema/radar-mvp-contracts.ts src/schema/radar-profile-summary.ts src/schema/radar-requirement-spec.ts
 git commit -m "feat: add chat radar MVP contracts"
 ```
 
@@ -410,7 +512,7 @@ Create `src/agents/radar-profile-summary.ts`:
 
 ```ts
 import type { RadarRequirementSpec, QuestionToConfirm } from "../schema/radar-requirement-spec";
-import type { RadarProfileSummary } from "../schema/radar-mvp-contracts";
+import type { RadarProfileSummary } from "../schema/radar-profile-summary";
 
 function list(values: unknown): string[] {
   return Array.from(
@@ -482,7 +584,7 @@ export function questionsToConfirmPayload(
 In `src/agents/radar-generator.ts`, import:
 
 ```ts
-import type { RadarProfileSummary } from "../schema/radar-mvp-contracts";
+import type { RadarProfileSummary } from "../schema/radar-profile-summary";
 import { buildRadarProfileSummary, questionsToConfirmPayload } from "./radar-profile-summary";
 ```
 
@@ -519,7 +621,7 @@ Return:
 In `src/api/types.ts`, import:
 
 ```ts
-import type { RadarProfileSummary } from "../schema/radar-mvp-contracts";
+import type { RadarProfileSummary } from "../schema/radar-profile-summary";
 ```
 
 Extend `RadarGenerateResponseData`:
@@ -639,9 +741,201 @@ git add src/agents/radar-profile-summary.ts src/agents/radar-generator.ts src/ap
 git commit -m "feat: return chat radar profile summary"
 ```
 
+### Task A3: Enforce Custom Radar Semantics and Free Quota
+
+**Files:**
+- Modify: `src/agents/opportunity-store.ts`
+- Modify: `src/api/types.ts`
+- Modify: `src/api/routes/radars.ts`
+- Modify: `src/api/routes/reports.ts`
+- Modify: `src/search/orchestrator.ts`
+- Modify: `src/agents/radar-report-generator.ts`
+- Modify: `src/agents/user-context.ts`
+- Modify: `web/radars.js`
+- Modify: `scripts/verify-task-v1.5-07-quota.ts`
+- Modify: `scripts/verify-chat-mvp-contract.ts`
+
+- [ ] **Step 1: Extend stored radar type with `custom`**
+
+In `src/agents/opportunity-store.ts`, change:
+
+```ts
+export type RadarType = "ai_competition" | "opc_policy" | "cultural_heritage";
+```
+
+to:
+
+```ts
+export type RadarType = "ai_competition" | "opc_policy" | "cultural_heritage" | "custom";
+```
+
+Update `RADAR_TYPES`:
+
+```ts
+const RADAR_TYPES: RadarType[] = ["ai_competition", "opc_policy", "cultural_heritage", "custom"];
+```
+
+- [ ] **Step 2: Extend report/search request radar type unions**
+
+In `src/api/types.ts`, update `radar_type` unions to include `custom`:
+
+```ts
+radar_type?: "ai_competition" | "opc_policy" | "cultural_heritage" | "custom";
+```
+
+Also update `OpportunityAddRequest.radar_type`.
+
+- [ ] **Step 3: Make custom stay custom in run route**
+
+In `src/api/routes/radars.ts`, replace `kindToRadarType` with:
+
+```ts
+/** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
+function kindToRadarType(kind: RadarKind): RadarType {
+  if (kind === "ai_competition" || kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") {
+    return kind;
+  }
+  return "custom";
+}
+```
+
+Expected: no `custom` path returns `ai_competition`.
+
+- [ ] **Step 4: Stop custom search fallback from using AI competition semantics**
+
+In `src/search/orchestrator.ts`, change `inferRadarType` fallback from:
+
+```ts
+return "ai_competition";
+```
+
+to:
+
+```ts
+return "custom";
+```
+
+Change `buildQueryFromSpec` final fallback from:
+
+```ts
+return "AI 比赛";
+```
+
+to:
+
+```ts
+return spec.core_goals.primary_goal || spec.opportunity_scope.primary_opportunity_types?.join(" ") || "机会";
+```
+
+If provider routing depends on radar type and no provider supports `custom`, route `custom` to enabled generic web providers by provider name, not by borrowing the `ai_competition` radar type:
+
+```ts
+primaryProviders = radarType === "custom"
+  ? providerRegistry.getByNames(["serper", "bocha", "exa", "google_cse"]).filter((p) => p.enabled)
+  : providerRegistry.getByRadarType(radarType).filter((p) => p.enabled);
+```
+
+Do not expose provider fallback details to opportunity cards, report titles, or stored `radar_type`.
+
+- [ ] **Step 5: Extend report generator names without AI semantics**
+
+In `src/agents/radar-report-generator.ts`, extend:
+
+```ts
+const RADAR_TYPE_NAMES: Record<RadarReportInput["radar_type"], string> = {
+  ai_competition: "AI 赛事雷达",
+  opc_policy: "OPC 政策雷达",
+  cultural_heritage: "文创非遗雷达",
+  custom: "自定义机会雷达",
+};
+```
+
+Expected: a study-tour or BD radar report title does not say `AI 赛事雷达`.
+
+- [ ] **Step 6: Lock free custom radar quota at 3**
+
+In `src/agents/user-context.ts`, keep:
+
+```ts
+free: 3
+```
+
+In `web/radars.js`, customer-facing copy must say:
+
+```text
+免费用户可保存 3 个长期雷达
+```
+
+In `scripts/verify-task-v1.5-07-quota.ts`, assert:
+
+```ts
+check("RADAR_QUOTA.free = 3", RADAR_QUOTA.free === 3);
+```
+
+- [ ] **Step 7: Add study-tour / BD contract checks**
+
+In `scripts/verify-chat-mvp-contract.ts`, add a second generation request:
+
+```ts
+const studyTour = await app.request("/api/radars/generate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    description: "我们是研学文旅公司，想找有研学需求的国企单位和企业，看看能否接到研学订单，优先广东和大湾区，排除纯招聘信息",
+  }),
+});
+const studyTourJson = await studyTour.json() as ApiResponse<RadarGenerateResponseData>;
+const studyText = JSON.stringify(studyTourJson.data ?? {});
+check("study-tour generation succeeds", studyTour.status === 200 && studyTourJson.success === true);
+check("study-tour profile is not AI competition", !/AI赛事|AI 赛事|ai_competition/.test(studyText));
+check("study-tour profile keeps business lead semantics", /研学|文旅|国企|企业|客户|线索|订单/.test(studyText));
+```
+
+- [ ] **Step 8: Verify**
+
+Run:
+
+```bash
+npm run typecheck
+npm run verify:v15:quota
+npm run verify:chat-mvp:contract
+npm run verify:v15:e2e
+```
+
+Expected:
+
+```text
+all exit 0
+```
+
+- [ ] **Step 9: Commit**
+
+Run:
+
+```bash
+git add src/agents/opportunity-store.ts src/api/types.ts src/api/routes/radars.ts src/api/routes/reports.ts src/search/orchestrator.ts src/agents/radar-report-generator.ts src/agents/user-context.ts web/radars.js scripts/verify-task-v1.5-07-quota.ts scripts/verify-chat-mvp-contract.ts
+git commit -m "feat: preserve custom radar semantics"
+```
+
 ## Milestone B: Natural Chat Clarification and Confirmation
 
 This milestone removes the feeling of a mechanical question form. It keeps the existing frontend simple, but the source of truth becomes backend profile generation and summary data.
+
+MVP clarification constants:
+
+```js
+const MAX_CLARIFICATION_ROUNDS = 2;
+const MAX_VISIBLE_CLARIFICATION_QUESTIONS = 1;
+```
+
+Rules:
+
+```text
+每轮只展示 1 个自然问题
+用户随时可以点“先按默认理解继续”
+达到 2 轮上限后必须生成画像
+仍不确定的内容写入默认假设
+```
 
 ### Task B1: Replace Frontend-Only Clarity With Backend-First Gate
 
@@ -711,19 +1005,46 @@ Keep the copy:
 先按默认理解继续
 ```
 
-Rationale: the product may internally track up to 3 missing fields, but the approved UX says AI-style conversation, not a mechanical mini-form.
+Rationale: the product may internally track multiple missing fields, but the approved UX says AI-style conversation, not a mechanical mini-form.
 
-- [ ] **Step 4: Preserve one-round MVP fallback**
+- [ ] **Step 4: Enforce two-round limit and default continuation**
 
-Keep `submitClarificationAnswer` and `continueWithDefaultUnderstanding` behavior:
+In `web/radar-profile.js`, track clarification rounds in `currentDraft`:
 
-```text
-原始需求 + 用户补充回答
-→ POST /api/radars/generate
-→ render profile card
+```js
+const MAX_CLARIFICATION_ROUNDS = 2;
+const MAX_VISIBLE_CLARIFICATION_QUESTIONS = 1;
 ```
 
-Do not introduce infinite clarification loops in this task.
+When creating the first draft:
+
+```js
+clarificationRounds: 0,
+```
+
+When the user answers a clarification:
+
+```js
+const nextRounds = (currentDraft.clarificationRounds || 0) + 1;
+```
+
+After regenerating:
+
+```js
+currentDraft.clarificationRounds = nextRounds;
+if (nextRounds >= MAX_CLARIFICATION_ROUNDS) {
+  currentDraft.clarification = {
+    ...currentDraft.clarification,
+    shouldAsk: false,
+    defaultAssumptions: [
+      ...(currentDraft.clarification?.defaultAssumptions || []),
+      "已达到两轮澄清上限，剩余不确定项按默认理解继续",
+    ],
+  };
+}
+```
+
+`continueWithDefaultUnderstanding` must always generate a profile card and must never ask another question.
 
 - [ ] **Step 5: Update static UX check**
 
@@ -733,10 +1054,11 @@ In `scripts/verify-mvp-ux.ts`, replace the "最多展示 3 个问题" check with
 check("澄清闸门客户侧一次只展示 1 个自然追问", profileJs.includes("slice(0, 1)") || profileJs.includes("MAX_VISIBLE_CLARIFICATION_QUESTIONS"));
 ```
 
-Keep a separate check that the system still caps internal question arrays at 3:
+Keep a separate check that the system caps clarification rounds at 2:
 
 ```ts
-check("澄清闸门内部最多保留 3 个候选问题", profileJs.includes("MAX_CLARIFICATION_QUESTIONS"));
+check("澄清闸门最多 2 轮", profileJs.includes("MAX_CLARIFICATION_ROUNDS = 2"));
+check("澄清闸门一次只展示 1 个问题", profileJs.includes("MAX_VISIBLE_CLARIFICATION_QUESTIONS = 1") || profileJs.includes("slice(0, 1)"));
 ```
 
 - [ ] **Step 6: Update browser smoke**
@@ -810,7 +1132,7 @@ In `SearchResult` usage, do not force every provider to return audit fields.
 In `src/search/orchestrator.ts`, import:
 
 ```ts
-import type { RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
+import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
 ```
 
 Extend `SearchOrchestratorResult`:
@@ -819,6 +1141,7 @@ Extend `SearchOrchestratorResult`:
   searchPlan?: RadarSearchPlan;
   executionLog?: SearchExecutionLog;
   sourceCoverage?: SourceCoverageItem[];
+  candidateAccounting?: CandidateAccounting;
   rawCandidates?: Array<{
     id: string;
     query: string;
@@ -836,7 +1159,10 @@ At the start of `search`, initialize:
 ```ts
     const queryExecutions: SearchExecutionLog["queryExecutions"] = [];
     const openedUrls: SearchExecutionLog["openedUrls"] = [];
+    let rawProviderResultCount = 0;
 ```
+
+`openedUrls` starts empty and must stay empty unless the code actually fetches page content or opens a URL. Do not derive it from search snippets.
 
 When each provider search starts, capture `startedAt`; on success push:
 
@@ -862,6 +1188,14 @@ queryExecutions.push({
   error: errMsg,
 });
 ```
+
+After provider calls, before URL deduplication, set:
+
+```ts
+rawProviderResultCount = primaryResults.reduce((sum, item) => sum + item.results.length, 0);
+```
+
+If fallback runs, include fallback raw counts in the same variable. `rawProviderResultCount` is the `rawCount`; the deduplicated `rawResults.length` is the `deduplicatedCount`.
 
 Map `sourceHintChecks` to `SourceCoverageItem`:
 
@@ -909,6 +1243,13 @@ rawCandidates: rawResults.map((result, index) => ({
   sourceType: result.source_type ?? "search_snippet",
   status: "raw",
 })),
+candidateAccounting: {
+  rawCount: rawProviderResultCount || rawResults.length,
+  deduplicatedCount: rawResults.length,
+  assessedCount: opportunities.length,
+  acceptedCount: opportunityCards?.length ?? opportunities.length,
+  rejectedCount: Math.max(0, rawResults.length - (opportunityCards?.length ?? opportunities.length)),
+},
 ```
 
 Wrap `new URL` in a helper so invalid URLs do not crash:
@@ -928,7 +1269,7 @@ function domainOf(url: string): string {
 In `src/api/types.ts`, import:
 
 ```ts
-import type { RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
+import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
 ```
 
 Extend `RadarRunResult`:
@@ -937,6 +1278,7 @@ Extend `RadarRunResult`:
   searchPlan?: RadarSearchPlan;
   executionLog?: SearchExecutionLog;
   sourceCoverage?: SourceCoverageItem[];
+  candidateAccounting?: CandidateAccounting;
   rawCandidates?: Array<{ id: string; query: string; title: string; url: string; status: string }>;
 ```
 
@@ -948,6 +1290,7 @@ In `src/api/routes/radars.ts`, when building `RadarRunResult`, add:
         searchPlan: searchResult.searchPlan,
         executionLog: searchResult.executionLog,
         sourceCoverage: searchResult.sourceCoverage,
+        candidateAccounting: searchResult.candidateAccounting,
         rawCandidates: searchResult.rawCandidates,
 ```
 
@@ -1063,8 +1406,15 @@ async function main(): Promise<void> {
     opportunityCards?: OpportunityCard[];
     rawCandidates?: unknown[];
     searchPlan?: unknown;
-    executionLog?: { queryExecutions?: unknown[] };
+    executionLog?: { queryExecutions?: unknown[]; openedUrls?: unknown[] };
     sourceCoverage?: unknown[];
+    candidateAccounting?: {
+      rawCount?: number;
+      deduplicatedCount?: number;
+      assessedCount?: number;
+      acceptedCount?: number;
+      rejectedCount?: number;
+    };
   } | null;
   const runId = runData?.run?.id || "";
   const cards = runData?.opportunityCards || [];
@@ -1072,7 +1422,14 @@ async function main(): Promise<void> {
   check("run has opportunity cards", cards.length > 0, `cards=${cards.length}`);
   check("run has search plan", !!runData?.searchPlan);
   check("run has execution log", (runData?.executionLog?.queryExecutions ?? []).length > 0);
+  check("run does not fake openedUrls", Array.isArray(runData?.executionLog?.openedUrls) && runData.executionLog.openedUrls.length === 0);
   check("run has raw candidates", (runData?.rawCandidates ?? []).length > 0);
+  check("run has candidate accounting", typeof runData?.candidateAccounting?.rawCount === "number");
+  check(
+    "candidate accounting is internally consistent",
+    (runData?.candidateAccounting?.rawCount ?? 0) >= (runData?.candidateAccounting?.deduplicatedCount ?? 0) &&
+      (runData?.candidateAccounting?.assessedCount ?? 0) >= (runData?.candidateAccounting?.acceptedCount ?? 0),
+  );
 
   const opps = await get(app, `/api/opportunities?radar_id=${encodeURIComponent(radarId)}`);
   const oppData = opps.json.data as { entries?: Array<{ card?: OpportunityCard; radarId?: string; radarIds?: string[] }> } | null;
@@ -1083,7 +1440,7 @@ async function main(): Promise<void> {
   const report = await post(app, "/api/reports/generate", {
     radar_id: radarId,
     run_id: runId,
-    radar_type: "ai_competition",
+    radar_type: "custom",
     spec: genData?.spec,
     opportunities: cards,
     profile: genData?.profileSummary,
@@ -1191,7 +1548,7 @@ Extend `OpportunityCard`:
   runId?: string;
 ```
 
-- [ ] **Step 2: Classify assessment from existing score**
+- [ ] **Step 2: Classify grade from score, but evidence from evidence records**
 
 In `src/search/opportunity-scorer.ts`, add helper:
 
@@ -1205,6 +1562,17 @@ export function gradeFromScore(score: number): "S" | "A" | "B" | "C" | undefined
 }
 ```
 
+Add evidence status helper. It must not convert model confidence into confirmed evidence:
+
+```ts
+export function evidenceStatusFromEvidence(evidenceIds: string[] | undefined, criticalFieldCount: number): EvidenceStatus {
+  const count = evidenceIds?.length ?? 0;
+  if (criticalFieldCount > 0 && count >= criticalFieldCount) return "confirmed";
+  if (count > 0) return "partially_verified";
+  return "needs_review";
+}
+```
+
 When constructing a scored opportunity, attach optional metadata if the local type permits extension:
 
 ```ts
@@ -1212,13 +1580,15 @@ const grade = gradeFromScore(score.total_score);
 return {
   ...existingScoredOpportunity,
   opportunity_kind: grade ? "direct_opportunity" : "rejected",
-  evidence_status: score.credibility >= 70 ? "confirmed" : "needs_review",
+  evidence_status: "needs_review",
   action_status: grade === "S" || grade === "A" ? "act_now" : grade ? "prepare" : "drop",
   score_basis: "mixed",
 };
 ```
 
 If `ScoredOpportunity` is strict, extend it in `src/search/types.ts` with optional fields instead of using casts.
+
+Rule: without field-level evidence IDs for the critical fields, `evidence_status` cannot be `confirmed`.
 
 - [ ] **Step 3: Map assessment to card**
 
@@ -1228,7 +1598,7 @@ In `src/search/opportunity-card-mapper.ts`, while building `OpportunityCard`, ad
 const assessment = {
   opportunityId: card.guid || card.official_source_url,
   kind: scored.opportunity_kind ?? "direct_opportunity",
-  evidenceStatus: scored.evidence_status ?? "needs_review",
+  evidenceStatus: evidenceStatusFromEvidence(card.evidenceIds, 2),
   actionStatus: scored.action_status ?? "prepare",
   score: card.backend_score,
   grade: card.visible_level === "hidden" || card.visible_level === "D" ? undefined : card.visible_level,
@@ -1256,6 +1626,8 @@ evidence_status: assessment.evidenceStatus,
 action_status: assessment.actionStatus,
 assessment,
 ```
+
+If `assessment.scoreItems[*].basis` is not pure fact, use `model_judgment` or `mixed`; never label a model-only judgment as `fact`.
 
 - [ ] **Step 4: Preserve metadata in store**
 
@@ -1335,6 +1707,8 @@ For each opportunity card, include:
 
 Do not expose backend score unless hidden behind a concise phrase such as `内部匹配判断：高` if needed.
 
+Do not write `已核验官网`, `官方已确认`, `已确认截止时间`, `已确认 BD 意向`, or similar wording unless the corresponding field has field-level evidence. When evidence is missing, write `待复核` or `未确认`.
+
 - [ ] **Step 3: Add empty-result report**
 
 When `opportunities.length === 0`, report must include:
@@ -1355,6 +1729,8 @@ Also include source coverage:
 | 来源 | 状态 | 结果数 | 说明 |
 ```
 
+Report counts must come from `candidateAccounting` produced by the run. The Markdown generator must not invent `raw`, `deduplicated`, `assessed`, `accepted`, or `rejected` counts from section layout.
+
 - [ ] **Step 4: Update report template verification**
 
 In `scripts/verify-report-template.ts`, assert:
@@ -1364,6 +1740,7 @@ check("报告包含来源与检查回执", markdown.includes("## 7. 来源与检
 check("报告包含机会类型", markdown.includes("机会类型"));
 check("报告包含证据状态", markdown.includes("证据状态"));
 check("报告包含行动状态", markdown.includes("行动状态"));
+check("报告统计来自 CandidateAccounting", reportGenerator.includes("candidateAccounting"));
 check("空报告包含可行动建议", emptyMarkdown.includes("放宽地区") && emptyMarkdown.includes("保存为长期雷达继续监控"));
 ```
 
@@ -1663,6 +2040,19 @@ This milestone proves the MVP path without live API side effects.
 "verify:mvp-browser": "tsx scripts/verify-mvp-browser-smoke.ts"
 ```
 
+Before adding a script to `verify:all`, confirm it exists:
+
+```bash
+npm pkg get scripts.verify:v16
+npm pkg get scripts.verify:mvp-ux
+npm pkg get scripts.verify:source-hints
+npm pkg get scripts.verify:report-template
+npm pkg get scripts.verify:chat-mvp:contract
+npm pkg get scripts.verify:chat-mvp:api
+```
+
+If `verify:v16` is missing, first add a real aggregate script that runs existing V1.6 checks. Do not reference nonexistent scripts from `verify:all`.
+
 `verify:all` may include mock-safe checks:
 
 ```json
@@ -1787,14 +2177,34 @@ Source Hints 仍是 MVP-light，不是完整来源后台
 
 Do not run all milestones in one unchecked batch.
 
+First implementation batch:
+
+```text
+Milestone 0
+Milestone A
+Milestone B
+STOP
+```
+
+After Milestone B, stop and output:
+
+```text
+修改文件列表
+测试结果
+浏览器验收路径
+截图或文字说明
+是否建议进入 Milestone C
+```
+
+Do not execute Milestone C/D/E/F until Jason explicitly approves continuing.
+
 Recommended Jason review gates:
 
-1. After Milestone A: confirm backend profile summary contract.
-2. After Milestone B: confirm clarification feels like AI conversation.
-3. After Milestone C: confirm run audit and persistence.
-4. After Milestone D: confirm card/report semantics match GPT radar reports.
-5. After Milestone E: confirm browser UX.
-6. After Milestone F: decide whether to merge or open PR.
+1. After Milestone 0 + A + B: confirm current path is preserved, backend profile contract is correct, and clarification feels like AI conversation.
+2. After Milestone C: confirm run audit, source coverage, opened URL logging, and candidate accounting.
+3. After Milestone D: confirm card/report semantics match GPT radar reports without hallucinated facts.
+4. After Milestone E: confirm browser UX.
+5. After Milestone F: decide whether to merge or open PR.
 
 ## Self-Review
 
@@ -1803,6 +2213,7 @@ Spec coverage:
 - Chat-first entry: Milestone B and E.
 - Radar profile as long-term memory: Milestone A, B, E.
 - Information sufficiency and natural clarification: Milestone B.
+- Baseline freezing: Milestone 0.
 - Confirmation before search: Milestone B and E.
 - Search plan and actual execution log: Milestone C.
 - Source Hints MVP-light: Milestone C and E.
@@ -1810,8 +2221,10 @@ Spec coverage:
 - Matching, scoring, S/A/B/C, opportunity/evidence/action dimensions: Milestone D.
 - Markdown report like GPT radar but verifiable: Milestone D.
 - Save as long-term radar and rerun from My Radar: Milestone E and F.
-- Free custom radar count remains 3: protected by existing quota tests and `verify:mvp-ux`.
-- `api.env` local-only and live checks excluded from `verify:all`: Task A0 and F1.
+- Free custom radar count remains 3: Task A3 plus existing quota tests and `verify:mvp-ux`.
+- `custom` must not map to `ai_competition`: Task A3.
+- `api.env` local-only and live checks excluded from `verify:all`: Milestone 0 and F1.
+- Anti-hallucination rules: Milestone C and D.
 
 Placeholder scan:
 
