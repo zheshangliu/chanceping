@@ -86,6 +86,9 @@ check("保存成功反馈说明绑定我的雷达", watchResultJs.includes("已�
 check("空结果页含可行动建议", ["放宽地区", "减少排除条件", "增加指定信号源", "保存为长期雷达继续监控"].every((text) => watchResultJs.includes(text)));
 check("我的雷达卡片使用客户语言入口", ["画像摘要", "上次运行时间", "上次运行状态", "查看机会和报告", "再次盯机会"].every((text) => radarsJs.includes(text)));
 check("我的雷达卡片不展示 Provider 调试字段", !radarsJs.includes("radar-providers"));
+check("再次盯机会会自动生成报告", radarsJs.includes("/api/reports/generate") && radarsJs.includes("run_id") && radarsJs.includes("reportId"));
+check("再次盯机会状态文案完整", ["正在重新盯机会", "正在生成报告", "已生成新报告", "查看本次报告"].every((text) => radarsJs.includes(text)));
+check("再次盯机会报告失败不丢机会", radarsJs.includes("机会已更新，报告生成失败，可重试生成报告"));
 check("我的雷达只请求当前用户长期雷达", radarsJs.includes("/api/radars?scope=mine"));
 check("我的雷达额外过滤内置模板", radarsJs.includes("radar.isBuiltin !== true"));
 check("我的雷达空状态引导回首页", radarsJs.includes("还没有保存长期雷达") && radarsJs.includes("回首页建立雷达"));

@@ -234,6 +234,36 @@ async function main(): Promise<void> {
   check("mock report does not claim real source verification", !/已真实核验|已核验官网|已验证官网/.test(reportData?.markdown ?? ""), reportData?.markdown ?? "");
   check("run reportId written back", ctx.radarRunStore.get(runId)?.reportId === reportData?.reportId);
 
+  const reportsBeforeRerun = ctx.reportStore.listByRadarId(radarId).length;
+  const rerunResp = await post<{
+    run?: { id?: string; status?: string; reportId?: string };
+    opportunityCards?: OpportunityCard[];
+    sourceCoverage?: SourceCoverageItem[];
+    sourceHintChecks?: unknown[];
+    candidateAccounting?: CandidateAccounting;
+  }>(app, `/api/radars/${radarId}/run`, {});
+  const rerunData = rerunResp.json.data;
+  const rerunRunId = rerunData?.run?.id || "";
+  const rerunCards = rerunData?.opportunityCards || [];
+  check("rerun creates a new RadarRun", rerunResp.res.status === 200 && rerunRunId.length > 0 && rerunRunId !== runId, `runId=${rerunRunId}`);
+  check("rerun keeps opportunity cards", rerunCards.length > 0, `cards=${rerunCards.length}`);
+  const rerunReport = await post<{ reportId?: string; markdown?: string }>(app, "/api/reports/generate", {
+    radar_id: radarId,
+    run_id: rerunRunId,
+    radar_type: "custom",
+    spec: confirmedSpec,
+    opportunities: rerunCards,
+    profile: genData?.profileSummary,
+    sourceHintChecks: rerunData?.sourceCoverage ?? rerunData?.sourceHintChecks,
+    candidateAccounting: rerunData?.candidateAccounting,
+  });
+  const rerunReportData = rerunReport.json.data;
+  const reportsAfterRerun = ctx.reportStore.listByRadarId(radarId).length;
+  check("rerun report generated", rerunReport.res.status === 200 && !!rerunReportData?.reportId, `status=${rerunReport.res.status}`);
+  check("rerun report binds radar_id + run_id", ctx.reportStore.get(rerunReportData?.reportId || "")?.runId === rerunRunId);
+  check("rerun RadarRun.reportId written back", ctx.radarRunStore.get(rerunRunId)?.reportId === rerunReportData?.reportId);
+  check("rerun appends a historical report", reportsAfterRerun === reportsBeforeRerun + 1, `before=${reportsBeforeRerun}, after=${reportsAfterRerun}`);
+
   const reloadedStore = new LocalFileStore({ file_path: files.opps });
   reloadedStore.load();
   check("reload keeps opportunities", reloadedStore.list({ radarId }).entries.length > 0);

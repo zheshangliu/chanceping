@@ -137,6 +137,33 @@ async function main(): Promise<void> {
       }));
       if (detailCounts.opportunities < 1) fail("radar detail missing stored opportunities");
       if (detailCounts.reports < 1) fail("radar detail missing report history");
+
+      await page.click("#radar-back-btn");
+      await page.waitForSelector(".radar-card[data-kind=\"custom\"] .btn-rerun-radar", { timeout: 10_000 });
+      await page.click(".radar-card[data-kind=\"custom\"] .btn-rerun-radar");
+      await page.waitForFunction(() => {
+        const text = ((globalThis as any).document.querySelector("#panel-radars")?.textContent || "");
+        return text.includes("已生成新报告") && text.includes("查看本次报告");
+      }, { timeout: 15_000 });
+      const rerunStatusText = await page.$eval("#panel-radars", (el: any) => el.textContent || "");
+      if (!rerunStatusText.includes("正在重新盯机会") && !rerunStatusText.includes("已生成新报告")) {
+        fail("rerun status copy missing");
+      }
+      const latestReportButton = await page.$(".btn-view-latest-report");
+      if (!latestReportButton) {
+        fail("rerun missing view latest report action");
+      } else {
+        await latestReportButton.click();
+        await page.waitForFunction((initialCount: number) => {
+          const doc = (globalThis as any).document;
+          const reportCount = doc.querySelectorAll("#radar-report-history-list tbody tr").length;
+          return reportCount > initialCount;
+        }, { timeout: 10_000 }, detailCounts.reports);
+        const reportCountAfterRerun = await page.$$eval("#radar-report-history-list tbody tr", (rows: any[]) => rows.length);
+        if (reportCountAfterRerun <= detailCounts.reports) {
+          fail(`rerun should append a report: before=${detailCounts.reports}, after=${reportCountAfterRerun}`);
+        }
+      }
     }
 
     // 2. 清楚需求：直接生成画像确认卡。

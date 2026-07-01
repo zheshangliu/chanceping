@@ -2394,6 +2394,43 @@ textarea {
   background: color-mix(in srgb, var(--error) 10%, transparent);
 }
 
+.radar-rerun-status {
+  min-height: 24px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.radar-rerun-status span {
+  margin-right: 10px;
+}
+
+.rerun-status-running {
+  color: var(--text-secondary);
+}
+
+.rerun-status-success {
+  color: var(--success);
+}
+
+.rerun-status-warning {
+  color: var(--warning);
+}
+
+.rerun-status-error {
+  color: var(--error);
+}
+
+.btn-view-latest-report,
+.btn-retry-rerun-report {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 .radar-empty-state {
   grid-column: 1 / -1;
   padding: 48px 20px;

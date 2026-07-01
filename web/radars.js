@@ -81,6 +81,22 @@
     return "";
   }
 
+  function kindToRadarType(kind) {
+    if (kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") return kind;
+    return "ai_competition";
+  }
+
+  async function postJson(url, body) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body || {}),
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error?.message || "请求失败");
+    return json;
+  }
+
   function buildProfileSummaryText(radar) {
     const spec = radar.spec || {};
     const summary = spec.profile_summary || {};
@@ -219,6 +235,7 @@
         <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRun ? "" : "disabled"} title="${canRun ? "" : "雷达运行中后可再次盯机会"}">再次盯机会</button>
         <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
       </div>
+      <div class="radar-rerun-status" aria-live="polite"></div>
     `;
 
     // 绑定详情按钮
@@ -231,7 +248,7 @@
     const rerunBtn = card.querySelector(".btn-rerun-radar");
     if (rerunBtn) {
       rerunBtn.addEventListener("click", () => {
-        if (!rerunBtn.disabled) rerunRadarFromCard(radar.id, rerunBtn);
+        if (!rerunBtn.disabled) rerunRadarFromCard(radar, rerunBtn);
       });
     }
     const deleteBtn = card.querySelector(".btn-delete-radar");
@@ -264,28 +281,92 @@
     document.getElementById("home-input")?.focus();
   }
 
-  async function rerunRadarFromCard(radarId, btn) {
+  function setRerunStatus(btn, html) {
+    const card = btn.closest(".radar-card");
+    const status = card?.querySelector(".radar-rerun-status");
+    if (status) status.innerHTML = html;
+    return status;
+  }
+
+  async function generateReportForRun(radar, runData) {
+    const runId = runData?.run?.id;
+    const cards = runData?.opportunityCards || [];
+    return postJson("/api/reports/generate", {
+      radar_id: radar.id,
+      run_id: runId,
+      radar_type: kindToRadarType(radar.kind),
+      spec: radar.spec,
+      opportunities: cards,
+      sourceHintChecks: runData?.sourceCoverage || runData?.sourceHintChecks || [],
+      candidateAccounting: runData?.candidateAccounting,
+    });
+  }
+
+  function bindViewLatestReport(btn, radarId) {
+    const status = btn.closest(".radar-card")?.querySelector(".radar-rerun-status");
+    const viewBtn = status?.querySelector(".btn-view-latest-report");
+    if (viewBtn) {
+      viewBtn.addEventListener("click", () => goToDetail(radarId));
+    }
+  }
+
+  function bindRetryReport(btn, radar, runData) {
+    const status = btn.closest(".radar-card")?.querySelector(".radar-rerun-status");
+    const retryBtn = status?.querySelector(".btn-retry-rerun-report");
+    if (!retryBtn) return;
+    retryBtn.addEventListener("click", async () => {
+      retryBtn.disabled = true;
+      retryBtn.textContent = "正在生成报告";
+      try {
+        const report = await generateReportForRun(radar, runData);
+        const reportId = report.data?.reportId || "";
+        setRerunStatus(btn, `
+          <span class="rerun-status-success">已生成新报告</span>
+          <button class="btn-view-latest-report" data-report-id="${escapeAttr(reportId)}">查看本次报告</button>
+        `);
+        bindViewLatestReport(btn, radar.id);
+        if (window.showToast) showToast("已生成新报告", "success");
+      } catch (err) {
+        retryBtn.disabled = false;
+        retryBtn.textContent = "重试生成报告";
+        if (window.showToast) showToast(`报告仍生成失败：${err instanceof Error ? err.message : "网络错误"}`, "error");
+      }
+    });
+  }
+
+  async function rerunRadarFromCard(radar, btn) {
+    const radarId = radar?.id;
     if (!radarId) return;
     const previousText = btn.textContent;
     btn.disabled = true;
-    btn.textContent = "正在盯...";
+    btn.textContent = "正在重新盯机会";
+    setRerunStatus(btn, '<span class="rerun-status-running">正在重新盯机会</span>');
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/run`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      const json = await res.json();
-      if (json.success) {
-        const count = (json.data?.opportunityCards || []).length;
-        if (window.showToast) showToast(`本次发现 ${count} 个机会`, "success");
-        loadRadarList();
-      } else {
-        const msg = json.error?.message || "运行失败";
-        if (window.showToast) showToast(`再次盯机会失败：${msg}`, "error");
+      const runJson = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, {});
+      const count = (runJson.data?.opportunityCards || []).length;
+      btn.textContent = "正在生成报告";
+      setRerunStatus(btn, '<span class="rerun-status-running">正在生成报告</span>');
+
+      try {
+        const report = await generateReportForRun(radar, runJson.data);
+        const reportId = report.data?.reportId || "";
+        setRerunStatus(btn, `
+          <span class="rerun-status-success">已生成新报告</span>
+          <button class="btn-view-latest-report" data-report-id="${escapeAttr(reportId)}">查看本次报告</button>
+        `);
+        bindViewLatestReport(btn, radarId);
+        if (window.showToast) showToast(`已生成新报告，本次发现 ${count} 个机会`, "success");
+      } catch (reportErr) {
+        setRerunStatus(btn, `
+          <span class="rerun-status-warning">机会已更新，报告生成失败，可重试生成报告</span>
+          <button class="btn-retry-rerun-report">重试生成报告</button>
+        `);
+        bindRetryReport(btn, radar, runJson.data);
+        if (window.showToast) showToast(`机会已更新，报告生成失败：${reportErr instanceof Error ? reportErr.message : "网络错误"}`, "warning");
       }
     } catch {
       if (window.showToast) showToast("再次盯机会失败：网络错误", "error");
+      setRerunStatus(btn, '<span class="rerun-status-error">再次盯机会失败，请稍后重试</span>');
     } finally {
       btn.disabled = false;
       btn.textContent = previousText;
