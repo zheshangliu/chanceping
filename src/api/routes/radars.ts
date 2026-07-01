@@ -23,6 +23,7 @@ import type { AppContext } from "../context";
 import type { ApiResponse, RadarCreateRequest, RadarUpdateRequest, RadarRunRequest, RadarRunResult, RadarGenerateRequest, RadarGenerateResponseData } from "../types";
 import { SearchOrchestrator } from "../../search/orchestrator";
 import { getDataMode } from "../../demo/data-mode";
+import { resolveSearchDataMode, validateLiveSearchResult } from "../../config/local-live-search";
 import type { RadarType } from "../../agents/opportunity-store";
 import type { RadarKind, RadarStatus, RadarSchedule } from "../../schema/radar";
 import { RadarGenerator } from "../../agents/radar-generator";
@@ -474,10 +475,18 @@ export function radarsRoutes(ctx: AppContext): Hono {
 
     try {
       // 3. 执行搜索
+      const resolvedMode = resolveSearchDataMode({
+        requestedMode: body.search_mode,
+        fallbackMode: getDataMode(),
+      });
+      if (resolvedMode.error) {
+        throw new Error(resolvedMode.error.message);
+      }
+
       const orchestrator = new SearchOrchestrator({
         llmAdapter: ctx.llmAdapter,
         mockContent: true,
-        dataMode: getDataMode(),
+        dataMode: resolvedMode.dataMode,
         opportunityStore: ctx.store, // V1.6-07：传入机会库引用，启用增量标签复用
       });
       const searchResult = await orchestrator.search(
@@ -486,6 +495,12 @@ export function radarsRoutes(ctx: AppContext): Hono {
         radar.providerRouting,
         radar.watchRules, // V1.6-06：传入雷达级 Watch Rules
       );
+      if (resolvedMode.dataMode === "live") {
+        const liveError = validateLiveSearchResult(searchResult);
+        if (liveError) {
+          throw new Error(`${liveError} 可以切回演示数据继续体验。`);
+        }
+      }
 
       // 4. 搜索结果存入 OpportunityStore，绑定 radarId
       const radarType = kindToRadarType(radar.kind);

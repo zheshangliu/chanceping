@@ -71,6 +71,8 @@ check("澄清闸门复用后端 questions_to_confirm", profileJs.includes("quest
 check("澄清闸门支持前端兜底问题", profileJs.includes("buildFallbackQuestions"));
 check("用户回答后重新生成画像", profileJs.includes("clarificationAnswer") && profileJs.includes("/api/radars/generate"));
 check("结果页按画像运行", watchResultJs.includes("profile") && watchResultJs.includes("spec"));
+check("本地 live search 通过 URL/localStorage 显式开启", homeJs.includes("live_search") && homeJs.includes("chanceping_live_search") && homeJs.includes("getChancePingSearchMode"));
+check("产品主路径可透传 search_mode=live", watchResultJs.includes("getSearchModeRequest") && watchResultJs.includes("search_mode: \"live\"") && radarsJs.includes("getSearchModeRequest") && radarDetailJs.includes("getSearchModeRequest"));
 check("模板路径允许调整画像", watchResultJs.includes("调整画像") && profileJs.includes("showRadarProfileDraftFromResult"));
 check("含正在搜索机会 loading", watchResultJs.includes("正在搜索机会"));
 check("含正在生成机会报告 loading", watchResultJs.includes("正在生成机会报告"));
@@ -104,6 +106,7 @@ check("雷达详情不会把 mock 来源渲染成可点击官网", radarDetailJs
 check("报告模板包含雷达画像", reportGenerator.includes("## 1. 雷达画像"));
 check("报告模板包含指定信号源", reportGenerator.includes("指定信号源"));
 check("报告模板声明 mock 演示数据未真实核验", reportGenerator.includes("演示 / 测试数据") && reportGenerator.includes("未真实核验"));
+check("报告模板区分搜索来源、已核验事实、模型判断、待复核项", ["### 搜索到的来源", "### 字段已核验事实", "### 模型判断", "### 待复核项"].every((text) => reportGenerator.includes(text)));
 check("结果页样式存在", styles.includes(".watch-result"));
 check("详情页支持历史报告", radarDetailJs.includes("loadReportHistory"));
 check("免费用户可拥有 3 个自定义雷达", userContext.includes("free: 3"));

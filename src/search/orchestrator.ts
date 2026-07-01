@@ -322,6 +322,28 @@ function applyMockSafeCardMark(card: OpportunityCard, result: SearchResult): Opp
   return card;
 }
 
+function applyLiveSearchCardMark(card: OpportunityCard, result: SearchResult): OpportunityCard {
+  if (isMockSearchResult(result)) return card;
+  const disclaimer = "搜索发现来源，字段待复核；未确认报名资格、报名费用、截止日期、联系人、版权义务或其他行动条件。";
+  card.data_mode = "live";
+  card.source_disclaimer = disclaimer;
+  card.verificationStatus = "unverified";
+  card.evidence_status = "needs_review";
+  card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), "搜索发现", "待复核"]));
+  card.risk_note = card.risk_note || disclaimer;
+  card.next_action = card.next_action || "打开搜索发现来源，逐项复核报名资格、费用、截止日期和行动要求。";
+  if (card.assessment) {
+    card.assessment.evidenceStatus = "needs_review";
+    card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+      ...item,
+      basis: "model_judgment",
+      evidenceIds: [],
+      reason: card.match_reason,
+    }));
+  }
+  return card;
+}
+
 function domainOf(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -964,6 +986,9 @@ export class SearchOrchestrator {
         const radarId = radarType;
         const card = mapToCard(opp, oppSources, oppEvidence, radarId);
         applyMockSafeCardMark(card, opp.search_result);
+        if (this.dataMode === "live") {
+          applyLiveSearchCardMark(card, opp.search_result);
+        }
         // V1.6-07：写入 AI 精筛 reason 到 card.ai_analysis（供下次增量复用）
         const aiAnalysis = aiAnalysisByUrl.get(oppUrl);
         if (aiAnalysis) {

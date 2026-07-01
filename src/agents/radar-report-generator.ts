@@ -127,9 +127,16 @@ function isDemoOpportunity(opp: OpportunityCard): boolean {
   return opp.is_demo_data === true || opp.data_mode === "mock" || /演示|测试数据|mock/i.test(`${opp.risk_note}${opp.source_disclaimer ?? ""}`);
 }
 
+function isLiveOpportunity(opp: OpportunityCard): boolean {
+  return opp.data_mode === "live" || /搜索发现|待复核/.test(`${opp.source_disclaimer ?? ""}`);
+}
+
 function fmtOpportunitySource(opp: OpportunityCard): string {
   if (isDemoOpportunity(opp)) {
     return "演示数据，未真实核验";
+  }
+  if (isLiveOpportunity(opp)) {
+    return `${fmtUrl(opp.official_source_url)}（搜索发现，待复核）`;
   }
   return fmtUrl(opp.official_source_url);
 }
@@ -716,7 +723,7 @@ function buildMvpOpportunityDetails(opps: OpportunityCard[]): string {
     lines.push(fmtStr(opp.next_action));
     lines.push("#### 风险提醒");
     lines.push(fmtStr(opp.risk_note));
-    lines.push("#### 官方来源");
+    lines.push(isLiveOpportunity(opp) ? "#### 搜索发现来源" : "#### 官方来源");
     lines.push(fmtOpportunitySource(opp));
     lines.push("");
     lines.push(`- 风险提醒：${fmtStr(opp.risk_note || "待复核")}`);
@@ -772,14 +779,14 @@ function buildMvpNextTracking(spec: RadarRequirementSpec): string {
 
 function sourceStatusLabel(status: string | undefined): string {
   const map: Record<string, string> = {
-    checked: "已检查",
-    no_results: "已检查，暂无结果",
-    failed: "检查失败",
-    invalid_url: "无效网址",
-    name_only: "来源名称，待转成可检查网址",
-    checked_with_results: "已检查，有结果",
-    checked_no_results: "已检查，暂无结果",
-    not_checked: "本轮未检查",
+    checked: "搜索发现，有结果",
+    no_results: "待复核，暂无结果",
+    failed: "搜索失败，待复核",
+    invalid_url: "待复核，无效网址",
+    name_only: "待复核，来源名称待转成网址",
+    checked_with_results: "搜索发现，有结果",
+    checked_no_results: "待复核，暂无结果",
+    not_checked: "待复核，本轮未检查",
   };
   return status ? map[status] ?? status : "未知";
 }
@@ -803,6 +810,7 @@ function buildCandidateAccountingTable(accounting?: CandidateAccounting): string
 function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]): string {
   const checks = input.sourceHintChecks ?? [];
   const hasDemoOpportunity = input.opportunities.some(isDemoOpportunity);
+  const hasLiveOpportunity = input.opportunities.some(isLiveOpportunity);
   const lines = ["## 7. 来源与检查回执", "", "### 来源索引", "", "### 本轮重点检查来源", ""];
   lines.push("| 来源 | 状态 | 结果数 | 说明 |");
   lines.push("|---|---|---:|---|");
@@ -816,23 +824,56 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
     });
   }
   lines.push("", ...buildCandidateAccountingTable(input.candidateAccounting));
-  lines.push("", "### 官方链接", "");
+  lines.push("", "### 搜索到的来源", "");
   if (hasDemoOpportunity) {
-    lines.push("- 演示数据，未真实核验；本轮不提供可点击官方链接。");
+    lines.push("- 演示数据，未真实核验；本轮不提供可点击真实来源。");
   } else if (sources.length === 0) {
     const urls = Array.from(new Set(input.opportunities.map((opp) => opp.official_source_url).filter(Boolean)));
     if (urls.length === 0) {
-      lines.push("- 暂无官方链接。");
+      lines.push("- 暂无搜索来源链接。");
     } else {
-      urls.forEach((url) => lines.push(`- ${url}`));
+      urls.forEach((url) => lines.push(`- ${url}（搜索发现，待复核）`));
     }
   } else {
-    sources.forEach((source) => lines.push(`- ${source.mediaName}：${source.url}`));
+    sources.forEach((source) => lines.push(`- ${source.mediaName}：${source.url}（搜索发现，待复核）`));
   }
-  const needsReview = checks.filter((check) => check.status === "failed" || check.status === "no_results" || check.status === "invalid_url");
-  lines.push("", "### 待复核来源", "");
+
+  lines.push("", "### 字段已核验事实", "");
+  if (hasDemoOpportunity) {
+    lines.push("- 暂无。演示数据没有字段级核验证据。");
+  } else if (hasLiveOpportunity) {
+    lines.push("- 暂无。本轮只完成搜索发现，未抓取网页正文或进行字段级事实核验。");
+  } else {
+    const confirmed = input.opportunities.filter((opp) => opp.evidence_status === "confirmed" || opp.verificationStatus === "verified");
+    if (confirmed.length === 0) {
+      lines.push("- 暂无字段级已核验事实。");
+    } else {
+      confirmed.forEach((opp) => lines.push(`- ${opp.title}：来源已标记为已验证。`));
+    }
+  }
+
+  lines.push("", "### 模型判断", "");
+  if (input.opportunities.length === 0) {
+    lines.push("- 暂无模型判断。");
+  } else {
+    input.opportunities.slice(0, 8).forEach((opp) => {
+      lines.push(`- ${opp.title}：等级 ${getVisibleLevel(opp)}；匹配理由为模型判断，需结合来源复核。`);
+    });
+  }
+
+  const needsReview = checks.filter((check) => {
+    const status = String(check.status);
+    return status === "failed" || status === "no_results" || status === "invalid_url" || status === "checked_no_results";
+  });
+  lines.push("", "### 待复核项", "");
   if (hasDemoOpportunity) {
     lines.push("- 演示 / 测试数据未真实核验，所有来源字段均需接入真实搜索后复核。");
+  } else if (hasLiveOpportunity) {
+    lines.push("- 报名资格、费用、截止日期、联系人、版权义务、获奖义务。");
+    lines.push("- 搜索结果标题和摘要只代表搜索发现，不代表官方事实确认。");
+    if (needsReview.length > 0) {
+      needsReview.forEach((check) => lines.push(`- ${check.sourceName || check.sourceUrl}（${check.status}）`));
+    }
   } else if (needsReview.length === 0) {
     lines.push("- 暂无。");
   } else {

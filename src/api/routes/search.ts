@@ -4,6 +4,7 @@ import type { ApiResponse, SearchRequest } from "../types";
 import { SearchOrchestrator } from "../../search/orchestrator";
 import type { RadarRequirementSpec } from "../../schema/radar-requirement-spec";
 import { getDataMode } from "../../demo/data-mode";
+import { resolveSearchDataMode, validateLiveSearchResult } from "../../config/local-live-search";
 
 /** 默认 mock spec（当请求未提供 spec 时使用） */
 function createDefaultSpec(): RadarRequirementSpec {
@@ -93,15 +94,45 @@ export function searchRoutes(ctx: AppContext): Hono {
         spec = (body.spec as RadarRequirementSpec) ?? createDefaultSpec();
       }
 
+      const resolvedMode = resolveSearchDataMode({
+        requestedMode: body.search_mode,
+        fallbackMode: getDataMode(),
+      });
+      if (resolvedMode.error) {
+        return c.json({
+          success: false,
+          data: null,
+          error: { code: resolvedMode.error.code, message: resolvedMode.error.message },
+          duration_ms: Date.now() - start,
+        } satisfies ApiResponse, resolvedMode.error.status);
+      }
+
       const orchestrator = new SearchOrchestrator({
         llmAdapter: ctx.llmAdapter,
         maxResultsPerProvider: body.max_results,
         minRelevance: body.min_relevance,
         enableContentFetch: body.enable_content_fetch ?? true,
         mockContent: true,
-        dataMode: getDataMode(),
+        dataMode: resolvedMode.dataMode,
       });
-      const result = await orchestrator.search(spec, body.query);
+      const liveProviderRouting = resolvedMode.dataMode === "live"
+        ? body.providerRouting ?? { primary: ["serper"], fallback: [] }
+        : body.providerRouting;
+      const result = await orchestrator.search(spec, body.query, liveProviderRouting);
+      if (resolvedMode.dataMode === "live") {
+        const liveError = validateLiveSearchResult(result);
+        if (liveError) {
+          return c.json({
+            success: false,
+            data: null,
+            error: {
+              code: "LIVE_SEARCH_FAILED",
+              message: `${liveError} 可以切回演示数据继续体验。`,
+            },
+            duration_ms: Date.now() - start,
+          } satisfies ApiResponse, 502);
+        }
+      }
 
       // V1.5-03：如果有 radar_id，给返回结果的 opportunities 附加 radarId
       if (radarId && result.opportunities) {

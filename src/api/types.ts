@@ -75,6 +75,10 @@ export interface SearchRequest {
   enable_content_fetch?: boolean;
   /** V1.5 新增：从 RadarStore 取 spec（优先级高于 spec 字段） */
   radar_id?: string;
+  /** Milestone K：本地显式真实搜索试跑；生产默认禁用 */
+  search_mode?: "mock" | "live";
+  /** Milestone K：可选 provider 路由；live MVP 默认收窄到 serper，避免缺 key provider 混入 mock。 */
+  providerRouting?: ProviderRouting;
 }
 
 /** Watch Rules 保存请求 */
@@ -169,6 +173,8 @@ export interface RadarUpdateRequest {
 export interface RadarRunRequest {
   /** 覆盖 spec 里的 query */
   query?: string;
+  /** Milestone K：本地显式真实搜索试跑；生产默认禁用 */
+  search_mode?: "mock" | "live";
 }
 
 /** 运行雷达结果 */

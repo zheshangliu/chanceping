@@ -97,6 +97,11 @@
     return json;
   }
 
+  function getSearchModeRequest() {
+    const mode = typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined;
+    return mode === "live" ? { search_mode: "live" } : {};
+  }
+
   function buildProfileSummaryText(radar) {
     const spec = radar.spec || {};
     const summary = spec.profile_summary || {};
@@ -342,7 +347,7 @@
     btn.textContent = "正在重新盯机会";
     setRerunStatus(btn, '<span class="rerun-status-running">正在重新盯机会</span>');
     try {
-      const runJson = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, {});
+      const runJson = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, getSearchModeRequest());
       const count = (runJson.data?.opportunityCards || []).length;
       btn.textContent = "正在生成报告";
       setRerunStatus(btn, '<span class="rerun-status-running">正在生成报告</span>');

@@ -83,6 +83,11 @@
     return json;
   }
 
+  function getSearchModeRequest() {
+    const mode = typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined;
+    return mode === "live" ? { search_mode: "live" } : {};
+  }
+
   function list(values) {
     return Array.from(new Set((Array.isArray(values) ? values : typeof values === "string" ? [values] : [])
       .map((value) => String(value ?? "").trim())
@@ -673,7 +678,7 @@
     try {
       const status = document.getElementById("radar-detail-rerun-status");
       if (status) status.innerHTML = '<span class="rerun-status-running">正在重新盯机会</span>';
-      const json = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, {});
+      const json = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, getSearchModeRequest());
       const runData = json.data || {};
       const opportunities = runData.opportunityCards || runData.opportunities || [];
       renderRunResult(opportunities);

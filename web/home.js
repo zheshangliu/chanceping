@@ -100,6 +100,28 @@ function showToast(message, type) {
 window.switchTab = switchTab;
 window.showToast = showToast;
 
+function syncLiveSearchPreference(urlParams) {
+  const requested = urlParams.get("live_search");
+  if (requested === "1" || requested === "true") {
+    localStorage.setItem("chanceping_live_search", "true");
+  } else if (requested === "0" || requested === "false") {
+    localStorage.removeItem("chanceping_live_search");
+  }
+  const liveEnabled = localStorage.getItem("chanceping_live_search") === "true";
+  const badge = document.getElementById("demo-badge");
+  if (badge && liveEnabled) {
+    badge.textContent = "Live Search 本地试跑";
+    badge.style.display = "inline-block";
+  }
+  return liveEnabled;
+}
+
+function getChancePingSearchMode() {
+  return localStorage.getItem("chanceping_live_search") === "true" ? "live" : undefined;
+}
+
+window.getChancePingSearchMode = getChancePingSearchMode;
+
 // ============================================================
 // 首页逻辑
 // ============================================================
@@ -109,6 +131,7 @@ let selectedTemplate = null;
 document.addEventListener("DOMContentLoaded", () => {
   // Task 041: Demo Mode 标识（URL 参数 ?demo=true 触发显示）
   const urlParams = new URLSearchParams(window.location.search);
+  syncLiveSearchPreference(urlParams);
   if (urlParams.get("demo") === "true") {
     const badge = document.getElementById("demo-badge");
     if (badge) badge.style.display = "inline-block";

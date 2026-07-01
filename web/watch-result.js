@@ -89,14 +89,14 @@
 
   function renderSourceHintCheck(item) {
     const label = {
-      checked: "已检查",
-      no_results: "未发现结果",
+      checked: "搜索发现",
+      no_results: "待复核，暂无结果",
       failed: "待复核",
-      invalid_url: "无效网址",
-      name_only: "来源名称",
-      checked_with_results: "已检查，有结果",
-      checked_no_results: "已检查，暂无结果",
-      not_checked: "未检查",
+      invalid_url: "待复核，无效网址",
+      name_only: "来源名称，待复核",
+      checked_with_results: "搜索发现，有结果",
+      checked_no_results: "待复核，暂无结果",
+      not_checked: "待复核，未检查",
     }[item.status] || item.status || "未知";
     const target = item.sourceUrl
       ? `<a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(item.sourceName || item.sourceUrl)}</a>`
@@ -113,12 +113,13 @@
   function renderCard(card) {
     const url = card.official_source_url || card.url || "#";
     const isDemo = card.is_demo_data === true || card.data_mode === "mock" || /演示|测试数据|mock/i.test(`${card.risk_note || ""}${card.source_disclaimer || ""}`);
+    const isLive = card.data_mode === "live" || /搜索发现|待复核/.test(`${card.source_disclaimer || ""}`);
     const source = isDemo
       ? "<span>演示来源，未真实核验</span>"
       : url && url !== "#"
-        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">官方来源</a>`
-        : "<span>官方来源暂未明确</span>";
-    const sourceLabel = isDemo ? "来源说明" : "官方来源";
+        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${isLive ? "查看搜索发现来源" : "官方来源"}</a>`
+        : `<span>${isLive ? "搜索来源暂未明确" : "官方来源暂未明确"}</span>`;
+    const sourceLabel = isDemo ? "来源说明" : isLive ? "搜索发现来源" : "官方来源";
     const opportunityKind = card.opportunity_kind || card.opportunityKind || card.type || "机会";
     const evidenceStatus = card.evidence_status || card.evidenceStatus || "model_judgment";
     const actionStatus = card.action_status || card.actionStatus || "建议确认";
@@ -160,6 +161,11 @@
     `;
   }
 
+  function getSearchModeRequest(preferredMode) {
+    const mode = preferredMode || (typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined);
+    return mode === "live" ? { search_mode: "live" } : {};
+  }
+
   function renderEmptyState() {
     return `
       <div class="watch-empty-state">
@@ -199,11 +205,12 @@
     renderLoading(description, "正在搜索机会");
     try {
       const search = radarId
-        ? await postJson(`/api/radars/${radarId}/run`, {})
-        : await postJson("/api/search", { spec, query: description });
+        ? await postJson(`/api/radars/${radarId}/run`, getSearchModeRequest())
+        : await postJson("/api/search", { spec, query: description, ...getSearchModeRequest() });
       const cards = search.data?.opportunityCards || [];
       const sourceHintChecks = search.data?.sourceCoverage || search.data?.sourceHintChecks || [];
       const candidateAccounting = search.data?.candidateAccounting;
+      const rawCandidates = search.data?.rawCandidates || [];
       const runId = search.data?.run?.id;
       renderLoading(description, "正在生成机会报告");
       const report = await postJson("/api/reports/generate", {
@@ -226,6 +233,8 @@
         opportunityCards: cards,
         sourceHintChecks,
         candidateAccounting,
+        rawCandidates,
+        searchMode: getSearchModeRequest().search_mode,
         markdown: report.data.markdown,
       };
       renderResult(currentResult);
@@ -256,11 +265,12 @@
       });
       const radarId = created.data.id;
       await postJson(`/api/radars/${radarId}/activate`, {});
-      const run = await postJson(`/api/radars/${radarId}/run`, {});
+      const run = await postJson(`/api/radars/${radarId}/run`, getSearchModeRequest(currentResult.searchMode));
       const runId = run.data?.run?.id;
       const cards = run.data?.opportunityCards || [];
       const sourceHintChecks = run.data?.sourceCoverage || run.data?.sourceHintChecks || [];
       const candidateAccounting = run.data?.candidateAccounting;
+      const rawCandidates = run.data?.rawCandidates || [];
       const report = await postJson("/api/reports/generate", {
         spec: currentResult.spec,
         radar_type: "custom",
@@ -278,6 +288,7 @@
         opportunityCards: cards,
         sourceHintChecks,
         candidateAccounting,
+        rawCandidates,
         markdown: report.data.markdown,
         reportId: report.data.reportId,
         savedMessage: "已保存为长期雷达。本次机会和报告已经绑定到我的雷达。",
