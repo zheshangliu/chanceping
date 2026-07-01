@@ -72,6 +72,17 @@
     }
   }
 
+  async function postJson(url, body) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body || {}),
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error?.message || "请求失败");
+    return json;
+  }
+
   function list(values) {
     return Array.from(new Set((Array.isArray(values) ? values : typeof values === "string" ? [values] : [])
       .map((value) => String(value ?? "").trim())
@@ -228,7 +239,7 @@
     container.innerHTML = `
       <div class="radar-detail-container">
         <div class="radar-detail-topbar">
-          <button class="btn-back" id="radar-back-btn">← 返回列表</button>
+          <button class="btn-back" id="radar-back-btn">← 返回我的雷达</button>
           <h3 class="radar-detail-title">${escapeHtml(radar.name || "未命名雷达")}</h3>
         </div>
 
@@ -239,10 +250,11 @@
           <span class="radar-status-text">${escapeHtml(statusLabel)}</span>
           <div class="radar-detail-actions">
             <button class="btn-primary btn-activate" id="radar-activate-btn" ${!isDraft || isBuiltin ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可激活" : !isDraft ? "仅草稿状态可激活" : ""}">激活</button>
-            <button class="btn-primary btn-run" id="radar-run-btn" ${!isActive ? "disabled" : ""} title="${!isActive ? "仅运行中状态可手动运行" : ""}">手动运行</button>
+            <button class="btn-primary btn-run" id="radar-run-btn" ${!isActive ? "disabled" : ""} title="${!isActive ? "仅运行中状态可再次盯机会" : ""}">再次盯机会</button>
             <button class="btn-edit" id="radar-edit-btn" ${isBuiltin || isArchived ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可编辑" : isArchived ? "已归档不可编辑" : ""}">编辑</button>
             <button class="btn-archive" id="radar-archive-btn" ${isBuiltin || isArchived ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可归档" : isArchived ? "已归档" : ""}">归档</button>
           </div>
+          <div class="radar-rerun-status" id="radar-detail-rerun-status" aria-live="polite"></div>
         </div>
 
         <div class="radar-detail-section">
@@ -659,30 +671,54 @@
     if (resultList) resultList.innerHTML = '<p class="placeholder">正在搜索机会，请稍候...</p>';
 
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/run`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      const json = await res.json();
-      if (json.success && json.data) {
-        const opportunities = json.data.opportunityCards || json.data.opportunities || [];
-        renderRunResult(opportunities);
-        if (window.showToast) showToast(`运行完成，发现 ${opportunities.length} 个机会`, "success");
-        // 刷新详情（更新 lastRunAt / lastRunStatus，并从机会库恢复入库结果）
-        loadRadarDetail(radarId);
-      } else {
-        const msg = json.error?.message || "运行失败";
-        if (resultList) resultList.innerHTML = `<p class="placeholder">运行失败：${escapeHtml(msg)}</p>`;
-        if (window.showToast) showToast(`运行失败：${msg}`, "error");
+      const status = document.getElementById("radar-detail-rerun-status");
+      if (status) status.innerHTML = '<span class="rerun-status-running">正在重新盯机会</span>';
+      const json = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, {});
+      const runData = json.data || {};
+      const opportunities = runData.opportunityCards || runData.opportunities || [];
+      renderRunResult(opportunities);
+      if (resultList) {
+        resultList.insertAdjacentHTML("afterbegin", '<p class="placeholder">正在生成报告...</p>');
       }
+      if (status) status.innerHTML = '<span class="rerun-status-running">正在生成报告</span>';
+
+      try {
+        const report = await postJson("/api/reports/generate", {
+          radar_id: radarId,
+          run_id: runData.run?.id,
+          radar_type: kindToRadarType(currentRadar?.kind),
+          spec: currentRadar?.spec,
+          opportunities,
+          sourceHintChecks: runData.sourceCoverage || runData.sourceHintChecks || [],
+          candidateAccounting: runData.candidateAccounting,
+        });
+        const reportId = report.data?.reportId || "";
+        if (status) {
+          status.innerHTML = `
+            <span class="rerun-status-success">已生成新报告</span>
+            <button class="btn-view-latest-report" id="radar-detail-view-latest-report" data-report-id="${escapeHtml(reportId)}">查看本次报告</button>
+          `;
+        }
+        document.getElementById("radar-detail-view-latest-report")?.addEventListener("click", () => {
+          document.getElementById("radar-report-history-list")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        if (window.showToast) showToast(`已生成新报告，本次发现 ${opportunities.length} 个机会`, "success");
+      } catch (reportErr) {
+        if (status) {
+          status.innerHTML = '<span class="rerun-status-warning">机会已更新，报告生成失败，可重试生成报告</span>';
+        }
+        if (window.showToast) showToast(`机会已更新，报告生成失败：${reportErr instanceof Error ? reportErr.message : "网络错误"}`, "warning");
+      }
+      await loadRadarRuns(radarId);
+      await loadRadarOpportunities(radarId);
+      await loadReportHistory(radarId);
     } catch (err) {
       if (resultList) resultList.innerHTML = '<p class="placeholder">运行失败：网络错误</p>';
       if (window.showToast) showToast("运行失败：网络错误", "error");
     } finally {
       if (runBtn) {
         runBtn.disabled = false;
-        runBtn.textContent = "手动运行";
+        runBtn.textContent = "再次盯机会";
       }
     }
   }

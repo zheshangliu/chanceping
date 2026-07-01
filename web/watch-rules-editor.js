@@ -596,6 +596,9 @@
       const btnTest = document.getElementById("btn-test");
       const testMockData = document.getElementById("test-mock-data");
       const testResult = document.getElementById("test-result");
+      if (!textarea || !highlight || !preview || !btnSave || !btnClear || !btnTest || !testMockData || !testResult) {
+        return;
+      }
 
       // 输入事件：更新高亮 + 预览 + 行号
       textarea.addEventListener("input", () => {
@@ -634,18 +637,21 @@
     updateHighlight() {
       const textarea = document.getElementById("editor-textarea");
       const highlight = document.getElementById("editor-highlight");
+      if (!textarea || !highlight) return;
       highlight.innerHTML = SyntaxHighlighter.highlight(textarea.value) + "\n";
     },
 
     updatePreview() {
       const textarea = document.getElementById("editor-textarea");
       const preview = document.getElementById("preview-content");
+      if (!textarea || !preview) return;
       PreviewRenderer.render(preview, textarea.value);
     },
 
     updateLineInfo() {
       const textarea = document.getElementById("editor-textarea");
       const lineInfo = document.getElementById("line-info");
+      if (!textarea || !lineInfo) return;
       const { selectionStart, value } = textarea;
       const before = value.slice(0, selectionStart);
       const lines = before.split("\n");
@@ -659,6 +665,7 @@
         const res = await API.getRules();
         if (res.success && res.data && typeof res.data.rules_text === "string") {
           const textarea = document.getElementById("editor-textarea");
+          if (!textarea) return;
           textarea.value = res.data.rules_text;
           this.updateHighlight();
           this.updatePreview();
@@ -671,6 +678,7 @@
 
     async save() {
       const textarea = document.getElementById("editor-textarea");
+      if (!textarea) return;
       try {
         const res = await API.saveRules(textarea.value);
         if (res.success) {
@@ -689,6 +697,7 @@
         const res = await API.clearRules();
         if (res.success) {
           const textarea = document.getElementById("editor-textarea");
+          if (!textarea) return;
           textarea.value = "";
           this.updateHighlight();
           this.updatePreview();
@@ -705,6 +714,7 @@
       const textarea = document.getElementById("editor-textarea");
       const testMockData = document.getElementById("test-mock-data");
       const testResult = document.getElementById("test-result");
+      if (!textarea || !testMockData || !testResult) return;
       await TestRunner.run(testResult, textarea.value, testMockData.value);
     },
 

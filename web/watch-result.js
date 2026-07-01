@@ -33,7 +33,17 @@
     const cards = result.opportunityCards || [];
     const markdown = result.markdown || "";
     const sourceHintChecks = result.sourceHintChecks || [];
-    const actionLabel = result.radarId ? "查看我的雷达" : "保存为长期雷达，之后持续盯";
+    const actionHtml = result.radarId ? `
+      <div class="watch-action-row saved-radar-actions">
+        <button id="btn-view-saved-radar-detail" class="btn-primary">查看本次雷达详情</button>
+        <button id="btn-back-to-radar-list" class="btn-secondary">返回我的雷达列表</button>
+      </div>
+    ` : `
+      <div class="watch-action-row">
+        <button id="btn-save-watch-radar" class="btn-primary">保存为长期雷达，之后持续盯</button>
+        <button id="btn-adjust-watch-profile" class="btn-secondary">调整画像</button>
+      </div>
+    `;
     root.innerHTML = `
       <div class="watch-result-header">
         <h3>${escapeHtml(result.suggestedName || "本次盯机会结果")}</h3>
@@ -41,10 +51,7 @@
       </div>
       <div class="watch-result-actions">
         <div class="watch-save-copy">
-          <div class="watch-action-row">
-            <button id="btn-save-watch-radar" class="btn-primary">${actionLabel}</button>
-            <button id="btn-adjust-watch-profile" class="btn-secondary">调整画像</button>
-          </div>
+          ${actionHtml}
           <p>下次不用重新描述，系统会按这个画像继续找机会。</p>
           ${result.savedMessage ? `<p class="save-success">${escapeHtml(result.savedMessage)}</p>` : ""}
         </div>
@@ -72,6 +79,8 @@
       </div>
     `;
     document.getElementById("btn-save-watch-radar")?.addEventListener("click", saveCurrentRadar);
+    document.getElementById("btn-view-saved-radar-detail")?.addEventListener("click", viewSavedRadarDetail);
+    document.getElementById("btn-back-to-radar-list")?.addEventListener("click", backToSavedRadarList);
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
       if (window.showRadarProfileDraftFromResult) window.showRadarProfileDraftFromResult(currentResult);
     });
@@ -229,7 +238,7 @@
   async function saveCurrentRadar() {
     if (!currentResult) return;
     if (currentResult.radarId) {
-      if (window.switchTab) window.switchTab("radars");
+      backToSavedRadarList();
       return;
     }
     const btn = document.getElementById("btn-save-watch-radar");
@@ -275,9 +284,6 @@
       };
       renderResult(currentResult);
       if (window.showToast) showToast("已保存为长期雷达，并生成了绑定报告", "success");
-      window.setTimeout(() => {
-        if (window.switchTab) window.switchTab("radars");
-      }, 700);
     } catch (err) {
       if (window.showToast) showToast(err.message || "保存失败", "error");
       if (btn) {
@@ -285,6 +291,28 @@
         btn.textContent = previousText;
       }
     }
+  }
+
+  function viewSavedRadarDetail() {
+    const radarId = currentResult?.radarId;
+    if (!radarId) return;
+    if (window.switchTab) window.switchTab("radars");
+    window.setTimeout(() => {
+      if (typeof window.goToDetail === "function") {
+        window.goToDetail(radarId);
+      }
+    }, 0);
+  }
+
+  function backToSavedRadarList() {
+    if (window.switchTab) window.switchTab("radars");
+    window.setTimeout(() => {
+      if (typeof window.backToList === "function") {
+        window.backToList();
+      } else if (typeof window.loadRadarList === "function") {
+        window.loadRadarList();
+      }
+    }, 0);
   }
 
   async function copyMarkdown(markdown) {

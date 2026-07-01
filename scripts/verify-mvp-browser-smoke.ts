@@ -69,6 +69,15 @@ async function main(): Promise<void> {
     await page.waitForSelector("#home-watch-btn", { timeout: 5_000 });
     const titleText = await page.$eval(".home-title", (el: any) => el.textContent || "");
     if (!titleText.includes("告诉我你想盯什么机会")) fail("home title not polished");
+    const initialBodyText = await page.$eval("body", (el: any) => el.textContent || "");
+    if (
+      initialBodyText.includes("DSL 规则编辑器") ||
+      initialBodyText.includes("点击\"开始搜索\"查找机会") ||
+      initialBodyText.includes("报告生成 雷达类型") ||
+      initialBodyText.includes("需求确认 搜索 机会库 报告 编辑器")
+    ) {
+      fail("customer home text is polluted by hidden legacy modules");
+    }
 
     // 1. 新角色短需求：保留身份并进入自然澄清。
     await page.type("#home-input", "我是围棋选手");
@@ -104,7 +113,17 @@ async function main(): Promise<void> {
       fail("report missing source coverage section");
     }
     await page.click("#btn-save-watch-radar");
-    await page.waitForSelector("#panel-radars.active", { timeout: 15_000 });
+    await page.waitForSelector("#btn-back-to-radar-list", { timeout: 15_000 });
+    await page.waitForSelector("#btn-view-saved-radar-detail", { timeout: 5_000 });
+    const savedResultText = await page.$eval("#panel-watch-result", (el: any) => el.textContent || "");
+    if (!savedResultText.includes("查看本次雷达详情") || !savedResultText.includes("返回我的雷达列表")) {
+      fail("save success should offer detail and list choices");
+    }
+    if (savedResultText.includes("DSL 规则编辑器") || savedResultText.includes("点击\"开始搜索\"查找机会")) {
+      fail("saved result text is polluted by hidden legacy modules");
+    }
+    await page.click("#btn-back-to-radar-list");
+    await page.waitForSelector("#panel-radars.active", { timeout: 10_000 });
     await page.waitForFunction(() => {
       const doc = (globalThis as any).document;
       const text = doc.querySelector("#panel-radars")?.textContent || "";
@@ -124,6 +143,14 @@ async function main(): Promise<void> {
     } else {
       await detailButton.click();
       await page.waitForSelector("#radar-detail-view", { timeout: 10_000 });
+      await page.waitForFunction(() => {
+        const text = ((globalThis as any).document.querySelector("#radar-detail-view")?.textContent || "");
+        return text.includes("雷达画像摘要") && text.includes("返回我的雷达") && text.includes("再次盯机会");
+      }, { timeout: 10_000 });
+      const detailActionText = await page.$eval("#radar-detail-view", (el: any) => el.textContent || "");
+      if (!detailActionText.includes("返回我的雷达") || !detailActionText.includes("再次盯机会")) {
+        fail("radar detail should expose return-to-list and rerun actions");
+      }
       await page.waitForFunction(async () => {
         const browserGlobal = globalThis as any;
         await new Promise((resolve) => browserGlobal.requestAnimationFrame(() => browserGlobal.requestAnimationFrame(resolve)));

@@ -15,17 +15,68 @@
 // 全局工具函数（供 home.js / requirement-chat.js / watch-rules-editor.js 共用）
 // ============================================================
 
+const CUSTOMER_TABS = new Set(["home", "watch-result", "radars"]);
+const ADVANCED_PANEL_IDS = [
+  "panel-chat",
+  "panel-search",
+  "panel-opportunities",
+  "panel-reports",
+  "panel-editor",
+];
+const advancedPanelVault = new Map();
+const advancedTabVault = new Map();
+
+function mountAdvancedPanelForTab(tabName) {
+  if (!CUSTOMER_TABS.has(tabName)) {
+    const nav = document.querySelector(".tab-nav");
+    const tabButton = advancedTabVault.get(tabName);
+    if (nav && tabButton && !document.querySelector(`.tab-btn[data-tab="${tabName}"]`)) {
+      nav.appendChild(tabButton);
+    }
+  }
+  const panelId = `panel-${tabName}`;
+  if (!ADVANCED_PANEL_IDS.includes(panelId)) return;
+  if (document.getElementById(panelId)) return;
+  const panel = advancedPanelVault.get(panelId);
+  const content = document.querySelector(".tab-content");
+  if (panel && content) content.appendChild(panel);
+}
+
+function detachAdvancedPanelsForCustomerPath() {
+  const activeTab = document.querySelector(".tab-btn.active")?.dataset.tab || "home";
+  if (!CUSTOMER_TABS.has(activeTab)) return;
+  document.querySelectorAll(".advanced-tab").forEach((tab) => {
+    if (!tab.dataset.tab) return;
+    tab.classList.remove("active");
+    advancedTabVault.set(tab.dataset.tab, tab);
+    tab.remove();
+  });
+  ADVANCED_PANEL_IDS.forEach((panelId) => {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    panel.classList.remove("active");
+    advancedPanelVault.set(panelId, panel);
+    panel.remove();
+  });
+}
+
 /**
  * 切换到指定 Tab。
  * @param {string} tabName - Tab 名称（home / watch-result / radars / advanced tabs）
  */
 function switchTab(tabName) {
+  if (!CUSTOMER_TABS.has(tabName)) {
+    mountAdvancedPanelForTab(tabName);
+  }
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.tab === tabName);
   });
   document.querySelectorAll(".tab-panel").forEach((panel) => {
     panel.classList.toggle("active", panel.id === `panel-${tabName}`);
   });
+  if (CUSTOMER_TABS.has(tabName)) {
+    window.setTimeout(detachAdvancedPanelsForCustomerPath, 0);
+  }
   // Task 040: 派发 tab-switched 事件，供 opportunities.js / reports.js 监听加载
   window.dispatchEvent(new CustomEvent("tab-switched", { detail: { tab: tabName } }));
 }
@@ -68,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!input || !watchBtn) return;
 
   renderMvpTemplates(input);
+  window.setTimeout(detachAdvancedPanelsForCustomerPath, 0);
 
   document.getElementById("home-attach-btn")?.addEventListener("click", () => {
     showToast("文件会作为画像补充材料使用，不会直接当作机会结果。", "warning");
