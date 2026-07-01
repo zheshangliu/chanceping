@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from "fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import { spawnSync } from "child_process";
@@ -22,6 +22,14 @@ const ignored = spawnSync("git", ["check-ignore", "-q", "api.env"], {
   stdio: "ignore",
 });
 check("api.env is git-ignored", ignored.status === 0);
+
+const packageJson = JSON.parse(readFileSync("package.json", "utf-8")) as {
+  scripts?: Record<string, string>;
+};
+check(
+  "live API verification is not part of verify:all",
+  !String(packageJson.scripts?.["verify:all"] ?? "").includes("verify:live-mvp"),
+);
 
 const tempDir = mkdtempSync(join(tmpdir(), "chanceping-api-env-"));
 try {
