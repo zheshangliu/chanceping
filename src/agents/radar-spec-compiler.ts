@@ -10,16 +10,17 @@
  *
  * 不修改原 spec-compiler.ts（保持向后兼容）。
  *
- * 注意：原 compileSpec 拒绝 confidence < 90 或非 confirmed 状态。AI 生成器场景下
- * 用户尚未走完整确认流程，因此本包装器构造一个"全分置信度 + confirmed 状态"的
- * 合成输入，以绕过拒绝检查（AI 生成结果由用户在前端二次确认）。
+ * custom 画像保留真实置信度和待确认问题，生成时不会冒充客户已经确认。
+ * 固定旧类型仍委托原 compileSpec，以保持 V1.5/V1.6 兼容。
  */
 
 import type { ExtractedRequirementInfo } from "../schema/extracted-requirement-info";
-import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
+import type { RadarRequirementSpec, QuestionToConfirm } from "../schema/radar-requirement-spec";
 import type { RadarKind } from "../schema/radar";
+import type { RequirementConfidence } from "../schema/requirement-confidence";
 import { compileSpec, type SpecCompileInput } from "./spec-compiler";
 import { createDefaultConfidence } from "../schema/requirement-confidence";
+import { calculateConfidence } from "./confidence-engine";
 import { createDefaultSpec } from "../schema/radar-requirement-spec";
 import { createDefaultScoringRules } from "../schema/scoring-rules";
 import { BRAND } from "../brand/constants";
@@ -73,9 +74,13 @@ export class RadarSpecCompiler {
    * @param radarKind 雷达类型（含 custom）
    * @returns RadarRequirementSpec
    */
-  compile(info: ExtractedRequirementInfo, radarKind: RadarKind): RadarRequirementSpec {
+  compile(
+    info: ExtractedRequirementInfo,
+    radarKind: RadarKind,
+    options?: { confidence?: RequirementConfidence; questions?: QuestionToConfirm[] },
+  ): RadarRequirementSpec {
     if (radarKind === "custom") {
-      return this.compileCustomSpec(info);
+      return this.compileCustomSpec(info, options);
     }
     return this.compileFixedSpec(info, radarKind);
   }
@@ -114,8 +119,13 @@ export class RadarSpecCompiler {
    * @param info 已提取的需求信息
    * @returns RadarRequirementSpec
    */
-  private compileCustomSpec(info: ExtractedRequirementInfo): RadarRequirementSpec {
+  private compileCustomSpec(
+    info: ExtractedRequirementInfo,
+    options?: { confidence?: RequirementConfidence; questions?: QuestionToConfirm[] },
+  ): RadarRequirementSpec {
     const baseSpec = createDefaultSpec();
+    const confidence = options?.confidence ?? calculateConfidence(info);
+    const questions = options?.questions ?? [];
 
     // 关键词：从 info.opportunity_type.primary_types 取
     const primaryTypes = arrOrEmpty(info.opportunity_type?.primary_types);
@@ -205,12 +215,12 @@ export class RadarSpecCompiler {
       report_frequency: strOrEmpty(rf.frequency) || "每周",
     };
 
-    // 确认状态：AI 生成视为已确认
+    // AI 只生成草案；必须由客户在前端明确确认后才能执行。
     const confirmationStatus = {
       ...baseSpec.confirmation_status,
-      status: "confirmed" as const,
-      user_confirmed: true,
-      confirmed_at: new Date().toISOString(),
+      status: (confidence.total >= 85 ? "ready_for_confirmation_card" : "needs_more_info") as "ready_for_confirmation_card" | "needs_more_info",
+      user_confirmed: false,
+      confirmed_at: "",
     };
 
     return {
@@ -225,8 +235,8 @@ export class RadarSpecCompiler {
       filter_rules: filterRules,
       scoring_rules: createDefaultScoringRules(),
       report_requirements: reportRequirements,
-      requirement_confidence: createFullConfidence(),
-      questions_to_confirm: [],
+      requirement_confidence: confidence,
+      questions_to_confirm: questions,
       confirmation_status: confirmationStatus,
     };
   }

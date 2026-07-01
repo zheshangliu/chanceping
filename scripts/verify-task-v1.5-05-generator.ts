@@ -354,13 +354,13 @@ async function main(): Promise<void> {
     );
   }
 
-  // 10. 返回的 completeness ≥ 90
+  // 10. 模糊输入不得伪装成高需求置信度
   {
-    const completeness = genResult?.completeness ?? 0;
+    const confidence = genResult?.requirementConfidence ?? 100;
     check(
-      "10. completeness ≥ 90（Mock 预设完整数据）",
-      typeof completeness === "number" && completeness >= 90,
-      `completeness=${completeness}`,
+      "10. 身份和地域缺失时 requirementConfidence < 85",
+      typeof confidence === "number" && confidence < 85 && (genResult?.questionsToConfirm.length ?? 0) > 0,
+      `confidence=${confidence}, questions=${genResult?.questionsToConfirm.length ?? 0}`,
     );
   }
 
@@ -438,16 +438,15 @@ async function main(): Promise<void> {
   const radarsJs = readFileText("web/radars.js");
   const indexHtml = readFileText("web/index.html");
 
-  // 16. web/radars.js 含"AI 生成"相关函数
+  // 16. 我的雷达只保留统一的聊天创建入口
   {
-    const hasOpenGenerateModal = radarsJs.includes("openGenerateModal");
-    const hasSubmitGenerate = radarsJs.includes("submitGenerate");
-    const hasRenderGenerateResult = radarsJs.includes("renderGenerateResult");
-    const hasAiGenerateButton = indexHtml.includes('id="btn-ai-generate"');
+    const hasUnifiedCreateButton = indexHtml.includes('id="btn-create-radar"') && indexHtml.includes("建立新雷达");
+    const hasLegacyAiGenerateButton = indexHtml.includes('id="btn-ai-generate"');
+    const createReturnsHome = radarsJs.includes("goToHomeForNewRadar") && radarsJs.includes('switchTab("home")');
     check(
-      "16. radars.js 含 AI 生成函数 + index.html 含 AI 生成按钮",
-      hasOpenGenerateModal && hasSubmitGenerate && hasRenderGenerateResult && hasAiGenerateButton,
-      `openGenerateModal=${hasOpenGenerateModal}, submitGenerate=${hasSubmitGenerate}, renderGenerateResult=${hasRenderGenerateResult}, btn-ai-generate=${hasAiGenerateButton}`,
+      "16. 我的雷达建立入口返回首页聊天，不显示旧 AI 生成按钮",
+      hasUnifiedCreateButton && !hasLegacyAiGenerateButton && createReturnsHome,
+      `unified=${hasUnifiedCreateButton}, legacy=${hasLegacyAiGenerateButton}, returnsHome=${createReturnsHome}`,
     );
   }
 

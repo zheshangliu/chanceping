@@ -5,17 +5,17 @@
  *
  * 验证项（T1-T28）：
  *   1. 文件存在性检查（2 个新增 JS）
- *   2. HTML 结构检查（panel-home / panel-chat / 输入框 / 确认卡 / Tab 顺序）
+ *   2. HTML 结构检查（panel-home / panel-chat / 输入框 / 确认卡 / MVP Tab 顺序）
  *   3. CSS 检查（home-container / confirmation-card / dimension-bar / 响应式）
- *   4. JS 功能检查（home-submit / fetch / updateConfirmationCard / renderDimensions）
+ *   4. JS 功能检查（home-watch-btn / fetch / updateConfirmationCard / renderDimensions）
  *   5. API 集成检查（启动服务器，GET / + POST /api/chat）
- *   6. 代码质量检查（无"盯一下"残留 / 相对路径 API）
+ *   6. 代码质量检查（MVP "盯机会" 入口 / 相对路径 API）
  *   7. 回归测试（verify-task034 / verify:e2e-ai-events / verify-task025）
  */
 
 import fs from "fs";
 import path from "path";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 
 // ============================================================
 // 0. 强制 Mock 模式（必须在 import app 之前设置）
@@ -84,7 +84,8 @@ function checkHtmlStructure(): void {
   check("T3 含 panel-home（首页面板）", html.includes('id="panel-home"'));
   check("T4 含 panel-chat（需求确认面板）", html.includes('id="panel-chat"'));
   check("T6 含 home-input（首页输入框）", html.includes('id="home-input"'));
-  check("T7 含 3 个 example-btn", (html.match(/class="example-btn"/g) || []).length === 3);
+  check("T7 含 MVP 模板容器", html.includes('id="mvp-template-list"'));
+  check("T7.1 含 home-watch-btn（盯机会按钮）", html.includes('id="home-watch-btn"'));
   check("T8 含 chat-input（对话输入框）", html.includes('id="chat-input"'));
   check("T8.1 含 chat-send-btn（发送按钮）", html.includes('id="chat-send-btn"'));
   check("T9 含 confirmation-card（确认卡）", html.includes('id="confirmation-card"'));
@@ -96,29 +97,37 @@ function checkHtmlStructure(): void {
 
   // Tab 顺序检查
   const tabBtnMatches = html.match(/data-tab="([^"]+)"/g) || [];
-  check("T5 含 7 个 tab-btn", tabBtnMatches.length === 7, `实际: ${tabBtnMatches.length}`);
-  if (tabBtnMatches.length === 7) {
+  check("T5 含 8 个 tab-btn（3 个客户入口 + 5 个高级入口）", tabBtnMatches.length === 8, `实际: ${tabBtnMatches.length}`);
+  if (tabBtnMatches.length === 8) {
     const tabs = tabBtnMatches.map((m) => m.match(/data-tab="([^"]+)"/)![1]);
     check("T5.1 Tab 顺序首位是 home", tabs[0] === "home", `实际: ${tabs[0]}`);
-    check("T5.2 Tab 顺序末位是 editor", tabs[6] === "editor", `实际: ${tabs[6]}`);
-    check("T5.3 Tab 顺序: home/chat/search/opportunities/reports/radars/editor",
-      tabs.join("/") === "home/chat/search/opportunities/reports/radars/editor",
-      `实际: ${tabs.join("/")}`);
+    check("T5.2 客户可见入口为 home/watch-result/radars",
+      tabs.slice(0, 3).join("/") === "home/watch-result/radars",
+      `实际: ${tabs.slice(0, 3).join("/")}`);
+    check("T5.3 高级入口仍保留但隐藏",
+      html.includes('data-tab="chat" hidden') &&
+        html.includes('data-tab="search" hidden') &&
+        html.includes('data-tab="opportunities" hidden') &&
+        html.includes('data-tab="reports" hidden') &&
+        html.includes('data-tab="editor" hidden'));
   }
 
   // panel 顺序检查
   const panelMatches = html.match(/id="panel-([^"]+)"/g) || [];
-  check("含 7 个 tab-panel", panelMatches.length === 7, `实际: ${panelMatches.length}`);
+  check("含 8 个 tab-panel", panelMatches.length === 8, `实际: ${panelMatches.length}`);
 
   // 首页是 active
   check("T5.4 首页 panel-home 含 active 类", html.includes('id="panel-home"') && html.includes('tab-panel active'));
   check("T5.5 首页 tab-btn 含 active 类", /data-tab="home"[^>]*class="tab-btn active"/.test(html) || /class="tab-btn active"[^>]*data-tab="home"/.test(html));
 
-  // 无"盯一下"残留
-  check("T26 无'盯一下'残留", !html.includes("盯一下"));
+  // MVP 入口文案
+  check("T26 含'盯机会'主按钮", html.includes("盯机会"));
 
   // 引入 JS 文件
   check("引入 home.js", html.includes('src="/home.js"'));
+  check("引入 mvp-templates.js", html.includes('src="/mvp-templates.js"'));
+  check("引入 radar-profile.js", html.includes('src="/radar-profile.js"'));
+  check("引入 watch-result.js", html.includes('src="/watch-result.js"'));
   check("引入 requirement-chat.js", html.includes('src="/requirement-chat.js"'));
 }
 
@@ -156,10 +165,10 @@ function checkJsFunctions(): void {
 
   // home.js
   check("T15 home.js 含 fetch('/api/chat')", homeJs.includes("/api/chat"));
-  check("home.js 含 home-submit 事件", homeJs.includes("home-submit"));
+  check("home.js 含 home-watch-btn 事件", homeJs.includes("home-watch-btn"));
   check("home.js 含 switchTab 函数", homeJs.includes("function switchTab"));
   check("home.js 含 showToast 函数", homeJs.includes("function showToast"));
-  check("home.js 含 example-btn 事件绑定", homeJs.includes("example-btn"));
+  check("home.js 含 MVP 模板事件绑定", homeJs.includes("mvp-template-btn") && homeJs.includes("runTemplateWatch"));
 
   // requirement-chat.js
   check("T16 requirement-chat.js 含 fetch('/api/chat')", chatJs.includes("/api/chat"));
@@ -195,11 +204,20 @@ async function checkApiIntegration(): Promise<void> {
     check("GET / 返回 200", resHome.status === 200, `status=${resHome.status}`);
     check("GET / 含 panel-home", htmlContent.includes('id="panel-home"'));
     check("GET / 含 panel-chat", htmlContent.includes('id="panel-chat"'));
-    check("GET / 含 7 个 tab-btn", (htmlContent.match(/data-tab="/g) || []).length === 7);
+    check("GET / 含 8 个 tab-btn", (htmlContent.match(/data-tab="/g) || []).length === 8);
 
     // GET /home.js
     const resHomeJs = await fetch(`http://localhost:${port}/home.js`);
     check("GET /home.js 返回 200", resHomeJs.status === 200, `status=${resHomeJs.status}`);
+
+    const resTemplatesJs = await fetch(`http://localhost:${port}/mvp-templates.js`);
+    check("GET /mvp-templates.js 返回 200", resTemplatesJs.status === 200, `status=${resTemplatesJs.status}`);
+
+    const resProfileJs = await fetch(`http://localhost:${port}/radar-profile.js`);
+    check("GET /radar-profile.js 返回 200", resProfileJs.status === 200, `status=${resProfileJs.status}`);
+
+    const resWatchResultJs = await fetch(`http://localhost:${port}/watch-result.js`);
+    check("GET /watch-result.js 返回 200", resWatchResultJs.status === 200, `status=${resWatchResultJs.status}`);
 
     // GET /requirement-chat.js
     const resChatJs = await fetch(`http://localhost:${port}/requirement-chat.js`);
@@ -225,7 +243,15 @@ async function checkApiIntegration(): Promise<void> {
     check("POST /api/chat 含 confidence", chatData?.confidence != null, `keys=${chatData ? Object.keys(chatData).join(",") : "null"}`);
     check("POST /api/chat 含 conversation_id", typeof chatData?.conversation_id === "string");
   } finally {
-    server.close();
+    await new Promise<void>((resolve, reject) => {
+      server.close((err?: Error) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
   }
 }
 
@@ -236,23 +262,15 @@ async function checkApiIntegration(): Promise<void> {
 function checkCodeQuality(): void {
   section("6. 代码质量检查");
 
-  // 无"盯一下"残留（全 web/ 目录扫描）
-  const webFiles = ["web/index.html", "web/styles.css", "web/home.js", "web/requirement-chat.js", "web/watch-rules-editor.js"];
-  let hasResidual = false;
-  for (const f of webFiles) {
-    if (fileExists(f) && readFile(f).includes("盯一下")) {
-      hasResidual = true;
-      console.log(`    ⚠ ${f} 含"盯一下"`);
-    }
-  }
-  check("T26 web/ 目录无'盯一下'残留", !hasResidual);
+  // MVP 主按钮必须保留
+  const html = readFile("web/index.html");
+  const homeJs = readFile("web/home.js");
+  check("T26 web/ 首页含'盯机会'主入口", html.includes("盯机会") && homeJs.includes("home-watch-btn"));
 
   // 品牌名一致
-  const html = readFile("web/index.html");
   check("T27 品牌名含'盯机会'", html.includes("盯机会"));
 
   // 无硬编码 API URL（使用相对路径）
-  const homeJs = readFile("web/home.js");
   const chatJs = readFile("web/requirement-chat.js");
   check("T28 home.js 使用相对路径 /api/...", !homeJs.includes("http://") || homeJs.includes("/api/"));
   check("T28.1 requirement-chat.js 使用相对路径 /api/...", !chatJs.includes("http://") || chatJs.includes("/api/"));
@@ -264,7 +282,13 @@ function checkCodeQuality(): void {
 
 function runRegressionTest(scriptName: string, label: string): void {
   try {
-    execSync(`npx.cmd tsx scripts/${scriptName}`, {
+    const tsxBin = path.resolve(
+      process.cwd(),
+      "node_modules",
+      ".bin",
+      process.platform === "win32" ? "tsx.cmd" : "tsx",
+    );
+    execFileSync(tsxBin, [`scripts/${scriptName}`], {
       cwd: process.cwd(),
       encoding: "utf-8",
       timeout: 120000,
@@ -273,7 +297,17 @@ function runRegressionTest(scriptName: string, label: string): void {
     // execSync 在 exit code 非 0 时抛异常，到这里即表示通过
     check(`${label} 回归通过`, true);
   } catch (err) {
-    check(`${label} 回归通过`, false, (err as Error).message.slice(0, 200));
+    const childErr = err as Error & { stdout?: Buffer | string; stderr?: Buffer | string; status?: number | null; signal?: string | null };
+    const stdoutTail = String(childErr.stdout ?? "").slice(-800);
+    const stderrTail = String(childErr.stderr ?? "").slice(-800);
+    const detail = [
+      childErr.message,
+      childErr.status !== undefined ? `status=${childErr.status}` : "",
+      childErr.signal ? `signal=${childErr.signal}` : "",
+      stdoutTail ? `stdout=${stdoutTail}` : "",
+      stderrTail ? `stderr=${stderrTail}` : "",
+    ].filter(Boolean).join(" | ");
+    check(`${label} 回归通过`, false, detail.slice(0, 1200));
   }
 }
 

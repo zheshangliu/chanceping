@@ -57,9 +57,10 @@ const TEMP_RADARS_FILE = "data/radars-v1.5.04-test.json";
 const TEMP_RUNS_FILE = "data/radar-runs-v1.5.04-test.json";
 const TEMP_STORE_FILE = "data/opportunity-store-v1.5.04-test.json";
 const TEMP_WATCH_FILE = "data/watch-rules-v1.5.04-test.txt";
+const TEMP_REPORT_FILE = "data/report-index-v1.5.04-test.json";
 
 function cleanupTempFiles(): void {
-  for (const f of [TEMP_RADARS_FILE, TEMP_RUNS_FILE, TEMP_STORE_FILE, TEMP_WATCH_FILE]) {
+  for (const f of [TEMP_RADARS_FILE, TEMP_RUNS_FILE, TEMP_STORE_FILE, TEMP_WATCH_FILE, TEMP_REPORT_FILE]) {
     const abs = path.resolve(process.cwd(), f);
     if (fs.existsSync(abs)) {
       try {
@@ -102,7 +103,7 @@ function createTestContext(): AppContext {
   const radarRunStore = new JsonRadarRunStore({ file_path: TEMP_RUNS_FILE });
   const radarRegistry = new RadarRegistry(radarStore);
   radarRegistry.initialize();
-  const reportStore = new JsonReportStore();
+  const reportStore = new JsonReportStore({ file_path: TEMP_REPORT_FILE });
 
   return {
     llmAdapter: modelRouter,
@@ -171,12 +172,24 @@ async function main(): Promise<void> {
   check("7. radars.js 含 loadRadarList 函数", /function\s+loadRadarList\b|loadRadarList\s*=\s*async function|window\.loadRadarList\s*=/.test(radarsJs) && radarsJs.includes("loadRadarList"));
   check("8. radars.js 含 renderRadarCards 函数", radarsJs.includes("renderRadarCards") && /function\s+renderRadarCards|renderRadarCards\s*=/.test(radarsJs));
   check("9. radars.js 含 openCreateModal 或 submitCreate 函数", radarsJs.includes("openCreateModal") || radarsJs.includes("submitCreate"));
-  check("10. radars.js 调用 GET /api/radars", radarsJs.includes("fetch(\"/api/radars\")") || radarsJs.includes("fetch('/api/radars')"));
+  check("10. radars.js 调用 GET /api/radars?scope=mine", radarsJs.includes("fetch(\"/api/radars?scope=mine\")") || radarsJs.includes("fetch('/api/radars?scope=mine')"));
   check("11. radars.js 调用 POST /api/radars", /fetch\(["'`]\/api\/radars["'`],\s*\{\s*method:\s*["'`]POST/.test(radarsJs));
 
   check("12. radar-detail.js 含 loadRadarDetail 函数", radarDetailJs.includes("loadRadarDetail") && /function\s+loadRadarDetail|loadRadarDetail\s*=/.test(radarDetailJs));
   check("13. radar-detail.js 含 runRadar 函数", radarDetailJs.includes("runRadar") && /function\s+runRadar|runRadar\s*=/.test(radarDetailJs));
   check("14. radar-detail.js 调用 POST /api/radars/:id/run", /fetch\(`\/api\/radars\/\$\{[^}]+\}\/run`/.test(radarDetailJs) || /\/api\/radars\/.+\/run/.test(radarDetailJs));
+  check(
+    "14.1 radar-detail.js 刷新后会按 radar_id 加载机会库",
+    radarDetailJs.includes("/api/opportunities?radar_id="),
+  );
+  check(
+    "14.2 radar-detail.js 支持从详情页生成报告",
+    radarDetailJs.includes("/api/reports/generate") && radarDetailJs.includes("run_id"),
+  );
+  check(
+    "14.3 radar-detail.js 会查询运行记录用于 reportId 回写",
+    radarDetailJs.includes("/runs") && radarDetailJs.includes("opportunityKeys"),
+  );
 
   // ============================================================
   // 6.4 CSS 样式（15-16）
@@ -256,6 +269,12 @@ async function main(): Promise<void> {
       opportunities.length > 0 && opportunities.every((o) => o.radarId === radarId),
       `len=${opportunities.length}, missing=${opportunities.filter((o) => !o.radarId).length}`,
     );
+
+    const runsRes = await app.request(`/api/radars/${radarId}/runs`, { method: "GET" });
+    const runsJson = await parseResponse(runsRes);
+    check("18.3 GET /api/radars/:id/runs 返回 200", runsRes.status === 200, `status=${runsRes.status}, msg=${runsJson.error?.message}`);
+    const runs = (runsJson.data as Array<{ id?: string; opportunityKeys?: string[] }> | null) ?? [];
+    check("18.4 运行记录包含本次机会 key", runs.length > 0 && (runs[0].opportunityKeys ?? []).length > 0, `len=${runs.length}`);
   }
 
   // ============================================================

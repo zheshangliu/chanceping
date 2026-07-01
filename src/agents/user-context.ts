@@ -20,7 +20,7 @@ export interface UserContext {
 
 /** 各等级的雷达配额（自定义雷达上限，内置雷达不计入） */
 export const RADAR_QUOTA: Record<UserPlan, number> = {
-  free: 1, // 免费用户 1 个自定义雷达
+  free: 3, // 免费用户 3 个自定义雷达
   basic: 3, // 基础版 3 个
   pro: 10, // 专业版 10 个
   enterprise: 50, // 企业版 50 个

@@ -316,7 +316,8 @@ function runCompatibilityTests(store: OpportunityStore, label: string): void {
   check(stats.total === 3, `${label} 25. stats() total=3（删除后剩 3 条）`);
   check(typeof stats.starred_count === "number", `${label} 25.1 stats() starred_count 是数字`);
   check(typeof stats.expiring_soon_count === "number", `${label} 25.2 stats() expiring_soon_count 是数字`);
-  check(Object.keys(stats.by_radar_type).length === 3, `${label} 25.3 stats() by_radar_type 有 3 个雷达`);
+  check(Object.keys(stats.by_radar_type).length === 4, `${label} 25.3 stats() by_radar_type 有 4 个雷达（含 custom）`);
+  check(stats.by_radar_type.custom === 0, `${label} 25.4 stats() by_radar_type.custom 初始为 0`);
   check(Object.keys(stats.by_status).length === 6, `${label} 25.4 stats() by_status 有 6 个状态`);
 
   // 测试 26: flush() 不报错

@@ -57,6 +57,14 @@
     "verify:v16:incremental": "tsx scripts/verify-task-v1.6-07-incremental.ts",
     "verify:v16:provider-fallback": "tsx scripts/verify-task-v1.6-08-provider-fallback.ts",
     "verify:v16:frontend-fallback": "tsx scripts/verify-task-v1.6-09-frontend-fallback.ts",
+    "verify:v16": "tsx scripts/verify-v1.6-04-radar-ids-e2e.ts && tsx scripts/verify-task-v1.6-05-schedule-ui.ts && tsx scripts/verify-task-v1.6-06-watch-rules.ts && tsx scripts/verify-task-v1.6-07-incremental.ts && tsx scripts/verify-task-v1.6-08-provider-fallback.ts && tsx scripts/verify-task-v1.6-09-frontend-fallback.ts",
+    "verify:mvp-ux": "tsx scripts/verify-mvp-ux.ts",
+    "verify:chat-mvp:contract": "tsx scripts/verify-chat-mvp-contract.ts",
+    "verify:chat-mvp:api": "tsx scripts/verify-chat-mvp-api.ts",
+    "verify:source-hints": "tsx scripts/verify-source-hints.ts",
+    "verify:report-template": "tsx scripts/verify-report-template.ts",
+    "verify:mvp-browser": "tsx scripts/verify-mvp-browser-smoke.ts",
+    "verify:all": "node --run typecheck && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api",
     "precheck": "tsx scripts/precheck.ts"
   },
   "dependencies": {

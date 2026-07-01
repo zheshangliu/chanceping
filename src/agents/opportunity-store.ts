@@ -24,7 +24,7 @@ import { hashContent } from "../search/incremental-tagger";
 // ============================================================
 
 /** 雷达类型（取自 Task 003-005 三大雷达） */
-export type RadarType = "ai_competition" | "opc_policy" | "cultural_heritage";
+export type RadarType = "ai_competition" | "opc_policy" | "cultural_heritage" | "custom";
 
 /** 机会库条目（卡片 + 元数据） */
 export interface StoreEntry {
@@ -157,7 +157,7 @@ const VISIBLE_LEVEL_PRIORITY: Record<CardVisibleLevel | "hidden", number> = {
 };
 
 /** 雷达类型列表（用于 stats 初始化） */
-const RADAR_TYPES: RadarType[] = ["ai_competition", "opc_policy", "cultural_heritage"];
+const RADAR_TYPES: RadarType[] = ["ai_competition", "opc_policy", "cultural_heritage", "custom"];
 
 /** 卡片状态列表（用于 stats 初始化） */
 const CARD_STATUSES: OpportunityCardStatus[] = [

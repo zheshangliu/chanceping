@@ -52,6 +52,48 @@ const MOCK_GENERIC_TEXT = `# 全国 AI 创新大赛 2026 官方介绍
 发布日期：2026-06-15
 作者：大赛组委会`;
 
+function buildMockTableTennisText(url: string): string {
+  const isIttf = /ittf/i.test(url);
+  const isCtta = /ctta/i.test(url);
+  const title = isIttf
+    ? "ITTF 国际乒乓球赛事日历与参赛通知"
+    : isCtta
+      ? "中国乒协官网乒乓球比赛报名通知"
+      : "WTT 乒乓球比赛公开赛报名窗口";
+  const organizer = isIttf
+    ? "国际乒乓球联合会"
+    : isCtta
+      ? "中国乒乓球协会"
+      : "世界乒乓球职业大联盟";
+  const deadline = isIttf ? "2026-08-05" : isCtta ? "2026-07-20" : "2026-07-28";
+  const link = isIttf
+    ? "https://www.ittf.com/"
+    : isCtta
+      ? "https://www.ctta.cn/"
+      : "https://worldtabletennis.com/";
+  return `# ${title}
+
+本页面汇总 ${organizer} 相关乒乓球比赛报名信息，面向具备参赛资格的乒乓球选手开放。
+
+## 报名信息
+
+主办单位：${organizer}。
+
+参赛条件：符合赛事年龄、积分、协会注册或公开报名要求的个人选手。
+
+地区：国内外。
+
+报名截止日期：${deadline}。
+
+奖励：积分、排名机会及赛事奖金以官方规程为准。
+
+报名链接：${link}
+
+联系方式：请以官方赛事页面公布的信息为准。
+
+发布日期：2026-07-01`;
+}
+
 /** 政策类 Mock 内容（gov.cn 等政府域名） */
 const MOCK_GOV_TEXT = `# 2026 年人工智能产业专项扶持政策
 
@@ -107,7 +149,9 @@ export class JinaReaderFetcher {
   /** Mock 抓取：根据 url 域名返回不同预设内容 */
   private fetchMock(url: string): CleanedContent {
     let rawText: string;
-    if (/gov\.cn|\.gov\./.test(url)) {
+    if (/worldtabletennis|ittf|ctta|tabletennis/i.test(url)) {
+      rawText = buildMockTableTennisText(url);
+    } else if (/gov\.cn|\.gov\./.test(url)) {
       rawText = MOCK_GOV_TEXT;
     } else {
       rawText = MOCK_GENERIC_TEXT;

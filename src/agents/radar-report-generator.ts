@@ -23,6 +23,8 @@ import type { OpportunityCard, OpportunityCardStatus } from "../schema/opportuni
 import type { VisibleLevel } from "../schema/scoring-rules";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { EvidenceItem } from "../schema/evidence-item";
+import type { CandidateAccounting } from "../schema/radar-mvp-contracts";
+import type { SourceHintCheck } from "../search/source-hints";
 import { CONFIDENCE_GRADE_LABELS, SOURCE_TYPE_LABELS } from "../schema/source-candidate";
 import { EVIDENCE_FIELD_LABELS } from "../schema/evidence-item";
 import { BRAND } from "../brand/constants";
@@ -39,7 +41,7 @@ export interface RadarReportInput {
   /** 机会卡片数组（V0.4 阶段人工提供，V0.8 起搜索层自动产出） */
   opportunities: OpportunityCard[];
   /** 雷达类型（影响标题展示） */
-  radar_type: "ai_competition" | "opc_policy" | "cultural_heritage";
+  radar_type: "ai_competition" | "opc_policy" | "cultural_heritage" | "custom";
   /** 报告周期开始日期（YYYY-MM-DD） */
   period_start: string;
   /** 报告周期结束日期（YYYY-MM-DD） */
@@ -50,6 +52,12 @@ export interface RadarReportInput {
   sourceCandidates?: SourceCandidate[];
   /** V1.3 新增：证据项数据（可选，用于来源索引章节的待复核字段） */
   evidenceItems?: EvidenceItem[];
+  /** MVP UX Rescue：雷达画像展示（可选，前端可传入中文画像对象） */
+  profile?: unknown;
+  /** MVP UX Rescue：客户指定信号源检查状态 */
+  sourceHintChecks?: SourceHintCheck[];
+  /** Chat-first MVP：本次搜索候选统计，只能来自 run 结果。 */
+  candidateAccounting?: CandidateAccounting;
 }
 
 /** 雷达报告生成结果 */
@@ -93,6 +101,7 @@ const RADAR_TYPE_NAMES: Record<RadarReportInput["radar_type"], string> = {
   ai_competition: "AI 赛事雷达",
   opc_policy: "OPC 政策雷达",
   cultural_heritage: "文创非遗雷达",
+  custom: "自定义机会雷达",
 };
 
 // ============================================================
@@ -570,6 +579,238 @@ function buildConclusion(
   return lines.join("\n");
 }
 
+function mvpSourceNames(spec: RadarRequirementSpec): string[] {
+  const ss = spec.source_strategy;
+  if (!ss) return [];
+  return [
+    ...(ss.user_supplied_sources ?? []).map((source) => source.source_url || source.source_name),
+    ...(ss.manual_sources ?? []),
+  ].filter(Boolean);
+}
+
+function getProfileValue(profile: unknown, key: string): unknown {
+  if (!profile || typeof profile !== "object") return undefined;
+  return (profile as Record<string, unknown>)[key];
+}
+
+function fmtUnknownArr(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value.length > 0 ? value.map((item) => String(item)).join("、") : "暂无";
+  }
+  if (typeof value === "string" && value.trim()) return value;
+  return "暂无";
+}
+
+function buildMvpHeader(spec: RadarRequirementSpec, periodStart: string, periodEnd: string): string {
+  const radarName = spec.core_goals.primary_goal || spec.client_profile.business_type || "我的机会雷达";
+  return [
+    "# ChancePing｜本周机会雷达报告",
+    "",
+    `雷达：${radarName}`,
+    `周期：${periodStart} 至 ${periodEnd}`,
+    "",
+  ].join("\n");
+}
+
+function buildMvpOverview(stats: RadarReportResult["stats"], topOpps: OpportunityCard[]): string {
+  const lines = ["## 2. 本周一句话判断", ""];
+  if (stats.total_opportunities === 0) {
+    lines.push("本轮没有发现足够匹配、可行动的机会。");
+    lines.push("");
+    lines.push("建议：");
+    lines.push("- 放宽地区");
+    lines.push("- 减少排除条件");
+    lines.push("- 增加指定信号源");
+    lines.push("- 保存为长期雷达继续监控");
+  } else {
+    lines.push(`- 本轮共发现 ${stats.total_opportunities} 条机会，其中 S 级 ${stats.s_count} 条，A 级 ${stats.a_count} 条。`);
+    lines.push(`- 最推荐关注：${topOpps.slice(0, 3).map((opp) => opp.title).join("、") || "暂无"}`);
+    lines.push(`- 本周最重要动作：${topOpps[0]?.next_action || topOpps[0]?.match_reason || "先复核机会来源并准备材料"}`);
+    lines.push("- 建议继续监控：是。");
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
+function buildMvpProfile(input: RadarReportInput): string {
+  const { spec, profile } = input;
+  const cp = spec.client_profile;
+  const goals = spec.core_goals;
+  const scope = spec.opportunity_scope;
+  const region = spec.region_scope;
+  const filters = spec.filter_rules;
+  const sourceNames = fmtUnknownArr(getProfileValue(profile, "指定信号源")) !== "暂无"
+    ? fmtUnknownArr(getProfileValue(profile, "指定信号源"))
+    : fmtArr(mvpSourceNames(spec));
+  return [
+    "## 1. 雷达画像",
+    "",
+    `- 用户身份：${fmtUnknownArr(getProfileValue(profile, "用户身份")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "用户身份")) : fmtStr(cp.business_type || cp.client_type)}`,
+    `- 关注机会：${fmtUnknownArr(getProfileValue(profile, "关注机会")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "关注机会")) : fmtArr(scope.primary_opportunity_types)}`,
+    `- 地域范围：${fmtUnknownArr(getProfileValue(profile, "地域范围")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "地域范围")) : fmtArr([...(region.primary_regions ?? []), ...(region.secondary_regions ?? [])])}`,
+    `- 时间范围：${fmtUnknownArr(getProfileValue(profile, "时间范围")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "时间范围")) : fmtStr(goals.success_definition)}`,
+    `- 指定信号源：${sourceNames}`,
+    `- 排除内容：${fmtUnknownArr(getProfileValue(profile, "排除内容")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "排除内容")) : fmtArr([...(scope.excluded_opportunity_types ?? []), ...(filters.must_exclude ?? [])])}`,
+    `- 排序偏好：${fmtUnknownArr(getProfileValue(profile, "排序偏好")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "排序偏好")) : fmtArr(goals.priority_order)}`,
+    "",
+  ].join("\n");
+}
+
+function buildMvpOpportunityTable(opps: OpportunityCard[]): string {
+  const lines = [
+    "## 3. S / A / B 级机会总览",
+    "",
+    "| 等级 | 机会名称 | 截止时间 | 适配度 | 建议动作 | 来源 |",
+    "|---|---|---|---|---|---|",
+  ];
+  if (opps.length === 0) {
+    lines.push("| - | 本轮暂无机会 | - | - | 放宽条件或继续监控 | - |");
+  } else {
+    for (const opp of opps) {
+      lines.push(`| ${getVisibleLevel(opp)} | ${opp.title} | ${fmtStr(opp.deadline)} | ${fmtStr(opp.match_reason)} | ${fmtStr(opp.next_action)} | ${fmtUrl(opp.official_source_url)} |`);
+    }
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
+function buildMvpOpportunityDetails(opps: OpportunityCard[]): string {
+  const lines = ["## 4. 机会详情卡片", ""];
+  if (opps.length === 0) {
+    lines.push("本轮暂无可详解机会。", "");
+    return lines.join("\n");
+  }
+  opps.slice(0, 8).forEach((opp, index) => {
+    lines.push(`### 机会 ${index + 1}：${opp.title}`);
+    lines.push("#### 基本信息");
+    lines.push(`- 级别：${getVisibleLevel(opp)}`);
+    lines.push(`- 机会类型：${fmtStr(opp.opportunity_kind || opp.type)}`);
+    lines.push(`- 证据状态：${fmtStr(opp.evidence_status || "needs_review")}`);
+    lines.push(`- 行动状态：${fmtStr(opp.action_status || "prepare")}`);
+    lines.push(`- 主办方 / 发布方：${fmtStr(opp.organizer)}`);
+    lines.push(`- 地区：${fmtStr(opp.region)}`);
+    lines.push(`- 截止时间：${fmtStr(opp.deadline)}`);
+    lines.push("#### 为什么适合你");
+    lines.push(fmtStr(opp.match_reason));
+    lines.push("#### 推荐动作");
+    lines.push(fmtStr(opp.next_action));
+    lines.push("#### 风险提醒");
+    lines.push(fmtStr(opp.risk_note));
+    lines.push("#### 官方来源");
+    lines.push(fmtUrl(opp.official_source_url));
+    lines.push("");
+    lines.push(`- 风险提醒：${fmtStr(opp.risk_note || "待复核")}`);
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+function buildMvpWatchPool(excluded: Array<{ opp: OpportunityCard; reason: string }>): string {
+  const lines = ["## 6. 不建议投入或需复核的机会", ""];
+  if (excluded.length === 0) {
+    lines.push("- 本轮没有明确需要排除的机会。");
+  } else {
+    excluded.forEach((item) => {
+      lines.push(`- ${item.opp.title}：${item.reason}`);
+    });
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
+function buildMvpActionList(opps: OpportunityCard[]): string {
+  const top = opps[0];
+  return [
+    "## 5. 本周行动清单",
+    "",
+    `- 今天要做：${top ? `打开来源并复核「${top.title}」报名要求` : "补充更多信号源或放宽关键词"}`,
+    `- 本周要做：${top?.next_action || "继续监控并筛选新机会"}`,
+    "- 后续准备：整理报名材料、截止时间和联系人信息。",
+    "",
+  ].join("\n");
+}
+
+function buildMvpNextTracking(spec: RadarRequirementSpec): string {
+  const keywords = [
+    ...(spec.keyword_strategy.core_keywords_zh ?? []),
+    ...(spec.keyword_strategy.core_keywords_en ?? []),
+  ];
+  return [
+    "## 8. 下周继续追踪",
+    "",
+    `- 关键词：${fmtArr(keywords)}`,
+    `- 来源网站：${fmtArr(mvpSourceNames(spec))}`,
+    "- 时间窗口：未来 7 / 14 / 30 天。",
+    "",
+  ].join("\n");
+}
+
+function sourceStatusLabel(status: string | undefined): string {
+  const map: Record<string, string> = {
+    checked: "已检查",
+    no_results: "已检查，暂无结果",
+    failed: "检查失败",
+    invalid_url: "无效网址",
+    name_only: "来源名称，待转成可检查网址",
+    checked_with_results: "已检查，有结果",
+    checked_no_results: "已检查，暂无结果",
+    not_checked: "本轮未检查",
+  };
+  return status ? map[status] ?? status : "未知";
+}
+
+function buildCandidateAccountingTable(accounting?: CandidateAccounting): string[] {
+  const lines = ["### 候选统计", ""];
+  if (!accounting) {
+    lines.push("- 本轮未收到 CandidateAccounting，报告不编造候选统计。");
+    return lines;
+  }
+  lines.push("| 字段 | 数量 |");
+  lines.push("|---|---:|");
+  lines.push(`| rawCount | ${accounting.rawCount} |`);
+  lines.push(`| deduplicatedCount | ${accounting.deduplicatedCount} |`);
+  lines.push(`| assessedCount | ${accounting.assessedCount} |`);
+  lines.push(`| acceptedCount | ${accounting.acceptedCount} |`);
+  lines.push(`| rejectedCount | ${accounting.rejectedCount} |`);
+  return lines;
+}
+
+function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]): string {
+  const checks = input.sourceHintChecks ?? [];
+  const lines = ["## 7. 来源与检查回执", "", "### 来源索引", "", "### 本轮重点检查来源", ""];
+  lines.push("| 来源 | 状态 | 结果数 | 说明 |");
+  lines.push("|---|---|---:|---|");
+  if (checks.length === 0) {
+    lines.push("| 未指定额外信号源 | not_checked | 0 | 可增加指定信号源提升命中率 |");
+  } else {
+    checks.forEach((check) => {
+      const source = check.sourceUrl ? `${check.sourceName}：${check.sourceUrl}` : check.sourceName;
+      const status = String(check.status);
+      lines.push(`| ${source} | ${sourceStatusLabel(status)} | ${check.resultCount} | ${check.error || "待复核"} |`);
+    });
+  }
+  lines.push("", ...buildCandidateAccountingTable(input.candidateAccounting));
+  lines.push("", "### 官方链接", "");
+  if (sources.length === 0) {
+    const urls = Array.from(new Set(input.opportunities.map((opp) => opp.official_source_url).filter(Boolean)));
+    if (urls.length === 0) {
+      lines.push("- 暂无官方链接。");
+    } else {
+      urls.forEach((url) => lines.push(`- ${url}`));
+    }
+  } else {
+    sources.forEach((source) => lines.push(`- ${source.mediaName}：${source.url}`));
+  }
+  const needsReview = checks.filter((check) => check.status === "failed" || check.status === "no_results" || check.status === "invalid_url");
+  lines.push("", "### 待复核来源", "");
+  if (needsReview.length === 0) {
+    lines.push("- 暂无。");
+  } else {
+    needsReview.forEach((check) => lines.push(`- ${check.sourceName || check.sourceUrl}（${check.status}）`));
+  }
+  return lines.join("\n");
+}
+
 // ============================================================
 // 核心导出函数
 // ============================================================
@@ -589,8 +830,9 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
   const { spec, opportunities, radar_type, period_start, period_end } = input;
   const generatedAt = input.generated_at ?? new Date().toISOString();
 
-  // 拒绝条件 1：确认度 < 95%
-  if (spec.requirement_confidence.total < 95) {
+  // 自定义雷达允许客户明确确认默认假设后继续；固定旧雷达仍保留 95% 门槛。
+  const customerAcceptedCustomProfile = radar_type === "custom" && spec.confirmation_status.user_confirmed;
+  if (spec.requirement_confidence.total < 95 && !customerAcceptedCustomProfile) {
     return {
       success: false,
       markdown: null,
@@ -626,7 +868,6 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
     };
   }
 
-  const radarTypeName = RADAR_TYPE_NAMES[radar_type];
   const baseDate = parseDate(generatedAt.split("T")[0]);
 
   // 机会分组
@@ -688,22 +929,17 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
   // 详情卡片机会（非 hidden，非排除）
   const cardOpps = [...sOpps, ...aOpps, ...bOpps, ...cOpps];
 
-  // 组装 9 章节 + 元信息 + 结论（V1.3 新增来源索引章节）
+  const rankedOpps = [...sOpps, ...aOpps, ...bOpps, ...cOpps];
   const parts: string[] = [
-    buildHeader(spec, radarTypeName, period_start, period_end, generatedAt),
-    "",
-    buildSection0(radarTypeName, stats, sOpps, expiringSoon.map((e) => e.opp)),
-    buildLevelSection("S", sOpps),
-    buildLevelSection("A", aOpps),
-    buildLevelSection("B", bOpps),
-    buildSection4(expiringSoon, period_start, period_end),
-    buildSection5(cardOpps),
-    buildSection6(sOpps, aOpps, expiringSoon, requiresManualReview, bOpps, baseDate),
-    buildSection7(excluded),
-    buildSection8(bOpps, spec, baseDate),
-    // V1.3 新增：来源索引章节
-    buildSourceIndex(input.sourceCandidates ?? [], input.evidenceItems ?? []),
-    buildConclusion(sOpps, aOpps, bOpps, expiringSoon, requiresManualReview, baseDate),
+    buildMvpHeader(spec, period_start, period_end),
+    buildMvpProfile(input),
+    buildMvpOverview(stats, rankedOpps),
+    buildMvpOpportunityTable(rankedOpps),
+    buildMvpOpportunityDetails(rankedOpps),
+    buildMvpActionList(rankedOpps),
+    buildMvpWatchPool(excluded),
+    buildMvpSourceIndex(input, input.sourceCandidates ?? []),
+    buildMvpNextTracking(spec),
   ];
 
   return {
@@ -713,6 +949,6 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
     version: "V0.4",
     generated_at: generatedAt,
     stats,
-    sections_count: 9,
+    sections_count: 8,
   };
 }

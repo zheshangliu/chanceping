@@ -5,7 +5,7 @@
  * 职责：
  *   - 监听 tab-switched 事件（tab=radars）触发 loadRadarList()
  *   - 调用 GET /api/radars 获取雷达列表
- *   - 渲染雷达卡片（名称 + 类型徽章 + 内置角标 + 状态圆点 + Provider + 最后运行时间）
+ *   - 渲染雷达卡片（名称 + 类型徽章 + 内置角标 + 状态圆点 + 画像摘要 + 上次运行）
  *   - "创建雷达"按钮打开 modal（输入名称 + 选类型 + 填关键词）
  *   - 提交创建调用 POST /api/radars
  *   - 点击"详情"按钮切换到详情视图（由 radar-detail.js 接管）
@@ -67,12 +67,37 @@
     }
   }
 
-  /** 获取 Provider 列表展示文本 */
-  function getProviderText(radar) {
-    const routing = radar.providerRouting;
-    if (!routing) return "默认";
-    const all = [...(routing.primary || []), ...(routing.fallback || [])];
-    return all.length > 0 ? all.join(", ") : "默认";
+  function list(values) {
+    return Array.from(new Set((Array.isArray(values) ? values : typeof values === "string" ? [values] : [])
+      .map((value) => String(value ?? "").trim())
+      .filter(Boolean)));
+  }
+
+  function firstNonEmpty(...values) {
+    for (const value of values) {
+      if (typeof value === "string" && value.trim()) return value.trim();
+      if (Array.isArray(value) && value.length > 0) return value.map(String).join("、");
+    }
+    return "";
+  }
+
+  function buildProfileSummaryText(radar) {
+    const spec = radar.spec || {};
+    const summary = spec.profile_summary || {};
+    const cp = spec.client_profile || {};
+    const goals = spec.core_goals || {};
+    const scope = spec.opportunity_scope || {};
+    const region = spec.region_scope || {};
+    const identity = firstNonEmpty(summary.identity, cp.business_type, cp.client_type, cp.industry);
+    const target = firstNonEmpty(summary.target, scope.primary_opportunity_types, goals.primary_goal);
+    const priorities = list(summary.priorities || scope.must_have_conditions || goals.priority_order).slice(0, 2);
+    const regionsAndTime = firstNonEmpty(summary.regionsAndTime, region.primary_regions, cp.regions, goals.success_definition);
+    const parts = [];
+    if (identity) parts.push(`你是 ${identity}`);
+    if (target) parts.push(`想盯 ${target}`);
+    if (priorities.length > 0) parts.push(`优先看 ${priorities.join("、")}`);
+    if (regionsAndTime) parts.push(regionsAndTime);
+    return parts.length > 0 ? parts.join("；") : "按已确认画像持续寻找匹配机会。";
   }
 
   // ============================================================
@@ -88,10 +113,10 @@
     if (!grid) return;
     grid.innerHTML = '<p class="placeholder">加载中...</p>';
     try {
-      const res = await fetch("/api/radars");
+      const res = await fetch("/api/radars?scope=mine");
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
-        renderRadarCards(json.data);
+        renderRadarCards(json.data.filter((radar) => radar.isBuiltin !== true));
         loadQuotaInfo();
       } else {
         grid.innerHTML = '<p class="placeholder">加载失败</p>';
@@ -137,7 +162,14 @@
     const grid = document.getElementById("radar-cards-grid");
     if (!grid) return;
     if (!radars || radars.length === 0) {
-      grid.innerHTML = '<p class="placeholder">暂无雷达，点击"创建雷达"添加</p>';
+      grid.innerHTML = `
+        <div class="radar-empty-state">
+          <h4>还没有保存长期雷达</h4>
+          <p>先告诉 AI 你想盯什么，看到有用的结果后再保存到这里。</p>
+          <button class="btn-primary" id="btn-empty-create-radar">回首页建立雷达</button>
+        </div>
+      `;
+      grid.querySelector("#btn-empty-create-radar")?.addEventListener("click", goToHomeForNewRadar);
       return;
     }
     grid.innerHTML = "";
@@ -155,6 +187,7 @@
     const card = document.createElement("div");
     card.className = "radar-card";
     card.dataset.radarId = radar.id || "";
+    card.dataset.kind = radar.kind || "custom";
     card.dataset.status = radar.status || "draft";
 
     const kindLabel = RADAR_KIND_LABELS[radar.kind] || "自定义";
@@ -162,11 +195,10 @@
     const builtinTag = radar.isBuiltin
       ? '<span class="builtin-tag">内置</span>'
       : "";
-    const providerText = getProviderText(radar);
     const lastRun = formatTime(radar.lastRunAt);
-    const lastRunStatus = radar.lastRunStatus
-      ? ` (${radar.lastRunStatus})`
-      : "";
+    const lastRunStatus = radar.lastRunStatus || "尚未运行";
+    const profileSummary = buildProfileSummaryText(radar);
+    const canRun = radar.status === "active";
 
     card.innerHTML = `
       ${builtinTag}
@@ -176,9 +208,17 @@
       </div>
       <h4 class="radar-name">${escapeHtml(radar.name || "未命名雷达")}</h4>
       <div class="radar-status-text">${escapeHtml(statusLabel)}</div>
-      <div class="radar-providers">${escapeHtml(providerText)}</div>
-      <div class="radar-last-run">最后运行：${escapeHtml(lastRun)}${escapeHtml(lastRunStatus)}</div>
-      <button class="btn-detail" data-radar-id="${escapeAttr(radar.id)}">详情</button>
+      <div class="radar-card-profile">
+        <span class="radar-card-profile-label">画像摘要</span>
+        <p>${escapeHtml(profileSummary)}</p>
+      </div>
+      <div class="radar-last-run"><span>上次运行时间</span>${escapeHtml(lastRun)}</div>
+      <div class="radar-last-run"><span>上次运行状态</span>${escapeHtml(lastRunStatus)}</div>
+      <div class="radar-card-actions">
+        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
+        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRun ? "" : "disabled"} title="${canRun ? "" : "雷达运行中后可再次盯机会"}">再次盯机会</button>
+        <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
+      </div>
     `;
 
     // 绑定详情按钮
@@ -188,7 +228,68 @@
         goToDetail(radar.id);
       });
     }
+    const rerunBtn = card.querySelector(".btn-rerun-radar");
+    if (rerunBtn) {
+      rerunBtn.addEventListener("click", () => {
+        if (!rerunBtn.disabled) rerunRadarFromCard(radar.id, rerunBtn);
+      });
+    }
+    const deleteBtn = card.querySelector(".btn-delete-radar");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", () => deleteRadarFromCard(radar.id, radar.name, deleteBtn));
+    }
     return card;
+  }
+
+  async function deleteRadarFromCard(radarId, radarName, btn) {
+    if (!radarId || !confirm(`确认删除“${radarName || "这个雷达"}”？删除后会从列表移除，但历史运行和报告仍会归档保留。`)) return;
+    const previousText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "正在删除...";
+    try {
+      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}`, { method: "DELETE" });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error?.message || "删除失败");
+      if (window.showToast) showToast("雷达已删除，免费名额已释放", "success");
+      await loadRadarList();
+    } catch (err) {
+      if (window.showToast) showToast(`删除失败：${err instanceof Error ? err.message : "网络错误"}`, "error");
+      btn.disabled = false;
+      btn.textContent = previousText;
+    }
+  }
+
+  function goToHomeForNewRadar() {
+    if (window.switchTab) window.switchTab("home");
+    document.getElementById("home-input")?.focus();
+  }
+
+  async function rerunRadarFromCard(radarId, btn) {
+    if (!radarId) return;
+    const previousText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "正在盯...";
+    try {
+      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const json = await res.json();
+      if (json.success) {
+        const count = (json.data?.opportunityCards || []).length;
+        if (window.showToast) showToast(`本次发现 ${count} 个机会`, "success");
+        loadRadarList();
+      } else {
+        const msg = json.error?.message || "运行失败";
+        if (window.showToast) showToast(`再次盯机会失败：${msg}`, "error");
+      }
+    } catch {
+      if (window.showToast) showToast("再次盯机会失败：网络错误", "error");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = previousText;
+    }
   }
 
   /** HTML 属性转义 */
@@ -631,10 +732,7 @@
   // DOMContentLoaded 后绑定按钮事件
   document.addEventListener("DOMContentLoaded", () => {
     const createBtn = document.getElementById("btn-create-radar");
-    if (createBtn) createBtn.addEventListener("click", openCreateModal);
-
-    const aiBtn = document.getElementById("btn-ai-generate");
-    if (aiBtn) aiBtn.addEventListener("click", openGenerateModal);
+    if (createBtn) createBtn.addEventListener("click", goToHomeForNewRadar);
 
     const refreshBtn = document.getElementById("btn-refresh-radars");
     if (refreshBtn) refreshBtn.addEventListener("click", loadRadarList);

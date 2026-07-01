@@ -218,33 +218,35 @@ function checkReview(): void {
   section("opportunity-review.ts 机会复盘");
   const { generateReview } = require("../src/agents/opportunity-review");
 
-  // 构造 mock 数据：5 条已截止机会
-  const now = new Date("2026-06-28");
+  // 构造 mock 数据：5 条最近 30 天内已截止机会。
+  // 使用相对日期，避免验收脚本随真实日期推移而失效。
+  const daysAgo = (days: number): string =>
+    new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const mockEntries = [
     {
       dedup_key: "k1",
       radar_type: "ai_competition",
-      card: { title: "AI大赛1", status: "applied", deadline: "2026-06-01", visible_level: "S" },
+      card: { title: "AI大赛1", status: "applied", deadline: daysAgo(20), visible_level: "S" },
     },
     {
       dedup_key: "k2",
       radar_type: "ai_competition",
-      card: { title: "AI大赛2", status: "new", deadline: "2026-06-01", visible_level: "A" },
+      card: { title: "AI大赛2", status: "new", deadline: daysAgo(20), visible_level: "A" },
     },
     {
       dedup_key: "k3",
       radar_type: "opc_policy",
-      card: { title: "政策1", status: "tracking", deadline: "2026-06-05", visible_level: "B" },
+      card: { title: "政策1", status: "tracking", deadline: daysAgo(15), visible_level: "B" },
     },
     {
       dedup_key: "k4",
       radar_type: "cultural_heritage",
-      card: { title: "文创1", status: "saved", deadline: "2026-06-10", visible_level: "A" },
+      card: { title: "文创1", status: "saved", deadline: daysAgo(10), visible_level: "A" },
     },
     {
       dedup_key: "k5",
       radar_type: "ai_competition",
-      card: { title: "AI大赛3", status: "applied", deadline: "2026-06-15", visible_level: "C" },
+      card: { title: "AI大赛3", status: "applied", deadline: daysAgo(5), visible_level: "C" },
     },
   ];
 

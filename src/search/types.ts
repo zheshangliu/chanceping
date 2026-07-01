@@ -11,6 +11,8 @@
  * 纯类型定义，无运行时逻辑，不引入依赖。
  */
 
+import type { ActionStatus, EvidenceStatus, OpportunityKind, ScoreBasis } from "../schema/radar-mvp-contracts";
+
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
 
@@ -37,6 +39,18 @@ export interface SearchResult {
   published_at?: string;
   /** 原始 API 返回（调试用，不参与业务逻辑） */
   raw_data?: unknown;
+}
+
+/** Chat-first MVP：搜索运行审计中的原始候选摘要。 */
+export interface RawCandidateAudit {
+  id: string;
+  query: string;
+  title: string;
+  url: string;
+  snippet?: string;
+  sourceDomain: string;
+  sourceType: string;
+  status: "raw" | "merged" | "assessed" | "rejected";
 }
 
 /**
@@ -102,6 +116,14 @@ export interface ScoredOpportunity {
   backend_score: number;
   /** T2: 全局唯一标识（可选） */
   guid?: string;
+  /** MVP chat-first：结果类型。 */
+  opportunity_kind?: OpportunityKind;
+  /** MVP chat-first：证据状态。 */
+  evidence_status?: EvidenceStatus;
+  /** MVP chat-first：行动状态。 */
+  action_status?: ActionStatus;
+  /** MVP chat-first：分数依据。 */
+  score_basis?: ScoreBasis;
 }
 
 /**

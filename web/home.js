@@ -3,9 +3,9 @@
  * 来源：Task 038 第 5 节
  *
  * 职责：
- *   - 首页输入框 + 快捷示例
- *   - 提交后直接调用 POST /api/chat 发送第一条消息
- *   - 切换到"需求确认"Tab，并触发 home-chat-response 事件（携带响应数据）
+ *   - 首页输入框 + MVP 模板
+ *   - 模板直接运行预置画像
+ *   - 自由输入先生成雷达画像确认卡
  *   - 暴露全局 switchTab / showToast 函数供其他模块共用
  *
  * 纯 JS，无框架，无构建工具。
@@ -17,7 +17,7 @@
 
 /**
  * 切换到指定 Tab。
- * @param {string} tabName - Tab 名称（home / chat / search / opportunities / reports / editor）
+ * @param {string} tabName - Tab 名称（home / watch-result / radars / advanced tabs）
  */
 function switchTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach((btn) => {
@@ -53,15 +53,7 @@ window.showToast = showToast;
 // 首页逻辑
 // ============================================================
 
-// Task 043: 雷达类型标签映射
-const RADAR_LABELS = {
-  ai_competition: "AI 赛事",
-  opc_policy: "政策申报",
-  cultural_heritage: "文创非遗",
-};
-
-// Task 043: 当前选中的雷达类型（模块变量）
-let selectedRadar = "ai_competition";
+let selectedTemplate = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   // Task 041: Demo Mode 标识（URL 参数 ?demo=true 触发显示）
@@ -72,72 +64,66 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const input = document.getElementById("home-input");
-  const startBtn = document.getElementById("home-start-btn");
-  if (!input || !startBtn) return;
+  const watchBtn = document.getElementById("home-watch-btn");
+  if (!input || !watchBtn) return;
 
-  // Task 043: 雷达选择按钮绑定
-  document.querySelectorAll(".radar-option").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      selectedRadar = btn.dataset.radar || "ai_competition";
-      document.querySelectorAll(".radar-option").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-    });
+  renderMvpTemplates(input);
+
+  document.getElementById("home-attach-btn")?.addEventListener("click", () => {
+    showToast("文件会作为画像补充材料使用，不会直接当作机会结果。", "warning");
   });
 
-  // 开始按钮：提交需求，切换到需求确认 Tab，并发送第一条消息
-  startBtn.addEventListener("click", () => {
+  watchBtn.addEventListener("click", () => {
     const text = input.value.trim();
     if (!text) {
       showToast("请输入你想盯的机会", "warning");
       return;
     }
 
-    // 切换到需求确认 Tab
-    switchTab("chat");
+    if (selectedTemplate && window.runTemplateWatch) {
+      window.runTemplateWatch({
+        ...selectedTemplate,
+        description: text,
+      }).catch((err) => showToast(err.message || "盯机会失败", "error"));
+      return;
+    }
 
-    // Task 043: 更新聊天区雷达标识
-    const chatBadge = document.getElementById("chat-radar-badge");
-    if (chatBadge) chatBadge.textContent = (RADAR_LABELS[selectedRadar] || "未知") + "雷达";
-
-    // Task 043: 更新搜索页雷达徽章
-    const searchBadge = document.getElementById("search-radar-badge");
-    if (searchBadge) searchBadge.textContent = RADAR_LABELS[selectedRadar] || "未知";
-
-    // 触发 home-submit 事件（通知 requirement-chat.js 重置状态并准备接收）
-    window.dispatchEvent(
-      new CustomEvent("home-submit", {
-        detail: { message: text, radar_type: selectedRadar },
-      }),
-    );
-
-    // 直接调用 POST /api/chat 发送第一条消息
-    sendFirstMessage(text, selectedRadar);
-
-    // 清空首页输入框
-    input.value = "";
+    if (window.createRadarProfileDraft) {
+      window.createRadarProfileDraft({ description: text })
+        .catch((err) => showToast(err.message || "生成雷达画像失败", "error"));
+    }
   });
 
   // Enter 提交（Shift+Enter 换行）
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      startBtn.click();
+      watchBtn.click();
     }
   });
 
-  // Task 043: 快捷示例：点击后填入输入框，同步雷达选择，并提交
-  document.querySelectorAll(".example-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      input.value = btn.dataset.text || "";
-      // 同步雷达选择（从 data-radar 读取）
-      selectedRadar = btn.dataset.radar || "ai_competition";
-      document.querySelectorAll(".radar-option").forEach((b) => {
-        b.classList.toggle("active", b.dataset.radar === selectedRadar);
-      });
-      startBtn.click();
-    });
+  input.addEventListener("input", () => {
+    selectedTemplate = null;
+    document.querySelectorAll(".mvp-template-btn").forEach((btn) => btn.classList.remove("active"));
   });
 });
+
+function renderMvpTemplates(input) {
+  const root = document.getElementById("mvp-template-list");
+  if (!root) return;
+  const templates = window.CHANCEPING_MVP_TEMPLATES || [];
+  root.innerHTML = templates.map((tpl) => (
+    `<button class="example-btn mvp-template-btn" data-template-id="${tpl.id}">${tpl.label}</button>`
+  )).join("");
+  root.querySelectorAll(".mvp-template-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      selectedTemplate = templates.find((item) => item.id === btn.dataset.templateId) || null;
+      input.value = selectedTemplate?.description || "";
+      root.querySelectorAll(".mvp-template-btn").forEach((item) => item.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+}
 
 /**
  * 发送第一条消息到 /api/chat，并把响应通过事件传给 requirement-chat.js。

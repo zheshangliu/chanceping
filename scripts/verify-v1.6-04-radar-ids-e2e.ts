@@ -19,7 +19,7 @@
  * 测试隔离：使用临时文件 data/*-v1.6.04-test.json，测试后清理。
  * Mock 模式：DATA_MODE=mock + LLM_MODE=mock。
  *
- * 说明：免费用户雷达配额为 1（RADAR_QUOTA.free=1），通过 POST /api/radars 只能
+ * 说明：免费用户雷达配额为 3（RADAR_QUOTA.free=3），通过 POST /api/radars 可创建
  * 创建 1 个自定义雷达。因此雷达 A 走 API 创建（验证创建路径），雷达 B 因配额限制
  * 直接通过 ctx.radarStore.create() 创建（store 层不检查配额），两者激活后均通过
  * API 运行 / 查询，完整覆盖 radarIds 的端到端路径。

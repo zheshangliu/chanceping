@@ -240,12 +240,12 @@ async function executeScheduledRadarSearch(
   }
 }
 
-/** 从 RadarKind 推断 RadarType（custom 默认 ai_competition，同 radars.ts 的 kindToRadarType） */
+/** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
 function kindToRadarType(kind: string): RadarType {
-  if (kind === "ai_competition" || kind === "opc_policy" || kind === "cultural_heritage") {
+  if (kind === "ai_competition" || kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") {
     return kind;
   }
-  return "ai_competition";
+  return "custom";
 }
 
 /**
@@ -319,7 +319,7 @@ async function executeReportTrigger(
   const input: RadarReportInput = {
     spec,
     opportunities,
-    radar_type: radarType as "ai_competition" | "opc_policy" | "cultural_heritage",
+    radar_type: radarType as RadarReportInput["radar_type"],
     period_start: periodStart,
     period_end: periodEnd,
   };
@@ -347,14 +347,22 @@ function createSimpleSpec(radarType: string): RadarRequirementSpec {
       ? ["政策补贴"]
       : radarType === "cultural_heritage"
         ? ["文创非遗"]
-        : ["AI 比赛"];
+        : radarType === "ai_competition"
+          ? ["AI 比赛"]
+          : ["自定义机会"];
 
   const coreKeywordsZh =
     radarType === "opc_policy"
       ? ["政策", "补贴"]
       : radarType === "cultural_heritage"
         ? ["文创", "非遗"]
-        : ["AI", "比赛"];
+        : radarType === "ai_competition"
+          ? ["AI", "比赛"]
+          : ["机会"];
+  const coreKeywordsEn = radarType === "ai_competition" ? ["AI", "competition"] : [];
+  const customBusinessType = radarType === "custom" ? "自定义机会主体" : "AI 应用";
+  const customIndustry = radarType === "custom" ? "自定义行业" : "AI";
+  const actionIntent = radarType === "custom" ? "保存观察" : "报名比赛";
 
   return {
     product_name: "ChancePing",
@@ -362,10 +370,10 @@ function createSimpleSpec(radarType: string): RadarRequirementSpec {
     client_profile: {
       client_name: "调度器客户",
       client_type: "团队",
-      industry: "AI",
-      business_type: "AI 应用",
+      industry: customIndustry,
+      business_type: customBusinessType,
       company_stage: "初创",
-      products_or_projects: ["AI 应用"],
+      products_or_projects: [customBusinessType],
       target_users: ["用户"],
       core_capabilities: ["AI"],
       current_assets: [],
@@ -376,7 +384,7 @@ function createSimpleSpec(radarType: string): RadarRequirementSpec {
       primary_goal: "找机会",
       secondary_goals: [],
       success_definition: "获得收益",
-      action_intent: ["报名比赛"],
+      action_intent: [actionIntent],
       priority_order: ["价值"],
     },
     opportunity_scope: {
@@ -395,7 +403,7 @@ function createSimpleSpec(radarType: string): RadarRequirementSpec {
     },
     keyword_strategy: {
       core_keywords_zh: coreKeywordsZh,
-      core_keywords_en: ["AI", "competition"],
+      core_keywords_en: coreKeywordsEn,
       expanded_keywords_zh: [],
       expanded_keywords_en: [],
       negative_keywords: [],

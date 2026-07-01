@@ -30,6 +30,8 @@ import { JsonRadarStore, JsonRadarRunStore } from "../src/agents/radar-store";
 import { RadarRegistry } from "../src/agents/radar-registry";
 import { JsonReportStore } from "../src/agents/report-store";
 import type { ApiResponse } from "../src/api/types";
+import type { OpportunityCard } from "../src/schema/opportunity-card";
+import type { RadarRequirementSpec } from "../src/schema/radar-requirement-spec";
 
 // ============================================================
 // 测试框架
@@ -157,14 +159,14 @@ async function main(): Promise<void> {
   // ============================================================
   // 步骤 1: AI 生成雷达 Spec
   // ============================================================
-  let generatedSpec: unknown = null;
+  let generatedSpec: RadarRequirementSpec | null = null;
   {
     const { res, json } = await postJson(app, "/api/radars/generate", {
       description: "追踪AI赛事机会和比赛信息",
     });
     check("步骤1: AI 生成雷达 Spec 返回 200", res.status === 200, `status=${res.status}, msg=${json.error?.message}`);
     check("步骤1: success=true", json.success === true);
-    const data = json.data as { spec?: unknown; completeness?: number; suggestedName?: string } | null;
+    const data = json.data as { spec?: RadarRequirementSpec; completeness?: number; suggestedName?: string } | null;
     generatedSpec = data?.spec ?? null;
     check("步骤1: data.spec 非空", generatedSpec !== null && generatedSpec !== undefined, `spec=${generatedSpec === null ? "null" : "有值"}`);
     check(
@@ -173,6 +175,19 @@ async function main(): Promise<void> {
         (typeof data?.suggestedName === "string" && data.suggestedName.length > 0),
       `completeness=${data?.completeness}, suggestedName=${data?.suggestedName}`,
     );
+  }
+
+  // 产品路径要求客户先确认画像，再保存并运行长期雷达。
+  if (generatedSpec) {
+    generatedSpec = {
+      ...generatedSpec,
+      confirmation_status: {
+        ...generatedSpec.confirmation_status,
+        status: "confirmed",
+        user_confirmed: true,
+        confirmed_at: new Date().toISOString(),
+      },
+    };
   }
 
   // ============================================================
@@ -209,6 +224,8 @@ async function main(): Promise<void> {
   // 步骤 4: 手动运行雷达
   // ============================================================
   let runId = "";
+  let runOpportunityCards: OpportunityCard[] = [];
+  let firstOpportunityTitle = "";
   {
     const { res, json } = await postJson(app, `/api/radars/${radarId}/run`, {
       query: "AI比赛",
@@ -217,36 +234,48 @@ async function main(): Promise<void> {
     check("步骤4: success=true", json.success === true);
     const data = json.data as {
       run?: { id?: string; status?: string };
-      opportunityCards?: unknown[];
+      opportunityCards?: OpportunityCard[];
       opportunities?: Array<{ radarId?: string }>;
     } | null;
     runId = data?.run?.id ?? "";
+    runOpportunityCards = data?.opportunityCards ?? [];
+    firstOpportunityTitle = runOpportunityCards[0]?.title ?? "";
     check("步骤4: data.run.id 非空", runId.length > 0, `runId=${runId}`);
     check("步骤4: data.run.status === succeeded", data?.run?.status === "succeeded", `status=${data?.run?.status}`);
-    // mock 模式可能有结果也可能为空，检查字段存在即可
     check(
-      "步骤4: opportunityCards 或 opportunities 字段存在",
-      data?.opportunityCards !== undefined || data?.opportunities !== undefined,
-      `opportunityCards=${data?.opportunityCards === undefined ? "undefined" : "有"}, opportunities=${data?.opportunities === undefined ? "undefined" : "有"}`,
+      "步骤4: opportunityCards.length > 0",
+      runOpportunityCards.length > 0,
+      `len=${runOpportunityCards.length}`,
     );
-    // 如果 opportunities 非空，每条含 radarId === radar.id
     const opportunities = data?.opportunities ?? [];
-    if (opportunities.length > 0) {
-      check(
-        "步骤4: opportunities 非空时每条 radarId === radar.id",
-        opportunities.every((o) => o.radarId === radarId),
-        `missing=${opportunities.filter((o) => o.radarId !== radarId).length}`,
-      );
-    }
+    check("步骤4: opportunities.length > 0", opportunities.length > 0, `len=${opportunities.length}`);
+    check(
+      "步骤4: opportunities 每条 radarId === radar.id",
+      opportunities.length > 0 && opportunities.every((o) => o.radarId === radarId),
+      `missing=${opportunities.filter((o) => o.radarId !== radarId).length}`,
+    );
   }
 
   // ============================================================
   // 步骤 5: 入库 radarIds 验证
   // ============================================================
+  let storedOpportunityCards: OpportunityCard[] = [];
   {
     const { res, json } = await getJson(app, `/api/opportunities?radar_id=${encodeURIComponent(radarId)}`);
     check("步骤5: GET /api/opportunities?radar_id 返回 200", res.status === 200, `status=${res.status}, msg=${json.error?.message}`);
     check("步骤5: success=true", json.success === true);
+    const data = json.data as {
+      entries?: Array<{ card?: OpportunityCard; radarId?: string; radarIds?: string[] }>;
+      total?: number;
+    } | null;
+    const entries = data?.entries ?? [];
+    storedOpportunityCards = entries.map((e) => e.card).filter((card): card is OpportunityCard => !!card);
+    check("步骤5: entries.length > 0", entries.length > 0, `len=${entries.length}`);
+    check(
+      "步骤5: entries 包含当前 radarId / radarIds",
+      entries.length > 0 && entries.every((e) => e.radarId === radarId || (e.radarIds ?? []).includes(radarId)),
+      `missing=${entries.filter((e) => e.radarId !== radarId && !(e.radarIds ?? []).includes(radarId)).length}`,
+    );
   }
 
   // ============================================================
@@ -254,18 +283,25 @@ async function main(): Promise<void> {
   // ============================================================
   let reportId = "";
   {
+    const reportOpportunities = runOpportunityCards.length > 0 ? runOpportunityCards : storedOpportunityCards;
     const { res, json } = await postJson(app, "/api/reports/generate", {
       radar_id: radarId,
       run_id: runId,
-      radar_type: "ai_competition",
-      opportunities: [],
-      // spec: undefined —— 不传 spec，报告路由使用 createDefaultSpec()
+      radar_type: "custom",
+      opportunities: reportOpportunities,
+      spec: generatedSpec,
     });
     check("步骤6: 生成报告返回 200", res.status === 200, `status=${res.status}, msg=${json.error?.message}`);
     check("步骤6: success=true", json.success === true);
-    const data = json.data as { reportId?: string } | null;
+    const data = json.data as { reportId?: string; markdown?: string } | null;
     reportId = data?.reportId ?? "";
     check("步骤6: data.reportId 非空", reportId.length > 0, `reportId=${reportId}`);
+    check("步骤6: 报告使用本次机会卡片生成", reportOpportunities.length > 0, `len=${reportOpportunities.length}`);
+    check(
+      "步骤6: markdown 包含至少一个机会标题",
+      !!firstOpportunityTitle && typeof data?.markdown === "string" && data.markdown.includes(firstOpportunityTitle),
+      `title=${firstOpportunityTitle || "空"}`,
+    );
   }
 
   // ============================================================
@@ -287,6 +323,28 @@ async function main(): Promise<void> {
     const data = json.data as unknown[] | null;
     check("步骤8: data 是数组", Array.isArray(data), `data=${data === null ? "null" : typeof data}`);
     check("步骤8: 报告数量 >= 1", Array.isArray(data) && data.length >= 1, `len=${Array.isArray(data) ? data.length : 0}`);
+    const reports = (data ?? []) as Array<{ id?: string; runId?: string; radarId?: string }>;
+    const currentReport = reports.find((r) => r.id === reportId);
+    check("步骤8: ReportMeta.radarId === radarId", currentReport?.radarId === radarId, `radarId=${currentReport?.radarId}`);
+    check("步骤8: ReportMeta.runId === runId", currentReport?.runId === runId, `runId=${currentReport?.runId}`);
+  }
+
+  // ============================================================
+  // 步骤 9: 持久化重载验证
+  // ============================================================
+  {
+    const reloadedRadarStore = new JsonRadarStore({ file_path: TEMP_RADARS_FILE });
+    const reloadedRunStore = new JsonRadarRunStore({ file_path: TEMP_RUNS_FILE });
+    const reloadedOpportunityStore = new LocalFileStore({ file_path: TEMP_STORE_FILE });
+    reloadedOpportunityStore.load();
+    const reloadedReportStore = new JsonReportStore({ file_path: TEMP_REPORT_FILE });
+
+    check("步骤9: 重载后雷达仍存在", reloadedRadarStore.get(radarId) !== null, `radarId=${radarId}`);
+    check("步骤9: 重载后 RadarRun 仍存在", reloadedRunStore.get(runId) !== null, `runId=${runId}`);
+    const entries = reloadedOpportunityStore.list({ radarId }).entries;
+    check("步骤9: 重载后机会仍可按 radarId 查询", entries.length > 0, `len=${entries.length}`);
+    const reports = reloadedReportStore.listByRadarId(radarId);
+    check("步骤9: 重载后报告仍可按 radarId 查询", reports.length > 0, `len=${reports.length}`);
   }
 
   // ============================================================

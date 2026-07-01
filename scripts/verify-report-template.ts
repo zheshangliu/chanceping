@@ -1,0 +1,232 @@
+import { generateRadarReport } from "../src/agents/radar-report-generator";
+import fs from "fs";
+import path from "path";
+
+const spec: any = {
+  product_name: "ChancePing",
+  product_category: "机会雷达",
+  client_profile: {
+    client_name: "测试客户",
+    client_type: "个人",
+    industry: "体育",
+    business_type: "乒乓球选手",
+    products_or_projects: ["个人参赛"],
+    target_users: ["自己"],
+    core_capabilities: ["乒乓球"],
+    current_assets: [],
+    regions: ["中国", "国际"],
+    notes: "",
+  },
+  core_goals: {
+    primary_goal: "寻找可报名乒乓球赛事",
+    secondary_goals: [],
+    success_definition: "找到可报名且来源真实的比赛",
+    action_intent: ["报名比赛"],
+    priority_order: ["可报名", "权威来源"],
+  },
+  opportunity_scope: {
+    primary_opportunity_types: ["乒乓球比赛"],
+    secondary_opportunity_types: ["公开赛"],
+    excluded_opportunity_types: ["培训广告"],
+    must_have_conditions: ["可报名"],
+    nice_to_have_conditions: [],
+  },
+  region_scope: {
+    primary_regions: ["中国"],
+    secondary_regions: ["国际"],
+    excluded_regions: [],
+    global_allowed: true,
+    overseas_allowed: true,
+  },
+  keyword_strategy: {
+    core_keywords_zh: ["乒乓球", "比赛", "报名"],
+    core_keywords_en: ["table tennis", "entry"],
+    expanded_keywords_zh: [],
+    expanded_keywords_en: [],
+    negative_keywords: ["培训广告"],
+  },
+  source_strategy: {
+    official_sites: [],
+    platforms: [],
+    search_engines: [],
+    social_media: [],
+    rss_sources: [],
+    manual_sources: ["中国乒协官网"],
+    source_priority: ["ITTF", "中国乒协官网"],
+    sources_used_in_report: [],
+    user_supplied_sources: [
+      {
+        source_name: "ITTF",
+        source_url: "https://www.ittf.com/",
+        added_at: "2026-06-30T00:00:00.000Z",
+        contributed_by: "user",
+      },
+    ],
+    source_transparency_enabled: true,
+  },
+  filter_rules: {
+    must_include: ["报名"],
+    must_exclude: ["广告"],
+    low_priority_signals: [],
+    high_priority_signals: ["官方"],
+    requires_manual_review: [],
+  },
+  scoring_rules: {
+    backend_score_enabled: true,
+    visible_level_enabled: true,
+    weights: { match_score: 30, business_value: 25, timeliness: 20, credibility: 15, actionability: 10, risk_penalty: -20 },
+    visible_level_mapping: { S: "90-100", A: "80-89", B: "65-79", C: "50-64", D: "0-49", hidden: "不展示" },
+    level_definitions: { S: "强烈推荐", A: "高价值", B: "可关注", C: "低优先级", D: "不推荐", hidden: "不展示" },
+  },
+  report_requirements: {
+    report_format: "markdown",
+    report_title_prefix: "机会雷达报告",
+    report_frequency: "weekly",
+    max_items_per_report: 10,
+    min_items_per_report: 1,
+    must_include_sections: [],
+    opportunity_card_required_fields: [],
+    link_required: true,
+    contact_required_if_available: false,
+    deadline_required_if_available: true,
+  },
+  requirement_confidence: {
+    total: 100,
+    client_identity: { score: 100, weight: 15, reason: "" },
+    business_goal: { score: 100, weight: 20, reason: "" },
+    opportunity_type: { score: 100, weight: 20, reason: "" },
+    region_scope: { score: 100, weight: 10, reason: "" },
+    exclusion_rules: { score: 100, weight: 10, reason: "" },
+    action_scenario: { score: 100, weight: 15, reason: "" },
+    report_format: { score: 100, weight: 10, reason: "" },
+  },
+  questions_to_confirm: [],
+  confirmation_status: {
+    status: "confirmed",
+    user_confirmed: true,
+    confirmed_at: "2026-06-30",
+    last_user_feedback: "",
+    revision_count: 0,
+  },
+};
+
+const result = generateRadarReport({
+  spec,
+  radar_type: "ai_competition",
+  period_start: "2026-06-24",
+  period_end: "2026-06-30",
+  sourceHintChecks: [
+    {
+      sourceName: "ITTF",
+      sourceUrl: "https://www.ittf.com/",
+      status: "checked",
+      resultCount: 1,
+    },
+    {
+      sourceName: "中国乒协官网",
+      sourceUrl: "",
+      status: "name_only",
+      resultCount: 0,
+    },
+  ] as any,
+  candidateAccounting: {
+    rawCount: 8,
+    deduplicatedCount: 5,
+    assessedCount: 3,
+    acceptedCount: 1,
+    rejectedCount: 2,
+  },
+  opportunities: [
+    {
+      id: "opp-test",
+      title: "测试乒乓球公开赛",
+      type: "乒乓球比赛",
+      deadline: "2026-07-15",
+      visible_level: "A",
+      status: "new",
+      match_reason: "报名窗口仍开放，适合个人选手。",
+      official_source_url: "https://www.ittf.com/",
+      next_action: "查看报名要求",
+      opportunity_kind: "direct_opportunity",
+      evidence_status: "needs_review",
+      action_status: "act_now",
+    } as any,
+  ],
+});
+
+const md = result.markdown || "";
+const required = [
+  "# ChancePing｜本周机会雷达报告",
+  "## 1. 雷达画像",
+  "## 2. 本周一句话判断",
+  "## 3. S / A / B 级机会总览",
+  "## 4. 机会详情卡片",
+  "## 5. 本周行动清单",
+  "## 6. 不建议投入或需复核的机会",
+  "## 7. 来源与检查回执",
+  "## 8. 下周继续追踪",
+  "指定信号源",
+  "本轮重点检查来源",
+  "中国乒协官网",
+  "测试乒乓球公开赛",
+  "https://www.ittf.com/",
+  "机会类型",
+  "证据状态",
+  "行动状态",
+  "rawCount",
+];
+
+const emptyResult = generateRadarReport({
+  spec,
+  radar_type: "custom",
+  period_start: "2026-06-24",
+  period_end: "2026-06-30",
+  sourceHintChecks: [
+    {
+      sourceName: "ITTF",
+      sourceUrl: "https://www.ittf.com/",
+      status: "checked_no_results",
+      resultCount: 0,
+    },
+  ] as any,
+  candidateAccounting: {
+    rawCount: 0,
+    deduplicatedCount: 0,
+    assessedCount: 0,
+    acceptedCount: 0,
+    rejectedCount: 0,
+  },
+  opportunities: [],
+});
+
+const emptyMd = emptyResult.markdown || "";
+const reportGenerator = fs.readFileSync(
+  path.resolve(process.cwd(), "src/agents/radar-report-generator.ts"),
+  "utf-8",
+);
+
+let failed = 0;
+for (const token of required) {
+  if (!md.includes(token)) {
+    failed++;
+    console.log(`FAIL missing ${token}`);
+  }
+}
+if (!reportGenerator.includes("candidateAccounting")) {
+  failed++;
+  console.log("FAIL report statistics are not wired to CandidateAccounting");
+}
+if (!emptyMd.includes("本轮没有发现足够匹配、可行动的机会。")) {
+  failed++;
+  console.log("FAIL empty report missing no-result statement");
+}
+if (!emptyMd.includes("放宽地区") || !emptyMd.includes("保存为长期雷达继续监控")) {
+  failed++;
+  console.log("FAIL empty report missing actionable suggestions");
+}
+if (!emptyMd.includes("| 来源 | 状态 | 结果数 | 说明 |")) {
+  failed++;
+  console.log("FAIL empty report missing source coverage table");
+}
+if (failed === 0) console.log("PASS report template matches MVP structure");
+process.exit(failed > 0 ? 1 : 0);

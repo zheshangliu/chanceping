@@ -19,7 +19,7 @@
  * Mock 模式：全部走 Mock（SerperProvider Mock + QwenAdapter Mock），端到端可测试。
  */
 
-import type { ScoredOpportunity, SearchResult, CleanedContent } from "./types";
+import type { ScoredOpportunity, SearchResult, CleanedContent, RawCandidateAudit } from "./types";
 import type { SearchProvider } from "./provider-registry";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { ProviderRouting } from "../schema/radar";
@@ -28,6 +28,7 @@ import type { DataMode } from "../demo/data-mode";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { EvidenceItem } from "../schema/evidence-item";
 import type { OpportunityCard } from "../schema/opportunity-card";
+import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
 import type { RadarType, OpportunityStore } from "../agents/opportunity-store";
 import { computeDedupKey } from "../agents/opportunity-store";
 import { normalizeUrl } from "../utils/url-normalizer";
@@ -40,6 +41,12 @@ import { loadDemoSearchResults } from "../demo";
 import { classifySources } from "./source-classifier";
 import { extractEvidenceBatch } from "./evidence-extractor";
 import { mapToCard } from "./opportunity-card-mapper";
+import {
+  buildMockSourceHintChecks,
+  buildNameOnlySourceChecks,
+  buildSourceHintSearches,
+  type SourceHintCheck,
+} from "./source-hints";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -98,6 +105,18 @@ export interface SearchOrchestratorResult {
   evidenceItems?: EvidenceItem[];
   /** V1.3 新增：机会卡片列表（映射后的 OpportunityCard，含 S 级硬规则） */
   opportunityCards?: OpportunityCard[];
+  /** MVP source hints：客户指定来源检查状态 */
+  sourceHintChecks?: SourceHintCheck[];
+  /** Chat-first MVP：本次搜索计划，不包含虚构执行结果 */
+  searchPlan?: RadarSearchPlan;
+  /** Chat-first MVP：实际 provider 调用日志；未真实打开网页时 openedUrls 为空 */
+  executionLog?: SearchExecutionLog;
+  /** Chat-first MVP：客户指定来源覆盖状态 */
+  sourceCoverage?: SourceCoverageItem[];
+  /** Chat-first MVP：候选数量统一账本 */
+  candidateAccounting?: CandidateAccounting;
+  /** Chat-first MVP：原始候选审计摘要 */
+  rawCandidates?: RawCandidateAudit[];
   // ============================================================
   // V1.6-06 新增字段（Watch Rules 过滤指标）
   // ============================================================
@@ -145,22 +164,29 @@ const DEFAULT_DATA_MODE: DataMode = "live";
 /**
  * 从 spec 推断雷达类型。
  * spec 没有 radar_type 字段，从 opportunity_scope.primary_opportunity_types 推断：
- *   - 含 "比赛"/"赛事" → "ai_competition"
+ *   - 明确 AI / 黑客松 / 算法赛事 → "ai_competition"
  *   - 含 "政策"/"补贴" → "opc_policy"
  *   - 含 "文创"/"非遗" → "cultural_heritage"
- *   - 默认 → "ai_competition"
+ *   - 默认 → "custom"
  */
-function inferRadarType(spec: RadarRequirementSpec): string {
+function inferRadarType(spec: RadarRequirementSpec): RadarType {
   const types = spec?.opportunity_scope?.primary_opportunity_types ?? [];
-  const text = types.join(" ");
+  const text = [
+    ...types,
+    ...(spec?.keyword_strategy?.core_keywords_zh ?? []),
+    spec?.core_goals?.primary_goal ?? "",
+    spec?.client_profile?.business_type ?? "",
+  ].join(" ");
+  if (/AI|人工智能|算法|黑客松|Kaggle|天池/i.test(text)) {
+    return "ai_competition";
+  }
   if (/政策|补贴|扶持|申报/.test(text)) {
     return "opc_policy";
   }
   if (/文创|非遗|文化/.test(text)) {
     return "cultural_heritage";
   }
-  // 默认 AI 赛事（SerperProvider 的 radar_types 含 ai_competition）
-  return "ai_competition";
+  return "custom";
 }
 
 /**
@@ -176,7 +202,166 @@ function buildQueryFromSpec(spec: RadarRequirementSpec): string {
   if (en.length > 0) {
     return en.slice(0, 3).join(" ");
   }
-  return "AI 比赛";
+  return spec?.core_goals?.primary_goal || spec?.opportunity_scope?.primary_opportunity_types?.join(" ") || "机会";
+}
+
+function isTableTennisRadar(spec: RadarRequirementSpec, query: string): boolean {
+  const text = [
+    query,
+    ...(spec?.keyword_strategy?.core_keywords_zh ?? []),
+    ...(spec?.keyword_strategy?.core_keywords_en ?? []),
+    ...(spec?.opportunity_scope?.primary_opportunity_types ?? []),
+    spec?.client_profile?.business_type ?? "",
+    spec?.core_goals?.primary_goal ?? "",
+  ].join(" ");
+  return /乒乓球|WTT|ITTF|table\s*tennis/i.test(text);
+}
+
+function buildTableTennisMockResults(): SearchResult[] {
+  return [
+    {
+      title: "WTT 乒乓球比赛公开赛报名窗口",
+      url: "https://worldtabletennis.com/",
+      snippet: "WTT 官方赛事信息，面向国内外乒乓球选手，报名截止 2026-07-28，需关注资格要求和报名入口。",
+      source_provider: "serper",
+      source_type: "web",
+      published_at: "2026-07-28",
+    },
+    {
+      title: "ITTF 国际乒乓球赛事日历与参赛通知",
+      url: "https://www.ittf.com/",
+      snippet: "ITTF 官网发布国际乒乓球比赛与公开赛日历，未来30天内可筛选可报名赛事。",
+      source_provider: "serper",
+      source_type: "web",
+      published_at: "2026-08-05",
+    },
+    {
+      title: "中国乒协官网 乒乓球比赛报名通知",
+      url: "https://www.ctta.cn/",
+      snippet: "中国乒协相关赛事通知，覆盖国内乒乓球比赛、公开赛和报名窗口，适合选手持续关注。",
+      source_provider: "serper",
+      source_type: "web",
+      published_at: "2026-07-20",
+    },
+  ];
+}
+
+function buildCustomMockResults(spec: RadarRequirementSpec, query: string): SearchResult[] {
+  const legacyCoreKeywords = Array.isArray((spec as unknown as { core_keywords?: unknown }).core_keywords)
+    ? ((spec as unknown as { core_keywords: string[] }).core_keywords ?? []).join(" ")
+    : "";
+  const target = spec.opportunity_scope?.primary_opportunity_types?.[0]
+    || spec.core_goals?.primary_goal
+    || query
+    || legacyCoreKeywords
+    || "自定义机会";
+  const region = spec.region_scope?.primary_regions?.[0] || spec.client_profile?.regions?.[0] || "全国";
+  return [
+    {
+      title: `${region}${target}线索监控样例`,
+      url: "https://example.com/custom-opportunity-1",
+      snippet: `${target}相关机会线索，适合按当前自定义雷达画像继续核验和跟进。`,
+      source_provider: "mock",
+      source_type: "web",
+      published_at: "2026-07-15",
+    },
+    {
+      title: `${target}官方通知与需求信号样例`,
+      url: "https://example.com/custom-opportunity-2",
+      snippet: `围绕${target}的公开来源信号，需进一步确认截止时间、资格、联系人和行动价值。`,
+      source_provider: "mock",
+      source_type: "web",
+      published_at: "2026-07-22",
+    },
+  ];
+}
+
+function domainOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+}
+
+function detectQueryLanguage(query: string): string {
+  const hasZh = /[\u4e00-\u9fff]/.test(query);
+  const hasEn = /[a-z]/i.test(query);
+  if (hasZh && hasEn) return "mixed";
+  if (hasEn) return "en";
+  return "zh";
+}
+
+function configuredSourcesFromSpec(spec: RadarRequirementSpec): string[] {
+  const manualSources = spec.source_strategy?.manual_sources ?? [];
+  const userSuppliedSources = (spec.source_strategy?.user_supplied_sources ?? [])
+    .map((source) => source.source_url)
+    .filter(Boolean);
+  return Array.from(new Set([...manualSources, ...userSuppliedSources]));
+}
+
+function buildSearchPlan(
+  spec: RadarRequirementSpec,
+  query: string,
+  maxCandidates: number,
+): RadarSearchPlan {
+  return {
+    id: `plan_${Date.now().toString(36)}`,
+    themes: spec.opportunity_scope?.primary_opportunity_types ?? [],
+    queries: [{
+      query,
+      language: detectQueryLanguage(query),
+      ...(spec.region_scope?.primary_regions?.[0] ? { region: spec.region_scope.primary_regions[0] } : {}),
+    }],
+    configuredSources: configuredSourcesFromSpec(spec),
+    exclusions: spec.filter_rules?.must_exclude ?? [],
+    maxCandidates,
+  };
+}
+
+function mapSourceCoverage(checks: SourceHintCheck[]): SourceCoverageItem[] {
+  return checks.map((check) => ({
+    sourceName: check.sourceName,
+    sourceUrl: check.sourceUrl || undefined,
+    status: check.status === "checked"
+      ? "checked_with_results"
+      : check.status === "no_results"
+        ? "checked_no_results"
+        : check.status === "failed" || check.status === "invalid_url"
+          ? "failed"
+          : "not_checked",
+    resultCount: check.resultCount,
+    ...(check.error ? { error: check.error } : {}),
+  }));
+}
+
+function buildRawCandidateAudits(results: SearchResult[], query: string): RawCandidateAudit[] {
+  return results.map((result, index) => ({
+    id: `raw_${index + 1}`,
+    query,
+    title: result.title,
+    url: result.url,
+    snippet: result.snippet,
+    sourceDomain: domainOf(result.url),
+    sourceType: result.source_type ?? "search_snippet",
+    status: "raw",
+  }));
+}
+
+function buildCandidateAccounting(
+  rawProviderResultCount: number,
+  rawResults: SearchResult[],
+  opportunities: ScoredOpportunity[],
+  opportunityCards?: OpportunityCard[],
+): CandidateAccounting {
+  const acceptedCount = opportunityCards?.length ?? opportunities.length;
+  return {
+    rawCount: rawProviderResultCount || rawResults.length,
+    deduplicatedCount: rawResults.length,
+    assessedCount: Math.max(opportunities.length, acceptedCount),
+    acceptedCount,
+    rejectedCount: Math.max(0, rawResults.length - acceptedCount),
+  };
 }
 
 /**
@@ -263,12 +448,34 @@ export class SearchOrchestrator {
     watchRules?: string[],
   ): Promise<SearchOrchestratorResult> {
     const startTime = Date.now();
+    const durationMs = () => Math.max(1, Date.now() - startTime);
     const errors: string[] = [];
+    const queryExecutions: SearchExecutionLog["queryExecutions"] = [];
+    const openedUrls: SearchExecutionLog["openedUrls"] = [];
+    let rawProviderResultCount = 0;
     // V1.6-08：provider 降级信息（live 模式下由 primary/fallback 逻辑写入）
     let _providerDegradation: SearchOrchestratorResult["providerDegradation"] | undefined;
 
     // 步骤 0：推断雷达类型（供 Demo 数据加载和真实搜索共用）
     const radarType = inferRadarType(spec);
+    const searchQuery = query && query.trim() ? query.trim() : buildQueryFromSpec(spec);
+    let sourceHintChecks: SourceHintCheck[] = [];
+    const buildAuditPayload = (
+      currentRawResults: SearchResult[],
+      currentOpportunities: ScoredOpportunity[] = [],
+      currentOpportunityCards?: OpportunityCard[],
+    ): Pick<SearchOrchestratorResult, "searchPlan" | "executionLog" | "sourceCoverage" | "rawCandidates" | "candidateAccounting"> => ({
+      searchPlan: buildSearchPlan(spec, searchQuery, this.maxResultsPerProvider),
+      executionLog: { queryExecutions, openedUrls },
+      sourceCoverage: mapSourceCoverage(sourceHintChecks),
+      rawCandidates: buildRawCandidateAudits(currentRawResults, searchQuery),
+      candidateAccounting: buildCandidateAccounting(
+        rawProviderResultCount,
+        currentRawResults,
+        currentOpportunities,
+        currentOpportunityCards,
+      ),
+    });
 
     // 步骤 1：根据数据模式获取原始搜索结果（Task 036）
     // - mock/recorded：加载 Demo 数据，跳过真实搜索
@@ -277,11 +484,33 @@ export class SearchOrchestrator {
 
     if (this.dataMode === "mock" || this.dataMode === "recorded") {
       // Mock/Recorded 模式：加载 Demo 数据
+      const startedAt = new Date().toISOString();
       try {
-        rawResults = loadDemoSearchResults(radarType, this.dataMode);
+        rawResults = this.dataMode === "mock" && isTableTennisRadar(spec, searchQuery)
+          ? buildTableTennisMockResults()
+          : this.dataMode === "mock" && radarType === "custom"
+            ? buildCustomMockResults(spec, searchQuery)
+            : loadDemoSearchResults(radarType, this.dataMode);
+        rawProviderResultCount = rawResults.length;
+        queryExecutions.push({
+          query: searchQuery,
+          provider: this.dataMode,
+          startedAt,
+          status: "succeeded",
+          rawResultCount: rawResults.length,
+        });
+        sourceHintChecks = buildMockSourceHintChecks(spec, searchQuery);
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : String(err);
         errors.push(`加载 Demo 数据失败（mode=${this.dataMode}）: ${errMsg}`);
+        queryExecutions.push({
+          query: searchQuery,
+          provider: this.dataMode,
+          startedAt,
+          status: "failed",
+          rawResultCount: 0,
+          error: errMsg,
+        });
         return {
           total_raw: 0,
           total_rule_passed: 0,
@@ -289,7 +518,9 @@ export class SearchOrchestrator {
           total_scored: 0,
           opportunities: [],
           errors,
-          duration_ms: Date.now() - startTime,
+          duration_ms: durationMs(),
+          sourceHintChecks,
+          ...buildAuditPayload([]),
         };
       }
     } else {
@@ -320,7 +551,9 @@ export class SearchOrchestrator {
           fallbackProviders = providerRegistry.getByNames(providerRouting.fallback);
         }
       } else {
-        primaryProviders = providerRegistry.getByRadarType(radarType).filter((p) => p.enabled);
+        primaryProviders = radarType === "custom"
+          ? providerRegistry.getByNames(["serper", "bocha", "exa", "google_cse"]).filter((p) => p.enabled)
+          : providerRegistry.getByRadarType(radarType).filter((p) => p.enabled);
       }
 
       if (primaryProviders.length === 0 && fallbackProviders.length === 0) {
@@ -332,25 +565,44 @@ export class SearchOrchestrator {
           total_scored: 0,
           opportunities: [],
           errors,
-          duration_ms: Date.now() - startTime,
+          duration_ms: durationMs(),
+          sourceHintChecks,
+          ...buildAuditPayload([]),
         };
       }
 
       // 步骤 2：并行调用各 primary provider 的 search()
-      const searchQuery = query && query.trim() ? query.trim() : buildQueryFromSpec(spec);
       const searchOptions = { max_results: this.maxResultsPerProvider };
 
       const primaryResults = await Promise.all(
         primaryProviders.map(async (provider) => {
+          const startedAt = new Date().toISOString();
           try {
             const results = await provider.search(searchQuery, searchOptions);
+            queryExecutions.push({
+              query: searchQuery,
+              provider: provider.name,
+              startedAt,
+              status: "succeeded",
+              rawResultCount: results.length,
+            });
             return { provider: provider.name, results, error: null as string | null };
           } catch (err) {
             const errMsg = err instanceof Error ? err.message : String(err);
-            return { provider: provider.name, results: [] as SearchResult[], error: `provider ${provider.name} 调用失败: ${errMsg}` };
+            const error = `provider ${provider.name} 调用失败: ${errMsg}`;
+            queryExecutions.push({
+              query: searchQuery,
+              provider: provider.name,
+              startedAt,
+              status: "failed",
+              rawResultCount: 0,
+              error,
+            });
+            return { provider: provider.name, results: [] as SearchResult[], error };
           }
         }),
       );
+      rawProviderResultCount += primaryResults.reduce((sum, item) => sum + item.results.length, 0);
 
       // 收集 primary 错误
       const primaryErrors: Record<string, string> = {};
@@ -378,16 +630,33 @@ export class SearchOrchestrator {
         const fallbackResults = await Promise.all(
           fallbackProviders.map(async (provider) => {
             fallbackProviderNames.push(provider.name);
+            const startedAt = new Date().toISOString();
             try {
               const results = await provider.search(searchQuery, searchOptions);
+              queryExecutions.push({
+                query: searchQuery,
+                provider: provider.name,
+                startedAt,
+                status: "succeeded",
+                rawResultCount: results.length,
+              });
               return { provider: provider.name, results, error: null as string | null };
             } catch (err) {
               const errMsg = err instanceof Error ? err.message : String(err);
               const fallbackErrMsg = `[fallback] provider ${provider.name} 调用失败: ${errMsg}`;
+              queryExecutions.push({
+                query: searchQuery,
+                provider: provider.name,
+                startedAt,
+                status: "failed",
+                rawResultCount: 0,
+                error: fallbackErrMsg,
+              });
               return { provider: provider.name, results: [] as SearchResult[], error: fallbackErrMsg };
             }
           }),
         );
+        rawProviderResultCount += fallbackResults.reduce((sum, item) => sum + item.results.length, 0);
 
         for (const r of fallbackResults) {
           if (r.error) {
@@ -412,6 +681,62 @@ export class SearchOrchestrator {
         };
       }
 
+      sourceHintChecks = buildNameOnlySourceChecks(spec);
+      const sourceHintSearches = buildSourceHintSearches(spec, searchQuery);
+      const sourceHintProvider = primaryProviders[0] ?? fallbackProviders[0];
+      if (sourceHintSearches.length > 0 && sourceHintProvider) {
+        const sourceHintResults = await Promise.all(
+          sourceHintSearches.map(async (hint) => {
+            const startedAt = new Date().toISOString();
+            try {
+              const results = await sourceHintProvider.search(hint.query, {
+                max_results: Math.min(this.maxResultsPerProvider, 5),
+                site_filter: hint.siteFilter,
+              });
+              queryExecutions.push({
+                query: hint.query,
+                provider: sourceHintProvider.name,
+                startedAt,
+                status: "succeeded",
+                rawResultCount: results.length,
+              });
+              return { hint, results, error: "" };
+            } catch (err) {
+              const error = err instanceof Error ? err.message : String(err);
+              queryExecutions.push({
+                query: hint.query,
+                provider: sourceHintProvider.name,
+                startedAt,
+                status: "failed",
+                rawResultCount: 0,
+                error,
+              });
+              return {
+                hint,
+                results: [] as SearchResult[],
+                error,
+              };
+            }
+          }),
+        );
+        rawProviderResultCount += sourceHintResults.reduce((sum, item) => sum + item.results.length, 0);
+
+        for (const item of sourceHintResults) {
+          sourceHintChecks.push({
+            sourceName: item.hint.sourceName,
+            sourceUrl: item.hint.sourceUrl,
+            status: item.error ? "failed" : item.results.length > 0 ? "checked" : "no_results",
+            resultCount: item.results.length,
+            ...(item.error ? { error: item.error } : {}),
+          });
+        }
+
+        allResults = deduplicateByUrL([
+          ...allResults,
+          ...sourceHintResults.flatMap((item) => item.results),
+        ]);
+      }
+
       rawResults = allResults;
 
       // 将 providerDegradation 存入闭包变量，供最终 return 使用
@@ -427,9 +752,11 @@ export class SearchOrchestrator {
         total_scored: 0,
         opportunities: [],
         errors,
-        duration_ms: Date.now() - startTime,
+        duration_ms: durationMs(),
+        sourceHintChecks,
         // V1.6-08：即使在无结果时也输出降级信息（便于排查 primary 失败原因）
         providerDegradation: _providerDegradation,
+        ...buildAuditPayload(rawResults),
       };
     }
 
@@ -445,7 +772,10 @@ export class SearchOrchestrator {
         total_scored: 0,
         opportunities: [],
         errors,
-        duration_ms: Date.now() - startTime,
+        duration_ms: durationMs(),
+        sourceHintChecks,
+        providerDegradation: _providerDegradation,
+        ...buildAuditPayload(rawResults),
       };
     }
 
@@ -541,7 +871,10 @@ export class SearchOrchestrator {
         total_scored: 0,
         opportunities: [],
         errors,
-        duration_ms: Date.now() - startTime,
+        duration_ms: durationMs(),
+        sourceHintChecks,
+        providerDegradation: _providerDegradation,
+        ...buildAuditPayload(rawResults),
       };
     }
 
@@ -652,11 +985,12 @@ export class SearchOrchestrator {
       total_scored: opportunities.length,
       opportunities,
       errors,
-      duration_ms: Date.now() - startTime,
+      duration_ms: durationMs(),
       // V1.3 新增字段
       sourceCandidates,
       evidenceItems,
       opportunityCards,
+      sourceHintChecks,
       // V1.6-06 新增字段
       watch_rules_before: watchRulesBefore,
       watch_rules_after: watchRulesAfter,
@@ -666,6 +1000,7 @@ export class SearchOrchestrator {
       ai_filter_executed: aiFilterExecuted,
       // V1.6-08 新增字段（provider 降级信息）
       providerDegradation: _providerDegradation,
+      ...buildAuditPayload(rawResults, opportunities, opportunityCards),
     };
   }
 }

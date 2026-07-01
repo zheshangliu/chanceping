@@ -192,6 +192,10 @@ textarea {
   background: transparent;
 }
 
+.advanced-tab[hidden] {
+  display: none;
+}
+
 /* ============================================================
  * Tab 内容区
  * ============================================================ */
@@ -616,7 +620,7 @@ textarea {
 }
 
 .home-hero {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .home-logo {
@@ -639,10 +643,14 @@ textarea {
   line-height: 1.6;
 }
 
+.home-examples-block {
+  margin-bottom: 20px;
+}
+
 .home-input-area {
   display: flex;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .home-input-area textarea {
@@ -663,7 +671,8 @@ textarea {
   border-color: var(--accent);
 }
 
-.home-input-area #home-start-btn {
+.home-input-area #home-start-btn,
+.home-input-area #home-watch-btn {
   align-self: flex-end;
   padding: 12px 28px;
   background-color: var(--accent);
@@ -675,7 +684,8 @@ textarea {
   white-space: nowrap;
 }
 
-.home-input-area #home-start-btn:hover {
+.home-input-area #home-start-btn:hover,
+.home-input-area #home-watch-btn:hover {
   background-color: var(--accent-hover);
 }
 
@@ -707,11 +717,13 @@ textarea {
   gap: 8px;
   align-items: center;
   justify-content: center;
+  margin-top: 8px;
 }
 
 .examples-label {
   color: var(--text-secondary);
   font-size: 13px;
+  margin: 0;
 }
 
 .example-btn {
@@ -726,6 +738,19 @@ textarea {
 .example-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.example-btn.active {
+  border-color: var(--accent);
+  color: #fff;
+  background-color: var(--accent);
+}
+
+.home-helper {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+  text-align: center;
 }
 
 /* ============================================================
@@ -1917,6 +1942,21 @@ textarea {
   cursor: not-allowed;
 }
 
+.btn-secondary {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .report-stats {
   font-size: 12px;
   color: var(--text-secondary);
@@ -2300,6 +2340,77 @@ textarea {
   color: var(--text-muted);
 }
 
+.radar-last-run span {
+  display: inline-block;
+  min-width: 84px;
+  color: var(--text-secondary);
+}
+
+.radar-card-profile {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  margin: 4px 0;
+}
+
+.radar-card-profile-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.radar-card-profile p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.radar-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.radar-card-actions .btn-detail,
+.btn-rerun-radar {
+  margin-top: 0;
+}
+
+.btn-rerun-radar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-delete-radar {
+  border: 1px solid var(--error);
+  background: transparent;
+  color: var(--error);
+}
+
+.btn-delete-radar:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--error) 10%, transparent);
+}
+
+.radar-empty-state {
+  grid-column: 1 / -1;
+  padding: 48px 20px;
+  text-align: center;
+  border: 1px dashed var(--border);
+}
+
+.radar-empty-state h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.radar-empty-state p {
+  margin: 0 0 18px;
+  color: var(--text-secondary);
+}
+
 /* 类型徽章 */
 .radar-kind-badge {
   display: inline-block;
@@ -2545,6 +2656,18 @@ textarea {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 12px;
+}
+
+.radar-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.radar-section-heading h4 {
+  margin-bottom: 0;
 }
 
 .radar-detail-info {
@@ -2958,4 +3081,371 @@ textarea {
   display: flex;
   gap: 8px;
   margin-left: auto;
+}
+
+/* ============================================================
+ * MVP 盯机会结果与雷达画像
+ * ============================================================ */
+
+.watch-result {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.watch-result-header {
+  margin-bottom: 16px;
+}
+
+.watch-result-header h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.watch-result-header p {
+  color: var(--text-secondary);
+}
+
+.watch-result-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.watch-save-copy {
+  max-width: 360px;
+  text-align: right;
+}
+
+.watch-action-row {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.watch-save-copy p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.watch-result-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.watch-result-grid section,
+.radar-profile-card,
+.watch-loading-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--bg-secondary);
+}
+
+.watch-loading-card {
+  max-width: 560px;
+  margin: 32px auto;
+  text-align: center;
+}
+
+.watch-loading-card strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.watch-loading-card p {
+  color: var(--text-secondary);
+}
+
+.watch-result-grid h4,
+.radar-profile-card h4 {
+  margin-bottom: 10px;
+}
+
+.watch-opportunity-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--bg-primary);
+}
+
+.watch-opportunity-card .card-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.watch-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.watch-card-meta span {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  background: var(--bg-secondary);
+}
+
+.watch-card-fields {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.watch-card-fields div {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.watch-card-fields dt {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.watch-card-fields dd {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.55;
+}
+
+.watch-empty-state {
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+}
+
+.watch-empty-state p {
+  margin: 0 0 8px;
+}
+
+.watch-empty-state ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.source-hint-check {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: var(--bg-primary);
+}
+
+.source-hint-check small {
+  color: var(--text-secondary);
+}
+
+.watch-report-preview {
+  white-space: pre-wrap;
+  max-height: 560px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.watch-report-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.watch-report-title-row h4 {
+  margin: 0;
+}
+
+.report-summary {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--bg-primary);
+  margin-bottom: 10px;
+}
+
+.report-summary p {
+  margin: 0 0 8px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.report-summary ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+}
+
+.save-success {
+  color: var(--success) !important;
+  font-weight: 600;
+}
+
+.markdown-details {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.markdown-details summary {
+  cursor: pointer;
+  padding: 10px 12px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.markdown-details .watch-report-preview {
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  margin: 0;
+}
+
+.radar-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.radar-profile-field {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+}
+
+.radar-profile-field span {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.radar-profile-field strong {
+  font-weight: 500;
+}
+
+.source-hints-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.source-hints-field textarea {
+  min-height: 96px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.radar-profile-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.clarification-card {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.clarification-question-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.clarification-question {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.clarification-answer {
+  width: 100%;
+  min-height: 96px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+  resize: vertical;
+  margin: 8px 0 16px;
+}
+
+.clarification-answer:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .watch-result-grid,
+  .radar-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .source-hint-check {
+    grid-template-columns: 1fr;
+  }
+
+  .watch-save-copy {
+    max-width: none;
+    text-align: left;
+  }
+
+  .watch-action-row {
+    justify-content: stretch;
+  }
+
+  .watch-action-row button {
+    flex: 1 1 160px;
+  }
 }

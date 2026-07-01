@@ -10,6 +10,7 @@
 
 import type { CardVisibleLevel } from "./scoring-rules";
 import type { Feedback, ActionIntent } from "./feedback";
+import type { ActionStatus, EvidenceStatus, OpportunityAssessment, OpportunityKind } from "./radar-mvp-contracts";
 import { t } from "../i18n/locales";
 
 /** 机会卡片状态（Task 030 扩展：+tracking/missed/expired） */
@@ -97,6 +98,18 @@ export interface OpportunityCard {
   recommendedActions?: string[];
   /** V1.6-07 新增：AI 精筛分析结果（reason），用于增量标签复用（incremental=true 时跳过 AI 精筛） */
   ai_analysis?: string;
+  /** MVP chat-first：结果类型。 */
+  opportunity_kind?: OpportunityKind;
+  /** MVP chat-first：关键字段证据状态。 */
+  evidence_status?: EvidenceStatus;
+  /** MVP chat-first：建议用户此刻采取的动作状态。 */
+  action_status?: ActionStatus;
+  /** MVP chat-first：本次运行可回放的评估元数据。 */
+  assessment?: OpportunityAssessment;
+  /** MVP chat-first：本卡片使用的画像版本。 */
+  profileRevisionId?: string;
+  /** MVP chat-first：产出本卡片的运行 ID。 */
+  runId?: string;
 }
 
 // ============================================================

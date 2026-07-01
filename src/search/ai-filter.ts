@@ -19,6 +19,7 @@
  * Mock 模式（QwenAdapter Mock 模式下，parsed 不含 relevance 字段时）：
  *   - 含"AI"/"大赛" → relevance=80
  *   - 含"政策"/"补贴" → relevance=70
+ *   - 含"机会"/"线索"/"客户"/"订单"等通用机会语义 → relevance=65
  *   - 其他 → relevance=40
  *
  * 并发控制：逐条处理（不并发），避免 Mock 模式下的状态问题。
@@ -97,11 +98,17 @@ function extractRelevance(
   }
 
   // Mock 模式预设：按 title 关键词返回
+  if (/乒乓球|WTT|ITTF|table\s*tennis/i.test(title)) {
+    return { relevance: 85, reason: "Mock 模式：乒乓球赛事相关，适合选手关注报名窗口" };
+  }
   if (/AI|大赛|比赛|赛事|竞赛/.test(title)) {
     return { relevance: 80, reason: "Mock 模式：AI 赛事相关，相关度较高" };
   }
   if (/政策|补贴|扶持|申报/.test(title)) {
     return { relevance: 70, reason: "Mock 模式：政策补贴相关，相关度中等" };
+  }
+  if (/机会|线索|客户|订单|需求|投标|采购|合作|招聘/.test(title)) {
+    return { relevance: 65, reason: "Mock 模式：自定义机会语义相关，建议进入后续评分" };
   }
   return { relevance: 40, reason: "Mock 模式：未匹配关键词，相关度较低" };
 }

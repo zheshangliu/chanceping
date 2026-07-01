@@ -17,11 +17,14 @@
 
 import type { LLMAdapter } from "./llm-adapter";
 import type { ExtractedRequirementInfo } from "../schema/extracted-requirement-info";
-import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
+import type { RadarRequirementSpec, SourceStrategy } from "../schema/radar-requirement-spec";
+import type { RadarProfileSummary } from "../schema/radar-profile-summary";
 import { RadarSpecCompiler } from "./radar-spec-compiler";
 import { RadarSpecValidator } from "../schema/radar-spec-validator";
 import { parseJsonWithRepair } from "../utils/json-repair";
 import { getLlmMode } from "../demo/data-mode";
+import { buildRadarProfileSummary, questionsToConfirmPayload } from "./radar-profile-summary";
+import { extractGenericMockRequirement, interpretRequirement } from "./radar-requirement-interpreter";
 import {
   RADAR_GENERATOR_SYSTEM_PROMPT,
   RADAR_GENERATOR_USER_PROMPT,
@@ -41,6 +44,12 @@ export interface RadarGenerateResult {
   extractedInfo: ExtractedRequirementInfo;
   /** 字段完整率（0-100） */
   completeness: number;
+  /** MVP chat-first: customer-visible profile summary */
+  profileSummary: RadarProfileSummary;
+  /** MVP chat-first: backend confidence copied from spec.requirement_confidence.total */
+  requirementConfidence: number;
+  /** MVP chat-first: normalized questions for frontend clarification */
+  questionsToConfirm: Array<{ id: string; question: string; priority: number }>;
 }
 
 // ============================================================
@@ -50,68 +59,28 @@ export interface RadarGenerateResult {
 /** 建议名称最大长度 */
 const SUGGESTED_NAME_MAX_LEN = 20;
 
+function createEmptySourceStrategy(): SourceStrategy {
+  return {
+    official_sites: [],
+    platforms: [],
+    search_engines: [],
+    social_media: [],
+    rss_sources: [],
+    manual_sources: [],
+    source_priority: [],
+    sources_used_in_report: [],
+    user_supplied_sources: [],
+    source_transparency_enabled: true,
+  };
+}
+
 // ============================================================
 // Mock 数据
 // ============================================================
 
-/**
- * Mock 模式预设的 ExtractedRequirementInfo。
- * 用于 LLM_MODE=mock 时返回完整数据，确保 completeness ≥ 90。
- */
+/** Mock mode uses a generic semantic fallback and leaves unknown fields empty. */
 function createMockExtractedInfo(description: string): ExtractedRequirementInfo {
-  // 从描述中提取关键词（简单实现：取描述中的非空词）
-  const desc = description.trim() || "RPA 比赛";
-  // 按 RPA/比赛/自动化 等关键词推断
-  const primaryTypes: string[] = [];
-  if (/RPA|自动化/i.test(desc)) primaryTypes.push("RPA", "自动化");
-  if (/比赛|竞赛|大赛/.test(desc)) primaryTypes.push("比赛");
-  if (primaryTypes.length === 0) primaryTypes.push("RPA", "自动化", "比赛");
-
-  return {
-    client_identity: {
-      client_type: "个人",
-      industry: "信息技术",
-      business_type: "自动化",
-      core_capabilities: ["RPA 开发", "流程自动化"],
-      products_or_projects: [],
-      company_stage: "",
-      regions: ["全国"],
-      notes: "",
-    },
-    business_goal: {
-      primary_goal: "盯 RPA 相关的比赛机会",
-      secondary_goals: [],
-      success_definition: "及时获取 RPA 比赛信息并报名",
-      priority_order: ["奖金", "知名度"],
-    },
-    opportunity_type: {
-      primary_types: primaryTypes,
-      secondary_types: ["机器人流程自动化"],
-      excluded_types: [],
-      must_have_conditions: [],
-    },
-    region_scope: {
-      primary_regions: ["全国"],
-      secondary_regions: [],
-      excluded_regions: [],
-      overseas_allowed: false,
-      global_allowed: false,
-    },
-    exclusion_rules: {
-      must_exclude: ["已过期", "需付费"],
-      low_priority_signals: [],
-      count: 2,
-    },
-    action_scenario: {
-      action_intent: "报名比赛",
-      priority_order: ["奖金", "知名度"],
-    },
-    report_format: {
-      frequency: "每周",
-      format: "markdown",
-      must_include_sections: [],
-    },
-  };
+  return extractGenericMockRequirement(description);
 }
 
 // ============================================================
@@ -130,7 +99,8 @@ function arrOrEmpty<T>(v: T[] | undefined): T[] {
 function generateSuggestedName(info: ExtractedRequirementInfo): string {
   const primaryTypes = arrOrEmpty(info.opportunity_type?.primary_types);
   if (primaryTypes.length === 0) {
-    return "我的自定义雷达";
+    const identity = info.client_identity?.business_type?.trim();
+    return identity ? `${identity}雷达`.slice(0, SUGGESTED_NAME_MAX_LEN) : "我的自定义雷达";
   }
   const top2 = primaryTypes.slice(0, 2).join("");
   const name = `${top2}雷达`;
@@ -138,6 +108,75 @@ function generateSuggestedName(info: ExtractedRequirementInfo): string {
   return name.length > SUGGESTED_NAME_MAX_LEN
     ? name.slice(0, SUGGESTED_NAME_MAX_LEN)
     : name;
+}
+
+function sourceNameFromUrl(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function addUserSource(strategy: SourceStrategy, sourceName: string, sourceUrl: string): void {
+  const normalizedUrl = sourceUrl.trim();
+  if (!normalizedUrl) return;
+  const exists = strategy.user_supplied_sources.some((source) => source.source_url === normalizedUrl);
+  if (exists) return;
+  strategy.user_supplied_sources.push({
+    source_name: sourceName || sourceNameFromUrl(normalizedUrl),
+    source_url: normalizedUrl,
+    added_at: new Date().toISOString(),
+    contributed_by: "user",
+  });
+}
+
+function addManualSource(strategy: SourceStrategy, sourceName: string): void {
+  const name = sourceName.trim();
+  if (!name || strategy.manual_sources.includes(name)) return;
+  strategy.manual_sources.push(name);
+}
+
+function applySourceHintsFromText(spec: RadarRequirementSpec, text: string): RadarRequirementSpec {
+  const sourceStrategy: SourceStrategy = {
+    ...createEmptySourceStrategy(),
+    ...(spec.source_strategy ?? {}),
+    user_supplied_sources: [...(spec.source_strategy?.user_supplied_sources ?? [])],
+    manual_sources: [...(spec.source_strategy?.manual_sources ?? [])],
+    source_priority: [...(spec.source_strategy?.source_priority ?? [])],
+  };
+
+  const urlMatches = text.match(/https?:\/\/[^\s，。；;、)）]+/gi) ?? [];
+  for (const url of urlMatches) {
+    addUserSource(sourceStrategy, sourceNameFromUrl(url), url);
+  }
+
+  if (/ITTF/i.test(text)) {
+    addUserSource(sourceStrategy, "ITTF", "https://www.ittf.com/");
+  }
+  if (/WTT|World\s*Table\s*Tennis/i.test(text)) {
+    addUserSource(sourceStrategy, "WTT", "https://worldtabletennis.com/");
+  }
+  if (/中国乒协|乒协官网|CTTA/i.test(text)) {
+    addManualSource(sourceStrategy, "中国乒协官网");
+  }
+  const namedSourceSegment = text.match(/优先(?:看|查|关注)?\s*([^，,。\n；;]+)/)?.[1] ?? "";
+  for (const sourceName of namedSourceSegment.split(/[、和或]/)) {
+    if (/官网|平台|协会|政府网站|官方网站/.test(sourceName)) {
+      addManualSource(sourceStrategy, sourceName.trim());
+    }
+  }
+
+  sourceStrategy.source_priority = Array.from(new Set([
+    ...sourceStrategy.source_priority,
+    ...sourceStrategy.user_supplied_sources.map((source) => source.source_name),
+    ...sourceStrategy.manual_sources,
+  ]));
+
+  return {
+    ...spec,
+    source_strategy: sourceStrategy,
+  };
 }
 
 /**
@@ -212,8 +251,17 @@ export class RadarGenerator {
       extractedInfo = await this.extractInfoViaLLM(fullDescription);
     }
 
+    const interpretation = interpretRequirement(fullDescription, extractedInfo);
+
     // 编译 Spec
-    const spec = this.specCompiler.compile(extractedInfo, "custom");
+    const spec = applySourceHintsFromText(
+      this.specCompiler.compile(extractedInfo, "custom", interpretation),
+      fullDescription,
+    );
+    const profileSummary = buildRadarProfileSummary(spec);
+    spec.primary_subject = profileSummary.identity;
+    spec.profile_version = spec.profile_version ?? 1;
+    spec.profile_summary = profileSummary;
 
     // 校验完整率
     const validation = this.validator.validate(spec);
@@ -226,6 +274,9 @@ export class RadarGenerator {
       suggestedName,
       extractedInfo,
       completeness: validation.completeness,
+      profileSummary,
+      requirementConfidence: spec.requirement_confidence.total,
+      questionsToConfirm: questionsToConfirmPayload(spec.questions_to_confirm),
     };
   }
 

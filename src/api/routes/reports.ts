@@ -173,6 +173,9 @@ export function reportRoutes(ctx: AppContext): Hono {
       const input: RadarReportInput = {
         spec, opportunities, radar_type: radarType,
         period_start: periodStart, period_end: periodEnd,
+        profile: body.profile,
+        sourceHintChecks: body.sourceHintChecks,
+        candidateAccounting: body.candidateAccounting,
       };
       const result = generateRadarReport(input);
 
@@ -192,6 +195,7 @@ export function reportRoutes(ctx: AppContext): Hono {
       if (result.success && savedFilename && effectiveRadarId) {
         const meta = ctx.reportStore.create({
           radarId: effectiveRadarId,
+          ...(body.run_id ? { runId: body.run_id } : {}),
           title: `${radarType} 报告 ${periodStart} ~ ${periodEnd}`,
           radarType,
           format: "markdown",
@@ -267,6 +271,7 @@ export function reportRoutes(ctx: AppContext): Hono {
       if (effectiveRadarId) {
         const meta = ctx.reportStore.create({
           radarId: effectiveRadarId,
+          ...(body.run_id ? { runId: body.run_id } : {}),
           title: `${radarType} 导出报告 ${input.period_start} ~ ${input.period_end}`,
           radarType,
           format,

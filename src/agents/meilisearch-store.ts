@@ -94,7 +94,7 @@ const VISIBLE_LEVEL_PRIORITY: Record<CardVisibleLevel | "hidden", number> = {
 };
 
 /** 雷达类型列表 */
-const RADAR_TYPES: RadarType[] = ["ai_competition", "opc_policy", "cultural_heritage"];
+const RADAR_TYPES: RadarType[] = ["ai_competition", "opc_policy", "cultural_heritage", "custom"];
 
 /** 可见等级列表（含 hidden） */
 const VISIBLE_LEVELS: Array<CardVisibleLevel | "hidden"> = ["S", "A", "B", "C", "D", "hidden"];

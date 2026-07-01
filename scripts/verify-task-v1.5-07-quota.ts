@@ -6,8 +6,8 @@
  * 验证范围（16 项断言，回归 3 项由外部命令运行）：
  *   6.1 配额常量（1-4）：free/basic/pro/enterprise
  *   6.2 getCurrentUser（5-6）：userId=demo_user / plan=free
- *   6.3 RadarQuotaChecker（7-10）：初始 allowed / 创建后 not allowed / 归档后 allowed / 内置不计入
- *   6.4 API 端点（11-13）：第1次 POST 200 / 第2次 POST 403 / 归档后 POST 200
+ *   6.3 RadarQuotaChecker（7-10）：初始 allowed / 创建 3 个后 not allowed / 归档后 allowed / 内置不计入
+ *   6.4 API 端点（11-13）：前 3 次 POST 200 / 第 4 次 POST 403 / 归档后 POST 200
  *   6.5 回归（14-16）：tsc + e2e + v1.5-03-api（外部命令）
  */
 
@@ -131,7 +131,7 @@ async function main(): Promise<void> {
   // ============================================================
   section("6.1 配额常量");
 
-  check("1. RADAR_QUOTA.free = 1", RADAR_QUOTA.free === 1, `actual=${RADAR_QUOTA.free}`);
+  check("1. RADAR_QUOTA.free = 3", RADAR_QUOTA.free === 3, `actual=${RADAR_QUOTA.free}`);
   check("2. RADAR_QUOTA.basic = 3", RADAR_QUOTA.basic === 3, `actual=${RADAR_QUOTA.basic}`);
   check("3. RADAR_QUOTA.pro = 10", RADAR_QUOTA.pro === 10, `actual=${RADAR_QUOTA.pro}`);
   check("4. RADAR_QUOTA.enterprise = 50", RADAR_QUOTA.enterprise === 50, `actual=${RADAR_QUOTA.enterprise}`);
@@ -152,37 +152,39 @@ async function main(): Promise<void> {
 
   const ctx = createTestContext();
 
-  // 7. 初始状态（0 个自定义雷达）→ allowed=true, current=0, quota=1
+  // 7. 初始状态（0 个自定义雷达）→ allowed=true, current=0, quota=3
   {
     const checker = new RadarQuotaChecker(ctx.radarStore);
     const result = checker.check(user);
     check(
-      "7. 初始状态 allowed=true, current=0, quota=1",
-      result.allowed === true && result.current === 0 && result.quota === 1,
+      "7. 初始状态 allowed=true, current=0, quota=3",
+      result.allowed === true && result.current === 0 && result.quota === 3,
       `allowed=${result.allowed}, current=${result.current}, quota=${result.quota}`,
     );
   }
 
-  // 8. 创建 1 个自定义雷达后 → allowed=false, current=1, quota=1
+  // 8. 创建 3 个自定义雷达后 → allowed=false, current=3, quota=3
   let createdRadarId: string | null = null;
   {
-    const created = ctx.radarRegistry.createCustomRadar({
-      name: "配额测试雷达",
-      kind: "custom",
-    });
-    createdRadarId = created.id;
+    for (let i = 1; i <= 3; i++) {
+      const created = ctx.radarRegistry.createCustomRadar({
+        name: `配额测试雷达${i}`,
+        kind: "custom",
+      });
+      if (i === 1) createdRadarId = created.id;
+    }
     ctx.radarStore.save();
 
     const checker = new RadarQuotaChecker(ctx.radarStore);
     const result = checker.check(user);
     check(
-      "8. 创建 1 个后 allowed=false, current=1, quota=1",
-      result.allowed === false && result.current === 1 && result.quota === 1,
+      "8. 创建 3 个后 allowed=false, current=3, quota=3",
+      result.allowed === false && result.current === 3 && result.quota === 3,
       `allowed=${result.allowed}, current=${result.current}, quota=${result.quota}`,
     );
   }
 
-  // 9. 归档该雷达后 → allowed=true, current=0（归档不计入）
+  // 9. 归档 1 个雷达后 → allowed=true, current=2（归档不计入）
   {
     ctx.radarRegistry.archiveRadar(createdRadarId!);
     ctx.radarStore.save();
@@ -190,20 +192,20 @@ async function main(): Promise<void> {
     const checker = new RadarQuotaChecker(ctx.radarStore);
     const result = checker.check(user);
     check(
-      "9. 归档后 allowed=true, current=0",
-      result.allowed === true && result.current === 0,
+      "9. 归档后 allowed=true, current=2",
+      result.allowed === true && result.current === 2,
       `allowed=${result.allowed}, current=${result.current}`,
     );
   }
 
-  // 10. 内置雷达不计入配额（有 3 个内置，仍 allowed=true）
+  // 10. 内置雷达不计入配额（有 3 个内置，自定义 current=2，仍 allowed=true）
   {
     const checker = new RadarQuotaChecker(ctx.radarStore);
     const result = checker.check(user);
     const builtinCount = ctx.radarStore.list({ isBuiltin: true }).length;
     check(
       "10. 内置雷达不计入配额（3 个内置仍 allowed=true）",
-      result.allowed === true && result.current === 0 && builtinCount === 3,
+      result.allowed === true && result.current === 2 && builtinCount === 3,
       `allowed=${result.allowed}, current=${result.current}, builtinCount=${builtinCount}`,
     );
   }
@@ -217,33 +219,37 @@ async function main(): Promise<void> {
   const ctx2 = createTestContext();
   const app = createApp(ctx2);
 
-  // 11. 第 1 次 POST /api/radars 创建自定义雷达 → 200
+  // 11. 前 3 次 POST /api/radars 创建自定义雷达 → 200
   let firstRadarId: string | null = null;
   {
-    const res = await app.request("/api/radars", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "第一个雷达", kind: "custom" }),
-    });
-    const json = await parseResponse(res);
-    firstRadarId = (json.data as { id?: string } | null)?.id ?? null;
+    let okCount = 0;
+    for (let i = 1; i <= 3; i++) {
+      const res = await app.request("/api/radars", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: `第${i}个雷达`, kind: "custom" }),
+      });
+      const json = await parseResponse(res);
+      if (i === 1) firstRadarId = (json.data as { id?: string } | null)?.id ?? null;
+      if (res.status === 200 && json.success === true) okCount++;
+    }
     check(
-      "11. 第 1 次 POST /api/radars 创建自定义雷达 → 200",
-      res.status === 200 && json.success === true,
-      `status=${res.status}, success=${json.success}`,
+      "11. 前 3 次 POST /api/radars 创建自定义雷达 → 200",
+      okCount === 3,
+      `okCount=${okCount}`,
     );
   }
 
-  // 12. 第 2 次 POST /api/radars 创建自定义雷达 → 403 RADAR_QUOTA_EXCEEDED
+  // 12. 第 4 次 POST /api/radars 创建自定义雷达 → 403 RADAR_QUOTA_EXCEEDED
   {
     const res = await app.request("/api/radars", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "第二个雷达", kind: "custom" }),
+      body: JSON.stringify({ name: "第四个雷达", kind: "custom" }),
     });
     const json = await parseResponse(res);
     check(
-      "12. 第 2 次 POST /api/radars → 403 RADAR_QUOTA_EXCEEDED",
+      "12. 第 4 次 POST /api/radars → 403 RADAR_QUOTA_EXCEEDED",
       res.status === 403 && json.success === false && json.error?.code === "RADAR_QUOTA_EXCEEDED",
       `status=${res.status}, success=${json.success}, code=${json.error?.code}`,
     );

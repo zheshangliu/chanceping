@@ -39,6 +39,8 @@
 
   let currentRadarId = null;
   let currentRadar = null;
+  let currentRadarRuns = [];
+  let currentOpportunityCards = [];
 
   // ============================================================
   // 工具函数
@@ -70,11 +72,64 @@
     }
   }
 
-  function getProviderText(radar) {
-    const routing = radar.providerRouting;
-    if (!routing) return "默认";
-    const all = [...(routing.primary || []), ...(routing.fallback || [])];
-    return all.length > 0 ? all.join(", ") : "默认";
+  function list(values) {
+    return Array.from(new Set((Array.isArray(values) ? values : typeof values === "string" ? [values] : [])
+      .map((value) => String(value ?? "").trim())
+      .filter(Boolean)));
+  }
+
+  function firstNonEmpty(...values) {
+    for (const value of values) {
+      if (typeof value === "string" && value.trim()) return value.trim();
+      if (Array.isArray(value) && value.length > 0) return value.map(String).join("、");
+    }
+    return "";
+  }
+
+  function renderInfoRow(label, value) {
+    const normalized = Array.isArray(value) ? value.filter(Boolean).join("、") : value;
+    return `<div class="info-row"><span class="info-label">${escapeHtml(label)}</span><span class="info-value">${normalized ? escapeHtml(normalized) : "—"}</span></div>`;
+  }
+
+  function renderRadarProfileSummary(radar) {
+    const spec = radar.spec || {};
+    const summary = spec.profile_summary || {};
+    const cp = spec.client_profile || {};
+    const goals = spec.core_goals || {};
+    const scope = spec.opportunity_scope || {};
+    const region = spec.region_scope || {};
+    const filter = spec.filter_rules || {};
+    const sourceStrategy = spec.source_strategy || {};
+    const userSources = list([
+      ...(sourceStrategy.user_supplied_sources || []).map((source) => source.source_url || source.source_name),
+      ...(sourceStrategy.manual_sources || []),
+      ...(sourceStrategy.official_sites || []),
+      ...(sourceStrategy.platforms || []),
+    ]);
+    const profile = {
+      identity: firstNonEmpty(summary.identity, cp.business_type, cp.client_type, cp.industry),
+      target: firstNonEmpty(summary.target, scope.primary_opportunity_types, goals.primary_goal),
+      priorities: list(summary.priorities || scope.must_have_conditions || goals.priority_order),
+      regionsAndTime: firstNonEmpty(summary.regionsAndTime, region.primary_regions, cp.regions, goals.success_definition),
+      exclusions: list(summary.exclusions || scope.excluded_opportunity_types || filter.must_exclude),
+      sourceHints: list(summary.sourceHints || userSources),
+      assumptions: list(summary.assumptions),
+    };
+
+    return `
+      <div class="radar-detail-section radar-profile-summary">
+        <h4>雷达画像摘要</h4>
+        <div class="radar-detail-info">
+          ${renderInfoRow("你是", profile.identity)}
+          ${renderInfoRow("你想盯", profile.target)}
+          ${renderInfoRow("优先看", profile.priorities)}
+          ${renderInfoRow("地域 / 时间", profile.regionsAndTime)}
+          ${renderInfoRow("排除", profile.exclusions)}
+          ${renderInfoRow("指定信号源", profile.sourceHints)}
+          ${profile.assumptions.length > 0 ? renderInfoRow("默认假设", profile.assumptions) : ""}
+        </div>
+      </div>
+    `;
   }
 
   /** 从 spec 提取关键词 */
@@ -166,7 +221,6 @@
     const regions = getRegions(radar.spec);
     const exclusions = getExclusions(radar.spec);
     const scoringText = getScoringSummary(radar.spec);
-    const providerText = getProviderText(radar);
     const lastRunText = radar.lastRunAt
       ? `${formatTime(radar.lastRunAt)} (${escapeHtml(radar.lastRunStatus || "—")})`
       : "从未运行";
@@ -199,12 +253,13 @@
             <div class="info-row"><span class="info-label">状态</span><span class="info-value">${escapeHtml(statusLabel)}</span></div>
             <div class="info-row"><span class="info-label">创建时间</span><span class="info-value">${escapeHtml(formatTime(radar.createdAt))}</span></div>
             <div class="info-row"><span class="info-label">最后运行</span><span class="info-value">${lastRunText}</span></div>
-            <div class="info-row"><span class="info-label">Provider</span><span class="info-value">${escapeHtml(providerText)}</span></div>
           </div>
         </div>
 
+        ${renderRadarProfileSummary(radar)}
+
         <div class="radar-detail-section">
-          <h4>需求规格 (RadarSpec)</h4>
+          <h4>搜索重点</h4>
           <div class="radar-detail-info">
             <div class="info-row"><span class="info-label">关键词</span><span class="info-value">${keywords.length > 0 ? escapeHtml(keywords.join(", ")) : "—"}</span></div>
             <div class="info-row"><span class="info-label">地域</span><span class="info-value">${regions.length > 0 ? escapeHtml(regions.join(", ")) : "—"}</span></div>
@@ -220,15 +275,25 @@
           <div id="radar-run-result-list"></div>
         </div>
 
+        <div class="radar-detail-section radar-stored-opportunities">
+          <h4>已入库机会</h4>
+          <div id="radar-stored-opportunity-list">
+            <p class="placeholder">加载中...</p>
+          </div>
+        </div>
+
         <div class="radar-detail-section radar-run-history">
           <h4>运行历史</h4>
           <div id="radar-run-history-list">
-            <p class="placeholder">${radar.lastRunAt ? `最后运行：${escapeHtml(formatTime(radar.lastRunAt))} (${escapeHtml(radar.lastRunStatus || "—")})` : "暂无运行记录"}</p>
+            <p class="placeholder">加载中...</p>
           </div>
         </div>
 
         <div class="radar-detail-section radar-report-history">
-          <h4>历史报告</h4>
+          <div class="radar-section-heading">
+            <h4>历史报告</h4>
+            <button class="btn-primary" id="radar-generate-report-btn" disabled title="需要先运行雷达并产生机会">生成 Markdown 报告</button>
+          </div>
           <div id="radar-report-history-list">
             <p class="placeholder">加载中...</p>
           </div>
@@ -237,6 +302,8 @@
     `;
 
     bindDetailEvents(radar);
+    loadRadarRuns(radar.id);
+    loadRadarOpportunities(radar.id);
     loadReportHistory(radar.id);
   }
 
@@ -267,6 +334,11 @@
     const archiveBtn = document.getElementById("radar-archive-btn");
     if (archiveBtn) archiveBtn.addEventListener("click", () => {
       if (!archiveBtn.disabled) archiveRadar(radar.id);
+    });
+
+    const reportBtn = document.getElementById("radar-generate-report-btn");
+    if (reportBtn) reportBtn.addEventListener("click", () => {
+      if (!reportBtn.disabled) generateRadarReport(radar.id);
     });
 
     // V1.6-05:定时设置区事件绑定
@@ -461,6 +533,111 @@
   }
 
   // ============================================================
+  // 已入库机会 + 运行记录
+  // ============================================================
+
+  function kindToRadarType(kind) {
+    if (kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") return kind;
+    return "ai_competition";
+  }
+
+  function updateReportButtonState() {
+    const btn = document.getElementById("radar-generate-report-btn");
+    if (!btn) return;
+    const latestRun = currentRadarRuns[0];
+    const canGenerate =
+      !!currentRadar &&
+      !!latestRun &&
+      latestRun.status === "succeeded" &&
+      currentOpportunityCards.length > 0;
+    btn.disabled = !canGenerate;
+    btn.title = canGenerate ? "" : "需要先运行雷达并产生机会";
+  }
+
+  async function loadRadarRuns(radarId) {
+    const container = document.getElementById("radar-run-history-list");
+    if (!container) return;
+    container.innerHTML = '<p class="placeholder">加载中...</p>';
+    try {
+      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/runs`);
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        currentRadarRuns = json.data;
+        renderRunHistory(currentRadarRuns);
+      } else {
+        currentRadarRuns = [];
+        container.innerHTML = '<p class="placeholder">暂无运行记录</p>';
+      }
+    } catch (err) {
+      currentRadarRuns = [];
+      container.innerHTML = '<p class="placeholder">加载运行历史失败</p>';
+    } finally {
+      updateReportButtonState();
+    }
+  }
+
+  function renderRunHistory(runs) {
+    const container = document.getElementById("radar-run-history-list");
+    if (!container) return;
+    if (!runs || runs.length === 0) {
+      container.innerHTML = '<p class="placeholder">暂无运行记录</p>';
+      return;
+    }
+    const rows = runs.map((run) => `
+      <tr>
+        <td>${escapeHtml(formatTime(run.startedAt))}</td>
+        <td>${escapeHtml(run.status || "—")}</td>
+        <td>${run.totalScored ?? 0}</td>
+        <td>${(run.opportunityKeys || []).length}</td>
+        <td>${escapeHtml(run.reportId || "—")}</td>
+      </tr>
+    `).join("");
+    container.innerHTML = `
+      <table class="report-history-table">
+        <thead><tr><th>开始时间</th><th>状态</th><th>机会数</th><th>入库 Key</th><th>报告</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  async function loadRadarOpportunities(radarId) {
+    const list = document.getElementById("radar-stored-opportunity-list");
+    if (!list) return;
+    list.innerHTML = '<p class="placeholder">加载中...</p>';
+    try {
+      const res = await fetch(`/api/opportunities?radar_id=${encodeURIComponent(radarId)}`);
+      const json = await res.json();
+      if (json.success && json.data && Array.isArray(json.data.entries)) {
+        currentOpportunityCards = json.data.entries
+          .map((entry) => entry.card)
+          .filter(Boolean);
+        renderStoredOpportunities(json.data.entries);
+      } else {
+        currentOpportunityCards = [];
+        list.innerHTML = '<p class="placeholder">暂无入库机会</p>';
+      }
+    } catch (err) {
+      currentOpportunityCards = [];
+      list.innerHTML = '<p class="placeholder">加载机会失败</p>';
+    } finally {
+      updateReportButtonState();
+    }
+  }
+
+  function renderStoredOpportunities(entries) {
+    const list = document.getElementById("radar-stored-opportunity-list");
+    if (!list) return;
+    if (!entries || entries.length === 0) {
+      list.innerHTML = '<p class="placeholder">暂无入库机会</p>';
+      return;
+    }
+    list.innerHTML = "";
+    entries.forEach((entry) => {
+      list.appendChild(buildOppCard(entry));
+    });
+  }
+
+  // ============================================================
   // 手动运行
   // ============================================================
 
@@ -489,10 +666,10 @@
       });
       const json = await res.json();
       if (json.success && json.data) {
-        const opportunities = json.data.opportunities || [];
+        const opportunities = json.data.opportunityCards || json.data.opportunities || [];
         renderRunResult(opportunities);
         if (window.showToast) showToast(`运行完成，发现 ${opportunities.length} 个机会`, "success");
-        // 刷新详情（更新 lastRunAt / lastRunStatus）
+        // 刷新详情（更新 lastRunAt / lastRunStatus，并从机会库恢复入库结果）
         loadRadarDetail(radarId);
       } else {
         const msg = json.error?.message || "运行失败";
@@ -530,19 +707,23 @@
   /**
    * 构造单个机会卡片（最简版）。
    * 复用现有 .opp-card / .level-badge / .card-title 样式。
-   * @param {Object} opp - ScoredOpportunity
+   * @param {Object} opp - ScoredOpportunity / OpportunityCard / StoreEntry
    * @returns {HTMLElement}
    */
   function buildOppCard(opp) {
     const card = document.createElement("div");
     card.className = "opp-card";
-    const level = opp.visible_level || "C";
-    const title = (opp.search_result && opp.search_result.title) || "未知机会";
-    const url = (opp.search_result && opp.search_result.url) || "#";
-    const source = (opp.search_result && opp.search_result.source_provider) || "未知";
-    const reason = opp.relevance_reason || "";
-    const score = opp.chance_score || {};
-    const totalScore = score.total != null ? score.total : (opp.backend_score || 0);
+    const entry = opp && opp.card ? opp : null;
+    const data = entry ? entry.card : opp;
+    const searchResult = data.search_result || {};
+    const level = data.visible_level || "C";
+    const title = searchResult.title || data.title || "未知机会";
+    const url = searchResult.url || data.official_source_url || "#";
+    const source = searchResult.source_provider || data.source_name || data.source_type || "未知";
+    const reason = data.relevance_reason || data.match_reason || data.ai_analysis || "";
+    const score = data.chance_score || {};
+    const totalScore = score.total != null ? score.total : (data.backend_score || 0);
+    const ids = (entry && entry.radarIds) || data.radarIds || ((entry && entry.radarId) || data.radarId ? [(entry && entry.radarId) || data.radarId] : []);
 
     card.innerHTML = `
       <div class="card-header">
@@ -553,7 +734,6 @@
         <span class="card-source">${escapeHtml(source)}</span>
         ${(() => {
           // V1.5 评审v2：同时检查 radarId（旧字段）和 radarIds（多雷达归属）
-          const ids = opp.radarIds || (opp.radarId ? [opp.radarId] : []);
           return ids.length > 0 ? `<span class="card-radar-tag">雷达: ${escapeHtml(ids.join(", "))}</span>` : "";
         })()}
       </div>
@@ -594,6 +774,55 @@
   // ============================================================
   // 历史报告（V1.5-08 新增）
   // ============================================================
+
+  async function generateRadarReport(radarId) {
+    if (!radarId || !currentRadar) return;
+    const latestRun = currentRadarRuns[0];
+    if (!latestRun || latestRun.status !== "succeeded") {
+      if (window.showToast) showToast("请先成功运行一次雷达", "warning");
+      return;
+    }
+    if (!currentOpportunityCards || currentOpportunityCards.length === 0) {
+      if (window.showToast) showToast("当前雷达暂无可报告的机会", "warning");
+      return;
+    }
+
+    const btn = document.getElementById("radar-generate-report-btn");
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "生成中...";
+    }
+
+    try {
+      const res = await fetch("/api/reports/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          radar_id: radarId,
+          run_id: latestRun.id,
+          radar_type: kindToRadarType(currentRadar.kind),
+          spec: currentRadar.spec,
+          opportunities: currentOpportunityCards,
+        }),
+      });
+      const json = await res.json();
+      if (json.success && json.data && json.data.reportId) {
+        if (window.showToast) showToast("Markdown 报告已生成", "success");
+        loadRadarRuns(radarId);
+        loadReportHistory(radarId);
+      } else {
+        const msg = json.error?.message || "报告生成失败";
+        if (window.showToast) showToast(`报告生成失败：${msg}`, "error");
+      }
+    } catch (err) {
+      if (window.showToast) showToast("报告生成失败：网络错误", "error");
+    } finally {
+      if (btn) {
+        btn.textContent = "生成 Markdown 报告";
+      }
+      updateReportButtonState();
+    }
+  }
 
   /**
    * 加载雷达的历史报告（GET /api/reports?radar_id=xxx）。
@@ -653,6 +882,9 @@
   window.activateRadar = activateRadar;
   window.runRadar = runRadar;
   window.renderRunResult = renderRunResult;
+  window.loadRadarRuns = loadRadarRuns;
+  window.loadRadarOpportunities = loadRadarOpportunities;
+  window.generateRadarReport = generateRadarReport;
   window.loadReportHistory = loadReportHistory;
   window.renderReportList = renderReportList;
 })();

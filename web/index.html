@@ -20,12 +20,13 @@
   <!-- Tab 导航 -->
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="home">首页</button>
-    <button class="tab-btn" data-tab="chat">需求确认</button>
-    <button class="tab-btn" data-tab="search">搜索</button>
-    <button class="tab-btn" data-tab="opportunities">机会库</button>
-    <button class="tab-btn" data-tab="reports">报告</button>
+    <button class="tab-btn" data-tab="watch-result">盯机会结果</button>
     <button class="tab-btn" data-tab="radars">我的雷达</button>
-    <button class="tab-btn" data-tab="editor">编辑器</button>
+    <button class="tab-btn advanced-tab" data-tab="chat" hidden>需求确认</button>
+    <button class="tab-btn advanced-tab" data-tab="search" hidden>搜索</button>
+    <button class="tab-btn advanced-tab" data-tab="opportunities" hidden>机会库</button>
+    <button class="tab-btn advanced-tab" data-tab="reports" hidden>报告</button>
+    <button class="tab-btn advanced-tab" data-tab="editor" hidden>编辑器</button>
   </nav>
 
   <!-- Tab 内容区 -->
@@ -35,26 +36,26 @@
       <div class="home-container">
         <div class="home-hero">
           <img src="/assets/logo.png" alt="ChancePing 盯机会" class="home-logo" />
-          <h2 class="home-title">ChancePing 盯机会</h2>
-          <p class="home-subtitle">告诉 AI 你要盯什么，它在合适的时间把对的机会推送给你</p>
+          <h2 class="home-title">告诉我你想盯什么机会</h2>
+          <p class="home-subtitle">AI 会帮你找出本周值得行动的机会</p>
         </div>
-        <div class="radar-selector" id="radar-selector">
-          <span class="radar-label">选择雷达：</span>
-          <button class="radar-option active" data-radar="ai_competition">AI 赛事</button>
-          <button class="radar-option" data-radar="opc_policy">政策申报</button>
-          <button class="radar-option" data-radar="cultural_heritage">文创非遗</button>
+        <div class="home-examples-block">
+          <p class="examples-label">试试看这些例子</p>
+          <div class="home-examples" id="mvp-template-list"></div>
         </div>
         <div class="home-input-area">
           <button class="attach-btn" id="home-attach-btn" title="上传文件（PDF/Word/Excel/图片）">📎</button>
-          <textarea id="home-input" placeholder="你想盯什么机会？&#10;例如：我要盯 AI 相关的比赛机会" rows="3"></textarea>
-          <button id="home-start-btn">开始</button>
+          <textarea id="home-input" placeholder="例如：我是乒乓球选手，想盯国内外比赛报名机会" rows="3"></textarea>
+          <button id="home-watch-btn" class="primary-btn">盯机会</button>
         </div>
-        <div class="home-examples">
-          <span class="examples-label">快捷示例：</span>
-          <button class="example-btn" data-text="我要盯 AI 相关的比赛机会" data-radar="ai_competition">AI 比赛</button>
-          <button class="example-btn" data-text="我要盯政策申报机会" data-radar="opc_policy">政策申报</button>
-          <button class="example-btn" data-text="我要盯文创非遗项目机会" data-radar="cultural_heritage">文创项目</button>
-        </div>
+        <p class="home-helper">你可以直接说一段话，也可以补充官网、排除条件或项目材料。先看结果，觉得有用再保存为长期雷达。</p>
+      </div>
+    </section>
+
+    <!-- Tab 2: 盯机会结果 -->
+    <section class="tab-panel" id="panel-watch-result">
+      <div class="watch-result" id="watch-result-root">
+        <p class="placeholder">输入需求后点击“盯机会”，这里会先生成雷达画像，再显示机会和报告。</p>
       </div>
     </section>
 
@@ -248,13 +249,12 @@
         <div class="radars-toolbar">
           <h3>我的雷达</h3>
           <div class="radars-toolbar-actions">
-            <button class="btn-primary" id="btn-ai-generate">✨ AI 生成</button>
-            <button class="btn-primary" id="btn-create-radar">+ 创建雷达</button>
+            <button class="btn-primary" id="btn-create-radar">建立新雷达</button>
           </div>
         </div>
         <div class="radar-quota-bar" id="radar-quota-bar"></div>
         <div class="radar-cards-grid" id="radar-cards-grid">
-          <p class="placeholder">点击"创建雷达"或刷新加载雷达列表</p>
+          <p class="placeholder">正在加载你的长期雷达...</p>
         </div>
         <button class="btn-refresh" id="btn-refresh-radars">刷新列表</button>
       </div>
@@ -335,6 +335,10 @@ $北京
   <!-- Toast 提示 -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="/mvp-templates.js"></script>
+  <script src="/source-hints.js"></script>
+  <script src="/radar-profile.js"></script>
+  <script src="/watch-result.js"></script>
   <script src="/home.js"></script>
   <script src="/requirement-chat.js"></script>
   <script src="/search.js"></script>

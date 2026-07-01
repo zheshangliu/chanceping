@@ -13,6 +13,7 @@
 
 import { BRAND, REPORT_TITLE_PREFIX } from "../brand/constants";
 import type { RequirementConfidence } from "./requirement-confidence";
+import type { RadarProfileSummary } from "./radar-profile-summary";
 import type { ScoringRules } from "./scoring-rules";
 
 // ---------------------------------------------------------------------------
@@ -227,6 +228,29 @@ export interface RadarRequirementSpec {
   requirement_confidence: RequirementConfidence;
   questions_to_confirm: QuestionToConfirm[];
   confirmation_status: ConfirmationStatusInfo;
+  /** MVP chat-first profile: one radar must have one primary subject. Optional for backward compatibility. */
+  primary_subject?: string;
+  /** MVP chat-first profile version. Optional so old saved radars remain readable. */
+  profile_version?: number;
+  /** MVP chat-first customer-visible summary generated from the structured spec. */
+  profile_summary?: RadarProfileSummary;
+  /** MVP-light risk policy: fields the run must verify for this vertical. */
+  risk_policy?: {
+    required_fields: string[];
+    manual_review_fields: string[];
+    disqualifying_signals: string[];
+  };
+  /** MVP report blueprint: public skeleton plus vertical sections. */
+  report_blueprint?: {
+    common_sections: string[];
+    vertical_sections: string[];
+  };
+  /** MVP scoring policy: vertical dimensions while keeping S/A/B/C thresholds unified. */
+  scoring_policy?: {
+    version: string;
+    dimensions: Array<{ key: string; label: string; weight: number }>;
+    thresholds: { S: number; A: number; B: number; C: number };
+  };
 }
 
 // ---------------------------------------------------------------------------

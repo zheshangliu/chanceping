@@ -16,8 +16,10 @@ import type { ScoredOpportunity, SearchVisibleLevel } from "./types";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { EvidenceItem, EvidenceField } from "../schema/evidence-item";
 import type { OpportunityCard } from "../schema/opportunity-card";
+import type { OpportunityAssessment } from "../schema/radar-mvp-contracts";
 import { CONFIDENCE_GRADE_SCORES } from "../schema/source-candidate";
 import type { CardVisibleLevel } from "../schema/scoring-rules";
+import { evidenceStatusFromEvidence } from "./opportunity-scorer";
 
 // ============================================================
 // 核心函数
@@ -60,6 +62,8 @@ export function mapToCard(
   // 步骤 6：确定可见等级（含 S 级硬规则）
   const visibleLevel = mapVisibleLevel(scored.visible_level);
   const backendScore = scored.backend_score;
+  const evidenceIds = evidence.map((e) => e.evidenceId);
+  const sourceIds = sources.map((s) => s.sourceId);
 
   // 步骤 7：构建卡片（填充所有必填字段）
   const card: OpportunityCard = {
@@ -86,8 +90,8 @@ export function mapToCard(
     // V1.3 新增字段
     radarId,
     decision: determineDecision(visibleLevel, backendScore),
-    sourceIds: sources.map((s) => s.sourceId),
-    evidenceIds: evidence.map((e) => e.evidenceId),
+    sourceIds,
+    evidenceIds,
     sourceConfidence,
     verificationStatus: officialSource?.verificationStatus ?? "unverified",
     sourceBadges,
@@ -95,9 +99,35 @@ export function mapToCard(
     riskSummary: backendScore < 50 ? "机会评分较低，建议谨慎评估" : undefined,
     recommendedActions: buildRecommendedActions(visibleLevel, evidenceMap),
   };
+  applySLevelGuard(card, sources);
+  const evidenceStatus = evidenceStatusFromEvidence(card.evidenceIds, 2);
+  const assessment: OpportunityAssessment = {
+    opportunityId: card.guid || card.official_source_url,
+    kind: scored.opportunity_kind ?? "direct_opportunity",
+    evidenceStatus,
+    actionStatus: scored.action_status ?? "prepare",
+    score: card.backend_score,
+    ...(card.visible_level === "D" ? {} : { grade: card.visible_level }),
+    scoringPolicyVersion: "mvp-2026-07-01",
+    scoreItems: [
+      {
+        key: "match",
+        label: "与雷达画像匹配",
+        score: card.backend_score,
+        weight: 100,
+        basis: "mixed",
+        evidenceIds: card.evidenceIds ?? [],
+        reason: card.match_reason,
+      },
+    ],
+    assessedAt: new Date().toISOString(),
+  };
+  card.opportunity_kind = assessment.kind;
+  card.evidence_status = assessment.evidenceStatus;
+  card.action_status = assessment.actionStatus;
+  card.assessment = assessment;
 
-  // 步骤 8：应用 S 级硬规则
-  return applySLevelGuard(card, sources);
+  return card;
 }
 
 /**

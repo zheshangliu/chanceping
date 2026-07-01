@@ -25,6 +25,7 @@
 
 import type { ScoredOpportunity, SearchVisibleLevel, ChanceScore } from "./types";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
+import type { EvidenceStatus } from "../schema/radar-mvp-contracts";
 import type { LLMAdapter, LLMRequest } from "../agents/llm-adapter";
 import type { AIFilterItem } from "./ai-filter";
 import type { ReliabilityGrade } from "./provider-registry";
@@ -48,6 +49,24 @@ const RELIABILITY_TO_EVIDENCE: Record<ReliabilityGrade, number> = {
   D: 40,
   F: 20,
 };
+
+export function gradeFromScore(score: number): "S" | "A" | "B" | "C" | undefined {
+  if (score >= 90) return "S";
+  if (score >= 80) return "A";
+  if (score >= 65) return "B";
+  if (score >= 50) return "C";
+  return undefined;
+}
+
+export function evidenceStatusFromEvidence(
+  evidenceIds: string[] | undefined,
+  criticalFieldCount: number,
+): EvidenceStatus {
+  const count = evidenceIds?.length ?? 0;
+  if (criticalFieldCount > 0 && count >= criticalFieldCount) return "confirmed";
+  if (count > 0) return "partially_verified";
+  return "needs_review";
+}
 
 /** LLM 评分结果 */
 interface LLMScoringResult {
@@ -80,6 +99,16 @@ function extractScoring(parsed: unknown, title: string): LLMScoringResult {
   }
 
   // Mock 模式预设：根据 title 关键词微调
+  if (/乒乓球|WTT|ITTF|table\s*tennis/i.test(title)) {
+    return {
+      fit: 95,
+      intent: 95,
+      effort_cost: 85,
+      fit_reason: "Mock: 乒乓球赛事与选手画像高度匹配",
+      intent_reason: "Mock: 报名参赛意图明确",
+      effort_reason: "Mock: 需核对资格和报名入口，行动成本可控",
+    };
+  }
   if (/AI|大赛|比赛|赛事|竞赛/.test(title)) {
     return {
       fit: 80,
@@ -300,6 +329,7 @@ export async function scoreOpportunities(
       effort_cost: llmResult.effort_cost,
       total,
     };
+    const grade = gradeFromScore(total);
 
     opportunities.push({
       search_result: item.result,
@@ -310,6 +340,10 @@ export async function scoreOpportunities(
       visible_level: visibleLevel,
       backend_score: total,
       guid,
+      opportunity_kind: grade ? "direct_opportunity" : "rejected",
+      evidence_status: "needs_review",
+      action_status: grade === "S" || grade === "A" ? "act_now" : grade ? "prepare" : "drop",
+      score_basis: "mixed",
     });
   }
 

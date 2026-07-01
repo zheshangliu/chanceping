@@ -263,16 +263,22 @@ function checkRegressionTests(): void {
     "verify-task031.ts",
   ];
 
+  const tsxBin = path.resolve(
+    process.cwd(),
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? "tsx.cmd" : "tsx",
+  );
+
   for (const script of regressionScripts) {
     const scriptPath = path.resolve(process.cwd(), "scripts", script);
     assert(fs.existsSync(scriptPath), `T3-T14: ${script} 文件存在`);
 
-    console.log(`  运行: npx tsx scripts/${script} ...`);
-    const result = spawnSync("npx", ["tsx", `scripts/${script}`], {
+    console.log(`  运行: ${path.relative(process.cwd(), tsxBin)} scripts/${script} ...`);
+    const result = spawnSync(tsxBin, [`scripts/${script}`], {
       cwd: process.cwd(),
       encoding: "utf-8",
       timeout: 180000, // 3 分钟超时
-      shell: true,
       env: { ...process.env, FORCE_COLOR: "0" },
     });
 

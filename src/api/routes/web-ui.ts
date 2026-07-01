@@ -7,6 +7,10 @@
  *   - GET /           → web/index.html
  *   - GET /styles.css → web/styles.css
  *   - GET /home.js    → web/home.js（Task 038 新增）
+ *   - GET /mvp-templates.js → web/mvp-templates.js（MVP UX Rescue 新增）
+ *   - GET /source-hints.js → web/source-hints.js（MVP UX Rescue 新增）
+ *   - GET /radar-profile.js → web/radar-profile.js（MVP UX Rescue 新增）
+ *   - GET /watch-result.js → web/watch-result.js（MVP UX Rescue 新增）
  *   - GET /requirement-chat.js → web/requirement-chat.js（Task 038 新增）
  *   - GET /search.js  → web/search.js（Task 039 新增）
  *   - GET /watch-rules-editor.js → web/watch-rules-editor.js
@@ -106,6 +110,22 @@ export function webUiRoutes(): Hono {
   app.get(
     "/home.js",
     serveFile("home.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/mvp-templates.js",
+    serveFile("mvp-templates.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/source-hints.js",
+    serveFile("source-hints.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/radar-profile.js",
+    serveFile("radar-profile.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/watch-result.js",
+    serveFile("watch-result.js", "application/javascript; charset=utf-8"),
   );
   app.get(
     "/requirement-chat.js",

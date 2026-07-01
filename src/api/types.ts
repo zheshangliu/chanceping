@@ -7,10 +7,21 @@
  */
 
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
+import type { RadarProfileSummary } from "../schema/radar-profile-summary";
 import type { ProviderRouting, RadarPrivacy, RadarRun } from "../schema/radar";
 import type { ScoredOpportunity } from "../search/types";
+import type { RawCandidateAudit } from "../search/types";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { OpportunityCard } from "../schema/opportunity-card";
+import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
+
+export interface SourceHintCheckResponse {
+  sourceName: string;
+  sourceUrl: string;
+  status: "checked" | "no_results" | "failed" | "invalid_url" | "name_only";
+  resultCount: number;
+  error?: string;
+}
 
 /** 统一响应格式 */
 export interface ApiResponse<T = unknown> {
@@ -93,7 +104,7 @@ export interface ReportGenerateRequest {
   /** 雷达需求规格（可选） */
   spec?: unknown;
   /** 雷达类型（默认 ai_competition） */
-  radar_type?: "ai_competition" | "opc_policy" | "cultural_heritage";
+  radar_type?: "ai_competition" | "opc_policy" | "cultural_heritage" | "custom";
   /** 报告周期开始日期（YYYY-MM-DD，可选，默认今天前 7 天） */
   period_start?: string;
   /** 报告周期结束日期（YYYY-MM-DD，可选，默认今天） */
@@ -102,6 +113,12 @@ export interface ReportGenerateRequest {
   radar_id?: string;
   /** V1.5 评审v2 新增：关联到具体运行记录（可选，传入时回写 RadarRun.reportId） */
   run_id?: string;
+  /** MVP UX Rescue：用于报告画像展示（可选） */
+  profile?: unknown;
+  /** MVP UX Rescue：客户指定信号源检查状态（可选） */
+  sourceHintChecks?: SourceHintCheckResponse[];
+  /** Chat-first MVP：本次运行候选统计（可选，只从 run 结果传入） */
+  candidateAccounting?: CandidateAccounting;
 }
 
 /** 机会库添加请求 */
@@ -109,7 +126,7 @@ export interface OpportunityAddRequest {
   /** 机会卡片 */
   card: unknown;
   /** 雷达类型 */
-  radar_type: "ai_competition" | "opc_policy" | "cultural_heritage";
+  radar_type: "ai_competition" | "opc_policy" | "cultural_heritage" | "custom";
 }
 
 /** 机会库更新请求 */
@@ -162,6 +179,18 @@ export interface RadarRunResult {
   opportunityCards?: OpportunityCard[];
   /** 来源候选列表 */
   sourceCandidates?: SourceCandidate[];
+  /** 客户指定信号源检查状态 */
+  sourceHintChecks?: SourceHintCheckResponse[];
+  /** Chat-first MVP：本次搜索计划 */
+  searchPlan?: RadarSearchPlan;
+  /** Chat-first MVP：实际查询执行日志；未真实打开网页时 openedUrls 为空 */
+  executionLog?: SearchExecutionLog;
+  /** Chat-first MVP：客户指定来源覆盖状态 */
+  sourceCoverage?: SourceCoverageItem[];
+  /** Chat-first MVP：统一候选数量账本 */
+  candidateAccounting?: CandidateAccounting;
+  /** Chat-first MVP：原始候选审计摘要 */
+  rawCandidates?: RawCandidateAudit[];
   /** 搜索到的机会列表（调试用，含评分明细） */
   opportunities: ScoredOpportunity[];
   /** V1.6b 新增：Watch Rules 过滤统计 */
@@ -201,4 +230,10 @@ export interface RadarGenerateResponseData {
   suggestedName: string;
   /** 字段完整率（0-100） */
   completeness: number;
+  /** MVP chat-first: internal confidence, not shown as a raw score to users */
+  requirementConfidence?: number;
+  /** MVP chat-first: normalized high-priority questions */
+  questionsToConfirm?: Array<{ id: string; question: string; priority: number }>;
+  /** MVP chat-first: customer-visible profile summary */
+  profileSummary?: RadarProfileSummary;
 }

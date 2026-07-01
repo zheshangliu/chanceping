@@ -29,12 +29,12 @@ import { RadarGenerator } from "../../agents/radar-generator";
 import { getCurrentUser } from "../../agents/user-context";
 import { RadarQuotaChecker } from "../../agents/radar-quota";
 
-/** 从 RadarKind 推断 RadarType（custom 默认 ai_competition） */
+/** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
 function kindToRadarType(kind: RadarKind): RadarType {
-  if (kind === "ai_competition" || kind === "opc_policy" || kind === "cultural_heritage") {
+  if (kind === "ai_competition" || kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") {
     return kind;
   }
-  return "ai_competition";
+  return "custom";
 }
 
 /** 构造错误响应 */
@@ -154,6 +154,9 @@ export function radarsRoutes(ctx: AppContext): Hono {
         spec: result.spec,
         suggestedName: result.suggestedName,
         completeness: result.completeness,
+        requirementConfidence: result.requirementConfidence,
+        questionsToConfirm: result.questionsToConfirm,
+        profileSummary: result.profileSummary,
       };
       return c.json({ success: true, data, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
     } catch (err) {
@@ -172,10 +175,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
     const status = c.req.query("status") as RadarStatus | undefined;
     const kind = c.req.query("kind") as RadarKind | undefined;
     const includeArchived = c.req.query("includeArchived") === "true";
+    const scope = c.req.query("scope");
 
+    const user = getCurrentUser();
     const radars = ctx.radarRegistry.listRadars({
       ...(status ? { status } : {}),
       ...(kind ? { kind } : {}),
+      ...(scope === "mine" ? { isBuiltin: false, ownerId: user.userId } : {}),
       includeArchived,
     });
     return c.json({ success: true, data: radars, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
@@ -200,6 +206,22 @@ export function radarsRoutes(ctx: AppContext): Hono {
       error: null,
       duration_ms: Date.now() - start,
     } satisfies ApiResponse);
+  });
+
+  // ============================================================
+  // GET /:id/runs - 列出雷达运行记录（用于详情页报告绑定）
+  // ============================================================
+  app.get("/:id/runs", (c) => {
+    const start = Date.now();
+    const id = c.req.param("id");
+    const radar = ctx.radarRegistry.getRadarById(id);
+    if (!radar) {
+      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    }
+    const limitRaw = c.req.query("limit");
+    const limit = limitRaw ? Math.max(1, Math.min(parseInt(limitRaw, 10) || 50, 100)) : 50;
+    const runs = ctx.radarRunStore.listByRadarId(id, limit);
+    return c.json({ success: true, data: runs, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
   });
 
   // ============================================================
@@ -505,6 +527,12 @@ export function radarsRoutes(ctx: AppContext): Hono {
         run: updatedRun ?? run,
         opportunityCards: searchResult.opportunityCards,
         sourceCandidates: searchResult.sourceCandidates,
+        sourceHintChecks: searchResult.sourceHintChecks,
+        searchPlan: searchResult.searchPlan,
+        executionLog: searchResult.executionLog,
+        sourceCoverage: searchResult.sourceCoverage,
+        candidateAccounting: searchResult.candidateAccounting,
+        rawCandidates: searchResult.rawCandidates,
         opportunities: opportunitiesWithRadarId,
         // V1.6b 自检修复:透传 V1.6 统计字段
         watch_rules_before: searchResult.watch_rules_before,
