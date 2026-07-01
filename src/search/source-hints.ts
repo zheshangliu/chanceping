@@ -75,12 +75,16 @@ export function buildNameOnlySourceChecks(spec: RadarRequirementSpec): SourceHin
 
 export function buildMockSourceHintChecks(spec: RadarRequirementSpec, baseQuery: string): SourceHintCheck[] {
   return [
-    ...buildNameOnlySourceChecks(spec),
+    ...buildNameOnlySourceChecks(spec).map((check) => ({
+      ...check,
+      error: "Mock 模式未真实检查该来源",
+    })),
     ...buildSourceHintSearches(spec, baseQuery).map((hint) => ({
       sourceName: hint.sourceName,
       sourceUrl: hint.sourceUrl,
-      status: "no_results" as const,
+      status: "name_only" as const,
       resultCount: 0,
+      error: "Mock 模式未真实检查该来源",
     })),
   ];
 }

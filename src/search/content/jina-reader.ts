@@ -94,6 +94,37 @@ function buildMockTableTennisText(url: string): string {
 发布日期：2026-07-01`;
 }
 
+function buildMockDemoText(url: string): string {
+  let topic = "机会信号";
+  try {
+    const parsed = new URL(url);
+    topic = parsed.searchParams.get("topic") || parsed.pathname.split("/").filter(Boolean)[0] || topic;
+  } catch {
+    // keep default topic
+  }
+  return `# ${topic}演示机会信息
+
+【演示数据，未真实核验】本内容用于验证 ChancePing 的需求理解、搜索、筛选、入库和报告链路，并非真实联网搜索结果。
+
+## 基本信息
+
+主办单位：演示数据。
+
+地区：按用户雷达画像推断。
+
+报名截止日期：2026-07-22。
+
+奖励：需真实搜索后确认。
+
+参赛条件：需真实来源核验后确认。
+
+报名链接：无，演示数据不提供真实报名入口。
+
+联系方式：未真实核验。
+
+发布日期：2026-07-01`;
+}
+
 /** 政策类 Mock 内容（gov.cn 等政府域名） */
 const MOCK_GOV_TEXT = `# 2026 年人工智能产业专项扶持政策
 
@@ -149,7 +180,9 @@ export class JinaReaderFetcher {
   /** Mock 抓取：根据 url 域名返回不同预设内容 */
   private fetchMock(url: string): CleanedContent {
     let rawText: string;
-    if (/worldtabletennis|ittf|ctta|tabletennis/i.test(url)) {
+    if (/mock\.chanceping\.local/i.test(url)) {
+      rawText = buildMockDemoText(url);
+    } else if (/worldtabletennis|ittf|ctta|tabletennis/i.test(url)) {
       rawText = buildMockTableTennisText(url);
     } else if (/gov\.cn|\.gov\./.test(url)) {
       rawText = MOCK_GOV_TEXT;

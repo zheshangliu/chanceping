@@ -719,7 +719,10 @@
     const level = data.visible_level || "C";
     const title = searchResult.title || data.title || "未知机会";
     const url = searchResult.url || data.official_source_url || "#";
-    const source = searchResult.source_provider || data.source_name || data.source_type || "未知";
+    const isDemo = data.is_demo_data === true || data.data_mode === "mock" || /演示|测试数据|mock/i.test(`${data.risk_note || ""}${data.source_disclaimer || ""}`);
+    const source = isDemo
+      ? "演示来源，未真实核验"
+      : searchResult.source_provider || data.source_name || data.source_type || "未知";
     const reason = data.relevance_reason || data.match_reason || data.ai_analysis || "";
     const score = data.chance_score || {};
     const totalScore = score.total != null ? score.total : (data.backend_score || 0);
@@ -728,7 +731,9 @@
     card.innerHTML = `
       <div class="card-header">
         <span class="level-badge level-${level.toLowerCase()}">${escapeHtml(String(level))}</span>
-        <a class="card-title" href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>
+        ${isDemo || !url || url === "#"
+          ? `<span class="card-title">${escapeHtml(title)}</span>`
+          : `<a class="card-title" href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`}
       </div>
       <div class="card-meta">
         <span class="card-source">${escapeHtml(source)}</span>

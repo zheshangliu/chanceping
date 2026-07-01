@@ -178,6 +178,26 @@ async function main(): Promise<void> {
       (accounting?.rejectedCount ?? -1) >= 0,
     JSON.stringify(accounting),
   );
+  const runText = JSON.stringify(runData ?? {});
+  check("mock run does not expose example.com links", !/example\.com/.test(runText), runText);
+  check(
+    "mock run opportunity cards are marked as demo data",
+    cards.length > 0 && cards.every((card) =>
+      card.is_demo_data === true && /演示|测试数据|未真实核验/.test(`${card.risk_note}${card.source_disclaimer ?? ""}`),
+    ),
+    JSON.stringify(cards),
+  );
+  check(
+    "mock run does not pretend official source verification",
+    !/已真实核验|已核验官网|已验证官网/.test(runText) &&
+      cards.every((card) => !card.official_source_url || !/example\.com|mock\.chanceping\.local/.test(card.official_source_url)),
+    runText,
+  );
+  check(
+    "mock source coverage is not reported as checked",
+    (runData?.sourceCoverage ?? []).every((item) => item.status === "not_checked"),
+    JSON.stringify(runData?.sourceCoverage ?? []),
+  );
 
   const opps = await get<{
     entries?: Array<{ card?: OpportunityCard; radarId?: string; radarIds?: string[] }>;
@@ -209,6 +229,9 @@ async function main(): Promise<void> {
   check("report includes source coverage", !!reportData?.markdown?.includes("来源与检查回执"));
   check("report includes evidence status", !!reportData?.markdown?.includes("证据状态"));
   check("report includes action status", !!reportData?.markdown?.includes("行动状态"));
+  check("mock report declares demo data is unverified", !!reportData?.markdown?.includes("演示 / 测试数据") && !!reportData.markdown.includes("未真实核验"));
+  check("mock report does not include fake links", !/example\.com|mock\.chanceping\.local/.test(reportData?.markdown ?? ""), reportData?.markdown ?? "");
+  check("mock report does not claim real source verification", !/已真实核验|已核验官网|已验证官网/.test(reportData?.markdown ?? ""), reportData?.markdown ?? "");
   check("run reportId written back", ctx.radarRunStore.get(runId)?.reportId === reportData?.reportId);
 
   const reloadedStore = new LocalFileStore({ file_path: files.opps });

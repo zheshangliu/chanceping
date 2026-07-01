@@ -99,6 +99,30 @@ async function main(): Promise<void> {
     JSON.stringify(clarifiedGoData?.profileSummary?.sourceHints ?? []),
   );
 
+  const clarifiedGoRadar = createDefaultRadar("围棋机会雷达", "custom", clarifiedGoData!.spec);
+  const clarifiedGoSearch = await new SearchOrchestrator({
+    llmAdapter: new ModelRouter(),
+    dataMode: "mock",
+    mockContent: true,
+  }).search(clarifiedGoRadar.spec);
+  const clarifiedGoSearchText = JSON.stringify(clarifiedGoSearch);
+  check("go mock search keeps go semantics", /围棋/.test(clarifiedGoSearchText), clarifiedGoSearchText);
+  check("go mock search does not use example.com", !/example\.com/.test(clarifiedGoSearchText), clarifiedGoSearchText);
+  check("go mock search does not fall back to AI/RPA events", !/RPA|自动化比赛|AI 创新大赛|AI 赛事/.test(clarifiedGoSearchText), clarifiedGoSearchText);
+  check(
+    "mock cards are explicitly marked as demo data",
+    (clarifiedGoSearch.opportunityCards ?? []).length > 0 &&
+      (clarifiedGoSearch.opportunityCards ?? []).every((card) =>
+        card.is_demo_data === true && /演示|测试数据|未真实核验/.test(`${card.risk_note}${card.source_disclaimer ?? ""}`),
+      ),
+    JSON.stringify(clarifiedGoSearch.opportunityCards ?? []),
+  );
+  check(
+    "mock cards do not expose fake official source urls",
+    (clarifiedGoSearch.opportunityCards ?? []).every((card) => !card.official_source_url || !/example\.com|mock\.chanceping\.local/.test(card.official_source_url)),
+    JSON.stringify(clarifiedGoSearch.opportunityCards ?? []),
+  );
+
   const roleMatrix = [
     { description: "我们是研学文旅公司", identity: "研学文旅公司", target: "" },
     { description: "我们帮客户做补贴申报", identity: "补贴申报", target: "" },

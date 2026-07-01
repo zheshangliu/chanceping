@@ -174,15 +174,27 @@ export function loadMockLlmResponses(): MockLlmResponses {
   return JSON.parse(content) as MockLlmResponses;
 }
 
+function mockDemoUrl(radarType: string, index: number): string {
+  return `https://mock.chanceping.local/${encodeURIComponent(radarType)}/opportunity-${index + 1}`;
+}
+
 /**
  * 将 DemoOpportunity 转换为 SearchResult（供 SearchOrchestrator 使用）。
  */
-export function toSearchResult(opp: DemoOpportunity): SearchResult {
+export function toSearchResult(
+  opp: DemoOpportunity,
+  mode: DataMode = "mock",
+  index = 0,
+  radarType = "ai_competition",
+): SearchResult {
+  const isMock = mode === "mock";
   return {
     title: opp.title,
-    url: opp.url,
-    snippet: opp.snippet,
-    source_provider: opp.source_provider,
+    url: isMock ? mockDemoUrl(radarType, index) : opp.url,
+    snippet: isMock
+      ? `【演示数据，未真实核验】${opp.snippet}`
+      : opp.snippet,
+    source_provider: isMock ? "mock" : opp.source_provider,
     source_type: "web" as const,
     published_at: opp.deadline || undefined,
   };
@@ -200,7 +212,7 @@ export function loadDemoSearchResults(
   mode: DataMode = "mock",
 ): SearchResult[] {
   const data = loadDemoData(radarType, mode);
-  return data.opportunities.map(toSearchResult);
+  return data.opportunities.map((opp, index) => toSearchResult(opp, mode, index, radarType));
 }
 
 /**

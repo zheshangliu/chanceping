@@ -103,17 +103,26 @@
 
   function renderCard(card) {
     const url = card.official_source_url || card.url || "#";
-    const source = url && url !== "#"
-      ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">官方来源</a>`
-      : "<span>官方来源暂未明确</span>";
+    const isDemo = card.is_demo_data === true || card.data_mode === "mock" || /演示|测试数据|mock/i.test(`${card.risk_note || ""}${card.source_disclaimer || ""}`);
+    const source = isDemo
+      ? "<span>演示来源，未真实核验</span>"
+      : url && url !== "#"
+        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">官方来源</a>`
+        : "<span>官方来源暂未明确</span>";
+    const sourceLabel = isDemo ? "来源说明" : "官方来源";
     const opportunityKind = card.opportunity_kind || card.opportunityKind || card.type || "机会";
     const evidenceStatus = card.evidence_status || card.evidenceStatus || "model_judgment";
     const actionStatus = card.action_status || card.actionStatus || "建议确认";
+    const defaultAction = isDemo
+      ? "先保存雷达验证流程；接入真实搜索后再复核来源和行动要求。"
+      : "先打开官方来源确认报名要求。";
     return `
       <article class="watch-opportunity-card">
         <header class="card-header">
           <span class="level-badge level-${escapeHtml((card.visible_level || "C").toLowerCase())}">${escapeHtml(card.visible_level || "C")}</span>
-          <a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(card.title || "未知机会")}</a>
+          ${isDemo || !url || url === "#"
+            ? `<span>${escapeHtml(card.title || "未知机会")}</span>`
+            : `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(card.title || "未知机会")}</a>`}
         </header>
         <div class="watch-card-meta">
           <span data-field="opportunity_kind">类型：${escapeHtml(opportunityKind)}</span>
@@ -131,10 +140,10 @@
           </div>
           <div>
             <dt>建议动作</dt>
-            <dd>${escapeHtml(card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || "先打开官方来源确认报名要求。")}</dd>
+            <dd>${escapeHtml(card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || defaultAction)}</dd>
           </div>
           <div>
-            <dt>官方来源</dt>
+            <dt>${escapeHtml(sourceLabel)}</dt>
             <dd>${source}</dd>
           </div>
         </dl>

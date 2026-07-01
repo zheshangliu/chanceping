@@ -123,6 +123,17 @@ function fmtUrl(v: string | undefined): string {
   return typeof v === "string" && v.trim() !== "" ? v : "需人工复核";
 }
 
+function isDemoOpportunity(opp: OpportunityCard): boolean {
+  return opp.is_demo_data === true || opp.data_mode === "mock" || /演示|测试数据|mock/i.test(`${opp.risk_note}${opp.source_disclaimer ?? ""}`);
+}
+
+function fmtOpportunitySource(opp: OpportunityCard): string {
+  if (isDemoOpportunity(opp)) {
+    return "演示数据，未真实核验";
+  }
+  return fmtUrl(opp.official_source_url);
+}
+
 /** 联系方式格式化：空 → 「未找到公开信息」 */
 function fmtContact(v: string | undefined): string {
   return typeof v === "string" && v.trim() !== "" ? v : "未找到公开信息";
@@ -612,6 +623,15 @@ function buildMvpHeader(spec: RadarRequirementSpec, periodStart: string, periodE
   ].join("\n");
 }
 
+function buildMvpDemoNotice(opps: OpportunityCard[]): string {
+  if (!opps.some(isDemoOpportunity)) return "";
+  return [
+    "> 注意：本报告包含演示 / 测试数据，未真实联网搜索或核验官网。",
+    "> 请勿把演示机会当作真实截止时间、参赛资格、报名费用、联系人或 BD 意向。",
+    "",
+  ].join("\n");
+}
+
 function buildMvpOverview(stats: RadarReportResult["stats"], topOpps: OpportunityCard[]): string {
   const lines = ["## 2. 本周一句话判断", ""];
   if (stats.total_opportunities === 0) {
@@ -667,7 +687,7 @@ function buildMvpOpportunityTable(opps: OpportunityCard[]): string {
     lines.push("| - | 本轮暂无机会 | - | - | 放宽条件或继续监控 | - |");
   } else {
     for (const opp of opps) {
-      lines.push(`| ${getVisibleLevel(opp)} | ${opp.title} | ${fmtStr(opp.deadline)} | ${fmtStr(opp.match_reason)} | ${fmtStr(opp.next_action)} | ${fmtUrl(opp.official_source_url)} |`);
+      lines.push(`| ${getVisibleLevel(opp)} | ${opp.title} | ${fmtStr(opp.deadline)} | ${fmtStr(opp.match_reason)} | ${fmtStr(opp.next_action)} | ${fmtOpportunitySource(opp)} |`);
     }
   }
   lines.push("");
@@ -697,7 +717,7 @@ function buildMvpOpportunityDetails(opps: OpportunityCard[]): string {
     lines.push("#### 风险提醒");
     lines.push(fmtStr(opp.risk_note));
     lines.push("#### 官方来源");
-    lines.push(fmtUrl(opp.official_source_url));
+    lines.push(fmtOpportunitySource(opp));
     lines.push("");
     lines.push(`- 风险提醒：${fmtStr(opp.risk_note || "待复核")}`);
     lines.push("");
@@ -720,10 +740,15 @@ function buildMvpWatchPool(excluded: Array<{ opp: OpportunityCard; reason: strin
 
 function buildMvpActionList(opps: OpportunityCard[]): string {
   const top = opps[0];
+  const firstAction = top && isDemoOpportunity(top)
+    ? `不要直接行动；接入真实搜索后再复核「${top.title}」来源、截止时间和资格要求`
+    : top
+      ? `打开来源并复核「${top.title}」报名要求`
+      : "补充更多信号源或放宽关键词";
   return [
     "## 5. 本周行动清单",
     "",
-    `- 今天要做：${top ? `打开来源并复核「${top.title}」报名要求` : "补充更多信号源或放宽关键词"}`,
+    `- 今天要做：${firstAction}`,
     `- 本周要做：${top?.next_action || "继续监控并筛选新机会"}`,
     "- 后续准备：整理报名材料、截止时间和联系人信息。",
     "",
@@ -777,6 +802,7 @@ function buildCandidateAccountingTable(accounting?: CandidateAccounting): string
 
 function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]): string {
   const checks = input.sourceHintChecks ?? [];
+  const hasDemoOpportunity = input.opportunities.some(isDemoOpportunity);
   const lines = ["## 7. 来源与检查回执", "", "### 来源索引", "", "### 本轮重点检查来源", ""];
   lines.push("| 来源 | 状态 | 结果数 | 说明 |");
   lines.push("|---|---|---:|---|");
@@ -791,7 +817,9 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
   }
   lines.push("", ...buildCandidateAccountingTable(input.candidateAccounting));
   lines.push("", "### 官方链接", "");
-  if (sources.length === 0) {
+  if (hasDemoOpportunity) {
+    lines.push("- 演示数据，未真实核验；本轮不提供可点击官方链接。");
+  } else if (sources.length === 0) {
     const urls = Array.from(new Set(input.opportunities.map((opp) => opp.official_source_url).filter(Boolean)));
     if (urls.length === 0) {
       lines.push("- 暂无官方链接。");
@@ -803,7 +831,9 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
   }
   const needsReview = checks.filter((check) => check.status === "failed" || check.status === "no_results" || check.status === "invalid_url");
   lines.push("", "### 待复核来源", "");
-  if (needsReview.length === 0) {
+  if (hasDemoOpportunity) {
+    lines.push("- 演示 / 测试数据未真实核验，所有来源字段均需接入真实搜索后复核。");
+  } else if (needsReview.length === 0) {
     lines.push("- 暂无。");
   } else {
     needsReview.forEach((check) => lines.push(`- ${check.sourceName || check.sourceUrl}（${check.status}）`));
@@ -932,6 +962,7 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
   const rankedOpps = [...sOpps, ...aOpps, ...bOpps, ...cOpps];
   const parts: string[] = [
     buildMvpHeader(spec, period_start, period_end),
+    buildMvpDemoNotice(opportunities),
     buildMvpProfile(input),
     buildMvpOverview(stats, rankedOpps),
     buildMvpOpportunityTable(rankedOpps),

@@ -57,12 +57,13 @@ export function classifySource(result: SearchResult): SourceCandidate {
   const url = result.url;
   const domain = extractDomain(url);
   const providerName = result.source_provider;
+  const isMockDemo = providerName === "mock" || domain === "mock.chanceping.local";
 
   // 步骤 1：确定 SourceType
-  const sourceType = determineSourceType(url, domain, result);
+  const sourceType = isMockDemo ? "unknown" : determineSourceType(url, domain, result);
 
   // 步骤 2：确定 SourceConfidenceGrade
-  const confidenceGrade = determineConfidenceGrade(domain, sourceType, providerName);
+  const confidenceGrade = isMockDemo ? "E5" : determineConfidenceGrade(domain, sourceType, providerName);
 
   // 步骤 3：确定 VerificationStatus
   const verificationStatus: VerificationStatus = "unverified";
@@ -71,7 +72,7 @@ export function classifySource(result: SearchResult): SourceCandidate {
   const official = isOfficialSource(sourceType);
 
   // 步骤 5：提取媒体名称
-  const mediaName = extractMediaName(domain, providerName);
+  const mediaName = isMockDemo ? "ChancePing 演示数据" : extractMediaName(domain, providerName);
 
   return {
     sourceId: generateSourceId(),

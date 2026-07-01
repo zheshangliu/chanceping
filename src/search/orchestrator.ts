@@ -217,29 +217,33 @@ function isTableTennisRadar(spec: RadarRequirementSpec, query: string): boolean 
   return /乒乓球|WTT|ITTF|table\s*tennis/i.test(text);
 }
 
+function mockDemoUrl(category: string, index: number, _topic?: string): string {
+  return `https://mock.chanceping.local/${encodeURIComponent(category)}/opportunity-${index}`;
+}
+
 function buildTableTennisMockResults(): SearchResult[] {
   return [
     {
-      title: "WTT 乒乓球比赛公开赛报名窗口",
-      url: "https://worldtabletennis.com/",
-      snippet: "WTT 官方赛事信息，面向国内外乒乓球选手，报名截止 2026-07-28，需关注资格要求和报名入口。",
-      source_provider: "serper",
+      title: "乒乓球公开赛报名窗口演示样例",
+      url: mockDemoUrl("table-tennis", 1, "乒乓球公开赛"),
+      snippet: "【演示数据，未真实核验】面向国内外乒乓球选手的公开赛报名信号样例，报名截止 2026-07-28，需接入真实搜索后核验资格和入口。",
+      source_provider: "mock",
       source_type: "web",
       published_at: "2026-07-28",
     },
     {
-      title: "ITTF 国际乒乓球赛事日历与参赛通知",
-      url: "https://www.ittf.com/",
-      snippet: "ITTF 官网发布国际乒乓球比赛与公开赛日历，未来30天内可筛选可报名赛事。",
-      source_provider: "serper",
+      title: "国际乒乓球赛事日历演示样例",
+      url: mockDemoUrl("table-tennis", 2, "国际乒乓球赛事"),
+      snippet: "【演示数据，未真实核验】国际乒乓球比赛和公开赛日历样例，用于验证雷达流程，未真实打开 ITTF 或 WTT 页面。",
+      source_provider: "mock",
       source_type: "web",
       published_at: "2026-08-05",
     },
     {
-      title: "中国乒协官网 乒乓球比赛报名通知",
-      url: "https://www.ctta.cn/",
-      snippet: "中国乒协相关赛事通知，覆盖国内乒乓球比赛、公开赛和报名窗口，适合选手持续关注。",
-      source_provider: "serper",
+      title: "国内乒乓球比赛报名通知演示样例",
+      url: mockDemoUrl("table-tennis", 3, "国内乒乓球比赛"),
+      snippet: "【演示数据，未真实核验】国内乒乓球比赛、公开赛和报名窗口信号样例，适合选手持续关注，但本条不是已核验真实机会。",
+      source_provider: "mock",
       source_type: "web",
       published_at: "2026-07-20",
     },
@@ -258,22 +262,64 @@ function buildCustomMockResults(spec: RadarRequirementSpec, query: string): Sear
   const region = spec.region_scope?.primary_regions?.[0] || spec.client_profile?.regions?.[0] || "全国";
   return [
     {
-      title: `${region}${target}线索监控样例`,
-      url: "https://example.com/custom-opportunity-1",
-      snippet: `${target}相关机会线索，适合按当前自定义雷达画像继续核验和跟进。`,
+      title: `${region}${target}机会演示样例`,
+      url: mockDemoUrl("custom", 1, target),
+      snippet: `【演示数据，未真实核验】${target}相关机会信号样例，适合按当前自定义雷达画像验证搜索、筛选和报告流程。`,
       source_provider: "mock",
       source_type: "web",
       published_at: "2026-07-15",
     },
     {
-      title: `${target}官方通知与需求信号样例`,
-      url: "https://example.com/custom-opportunity-2",
-      snippet: `围绕${target}的公开来源信号，需进一步确认截止时间、资格、联系人和行动价值。`,
+      title: `${target}公开信号演示样例`,
+      url: mockDemoUrl("custom", 2, target),
+      snippet: `【演示数据，未真实核验】围绕${target}的公开来源信号样例，真实截止时间、资格、联系人和行动价值均需后续核验。`,
       source_provider: "mock",
       source_type: "web",
       published_at: "2026-07-22",
     },
   ];
+}
+
+function isMockSearchResult(result: SearchResult): boolean {
+  return result.source_provider === "mock" || result.url.includes("mock.chanceping.local");
+}
+
+function demoCardReason(result: SearchResult, fallback: string): string {
+  const cleanFallback = fallback.replace(/^Mock 模式[:：]\s*/, "演示数据：");
+  return cleanFallback.includes("演示数据")
+    ? cleanFallback
+    : `演示数据：${result.title}与当前雷达画像语义相关，用于验证 MVP 搜索和报告链路，未真实核验。`;
+}
+
+function applyMockSafeCardMark(card: OpportunityCard, result: SearchResult): OpportunityCard {
+  if (!isMockSearchResult(result)) return card;
+  const disclaimer = "演示 / 测试数据，未真实核验；不可当作真实报名、申报或合作机会直接行动。";
+  card.title = result.title;
+  card.organizer = card.organizer || "演示数据";
+  card.deadline = card.deadline || result.published_at || "";
+  card.match_reason = demoCardReason(result, card.match_reason || result.snippet || "");
+  card.next_action = "先保存雷达验证流程；接入真实搜索后再复核来源、截止时间和行动要求。";
+  card.official_source_url = "";
+  card.application_url = "";
+  card.contact_info = "";
+  card.risk_note = disclaimer;
+  card.sourceConfidence = "E5";
+  card.verificationStatus = "unverified";
+  card.sourceBadges = ["演示数据", "未核验"];
+  card.evidence_status = "needs_review";
+  card.is_demo_data = true;
+  card.data_mode = "mock";
+  card.source_disclaimer = disclaimer;
+  if (card.assessment) {
+    card.assessment.evidenceStatus = "needs_review";
+    card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+      ...item,
+      basis: "model_judgment",
+      evidenceIds: [],
+      reason: card.match_reason,
+    }));
+  }
+  return card;
 }
 
 function domainOf(url: string): string {
@@ -917,10 +963,11 @@ export class SearchOrchestrator {
         const oppEvidence = evidenceItems!.filter((e) => oppSourceIds.includes(e.sourceId));
         const radarId = radarType;
         const card = mapToCard(opp, oppSources, oppEvidence, radarId);
+        applyMockSafeCardMark(card, opp.search_result);
         // V1.6-07：写入 AI 精筛 reason 到 card.ai_analysis（供下次增量复用）
         const aiAnalysis = aiAnalysisByUrl.get(oppUrl);
         if (aiAnalysis) {
-          card.ai_analysis = aiAnalysis;
+          card.ai_analysis = card.is_demo_data ? demoCardReason(opp.search_result, aiAnalysis) : aiAnalysis;
         }
         return card;
       });

@@ -110,6 +110,12 @@ export interface OpportunityCard {
   profileRevisionId?: string;
   /** MVP chat-first：产出本卡片的运行 ID。 */
   runId?: string;
+  /** MVP mock-safe：是否为演示 / 测试数据，不能当作真实机会行动。 */
+  is_demo_data?: boolean;
+  /** MVP mock-safe：数据模式标记。 */
+  data_mode?: "mock" | "recorded" | "live";
+  /** MVP mock-safe：来源说明，尤其用于 mock 模式避免伪装成真实官网。 */
+  source_disclaimer?: string;
 }
 
 // ============================================================

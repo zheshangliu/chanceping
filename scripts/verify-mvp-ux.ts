@@ -74,8 +74,9 @@ check("结果页按画像运行", watchResultJs.includes("profile") && watchResu
 check("模板路径允许调整画像", watchResultJs.includes("调整画像") && profileJs.includes("showRadarProfileDraftFromResult"));
 check("含正在搜索机会 loading", watchResultJs.includes("正在搜索机会"));
 check("含正在生成机会报告 loading", watchResultJs.includes("正在生成机会报告"));
-check("机会卡片按用户关心顺序渲染", ["为什么适合你", "截止时间", "建议动作", "官方来源"].every((text) => watchResultJs.includes(text)));
+check("机会卡片按用户关心顺序渲染", ["为什么适合你", "截止时间", "建议动作"].every((text) => watchResultJs.includes(text)));
 check("机会卡片展示四维状态标签", ["watch-card-meta", "opportunity_kind", "evidence_status", "action_status"].every((text) => watchResultJs.includes(text)));
+check("机会卡片能把 mock 显示为演示来源", watchResultJs.includes("演示来源，未真实核验") && watchResultJs.includes("来源说明"));
 check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_no_results", "not_checked", "invalid_url", "name_only"].every((text) => watchResultJs.includes(text)));
 check("Markdown 报告默认摘要并可展开", watchResultJs.includes("报告摘要") && watchResultJs.includes("查看完整 Markdown 报告"));
 check("Markdown 支持复制", watchResultJs.includes("复制 Markdown"));
@@ -92,8 +93,10 @@ check("我的雷达旧创建入口改为建立新雷达", html.includes("建立�
 check("我的雷达卡片支持软删除", radarsJs.includes("删除雷达") && radarsJs.includes('method: "DELETE"') && radarsJs.includes("confirm("));
 check("删除雷达后刷新列表和配额", radarsJs.includes("loadRadarList()") && radarsJs.includes("loadQuotaInfo()"));
 check("雷达详情展示画像机会报告", radarDetailJs.includes("雷达画像摘要") && radarDetailJs.includes("已入库机会") && radarDetailJs.includes("历史报告") && radarDetailJs.includes("reportId"));
+check("雷达详情不会把 mock 来源渲染成可点击官网", radarDetailJs.includes("演示来源，未真实核验") && radarDetailJs.includes("source_disclaimer"));
 check("报告模板包含雷达画像", reportGenerator.includes("## 1. 雷达画像"));
 check("报告模板包含指定信号源", reportGenerator.includes("指定信号源"));
+check("报告模板声明 mock 演示数据未真实核验", reportGenerator.includes("演示 / 测试数据") && reportGenerator.includes("未真实核验"));
 check("结果页样式存在", styles.includes(".watch-result"));
 check("详情页支持历史报告", radarDetailJs.includes("loadReportHistory"));
 check("免费用户可拥有 3 个自定义雷达", userContext.includes("free: 3"));
