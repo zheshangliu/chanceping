@@ -18,6 +18,11 @@ import type { SearchResult, SearchOptions } from "../types";
 import type { SearchProvider } from "../provider-registry";
 import { validateLink } from "../../utils/link-validator";
 import { normalizeUrl } from "../../utils/url-normalizer";
+import {
+  getCachedSearchResults,
+  recordSerperCallOrThrow,
+  setCachedSearchResults,
+} from "../search-cost-guard";
 
 /** Serper 配置 */
 export interface SerperConfig {
@@ -165,6 +170,7 @@ export class SerperProvider implements SearchProvider {
   readonly reliability = "B" as const;
   readonly enabled = true;
   readonly radar_types = ["ai_competition", "cultural_heritage"];
+  lastSearchMeta?: { cacheStatus: "hit" | "miss"; queryHash: string };
 
   private readonly apiKey: string;
   private readonly mockMode: boolean;
@@ -230,6 +236,21 @@ export class SerperProvider implements SearchProvider {
     query: string,
     options?: SearchOptions,
   ): Promise<SearchResult[]> {
+    const cacheInput = {
+      provider: this.name,
+      query,
+      language: options?.language,
+      region: options?.region,
+      siteFilter: options?.site_filter,
+    };
+    const cached = getCachedSearchResults(cacheInput);
+    this.lastSearchMeta = { cacheStatus: cached.status, queryHash: cached.queryHash };
+    if (cached.status === "hit") {
+      return (cached.results ?? []).map((result) => ({ ...result }));
+    }
+    console.info(`[SearchCostGuard] provider=serper cache miss queryHash=${cached.queryHash}`);
+    recordSerperCallOrThrow();
+
     const body: Record<string, unknown> = {
       q: query,
       num: options?.max_results ?? DEFAULT_MAX_RESULTS,
@@ -294,6 +315,7 @@ export class SerperProvider implements SearchProvider {
       });
     }
 
+    setCachedSearchResults(cacheInput, results);
     return results;
   }
 }

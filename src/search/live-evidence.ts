@@ -2,7 +2,7 @@ import type { SearchResult, CleanedContent } from "./types";
 import type { FieldEvidenceItem, FieldEvidenceName, SearchExecutionLog } from "../schema/radar-mvp-contracts";
 import { JinaReaderFetcher } from "./content/jina-reader";
 
-const DEFAULT_LIVE_EVIDENCE_LIMIT = 3;
+const DEFAULT_LIVE_EVIDENCE_LIMIT = 5;
 const DEFAULT_LIVE_EVIDENCE_TIMEOUT_MS = 8000;
 
 const REQUIRED_FIELDS: FieldEvidenceName[] = [

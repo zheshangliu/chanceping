@@ -50,6 +50,32 @@ export const GOLDEN_CASES = [
   { id: 20, input: "我们是一个手工饰品工作室，想找能卖货或者曝光的机会。", clarity: "模糊", answer: "主要找未来60天手工市集、买手店合作、展会摊位、电商平台活动、品牌联名和社媒曝光机会，优先国内，排除纯招商加盟广告。", subjectRe: /手工饰品工作室|手工饰品/, typeRe: /卖货|曝光|市集|买手店|展会|电商平台|品牌联名/ },
 ];
 
+export const DEFAULT_GOLDEN_LIVE_SAMPLE_IDS = [1, 2, 7, 19];
+
+export function parseGoldenCaseSelection(selected) {
+  if (Array.isArray(selected)) {
+    return selected
+      .map((id) => Number(id))
+      .filter((id) => Number.isInteger(id) && id >= 1 && id <= 20);
+  }
+  return String(selected || "")
+    .split(",")
+    .map((part) => Number(part.trim()))
+    .filter((id) => Number.isInteger(id) && id >= 1 && id <= 20);
+}
+
+export function selectGoldenCaseIdsForLiveMode(options = {}) {
+  const fullLiveGolden20 =
+    options.fullLiveGolden20 === true ||
+    options.fullLiveGolden20 === "true" ||
+    process.env.full_live_golden20 === "true" ||
+    process.env.FULL_LIVE_GOLDEN20 === "true";
+  if (fullLiveGolden20) return GOLDEN_CASES.map((item) => item.id);
+  const selected = parseGoldenCaseSelection(options.selected ?? process.env.GOLDEN20_LIVE_CASES);
+  if (selected.length > 0) return Array.from(new Set(selected));
+  return DEFAULT_GOLDEN_LIVE_SAMPLE_IDS;
+}
+
 async function ensureDir(url) {
   await mkdir(dirname(fileURLToPath(url)), { recursive: true });
 }

@@ -101,7 +101,7 @@ function buildPromptPayload(input: RadarReportInput): Record<string, unknown> {
       assumptions: input.spec.profile_summary?.assumptions ?? [],
     },
     candidate_accounting: input.candidateAccounting,
-    opened_urls: (input.executionLog?.openedUrls ?? []).slice(0, 3).map((item) => ({
+    opened_urls: (input.executionLog?.openedUrls ?? []).slice(0, 5).map((item) => ({
       url: item.url,
       status: item.status,
       title: item.title,

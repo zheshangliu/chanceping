@@ -160,7 +160,7 @@ function liveRunHasEvidence(data: {
   return rawCandidates.length > 0
     && rawCandidates.every((candidate) => Boolean(candidate.sourceDomain) && !hasMockOrExampleUrl(candidate.url))
     && openedUrls.length > 0
-    && openedUrls.length <= 3
+    && openedUrls.length <= 5
     && providerSummary.some((item) => item.provider === "serper")
     && cards.length > 0
     && cards.every((card) => card.data_mode === "live" && card.is_demo_data !== true)
@@ -631,7 +631,7 @@ async function main(): Promise<void> {
     check(`${scenario.label}: key opportunity cards keep action signals`, cards.slice(0, 5).some((card) => actionSignalText(cardText(card))), cards.slice(0, 5).map(cardText).join(" | "));
     check(`${scenario.label}: result has one expected source family`, domains.some((domain) => scenario.expectedDomains.some((expected) => domain.includes(expected))), domains.join(", "));
     const openedUrls = searchJson.data?.executionLog?.openedUrls ?? [];
-    check(`${scenario.label}: live evidence attempts at most first 3 URLs`, openedUrls.length > 0 && openedUrls.length <= 3, `opened=${openedUrls.length}`);
+    check(`${scenario.label}: live evidence attempts at most first 5 URLs`, openedUrls.length > 0 && openedUrls.length <= 5, `opened=${openedUrls.length}`);
     check(`${scenario.label}: openedUrls record fetch outcome`, openedUrls.every((item) => ["succeeded", "partial", "failed"].includes(item.status) && !!item.fetchedAt));
     const firstCard = cards[0];
     check(`${scenario.label}: first card has field-level evidence`, (firstCard?.field_evidence ?? []).length >= REQUIRED_FIELD_EVIDENCE.length, fieldEvidenceFields(firstCard).join(", "));

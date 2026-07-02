@@ -54,6 +54,7 @@ import {
 import { buildUnopenedFieldEvidence, fetchLiveEvidence, type LiveEvidenceFetchResult } from "./live-evidence";
 import { buildSearchIntentPlan, type SearchIntentPlan, type SearchQueryFamilyItem } from "./search-intent-planner";
 import { normalizeOpportunityIntent } from "./opportunity-strategy";
+import { getSearchCostLimits, normalizeSearchQuery, type SearchCostLimits } from "./search-cost-guard";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -596,6 +597,35 @@ function buildSearchPlan(
   };
 }
 
+function queryItemKey(item: Pick<SearchQueryFamilyItem, "query" | "sourceDomain">): string {
+  return normalizeSearchQuery(item.sourceDomain ? `${item.query} site:${item.sourceDomain}` : item.query);
+}
+
+function limitSearchIntentPlan(plan: SearchIntentPlan, limits: SearchCostLimits): SearchIntentPlan {
+  const searchThemes = plan.searchThemes.slice(0, limits.maxThemesPerRun);
+  const themeNames = new Set(searchThemes.map((theme) => theme.themeName));
+  const seen = new Set<string>();
+  const queries: SearchQueryFamilyItem[] = [];
+  for (const item of plan.queries) {
+    if (themeNames.size > 0 && !themeNames.has(item.themeName)) continue;
+    const key = queryItemKey(item);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    queries.push(item);
+    if (queries.length >= limits.maxQueriesPerRun) break;
+  }
+
+  const opportunityStrategy = plan.opportunityStrategy
+    ? {
+      ...plan.opportunityStrategy,
+      searchThemes,
+      queries,
+      evidenceReadPriority: plan.opportunityStrategy.evidenceReadPriority.slice(0, limits.maxReadUrlsPerRun),
+    }
+    : undefined;
+  return { searchThemes, queries, ...(opportunityStrategy ? { opportunityStrategy } : {}) };
+}
+
 function mapSourceCoverage(checks: SourceHintCheck[]): SourceCoverageItem[] {
   return checks.map((check) => ({
     sourceName: check.sourceName,
@@ -863,8 +893,10 @@ export class SearchOrchestrator {
     // 步骤 0：推断雷达类型（供 Demo 数据加载和真实搜索共用）
     const radarType = inferRadarType(spec);
     const searchQuery = query && query.trim() ? query.trim() : buildQueryFromSpec(spec);
-    const intentPlan = buildSearchIntentPlan(spec, searchQuery);
+    const searchCostLimits = getSearchCostLimits();
+    const intentPlan = limitSearchIntentPlan(buildSearchIntentPlan(spec, searchQuery), searchCostLimits);
     const baseQueryItem = intentPlan.queries[0] ?? fallbackQueryItem(searchQuery);
+    const reservedLiveQueryKeys = new Set(intentPlan.queries.map(queryItemKey));
     let sourceHintChecks: SourceHintCheck[] = [];
     const buildAuditPayload = (
       currentRawResults: SearchResult[],
@@ -983,7 +1015,11 @@ export class SearchOrchestrator {
       }
 
       // 步骤 2：并行调用各 primary provider 的 search()
-      const searchOptions = { max_results: this.dataMode === "live" ? Math.min(this.maxResultsPerProvider, 5) : this.maxResultsPerProvider };
+      const searchOptions = {
+        max_results: this.dataMode === "live"
+          ? Math.min(this.maxResultsPerProvider, searchCostLimits.maxResultsPerQuery)
+          : this.maxResultsPerProvider,
+      };
       const liveQueryItems = this.dataMode === "live" && providerRouting
         ? intentPlan.queries
         : [baseQueryItem];
@@ -1067,21 +1103,47 @@ export class SearchOrchestrator {
       ];
       const sourceHintProvider = primaryProviders[0] ?? fallbackProviders[0];
       if (sourceHintSearches.length > 0 && sourceHintProvider) {
+        const sourceHintQueryItems: Array<{ hint: (typeof sourceHintSearches)[number]; queryItem: SearchQueryFamilyItem }> = [];
+        for (const hint of sourceHintSearches) {
+          const hintQueryItem: SearchQueryFamilyItem = {
+            query: hint.query,
+            language: detectQueryLanguage(hint.query),
+            ...(hint.siteFilter ? { sourceDomain: hint.siteFilter } : {}),
+            themeName: "指定来源复核",
+            intentType: "direct_opportunity",
+            sourceArchetype: "official_event_site",
+            sourceArchetypeLabel: hint.siteFilter ? `指定站点：${hint.siteFilter}` : "用户指定来源",
+            queryFamily: "configured source review",
+            queryVariant: "source_hint",
+          };
+          const key = queryItemKey(hintQueryItem);
+          if (reservedLiveQueryKeys.has(key)) {
+            sourceHintChecks.push({
+              sourceName: hint.sourceName,
+              sourceUrl: hint.sourceUrl,
+              status: "name_only",
+              resultCount: 0,
+              error: "Search Cost Guard：本轮已有相同 query，未重复调用搜索 provider",
+            });
+            continue;
+          }
+          if (reservedLiveQueryKeys.size >= searchCostLimits.maxQueriesPerRun) {
+            sourceHintChecks.push({
+              sourceName: hint.sourceName,
+              sourceUrl: hint.sourceUrl,
+              status: "name_only",
+              resultCount: 0,
+              error: "Search Cost Guard：本轮 query 数已达上限，未继续调用搜索 provider",
+            });
+            continue;
+          }
+          reservedLiveQueryKeys.add(key);
+          sourceHintQueryItems.push({ hint, queryItem: hintQueryItem });
+        }
         const sourceHintResults = await Promise.all(
-          sourceHintSearches.map(async (hint) => {
-            const hintQueryItem: SearchQueryFamilyItem = {
-              query: hint.query,
-              language: detectQueryLanguage(hint.query),
-              ...(hint.siteFilter ? { sourceDomain: hint.siteFilter } : {}),
-              themeName: "指定来源复核",
-              intentType: "direct_opportunity",
-              sourceArchetype: "official_event_site",
-              sourceArchetypeLabel: hint.siteFilter ? `指定站点：${hint.siteFilter}` : "用户指定来源",
-              queryFamily: "configured source review",
-              queryVariant: "source_hint",
-            };
-            const result = await searchProviderWithRetry(sourceHintProvider, hintQueryItem, {
-              max_results: Math.min(this.maxResultsPerProvider, 5),
+          sourceHintQueryItems.map(async ({ hint, queryItem }) => {
+            const result = await searchProviderWithRetry(sourceHintProvider, queryItem, {
+              max_results: Math.min(this.maxResultsPerProvider, searchCostLimits.maxResultsPerQuery),
               ...(hint.siteFilter ? { site_filter: hint.siteFilter } : {}),
             });
             queryExecutions.push(result.log);
@@ -1139,7 +1201,7 @@ export class SearchOrchestrator {
 
     if (this.dataMode === "live" && providerRouting && this.enableContentFetch && candidateResults.length > 0) {
       liveEvidence = await fetchLiveEvidence(candidateResults, {
-        maxUrls: 3,
+        maxUrls: searchCostLimits.maxReadUrlsPerRun,
         timeoutMs: 8000,
       });
       openedUrls.push(...liveEvidence.openedUrls);
