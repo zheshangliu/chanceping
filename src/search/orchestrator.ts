@@ -378,6 +378,34 @@ function resultText(result: SearchResult): string {
   return `${result.title} ${result.snippet} ${domainOf(result.url)}`.toLowerCase();
 }
 
+interface CandidateQuality {
+  status: "actionable" | "low_action" | "unknown";
+  reason: string;
+}
+
+function candidateQuality(result: SearchResult): CandidateQuality {
+  const text = resultText(result);
+  const lowActionPatterns = [
+    { pattern: /视频|集锦|youtube|playlist/i, reason: "视频/集锦页面，通常不是行动入口" },
+    { pattern: /百科|维基|wikipedia|baike/i, reason: "百科页面，通常不是报名或申请入口" },
+    { pattern: /规则|历史|history|rules/i, reason: "规则/历史介绍页面，行动性不足" },
+    { pattern: /新闻转载|转载|综合新闻|news roundup/i, reason: "新闻转载或泛资讯页面，需人工再追踪原始公告" },
+    { pattern: /培训广告|培训班|训练营|课程|camp|course/i, reason: "培训广告或课程页面，不是本轮重点机会" },
+  ];
+  const matchedLowAction = lowActionPatterns.find((item) => item.pattern.test(text));
+  if (matchedLowAction) {
+    return { status: "low_action", reason: matchedLowAction.reason };
+  }
+  if (/报名|申报|申请|参赛|赛事通知|赛程|采购公告|招标公告|申请入口|官方公告|公开赛|锦标赛|大会|イベント|棋戦|calendar|event|events|tournament|championship|champions|registration|entry/i.test(text)) {
+    return { status: "actionable", reason: "包含报名、赛程、公告或申请入口等行动信号" };
+  }
+  return { status: "unknown", reason: "未识别到明确行动入口，保留为观察候选" };
+}
+
+function isActionableCandidate(result: SearchResult): boolean {
+  return candidateQuality(result).status === "actionable";
+}
+
 function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): number {
   const text = resultText(result);
   const domain = domainOf(result.url).toLowerCase();
@@ -401,7 +429,7 @@ function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): 
   if (/报名|申报|申请|参赛|赛事|比赛|公开赛|锦标赛|日程|赛程|大会|イベント|棋戦|calendar|event|events|tournament|championship|champions|registration|entry/i.test(text)) {
     score += 30;
   }
-  if (/百科|维基|wikipedia|baike|youtube|playlist|规则|历史|history|rules/i.test(text)) {
+  if (candidateQuality(result).status === "low_action") {
     score -= 80;
   }
   return score;
@@ -466,16 +494,21 @@ function mapSourceCoverage(checks: SourceHintCheck[]): SourceCoverageItem[] {
 }
 
 function buildRawCandidateAudits(results: SearchResult[], query: string): RawCandidateAudit[] {
-  return results.map((result, index) => ({
-    id: `raw_${index + 1}`,
-    query,
-    title: result.title,
-    url: result.url,
-    snippet: result.snippet,
-    sourceDomain: domainOf(result.url),
-    sourceType: result.source_type ?? "search_snippet",
-    status: "raw",
-  }));
+  return results.map((result, index) => {
+    const quality = candidateQuality(result);
+    return {
+      id: `raw_${index + 1}`,
+      query,
+      title: result.title,
+      url: result.url,
+      snippet: result.snippet,
+      sourceDomain: domainOf(result.url),
+      sourceType: result.source_type ?? "search_snippet",
+      status: quality.status === "low_action" ? "rejected" : "raw",
+      qualityStatus: quality.status,
+      qualityReason: quality.reason,
+    };
+  });
 }
 
 function buildCandidateAccounting(
@@ -913,14 +946,6 @@ export class SearchOrchestrator {
 
       rawResults = allResults;
 
-      if (this.enableContentFetch && providerRouting) {
-        liveEvidence = await fetchLiveEvidence(rawResults, {
-          maxUrls: 3,
-          timeoutMs: 8000,
-        });
-        openedUrls.push(...liveEvidence.openedUrls);
-      }
-
       // 将 providerDegradation 存入闭包变量，供最终 return 使用
       _providerDegradation = providerDegradation;
     }
@@ -942,8 +967,35 @@ export class SearchOrchestrator {
       };
     }
 
+    const candidateResults = this.dataMode === "live" && providerRouting
+      ? rawResults.filter(isActionableCandidate)
+      : rawResults;
+
+    if (this.dataMode === "live" && providerRouting && this.enableContentFetch && candidateResults.length > 0) {
+      liveEvidence = await fetchLiveEvidence(candidateResults, {
+        maxUrls: 3,
+        timeoutMs: 8000,
+      });
+      openedUrls.push(...liveEvidence.openedUrls);
+    }
+
+    if (candidateResults.length === 0) {
+      return {
+        total_raw: rawResults.length,
+        total_rule_passed: 0,
+        total_ai_passed: 0,
+        total_scored: 0,
+        opportunities: [],
+        errors,
+        duration_ms: durationMs(),
+        sourceHintChecks,
+        providerDegradation: _providerDegradation,
+        ...buildAuditPayload(rawResults),
+      };
+    }
+
     // 步骤 3：第一层规则粗筛
-    const ruleResult = ruleFilter(rawResults, spec);
+    const ruleResult = ruleFilter(candidateResults, spec);
 
     // 边界情况：规则粗筛全部失败
     if (ruleResult.passed.length === 0) {

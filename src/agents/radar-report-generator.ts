@@ -881,12 +881,24 @@ function buildFailedSourceLines(input: RadarReportInput): string[] {
 function buildUncheckedSourceLines(input: RadarReportInput): string[] {
   const opened = new Set((input.executionLog?.openedUrls ?? []).map((item) => item.url));
   const unchecked = (input.rawCandidates ?? [])
-    .filter((candidate) => candidate.url && !opened.has(candidate.url))
+    .filter((candidate) => candidate.url && !opened.has(candidate.url) && candidate.qualityStatus !== "low_action")
     .slice(0, 24);
   if (unchecked.length === 0) {
     return ["- 暂无未检查来源，或本轮未传入 rawCandidates。"];
   }
   return unchecked.map((candidate) => `- ${candidate.title || candidate.url}：${candidate.url}（未进入前 3 个 URL 有限读取范围）`);
+}
+
+function buildLowActionSourceLines(input: RadarReportInput): string[] {
+  const lowAction = (input.rawCandidates ?? [])
+    .filter((candidate) => candidate.qualityStatus === "low_action")
+    .slice(0, 24);
+  if (lowAction.length === 0) {
+    return ["- 暂无低行动性观察来源。"];
+  }
+  return lowAction.map((candidate) =>
+    `- ${candidate.title || candidate.url}：${candidate.url}（${candidate.qualityReason || "低行动性来源"}，不进入重点推荐机会）`,
+  );
 }
 
 function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]): string {
@@ -918,6 +930,13 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
     }
   } else {
     sources.forEach((source) => lines.push(`- ${source.mediaName}：${source.url}（搜索发现，待复核）`));
+  }
+
+  lines.push("", "### 低行动性观察来源", "");
+  if (hasDemoOpportunity) {
+    lines.push("- 演示数据未执行真实候选质量分层。");
+  } else {
+    lines.push(...buildLowActionSourceLines(input));
   }
 
   lines.push("", "### 字段已核验事实", "");

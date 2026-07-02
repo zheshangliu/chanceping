@@ -51,6 +51,9 @@ export interface RawCandidateAudit {
   sourceDomain: string;
   sourceType: string;
   status: "raw" | "merged" | "assessed" | "rejected";
+  /** MVP L.2: lightweight quality mark for report grouping, not a verified fact. */
+  qualityStatus?: "actionable" | "low_action" | "unknown";
+  qualityReason?: string;
 }
 
 /**

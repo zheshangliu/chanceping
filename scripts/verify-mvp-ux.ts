@@ -109,6 +109,7 @@ check("报告模板包含指定信号源", reportGenerator.includes("指定信�
 check("报告模板声明 mock 演示数据未真实核验", reportGenerator.includes("演示 / 测试数据") && reportGenerator.includes("未真实核验"));
 check("报告模板区分搜索来源、已核验事实、模型判断、待复核项", ["### 搜索到的来源", "### 字段已核验事实", "### 模型判断", "### 待复核项"].every((text) => reportGenerator.includes(text)));
 check("报告模板区分失败来源和未检查来源", ["### 失败来源", "### 未检查来源"].every((text) => reportGenerator.includes(text)));
+check("报告模板区分低行动性观察来源", reportGenerator.includes("### 低行动性观察来源"));
 check("结果页样式存在", styles.includes(".watch-result"));
 check("详情页支持历史报告", radarDetailJs.includes("loadReportHistory"));
 check("免费用户可拥有 3 个自定义雷达", userContext.includes("free: 3"));

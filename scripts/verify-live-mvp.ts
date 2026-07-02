@@ -4,6 +4,8 @@ import { loadLocalApiEnv } from "../src/config/local-env";
 import type { OpportunityCard } from "../src/schema/opportunity-card";
 import type { RadarRequirementSpec } from "../src/schema/radar-requirement-spec";
 import type { FieldEvidenceName, FieldEvidenceStatus } from "../src/schema/radar-mvp-contracts";
+import type { SearchResult } from "../src/search/types";
+import type { SearchProvider } from "../src/search/provider-registry";
 
 let passed = 0;
 let failed = 0;
@@ -35,6 +37,24 @@ function hasMockOrExampleUrl(url: string): boolean {
 
 function titleOf(card: OpportunityCard | undefined): string {
   return String(card?.title ?? "").trim();
+}
+
+function lowActionText(value: string): boolean {
+  return /视频|集锦|百科|维基|规则|历史|新闻转载|培训广告|培训班|YouTube|playlist|wikipedia|baike|rules|history/i.test(value);
+}
+
+function cardText(card: OpportunityCard | undefined): string {
+  if (!card) return "";
+  return [
+    card.title,
+    card.official_source_url,
+    card.match_reason,
+    card.next_action,
+  ].join(" ");
+}
+
+function actionSignalText(value: string): boolean {
+  return /报名|申报|申请|赛事通知|赛程|采购公告|招标公告|申请入口|官方公告|公开赛|锦标赛|大会|イベント|棋戦|calendar|event|events|tournament|championship|registration|entry/i.test(value);
 }
 
 const REQUIRED_FIELD_EVIDENCE: FieldEvidenceName[] = [
@@ -128,10 +148,13 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const [{ createApp }, { createAppContext }, { createDefaultSpec }] = await Promise.all([
+  const [{ createApp }, { createAppContext }, { createDefaultSpec }, { SearchOrchestrator }, { providerRegistry }, { ModelRouter }] = await Promise.all([
     import("../src/api/app"),
     import("../src/api/context"),
     import("../src/schema/radar-requirement-spec"),
+    import("../src/search/orchestrator"),
+    import("../src/search/provider-registry"),
+    import("../src/agents/model-router"),
   ]);
 
   const ctx = createAppContext();
@@ -155,6 +178,101 @@ async function main(): Promise<void> {
     delete process.env.NODE_ENV;
   } else {
     process.env.NODE_ENV = originalNodeEnv;
+  }
+
+  const mixedQualityResults: SearchResult[] = [
+    {
+      title: "WTT Champions 2026 报名入口",
+      url: "https://worldtabletennis.com/eventInfo?eventId=123",
+      snippet: "官方公告：报名入口开放，选手可查看参赛要求和赛程。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+    {
+      title: "乒乓球比赛规则介绍",
+      url: "https://rules.example.local/table-tennis-rules",
+      snippet: "泛资讯页面：介绍乒乓球比赛规则和历史。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+    {
+      title: "精彩乒乓球比赛视频集锦 - YouTube",
+      url: "https://youtube.com/playlist?list=test",
+      snippet: "视频合集，不含报名或申请入口。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+    {
+      title: "2026 全国乒乓球赛事通知",
+      url: "https://www.ctta.cn/ssxx/2026-notice.html",
+      snippet: "中国乒协官方公告：赛事通知、赛程和报名安排。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+    {
+      title: "乒乓球培训广告",
+      url: "https://training.example.local/table-tennis-camp",
+      snippet: "培训班招生广告，不是正式赛事机会。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+  ];
+  const qualityProvider: SearchProvider = {
+    name: "test_live_quality",
+    display_name: "Test Live Quality",
+    source_type: "web",
+    reliability: "A",
+    enabled: true,
+    radar_types: ["custom"],
+    async search() {
+      return mixedQualityResults;
+    },
+    async healthCheck() {
+      return true;
+    },
+  };
+  providerRegistry.register(qualityProvider);
+  try {
+    const qualitySpec = createDefaultSpec();
+    qualitySpec.client_profile.business_type = "乒乓球选手";
+    qualitySpec.core_goals.primary_goal = "寻找可报名的乒乓球比赛";
+    qualitySpec.core_goals.action_intent = ["报名比赛"];
+    qualitySpec.opportunity_scope.primary_opportunity_types = ["乒乓球比赛", "赛事通知", "报名窗口"];
+    qualitySpec.keyword_strategy.core_keywords_zh = ["乒乓球", "比赛", "报名", "赛事通知"];
+    qualitySpec.filter_rules.must_exclude = ["培训广告"];
+    setConfirmed(qualitySpec, now);
+    const qualitySearch = await new SearchOrchestrator({
+      llmAdapter: new ModelRouter(),
+      dataMode: "live",
+      enableContentFetch: false,
+      maxResultsPerProvider: 5,
+    }).search(qualitySpec, "乒乓球 比赛 报名", { primary: ["test_live_quality"], fallback: [] });
+    const qualityCards = qualitySearch.opportunityCards ?? [];
+    const qualityCardText = qualityCards.map(cardText).join(" | ");
+    const rawLowAction = qualitySearch.rawCandidates?.filter((candidate) =>
+      lowActionText(`${candidate.title} ${candidate.url} ${candidate.snippet ?? ""}`),
+    ) ?? [];
+    check("quality filter keeps low-action pages in raw candidates", rawLowAction.length >= 2, JSON.stringify(qualitySearch.rawCandidates ?? []));
+    check("quality filter removes low-action pages from key opportunity cards", qualityCards.length > 0 && qualityCards.every((card) => !lowActionText(cardText(card))), qualityCardText);
+    check("quality filter keeps action-oriented cards", qualityCards.some((card) => actionSignalText(cardText(card))), qualityCardText);
+    const qualityReportResponse = await app.request("/api/reports/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        spec: qualitySpec,
+        radar_type: "custom",
+        opportunities: qualityCards,
+        candidateAccounting: qualitySearch.candidateAccounting,
+        executionLog: qualitySearch.executionLog,
+        rawCandidates: qualitySearch.rawCandidates,
+      }),
+    });
+    const qualityReportJson = await qualityReportResponse.json() as { success?: boolean; data?: { markdown?: string } };
+    const qualityMarkdown = qualityReportJson.data?.markdown ?? "";
+    check("quality report separates low-action observation sources", qualityReportJson.success === true && qualityMarkdown.includes("### 低行动性观察来源"));
+    check("quality report keeps low-action pages out of recommended opportunity titles", !qualityCards.some((card) => lowActionText(titleOf(card))), qualityCardText);
+  } finally {
+    providerRegistry.unregister("test_live_quality");
   }
 
   const scenarios: LiveScenario[] = [
@@ -256,6 +374,8 @@ async function main(): Promise<void> {
     check(`${scenario.label}: opportunity cards include real URL`, cards.some((card) => /^https?:\/\//.test(card.official_source_url || "")));
     check(`${scenario.label}: opportunity cards are live and not demo`, cards.length > 0 && cards.every((card) => card.data_mode === "live" && card.is_demo_data !== true));
     check(`${scenario.label}: source status stays待复核`, cards.every((card) => card.evidence_status !== "confirmed" && card.verificationStatus !== "verified"));
+    check(`${scenario.label}: key opportunity cards exclude low-action pages`, cards.slice(0, 5).every((card) => !lowActionText(cardText(card))), cards.slice(0, 5).map(cardText).join(" | "));
+    check(`${scenario.label}: key opportunity cards keep action signals`, cards.slice(0, 5).some((card) => actionSignalText(cardText(card))), cards.slice(0, 5).map(cardText).join(" | "));
     check(`${scenario.label}: result has one expected source family`, domains.some((domain) => scenario.expectedDomains.some((expected) => domain.includes(expected))), domains.join(", "));
     const openedUrls = searchJson.data?.executionLog?.openedUrls ?? [];
     check(`${scenario.label}: live evidence attempts at most first 3 URLs`, openedUrls.length > 0 && openedUrls.length <= 3, `opened=${openedUrls.length}`);
