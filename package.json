@@ -72,6 +72,8 @@
     "verify:llm-retry": "tsx scripts/verify-llm-retry.ts",
     "verify:search-cost-guard": "tsx scripts/verify-search-cost-guard.ts",
     "verify:q3": "tsx scripts/verify-q3-saveable-failed-run.ts",
+    "verify:q4:health": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial LLM_MODE=live DATA_MODE=mock tsx scripts/verify-q4-health.ts",
+    "q4:live-server": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial LLM_MODE=live DATA_MODE=mock tsx scripts/start-q4-live-server.ts",
     "verify:all": "node --run typecheck && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3",
     "precheck": "tsx scripts/precheck.ts"
   },

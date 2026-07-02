@@ -12,6 +12,12 @@ export interface SearchRunOutcome {
   errorCode?: string;
 }
 
+function liveSearchErrorCode(liveValidationError: string): string {
+  return liveValidationError.includes("LIVE_PROVIDER_MOCK_MODE_BLOCKED")
+    ? "LIVE_PROVIDER_MOCK_MODE_BLOCKED"
+    : "LIVE_SEARCH_FAILED";
+}
+
 export function buildSearchRunOutcome(
   result: SearchOrchestratorResult,
   dataMode: DataMode,
@@ -21,13 +27,17 @@ export function buildSearchRunOutcome(
   const cardCount = result.opportunityCards?.length ?? 0;
   const rawCount = result.total_raw ?? result.rawCandidates?.length ?? 0;
   if (liveValidationError) {
+    const errorCode = liveSearchErrorCode(liveValidationError);
+    const prefix = errorCode === "LIVE_PROVIDER_MOCK_MODE_BLOCKED"
+      ? "本轮真实搜索环境错误"
+      : "本轮真实搜索失败";
     return {
       status: "failed",
-      message: `本轮真实搜索失败：${liveValidationError} 雷达策略已生成，你可以先保存这个雷达，之后继续盯机会。`,
+      message: `${prefix}：${liveValidationError} 雷达策略已生成，你可以先保存这个雷达，之后继续盯机会。`,
       canSaveRadar: true,
       canRetry: true,
       canSwitchToDemo: isLive,
-      errorCode: "LIVE_SEARCH_FAILED",
+      errorCode,
     };
   }
   if (rawCount === 0) {

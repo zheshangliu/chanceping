@@ -54,6 +54,10 @@ function isMockLikeUrl(url: string): boolean {
 }
 
 export function validateLiveSearchResult(result: SearchOrchestratorResult): string | null {
+  const mockModeError = (result.errors ?? []).find((error) => error.includes("LIVE_PROVIDER_MOCK_MODE_BLOCKED"));
+  if (mockModeError) {
+    return mockModeError;
+  }
   const rawCandidates = result.rawCandidates ?? [];
   const mockLike = rawCandidates.find((candidate) => isMockLikeUrl(candidate.url));
   if (mockLike) {

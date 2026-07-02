@@ -716,6 +716,13 @@ function isRetryableProviderError(message: string): boolean {
   return /fetch failed|network|timeout|ECONNRESET|ETIMEDOUT|ENOTFOUND/i.test(message);
 }
 
+function providerMockModeError(provider: SearchProvider): string | null {
+  if (process.env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH !== "true") return null;
+  const mockMode = (provider as SearchProvider & { mockMode?: unknown }).mockMode;
+  if (mockMode !== true) return null;
+  return `LIVE_PROVIDER_MOCK_MODE_BLOCKED: provider ${provider.name} 处于 mockMode，已阻断真实搜索，避免把演示数据当作 live 结果。`;
+}
+
 async function searchProviderWithRetry(
   provider: SearchProvider,
   item: SearchQueryFamilyItem,
@@ -727,6 +734,24 @@ async function searchProviderWithRetry(
   log: SearchExecutionLog["queryExecutions"][number];
 }> {
   const startedAt = new Date().toISOString();
+  const mockModeError = providerMockModeError(provider);
+  if (mockModeError) {
+    return {
+      provider: provider.name,
+      results: [],
+      error: mockModeError,
+      log: {
+        query: item.query,
+        provider: provider.name,
+        startedAt,
+        status: "failed",
+        rawResultCount: 0,
+        error: mockModeError,
+        retryCount: 0,
+        ...queryMeta(item),
+      },
+    };
+  }
   let retryCount = 0;
   let lastError = "";
   for (let attempt = 0; attempt < 2; attempt += 1) {

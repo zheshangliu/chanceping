@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = new URL("../", import.meta.url);
 const RESULT_FILE = new URL("../data/golden-20-results.json", import.meta.url);
 const REPORT_FILE = new URL("../Golden_20_User_Simulation_Report.md", import.meta.url);
+const GOLDEN_5_REPORT_FILE = new URL("../Golden_5_Live_Smoke_Report.md", import.meta.url);
 
 const REQUIRED_SECTIONS = [
   "搜索到的来源",
@@ -26,6 +27,23 @@ const LOW_ACTION_RE = /视频|集锦|百科|维基|规则介绍|历史介绍|新
 const KEY_LEAK_RE = /COMMERCIAL_LLM_API_KEY|DEEPSEEK_API_KEY|CONTEST_LLM_API_KEY|DASHSCOPE_API_KEY|(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{8,}|(?<![A-Za-z0-9])Bearer\s+[A-Za-z0-9._-]{12,}/i;
 const ACTUAL_MOCK_RE = /演示来源|演示数据，未真实核验|Mock 模式|data_mode.?mock/i;
 const OVERCLAIM_RE = /已确认报名资格|已核验报名资格|已确认费用|已核验费用|已确认截止日期|已核验截止日期|已确认联系人|已核验联系人|已确认报名状态|已核验报名状态|已确认版权义务|已核验版权义务/;
+const ACTION_LAYER_FIELDS = [
+  "decision:",
+  "recommended_angle:",
+  "material_gaps:",
+  "next_actions:",
+  "risk_notes:",
+  "monitoring_keywords:",
+];
+const SEMANTIC_BUCKETS = [
+  "direct_opportunity",
+  "business_lead",
+  "channel_partner_lead",
+  "customer_lead",
+  "association_directory",
+  "watch_signal",
+  "reference_case",
+];
 
 export const GOLDEN_CASES = [
   { id: 1, input: "我是围棋选手，帮我盯机会。", clarity: "模糊", answer: "主要盯未来30天内国内外可报名的围棋公开赛、职业定段赛和奖金赛事，排除培训广告。", subjectRe: /围棋选手/, typeRe: /围棋|公开赛|定段赛|奖金赛事|赛事|比赛/ },
@@ -51,6 +69,7 @@ export const GOLDEN_CASES = [
 ];
 
 export const DEFAULT_GOLDEN_LIVE_SAMPLE_IDS = [1, 2, 7, 19];
+export const GOLDEN_Q4_SMOKE_IDS = [1, 3, 4, 19, 20];
 
 export function parseGoldenCaseSelection(selected) {
   if (Array.isArray(selected)) {
@@ -98,9 +117,17 @@ async function saveGoldenResults(results) {
 }
 
 export class Golden20BrowserRunner {
-  constructor({ tab, baseUrl = "http://localhost:3000" }) {
+  constructor({
+    tab,
+    baseUrl = "http://localhost:3000",
+    testRadarNamePrefix = "Golden Q4 Test",
+    protectExistingRadars = true,
+  }) {
     this.tab = tab;
     this.baseUrl = baseUrl;
+    this.testRadarNamePrefix = testRadarNamePrefix;
+    this.protectExistingRadars = protectExistingRadars;
+    this.createdRadarIds = new Set();
   }
 
   sleep(ms) {
@@ -166,7 +193,13 @@ export class Golden20BrowserRunner {
     const active = (Array.isArray(radars) ? radars : []).filter((r) => r.isBuiltin !== true && r.status !== "archived");
     const result = { quotaFull: active.length >= 3, deleted: null, before: active.length, after: active.length, released: false };
     if (!result.quotaFull) return result;
-    const target = [...active].sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")))[0];
+    const deletable = this.protectExistingRadars
+      ? active.filter((radar) => this.createdRadarIds.has(radar.id) || String(radar.name || "").startsWith(this.testRadarNamePrefix))
+      : active;
+    const target = [...deletable].sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")))[0];
+    if (!target?.id && this.protectExistingRadars) {
+      throw new Error("配额已满且没有本轮 Q.4 测试雷达可释放；为避免误删用户雷达，已停止。");
+    }
     if (!target?.id) throw new Error("配额已满但没有可删除雷达");
     await this.api(`/api/radars/${encodeURIComponent(target.id)}`, { method: "DELETE", body: {} });
     const afterRadars = await this.api("/api/radars?scope=mine");
@@ -185,22 +218,48 @@ export class Golden20BrowserRunner {
   classify(result) {
     const serious = [];
     const partial = [];
+    const failureClasses = new Set();
     if (result.keyLeak) serious.push("疑似 API key 泄露");
     if (result.mockFallback) serious.push("live 路径疑似回退演示数据");
     if (result.overclaim) serious.push("报告把搜索发现包装成已核验事实");
     if (!result.saved) serious.push("保存长期雷达失败");
-    if (!result.rerunSuccess) serious.push("再次盯机会失败");
-    if (!result.secondReport) serious.push("第二份报告未生成");
+    if (!result.rerunAttempted) serious.push("再次盯机会未触发");
+    if (result.searchSucceeded && !result.rerunSuccess) serious.push("搜索成功后再次盯机会失败");
+    if (result.searchSucceeded && !result.secondReport) serious.push("搜索成功后第二份报告未生成");
+    if (serious.length > 0) failureClasses.add("主链路失败");
+    if (!result.searchSucceeded || !result.rerunSuccess || !result.secondReport) {
+      failureClasses.add("搜索质量失败");
+    }
+    if (!result.strategyCardClear) {
+      partial.push("雷达版本策略卡不够清楚");
+      failureClasses.add("主链路失败");
+    }
     if (!result.profileSubjectOk) partial.push("主体识别不稳");
     if (!result.opportunityTypeOk) partial.push("机会类型不够合理");
-    if (!result.searchRelevant) partial.push("搜索结果相关性不足");
-    if (result.lowActionInCards) partial.push("低行动性页面进入重点机会卡");
-    if (!result.cardsActionable) partial.push("机会卡行动价值不足");
-    if (!result.reportSectionsOk) partial.push("报告可信度分区不完整");
+    if (!result.searchRelevant) {
+      partial.push("搜索结果相关性不足");
+      failureClasses.add("搜索质量失败");
+    }
+    if (result.lowActionInCards) {
+      partial.push("低行动性页面进入重点机会卡");
+      failureClasses.add("搜索质量失败");
+    }
+    if (!result.cardsActionable) {
+      partial.push("机会卡行动价值不足");
+      failureClasses.add("搜索质量失败");
+    }
+    if (!result.reportSectionsOk) {
+      partial.push("报告可信度分区不完整");
+      failureClasses.add("报告价值失败");
+    }
+    if (!result.reportActionLayerOk) {
+      partial.push("报告行动层不足");
+      failureClasses.add("报告价值失败");
+    }
     if (result.consoleErrorCount > 0) partial.push("控制台出现 error/warn");
-    if (serious.length > 0) return { status: "失败", reason: serious.join("；"), suggestions: [...serious, ...partial] };
-    if (partial.length > 0) return { status: "部分通过", reason: partial.join("；"), suggestions: partial };
-    return { status: "通过", reason: "", suggestions: [] };
+    if (serious.length > 0) return { status: "失败", reason: serious.join("；"), suggestions: [...serious, ...partial], failureClasses: [...failureClasses] };
+    if (partial.length > 0) return { status: "部分通过", reason: partial.join("；"), suggestions: partial, failureClasses: [...failureClasses] };
+    return { status: "通过", reason: "", suggestions: [], failureClasses: [] };
   }
 
   async runCase(id) {
@@ -215,14 +274,22 @@ export class Golden20BrowserRunner {
       triggeredClarification: false,
       question: "",
       profileSummary: "",
+      strategyCardClear: false,
       profileSubjectOk: false,
       opportunityTypeOk: false,
+      searchSucceeded: false,
+      searchFailureSaveable: false,
       searchRelevant: false,
       lowActionInCards: false,
       cardsActionable: false,
       reportSectionsOk: false,
+      reportActionLayerOk: false,
+      directOpportunity: false,
+      semanticBuckets: [],
       saved: false,
+      rerunAttempted: false,
       rerunSuccess: false,
+      rerunIssueVisible: false,
       secondReport: false,
       quotaDeletion: null,
       consoleErrorCount: 0,
@@ -257,6 +324,9 @@ export class Golden20BrowserRunner {
       }
       if (!hasRadarVersionCard(state)) throw new Error("未进入雷达版本策略卡");
       result.profileSummary = state.profile.map((p) => `${p.label}:${p.value}`).join("；");
+      result.strategyCardClear = /雷达 V1\.\d+ (?:确认卡|策略卡)/.test(state.text)
+        && state.text.includes("会按哪些搜索主题去找")
+        && state.text.includes("优先看哪些来源");
       result.profileSubjectOk = c.subjectRe.test(result.profileSummary) || c.subjectRe.test(state.text);
       result.opportunityTypeOk = c.typeRe.test(result.profileSummary) || c.typeRe.test(state.text);
 
@@ -266,10 +336,17 @@ export class Golden20BrowserRunner {
       const initialText = `${initial.text}\n${initial.markdown}`;
       result.cardCount = initial.cards.length;
       result.cardTitles = initial.cards.map((card) => card.title || card.text.slice(0, 60)).slice(0, 3);
+      result.searchSucceeded = initial.cards.length > 0 && !/真实搜索失败|结果不足|没有发现候选来源|没有形成重点机会卡/.test(initialText);
+      result.searchFailureSaveable = /真实搜索失败|结果不足|没有发现候选来源|没有形成重点机会卡/.test(initialText)
+        ? initial.text.includes("保存为长期雷达")
+        : true;
       result.searchRelevant = initial.cards.length > 0 && (c.typeRe.test(initialText) || c.subjectRe.test(initialText) || /搜索发现|待复核|官方|采购|招标|赛事|征集|展会|合作|报名|申请|机会|项目|客户|线索/.test(initialText));
       result.lowActionInCards = initial.cards.some((card) => LOW_ACTION_RE.test(card.text));
       result.cardsActionable = initial.cards.some((card) => /建议动作|搜索发现来源|官方来源|截止时间|报名|申请|联系|采购|招标|征集|展会|合作|投稿|入口|待复核/.test(card.text));
       result.reportSectionsOk = REQUIRED_SECTIONS.every((section) => initial.markdown.includes(section));
+      result.reportActionLayerOk = ACTION_LAYER_FIELDS.every((field) => initial.markdown.includes(field));
+      result.directOpportunity = /direct_opportunity/.test(initialText);
+      result.semanticBuckets = SEMANTIC_BUCKETS.filter((bucket) => initialText.includes(bucket));
       result.mockFallback = ACTUAL_MOCK_RE.test(initialText);
       result.overclaim = OVERCLAIM_RE.test(initial.markdown);
       result.keyLeak = KEY_LEAK_RE.test(initialText);
@@ -284,12 +361,23 @@ export class Golden20BrowserRunner {
       const radar = await this.latestRadar();
       result.radarId = radar?.id || "";
       result.radarName = radar?.name || state.title || "";
+      if (result.radarId) {
+        this.createdRadarIds.add(result.radarId);
+        const taggedName = `${this.testRadarNamePrefix} #${c.id} ${result.radarName || "雷达"}`.slice(0, 80);
+        const updated = await this.api(`/api/radars/${encodeURIComponent(result.radarId)}`, {
+          method: "PUT",
+          body: { name: taggedName },
+        });
+        result.radarName = updated?.name || taggedName;
+      }
       await this.clickUnique("#btn-back-to-radar-list", "back to radar list");
       await this.waitFor((s) => s.text.includes("我的雷达") && s.text.includes(result.radarName || "雷达"), 60000, `case ${c.id} my radars`);
       if (!result.radarId) throw new Error("保存后找不到 radarId");
       await this.clickUnique(`.radar-card[data-radar-id="${result.radarId}"] .btn-rerun-radar`, "rerun saved radar");
       state = await this.waitFor((s) => s.text.includes("已生成新报告") || s.text.includes("报告生成失败") || s.text.includes("真实搜索失败") || s.text.includes("结果不足"), 300000, `case ${c.id} rerun`);
+      result.rerunAttempted = true;
       result.rerunSuccess = state.text.includes("已生成新报告") || state.text.includes("查看本次报告");
+      result.rerunIssueVisible = /报告生成失败|真实搜索失败|结果不足|重试搜索/.test(state.text);
       const reports = await this.api(`/api/reports?radar_id=${encodeURIComponent(result.radarId)}`);
       result.reportCount = Array.isArray(reports) ? reports.length : 0;
       result.secondReport = result.reportCount >= 2;
@@ -316,6 +404,7 @@ export class Golden20BrowserRunner {
     result.status = result.failureReason && grade.status === "通过" ? "失败" : grade.status;
     result.failureReason = result.failureReason || grade.reason;
     result.recommendations = grade.suggestions.length > 0 ? grade.suggestions : ["继续观察 Golden 20 中的共性问题"];
+    result.failureClasses = grade.failureClasses ?? (result.failureReason ? ["主链路失败"] : []);
 
     const existing = await loadGoldenResults();
     await saveGoldenResults(existing.filter((item) => item.id !== result.id).concat(result));
@@ -336,6 +425,22 @@ function escapeCell(value) {
 }
 
 export function buildGolden20Report(results) {
+  return buildGoldenReport(results, {
+    title: "Golden 20 User Simulation Report",
+    expectedTotal: 20,
+  });
+}
+
+export function buildGolden5Report(results) {
+  return buildGoldenReport(results, {
+    title: "Golden 5 Live Smoke Report",
+    expectedTotal: 5,
+  });
+}
+
+export function buildGoldenReport(results, options = {}) {
+  const title = options.title ?? "Golden User Simulation Report";
+  const expectedTotal = options.expectedTotal ?? results.length;
   const sorted = [...results].sort((a, b) => a.id - b.id);
   const pass = countBy(sorted, "通过");
   const partial = countBy(sorted, "部分通过");
@@ -343,56 +448,81 @@ export function buildGolden20Report(results) {
   const passRate = sorted.length ? `${Math.round((pass / sorted.length) * 100)}%` : "0%";
   const severe = sorted.filter((item) => item.status === "失败");
   const partials = sorted.filter((item) => item.status === "部分通过");
+  const mainPathFailures = sorted.filter((item) => (item.failureClasses ?? []).includes("主链路失败")).length;
+  const searchQualityFailures = sorted.filter((item) => (item.failureClasses ?? []).includes("搜索质量失败")).length;
+  const reportValueFailures = sorted.filter((item) => (item.failureClasses ?? []).includes("报告价值失败")).length;
+  const actionLayerCount = sorted.filter((item) => item.reportActionLayerOk).length;
+  const saveableOnFailureCount = sorted.filter((item) => item.searchFailureSaveable).length;
+  const keyLeaks = sorted.filter((item) => item.keyLeak).length;
+  const mockFallbacks = sorted.filter((item) => item.mockFallback).length;
+  const overclaims = sorted.filter((item) => item.overclaim).length;
   const issueBuckets = [
     ["搜索相关性不足", sorted.filter((item) => /搜索结果相关性不足/.test(item.failureReason)).length],
     ["机会卡行动价值不足", sorted.filter((item) => /机会卡行动价值不足/.test(item.failureReason)).length],
+    ["报告行动层不足", sorted.filter((item) => /报告行动层不足/.test(item.failureReason)).length],
     ["主体识别不稳", sorted.filter((item) => /主体识别不稳/.test(item.failureReason)).length],
     ["机会类型不合理", sorted.filter((item) => /机会类型不够合理/.test(item.failureReason)).length],
     ["低行动性结果进入卡片", sorted.filter((item) => item.lowActionInCards).length],
     ["保存或复跑失败", sorted.filter((item) => !item.saved || !item.rerunSuccess || !item.secondReport).length],
   ];
-  const recommendN = pass >= 15 && partial <= 5 && failed <= 2;
+  const fullRun = expectedTotal >= 20;
+  const recommendN = fullRun && pass >= 15 && partial <= 5 && failed <= 2;
+  const recommendQ5 = mainPathFailures === 0
+    && keyLeaks === 0
+    && mockFallbacks === 0
+    && overclaims === 0
+    && (searchQualityFailures > 0 || reportValueFailures > 0);
 
   const lines = [
-    "# Golden 20 User Simulation Report",
+    `# ${title}`,
     "",
     `生成时间：${new Date().toISOString()}`,
     "",
     "## 1. 总体通过率",
     "",
-    `- 样本数：${sorted.length}/20`,
+    `- 样本数：${sorted.length}/${expectedTotal}`,
     `- 强通过：${pass}`,
     `- 部分通过：${partial}`,
     `- 失败：${failed}`,
     `- 强通过率：${passRate}`,
-    `- Q 通过标准：15 个以上强通过、部分通过不超过 5 个、严重失败不超过 2 个。`,
-    `- 当前结论：${recommendN ? "达到进入 Milestone N/O 的门槛。" : "未达到进入 Milestone N/O 的门槛，应先修复共性问题后复测。"}`,
+    fullRun
+      ? "- Q.4-B 通过标准：强通过 >= 15，部分通过 <= 5，失败 <= 2。"
+      : "- Q.4-A 通过标准：主链路不失败，失败/结果不足时仍可保存，不泄露 key，不静默回退 mock，不把搜索发现包装成已核验事实。",
+    `- 主链路失败：${mainPathFailures}`,
+    `- 搜索质量失败：${searchQualityFailures}`,
+    `- 报告价值失败：${reportValueFailures}`,
+    `- 搜索失败时可保存雷达：${saveableOnFailureCount}/${sorted.length}`,
+    `- 报告行动层覆盖：${actionLayerCount}/${sorted.length}`,
+    `- API key 泄露：${keyLeaks}`,
+    `- 静默 mock fallback：${mockFallbacks}`,
+    `- 搜索发现包装成已核验事实：${overclaims}`,
+    `- 当前结论：${recommendN ? "达到进入 Milestone N/O 的门槛。" : recommendQ5 ? "主链路可进入 Q.5 定向修复搜索/报告质量。" : "未达到进入下一阶段门槛，应先处理主链路或环境问题。"}`,
     "",
-    "## 2. 20 个用户逐项记录表",
+    "## 2. 用户逐项记录表",
     "",
-    "说明：`本轮释放的旧测试雷达` 只是测试配额满 3 个时，为继续测试而删除的旧测试雷达名称，与当前用户画像无关。",
+    "说明：`本轮释放的旧测试雷达` 只允许释放本轮 Q.4 测试创建且带前缀的雷达；若配额满且没有本轮测试雷达可删，脚本会停止，避免误删用户雷达。",
     "",
-    "| # | 原始输入 | 清晰度 | 追问 | 追问内容 | 画像摘要 | 主体正确 | 机会类型合理 | 搜索相关 | 低行动性进卡 | 卡片有行动价值 | 报告分区完整 | 保存成功 | 复跑成功 | 第二报告 | 本轮释放的旧测试雷达 | 控制台 error/warn | 结果 | 失败原因 | 改进建议 |",
-    "|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---:|---|---|---|",
+    "| # | 原始输入 | 策略澄清 | 雷达版本卡清楚 | 搜索成功 | 失败时可保存 | 搜索相关 | direct_opportunity | 语义分层 | 机会卡有行动价值 | 报告行动层 | 保存成功 | 复跑成功 | 第二报告 | 本轮释放的旧测试雷达 | 控制台 error/warn | 结果 | 失败分类 | 失败原因 | 改进建议 |",
+    "|---:|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---:|---|---|---|---|",
     ...sorted.map((item) => [
       item.id,
       escapeCell(item.input),
-      item.clarity,
       yesNo(item.triggeredClarification),
-      escapeCell(item.question || "无"),
-      escapeCell(item.profileSummary || "未记录"),
-      yesNo(item.profileSubjectOk),
-      yesNo(item.opportunityTypeOk),
+      yesNo(item.strategyCardClear),
+      yesNo(item.searchSucceeded),
+      yesNo(item.searchFailureSaveable),
       yesNo(item.searchRelevant),
-      yesNo(item.lowActionInCards),
+      yesNo(item.directOpportunity),
+      escapeCell((item.semanticBuckets || []).join(", ") || "无"),
       yesNo(item.cardsActionable),
-      yesNo(item.reportSectionsOk),
+      yesNo(item.reportActionLayerOk),
       yesNo(item.saved),
       yesNo(item.rerunSuccess),
       yesNo(item.secondReport),
       item.quotaDeletion?.deleted ? `是：${escapeCell(item.quotaDeletion.deleted.name)}` : "否",
       item.consoleErrorCount ?? 0,
       item.status,
+      escapeCell((item.failureClasses || []).join("；") || "无"),
       escapeCell(item.failureReason || "无"),
       escapeCell((item.recommendations || []).join("；")),
     ].join(" | ")).map((row) => `| ${row} |`),
@@ -412,17 +542,24 @@ export function buildGolden20Report(results) {
     "## 6. 建议修复优先级",
     "",
     "P0：不得出现 API key 泄露、mock 静默回退、搜索发现包装成已核验事实；本轮若出现需立即阻断。",
+    "P0：若主链路失败不为 0，先修主链路，不进入 Q.5。",
     "P1：提升非赛事行业 live query 规划和候选质量，尤其是婚庆、员工福利、研学文旅、活动布置、招生合作、手工饰品等 BD/订单类机会。",
     "P2：让机会卡更稳定地输出行动入口、下一步动作和待复核字段，避免只有泛资讯或泛搜索结果。",
     "P3：优化清晰需求的置信度判断，减少清晰样例被额外追问。",
     "",
-    "## 7. 是否建议进入 Milestone N/O",
+    "## 7. 是否建议进入 Q.5",
+    "",
+    recommendQ5
+      ? "- 建议进入 Q.5：主链路安全底线通过，但搜索质量或报告价值仍需定向修复。"
+      : "- 暂不建议进入 Q.5；若是环境失败或主链路失败，应先处理对应问题。",
+    "",
+    "## 8. 是否建议进入 Milestone N/O",
     "",
     recommendN
       ? "- 建议进入 Milestone N/O，同时把 Q 中部分通过问题列为 N/O 的 UX 与错误态收口项。"
       : "- 暂不建议进入 Milestone N/O。应先做一次 Live Search 质量和行业泛化修复，再重新跑 Golden 20。",
     "",
-    "## 8. 是否建议进入阿里云测试站",
+    "## 9. 是否建议进入阿里云测试站",
     "",
     recommendN
       ? "- 可以准备阿里云测试站，但 live LLM/live search 仍应默认关闭，仅给测试环境显式开关。"
@@ -438,10 +575,17 @@ export async function writeGolden20Report(results) {
   return fileURLToPath(REPORT_FILE);
 }
 
+export async function writeGolden5Report(results) {
+  const markdown = buildGolden5Report(results);
+  await writeFile(GOLDEN_5_REPORT_FILE, markdown, "utf-8");
+  return fileURLToPath(GOLDEN_5_REPORT_FILE);
+}
+
 export function goldenPaths() {
   return {
     root: fileURLToPath(ROOT),
     resultFile: fileURLToPath(RESULT_FILE),
     reportFile: fileURLToPath(REPORT_FILE),
+    golden5ReportFile: fileURLToPath(GOLDEN_5_REPORT_FILE),
   };
 }
