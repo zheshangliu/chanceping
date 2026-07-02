@@ -130,6 +130,9 @@ export interface ProviderRouting {
   fallback: string[];
 }
 
+/** 本地试跑时的搜索模式偏好。生产环境仍由后端安全开关统一拒绝 live。 */
+export type RadarPreferredSearchMode = "mock" | "live";
+
 // ============================================================
 // RadarRun 运行记录（V1.5-01 新增）
 // ============================================================
@@ -205,6 +208,8 @@ export interface Radar {
   spec: RadarRequirementSpec;
   /** Provider 路由配置（V1.5-01 新增，不塞进 spec） */
   providerRouting?: ProviderRouting;
+  /** Milestone M：保存长期雷达时记住本地 live 试跑偏好，复跑不能静默退回 mock */
+  preferredSearchMode?: RadarPreferredSearchMode;
   /** V1.5-06 新增：定时运行配置 */
   schedule?: RadarSchedule;
   /** V1.6-06 新增：Watch Rules DSL 规则列表（按行存储，雷达级配置） */
@@ -287,6 +292,7 @@ export function createDefaultRadar(
     isBuiltin?: boolean;
     ownerId?: string;
     providerRouting?: ProviderRouting;
+    preferredSearchMode?: RadarPreferredSearchMode;
   },
 ): Radar {
   const now = new Date().toISOString();
@@ -299,6 +305,7 @@ export function createDefaultRadar(
     privacy: createDefaultPrivacy(),
     spec: spec ?? createDefaultSpec(),
     providerRouting: options?.providerRouting ?? createDefaultProviderRouting(kind),
+    preferredSearchMode: options?.preferredSearchMode,
 
     // 运行追踪
     currentRunId: undefined,

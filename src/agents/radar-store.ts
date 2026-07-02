@@ -24,6 +24,7 @@ import type {
   RadarPrivacy,
   RadarSchedule,
   LastRunStatus,
+  RadarPreferredSearchMode,
 } from "../schema/radar";
 import {
   createDefaultRadar,
@@ -52,6 +53,8 @@ export interface RadarCreateInput {
   spec?: RadarRequirementSpec;
   /** Provider 路由（可选，不传用默认） */
   providerRouting?: ProviderRouting;
+  /** Milestone M：本地 live 试跑偏好（生产仍由后端开关拒绝） */
+  preferredSearchMode?: RadarPreferredSearchMode;
   /** 所有者 ID（可选） */
   ownerId?: string;
   /** 是否内置雷达（可选） */
@@ -66,6 +69,7 @@ export interface RadarUpdateInput {
   spec?: RadarRequirementSpec;
   privacy?: RadarPrivacy;
   providerRouting?: ProviderRouting;
+  preferredSearchMode?: RadarPreferredSearchMode;
   /** V1.5-03 新增：支持 activate/pause */
   status?: RadarStatus;
   /** V1.5-03 新增：支持运行追踪 */
@@ -197,6 +201,7 @@ export class JsonRadarStore implements RadarStore {
       isBuiltin: input.isBuiltin,
       ownerId: input.ownerId,
       providerRouting: input.providerRouting,
+      preferredSearchMode: input.preferredSearchMode,
     });
 
     // 覆盖稳定 ID（内置雷达）
@@ -257,6 +262,7 @@ export class JsonRadarStore implements RadarStore {
       ...(patch.spec !== undefined ? { spec: patch.spec } : {}),
       ...(patch.privacy !== undefined ? { privacy: patch.privacy } : {}),
       ...(patch.providerRouting !== undefined ? { providerRouting: patch.providerRouting } : {}),
+      ...(patch.preferredSearchMode !== undefined ? { preferredSearchMode: patch.preferredSearchMode } : {}),
       ...(patch.status !== undefined ? { status: patch.status } : {}),
       // currentRunId 使用 in 检查 key 是否存在，传 undefined 表示显式清空
       ...("currentRunId" in patch ? { currentRunId: patch.currentRunId } : {}),

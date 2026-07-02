@@ -288,6 +288,7 @@
         name,
         kind: "custom",
         spec: currentResult.spec,
+        ...(currentResult.searchMode === "live" ? { preferredSearchMode: "live" } : {}),
       });
       const radarId = created.data.id;
       await postJson(`/api/radars/${radarId}/activate`, {});

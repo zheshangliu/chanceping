@@ -137,6 +137,7 @@ async function main(): Promise<void> {
     }
     const userRadarCount = await page.$$eval('.radar-card[data-kind="custom"]', (items: any[]) => items.length);
     if (userRadarCount !== 1) fail(`my radar list should contain one saved custom radar: ${userRadarCount}`);
+    const savedRadarId = await page.$eval('.radar-card[data-kind="custom"]', (el: any) => el.getAttribute("data-radar-id") || "");
     const detailButton = await page.$('.radar-card[data-kind="custom"] .btn-view-radar-detail, .radar-card[data-kind="custom"] .btn-detail');
     if (!detailButton) {
       fail("my radar list missing detail button");
@@ -189,6 +190,14 @@ async function main(): Promise<void> {
         const reportCountAfterRerun = await page.$$eval("#radar-report-history-list tbody tr", (rows: any[]) => rows.length);
         if (reportCountAfterRerun <= detailCounts.reports) {
           fail(`rerun should append a report: before=${detailCounts.reports}, after=${reportCountAfterRerun}`);
+        }
+        const runHistory = await page.evaluate(async (radarId: string) => {
+          const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/runs?limit=5`);
+          return await res.json();
+        }, savedRadarId) as { success?: boolean; data?: Array<{ id: string; reportId?: string }> };
+        const boundRuns = (runHistory.data ?? []).filter((run) => Boolean(run.reportId));
+        if (!runHistory.success || boundRuns.length < 2) {
+          fail(`rerun should persist RadarRun.reportId history: ${JSON.stringify(runHistory)}`);
         }
       }
     }

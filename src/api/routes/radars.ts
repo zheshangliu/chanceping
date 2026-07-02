@@ -127,6 +127,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       kind: body.kind,
       spec: body.spec,
       providerRouting: body.providerRouting,
+      preferredSearchMode: body.preferredSearchMode,
     });
     // V1.6a 自检修复:创建后立即 save,避免重启丢失
     ctx.radarStore.save();
@@ -262,6 +263,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       ...(body.spec !== undefined ? { spec: body.spec } : {}),
       ...(body.privacy !== undefined ? { privacy: body.privacy } : {}),
       ...(body.providerRouting !== undefined ? { providerRouting: body.providerRouting } : {}),
+      ...(body.preferredSearchMode !== undefined ? { preferredSearchMode: body.preferredSearchMode } : {}),
       // V1.6-06：支持更新 watchRules（用 in 检查以支持显式清空）
       ...("watchRules" in body ? { watchRules: body.watchRules } : {}),
     });
@@ -476,7 +478,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
     try {
       // 3. 执行搜索
       const resolvedMode = resolveSearchDataMode({
-        requestedMode: body.search_mode,
+        requestedMode: body.search_mode ?? radar.preferredSearchMode,
         fallbackMode: getDataMode(),
       });
       if (resolvedMode.error) {

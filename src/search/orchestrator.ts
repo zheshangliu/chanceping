@@ -391,6 +391,8 @@ function candidateQuality(result: SearchResult): CandidateQuality {
     { pattern: /规则|历史|history|rules/i, reason: "规则/历史介绍页面，行动性不足" },
     { pattern: /新闻转载|转载|综合新闻|news roundup/i, reason: "新闻转载或泛资讯页面，需人工再追踪原始公告" },
     { pattern: /培训广告|培训班|训练营|课程|camp|course/i, reason: "培训广告或课程页面，不是本轮重点机会" },
+    { pattern: /知乎|专栏|博客|科普|入门|指南|升段|升级|zhihu|column|blog|guide|explainer/i, reason: "专栏/科普/指南类页面，通常不是报名或申请入口" },
+    { pattern: /新浪|搜狐|网易|腾讯新闻|今日头条|澎湃|凤凰网|sports\.sina|sohu|163\.com|qq\.com|toutiao|thepaper|ifeng/i, reason: "门户或社区资讯页面，需人工追踪原始公告" },
   ];
   const matchedLowAction = lowActionPatterns.find((item) => item.pattern.test(text));
   if (matchedLowAction) {

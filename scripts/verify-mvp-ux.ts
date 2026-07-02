@@ -29,6 +29,7 @@ const radarsJs = read("web/radars.js");
 const styles = read("web/styles.css");
 const radarDetailJs = read("web/radar-detail.js");
 const reportGenerator = read("src/agents/radar-report-generator.ts");
+const radarsRoute = read("src/api/routes/radars.ts");
 const userContext = read("src/agents/user-context.ts");
 
 check("首页标题更直白", html.includes("告诉我你想盯什么机会"));
@@ -73,6 +74,7 @@ check("用户回答后重新生成画像", profileJs.includes("clarificationAnsw
 check("结果页按画像运行", watchResultJs.includes("profile") && watchResultJs.includes("spec"));
 check("本地 live search 通过 URL/localStorage 显式开启", homeJs.includes("live_search") && homeJs.includes("chanceping_live_search") && homeJs.includes("getChancePingSearchMode"));
 check("产品主路径可透传 search_mode=live", watchResultJs.includes("getSearchModeRequest") && watchResultJs.includes("search_mode: \"live\"") && radarsJs.includes("getSearchModeRequest") && radarDetailJs.includes("getSearchModeRequest"));
+check("保存长期雷达会记住本地 live 试跑偏好", watchResultJs.includes("preferredSearchMode: \"live\"") && radarsRoute.includes("radar.preferredSearchMode"));
 check("模板路径允许调整画像", watchResultJs.includes("调整画像") && profileJs.includes("showRadarProfileDraftFromResult"));
 check("含正在搜索机会 loading", watchResultJs.includes("正在搜索机会"));
 check("含正在生成机会报告 loading", watchResultJs.includes("正在生成机会报告"));

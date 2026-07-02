@@ -40,7 +40,7 @@ function titleOf(card: OpportunityCard | undefined): string {
 }
 
 function lowActionText(value: string): boolean {
-  return /视频|集锦|百科|维基|规则|历史|新闻转载|培训广告|培训班|YouTube|playlist|wikipedia|baike|rules|history/i.test(value);
+  return /视频|集锦|百科|维基|规则|历史|新闻转载|培训广告|培训班|专栏|博客|科普|入门|指南|升段|升级|知乎|新浪|搜狐|网易|YouTube|playlist|wikipedia|baike|rules|history|zhihu|column|blog|guide|explainer|sports\.sina|sohu|163\.com/i.test(value);
 }
 
 function cardText(card: OpportunityCard | undefined): string {
@@ -56,6 +56,16 @@ function cardText(card: OpportunityCard | undefined): string {
 function actionSignalText(value: string): boolean {
   return /报名|申报|申请|赛事通知|赛程|采购公告|招标公告|申请入口|官方公告|公开赛|锦标赛|大会|イベント|棋戦|calendar|event|events|tournament|championship|registration|entry/i.test(value);
 }
+
+const REQUIRED_TRUST_SECTIONS = [
+  "### 搜索到的来源",
+  "### 字段已核验事实",
+  "### 模型判断",
+  "### 待复核项",
+  "### 失败来源",
+  "### 未检查来源",
+  "### 低行动性观察来源",
+];
 
 const REQUIRED_FIELD_EVIDENCE: FieldEvidenceName[] = [
   "title",
@@ -76,6 +86,10 @@ const ALLOWED_FIELD_STATUSES: FieldEvidenceStatus[] = [
   "not_found",
   "failed",
 ];
+
+function hasRequiredTrustSections(markdown: string): boolean {
+  return REQUIRED_TRUST_SECTIONS.every((section) => markdown.includes(section));
+}
 
 function fieldEvidenceFields(card: OpportunityCard | undefined): string[] {
   return (card?.field_evidence ?? []).map((item) => item.field);
@@ -106,6 +120,94 @@ function addSources(
     added_at: now,
     contributed_by: "user",
   }));
+}
+
+function buildTableTennisSpec(createDefaultSpec: () => RadarRequirementSpec, now: string): RadarRequirementSpec {
+  const spec = createDefaultSpec();
+  spec.client_profile.client_type = "个人";
+  spec.client_profile.industry = "体育";
+  spec.client_profile.business_type = "乒乓球选手";
+  spec.client_profile.regions = ["中国", "国际"];
+  spec.core_goals.primary_goal = "寻找未来30天内可报名的乒乓球比赛";
+  spec.core_goals.action_intent = ["报名比赛"];
+  spec.core_goals.priority_order = ["WTT", "ITTF", "中国乒协"];
+  spec.opportunity_scope.primary_opportunity_types = ["乒乓球比赛", "公开赛", "报名窗口"];
+  spec.region_scope.primary_regions = ["中国", "国际"];
+  spec.region_scope.global_allowed = true;
+  spec.keyword_strategy.core_keywords_zh = ["乒乓球", "比赛", "报名", "赛事通知"];
+  spec.keyword_strategy.core_keywords_en = ["table tennis", "WTT", "ITTF", "calendar"];
+  spec.filter_rules.must_exclude = ["培训广告"];
+  addSources(spec, now, [
+    { name: "WTT", url: "https://worldtabletennis.com/" },
+    { name: "ITTF", url: "https://www.ittf.com/" },
+  ], ["中国乒协官网"]);
+  setConfirmed(spec, now);
+  return spec;
+}
+
+function liveRunHasEvidence(data: {
+  opportunityCards?: OpportunityCard[];
+  rawCandidates?: Array<{ title: string; url: string; sourceDomain: string }>;
+  executionLog?: {
+    openedUrls?: Array<{ url: string; status: string; errorType?: string; fetchedAt: string }>;
+    queryExecutions?: Array<{ provider: string; status: string; rawResultCount: number }>;
+  };
+} | undefined): boolean {
+  const cards = data?.opportunityCards ?? [];
+  const rawCandidates = data?.rawCandidates ?? [];
+  const openedUrls = data?.executionLog?.openedUrls ?? [];
+  const providerSummary = data?.executionLog?.queryExecutions ?? [];
+  return rawCandidates.length > 0
+    && rawCandidates.every((candidate) => Boolean(candidate.sourceDomain) && !hasMockOrExampleUrl(candidate.url))
+    && openedUrls.length > 0
+    && openedUrls.length <= 3
+    && providerSummary.some((item) => item.provider === "serper")
+    && cards.length > 0
+    && cards.every((card) => card.data_mode === "live" && card.is_demo_data !== true)
+    && cards.slice(0, 5).every((card) => !lowActionText(cardText(card)));
+}
+
+async function generateBoundReport(
+  app: { request: (input: string, init?: RequestInit) => Response | Promise<Response> },
+  radarId: string,
+  spec: RadarRequirementSpec,
+  runData: {
+    run?: { id?: string };
+    opportunityCards?: OpportunityCard[];
+    sourceCoverage?: unknown[];
+    sourceHintChecks?: unknown[];
+    candidateAccounting?: unknown;
+    executionLog?: unknown;
+    rawCandidates?: unknown[];
+  },
+): Promise<{ reportId?: string; markdown: string; status: number; success?: boolean; error?: string }> {
+  const response = await app.request("/api/reports/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      radar_id: radarId,
+      run_id: runData.run?.id,
+      radar_type: "custom",
+      spec,
+      opportunities: runData.opportunityCards ?? [],
+      sourceHintChecks: runData.sourceCoverage ?? runData.sourceHintChecks ?? [],
+      candidateAccounting: runData.candidateAccounting,
+      executionLog: runData.executionLog,
+      rawCandidates: runData.rawCandidates ?? [],
+    }),
+  });
+  const json = await response.json() as {
+    success?: boolean;
+    data?: { reportId?: string; markdown?: string };
+    error?: { message?: string };
+  };
+  return {
+    reportId: json.data?.reportId,
+    markdown: json.data?.markdown ?? "",
+    status: response.status,
+    success: json.success,
+    error: json.error?.message,
+  };
 }
 
 interface LiveScenario {
@@ -180,6 +282,120 @@ async function main(): Promise<void> {
     process.env.NODE_ENV = originalNodeEnv;
   }
 
+  const testRadarNamePrefix = "Milestone M live复跑验收";
+  const existingRadarsResponse = await app.request("/api/radars?scope=mine");
+  const existingRadarsJson = await existingRadarsResponse.json() as {
+    success?: boolean;
+    data?: Array<{ id: string; name?: string; isBuiltin?: boolean }>;
+  };
+  if (existingRadarsJson.success && Array.isArray(existingRadarsJson.data)) {
+    for (const radar of existingRadarsJson.data) {
+      if (radar.name?.startsWith(testRadarNamePrefix) && radar.isBuiltin !== true) {
+        await app.request(`/api/radars/${radar.id}`, { method: "DELETE" });
+      }
+    }
+  }
+
+  const liveRerunSpec = buildTableTennisSpec(createDefaultSpec, now);
+  const liveRadarCreateResponse = await app.request("/api/radars", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: `${testRadarNamePrefix} ${Date.now()}`,
+      kind: "custom",
+      spec: liveRerunSpec,
+      preferredSearchMode: "live",
+    }),
+  });
+  const liveRadarCreateJson = await liveRadarCreateResponse.json() as {
+    success?: boolean;
+    data?: { id?: string; preferredSearchMode?: string };
+    error?: { message?: string };
+  };
+  const liveRadarId = liveRadarCreateJson.data?.id ?? "";
+  check("saved live radar create endpoint returns 200", liveRadarCreateResponse.status === 200, `status=${liveRadarCreateResponse.status}, error=${sanitize(liveRadarCreateJson.error?.message)}`);
+  check("saved live radar persists preferred live mode", liveRadarCreateJson.data?.preferredSearchMode === "live", JSON.stringify(liveRadarCreateJson.data ?? {}));
+
+  if (liveRadarId) {
+    const activateResponse = await app.request(`/api/radars/${liveRadarId}/activate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    check("saved live radar activates", activateResponse.status === 200, `status=${activateResponse.status}`);
+
+    const nodeEnvBeforeRadarRun = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    const productionRunResponse = await app.request(`/api/radars/${liveRadarId}/run`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    const productionRunJson = await productionRunResponse.json() as { success?: boolean; error?: { message?: string } };
+    check(
+      "production blocks persisted live radar rerun",
+      productionRunResponse.status !== 200 && productionRunJson.success !== true && /真实搜索未开启|生产环境默认关闭|LIVE_SEARCH_DISABLED/.test(productionRunJson.error?.message ?? ""),
+      `status=${productionRunResponse.status}, message=${sanitize(productionRunJson.error?.message)}`,
+    );
+    if (nodeEnvBeforeRadarRun === undefined) {
+      delete process.env.NODE_ENV;
+    } else {
+      process.env.NODE_ENV = nodeEnvBeforeRadarRun;
+    }
+
+    const runIds: string[] = [];
+    const reportIds: string[] = [];
+    for (const attempt of [1, 2]) {
+      const runResponse = await app.request(`/api/radars/${liveRadarId}/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const runJson = await runResponse.json() as {
+        success?: boolean;
+        data?: {
+          run?: { id?: string; reportId?: string };
+          opportunityCards?: OpportunityCard[];
+          rawCandidates?: Array<{ title: string; url: string; sourceDomain: string }>;
+          sourceCoverage?: unknown[];
+          sourceHintChecks?: unknown[];
+          candidateAccounting?: unknown;
+          executionLog?: {
+            openedUrls?: Array<{ url: string; status: string; errorType?: string; fetchedAt: string }>;
+            queryExecutions?: Array<{ provider: string; status: string; rawResultCount: number }>;
+          };
+        };
+        error?: { message?: string };
+      };
+      const runId = runJson.data?.run?.id ?? "";
+      if (runId) runIds.push(runId);
+      check(`saved live radar rerun ${attempt} returns 200`, runResponse.status === 200, `status=${runResponse.status}, error=${sanitize(runJson.error?.message)}`);
+      check(`saved live radar rerun ${attempt} succeeds`, runJson.success === true, sanitize(runJson.error?.message));
+      check(`saved live radar rerun ${attempt} uses live evidence`, liveRunHasEvidence(runJson.data), JSON.stringify(runJson.data?.executionLog?.queryExecutions ?? []));
+
+      const report = await generateBoundReport(app, liveRadarId, liveRerunSpec, runJson.data ?? {});
+      if (report.reportId) reportIds.push(report.reportId);
+      check(`saved live radar rerun ${attempt} report returns 200`, report.status === 200, `status=${report.status}, error=${sanitize(report.error)}`);
+      check(`saved live radar rerun ${attempt} report is bound`, Boolean(report.reportId), report.markdown.slice(0, 120));
+      check(`saved live radar rerun ${attempt} report keeps trust sections`, hasRequiredTrustSections(report.markdown));
+      check(`saved live radar rerun ${attempt} report does not overclaim verified facts`, !/已确认(报名资格|费用|截止日期|版权义务)/.test(report.markdown));
+
+      const runsResponse = await app.request(`/api/radars/${liveRadarId}/runs?limit=10`);
+      const runsJson = await runsResponse.json() as { success?: boolean; data?: Array<{ id: string; reportId?: string }> };
+      const boundRun = (runsJson.data ?? []).find((run) => run.id === runId);
+      check(`saved live radar rerun ${attempt} writes RadarRun.reportId`, boundRun?.reportId === report.reportId, JSON.stringify(boundRun ?? {}));
+    }
+
+    const reportsResponse = await app.request(`/api/reports?radar_id=${liveRadarId}`);
+    const reportsJson = await reportsResponse.json() as { success?: boolean; data?: Array<{ id: string; runId?: string }> };
+    const historyReports = reportsJson.data ?? [];
+    check("saved live radar rerun creates two distinct runs", new Set(runIds).size === 2, runIds.join(", "));
+    check("saved live radar rerun creates two distinct reports", new Set(reportIds).size === 2, reportIds.join(", "));
+    check("saved live radar report history includes rerun reports", reportIds.every((id) => historyReports.some((report) => report.id === id)), JSON.stringify(historyReports));
+
+    await app.request(`/api/radars/${liveRadarId}`, { method: "DELETE" });
+  }
+
   const mixedQualityResults: SearchResult[] = [
     {
       title: "WTT Champions 2026 报名入口",
@@ -206,6 +422,20 @@ async function main(): Promise<void> {
       title: "2026 全国乒乓球赛事通知",
       url: "https://www.ctta.cn/ssxx/2026-notice.html",
       snippet: "中国乒协官方公告：赛事通知、赛程和报名安排。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+    {
+      title: "乒乓球升段和入门指南 - 知乎专栏",
+      url: "https://zhuanlan.zhihu.com/p/table-tennis-guide",
+      snippet: "科普介绍乒乓球升段与基础知识，不含报名或申请入口。",
+      source_provider: "test_live_quality",
+      source_type: "web",
+    },
+    {
+      title: "乒乓球新闻_新浪竞技风暴 - 体育",
+      url: "https://sports.sina.com.cn/others/pingpang/",
+      snippet: "门户资讯聚合页面，不是官方赛事通知或报名入口。",
       source_provider: "test_live_quality",
       source_type: "web",
     },

@@ -8,7 +8,7 @@
 
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { RadarProfileSummary } from "../schema/radar-profile-summary";
-import type { ProviderRouting, RadarPrivacy, RadarRun } from "../schema/radar";
+import type { ProviderRouting, RadarPreferredSearchMode, RadarPrivacy, RadarRun } from "../schema/radar";
 import type { ScoredOpportunity } from "../search/types";
 import type { RawCandidateAudit } from "../search/types";
 import type { SourceCandidate } from "../schema/source-candidate";
@@ -157,6 +157,8 @@ export interface RadarCreateRequest {
   spec?: RadarRequirementSpec;
   /** Provider 路由（可选） */
   providerRouting?: ProviderRouting;
+  /** Milestone M：保存后的本地搜索模式偏好；生产 live 仍由安全开关拒绝 */
+  preferredSearchMode?: RadarPreferredSearchMode;
 }
 
 /** 更新雷达请求 */
@@ -169,6 +171,8 @@ export interface RadarUpdateRequest {
   privacy?: RadarPrivacy;
   /** Provider 路由 */
   providerRouting?: ProviderRouting;
+  /** Milestone M：保存后的本地搜索模式偏好；生产 live 仍由安全开关拒绝 */
+  preferredSearchMode?: RadarPreferredSearchMode;
   /** V1.6-06 新增：Watch Rules DSL 规则列表 */
   watchRules?: string[];
 }
