@@ -13,6 +13,10 @@ import type { ApiResponse, RadarGenerateResponseData } from "../src/api/types";
 import type { OpportunityCard } from "../src/schema/opportunity-card";
 import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../src/schema/radar-mvp-contracts";
 import type { RawCandidateAudit } from "../src/search/types";
+import type { SearchProvider } from "../src/search/provider-registry";
+import type { SearchResult } from "../src/search/types";
+import { SearchOrchestrator } from "../src/search/orchestrator";
+import { providerRegistry } from "../src/search/provider-registry";
 
 let passed = 0;
 let failed = 0;
@@ -165,7 +169,43 @@ async function main(): Promise<void> {
   check("run has opportunity cards", cards.length > 0, `cards=${cards.length}`);
   check("run has search plan", !!runData?.searchPlan);
   check("search plan has query", (runData?.searchPlan?.queries ?? []).length > 0);
+  const runSearchThemes = (runData?.searchPlan as RadarSearchPlan & { searchThemes?: Array<Record<string, unknown>> } | undefined)?.searchThemes ?? [];
+  check("search plan has 3-5 semantic search themes", runSearchThemes.length >= 3 && runSearchThemes.length <= 5, JSON.stringify(runSearchThemes));
+  check(
+    "search themes expose intent/source/query rationale",
+    runSearchThemes.every((theme) =>
+      typeof theme.themeName === "string" &&
+      ["direct_opportunity", "business_lead", "watch_signal", "reference_case"].includes(String(theme.intentType)) &&
+      typeof theme.sourceArchetype === "string" &&
+      Array.isArray(theme.queryExamples) &&
+      (theme.queryExamples as unknown[]).length >= 2 &&
+      (theme.queryExamples as unknown[]).length <= 3 &&
+      typeof theme.whyThisTheme === "string",
+    ),
+    JSON.stringify(runSearchThemes),
+  );
+  check(
+    "search plan query family records semantic metadata",
+    (runData?.searchPlan?.queries ?? []).every((item) => {
+      const q = item as Record<string, unknown>;
+      return typeof q.themeName === "string" &&
+        typeof q.intentType === "string" &&
+        typeof q.sourceArchetype === "string" &&
+        typeof q.queryFamily === "string";
+    }),
+    JSON.stringify(runData?.searchPlan?.queries ?? []),
+  );
   check("run has execution log", (runData?.executionLog?.queryExecutions ?? []).length > 0);
+  check(
+    "execution log query executions keep query family metadata",
+    (runData?.executionLog?.queryExecutions ?? []).every((item) => {
+      const q = item as Record<string, unknown>;
+      return typeof q.intentType === "string" &&
+        typeof q.sourceArchetype === "string" &&
+        typeof q.queryFamily === "string";
+    }),
+    JSON.stringify(runData?.executionLog?.queryExecutions ?? []),
+  );
   check("run does not fake openedUrls", Array.isArray(runData?.executionLog?.openedUrls) && runData.executionLog.openedUrls.length === 0);
   check("run has source coverage", Array.isArray(runData?.sourceCoverage));
   check("run has raw candidates", (runData?.rawCandidates ?? []).length > 0);
@@ -298,6 +338,124 @@ async function main(): Promise<void> {
   );
   check("soft delete keeps historical opportunities", reloadedStore.list({ radarId }).entries.length > 0);
   check("soft delete keeps historical reports", new JsonReportStore({ file_path: files.reports }).listByRadarId(radarId).length > 0);
+
+  const semanticProviderResults: SearchResult[] = [
+    {
+      title: "广东员工福利礼品采购公告",
+      url: "https://procurement.example.org/welfare-gift-tender-2026",
+      snippet: "采购公告：员工福利礼品项目正在招标，供应商可查看报名和投标要求。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+    {
+      title: "大湾区集团员工福利供应商入库合作入口",
+      url: "https://partners.example.org/welfare-supplier-onboarding",
+      snippet: "合作入口：征集员工福利和节日礼品供应商，需联系采购部门确认入库条件。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+    {
+      title: "广东企业员工福利采购趋势观察",
+      url: "https://insights.example.org/welfare-procurement-trend",
+      snippet: "观察信号：多家企业下半年福利采购预算和节日礼品需求上升。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+    {
+      title: "员工福利礼品项目案例复盘",
+      url: "https://cases.example.org/welfare-gift-reference-case",
+      snippet: "参考案例：往届员工福利礼品项目供应商方案、预算和执行方式复盘。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+    {
+      title: "员工福利培训广告课程",
+      url: "https://ads.example.org/welfare-training-course",
+      snippet: "培训广告：员工福利课程招商，不是采购、合作或报名入口。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+  ];
+  const semanticProvider: SearchProvider = {
+    name: "test_q1_semantic",
+    display_name: "Q1 Semantic Provider",
+    source_type: "web",
+    reliability: "B",
+    enabled: true,
+    radar_types: ["custom"],
+    async search() {
+      return semanticProviderResults;
+    },
+    async healthCheck() {
+      return true;
+    },
+  };
+  providerRegistry.register(semanticProvider);
+  try {
+    if (confirmedSpec) {
+      const semanticSpec: typeof confirmedSpec = {
+        ...confirmedSpec,
+        client_profile: {
+          ...confirmedSpec.client_profile,
+          industry: "企业服务",
+          business_type: "员工福利和节日礼品供应商",
+          regions: ["广东", "香港"],
+        },
+        core_goals: {
+          ...confirmedSpec.core_goals,
+          primary_goal: "寻找员工福利采购、节日礼品招标和企业合作线索",
+          action_intent: ["寻找合作", "寻找客户", "准备材料"],
+        },
+        opportunity_scope: {
+          ...confirmedSpec.opportunity_scope,
+          primary_opportunity_types: ["员工福利采购", "节日礼品招标", "企业合作线索"],
+          excluded_opportunity_types: ["加盟广告"],
+        },
+        region_scope: {
+          ...confirmedSpec.region_scope,
+          primary_regions: ["广东", "香港"],
+        },
+        keyword_strategy: {
+          ...confirmedSpec.keyword_strategy,
+          core_keywords_zh: ["员工福利", "节日礼品", "采购", "合作"],
+          core_keywords_en: ["employee benefits", "corporate gifts", "procurement"],
+        },
+        filter_rules: {
+          ...confirmedSpec.filter_rules,
+          must_exclude: ["加盟广告"],
+        },
+      };
+      const semanticSearch = await new SearchOrchestrator({
+        llmAdapter: ctx.llmAdapter,
+        dataMode: "live",
+        enableContentFetch: false,
+        maxResultsPerProvider: 5,
+      }).search(semanticSpec, "员工福利 礼品 采购 合作", { primary: ["test_q1_semantic"], fallback: [] });
+      const semanticThemes = (semanticSearch.searchPlan as RadarSearchPlan & { searchThemes?: Array<{ intentType?: string; queryExamples?: string[] }> } | undefined)?.searchThemes ?? [];
+      const semanticRaw = semanticSearch.rawCandidates ?? [];
+      const semanticCards = semanticSearch.opportunityCards ?? [];
+      const rawTypes = semanticRaw.map((item) => (item as RawCandidateAudit & { semanticType?: string }).semanticType);
+      const cardTypes = semanticCards.map((card) => card.opportunity_kind);
+      const expectedRawTypes: Array<NonNullable<RawCandidateAudit["semanticType"]>> = ["direct_opportunity", "business_lead", "watch_signal", "reference_case", "rejected"];
+      check("semantic planner produces 3-5 themes", semanticThemes.length >= 3 && semanticThemes.length <= 5, JSON.stringify(semanticThemes));
+      check("semantic planner includes business/watch/reference themes", ["business_lead", "watch_signal", "reference_case"].every((type) => semanticThemes.some((theme) => theme.intentType === type)), JSON.stringify(semanticThemes));
+      check("semantic query hard cap stays within 15 queries", (semanticSearch.searchPlan?.queries ?? []).length <= 15, JSON.stringify(semanticSearch.searchPlan?.queries ?? []));
+      check("semantic raw candidates keep all five result buckets", expectedRawTypes.every((type) => rawTypes.includes(type)), JSON.stringify(semanticRaw));
+      check("business lead can enter key opportunity cards", cardTypes.includes("business_lead"), JSON.stringify(semanticCards));
+      check("watch/reference/rejected stay out of key opportunity cards", !cardTypes.includes("watch_signal") && !cardTypes.includes("reference_case") && !cardTypes.includes("rejected"), JSON.stringify(semanticCards));
+      check(
+        "business lead card is clearly marked as contact-confirmed lead",
+        semanticCards.some((card) =>
+          card.opportunity_kind === "business_lead" &&
+          /可行动线索/.test(`${card.type}${card.sourceBadges?.join(" ")}${card.risk_note}`) &&
+          /需联系确认|联系确认|待复核/.test(`${card.next_action}${card.risk_note}${card.source_disclaimer ?? ""}`),
+        ),
+        JSON.stringify(semanticCards),
+      );
+    }
+  } finally {
+    providerRegistry.unregister("test_q1_semantic");
+  }
 
   cleanup();
   summarizeFailures();

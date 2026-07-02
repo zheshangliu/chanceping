@@ -11,6 +11,8 @@ export type OpportunityKind =
   | "watch_signal"
   | "rejected";
 
+export type SearchIntentType = Exclude<OpportunityKind, "rejected">;
+
 export type EvidenceStatus =
   | "confirmed"
   | "partially_verified"
@@ -84,12 +86,24 @@ export interface RadarSearchPlan {
   runId?: string;
   profileRevisionId?: string;
   themes: string[];
+  searchThemes?: Array<{
+    id: string;
+    themeName: string;
+    intentType: SearchIntentType;
+    sourceArchetype: string;
+    queryExamples: string[];
+    whyThisTheme: string;
+  }>;
   queries: Array<{
     query: string;
     language: string;
     region?: string;
     timeWindow?: string;
     sourceDomain?: string;
+    themeName?: string;
+    intentType?: SearchIntentType;
+    sourceArchetype?: string;
+    queryFamily?: string;
   }>;
   configuredSources: string[];
   exclusions: string[];
@@ -102,9 +116,14 @@ export interface SearchExecutionLog {
     query: string;
     provider: string;
     startedAt: string;
-    status: "succeeded" | "failed";
+    status: "succeeded" | "failed" | "no_results";
     rawResultCount: number;
     error?: string;
+    themeName?: string;
+    intentType?: SearchIntentType;
+    sourceArchetype?: string;
+    queryFamily?: string;
+    retryCount?: number;
   }>;
   openedUrls: Array<{
     url: string;

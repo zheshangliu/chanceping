@@ -19,7 +19,7 @@
  * Mock 模式：全部走 Mock（SerperProvider Mock + QwenAdapter Mock），端到端可测试。
  */
 
-import type { ScoredOpportunity, SearchResult, CleanedContent, RawCandidateAudit } from "./types";
+import type { ScoredOpportunity, SearchResult, CleanedContent, RawCandidateAudit, SearchOptions } from "./types";
 import type { SearchProvider } from "./provider-registry";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { ProviderRouting } from "../schema/radar";
@@ -28,7 +28,7 @@ import type { DataMode } from "../demo/data-mode";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { EvidenceItem } from "../schema/evidence-item";
 import type { OpportunityCard } from "../schema/opportunity-card";
-import type { CandidateAccounting, FieldEvidenceItem, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
+import type { CandidateAccounting, FieldEvidenceItem, OpportunityKind, RadarSearchPlan, SearchExecutionLog, SearchIntentType, SourceCoverageItem } from "../schema/radar-mvp-contracts";
 import type { RadarType, OpportunityStore } from "../agents/opportunity-store";
 import { computeDedupKey } from "../agents/opportunity-store";
 import { normalizeUrl } from "../utils/url-normalizer";
@@ -52,6 +52,7 @@ import {
   type SourceHintCheck,
 } from "./source-hints";
 import { buildUnopenedFieldEvidence, fetchLiveEvidence, type LiveEvidenceFetchResult } from "./live-evidence";
+import { buildSearchIntentPlan, type SearchIntentPlan, type SearchQueryFamilyItem } from "./search-intent-planner";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -356,6 +357,45 @@ function applyLiveSearchCardMark(card: OpportunityCard, result: SearchResult, fi
   return card;
 }
 
+function semanticKindLabel(kind: OpportunityKind | undefined): string {
+  const labels: Record<OpportunityKind, string> = {
+    direct_opportunity: "直接机会",
+    business_lead: "可行动线索",
+    watch_signal: "观察信号",
+    reference_case: "参考案例",
+    rejected: "已降权来源",
+  };
+  return kind ? labels[kind] : "机会";
+}
+
+function applySemanticCardMark(card: OpportunityCard, result: SearchResult): OpportunityCard {
+  const kind = result.semantic_type ?? card.opportunity_kind ?? "direct_opportunity";
+  card.opportunity_kind = kind;
+  card.type = semanticKindLabel(kind);
+  if (card.assessment) {
+    card.assessment.kind = kind;
+    card.assessment.actionStatus = kind === "business_lead" ? "prepare" : card.assessment.actionStatus;
+    card.action_status = card.assessment.actionStatus;
+  }
+  if (kind === "business_lead") {
+    const disclaimer = "类型：可行动线索；状态：需联系确认；不是已确认采购、招聘、报名或合作机会。";
+    card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), "可行动线索", "需联系确认"]));
+    card.next_action = `联系来源方确认采购、合作、招聘或报名条件；${card.next_action || "先复核来源与行动入口。"}`;
+    card.risk_note = card.risk_note ? `${card.risk_note} ${disclaimer}` : disclaimer;
+    card.source_disclaimer = card.source_disclaimer
+      ? `${card.source_disclaimer} ${disclaimer}`
+      : disclaimer;
+    if (card.assessment) {
+      card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+        ...item,
+        basis: "model_judgment",
+        reason: `${item.reason}；${disclaimer}`,
+      }));
+    }
+  }
+  return card;
+}
+
 function domainOf(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -383,6 +423,31 @@ interface CandidateQuality {
   reason: string;
 }
 
+const BUSINESS_LEAD_RE = /客户线索|销售线索|潜在客户|合作入口|合作机会|供应商|入库|招商|渠道|伙伴|联系|contact|partner|supplier|vendor|careers|招聘|岗位|BD|商机|采购部门|征集.*供应商/i;
+const WATCH_SIGNAL_RE = /观察|趋势|计划|日历|排期|预告|即将|未来|动态|动向|预算|需求上升|calendar|trend|roadmap|pipeline|upcoming|watch/i;
+const REFERENCE_CASE_RE = /案例|复盘|往届|获奖名单|规则|费用|条款|资格|指南|白皮书|报告|reference|case|rules|fee|eligibility|winner|shortlist|guideline/i;
+const DIRECT_ACTION_RE = /报名|申报|申请|参赛|赛事通知|赛程|采购公告|招标公告|询价公告|投标|投稿|征集|申请入口|报名入口|官方公告|公开赛|锦标赛|大会|摊位|展位|供应商招募|イベント|棋戦|calendar|event|events|tournament|championship|registration|entry|apply|application|tender|rfp|procurement|submission|open call/i;
+const REJECTED_RE = /视频|集锦|youtube|playlist|百科|维基|wikipedia|baike|新闻转载|转载|综合新闻|news roundup|培训广告|培训班|训练营|课程|camp|course|知乎|专栏|博客|科普|入门|指南|升段|升级|zhihu|column|blog|guide|explainer|新浪|搜狐|网易|腾讯新闻|今日头条|澎湃|凤凰网|sports\.sina|sohu|163\.com|qq\.com|toutiao|thepaper|ifeng/i;
+
+function semanticTypeForResult(result: SearchResult): OpportunityKind {
+  if (result.semantic_type) return result.semantic_type;
+  const text = resultText(result);
+  if (REJECTED_RE.test(text)) return "rejected";
+  if (REFERENCE_CASE_RE.test(text)) return "reference_case";
+  if (BUSINESS_LEAD_RE.test(text) && !/采购公告|招标公告|询价公告|投标|报名入口|申请入口|registration|tender|rfp/i.test(text)) {
+    return "business_lead";
+  }
+  if (DIRECT_ACTION_RE.test(text)) return "direct_opportunity";
+  if (WATCH_SIGNAL_RE.test(text)) return "watch_signal";
+  return result.intent_type === "business_lead"
+    ? "business_lead"
+    : result.intent_type === "reference_case"
+      ? "reference_case"
+      : result.intent_type === "watch_signal"
+        ? "watch_signal"
+        : "watch_signal";
+}
+
 function candidateQuality(result: SearchResult): CandidateQuality {
   const text = resultText(result);
   const lowActionPatterns = [
@@ -398,14 +463,19 @@ function candidateQuality(result: SearchResult): CandidateQuality {
   if (matchedLowAction) {
     return { status: "low_action", reason: matchedLowAction.reason };
   }
-  if (/报名|申报|申请|参赛|赛事通知|赛程|采购公告|招标公告|申请入口|官方公告|公开赛|锦标赛|大会|イベント|棋戦|calendar|event|events|tournament|championship|champions|registration|entry/i.test(text)) {
+  const semanticType = semanticTypeForResult(result);
+  if (semanticType === "direct_opportunity") {
     return { status: "actionable", reason: "包含报名、赛程、公告或申请入口等行动信号" };
+  }
+  if (semanticType === "business_lead") {
+    return { status: "actionable", reason: "包含合作、客户线索、供应商入库或联系确认信号" };
   }
   return { status: "unknown", reason: "未识别到明确行动入口，保留为观察候选" };
 }
 
-function isActionableCandidate(result: SearchResult): boolean {
-  return candidateQuality(result).status === "actionable";
+function isKeyCandidate(result: SearchResult): boolean {
+  const semanticType = semanticTypeForResult(result);
+  return semanticType === "direct_opportunity" || semanticType === "business_lead";
 }
 
 function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): number {
@@ -460,19 +530,31 @@ function configuredSourcesFromSpec(spec: RadarRequirementSpec): string[] {
   return Array.from(new Set([...manualSources, ...userSuppliedSources]));
 }
 
+function fallbackQueryItem(query: string): SearchQueryFamilyItem {
+  return {
+    query,
+    language: detectQueryLanguage(query),
+    themeName: "基础查询",
+    intentType: "direct_opportunity",
+    sourceArchetype: "通用机会来源",
+    queryFamily: "broad_discovery",
+  };
+}
+
 function buildSearchPlan(
   spec: RadarRequirementSpec,
   query: string,
   maxCandidates: number,
+  intentPlan: SearchIntentPlan,
 ): RadarSearchPlan {
+  const queries = intentPlan.queries.length > 0 ? intentPlan.queries : [fallbackQueryItem(query)];
   return {
     id: `plan_${Date.now().toString(36)}`,
-    themes: spec.opportunity_scope?.primary_opportunity_types ?? [],
-    queries: [{
-      query,
-      language: detectQueryLanguage(query),
-      ...(spec.region_scope?.primary_regions?.[0] ? { region: spec.region_scope.primary_regions[0] } : {}),
-    }],
+    themes: intentPlan.searchThemes.length > 0
+      ? intentPlan.searchThemes.map((theme) => theme.themeName)
+      : (spec.opportunity_scope?.primary_opportunity_types ?? []),
+    searchThemes: intentPlan.searchThemes,
+    queries,
     configuredSources: configuredSourcesFromSpec(spec),
     exclusions: spec.filter_rules?.must_exclude ?? [],
     maxCandidates,
@@ -498,17 +580,23 @@ function mapSourceCoverage(checks: SourceHintCheck[]): SourceCoverageItem[] {
 function buildRawCandidateAudits(results: SearchResult[], query: string): RawCandidateAudit[] {
   return results.map((result, index) => {
     const quality = candidateQuality(result);
+    const semanticType = semanticTypeForResult(result);
     return {
       id: `raw_${index + 1}`,
-      query,
+      query: result.search_query || query,
       title: result.title,
       url: result.url,
       snippet: result.snippet,
       sourceDomain: domainOf(result.url),
       sourceType: result.source_type ?? "search_snippet",
-      status: quality.status === "low_action" ? "rejected" : "raw",
+      status: semanticType === "rejected" ? "rejected" : "raw",
       qualityStatus: quality.status,
       qualityReason: quality.reason,
+      semanticType,
+      themeName: result.search_theme,
+      intentType: result.intent_type,
+      sourceArchetype: result.source_archetype,
+      queryFamily: result.query_family,
     };
   });
 }
@@ -529,27 +617,103 @@ function buildCandidateAccounting(
   };
 }
 
-function compactTerms(terms: string[], limit: number): string[] {
-  return Array.from(new Set(terms.map((term) => term.trim()).filter(Boolean))).slice(0, limit);
+function queryMeta(item: SearchQueryFamilyItem): Pick<SearchExecutionLog["queryExecutions"][number], "themeName" | "intentType" | "sourceArchetype" | "queryFamily"> {
+  return {
+    themeName: item.themeName,
+    intentType: item.intentType,
+    sourceArchetype: item.sourceArchetype,
+    queryFamily: item.queryFamily,
+  };
 }
 
-function buildLiveSearchQueries(spec: RadarRequirementSpec, baseQuery: string): string[] {
-  const zh = compactTerms([
-    ...(spec.keyword_strategy?.core_keywords_zh ?? []),
-    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
-  ], 6);
-  const en = compactTerms(spec.keyword_strategy?.core_keywords_en ?? [], 4);
-  const sourceNames = compactTerms([
-    ...(spec.source_strategy?.manual_sources ?? []),
-    ...((spec.source_strategy?.user_supplied_sources ?? []).map((source) => source.source_name)),
-  ], 6);
-  const queries = [
-    baseQuery,
-    zh.length > 0 ? zh.slice(0, 4).join(" ") : "",
-    en.length > 0 ? en.slice(0, 4).join(" ") : "",
-    ...sourceNames.slice(0, 4).map((name) => `${name} ${zh.slice(0, 2).join(" ") || en.slice(0, 2).join(" ")}`.trim()),
-  ];
-  return compactTerms(queries, 6);
+function annotateResultsWithQueryMeta(results: SearchResult[], item: SearchQueryFamilyItem): SearchResult[] {
+  return results.map((result) => {
+    const annotated: SearchResult = {
+      ...result,
+      search_query: item.query,
+      search_theme: item.themeName,
+      intent_type: item.intentType,
+      source_archetype: item.sourceArchetype,
+      query_family: item.queryFamily,
+    };
+    annotated.semantic_type = semanticTypeForResult(annotated);
+    return annotated;
+  });
+}
+
+function isRetryableProviderError(message: string): boolean {
+  return /fetch failed|network|timeout|ECONNRESET|ETIMEDOUT|ENOTFOUND/i.test(message);
+}
+
+async function searchProviderWithRetry(
+  provider: SearchProvider,
+  item: SearchQueryFamilyItem,
+  options: SearchOptions,
+): Promise<{
+  provider: string;
+  results: SearchResult[];
+  error: string | null;
+  log: SearchExecutionLog["queryExecutions"][number];
+}> {
+  const startedAt = new Date().toISOString();
+  let retryCount = 0;
+  let lastError = "";
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const results = annotateResultsWithQueryMeta(await provider.search(item.query, options), item);
+      return {
+        provider: provider.name,
+        results,
+        error: null,
+        log: {
+          query: item.query,
+          provider: provider.name,
+          startedAt,
+          status: results.length > 0 ? "succeeded" : "no_results",
+          rawResultCount: results.length,
+          retryCount,
+          ...queryMeta(item),
+        },
+      };
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      lastError = `provider ${provider.name} 调用失败: ${errMsg}`;
+      if (attempt === 0 && isRetryableProviderError(errMsg)) {
+        retryCount = 1;
+        continue;
+      }
+      return {
+        provider: provider.name,
+        results: [],
+        error: lastError,
+        log: {
+          query: item.query,
+          provider: provider.name,
+          startedAt,
+          status: "failed",
+          rawResultCount: 0,
+          error: lastError,
+          retryCount,
+          ...queryMeta(item),
+        },
+      };
+    }
+  }
+  return {
+    provider: provider.name,
+    results: [],
+    error: lastError,
+    log: {
+      query: item.query,
+      provider: provider.name,
+      startedAt,
+      status: "failed",
+      rawResultCount: 0,
+      error: lastError,
+      retryCount,
+      ...queryMeta(item),
+    },
+  };
 }
 
 /**
@@ -658,13 +822,15 @@ export class SearchOrchestrator {
     // 步骤 0：推断雷达类型（供 Demo 数据加载和真实搜索共用）
     const radarType = inferRadarType(spec);
     const searchQuery = query && query.trim() ? query.trim() : buildQueryFromSpec(spec);
+    const intentPlan = buildSearchIntentPlan(spec, searchQuery);
+    const baseQueryItem = intentPlan.queries[0] ?? fallbackQueryItem(searchQuery);
     let sourceHintChecks: SourceHintCheck[] = [];
     const buildAuditPayload = (
       currentRawResults: SearchResult[],
       currentOpportunities: ScoredOpportunity[] = [],
       currentOpportunityCards?: OpportunityCard[],
     ): Pick<SearchOrchestratorResult, "searchPlan" | "executionLog" | "sourceCoverage" | "rawCandidates" | "candidateAccounting"> => ({
-      searchPlan: buildSearchPlan(spec, searchQuery, this.maxResultsPerProvider),
+      searchPlan: buildSearchPlan(spec, searchQuery, this.maxResultsPerProvider, intentPlan),
       executionLog: { queryExecutions, openedUrls },
       sourceCoverage: mapSourceCoverage(sourceHintChecks),
       rawCandidates: buildRawCandidateAudits(currentRawResults, searchQuery),
@@ -690,13 +856,16 @@ export class SearchOrchestrator {
           : this.dataMode === "mock" && radarType === "custom"
             ? buildCustomMockResults(spec, searchQuery)
             : loadDemoSearchResults(radarType, this.dataMode);
+        rawResults = annotateResultsWithQueryMeta(rawResults, baseQueryItem);
         rawProviderResultCount = rawResults.length;
         queryExecutions.push({
           query: searchQuery,
           provider: this.dataMode,
           startedAt,
-          status: "succeeded",
+          status: rawResults.length > 0 ? "succeeded" : "no_results",
           rawResultCount: rawResults.length,
+          retryCount: 0,
+          ...queryMeta(baseQueryItem),
         });
         sourceHintChecks = buildMockSourceHintChecks(spec, searchQuery);
       } catch (err) {
@@ -709,6 +878,8 @@ export class SearchOrchestrator {
           status: "failed",
           rawResultCount: 0,
           error: errMsg,
+          retryCount: 0,
+          ...queryMeta(baseQueryItem),
         });
         return {
           total_raw: 0,
@@ -771,37 +942,16 @@ export class SearchOrchestrator {
       }
 
       // 步骤 2：并行调用各 primary provider 的 search()
-      const searchOptions = { max_results: this.maxResultsPerProvider };
-      const liveQueries = this.dataMode === "live" && providerRouting
-        ? buildLiveSearchQueries(spec, searchQuery)
-        : [searchQuery];
+      const searchOptions = { max_results: this.dataMode === "live" ? Math.min(this.maxResultsPerProvider, 5) : this.maxResultsPerProvider };
+      const liveQueryItems = this.dataMode === "live" && providerRouting
+        ? intentPlan.queries
+        : [baseQueryItem];
 
       const primaryResults = await Promise.all(
-        primaryProviders.flatMap((provider) => liveQueries.map(async (queryText) => {
-          const startedAt = new Date().toISOString();
-          try {
-            const results = await provider.search(queryText, searchOptions);
-            queryExecutions.push({
-              query: queryText,
-              provider: provider.name,
-              startedAt,
-              status: "succeeded",
-              rawResultCount: results.length,
-            });
-            return { provider: provider.name, results, error: null as string | null };
-          } catch (err) {
-            const errMsg = err instanceof Error ? err.message : String(err);
-            const error = `provider ${provider.name} 调用失败: ${errMsg}`;
-            queryExecutions.push({
-              query: queryText,
-              provider: provider.name,
-              startedAt,
-              status: "failed",
-              rawResultCount: 0,
-              error,
-            });
-            return { provider: provider.name, results: [] as SearchResult[], error };
-          }
+        primaryProviders.flatMap((provider) => liveQueryItems.map(async (queryItem) => {
+          const result = await searchProviderWithRetry(provider, queryItem, searchOptions);
+          queryExecutions.push(result.log);
+          return { provider: result.provider, results: result.results, error: result.error };
         })),
       );
       rawProviderResultCount += primaryResults.reduce((sum, item) => sum + item.results.length, 0);
@@ -832,30 +982,16 @@ export class SearchOrchestrator {
         const fallbackResults = await Promise.all(
           fallbackProviders.map(async (provider) => {
             fallbackProviderNames.push(provider.name);
-            const startedAt = new Date().toISOString();
-            try {
-              const results = await provider.search(searchQuery, searchOptions);
-              queryExecutions.push({
-                query: searchQuery,
-                provider: provider.name,
-                startedAt,
-                status: "succeeded",
-                rawResultCount: results.length,
-              });
-              return { provider: provider.name, results, error: null as string | null };
-            } catch (err) {
-              const errMsg = err instanceof Error ? err.message : String(err);
-              const fallbackErrMsg = `[fallback] provider ${provider.name} 调用失败: ${errMsg}`;
-              queryExecutions.push({
-                query: searchQuery,
-                provider: provider.name,
-                startedAt,
-                status: "failed",
-                rawResultCount: 0,
-                error: fallbackErrMsg,
-              });
-              return { provider: provider.name, results: [] as SearchResult[], error: fallbackErrMsg };
-            }
+            const result = await searchProviderWithRetry(provider, baseQueryItem, searchOptions);
+            const fallbackLog = result.error
+              ? { ...result.log, error: `[fallback] ${result.error}` }
+              : result.log;
+            queryExecutions.push(fallbackLog);
+            return {
+              provider: result.provider,
+              results: result.results,
+              error: result.error ? `[fallback] ${result.error}` : null,
+            };
           }),
         );
         rawProviderResultCount += fallbackResults.reduce((sum, item) => sum + item.results.length, 0);
@@ -892,36 +1028,21 @@ export class SearchOrchestrator {
       if (sourceHintSearches.length > 0 && sourceHintProvider) {
         const sourceHintResults = await Promise.all(
           sourceHintSearches.map(async (hint) => {
-            const startedAt = new Date().toISOString();
-            try {
-              const results = await sourceHintProvider.search(hint.query, {
-                max_results: Math.min(this.maxResultsPerProvider, 5),
-                ...(hint.siteFilter ? { site_filter: hint.siteFilter } : {}),
-              });
-              queryExecutions.push({
-                query: hint.query,
-                provider: sourceHintProvider.name,
-                startedAt,
-                status: "succeeded",
-                rawResultCount: results.length,
-              });
-              return { hint, results, error: "" };
-            } catch (err) {
-              const error = err instanceof Error ? err.message : String(err);
-              queryExecutions.push({
-                query: hint.query,
-                provider: sourceHintProvider.name,
-                startedAt,
-                status: "failed",
-                rawResultCount: 0,
-                error,
-              });
-              return {
-                hint,
-                results: [] as SearchResult[],
-                error,
-              };
-            }
+            const hintQueryItem: SearchQueryFamilyItem = {
+              query: hint.query,
+              language: detectQueryLanguage(hint.query),
+              ...(hint.siteFilter ? { sourceDomain: hint.siteFilter } : {}),
+              themeName: "指定来源复核",
+              intentType: "direct_opportunity",
+              sourceArchetype: hint.siteFilter ? `指定站点：${hint.siteFilter}` : "用户指定来源",
+              queryFamily: "source_hint",
+            };
+            const result = await searchProviderWithRetry(sourceHintProvider, hintQueryItem, {
+              max_results: Math.min(this.maxResultsPerProvider, 5),
+              ...(hint.siteFilter ? { site_filter: hint.siteFilter } : {}),
+            });
+            queryExecutions.push(result.log);
+            return { hint, results: result.results, error: result.error ?? "" };
           }),
         );
         rawProviderResultCount += sourceHintResults.reduce((sum, item) => sum + item.results.length, 0);
@@ -970,7 +1091,7 @@ export class SearchOrchestrator {
     }
 
     const candidateResults = this.dataMode === "live" && providerRouting
-      ? rawResults.filter(isActionableCandidate)
+      ? rawResults.filter(isKeyCandidate)
       : rawResults;
 
     if (this.dataMode === "live" && providerRouting && this.enableContentFetch && candidateResults.length > 0) {
@@ -1162,6 +1283,7 @@ export class SearchOrchestrator {
             ?? buildUnopenedFieldEvidence(opp.search_result);
           applyLiveSearchCardMark(card, opp.search_result, fieldEvidence);
         }
+        applySemanticCardMark(card, opp.search_result);
         // V1.6-07：写入 AI 精筛 reason 到 card.ai_analysis（供下次增量复用）
         const aiAnalysis = aiAnalysisByUrl.get(oppUrl);
         if (aiAnalysis) {

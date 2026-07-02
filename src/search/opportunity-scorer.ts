@@ -25,7 +25,7 @@
 
 import type { ScoredOpportunity, SearchVisibleLevel, ChanceScore } from "./types";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
-import type { EvidenceStatus } from "../schema/radar-mvp-contracts";
+import type { ActionStatus, EvidenceStatus, OpportunityKind } from "../schema/radar-mvp-contracts";
 import type { LLMAdapter, LLMRequest } from "../agents/llm-adapter";
 import type { AIFilterItem } from "./ai-filter";
 import type { ReliabilityGrade } from "./provider-registry";
@@ -66,6 +66,13 @@ export function evidenceStatusFromEvidence(
   if (criticalFieldCount > 0 && count >= criticalFieldCount) return "confirmed";
   if (count > 0) return "partially_verified";
   return "needs_review";
+}
+
+function actionStatusForKind(kind: OpportunityKind, grade: "S" | "A" | "B" | "C" | undefined): ActionStatus {
+  if (kind === "rejected") return "drop";
+  if (kind === "watch_signal" || kind === "reference_case") return "monitor";
+  if (kind === "business_lead") return grade === "S" || grade === "A" ? "act_now" : "prepare";
+  return grade === "S" || grade === "A" ? "act_now" : grade ? "prepare" : "drop";
 }
 
 /** LLM 评分结果 */
@@ -330,6 +337,7 @@ export async function scoreOpportunities(
       total,
     };
     const grade = gradeFromScore(total);
+    const opportunityKind: OpportunityKind = item.result.semantic_type ?? (grade ? "direct_opportunity" : "rejected");
 
     opportunities.push({
       search_result: item.result,
@@ -340,9 +348,9 @@ export async function scoreOpportunities(
       visible_level: visibleLevel,
       backend_score: total,
       guid,
-      opportunity_kind: grade ? "direct_opportunity" : "rejected",
+      opportunity_kind: opportunityKind,
       evidence_status: "needs_review",
-      action_status: grade === "S" || grade === "A" ? "act_now" : grade ? "prepare" : "drop",
+      action_status: actionStatusForKind(opportunityKind, grade),
       score_basis: "mixed",
     });
   }

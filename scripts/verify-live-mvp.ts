@@ -295,6 +295,29 @@ async function main(): Promise<void> {
       }
     }
   }
+  const quotaRadarsResponse = await app.request("/api/radars?scope=mine");
+  const quotaRadarsJson = await quotaRadarsResponse.json() as {
+    success?: boolean;
+    data?: Array<{ id: string; name?: string; status?: string; isBuiltin?: boolean; createdAt?: string }>;
+  };
+  const activeCustomRadars = (quotaRadarsJson.data ?? [])
+    .filter((radar) => radar.isBuiltin !== true && radar.status !== "archived")
+    .sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
+  if (activeCustomRadars.length >= 3) {
+    const target = activeCustomRadars[0];
+    const deleteResponse = await app.request(`/api/radars/${target.id}`, { method: "DELETE" });
+    const afterDeleteResponse = await app.request("/api/radars?scope=mine");
+    const afterDeleteJson = await afterDeleteResponse.json() as {
+      success?: boolean;
+      data?: Array<{ id: string; status?: string; isBuiltin?: boolean }>;
+    };
+    const afterActiveCount = (afterDeleteJson.data ?? []).filter((radar) => radar.isBuiltin !== true && radar.status !== "archived").length;
+    check(
+      "live verification releases a custom radar quota slot when full",
+      deleteResponse.status === 200 && afterActiveCount < activeCustomRadars.length,
+      `deleted=${target.name || target.id}, before=${activeCustomRadars.length}, after=${afterActiveCount}`,
+    );
+  }
 
   const liveRerunSpec = buildTableTennisSpec(createDefaultSpec, now);
   const liveRadarCreateResponse = await app.request("/api/radars", {

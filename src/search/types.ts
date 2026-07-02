@@ -12,6 +12,7 @@
  */
 
 import type { ActionStatus, EvidenceStatus, OpportunityKind, ScoreBasis } from "../schema/radar-mvp-contracts";
+import type { SearchIntentType } from "../schema/radar-mvp-contracts";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -39,6 +40,18 @@ export interface SearchResult {
   published_at?: string;
   /** 原始 API 返回（调试用，不参与业务逻辑） */
   raw_data?: unknown;
+  /** Q.1 内部审计：本结果来自哪条查询。 */
+  search_query?: string;
+  /** Q.1 内部审计：查询主题。 */
+  search_theme?: string;
+  /** Q.1 内部审计：查询意图。 */
+  intent_type?: SearchIntentType;
+  /** Q.1 内部审计：来源类型。 */
+  source_archetype?: string;
+  /** Q.1 内部审计：query family。 */
+  query_family?: string;
+  /** Q.1 内部审计：结果语义分桶。 */
+  semantic_type?: OpportunityKind;
 }
 
 /** Chat-first MVP：搜索运行审计中的原始候选摘要。 */
@@ -54,6 +67,12 @@ export interface RawCandidateAudit {
   /** MVP L.2: lightweight quality mark for report grouping, not a verified fact. */
   qualityStatus?: "actionable" | "low_action" | "unknown";
   qualityReason?: string;
+  /** MVP Q.1: semantic result bucket, used for cards/report grouping but not as verified fact. */
+  semanticType?: OpportunityKind;
+  themeName?: string;
+  intentType?: SearchIntentType;
+  sourceArchetype?: string;
+  queryFamily?: string;
 }
 
 /**
