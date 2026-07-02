@@ -15,6 +15,7 @@ import type { RawCandidateAudit } from "../search/types";
 import type { SourceCandidate } from "../schema/source-candidate";
 import type { OpportunityCard } from "../schema/opportunity-card";
 import type { CandidateAccounting, RadarSearchPlan, SearchExecutionLog, SourceCoverageItem } from "../schema/radar-mvp-contracts";
+import type { SearchRunOutcome } from "./search-outcome";
 
 export interface SourceHintCheckResponse {
   sourceName: string;
@@ -190,6 +191,8 @@ export interface RadarRunRequest {
 export interface RadarRunResult {
   /** 运行记录 */
   run: RadarRun;
+  /** MVP Q.3：本次搜索结果状态。失败/无结果也可保存雷达，不静默回退 mock。 */
+  runOutcome?: SearchRunOutcome;
   /** 机会卡片列表（前端主数据） */
   opportunityCards?: OpportunityCard[];
   /** 来源候选列表 */

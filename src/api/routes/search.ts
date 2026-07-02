@@ -5,6 +5,7 @@ import { SearchOrchestrator } from "../../search/orchestrator";
 import type { RadarRequirementSpec } from "../../schema/radar-requirement-spec";
 import { getDataMode } from "../../demo/data-mode";
 import { resolveSearchDataMode, validateLiveSearchResult } from "../../config/local-live-search";
+import { withSearchRunOutcome } from "../search-outcome";
 
 /** 默认 mock spec（当请求未提供 spec 时使用） */
 function createDefaultSpec(): RadarRequirementSpec {
@@ -119,30 +120,18 @@ export function searchRoutes(ctx: AppContext): Hono {
         ? body.providerRouting ?? { primary: ["serper"], fallback: [] }
         : body.providerRouting;
       const result = await orchestrator.search(spec, body.query, liveProviderRouting);
-      if (resolvedMode.dataMode === "live") {
-        const liveError = validateLiveSearchResult(result);
-        if (liveError) {
-          return c.json({
-            success: false,
-            data: null,
-            error: {
-              code: "LIVE_SEARCH_FAILED",
-              message: `${liveError} 可以切回演示数据继续体验。`,
-            },
-            duration_ms: Date.now() - start,
-          } satisfies ApiResponse, 502);
-        }
-      }
+      const liveError = resolvedMode.dataMode === "live" ? validateLiveSearchResult(result) : null;
+      const resultWithOutcome = withSearchRunOutcome(result, resolvedMode.dataMode, liveError);
 
       // V1.5-03：如果有 radar_id，给返回结果的 opportunities 附加 radarId
-      if (radarId && result.opportunities) {
-        result.opportunities = result.opportunities.map((opp) => ({
+      if (radarId && resultWithOutcome.opportunities) {
+        resultWithOutcome.opportunities = resultWithOutcome.opportunities.map((opp) => ({
           ...opp,
           radarId,
         }));
       }
 
-      return c.json({ success: true, data: result, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
+      return c.json({ success: true, data: resultWithOutcome, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
     } catch (err) {
       return c.json({ success: false, data: null, error: { code: "SEARCH_ERROR", message: err instanceof Error ? err.message : String(err) }, duration_ms: Date.now() - start } satisfies ApiResponse, 500);
     }

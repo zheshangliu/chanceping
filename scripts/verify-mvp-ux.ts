@@ -52,8 +52,8 @@ check("source hints 脚本被引入", html.includes("/source-hints.js"));
 check("自由输入走画像确认", homeJs.includes("createRadarProfileDraft") || profileJs.includes("createRadarProfileDraft"));
 check("模板含预置画像", templatesJs.includes("profile") && templatesJs.includes("用户身份"));
 check("画像确认支持指定信号源", profileJs.includes("source-hints-input") || sourceHintsJs.includes("applySourceHintsToSpec"));
-check("雷达版本卡标题升级为 V1.0 确认", profileJs.includes("雷达 V1.0 确认卡") || profileJs.includes("雷达 ${escapeHtml(radarVersion.version)} 确认卡"));
-check("雷达版本卡展示执行策略", ["这版雷达会盯什么", "不盯什么", "优先看哪些来源", "什么算高价值", "缺哪些信息", "默认假设"].every((text) => profileJs.includes(text)));
+check("雷达版本卡标题升级为 V1.0 策略", profileJs.includes("雷达 V1.0 策略卡") || profileJs.includes("雷达 ${escapeHtml(radarVersion.version)} 策略卡"));
+check("雷达版本卡展示执行策略", ["这版雷达会盯什么", "不盯什么", "优先看哪些来源", "什么算高价值", "会按哪些搜索主题去找", "缺哪些信息", "默认假设"].every((text) => profileJs.includes(text)));
 check("画像优先范围不重复显示", profileJs.includes("regionText === timeText") && profileJs.includes("范围："));
 check("画像确认展示默认假设", profileJs.includes('renderProfileField("默认假设"'));
 check("雷达版本确认主按钮文案正确", profileJs.includes("确认，按 V1.0 盯一次") || profileJs.includes("确认，按 ${escapeHtml(radarVersion.version)} 盯一次"));
@@ -70,6 +70,7 @@ check("澄清闸门客户侧一次只展示 1 个自然追问", profileJs.includ
 check("澄清闸门包含 85/60 阈值", profileJs.includes("CLARITY_DIRECT_THRESHOLD = 85") && profileJs.includes("CLARITY_BACKGROUND_THRESHOLD = 60"));
 check("澄清闸门复用后端 questions_to_confirm", profileJs.includes("questions_to_confirm") && profileJs.includes("requirement_confidence"));
 check("澄清闸门支持前端兜底问题", profileJs.includes("buildFallbackQuestions"));
+check("澄清闸门优先策略型追问", profileJs.includes("buildStrategyClarificationQuestions") && profileJs.includes("搜索策略定准"));
 check("用户回答后重新生成画像", profileJs.includes("clarificationAnswer") && profileJs.includes("/api/radars/generate"));
 check("结果页按画像运行", watchResultJs.includes("profile") && watchResultJs.includes("spec"));
 check("本地 live search 通过 URL/localStorage 显式开启", homeJs.includes("live_search") && homeJs.includes("chanceping_live_search") && homeJs.includes("getChancePingSearchMode"));
@@ -83,6 +84,8 @@ check("机会卡片展示四维状态标签", ["watch-card-meta", "opportunity_k
 check("机会卡片能把 mock 显示为演示来源", watchResultJs.includes("演示来源，未真实核验") && watchResultJs.includes("来源说明"));
 check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_no_results", "not_checked", "invalid_url", "name_only"].every((text) => watchResultJs.includes(text)));
 check("live 失败或结果不足提示可切回演示数据", watchResultJs.includes("Live 真实搜索失败") && watchResultJs.includes("切回演示数据查看流程"));
+check("失败或无结果仍可保存雷达", watchResultJs.includes("本轮真实搜索结果不足，但雷达已生成") && watchResultJs.includes("runOutcome") && watchResultJs.includes("保存为长期雷达"));
+check("失败或无结果提供调整策略和重试搜索", watchResultJs.includes("调整雷达策略") && watchResultJs.includes("重试搜索"));
 check("Markdown 报告默认摘要并可展开", watchResultJs.includes("报告摘要") && watchResultJs.includes("查看完整 Markdown 报告"));
 check("Markdown 支持复制", watchResultJs.includes("复制 Markdown"));
 check("保存按钮文案说明持续盯", watchResultJs.includes("保存为长期雷达，之后持续盯"));

@@ -33,6 +33,9 @@
     const cards = result.opportunityCards || [];
     const markdown = result.markdown || "";
     const sourceHintChecks = result.sourceHintChecks || [];
+    const runOutcome = result.runOutcome || {};
+    const hasRunIssue = runOutcome.status && runOutcome.status !== "succeeded";
+    const adjustButtonText = hasRunIssue ? "调整雷达策略" : "调整画像";
     const actionHtml = result.radarId ? `
       <div class="watch-action-row saved-radar-actions">
         <button id="btn-view-saved-radar-detail" class="btn-primary">查看本次雷达详情</button>
@@ -41,7 +44,8 @@
     ` : `
       <div class="watch-action-row">
         <button id="btn-save-watch-radar" class="btn-primary">保存为长期雷达，之后持续盯</button>
-        <button id="btn-adjust-watch-profile" class="btn-secondary">调整画像</button>
+        <button id="btn-adjust-watch-profile" class="btn-secondary">${escapeHtml(adjustButtonText)}</button>
+        ${hasRunIssue ? '<button id="btn-retry-watch-search" class="btn-secondary">重试搜索</button>' : ""}
       </div>
     `;
     root.innerHTML = `
@@ -49,6 +53,7 @@
         <h3>${escapeHtml(result.suggestedName || "本次盯机会结果")}</h3>
         <p>${escapeHtml(result.description)}</p>
       </div>
+      ${renderRunOutcomeNotice(result)}
       <div class="watch-result-actions">
         <div class="watch-save-copy">
           ${actionHtml}
@@ -82,10 +87,29 @@
     document.getElementById("btn-view-saved-radar-detail")?.addEventListener("click", viewSavedRadarDetail);
     document.getElementById("btn-back-to-radar-list")?.addEventListener("click", backToSavedRadarList);
     document.getElementById("btn-switch-demo-mode")?.addEventListener("click", switchBackToDemoMode);
+    document.querySelectorAll("#btn-retry-watch-search").forEach((btn) => {
+      btn.addEventListener("click", retryCurrentSearch);
+    });
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
       if (window.showRadarProfileDraftFromResult) window.showRadarProfileDraftFromResult(currentResult);
     });
     document.getElementById("btn-copy-markdown")?.addEventListener("click", () => copyMarkdown(markdown));
+  }
+
+  function renderRunOutcomeNotice(result) {
+    const outcome = result?.runOutcome || {};
+    if (!outcome.status || outcome.status === "succeeded") return "";
+    const isLive = result?.searchMode === "live" || outcome.canSwitchToDemo;
+    const message = outcome.message || (isLive
+      ? "本轮真实搜索结果不足，但雷达已生成。你可以先保存这个雷达，之后继续盯机会。"
+      : "本轮搜索结果不足，但雷达已生成。你可以先保存这个雷达，之后继续盯机会。");
+    return `
+      <div class="watch-run-outcome ${escapeHtml(outcome.status)}">
+        <strong>${isLive ? "本轮真实搜索结果不足，但雷达已生成" : "本轮搜索结果不足，但雷达已生成"}</strong>
+        <p>${escapeHtml(message)}</p>
+        <p class="placeholder">可以选择保存为长期雷达、调整雷达策略，或重试搜索。</p>
+      </div>
+    `;
   }
 
   function renderSourceHintCheck(item) {
@@ -169,16 +193,21 @@
 
   function renderEmptyState(result) {
     const isLive = result?.searchMode === "live";
+    const outcome = result?.runOutcome || {};
     return `
       <div class="watch-empty-state">
-        <p>${isLive ? "本次真实搜索结果不足，没有找到足够匹配的机会。" : "这次没有找到足够匹配的机会。"}你可以这样调整：</p>
+        <p>${outcome.message ? escapeHtml(outcome.message) : isLive ? "本次真实搜索结果不足，没有找到足够匹配的机会。" : "这次没有找到足够匹配的机会。"}你可以这样调整：</p>
         <ul>
           <li>放宽地区</li>
           <li>减少排除条件</li>
           <li>增加指定信号源</li>
           <li>保存为长期雷达继续监控</li>
         </ul>
-        ${isLive ? '<button id="btn-switch-demo-mode" class="btn-secondary">切回演示数据查看流程</button><p class="placeholder">演示数据会明确标记为演示 / 测试数据，不代表真实机会。</p>' : ""}
+        <div class="watch-action-row">
+          <button id="btn-retry-watch-search" class="btn-secondary">重试搜索</button>
+          ${isLive ? '<button id="btn-switch-demo-mode" class="btn-secondary">切回演示数据查看流程</button>' : ""}
+        </div>
+        ${isLive ? '<p class="placeholder">演示数据会明确标记为演示 / 测试数据，不代表真实机会。</p>' : ""}
       </div>
     `;
   }
@@ -202,7 +231,7 @@
     `;
   }
 
-  async function runWatchNow({ radarId, description, spec, profile, suggestedName, presetId }) {
+  async function runWatchNow({ radarId, description, spec, profile, suggestedName, presetId, radarVersion }) {
     if (!spec) throw new Error("缺少已确认的雷达规格");
     switchToResult();
     renderLoading(description, "正在搜索机会");
@@ -215,9 +244,10 @@
       const candidateAccounting = search.data?.candidateAccounting;
       const rawCandidates = search.data?.rawCandidates || [];
       const executionLog = search.data?.executionLog;
+      const runOutcome = search.data?.runOutcome;
       const runId = search.data?.run?.id;
       renderLoading(description, "正在生成机会报告");
-      const report = await postJson("/api/reports/generate", {
+      const report = await safeGenerateReport({
         spec,
         radar_type: "custom",
         opportunities: cards,
@@ -227,13 +257,14 @@
         rawCandidates,
         ...(radarId ? { radar_id: radarId, run_id: runId } : {}),
         profile,
-      });
+      }, runOutcome);
       currentResult = {
         radarId,
         runId,
         description,
         spec,
         profile,
+        radarVersion: radarVersion || spec?.radar_version,
         presetId,
         suggestedName: suggestedName || "本次盯机会结果",
         opportunityCards: cards,
@@ -241,6 +272,7 @@
         candidateAccounting,
         rawCandidates,
         executionLog,
+        runOutcome,
         searchMode: getSearchModeRequest().search_mode,
         markdown: report.data.markdown,
       };
@@ -258,6 +290,45 @@
         document.getElementById("btn-switch-demo-mode")?.addEventListener("click", switchBackToDemoMode);
       }
     }
+  }
+
+  async function safeGenerateReport(body, runOutcome) {
+    try {
+      return await postJson("/api/reports/generate", body);
+    } catch (err) {
+      return {
+        data: {
+          markdown: [
+            "# ChancePing｜本轮机会雷达报告",
+            "",
+            "## 本轮结论",
+            "",
+            runOutcome?.message || `报告生成失败：${err.message || "未知错误"}`,
+            "",
+            "## 建议动作",
+            "",
+            "- 保存为长期雷达继续监控。",
+            "- 调整雷达策略后重试搜索。",
+            "- 增加指定信号源或放宽条件。",
+            "",
+          ].join("\n"),
+        },
+      };
+    }
+  }
+
+  function retryCurrentSearch() {
+    if (!currentResult?.spec) return;
+    runWatchNow({
+      description: currentResult.description,
+      spec: currentResult.spec,
+      profile: currentResult.profile,
+      suggestedName: currentResult.suggestedName,
+      presetId: currentResult.presetId,
+      radarVersion: currentResult.radarVersion,
+    }).catch((err) => {
+      if (window.showToast) showToast(err.message || "重试搜索失败", "error");
+    });
   }
 
   function switchBackToDemoMode() {
@@ -292,25 +363,50 @@
       });
       const radarId = created.data.id;
       await postJson(`/api/radars/${radarId}/activate`, {});
-      const run = await postJson(`/api/radars/${radarId}/run`, getSearchModeRequest(currentResult.searchMode));
+      let run = null;
+      let report = null;
+      try {
+        run = await postJson(`/api/radars/${radarId}/run`, getSearchModeRequest(currentResult.searchMode));
+        const runId = run.data?.run?.id;
+        const cards = run.data?.opportunityCards || [];
+        const sourceHintChecks = run.data?.sourceCoverage || run.data?.sourceHintChecks || [];
+        const candidateAccounting = run.data?.candidateAccounting;
+        const rawCandidates = run.data?.rawCandidates || [];
+        const executionLog = run.data?.executionLog;
+        if (cards.length > 0) {
+          report = await postJson("/api/reports/generate", {
+            spec: currentResult.spec,
+            radar_type: "custom",
+            opportunities: cards,
+            sourceHintChecks,
+            candidateAccounting,
+            executionLog,
+            rawCandidates,
+            radar_id: radarId,
+            run_id: runId,
+            profile: currentResult.profile,
+          });
+        }
+      } catch (runErr) {
+        run = {
+          data: {
+            runOutcome: {
+              status: "failed",
+              message: `本轮复跑失败：${runErr.message || "网络错误"}。雷达已保存，可稍后在我的雷达里重试。`,
+              canRetry: true,
+              canSaveRadar: true,
+            },
+          },
+        };
+      }
       const runId = run.data?.run?.id;
-      const cards = run.data?.opportunityCards || [];
-      const sourceHintChecks = run.data?.sourceCoverage || run.data?.sourceHintChecks || [];
-      const candidateAccounting = run.data?.candidateAccounting;
-      const rawCandidates = run.data?.rawCandidates || [];
-      const executionLog = run.data?.executionLog;
-      const report = await postJson("/api/reports/generate", {
-        spec: currentResult.spec,
-        radar_type: "custom",
-        opportunities: cards,
-        sourceHintChecks,
-        candidateAccounting,
-        executionLog,
-        rawCandidates,
-        radar_id: radarId,
-        run_id: runId,
-        profile: currentResult.profile,
-      });
+      const cards = run.data?.opportunityCards || currentResult.opportunityCards || [];
+      const sourceHintChecks = run.data?.sourceCoverage || run.data?.sourceHintChecks || currentResult.sourceHintChecks || [];
+      const candidateAccounting = run.data?.candidateAccounting || currentResult.candidateAccounting;
+      const rawCandidates = run.data?.rawCandidates || currentResult.rawCandidates || [];
+      const executionLog = run.data?.executionLog || currentResult.executionLog;
+      const runOutcome = run.data?.runOutcome || currentResult.runOutcome;
+      const reportMarkdown = report?.data?.markdown || currentResult.markdown;
       currentResult = {
         ...currentResult,
         radarId,
@@ -320,12 +416,15 @@
         candidateAccounting,
         rawCandidates,
         executionLog,
-        markdown: report.data.markdown,
-        reportId: report.data.reportId,
-        savedMessage: "已保存为长期雷达。本次机会和报告已经绑定到我的雷达。",
+        runOutcome,
+        markdown: reportMarkdown,
+        reportId: report?.data?.reportId,
+        savedMessage: report?.data?.reportId
+          ? "已保存为长期雷达。本次机会和报告已经绑定到我的雷达。"
+          : "已保存为长期雷达。本轮结果不足或报告尚未生成，可在我的雷达里再次盯机会。",
       };
       renderResult(currentResult);
-      if (window.showToast) showToast("已保存为长期雷达，并生成了绑定报告", "success");
+      if (window.showToast) showToast(currentResult.reportId ? "已保存为长期雷达，并生成了绑定报告" : "已保存为长期雷达，可稍后再次盯机会", "success");
     } catch (err) {
       if (window.showToast) showToast(err.message || "保存失败", "error");
       if (btn) {

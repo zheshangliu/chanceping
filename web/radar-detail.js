@@ -680,6 +680,22 @@
       if (status) status.innerHTML = '<span class="rerun-status-running">正在重新盯机会</span>';
       const json = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, getSearchModeRequest());
       const runData = json.data || {};
+      const outcome = runData.runOutcome;
+      if (outcome?.status && outcome.status !== "succeeded") {
+        if (resultList) {
+          resultList.innerHTML = `
+            <div class="watch-empty-state">
+              <p>${escapeHtml(outcome.message || "本轮结果不足，可重试搜索。")}</p>
+              <button class="btn-secondary" id="radar-detail-retry-run">重试搜索</button>
+            </div>
+          `;
+          document.getElementById("radar-detail-retry-run")?.addEventListener("click", () => runRadar(radarId));
+        }
+        if (status) status.innerHTML = `<span class="rerun-status-warning">${escapeHtml(outcome.message || "本轮结果不足，可重试搜索。")}</span>`;
+        if (window.showToast) showToast(outcome.message || "本轮结果不足，可稍后重试", "warning");
+        await loadRadarRuns(radarId);
+        return;
+      }
       const opportunities = runData.opportunityCards || runData.opportunities || [];
       renderRunResult(opportunities);
       if (resultList) {

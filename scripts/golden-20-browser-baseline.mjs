@@ -239,7 +239,7 @@ export class Golden20BrowserRunner {
       await this.tab.playwright.waitForLoadState({ state: "domcontentloaded", timeoutMs: 10000 });
       await this.fillUnique("#home-input", c.input, "home input");
       await this.clickUnique("#home-watch-btn", "home watch button");
-      const hasRadarVersionCard = (s) => /雷达 V1\.\d+ 确认卡/.test(s.text) || s.text.includes("我理解你想建立这样的机会雷达");
+      const hasRadarVersionCard = (s) => /雷达 V1\.\d+ (?:确认卡|策略卡)/.test(s.text) || s.text.includes("我理解你想建立这样的机会雷达");
       let state = await this.waitFor((s) => s.text.includes("我还需要确认几个关键点") || hasRadarVersionCard(s) || s.text.includes("生成雷达画像失败"), 120000, `case ${c.id} profile`);
       let rounds = 0;
       while (state.text.includes("我还需要确认几个关键点") && rounds < 2) {
@@ -255,13 +255,13 @@ export class Golden20BrowserRunner {
         state = await this.waitFor((s) => hasRadarVersionCard(s) || s.text.includes("我还需要确认几个关键点") || s.text.includes("生成雷达画像失败"), 120000, `case ${c.id} profile after clarification`);
         if (hasRadarVersionCard(state)) break;
       }
-      if (!hasRadarVersionCard(state)) throw new Error("未进入雷达版本确认卡");
+      if (!hasRadarVersionCard(state)) throw new Error("未进入雷达版本策略卡");
       result.profileSummary = state.profile.map((p) => `${p.label}:${p.value}`).join("；");
       result.profileSubjectOk = c.subjectRe.test(result.profileSummary) || c.subjectRe.test(state.text);
       result.opportunityTypeOk = c.typeRe.test(result.profileSummary) || c.typeRe.test(state.text);
 
       await this.clickUnique("#btn-confirm-radar-profile", "confirm profile");
-      state = await this.waitFor((s) => s.text.includes("机会卡片") || s.text.includes("Live 真实搜索失败") || s.text.includes("盯机会失败") || s.text.includes("本次真实搜索结果不足"), 300000, `case ${c.id} live result`);
+      state = await this.waitFor((s) => s.text.includes("机会卡片") || s.text.includes("Live 真实搜索失败") || s.text.includes("盯机会失败") || s.text.includes("本次真实搜索结果不足") || s.text.includes("本轮真实搜索结果不足"), 300000, `case ${c.id} live result`);
       const initial = await this.pageState();
       const initialText = `${initial.text}\n${initial.markdown}`;
       result.cardCount = initial.cards.length;

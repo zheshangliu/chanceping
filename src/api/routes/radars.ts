@@ -24,6 +24,7 @@ import type { ApiResponse, RadarCreateRequest, RadarUpdateRequest, RadarRunReque
 import { SearchOrchestrator } from "../../search/orchestrator";
 import { getDataMode } from "../../demo/data-mode";
 import { resolveSearchDataMode, validateLiveSearchResult } from "../../config/local-live-search";
+import { withSearchRunOutcome } from "../search-outcome";
 import type { RadarType } from "../../agents/opportunity-store";
 import type { RadarKind, RadarStatus, RadarSchedule } from "../../schema/radar";
 import { RadarGenerator } from "../../agents/radar-generator";
@@ -493,7 +494,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
         opportunityStore: ctx.store, // V1.6-07：传入机会库引用，启用增量标签复用
       });
       const liveProviderRouting = resolvedMode.dataMode === "live"
-        ? { primary: ["serper"], fallback: [] }
+        ? (radar.providerRouting?.primary?.length ? radar.providerRouting : { primary: ["serper"], fallback: [] })
         : radar.providerRouting;
       const searchResult = await orchestrator.search(
         radar.spec,
@@ -501,67 +502,66 @@ export function radarsRoutes(ctx: AppContext): Hono {
         liveProviderRouting,
         radar.watchRules, // V1.6-06：传入雷达级 Watch Rules
       );
-      if (resolvedMode.dataMode === "live") {
-        const liveError = validateLiveSearchResult(searchResult);
-        if (liveError) {
-          throw new Error(`${liveError} 可以切回演示数据继续体验。`);
-        }
-      }
+      const liveError = resolvedMode.dataMode === "live" ? validateLiveSearchResult(searchResult) : null;
+      const searchResultWithOutcome = withSearchRunOutcome(searchResult, resolvedMode.dataMode, liveError);
 
       // 4. 搜索结果存入 OpportunityStore，绑定 radarId
       const radarType = kindToRadarType(radar.kind);
       const opportunityKeys: string[] = [];
-      if (searchResult.opportunityCards && searchResult.opportunityCards.length > 0) {
-        const entries = ctx.store.addBatch(searchResult.opportunityCards, radarType, id);
+      if (searchResultWithOutcome.opportunityCards && searchResultWithOutcome.opportunityCards.length > 0) {
+        const entries = ctx.store.addBatch(searchResultWithOutcome.opportunityCards, radarType, id);
         for (const entry of entries) {
           opportunityKeys.push(entry.dedup_key);
         }
       }
 
-      // 5. 更新 RadarRun: status=succeeded
+      // 5. 更新 RadarRun: 真实搜索失败也返回 result envelope，但运行记录保持 failed
       const now = new Date().toISOString();
+      const runStatus = searchResultWithOutcome.runOutcome.status === "failed" ? "failed" : "succeeded";
       const updatedRun = ctx.radarRunStore.update(run.id, {
-        status: "succeeded",
+        status: runStatus,
         finishedAt: now,
-        totalRaw: searchResult.total_raw,
-        totalScored: searchResult.total_scored,
+        totalRaw: searchResultWithOutcome.total_raw,
+        totalScored: searchResultWithOutcome.total_scored,
         opportunityKeys,
-        sourceCandidateCount: searchResult.sourceCandidates?.length,
+        sourceCandidateCount: searchResultWithOutcome.sourceCandidates?.length,
+        ...(runStatus === "failed" ? { error: searchResultWithOutcome.runOutcome.message, errorCode: searchResultWithOutcome.runOutcome.errorCode } : {}),
       });
       ctx.radarRunStore.save();
 
-      // 6. 更新 Radar: currentRunId=undefined, lastRunStatus=succeeded, lastRunAt=now
+      // 6. 更新 Radar: currentRunId=undefined, lastRunStatus, lastRunAt=now
       ctx.radarStore.update(id, {
         currentRunId: undefined,
-        lastRunStatus: "succeeded",
+        lastRunStatus: runStatus,
         lastRunAt: now,
       });
       ctx.radarStore.save();
 
       // 7. 返回结果（opportunityCards 为前端主数据，opportunities 为调试字段）
-      const opportunitiesWithRadarId = searchResult.opportunities.map((opp) => ({
+      const opportunitiesWithRadarId = searchResultWithOutcome.opportunities.map((opp) => ({
         ...opp,
         radarId: id,
       }));
 
       const result: RadarRunResult = {
         run: updatedRun ?? run,
-        opportunityCards: searchResult.opportunityCards,
-        sourceCandidates: searchResult.sourceCandidates,
-        sourceHintChecks: searchResult.sourceHintChecks,
-        searchPlan: searchResult.searchPlan,
-        executionLog: searchResult.executionLog,
-        sourceCoverage: searchResult.sourceCoverage,
-        candidateAccounting: searchResult.candidateAccounting,
-        rawCandidates: searchResult.rawCandidates,
+        runOutcome: searchResultWithOutcome.runOutcome,
+        opportunityCards: searchResultWithOutcome.opportunityCards,
+        sourceCandidates: searchResultWithOutcome.sourceCandidates,
+        sourceHintChecks: searchResultWithOutcome.sourceHintChecks,
+        searchPlan: searchResultWithOutcome.searchPlan,
+        executionLog: searchResultWithOutcome.executionLog,
+        sourceCoverage: searchResultWithOutcome.sourceCoverage,
+        candidateAccounting: searchResultWithOutcome.candidateAccounting,
+        rawCandidates: searchResultWithOutcome.rawCandidates,
         opportunities: opportunitiesWithRadarId,
         // V1.6b 自检修复:透传 V1.6 统计字段
-        watch_rules_before: searchResult.watch_rules_before,
-        watch_rules_after: searchResult.watch_rules_after,
-        watch_rules_filtered_out: searchResult.watch_rules_filtered_out,
-        ai_filter_skipped: searchResult.ai_filter_skipped,
-        ai_filter_executed: searchResult.ai_filter_executed,
-        providerDegradation: searchResult.providerDegradation,
+        watch_rules_before: searchResultWithOutcome.watch_rules_before,
+        watch_rules_after: searchResultWithOutcome.watch_rules_after,
+        watch_rules_filtered_out: searchResultWithOutcome.watch_rules_filtered_out,
+        ai_filter_skipped: searchResultWithOutcome.ai_filter_skipped,
+        ai_filter_executed: searchResultWithOutcome.ai_filter_executed,
+        providerDegradation: searchResultWithOutcome.providerDegradation,
       };
       return c.json({ success: true, data: result, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
     } catch (err) {

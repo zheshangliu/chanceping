@@ -350,6 +350,17 @@
     setRerunStatus(btn, '<span class="rerun-status-running">正在重新盯机会</span>');
     try {
       const runJson = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, getSearchModeRequest());
+      const outcome = runJson.data?.runOutcome;
+      if (outcome?.status && outcome.status !== "succeeded") {
+        setRerunStatus(btn, `
+          <span class="rerun-status-warning">${escapeHtml(outcome.message || "本轮结果不足，可重试搜索。")}</span>
+          <button class="btn-retry-radar-run">重试搜索</button>
+        `);
+        const retryBtn = btn.closest(".radar-card")?.querySelector(".btn-retry-radar-run");
+        retryBtn?.addEventListener("click", () => rerunRadarFromCard(radar, btn));
+        if (window.showToast) showToast(outcome.message || "本轮结果不足，可稍后重试", "warning");
+        return;
+      }
       const count = (runJson.data?.opportunityCards || []).length;
       btn.textContent = "正在生成报告";
       setRerunStatus(btn, '<span class="rerun-status-running">正在生成报告</span>');

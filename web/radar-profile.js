@@ -89,6 +89,18 @@
     };
   }
 
+  function queryFamilyText(radarVersion) {
+    const families = Array.isArray(radarVersion?.queryFamilies) ? radarVersion.queryFamilies : [];
+    if (families.length === 0) {
+      return ["直接机会入口", "可行动线索", "观察信号", "参考案例"];
+    }
+    return families.slice(0, 5).map((family) => {
+      const name = family.familyName || family.queryFamily || "搜索主题";
+      const source = family.sourceArchetype ? `（${family.sourceArchetype}）` : "";
+      return `${name}${source}`;
+    });
+  }
+
   function mergeSourceHintsIntoRadarVersion(radarVersion, sourceHintText) {
     if (!radarVersion || typeof radarVersion !== "object") return radarVersion;
     const hints = String(sourceHintText || "")
@@ -126,11 +138,12 @@
       signals.actionPurpose ? 15 : 0,
       signals.sourceOrExclude ? 15 : 0,
     ].reduce((sum, value) => sum + value, 0);
+    const strategyQuestions = buildStrategyClarificationQuestions(text, generatedData);
     const backendQuestions = normalizeBackendQuestions(generatedData?.questionsToConfirm || generatedData?.spec?.questions_to_confirm);
     const backendScore = Math.min(100, Math.max(backendCompleteness, backendConfidence || 0));
     const score = backendConfidence > 0 ? Math.round(backendConfidence) : Math.min(100, Math.round(Math.max(frontendScore, backendScore)));
-    const fallbackQuestions = backendQuestions.length > 0 ? [] : buildFallbackQuestions(signals, score);
-    const questions = [...backendQuestions, ...fallbackQuestions]
+    const fallbackQuestions = strategyQuestions.length > 0 ? [] : backendQuestions.length > 0 ? [] : buildFallbackQuestions(signals, score);
+    const questions = [...strategyQuestions, ...backendQuestions, ...fallbackQuestions]
       .filter((question, index, arr) => arr.findIndex((item) => item.key === question.key || item.question === question.question) === index)
       .slice(0, MAX_VISIBLE_CLARIFICATION_QUESTIONS);
     return {
@@ -141,6 +154,30 @@
       needsBackground: score < CLARITY_BACKGROUND_THRESHOLD,
       defaultAssumptions: buildDefaultAssumptions(signals),
     };
+  }
+
+  function buildStrategyClarificationQuestions(text, generatedData) {
+    const score = Number(generatedData?.requirementConfidence || generatedData?.spec?.requirement_confidence?.total || 0);
+    if (score >= CLARITY_DIRECT_THRESHOLD) return [];
+    if (/b2b\s*saas|出海|东南亚|southeast|asean/i.test(text) && !/零售|retail|商品交易|渠道|代理|客户|行业/.test(text)) {
+      return [{
+        key: "strategy_divergence_b2b_saas",
+        question: "你更想优先找哪类机会：展会和创业扶持、渠道/代理伙伴、政府招商，还是某个垂直行业客户线索？",
+      }];
+    }
+    if (/婚庆|活动布置|美陈|员工福利|礼品|研学|文旅|猎头|补贴|投标|客户线索|订单|合作/.test(text)) {
+      return [{
+        key: "strategy_divergence_general",
+        question: "这类机会有几种找法：直接报名/招采入口、客户或采购线索、渠道合作、协会目录、观察信号。你希望这版雷达优先哪一种？",
+      }];
+    }
+    if (/想|找|盯|机会|合作|客户|订单/.test(text) && !/优先看|官网|来源|排除/.test(text)) {
+      return [{
+        key: "search_strategy_priority",
+        question: "为了把搜索策略定准，你希望我优先找直接可行动入口、可联系线索，还是先建立观察来源清单？",
+      }];
+    }
+    return [];
   }
 
   function normalizeBackendQuestions(value) {
@@ -202,7 +239,7 @@
     root.innerHTML = `
       <section class="radar-profile-card">
         <div class="watch-result-header">
-          <h3>雷达 ${escapeHtml(radarVersion.version)} 确认卡</h3>
+          <h3>雷达 ${escapeHtml(radarVersion.version)} 策略卡</h3>
           <p>${escapeHtml(radarVersion.oneSentencePositioning || draft.description)}</p>
         </div>
         <div class="radar-profile-grid">
@@ -211,6 +248,7 @@
           ${renderProfileField("不盯什么", radarVersion.exclusionRules)}
           ${renderProfileField("优先看哪些来源", radarVersion.prioritySourceArchetypes)}
           ${renderProfileField("什么算高价值", radarVersion.highValueCriteria)}
+          ${renderProfileField("会按哪些搜索主题去找", queryFamilyText(radarVersion))}
           ${renderProfileField("缺哪些信息", radarVersion.missingConfig)}
           ${renderProfileField("默认假设", radarVersion.defaultAssumptions || profile.默认假设)}
           ${(radarVersion.revisionNotes || []).length ? renderProfileField("本次修订", radarVersion.revisionNotes.map((item) => item.detail || item)) : ""}
@@ -339,6 +377,7 @@
       spec: confirmedSpec,
       profile: profileFromSpec(confirmedSpec, currentDraft.profile),
       suggestedName: currentDraft.suggestedName,
+      radarVersion: confirmedSpec.radar_version,
     });
   }
 
