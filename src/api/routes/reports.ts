@@ -5,6 +5,7 @@ import type { AppContext } from "../context";
 import type { ApiResponse, ReportGenerateRequest } from "../types";
 import { generateRadarReport } from "../../agents/radar-report-generator";
 import type { RadarReportInput } from "../../agents/radar-report-generator";
+import { generateLiveLlmEvidenceExplanation } from "../../agents/live-llm-report-explainer";
 import type { RadarRequirementSpec } from "../../schema/radar-requirement-spec";
 import type { OpportunityCard } from "../../schema/opportunity-card";
 import { exportReport } from "../../export/report-exporter";
@@ -12,6 +13,8 @@ import type { ExportFormat } from "../../export/report-exporter";
 import { exportReview } from "../../export/review-exporter";
 import { generateReview } from "../../agents/opportunity-review";
 import type { ReportMeta } from "../../agents/report-store";
+import { getLlmMode } from "../../demo/data-mode";
+import { resolveLiveLlmProfile, toLiveLlmPublicProfile } from "../../config/live-llm-profile";
 
 /** 默认高确认度 spec（用于 API 报告生成） */
 function createDefaultSpec(): RadarRequirementSpec {
@@ -179,6 +182,14 @@ export function reportRoutes(ctx: AppContext): Hono {
         executionLog: body.executionLog,
         rawCandidates: body.rawCandidates,
       };
+      if (getLlmMode() === "live") {
+        const liveProfile = resolveLiveLlmProfile();
+        input.liveLlmEvidenceExplanation = await generateLiveLlmEvidenceExplanation(
+          ctx.llmAdapter,
+          input,
+          toLiveLlmPublicProfile(liveProfile),
+        );
+      }
       const result = generateRadarReport(input);
 
       // 保存报告到文件

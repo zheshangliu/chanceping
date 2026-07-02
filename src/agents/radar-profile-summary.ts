@@ -62,5 +62,6 @@ export function questionsToConfirmPayload(
       priority: priority[item.priority] ?? 1,
     }))
     .filter((item) => item.question.trim())
-    .sort((a, b) => b.priority - a.priority);
+    .sort((a, b) => b.priority - a.priority)
+    .slice(0, 1);
 }

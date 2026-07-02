@@ -26,6 +26,7 @@ import type { EvidenceItem } from "../schema/evidence-item";
 import type { CandidateAccounting, FieldEvidenceItem, FieldEvidenceName, SearchExecutionLog } from "../schema/radar-mvp-contracts";
 import type { RawCandidateAudit } from "../search/types";
 import type { SourceHintCheck } from "../search/source-hints";
+import type { LiveLlmEvidenceExplanation } from "./live-llm-report-explainer";
 import { CONFIDENCE_GRADE_LABELS, SOURCE_TYPE_LABELS } from "../schema/source-candidate";
 import { EVIDENCE_FIELD_LABELS } from "../schema/evidence-item";
 import { BRAND } from "../brand/constants";
@@ -63,6 +64,8 @@ export interface RadarReportInput {
   executionLog?: SearchExecutionLog;
   /** Live Evidence MVP：原始候选审计摘要。 */
   rawCandidates?: RawCandidateAudit[];
+  /** Live LLM MVP：基于字段证据的模型解释。 */
+  liveLlmEvidenceExplanation?: LiveLlmEvidenceExplanation;
 }
 
 /** 雷达报告生成结果 */
@@ -956,6 +959,22 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
   }
 
   lines.push("", "### 模型判断", "");
+  if (input.liveLlmEvidenceExplanation) {
+    const explanation = input.liveLlmEvidenceExplanation;
+    lines.push(`- Live LLM profile：${explanation.profile.profile} / ${explanation.profile.provider} / ${explanation.profile.model}`);
+    lines.push("- 以下内容属于基于 evidence status 的模型判断，不是字段级已核验事实。");
+    explanation.globalNotes.forEach((note) => lines.push(`- ${note}`));
+    explanation.items.forEach((item) => {
+      lines.push(`- ${item.title}`);
+      lines.push(`  - 价值解释：${item.opportunityValue}`);
+      lines.push(`  - 建议动作：${item.suggestedAction}`);
+      lines.push(`  - 风险提醒：${item.riskNote}`);
+      lines.push(`  - 证据依据：${item.evidenceBasis}`);
+      if (item.reviewNeeded.length > 0) {
+        lines.push(`  - 待复核：${item.reviewNeeded.join("、")}`);
+      }
+    });
+  }
   if (input.opportunities.length === 0) {
     lines.push("- 暂无模型判断。");
   } else {

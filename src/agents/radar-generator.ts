@@ -184,7 +184,12 @@ function applySourceHintsFromText(spec: RadarRequirementSpec, text: string): Rad
  * 确保所有必需字段存在（缺失时用空值填充）。
  */
 function normalizeExtractedInfo(raw: unknown): ExtractedRequirementInfo {
-  const obj = (raw ?? {}) as Record<string, unknown>;
+  const rawObj = (raw ?? {}) as Record<string, unknown>;
+  const obj = (
+    rawObj.extracted_info && typeof rawObj.extracted_info === "object"
+      ? rawObj.extracted_info
+      : rawObj
+  ) as Record<string, unknown>;
   const er = (obj.exclusion_rules ?? {}) as Record<string, unknown>;
   const mustExclude = arrOrEmpty(er.must_exclude as string[] | undefined);
 

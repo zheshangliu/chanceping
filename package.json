@@ -67,6 +67,7 @@
     "verify:mvp-browser": "tsx scripts/verify-mvp-browser-smoke.ts",
     "verify:api-env": "tsx scripts/verify-api-env.ts",
     "verify:live-mvp": "CHANCEPING_LOAD_API_ENV=true DATA_MODE=live LLM_MODE=mock tsx scripts/verify-live-mvp.ts",
+    "verify:live-llm": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial DATA_MODE=mock LLM_MODE=live tsx scripts/verify-live-llm.ts",
     "verify:all": "node --run typecheck && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api",
     "precheck": "tsx scripts/precheck.ts"
   },

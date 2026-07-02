@@ -40,6 +40,7 @@ import { GlmAdapter } from "./glm-adapter";
 import { getStrategyFromEnv, getStrategy } from "../config/llm-strategy";
 import { getLlmMode } from "../demo/data-mode";
 import { MockLlmAdapter } from "../demo/mock-llm-adapter";
+import { resolveLiveLlmProfile, type LiveLlmApiProfile } from "../config/live-llm-profile";
 
 // ============================================================
 // 类型定义
@@ -79,6 +80,32 @@ export interface ModelStrategy {
   profile: StrategyProfile;
   taskRouting: Record<TaskType, TaskRouting>;
   defaultTask: TaskType;
+}
+
+const ALL_TASK_TYPES: TaskType[] = [
+  "requirement_understanding",
+  "batch_screening",
+  "core_judgment",
+  "high_difficulty",
+  "report_generation",
+  "summarization",
+  "dedup_classification",
+  "fallback",
+];
+
+function createSingleProviderStrategy(profile: LiveLlmApiProfile): ModelStrategy {
+  const route: ModelRoute = {
+    provider: profile.provider,
+    model: profile.model,
+  };
+  const taskRouting = Object.fromEntries(
+    ALL_TASK_TYPES.map((task) => [task, { primary: route, fallback: null }]),
+  ) as Record<TaskType, TaskRouting>;
+  return {
+    profile: profile.profile === "contest" ? "competition" : "commercial",
+    defaultTask: "requirement_understanding",
+    taskRouting,
+  };
 }
 
 // ============================================================
@@ -127,11 +154,13 @@ class FallbackAdapter implements LLMAdapter {
  */
 export class ModelRouter implements LLMAdapter {
   private readonly strategy: ModelStrategy;
+  private readonly liveProfile?: LiveLlmApiProfile;
   /** 适配器实例缓存，key = `${provider}:${model}` */
   private readonly adapterCache: Map<string, LLMAdapter> = new Map();
 
-  constructor(strategy?: ModelStrategy) {
+  constructor(strategy?: ModelStrategy, options: { liveProfile?: LiveLlmApiProfile } = {}) {
     this.strategy = strategy ?? getStrategyFromEnv();
+    this.liveProfile = options.liveProfile;
   }
 
   /**
@@ -214,12 +243,21 @@ export class ModelRouter implements LLMAdapter {
     }
 
     let adapter: LLMAdapter;
+    const liveConfig = this.liveProfile;
+    if (liveConfig && (route.provider !== liveConfig.provider || route.model !== liveConfig.model)) {
+      throw new Error(`live LLM profile 路由不一致：profile=${liveConfig.provider}:${liveConfig.model}, route=${route.provider}:${route.model}`);
+    }
+
     switch (route.provider) {
       case "qwen":
-        adapter = new QwenAdapter({ model: route.model });
+        adapter = liveConfig
+          ? new QwenAdapter({ model: liveConfig.model, apiKey: liveConfig.apiKey, baseUrl: liveConfig.baseUrl, mockMode: false })
+          : new QwenAdapter({ model: route.model });
         break;
       case "deepseek":
-        adapter = new DeepSeekAdapter({ model: route.model });
+        adapter = liveConfig
+          ? new DeepSeekAdapter({ model: liveConfig.model, apiKey: liveConfig.apiKey, baseUrl: liveConfig.baseUrl, mockMode: false })
+          : new DeepSeekAdapter({ model: route.model });
         break;
       case "glm":
         adapter = new GlmAdapter({ model: route.model });
@@ -253,5 +291,6 @@ export function createAdapter(): LLMAdapter {
     return new MockLlmAdapter();
   }
   // Live 模式：返回 ModelRouter（多 Provider 路由 + fallback）
-  return new ModelRouter();
+  const liveProfile = resolveLiveLlmProfile();
+  return new ModelRouter(createSingleProviderStrategy(liveProfile), { liveProfile });
 }
