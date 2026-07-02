@@ -770,13 +770,157 @@ function buildMvpActionList(opps: OpportunityCard[]): string {
   ].join("\n");
 }
 
+type ReportActionDecision = "Attack" | "Hold" | "Monitor" | "Archive";
+
+function uniqueList(items: string[], limit: number): string[] {
+  return Array.from(new Set(items.map((item) => item.trim()).filter(Boolean))).slice(0, limit);
+}
+
+function actionDecision(input: RadarReportInput, opps: OpportunityCard[]): ReportActionDecision {
+  const actionable = opps.filter((opp) => opp.opportunity_kind === "direct_opportunity" || opp.opportunity_kind === "business_lead");
+  if (actionable.some((opp) => !isDemoOpportunity(opp) && (getVisibleLevel(opp) === "S" || getVisibleLevel(opp) === "A"))) {
+    return "Attack";
+  }
+  if (actionable.length > 0) {
+    return "Hold";
+  }
+  if ((input.rawCandidates ?? []).length > 0 || input.candidateAccounting?.rawCount) {
+    return "Monitor";
+  }
+  return "Monitor";
+}
+
+function actionLayerKeywords(input: RadarReportInput): string[] {
+  return uniqueList([
+    ...(input.spec.keyword_strategy?.core_keywords_zh ?? []),
+    ...(input.spec.keyword_strategy?.core_keywords_en ?? []),
+    ...(input.spec.opportunity_scope?.primary_opportunity_types ?? []),
+    ...mvpSourceNames(input.spec),
+    ...((input.rawCandidates ?? []).map((candidate) => candidate.sourceDomain)),
+  ], 10);
+}
+
+function buildMaterialGaps(opps: OpportunityCard[]): string[] {
+  const gaps = [
+    "待复核：官方报名 / 申请 / 联系入口是否真实可用。",
+    "待复核：截止时间、费用、资格、联系人、版权义务和获奖义务。",
+  ];
+  const top = opps[0];
+  if (top?.materials_required && top.materials_required !== "待复核") {
+    gaps.push(`模型判断：围绕「${top.title}」先整理 ${top.materials_required}。`);
+  } else if (top) {
+    gaps.push(`模型判断：围绕「${top.title}」先准备个人 / 公司介绍、项目说明、过往案例和可提交材料清单。`);
+  } else {
+    gaps.push("模型判断：先补充更明确的地区、机会类型和指定信号源，提升下一轮搜索命中率。");
+  }
+  return uniqueList(gaps, 5);
+}
+
+function buildRecommendedAngles(spec: RadarRequirementSpec, opps: OpportunityCard[]): string[] {
+  const identity = spec.client_profile?.business_type || spec.client_profile?.client_type || "当前用户";
+  const target = fmtArr(spec.opportunity_scope?.primary_opportunity_types);
+  const top = opps[0];
+  if (!top) {
+    return [
+      `模型判断：先把「${identity}」的雷达包装成持续监控 ${target} 的观察雷达，下一轮优先补足来源和地区。`,
+    ];
+  }
+  if (top.opportunity_kind === "business_lead") {
+    return [
+      `模型判断：把「${top.title}」作为可行动线索处理，先确认对方是否真实有采购、合作、招聘或报名需求。`,
+      `模型判断：外联时不要声称对方意向已经证实，用「看到公开信号，想确认是否开放合作」作为开场。`,
+    ];
+  }
+  if (top.opportunity_kind === "direct_opportunity") {
+    return [
+      `模型判断：把「${top.title}」作为本周优先核验入口，先核对官方页面、截止时间和资格要求。`,
+      `模型判断：若核验通过，再围绕「${identity}」与 ${target} 的匹配点准备提交材料。`,
+    ];
+  }
+  return [
+    `模型判断：「${top.title}」更适合作为观察或参考，不建议直接当作已经成立的机会行动。`,
+  ];
+}
+
+function buildRiskNotes(opps: OpportunityCard[]): string[] {
+  const fromCards = opps
+    .map((opp) => opp.risk_note)
+    .filter(Boolean)
+    .slice(0, 3);
+  return uniqueList([
+    "待复核：搜索发现不能证明报名资格、费用、截止日期、联系人、采购意向、招聘意向或版权义务已经成立。",
+    "待复核：费用、资格、版权 / 授权、地区限制、材料成本和执行周期可能影响是否投入。",
+    ...fromCards.map((note) => `模型判断 / 待复核：${note}`),
+  ], 6);
+}
+
+function buildNextActions(opps: OpportunityCard[]): string[] {
+  const top = opps[0];
+  if (!top) {
+    return [
+      "模型判断：补充 2-3 个指定信号源或官网名称。",
+      "模型判断：放宽地区或时间窗口后重新盯一次。",
+      "模型判断：保存为长期雷达，让系统持续监控新信号。",
+    ];
+  }
+  const actions = [
+    `模型判断：今天先打开「${top.title}」来源，逐项复核行动入口、资格、费用和截止时间。`,
+    "模型判断：把可报名 / 可申报 / 可联系的结果单独建表，标记负责人和截止日。",
+    "模型判断：准备一版 100 字自我 / 公司介绍和一版项目说明，方便报名或外联复用。",
+  ];
+  const businessLead = opps.find((opp) => opp.opportunity_kind === "business_lead");
+  if (businessLead) {
+    actions.push(`模型判断：对「${businessLead.title}」只做联系确认，不把它当作采购、招聘或合作已经成立的机会。`);
+  }
+  actions.push("模型判断：保存本轮报告，下一轮对比新增来源、失败来源和低行动性来源变化。");
+  return uniqueList(actions, 5);
+}
+
+function buildMvpActionLayer(input: RadarReportInput, opps: OpportunityCard[]): string {
+  const decision = actionDecision(input, opps);
+  const lines = [
+    "## 8. 报告行动层",
+    "",
+    "> 本节是基于雷达画像、机会卡和来源状态生成的模型判断；所有未被字段级证据支持的内容均为待复核建议。",
+    "",
+    `- decision: ${decision}（模型判断）`,
+    "",
+    "### recommended_angle: 推荐打法 / 包装角度",
+    "",
+    ...buildRecommendedAngles(input.spec, opps).map((item) => `- ${item}`),
+    "",
+    "### material_gaps: 材料缺口与准备清单",
+    "",
+    ...buildMaterialGaps(opps).map((item) => `- ${item}`),
+    "",
+    "### risk_notes: 风险提醒",
+    "",
+    ...buildRiskNotes(opps).map((item) => `- ${item}`),
+    "",
+    "### next_actions: 本周建议动作",
+    "",
+    ...buildNextActions(opps).map((item, index) => `${index + 1}. ${item}`),
+    "",
+    "### monitoring_keywords: 下一轮监控关键词",
+    "",
+  ];
+  const keywords = actionLayerKeywords(input);
+  if (keywords.length === 0) {
+    lines.push("- 待复核：暂无明确关键词，建议补充地区、机会类型和指定来源。");
+  } else {
+    keywords.forEach((keyword) => lines.push(`- ${keyword}`));
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
 function buildMvpNextTracking(spec: RadarRequirementSpec): string {
   const keywords = [
     ...(spec.keyword_strategy.core_keywords_zh ?? []),
     ...(spec.keyword_strategy.core_keywords_en ?? []),
   ];
   return [
-    "## 8. 下周继续追踪",
+    "## 9. 下周继续追踪",
     "",
     `- 关键词：${fmtArr(keywords)}`,
     `- 来源网站：${fmtArr(mvpSourceNames(spec))}`,
@@ -1149,6 +1293,7 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
     buildMvpActionList(rankedOpps),
     buildMvpWatchPool(excluded),
     buildMvpSourceIndex(input, input.sourceCandidates ?? []),
+    buildMvpActionLayer(input, rankedOpps),
     buildMvpNextTracking(spec),
   ];
 
@@ -1159,6 +1304,6 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
     version: "V0.4",
     generated_at: generatedAt,
     stats,
-    sections_count: 8,
+    sections_count: 9,
   };
 }

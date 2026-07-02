@@ -378,7 +378,7 @@ function applySemanticCardMark(card: OpportunityCard, result: SearchResult): Opp
     card.action_status = card.assessment.actionStatus;
   }
   if (kind === "business_lead") {
-    const disclaimer = "类型：可行动线索；状态：需联系确认；不是已确认采购、招聘、报名或合作机会。";
+    const disclaimer = "类型：可行动线索；状态：需联系确认；不能当作采购、招聘、报名或合作机会已经成立。";
     card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), "可行动线索", "需联系确认"]));
     card.next_action = `联系来源方确认采购、合作、招聘或报名条件；${card.next_action || "先复核来源与行动入口。"}`;
     card.risk_note = card.risk_note ? `${card.risk_note} ${disclaimer}` : disclaimer;

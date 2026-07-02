@@ -13,10 +13,17 @@ const REQUIRED_SECTIONS = [
   "待复核项",
   "失败来源",
   "低行动性观察来源",
+  "报告行动层",
+  "decision:",
+  "recommended_angle:",
+  "material_gaps:",
+  "next_actions:",
+  "risk_notes:",
+  "monitoring_keywords:",
 ];
 
 const LOW_ACTION_RE = /视频|集锦|百科|维基|规则介绍|历史介绍|新闻转载|培训广告|培训班|专栏|博客|科普|入门|指南|知乎|新浪|搜狐|网易|YouTube|playlist|wikipedia|baike|rules|history|zhihu|column|blog|guide|explainer|sports\.sina|sohu|163\.com/i;
-const KEY_LEAK_RE = /COMMERCIAL_LLM_API_KEY|DEEPSEEK_API_KEY|CONTEST_LLM_API_KEY|DASHSCOPE_API_KEY|sk-[A-Za-z0-9_-]{8,}|Bearer\s+[A-Za-z0-9._-]{12,}/i;
+const KEY_LEAK_RE = /COMMERCIAL_LLM_API_KEY|DEEPSEEK_API_KEY|CONTEST_LLM_API_KEY|DASHSCOPE_API_KEY|(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{8,}|(?<![A-Za-z0-9])Bearer\s+[A-Za-z0-9._-]{12,}/i;
 const ACTUAL_MOCK_RE = /演示来源|演示数据，未真实核验|Mock 模式|data_mode.?mock/i;
 const OVERCLAIM_RE = /已确认报名资格|已核验报名资格|已确认费用|已核验费用|已确认截止日期|已核验截止日期|已确认联系人|已核验联系人|已确认报名状态|已核验报名状态|已确认版权义务|已核验版权义务/;
 

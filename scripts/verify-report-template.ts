@@ -164,7 +164,16 @@ const required = [
   "## 5. 本周行动清单",
   "## 6. 不建议投入或需复核的机会",
   "## 7. 来源与检查回执",
-  "## 8. 下周继续追踪",
+  "## 8. 报告行动层",
+  "## 9. 下周继续追踪",
+  "decision:",
+  "recommended_angle:",
+  "material_gaps:",
+  "next_actions:",
+  "risk_notes:",
+  "monitoring_keywords:",
+  "模型判断",
+  "待复核",
   "指定信号源",
   "本轮重点检查来源",
   "中国乒协官网",
@@ -227,6 +236,10 @@ if (!emptyMd.includes("放宽地区") || !emptyMd.includes("保存为长期雷�
 if (!emptyMd.includes("| 来源 | 状态 | 结果数 | 说明 |")) {
   failed++;
   console.log("FAIL empty report missing source coverage table");
+}
+if (!emptyMd.includes("decision: Monitor") || !emptyMd.includes("monitoring_keywords:")) {
+  failed++;
+  console.log("FAIL empty report missing action layer monitor decision");
 }
 if (failed === 0) console.log("PASS report template matches MVP structure");
 process.exit(failed > 0 ? 1 : 0);
