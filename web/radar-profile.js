@@ -70,6 +70,38 @@
     return Array.isArray(sources) ? sources.join("\n") : String(sources || "");
   }
 
+  function radarVersionFromDraft(draft) {
+    const specVersion = draft?.radarVersion || draft?.spec?.radar_version;
+    if (specVersion && typeof specVersion === "object") return specVersion;
+    const profile = draft?.profile || {};
+    return {
+      version: "V1.0",
+      oneSentencePositioning: `${arrayText(profile.用户身份)}的${arrayText(profile.关注机会)}机会雷达`,
+      opportunityIntents: Array.isArray(profile.关注机会) ? profile.关注机会 : [profile.关注机会 || "可行动机会"],
+      exclusionRules: Array.isArray(profile.排除内容) ? profile.排除内容 : [profile.排除内容 || "广告、旧新闻和无行动入口页面"],
+      prioritySourceArchetypes: Array.isArray(profile.指定信号源) && profile.指定信号源.length
+        ? profile.指定信号源
+        : ["官网、协会、政府公告、平台入口、合作目录"],
+      highValueCriteria: ["有报名、申请、合作、联系或可执行入口", "与用户画像和时间窗口匹配"],
+      missingConfig: ["指定来源、预算、材料状态和联系人偏好可继续补充"],
+      defaultAssumptions: profile.默认假设 || ["默认优先看未来30天内可行动机会"],
+      revisionNotes: [],
+    };
+  }
+
+  function mergeSourceHintsIntoRadarVersion(radarVersion, sourceHintText) {
+    if (!radarVersion || typeof radarVersion !== "object") return radarVersion;
+    const hints = String(sourceHintText || "")
+      .split(/\n+/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+    if (hints.length === 0) return radarVersion;
+    return {
+      ...radarVersion,
+      prioritySourceArchetypes: uniqueTextList([...(radarVersion.prioritySourceArchetypes || []), ...hints]),
+    };
+  }
+
   function hasAny(text, patterns) {
     return patterns.some((pattern) => pattern.test(text));
   }
@@ -81,7 +113,7 @@
     const signals = {
       identity: hasAny(text, [/我是|我们是|我代表|用户是/, /选手|学生|家长|公司|机构|团队|老师|顾问|猎头|财税|创业者|创作者/]),
       opportunityType: hasAny(text, [/比赛|竞赛|大赛|申报|补贴|客户线索|招聘|岗位|投标|展会|奖项|赛事/]),
-      region: hasAny(text, [/中国|国内|国外|海外|全球|国际|城市|北京|上海|广州|深圳|杭州|香港|澳门|台湾|华东|华南|华北|国内外/]),
+      region: hasAny(text, [/中国|国内|国外|海外|全球|国际|城市|北京|上海|广州|深圳|杭州|香港|澳门|台湾|华东|华南|华北|国内外|东南亚|东盟|ASEAN|Southeast\s*Asia|新加坡|马来西亚|越南|泰国|印尼|菲律宾/i]),
       timeWindow: hasAny(text, [/本周|本月|未来\s*\d+\s*天|未来30天|长期|每天|每周|近期|可报名|截止|即将/]),
       actionPurpose: hasAny(text, [/报名|参赛|申报|申请|销售|投递|联系|获客|做内容|投稿|收藏|跟进|监控/]),
       sourceOrExclude: hasAny(text, [/排除|不要|不想要|优先看|官网|平台|来源|指定|广告|ITTF|WTT|中国乒协|Kaggle|天池|政府|协会/]),
@@ -166,27 +198,30 @@
     const root = document.getElementById("watch-result-root");
     if (!root) return;
     const profile = draft.profile || {};
+    const radarVersion = radarVersionFromDraft(draft);
     root.innerHTML = `
       <section class="radar-profile-card">
         <div class="watch-result-header">
-          <h3>我理解你想建立这样的机会雷达</h3>
-          <p>${escapeHtml(draft.description)}</p>
+          <h3>雷达 ${escapeHtml(radarVersion.version)} 确认卡</h3>
+          <p>${escapeHtml(radarVersion.oneSentencePositioning || draft.description)}</p>
         </div>
         <div class="radar-profile-grid">
           ${renderProfileField("你是", profile.用户身份)}
-          ${renderProfileField("你想盯", profile.关注机会)}
-          ${renderProfileField("优先看", priorityText(profile))}
-          ${renderProfileField("排除", profile.排除内容)}
-          ${renderProfileField("指定信号源", profile.指定信号源)}
-          ${(profile.默认假设 || []).length ? renderProfileField("默认假设", profile.默认假设) : ""}
+          ${renderProfileField("这版雷达会盯什么", radarVersion.opportunityIntents)}
+          ${renderProfileField("不盯什么", radarVersion.exclusionRules)}
+          ${renderProfileField("优先看哪些来源", radarVersion.prioritySourceArchetypes)}
+          ${renderProfileField("什么算高价值", radarVersion.highValueCriteria)}
+          ${renderProfileField("缺哪些信息", radarVersion.missingConfig)}
+          ${renderProfileField("默认假设", radarVersion.defaultAssumptions || profile.默认假设)}
+          ${(radarVersion.revisionNotes || []).length ? renderProfileField("本次修订", radarVersion.revisionNotes.map((item) => item.detail || item)) : ""}
         </div>
         <label class="source-hints-field" for="source-hints-input">
           <span>指定信号源（可选）</span>
           <textarea id="source-hints-input" rows="4" placeholder="每行一个官网、网址或平台名称&#10;https://www.ittf.com/&#10;https://worldtabletennis.com/&#10;中国乒协官网">${escapeHtml(sourceHintTextFromProfile(profile))}</textarea>
         </label>
         <div class="radar-profile-actions">
-          <button id="btn-confirm-radar-profile" class="btn-primary">确认，开始盯机会</button>
-          <button id="btn-edit-radar-profile">我再改一下</button>
+          <button id="btn-confirm-radar-profile" class="btn-primary">确认，按 ${escapeHtml(radarVersion.version)} 盯一次</button>
+          <button id="btn-edit-radar-profile">继续修改雷达</button>
         </div>
       </section>
     `;
@@ -256,6 +291,7 @@
       description,
       spec,
       profile: profileFromBackendSummary(gen.data.profileSummary) || profileFromSpec(spec),
+      radarVersion: gen.data.radarVersion || spec.radar_version,
       suggestedName: gen.data.suggestedName || "我的机会雷达",
       questions: gen.data.questionsToConfirm || spec.questions_to_confirm || [],
       clarification,
@@ -281,6 +317,7 @@
       description,
       spec: markSpecConfirmed(spec),
       profile: template.profile || profileFromBackendSummary(gen.data.profileSummary) || profileFromSpec(spec),
+      radarVersion: gen.data.radarVersion || spec.radar_version,
       presetId: template.id,
       suggestedName: `${template.label || gen.data.suggestedName || "示例"}雷达`,
     });
@@ -293,6 +330,10 @@
       ? window.applySourceHintsToSpec(currentDraft.spec, sourceHintText)
       : currentDraft.spec;
     const confirmedSpec = markSpecConfirmed(specWithSources);
+    confirmedSpec.radar_version = mergeSourceHintsIntoRadarVersion(
+      currentDraft.radarVersion || specWithSources.radar_version,
+      sourceHintText,
+    );
     await window.runWatchNow?.({
       description: currentDraft.description,
       spec: confirmedSpec,
@@ -362,6 +403,7 @@
       clarificationAnswer,
       spec,
       profile: profileFromBackendSummary(gen.data.profileSummary) || profileFromSpec(spec),
+      radarVersion: gen.data.radarVersion || spec.radar_version,
       suggestedName: gen.data.suggestedName || currentDraft?.suggestedName || "我的机会雷达",
       questions: gen.data.questionsToConfirm || spec.questions_to_confirm || [],
       clarification,
@@ -381,6 +423,7 @@
       description: result.description || "",
       spec: result.spec,
       profile: result.profile || profileFromSpec(result.spec),
+      radarVersion: result.radarVersion || result.spec?.radar_version,
       suggestedName: result.suggestedName || "我的机会雷达",
       questions: [],
       clarification: { score: 100, questions: [], shouldAsk: false, needsBackground: false, defaultAssumptions: [] },

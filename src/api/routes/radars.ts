@@ -159,6 +159,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
         requirementConfidence: result.requirementConfidence,
         questionsToConfirm: result.questionsToConfirm,
         profileSummary: result.profileSummary,
+        radarVersion: result.radarVersion,
       };
       return c.json({ success: true, data, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
     } catch (err) {

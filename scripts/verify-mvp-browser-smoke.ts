@@ -94,7 +94,7 @@ async function main(): Promise<void> {
     await page.click("#btn-submit-clarification");
     await page.waitForSelector("#btn-confirm-radar-profile", { timeout: 10_000 });
     const profileText = await page.$eval(".radar-profile-card", (el: any) => el.textContent || "");
-    if (!profileText.includes("我理解你想建立这样的机会雷达")) fail("profile card title missing");
+    if (!/雷达 V1\.\d+ 确认卡/.test(profileText) && !profileText.includes("我理解你想建立这样的机会雷达")) fail("profile card title missing");
     if (!profileText.includes("围棋选手")) fail("clarified profile missing go player identity");
     if (!profileText.includes("围棋公开赛") && !profileText.includes("围棋比赛")) fail("clarified profile missing go opportunities");
     if (profileText.includes("RPA") || profileText.includes("AI 赛事")) fail("go profile fell back to a fixed vertical");

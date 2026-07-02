@@ -669,6 +669,7 @@ function buildMvpOverview(stats: RadarReportResult["stats"], topOpps: Opportunit
 
 function buildMvpProfile(input: RadarReportInput): string {
   const { spec, profile } = input;
+  const radarVersion = spec.radar_version;
   const cp = spec.client_profile;
   const goals = spec.core_goals;
   const scope = spec.opportunity_scope;
@@ -677,7 +678,7 @@ function buildMvpProfile(input: RadarReportInput): string {
   const sourceNames = fmtUnknownArr(getProfileValue(profile, "指定信号源")) !== "暂无"
     ? fmtUnknownArr(getProfileValue(profile, "指定信号源"))
     : fmtArr(mvpSourceNames(spec));
-  return [
+  const lines = [
     "## 1. 雷达画像",
     "",
     `- 用户身份：${fmtUnknownArr(getProfileValue(profile, "用户身份")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "用户身份")) : fmtStr(cp.business_type || cp.client_type)}`,
@@ -687,8 +688,27 @@ function buildMvpProfile(input: RadarReportInput): string {
     `- 指定信号源：${sourceNames}`,
     `- 排除内容：${fmtUnknownArr(getProfileValue(profile, "排除内容")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "排除内容")) : fmtArr([...(scope.excluded_opportunity_types ?? []), ...(filters.must_exclude ?? [])])}`,
     `- 排序偏好：${fmtUnknownArr(getProfileValue(profile, "排序偏好")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "排序偏好")) : fmtArr(goals.priority_order)}`,
-    "",
-  ].join("\n");
+  ];
+  if (radarVersion) {
+    lines.push(
+      "",
+      "### 雷达版本",
+      `- 版本：${radarVersion.version}`,
+      `- 定位：${radarVersion.oneSentencePositioning}`,
+      `- 这版雷达会盯什么：${fmtArr(radarVersion.opportunityIntents)}`,
+      `- 不盯什么：${fmtArr(radarVersion.exclusionRules)}`,
+      `- 优先看哪些来源：${fmtArr(radarVersion.prioritySourceArchetypes)}`,
+      `- 什么算高价值：${fmtArr(radarVersion.highValueCriteria)}`,
+      `- 查询族：${fmtArr(radarVersion.queryFamilies.map((family) => family.familyName))}`,
+      `- 缺哪些信息：${fmtArr(radarVersion.missingConfig)}`,
+      `- 默认假设：${fmtArr(radarVersion.defaultAssumptions)}`,
+    );
+    if (radarVersion.revisionNotes.length > 0) {
+      lines.push(`- 本次修订：${radarVersion.revisionNotes.map((note) => note.detail).join("；")}`);
+    }
+  }
+  lines.push("");
+  return lines.join("\n");
 }
 
 function buildMvpOpportunityTable(opps: OpportunityCard[]): string {

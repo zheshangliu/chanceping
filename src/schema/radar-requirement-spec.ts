@@ -14,6 +14,7 @@
 import { BRAND, REPORT_TITLE_PREFIX } from "../brand/constants";
 import type { RequirementConfidence } from "./requirement-confidence";
 import type { RadarProfileSummary } from "./radar-profile-summary";
+import type { RadarVersionSpec } from "./radar-version-spec";
 import type { ScoringRules } from "./scoring-rules";
 
 // ---------------------------------------------------------------------------
@@ -234,6 +235,8 @@ export interface RadarRequirementSpec {
   profile_version?: number;
   /** MVP chat-first customer-visible summary generated from the structured spec. */
   profile_summary?: RadarProfileSummary;
+  /** Chat-first radar builder: executable version confirmed before each run. */
+  radar_version?: RadarVersionSpec;
   /** MVP-light risk policy: fields the run must verify for this vertical. */
   risk_policy?: {
     required_fields: string[];

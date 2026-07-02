@@ -54,6 +54,19 @@ async function main(): Promise<void> {
     summaryText,
   );
   check("spec keeps profile version", data?.spec.profile_version === 1, `profile_version=${data?.spec.profile_version}`);
+  const tableTennisVersion = (data as unknown as { radarVersion?: Record<string, unknown> })?.radarVersion;
+  check("radar version exists", !!tableTennisVersion, JSON.stringify(data ?? {}));
+  check("radar version starts at V1.0", tableTennisVersion?.version === "V1.0", JSON.stringify(tableTennisVersion ?? {}));
+  check(
+    "radar version has executable criteria and source archetypes",
+    Array.isArray(tableTennisVersion?.highValueCriteria) &&
+      (tableTennisVersion.highValueCriteria as unknown[]).length > 0 &&
+      Array.isArray(tableTennisVersion?.prioritySourceArchetypes) &&
+      (tableTennisVersion.prioritySourceArchetypes as unknown[]).length > 0 &&
+      Array.isArray(tableTennisVersion?.queryFamilies) &&
+      (tableTennisVersion.queryFamilies as unknown[]).length > 0,
+    JSON.stringify(tableTennisVersion ?? {}),
+  );
   check(
     "clear requirement has high confidence",
     (data?.requirementConfidence ?? 0) >= 85,
@@ -167,6 +180,57 @@ async function main(): Promise<void> {
   check("study-tour generation succeeds", studyTour.status === 200 && studyTour.json.success === true);
   check("study-tour profile is not AI competition", !/AI赛事|AI 赛事|ai_competition/.test(studyText));
   check("study-tour profile keeps business lead semantics", /研学|文旅|国企|企业|客户|线索|订单/.test(studyText), studyText);
+
+  const b2bSaasDescription = "我们是一家 B2B SaaS 公司，准备出海东南亚，想找当地展会、创业扶持、渠道合作、政府招商和潜在代理商线索。";
+  const b2bSaas = await generate(b2bSaasDescription);
+  const b2bData = b2bSaas.json.data;
+  const b2bVersion = (b2bSaas.json.data as unknown as { radarVersion?: Record<string, unknown> })?.radarVersion;
+  const b2bVersionText = JSON.stringify(b2bVersion ?? {});
+  check("B2B SaaS generates radar V1.0", b2bVersion?.version === "V1.0", b2bVersionText);
+  check("B2B SaaS radar positions around SEA SaaS outbound", /B2B SaaS|东南亚|出海/.test(String(b2bVersion?.oneSentencePositioning ?? "")), b2bVersionText);
+  check("B2B SaaS profile keeps Southeast Asia region", /东南亚|ASEAN|Southeast/i.test(String(b2bData?.profileSummary?.regionsAndTime ?? "")), JSON.stringify(b2bData?.profileSummary ?? {}));
+  check("B2B SaaS clarification does not ask user to repeat region", !(b2bData?.questionsToConfirm?.[0]?.question ?? "").includes("地区和时间范围"), JSON.stringify(b2bData?.questionsToConfirm ?? []));
+  check(
+    "B2B SaaS radar requires contactable opportunities",
+    /联系人|报名入口|合作入口|商务配对|表单|邮箱/.test(b2bVersionText),
+    b2bVersionText,
+  );
+
+  const retailRevision = await generate(`${b2bSaasDescription}\n\n[用户补充回答]\n不准，我不是泛 SaaS，我是 B2B 商品交易 SaaS，我想找零售行业机会。`);
+  const retailData = retailRevision.json.data;
+  const retailVersion = (retailData as unknown as { radarVersion?: Record<string, unknown> })?.radarVersion;
+  const retailText = JSON.stringify(retailVersion ?? {});
+  check("retail feedback upgrades radar to V1.1", retailVersion?.version === "V1.1", retailText);
+  check("retail feedback updates executable spec semantics", /零售|商品交易|retail/i.test(JSON.stringify(retailData?.spec?.opportunity_scope?.primary_opportunity_types ?? [])) && /零售|商品交易|retail/i.test(String(retailData?.profileSummary?.target ?? "")), JSON.stringify({ target: retailData?.profileSummary?.target, types: retailData?.spec?.opportunity_scope?.primary_opportunity_types }));
+  check("retail suggested radar name avoids glued opportunity labels", !/渠道合作零售客户/.test(String(retailData?.suggestedName ?? "")), String(retailData?.suggestedName ?? ""));
+  check("retail V1.1 keeps commodity trading SaaS positioning", /商品交易|零售|retail/i.test(String(retailVersion?.oneSentencePositioning ?? "")), retailText);
+  check("retail V1.1 lowers fintech AI generic tech", /降低|降权/.test(retailText) && /FinTech|AI|泛科技/.test(retailText), retailText);
+  check("retail V1.1 raises retail FMCG distributor semantics", /零售|FMCG|商超|便利店|POS|ERP|供应链|B2B marketplace/i.test(retailText), retailText);
+  check(
+    "retail V1.1 source archetypes include retail-specific sources",
+    /retail association|supermarket association|convenience store association|FMCG association|wholesaler association|distributor directory|retail trade fair|supplier portal|B2B marketplace|POS\/ERP partner directory/i.test(retailText),
+    retailText,
+  );
+  check(
+    "retail V1.1 query families include supplier and partner searches",
+    /retail trade show|FMCG distributor|supermarket supplier registration|convenience store supplier portal|retail digital transformation grant|POS reseller partner|wholesale marketplace partner/i.test(retailText),
+    retailText,
+  );
+  check(
+    "retail V1.1 result buckets include lead subtypes",
+    /channel_partner_lead|retail_customer_lead|association_directory/.test(retailText),
+    retailText,
+  );
+
+  const retailRadar = createDefaultRadar("零售商品交易雷达", "custom", retailData!.spec);
+  const retailSearch = await new SearchOrchestrator({
+    llmAdapter: new ModelRouter(),
+    dataMode: "mock",
+    mockContent: true,
+  }).search(retailRadar.spec);
+  const retailSearchText = JSON.stringify(retailSearch.searchPlan ?? {});
+  check("retail search planner consumes radar version source archetypes", /retail association|supplier portal|distributor directory|POS\/ERP|FMCG|supermarket/i.test(retailSearchText), retailSearchText);
+  check("retail search planner emits retail query families", /retail trade show|supermarket supplier registration|wholesale marketplace partner|POS reseller partner/i.test(retailSearchText), retailSearchText);
 
   const customRadar = createDefaultRadar("测试自定义雷达", "custom");
   const customSearch = await new SearchOrchestrator({

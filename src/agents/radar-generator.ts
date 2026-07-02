@@ -19,11 +19,13 @@ import type { LLMAdapter } from "./llm-adapter";
 import type { ExtractedRequirementInfo } from "../schema/extracted-requirement-info";
 import type { RadarRequirementSpec, SourceStrategy } from "../schema/radar-requirement-spec";
 import type { RadarProfileSummary } from "../schema/radar-profile-summary";
+import type { RadarVersionSpec } from "../schema/radar-version-spec";
 import { RadarSpecCompiler } from "./radar-spec-compiler";
 import { RadarSpecValidator } from "../schema/radar-spec-validator";
 import { parseJsonWithRepair } from "../utils/json-repair";
 import { getLlmMode } from "../demo/data-mode";
 import { buildRadarProfileSummary, questionsToConfirmPayload } from "./radar-profile-summary";
+import { buildRadarVersionSpec } from "./radar-version-builder";
 import { extractGenericMockRequirement, interpretRequirement } from "./radar-requirement-interpreter";
 import {
   RADAR_GENERATOR_SYSTEM_PROMPT,
@@ -46,6 +48,8 @@ export interface RadarGenerateResult {
   completeness: number;
   /** MVP chat-first: customer-visible profile summary */
   profileSummary: RadarProfileSummary;
+  /** Chat-first radar builder: executable radar version for confirmation and search planning. */
+  radarVersion: RadarVersionSpec;
   /** MVP chat-first: backend confidence copied from spec.requirement_confidence.total */
   requirementConfidence: number;
   /** MVP chat-first: normalized questions for frontend clarification */
@@ -108,6 +112,15 @@ function generateSuggestedName(info: ExtractedRequirementInfo): string {
   return name.length > SUGGESTED_NAME_MAX_LEN
     ? name.slice(0, SUGGESTED_NAME_MAX_LEN)
     : name;
+}
+
+function generateSuggestedNameFromRadarVersion(radarVersion: RadarVersionSpec, fallback: string): string {
+  const base = radarVersion.oneSentencePositioning
+    .split("/")[0]
+    .replace(/机会雷达|雷达/g, "")
+    .trim();
+  const name = base ? `${base}雷达` : fallback;
+  return name.length > SUGGESTED_NAME_MAX_LEN ? name.slice(0, SUGGESTED_NAME_MAX_LEN) : name;
 }
 
 function sourceNameFromUrl(url: string): string {
@@ -267,12 +280,14 @@ export class RadarGenerator {
     spec.primary_subject = profileSummary.identity;
     spec.profile_version = spec.profile_version ?? 1;
     spec.profile_summary = profileSummary;
+    const radarVersion = buildRadarVersionSpec({ spec, description: fullDescription, profileSummary });
+    spec.radar_version = radarVersion;
 
     // 校验完整率
     const validation = this.validator.validate(spec);
 
     // 生成建议名称
-    const suggestedName = generateSuggestedName(extractedInfo);
+    const suggestedName = generateSuggestedNameFromRadarVersion(radarVersion, generateSuggestedName(extractedInfo));
 
     return {
       spec,
@@ -280,6 +295,7 @@ export class RadarGenerator {
       extractedInfo,
       completeness: validation.completeness,
       profileSummary,
+      radarVersion,
       requirementConfidence: spec.requirement_confidence.total,
       questionsToConfirm: questionsToConfirmPayload(spec.questions_to_confirm),
     };

@@ -1,5 +1,6 @@
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { SearchIntentType } from "../schema/radar-mvp-contracts";
+import type { RadarVersionQueryFamily } from "../schema/radar-version-spec";
 
 export interface SearchTheme {
   id: string;
@@ -93,7 +94,44 @@ function uniqueQueries(items: SearchQueryFamilyItem[]): SearchQueryFamilyItem[] 
   return out;
 }
 
+function normalizeIntentType(intentType: RadarVersionQueryFamily["intentType"]): SearchIntentType {
+  if (intentType === "watch_signal" || intentType === "reference_case" || intentType === "direct_opportunity") return intentType;
+  return "business_lead";
+}
+
+function queryFamilyForIndex(index: number): SearchQueryFamilyItem["queryFamily"] {
+  const families: SearchQueryFamilyItem["queryFamily"][] = ["broad_discovery", "official_source", "action_keyword", "region_language"];
+  return families[index] ?? "broad_discovery";
+}
+
+function buildRadarVersionIntentPlan(spec: RadarRequirementSpec): SearchIntentPlan | null {
+  const radarVersion = spec.radar_version;
+  const families = radarVersion?.queryFamilies ?? [];
+  if (families.length === 0) return null;
+  const selected = families.slice(0, MAX_THEMES);
+  const searchThemes: SearchTheme[] = selected.map((family, index) => ({
+    id: `theme_radar_version_${index + 1}`,
+    themeName: family.familyName,
+    intentType: normalizeIntentType(family.intentType),
+    sourceArchetype: family.sourceArchetype,
+    queryExamples: family.queries.slice(0, MAX_QUERIES_PER_THEME),
+    whyThisTheme: family.whyThisFamily,
+  }));
+  const queries = uniqueQueries(selected.flatMap((family, themeIndex) => {
+    const theme = searchThemes[themeIndex];
+    return family.queries.slice(0, MAX_QUERIES_PER_THEME).map((query, queryIndex) => buildQuery(
+      theme,
+      query,
+      queryFamilyForIndex(queryIndex),
+    ));
+  })).slice(0, MAX_THEMES * MAX_QUERIES_PER_THEME);
+  return { searchThemes, queries };
+}
+
 export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: string): SearchIntentPlan {
+  const radarVersionPlan = buildRadarVersionIntentPlan(spec);
+  if (radarVersionPlan) return radarVersionPlan;
+
   const identity = spec.client_profile?.business_type || spec.client_profile?.industry || spec.client_profile?.client_type || "用户";
   const primaryGoal = spec.core_goals?.primary_goal || baseQuery || "机会";
   const opportunityTypes = compactTerms(spec.opportunity_scope?.primary_opportunity_types ?? [], 4);

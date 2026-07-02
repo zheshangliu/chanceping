@@ -213,7 +213,8 @@ export class Golden20BrowserRunner {
       await this.tab.playwright.waitForLoadState({ state: "domcontentloaded", timeoutMs: 10000 });
       await this.fillUnique("#home-input", c.input, "home input");
       await this.clickUnique("#home-watch-btn", "home watch button");
-      let state = await this.waitFor((s) => s.text.includes("我还需要确认几个关键点") || s.text.includes("我理解你想建立这样的机会雷达") || s.text.includes("生成雷达画像失败"), 120000, `case ${c.id} profile`);
+      const hasRadarVersionCard = (s) => /雷达 V1\.\d+ 确认卡/.test(s.text) || s.text.includes("我理解你想建立这样的机会雷达");
+      let state = await this.waitFor((s) => s.text.includes("我还需要确认几个关键点") || hasRadarVersionCard(s) || s.text.includes("生成雷达画像失败"), 120000, `case ${c.id} profile`);
       let rounds = 0;
       while (state.text.includes("我还需要确认几个关键点") && rounds < 2) {
         result.triggeredClarification = true;
@@ -225,10 +226,10 @@ export class Golden20BrowserRunner {
           await this.clickUnique("#btn-continue-default", "continue default");
         }
         rounds += 1;
-        state = await this.waitFor((s) => s.text.includes("我理解你想建立这样的机会雷达") || s.text.includes("我还需要确认几个关键点") || s.text.includes("生成雷达画像失败"), 120000, `case ${c.id} profile after clarification`);
-        if (state.text.includes("我理解你想建立这样的机会雷达")) break;
+        state = await this.waitFor((s) => hasRadarVersionCard(s) || s.text.includes("我还需要确认几个关键点") || s.text.includes("生成雷达画像失败"), 120000, `case ${c.id} profile after clarification`);
+        if (hasRadarVersionCard(state)) break;
       }
-      if (!state.text.includes("我理解你想建立这样的机会雷达")) throw new Error("未进入画像确认卡");
+      if (!hasRadarVersionCard(state)) throw new Error("未进入雷达版本确认卡");
       result.profileSummary = state.profile.map((p) => `${p.label}:${p.value}`).join("；");
       result.profileSubjectOk = c.subjectRe.test(result.profileSummary) || c.subjectRe.test(state.text);
       result.opportunityTypeOk = c.typeRe.test(result.profileSummary) || c.typeRe.test(state.text);

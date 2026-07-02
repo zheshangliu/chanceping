@@ -52,6 +52,10 @@ function extractOpportunityTypes(text: string, domain: string): string[] {
   const types: string[] = [];
   const domainLabel = domain || "";
 
+  if (/b2b\s*商品交易|商品交易\s*SaaS|B2B\s*商品|零售行业|retail/i.test(text) && /SaaS|软件|系统|平台|B2B/i.test(text)) {
+    types.push("零售商品交易 SaaS 渠道合作");
+    types.push("零售客户线索");
+  }
   if (/研学需求/.test(text)) types.push("研学需求");
   if (/客户线索|找[^，,。\n；;]{0,12}客户|国企单位和企业/.test(text)) types.push("客户线索");
   if (/投标|招标/.test(text)) types.push("投标机会");
@@ -84,7 +88,8 @@ function extractRegions(text: string): string[] {
   const regions: string[] = [];
   if (/中国|国内|全国|国内外/.test(text)) regions.push("中国");
   if (/国外|海外|国际|全球|国内外/.test(text)) regions.push("国际");
-  for (const region of ["北京", "上海", "广州", "深圳", "杭州", "广东", "大湾区", "香港", "澳门", "台湾"]) {
+  if (/东南亚|东盟|ASEAN|Southeast\s*Asia/i.test(text)) regions.push("东南亚");
+  for (const region of ["北京", "上海", "广州", "深圳", "杭州", "广东", "大湾区", "香港", "澳门", "台湾", "新加坡", "马来西亚", "越南", "泰国", "印尼", "菲律宾"]) {
     if (text.includes(region)) regions.push(region);
   }
   return unique(regions);
@@ -170,7 +175,7 @@ export function extractGenericMockRequirement(description: string): ExtractedReq
       primary_regions: regions,
       secondary_regions: [],
       excluded_regions: [],
-      overseas_allowed: regions.includes("国际"),
+      overseas_allowed: regions.includes("国际") || regions.includes("东南亚"),
       global_allowed: /全球|国内外/.test(text),
     },
     exclusion_rules: {
@@ -280,8 +285,12 @@ export function interpretRequirement(
   if (!identityExplicit) {
     questions.push(missingQuestion("为了判断机会是否适合你，你是谁，或代表哪类公司、团队或机构？", "client_identity", "主体身份决定匹配条件"));
   }
-  if (!regionExplicit || !timeExplicit) {
+  if (!regionExplicit && !timeExplicit) {
     questions.push(missingQuestion("你希望优先看哪些地区和时间范围，例如国内外、未来30天或长期监控？", "region_scope", "地区和时间范围会显著影响搜索结果", "medium"));
+  } else if (!regionExplicit) {
+    questions.push(missingQuestion("你希望优先看哪些地区，例如中国、海外、城市或行业范围？", "region_scope", "地区范围会显著影响搜索结果", "medium"));
+  } else if (!timeExplicit) {
+    questions.push(missingQuestion("你希望优先看什么时间窗口，例如本周、未来30天、未来60天或长期监控？", "time_window", "时间窗口会影响搜索结果和行动优先级", "medium"));
   }
   if (!actionExplicit || !exclusionExplicit) {
     questions.push(missingQuestion("找到机会后你准备采取什么行动？还有哪些内容需要排除或哪些官网要优先看？", "action_scenario", "行动和排除条件能减少无效结果", "medium"));
