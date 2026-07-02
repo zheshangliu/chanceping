@@ -12,7 +12,7 @@
  */
 
 import type { ActionStatus, EvidenceStatus, OpportunityKind, ScoreBasis } from "../schema/radar-mvp-contracts";
-import type { SearchIntentType } from "../schema/radar-mvp-contracts";
+import type { SearchIntentType, SearchQueryVariant, SourceArchetypeId } from "../schema/radar-mvp-contracts";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -47,9 +47,11 @@ export interface SearchResult {
   /** Q.1 内部审计：查询意图。 */
   intent_type?: SearchIntentType;
   /** Q.1 内部审计：来源类型。 */
-  source_archetype?: string;
+  source_archetype?: SourceArchetypeId;
+  source_archetype_label?: string;
   /** Q.1 内部审计：query family。 */
   query_family?: string;
+  query_variant?: SearchQueryVariant;
   /** Q.1 内部审计：结果语义分桶。 */
   semantic_type?: OpportunityKind;
 }
@@ -71,8 +73,10 @@ export interface RawCandidateAudit {
   semanticType?: OpportunityKind;
   themeName?: string;
   intentType?: SearchIntentType;
-  sourceArchetype?: string;
+  sourceArchetype?: SourceArchetypeId;
+  sourceArchetypeLabel?: string;
   queryFamily?: string;
+  queryVariant?: SearchQueryVariant;
 }
 
 /**

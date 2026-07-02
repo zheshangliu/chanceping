@@ -7,11 +7,36 @@ export type SourceCheckStatus =
 export type OpportunityKind =
   | "direct_opportunity"
   | "business_lead"
+  | "channel_partner_lead"
+  | "customer_lead"
+  | "association_directory"
   | "reference_case"
   | "watch_signal"
   | "rejected";
 
 export type SearchIntentType = Exclude<OpportunityKind, "rejected">;
+
+export type SourceArchetypeId =
+  | "official_event_site"
+  | "exhibitor_sponsor_page"
+  | "business_matching_platform"
+  | "association_member_directory"
+  | "government_grant_page"
+  | "procurement_or_supplier_portal"
+  | "reseller_partner_page"
+  | "distributor_directory"
+  | "company_careers_or_contact"
+  | "marketplace_partner_page"
+  | "open_call_submission_page"
+  | "reference_case_source";
+
+export type SearchQueryVariant =
+  | "broad_discovery"
+  | "official_source"
+  | "action_keyword"
+  | "region_language"
+  | "source_archetype"
+  | "source_hint";
 
 export type EvidenceStatus =
   | "confirmed"
@@ -90,9 +115,12 @@ export interface RadarSearchPlan {
     id: string;
     themeName: string;
     intentType: SearchIntentType;
-    sourceArchetype: string;
+    sourceArchetype: SourceArchetypeId;
+    sourceArchetypeLabel?: string;
+    queryFamily: string;
     queryExamples: string[];
     whyThisTheme: string;
+    priority: number;
   }>;
   queries: Array<{
     query: string;
@@ -102,9 +130,17 @@ export interface RadarSearchPlan {
     sourceDomain?: string;
     themeName?: string;
     intentType?: SearchIntentType;
-    sourceArchetype?: string;
+    sourceArchetype?: SourceArchetypeId;
+    sourceArchetypeLabel?: string;
     queryFamily?: string;
+    queryVariant?: SearchQueryVariant;
   }>;
+  opportunityStrategy?: {
+    radarVersion: string;
+    sourceArchetypes: Array<{ id: SourceArchetypeId; label: string }>;
+    resultBucketPolicy: Record<OpportunityKind, "key_opportunity" | "actionable_lead" | "lead_resource" | "observation" | "reference" | "audit_only">;
+    evidenceReadPriority: string[];
+  };
   configuredSources: string[];
   exclusions: string[];
   maxCandidates: number;
@@ -121,8 +157,10 @@ export interface SearchExecutionLog {
     error?: string;
     themeName?: string;
     intentType?: SearchIntentType;
-    sourceArchetype?: string;
+    sourceArchetype?: SourceArchetypeId;
+    sourceArchetypeLabel?: string;
     queryFamily?: string;
+    queryVariant?: SearchQueryVariant;
     retryCount?: number;
   }>;
   openedUrls: Array<{

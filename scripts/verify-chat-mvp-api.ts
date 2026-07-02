@@ -375,6 +375,27 @@ async function main(): Promise<void> {
       source_provider: "test_q1_semantic",
       source_type: "web",
     },
+    {
+      title: "华南企业礼品渠道伙伴与经销商目录",
+      url: "https://partners.example.org/gift-reseller-directory",
+      snippet: "渠道伙伴线索：经销商和实施伙伴目录，需联系确认合作条件与覆盖地区。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+    {
+      title: "广东集团员工福利潜在客户供应商注册入口",
+      url: "https://buyers.example.org/employee-benefit-supplier-registration",
+      snippet: "潜在客户线索：企业福利供应商注册页面，采购意向和准入条件均需联系确认。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
+    {
+      title: "大湾区企业福利协会会员目录",
+      url: "https://association.example.org/member-directory",
+      snippet: "协会会员目录：用于建立目标机构名单，没有公开采购、报名或合作入口。",
+      source_provider: "test_q1_semantic",
+      source_type: "web",
+    },
   ];
   const semanticProvider: SearchProvider = {
     name: "test_q1_semantic",
@@ -436,13 +457,23 @@ async function main(): Promise<void> {
       const semanticCards = semanticSearch.opportunityCards ?? [];
       const rawTypes = semanticRaw.map((item) => (item as RawCandidateAudit & { semanticType?: string }).semanticType);
       const cardTypes = semanticCards.map((card) => card.opportunity_kind);
-      const expectedRawTypes: Array<NonNullable<RawCandidateAudit["semanticType"]>> = ["direct_opportunity", "business_lead", "watch_signal", "reference_case", "rejected"];
+      const expectedRawTypes: Array<NonNullable<RawCandidateAudit["semanticType"]>> = [
+        "direct_opportunity",
+        "business_lead",
+        "channel_partner_lead",
+        "customer_lead",
+        "association_directory",
+        "watch_signal",
+        "reference_case",
+        "rejected",
+      ];
       check("semantic planner produces 3-5 themes", semanticThemes.length >= 3 && semanticThemes.length <= 5, JSON.stringify(semanticThemes));
       check("semantic planner includes business/watch/reference themes", ["business_lead", "watch_signal", "reference_case"].every((type) => semanticThemes.some((theme) => theme.intentType === type)), JSON.stringify(semanticThemes));
       check("semantic query hard cap stays within 15 queries", (semanticSearch.searchPlan?.queries ?? []).length <= 15, JSON.stringify(semanticSearch.searchPlan?.queries ?? []));
-      check("semantic raw candidates keep all five result buckets", expectedRawTypes.every((type) => rawTypes.includes(type)), JSON.stringify(semanticRaw));
+      check("semantic raw candidates keep all Q2 result buckets", expectedRawTypes.every((type) => rawTypes.includes(type)), JSON.stringify(semanticRaw));
       check("business lead can enter key opportunity cards", cardTypes.includes("business_lead"), JSON.stringify(semanticCards));
-      check("watch/reference/rejected stay out of key opportunity cards", !cardTypes.includes("watch_signal") && !cardTypes.includes("reference_case") && !cardTypes.includes("rejected"), JSON.stringify(semanticCards));
+      check("channel and customer leads can enter key opportunity cards", cardTypes.includes("channel_partner_lead") && cardTypes.includes("customer_lead"), JSON.stringify(semanticCards));
+      check("directory/watch/reference/rejected stay out of key opportunity cards", !cardTypes.includes("association_directory") && !cardTypes.includes("watch_signal") && !cardTypes.includes("reference_case") && !cardTypes.includes("rejected"), JSON.stringify(semanticCards));
       check(
         "business lead card is clearly marked as contact-confirmed lead",
         semanticCards.some((card) =>
@@ -452,9 +483,58 @@ async function main(): Promise<void> {
         ),
         JSON.stringify(semanticCards),
       );
+      check(
+        "Q2 lead subtype cards are marked contact-confirmed and pending review",
+        semanticCards
+          .filter((card) => card.opportunity_kind === "channel_partner_lead" || card.opportunity_kind === "customer_lead")
+          .every((card) =>
+            /渠道合作线索|潜在客户线索/.test(`${card.type}${card.sourceBadges?.join(" ")}`) &&
+            /需联系确认|待复核/.test(`${card.next_action}${card.risk_note}${card.source_disclaimer ?? ""}`),
+          ),
+        JSON.stringify(semanticCards),
+      );
     }
   } finally {
     providerRegistry.unregister("test_q1_semantic");
+  }
+
+  let retryProviderAttempts = 0;
+  const retryProvider: SearchProvider = {
+    name: "test_serper_retry",
+    display_name: "Serper Retry Test",
+    source_type: "web",
+    reliability: "B",
+    enabled: true,
+    radar_types: ["custom"],
+    async search() {
+      retryProviderAttempts += 1;
+      if (retryProviderAttempts === 1) throw new Error("fetch failed");
+      return [{
+        title: "员工福利采购公告",
+        url: "https://procurement.example.org/retry-success",
+        snippet: "采购公告与供应商报名入口，字段待复核。",
+        source_provider: "test_serper_retry",
+        source_type: "web",
+      }];
+    },
+    async healthCheck() {
+      return true;
+    },
+  };
+  providerRegistry.register(retryProvider);
+  try {
+    if (confirmedSpec) {
+      const retrySearch = await new SearchOrchestrator({
+        llmAdapter: ctx.llmAdapter,
+        dataMode: "live",
+        enableContentFetch: false,
+        maxResultsPerProvider: 1,
+      }).search(confirmedSpec, "员工福利采购公告", { primary: ["test_serper_retry"], fallback: [] });
+      check("Serper-style fetch failure retries once and recovers", retryProviderAttempts >= 2 && retrySearch.errors.length === 0, `attempts=${retryProviderAttempts}, errors=${JSON.stringify(retrySearch.errors)}`);
+      check("search execution log records limited retry", (retrySearch.executionLog?.queryExecutions ?? []).some((item) => item.retryCount === 1 && item.status === "succeeded"), JSON.stringify(retrySearch.executionLog));
+    }
+  } finally {
+    providerRegistry.unregister("test_serper_retry");
   }
 
   cleanup();

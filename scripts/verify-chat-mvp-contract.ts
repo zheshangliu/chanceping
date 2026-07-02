@@ -3,6 +3,8 @@ import { createAppContext } from "../src/api/context";
 import { ModelRouter } from "../src/agents/model-router";
 import { createDefaultRadar } from "../src/schema/radar";
 import { SearchOrchestrator } from "../src/search/orchestrator";
+import { RadarGenerator } from "../src/agents/radar-generator";
+import type { LLMAdapter } from "../src/agents/llm-adapter";
 import type { ApiResponse, RadarGenerateResponseData } from "../src/api/types";
 
 let passed = 0;
@@ -229,8 +231,223 @@ async function main(): Promise<void> {
     mockContent: true,
   }).search(retailRadar.spec);
   const retailSearchText = JSON.stringify(retailSearch.searchPlan ?? {});
+  check(
+    "retail V1.1 mock execution returns semantic demo opportunity cards",
+    (retailSearch.opportunityCards?.length ?? 0) > 0 &&
+      /零售|商品交易|SaaS|渠道|客户/i.test(JSON.stringify(retailSearch.opportunityCards ?? [])) &&
+      (retailSearch.opportunityCards ?? []).every((card) =>
+        card.opportunity_kind === "direct_opportunity" ||
+        card.opportunity_kind === "business_lead" ||
+        card.opportunity_kind === "channel_partner_lead" ||
+        card.opportunity_kind === "customer_lead",
+      ),
+    JSON.stringify({ errors: retailSearch.errors, raw: retailSearch.rawCandidates, cards: retailSearch.opportunityCards }),
+  );
+  const retailPlan = retailSearch.searchPlan as unknown as {
+    searchThemes?: Array<{
+      themeName?: string;
+      intentType?: string;
+      sourceArchetype?: string;
+      queryFamily?: string;
+      priority?: number;
+    }>;
+    queries?: Array<{ queryVariant?: string; intentType?: string; themeName?: string }>;
+    opportunityStrategy?: {
+      sourceArchetypes?: Array<{ id?: string }>;
+      resultBucketPolicy?: Record<string, string>;
+      evidenceReadPriority?: string[];
+    };
+  };
+  const retailThemes = retailPlan.searchThemes ?? [];
+  const retailQueries = retailPlan.queries ?? [];
   check("retail search planner consumes radar version source archetypes", /retail association|supplier portal|distributor directory|POS\/ERP|FMCG|supermarket/i.test(retailSearchText), retailSearchText);
   check("retail search planner emits retail query families", /retail trade show|supermarket supplier registration|wholesale marketplace partner|POS reseller partner/i.test(retailSearchText), retailSearchText);
+  check(
+    "retail strategy preserves channel and customer lead intents",
+    retailThemes.some((theme) => theme.intentType === "channel_partner_lead") &&
+      retailThemes.some((theme) => theme.intentType === "customer_lead"),
+    retailSearchText,
+  );
+  check(
+    "retail strategy themes carry explicit family and priority",
+    retailThemes.length > 0 && retailThemes.every((theme) =>
+      typeof theme.queryFamily === "string" && theme.queryFamily.length > 0 &&
+      typeof theme.priority === "number" && theme.priority >= 1 && theme.priority <= 5,
+    ),
+    retailSearchText,
+  );
+  check(
+    "retail strategy queries carry explicit variants",
+    retailQueries.length > 0 && retailQueries.every((item) =>
+      ["broad_discovery", "official_source", "action_keyword", "region_language", "source_archetype", "source_hint"].includes(String(item.queryVariant)),
+    ),
+    retailSearchText,
+  );
+  check(
+    "retail strategy uses controlled source archetypes",
+    (retailPlan.opportunityStrategy?.sourceArchetypes ?? []).length > 0 &&
+      (retailPlan.opportunityStrategy?.sourceArchetypes ?? []).every((item) =>
+        [
+          "official_event_site",
+          "exhibitor_sponsor_page",
+          "business_matching_platform",
+          "association_member_directory",
+          "government_grant_page",
+          "procurement_or_supplier_portal",
+          "reseller_partner_page",
+          "distributor_directory",
+          "company_careers_or_contact",
+          "marketplace_partner_page",
+          "open_call_submission_page",
+          "reference_case_source",
+        ].includes(String(item.id)),
+      ),
+    retailSearchText,
+  );
+  check(
+    "retail strategy records semantic bucket policy and evidence priority",
+    retailPlan.opportunityStrategy?.resultBucketPolicy?.association_directory === "lead_resource" &&
+      (retailPlan.opportunityStrategy?.evidenceReadPriority ?? []).length === 3,
+    retailSearchText,
+  );
+  check("retail strategy obeys five-theme cap", retailThemes.length <= 5, retailSearchText);
+  check("retail strategy obeys three-query-per-theme cap", retailThemes.every((theme) => retailQueries.filter((query) => query.themeName === theme.themeName).length <= 3) && retailQueries.length <= 15, retailSearchText);
+  const mixedIntentRetailSpec = {
+    ...retailData!.spec,
+    opportunity_scope: {
+      ...retailData!.spec.opportunity_scope,
+      primary_opportunity_types: [
+        ...(retailData!.spec.opportunity_scope?.primary_opportunity_types ?? []),
+        "创业扶持",
+      ],
+    },
+  };
+  const mixedIntentRetailSearch = await new SearchOrchestrator({
+    llmAdapter: new ModelRouter(),
+    dataMode: "mock",
+    mockContent: true,
+  }).search(mixedIntentRetailSpec);
+  check(
+    "custom radar version never falls into builtin policy demo",
+    (mixedIntentRetailSearch.opportunityCards?.length ?? 0) > 0 &&
+      /零售|商品交易|SaaS|渠道|客户/i.test(JSON.stringify(mixedIntentRetailSearch.opportunityCards ?? [])) &&
+      !/高新技术企业|专精特新|政策补贴/.test(JSON.stringify(mixedIntentRetailSearch.rawCandidates ?? [])),
+    JSON.stringify({ raw: mixedIntentRetailSearch.rawCandidates, cards: mixedIntentRetailSearch.opportunityCards }),
+  );
+  const rejectingLiveLlm: LLMAdapter = {
+    async chat() {
+      return { content: '{"relevance":0,"reason":"演示数据不是现实机会"}', parsed: { relevance: 0, reason: "演示数据不是现实机会" } };
+    },
+  };
+  const mixedModeRetailSearch = await new SearchOrchestrator({
+    llmAdapter: rejectingLiveLlm,
+    dataMode: "mock",
+    mockContent: true,
+  }).search(mixedIntentRetailSpec);
+  check(
+    "live LLM plus mock search keeps deterministic demo cards",
+    (mixedModeRetailSearch.opportunityCards?.length ?? 0) > 0,
+    JSON.stringify({ aiPassed: mixedModeRetailSearch.total_ai_passed, errors: mixedModeRetailSearch.errors, cards: mixedModeRetailSearch.opportunityCards }),
+  );
+
+  const strategyLlm: LLMAdapter = {
+    async chat() {
+      return {
+        content: JSON.stringify({
+          client_identity: {
+            client_type: "公司",
+            industry: "婚庆服务",
+            business_type: "",
+            regions: ["广州"],
+          },
+          business_goal: {
+            primary_goal: "寻找高端婚礼客户和合作渠道",
+            success_definition: "找到可联系确认的客户与合作入口",
+          },
+          opportunity_type: {
+            primary_types: ["高端婚礼客户线索", "场地合作", "品牌合作"],
+            secondary_types: ["婚礼展会"],
+            excluded_types: ["加盟广告"],
+            must_have_conditions: ["有公开联系或合作入口"],
+          },
+          region_scope: {
+            primary_regions: ["广州", "大湾区"],
+            secondary_regions: [],
+            excluded_regions: [],
+            overseas_allowed: false,
+            global_allowed: false,
+          },
+          exclusion_rules: { must_exclude: ["加盟广告"], low_priority_signals: [], count: 1 },
+          action_scenario: { action_intent: "BD", priority_order: ["联系客户", "联系场地"] },
+          report_format: { frequency: "每周", format: "markdown", must_include_sections: [] },
+          opportunity_strategy: {
+            source_archetypes: ["luxury wedding venue partner page", "hotel wedding supplier portal", "wedding expo exhibitor page"],
+            high_value_criteria: ["有公开咨询、供应商申请、场地合作或展商报名入口"],
+            search_themes: [
+              {
+                theme_name: "高端婚礼场地合作",
+                intent_type: "channel_partner_lead",
+                source_archetype: "luxury wedding venue partner page",
+                query_family: "luxury wedding venue partnership",
+                why_this_theme: "场地合作可带来稳定客户转介。",
+                result_bucket: "channel_partner_lead",
+                query_variants: [
+                  { query: "广州 高端酒店 婚礼场地 合作", variant: "broad_discovery" },
+                  { query: "大湾区 hotel wedding supplier portal", variant: "source_archetype" },
+                  { query: "广州 婚礼场地 供应商申请 联系", variant: "action_keyword" }
+                ]
+              },
+              {
+                theme_name: "婚礼客户需求入口",
+                intent_type: "customer_lead",
+                source_archetype: "hotel wedding supplier portal",
+                query_family: "wedding customer demand",
+                why_this_theme: "客户咨询和场地方推荐是需联系确认的客户线索。",
+                result_bucket: "customer_lead",
+                query_variants: [
+                  { query: "广州 婚礼策划 咨询 需求", variant: "broad_discovery" },
+                  { query: "广州 酒店 婚宴 合作供应商", variant: "official_source" },
+                  { query: "大湾区 婚礼策划 服务商 联系", variant: "action_keyword" }
+                ]
+              },
+              {
+                theme_name: "婚礼展会参展",
+                intent_type: "direct_opportunity",
+                source_archetype: "wedding expo exhibitor page",
+                query_family: "wedding expo exhibitor",
+                why_this_theme: "展会可能提供明确展商报名入口。",
+                result_bucket: "direct_opportunity",
+                query_variants: [
+                  { query: "广州 婚博会 展商报名", variant: "broad_discovery" },
+                  { query: "wedding expo Guangzhou official exhibitor", variant: "official_source" },
+                  { query: "婚博会 展位申请 联系", variant: "action_keyword" }
+                ]
+              }
+            ]
+          }
+        }),
+      };
+    },
+  };
+  process.env.LLM_MODE = "live";
+  const weddingStrategy = await new RadarGenerator(strategyLlm).generate("我们是一家广州婚庆公司，想找更多高端客户和合作机会。未来60天，排除加盟广告。");
+  process.env.LLM_MODE = "mock";
+  const weddingStrategyText = JSON.stringify(weddingStrategy.radarVersion);
+  check("explicit user identity overrides weaker LLM industry label", weddingStrategy.profileSummary.identity === "广州婚庆公司", JSON.stringify(weddingStrategy.profileSummary));
+  check("live LLM strategy draft drives non-hardcoded source archetypes", /luxury wedding venue|hotel wedding supplier portal|wedding expo exhibitor/i.test(weddingStrategyText), weddingStrategyText);
+  check("live LLM strategy draft preserves channel and customer themes", /channel_partner_lead/.test(weddingStrategyText) && /customer_lead/.test(weddingStrategyText), weddingStrategyText);
+  check("live LLM strategy draft keeps explicit query variants", /source_archetype/.test(weddingStrategyText) && /action_keyword/.test(weddingStrategyText), weddingStrategyText);
+  const weddingSearch = await new SearchOrchestrator({
+    llmAdapter: new ModelRouter(),
+    dataMode: "mock",
+    mockContent: true,
+  }).search(createDefaultRadar("婚庆机会雷达", "custom", weddingStrategy.spec).spec);
+  check(
+    "industry strategy normalizes partner and supplier source archetypes",
+    (weddingSearch.searchPlan?.opportunityStrategy?.sourceArchetypes ?? []).some((source) => source.id === "reseller_partner_page") &&
+      (weddingSearch.searchPlan?.opportunityStrategy?.sourceArchetypes ?? []).some((source) => source.id === "procurement_or_supplier_portal"),
+    JSON.stringify(weddingSearch.searchPlan?.opportunityStrategy ?? {}),
+  );
 
   const customRadar = createDefaultRadar("测试自定义雷达", "custom");
   const customSearch = await new SearchOrchestrator({

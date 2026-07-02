@@ -69,6 +69,9 @@ export interface ExtractedRequirementInfo {
     format?: string;                // 报告格式
     must_include_sections?: string[];// 必须包含的章节
   };
+
+  /** Q.2: LLM-proposed industry search strategy, validated and capped before execution. */
+  opportunity_strategy?: ExtractedOpportunityStrategy;
 }
 
 /** 生成一份全空的 ExtractedRequirementInfo（所有字段未填充） */
@@ -82,4 +85,22 @@ export function createEmptyExtractedInfo(): ExtractedRequirementInfo {
     action_scenario: {},
     report_format: {},
   };
+}
+import type { OpportunityKind, SearchIntentType, SearchQueryVariant } from "./radar-mvp-contracts";
+
+export interface ExtractedOpportunityStrategy {
+  source_archetypes?: string[];
+  high_value_criteria?: string[];
+  search_themes?: Array<{
+    theme_name?: string;
+    intent_type?: SearchIntentType | "retail_customer_lead";
+    source_archetype?: string;
+    query_family?: string;
+    why_this_theme?: string;
+    result_bucket?: OpportunityKind | "retail_customer_lead";
+    query_variants?: Array<{
+      query?: string;
+      variant?: SearchQueryVariant;
+    }>;
+  }>;
 }

@@ -243,7 +243,7 @@ export class DeepSeekAdapter implements LLMAdapter {
    *   Body: { model, messages, temperature, max_tokens, response_format? }
    *
    * 响应解析：data.choices[0].message.content
-   * 错误处理：网络错误重试 1 次（共 2 次尝试），HTTP 4xx/5xx 不重试
+   * 错误处理：网络错误、HTTP 429 和 HTTP 5xx 重试 1 次（共 2 次尝试）
    * JSON 修复：response_format="json" 时使用 parseJsonWithRepair
    *
    * 注意：DeepSeek V4-Pro 并发限制 500，V4-Flash 并发限制 2500。
@@ -254,7 +254,7 @@ export class DeepSeekAdapter implements LLMAdapter {
     const body = this.buildRequestBody(request);
 
     let lastError: Error | null = null;
-    // 网络错误重试 1 次（共 2 次尝试）
+    // 网络错误、限流和临时服务端错误重试 1 次（共 2 次尝试）
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const response = await fetch(url, {
@@ -289,9 +289,7 @@ export class DeepSeekAdapter implements LLMAdapter {
         return { content };
       } catch (err) {
         lastError = err instanceof Error ? err : new Error(String(err));
-        // 网络错误才重试，HTTP 4xx/5xx 错误不重试
-        const isNetworkError = this.isNetworkError(lastError);
-        if (!isNetworkError) {
+        if (!this.isRetryableError(lastError)) {
           break;
         }
         // 第 1 次失败后继续重试
@@ -320,18 +318,14 @@ export class DeepSeekAdapter implements LLMAdapter {
     return body;
   }
 
-  /** 判断是否为网络错误（可重试） */
-  private isNetworkError(err: Error): boolean {
+  /** 只重试网络故障、限流和临时服务端错误。 */
+  private isRetryableError(err: Error): boolean {
     const msg = err.message.toLowerCase();
     // 网络错误特征：fetch failed / network / timeout / econnreset
     if (/fetch failed|network|timeout|econnreset|enotfound/.test(msg)) {
       return true;
     }
-    // HTTP 错误（status=xxx）不重试
-    if (/status=\d/.test(msg)) {
-      return false;
-    }
-    // 默认不重试
-    return false;
+    const status = Number(msg.match(/status=(\d{3})/)?.[1] ?? 0);
+    return status === 429 || status >= 500;
   }
 }

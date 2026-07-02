@@ -1,5 +1,7 @@
 import type { RadarProfileSummary } from "../schema/radar-profile-summary";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
+import type { ExtractedOpportunityStrategy } from "../schema/extracted-requirement-info";
+import type { OpportunityKind, SearchIntentType, SearchQueryVariant } from "../schema/radar-mvp-contracts";
 import type {
   RadarVersionQueryFamily,
   RadarVersionRevisionNote,
@@ -353,6 +355,59 @@ function inferQueryFamilies(spec: RadarRequirementSpec, description: string, pro
   return genericQueryFamilies(spec, profileSummary);
 }
 
+function normalizeStrategyIntent(value: string | undefined): SearchIntentType {
+  if (value === "retail_customer_lead") return "customer_lead";
+  if (
+    value === "direct_opportunity" ||
+    value === "business_lead" ||
+    value === "channel_partner_lead" ||
+    value === "customer_lead" ||
+    value === "association_directory" ||
+    value === "watch_signal" ||
+    value === "reference_case"
+  ) return value;
+  return "business_lead";
+}
+
+function normalizeQueryVariant(value: string | undefined): SearchQueryVariant {
+  if (
+    value === "broad_discovery" ||
+    value === "official_source" ||
+    value === "action_keyword" ||
+    value === "region_language" ||
+    value === "source_archetype" ||
+    value === "source_hint"
+  ) return value;
+  return "broad_discovery";
+}
+
+function queryFamiliesFromStrategyDraft(draft?: ExtractedOpportunityStrategy): RadarVersionQueryFamily[] {
+  const themes = draft?.search_themes ?? [];
+  return themes.slice(0, 5).flatMap((theme) => {
+    const familyName = String(theme.theme_name ?? theme.query_family ?? "").trim();
+    const sourceArchetype = String(theme.source_archetype ?? "").trim();
+    const queryVariants = (theme.query_variants ?? [])
+      .map((item) => ({
+        query: String(item.query ?? "").replace(/\s+/g, " ").trim(),
+        variant: normalizeQueryVariant(item.variant),
+      }))
+      .filter((item) => item.query)
+      .slice(0, 3);
+    if (!familyName || !sourceArchetype || queryVariants.length < 2) return [];
+    const intentType = normalizeStrategyIntent(theme.intent_type);
+    const resultBucket = normalizeStrategyIntent(theme.result_bucket || intentType) as OpportunityKind;
+    return [{
+      familyName,
+      intentType,
+      sourceArchetype,
+      queries: queryVariants.map((item) => item.query),
+      queryVariants,
+      whyThisFamily: String(theme.why_this_theme ?? "").trim() || "根据用户画像扩展该行业的可行动机会来源。",
+      resultBucket,
+    }];
+  });
+}
+
 function inferMissingConfig(spec: RadarRequirementSpec, description: string): string[] {
   const missing: string[] = [];
   if (!spec.client_profile?.business_type) missing.push("雷达服务对象的具体角色");
@@ -396,13 +451,19 @@ function inferRevisionNotes(description: string): RadarVersionRevisionNote[] {
   ];
 }
 
-function inferResultBuckets(description: string): string[] {
+function inferResultBuckets(description: string, strategyDraft?: ExtractedOpportunityStrategy): string[] {
+  const strategyBuckets = unique((strategyDraft?.search_themes ?? []).map((theme) =>
+    normalizeStrategyIntent(theme.result_bucket || theme.intent_type),
+  ));
+  if (strategyBuckets.length > 0) {
+    return unique([...strategyBuckets, "watch_signal", "reference_case", "rejected"]);
+  }
   if (/b2b\s*商品交易|商品交易\s*saas|零售|retail/.test(description.toLowerCase())) {
     return [
       "direct_opportunity",
       "business_lead",
       "channel_partner_lead",
-      "retail_customer_lead",
+      "customer_lead",
       "association_directory",
       "watch_signal",
       "reference_case",
@@ -416,19 +477,25 @@ export function buildRadarVersionSpec(params: {
   spec: RadarRequirementSpec;
   description: string;
   profileSummary?: RadarProfileSummary;
+  strategyDraft?: ExtractedOpportunityStrategy;
 }): RadarVersionSpec {
-  const { spec, description, profileSummary } = params;
+  const { spec, description, profileSummary, strategyDraft } = params;
   const version = revisionVersion(description);
-  const queryFamilies = inferQueryFamilies(spec, description, profileSummary);
+  const draftedQueryFamilies = queryFamiliesFromStrategyDraft(strategyDraft);
+  const queryFamilies = draftedQueryFamilies.length >= 2
+    ? draftedQueryFamilies
+    : inferQueryFamilies(spec, description, profileSummary);
+  const draftedSourceArchetypes = unique(strategyDraft?.source_archetypes ?? [], 10);
+  const draftedHighValueCriteria = unique(strategyDraft?.high_value_criteria ?? [], 8);
   return {
     version,
     oneSentencePositioning: inferPositioning(spec, description, profileSummary),
     targetUser: profileSummary?.identity || firstNonEmpty(spec.client_profile?.business_type, spec.client_profile?.client_type, spec.client_profile?.industry),
     businessContext: inferBusinessContext(spec, description, profileSummary),
     opportunityIntents: inferOpportunityIntents(spec, description),
-    highValueCriteria: inferHighValueCriteria(description),
+    highValueCriteria: draftedHighValueCriteria.length > 0 ? draftedHighValueCriteria : inferHighValueCriteria(description),
     exclusionRules: inferExclusions(spec, description),
-    prioritySourceArchetypes: inferSourceArchetypes(spec, description),
+    prioritySourceArchetypes: draftedSourceArchetypes.length > 0 ? draftedSourceArchetypes : inferSourceArchetypes(spec, description),
     queryFamilies,
     scoringRules: [
       { key: "contactability", label: "可联系 / 可进入入口", weight: 35, highScoreRule: "有官方联系人、邮箱、报名表单、供应商入口、商务配对或合作入口。" },
@@ -455,6 +522,6 @@ export function buildRadarVersionSpec(params: {
     missingConfig: inferMissingConfig(spec, description),
     defaultAssumptions: inferDefaultAssumptions(spec, description, profileSummary),
     revisionNotes: inferRevisionNotes(description),
-    resultBuckets: inferResultBuckets(description),
+    resultBuckets: inferResultBuckets(description, strategyDraft),
   };
 }

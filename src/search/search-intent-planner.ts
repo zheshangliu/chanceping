@@ -1,30 +1,17 @@
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
-import type { SearchIntentType } from "../schema/radar-mvp-contracts";
-import type { RadarVersionQueryFamily } from "../schema/radar-version-spec";
+import {
+  buildOpportunityStrategy,
+  type OpportunityStrategy,
+  type SearchQueryFamilyItem,
+  type SearchTheme,
+} from "./opportunity-strategy";
 
-export interface SearchTheme {
-  id: string;
-  themeName: string;
-  intentType: SearchIntentType;
-  sourceArchetype: string;
-  queryExamples: string[];
-  whyThisTheme: string;
-}
-
-export interface SearchQueryFamilyItem {
-  query: string;
-  language: string;
-  region?: string;
-  sourceDomain?: string;
-  themeName: string;
-  intentType: SearchIntentType;
-  sourceArchetype: string;
-  queryFamily: "broad_discovery" | "official_source" | "action_keyword" | "region_language" | "source_hint";
-}
+export type { SearchQueryFamilyItem, SearchTheme } from "./opportunity-strategy";
 
 export interface SearchIntentPlan {
   searchThemes: SearchTheme[];
   queries: SearchQueryFamilyItem[];
+  opportunityStrategy?: OpportunityStrategy;
 }
 
 const MAX_THEMES = 5;
@@ -66,7 +53,7 @@ function sourceDomain(value: string): string {
 function buildQuery(
   theme: Omit<SearchTheme, "queryExamples">,
   query: string,
-  queryFamily: SearchQueryFamilyItem["queryFamily"],
+  queryVariant: SearchQueryFamilyItem["queryVariant"],
   region?: string,
   sourceUrl?: string,
 ): SearchQueryFamilyItem {
@@ -78,7 +65,9 @@ function buildQuery(
     themeName: theme.themeName,
     intentType: theme.intentType,
     sourceArchetype: theme.sourceArchetype,
-    queryFamily,
+    sourceArchetypeLabel: theme.sourceArchetypeLabel,
+    queryFamily: theme.queryFamily,
+    queryVariant,
   };
 }
 
@@ -94,38 +83,14 @@ function uniqueQueries(items: SearchQueryFamilyItem[]): SearchQueryFamilyItem[] 
   return out;
 }
 
-function normalizeIntentType(intentType: RadarVersionQueryFamily["intentType"]): SearchIntentType {
-  if (intentType === "watch_signal" || intentType === "reference_case" || intentType === "direct_opportunity") return intentType;
-  return "business_lead";
-}
-
-function queryFamilyForIndex(index: number): SearchQueryFamilyItem["queryFamily"] {
-  const families: SearchQueryFamilyItem["queryFamily"][] = ["broad_discovery", "official_source", "action_keyword", "region_language"];
-  return families[index] ?? "broad_discovery";
-}
-
 function buildRadarVersionIntentPlan(spec: RadarRequirementSpec): SearchIntentPlan | null {
-  const radarVersion = spec.radar_version;
-  const families = radarVersion?.queryFamilies ?? [];
-  if (families.length === 0) return null;
-  const selected = families.slice(0, MAX_THEMES);
-  const searchThemes: SearchTheme[] = selected.map((family, index) => ({
-    id: `theme_radar_version_${index + 1}`,
-    themeName: family.familyName,
-    intentType: normalizeIntentType(family.intentType),
-    sourceArchetype: family.sourceArchetype,
-    queryExamples: family.queries.slice(0, MAX_QUERIES_PER_THEME),
-    whyThisTheme: family.whyThisFamily,
-  }));
-  const queries = uniqueQueries(selected.flatMap((family, themeIndex) => {
-    const theme = searchThemes[themeIndex];
-    return family.queries.slice(0, MAX_QUERIES_PER_THEME).map((query, queryIndex) => buildQuery(
-      theme,
-      query,
-      queryFamilyForIndex(queryIndex),
-    ));
-  })).slice(0, MAX_THEMES * MAX_QUERIES_PER_THEME);
-  return { searchThemes, queries };
+  const opportunityStrategy = buildOpportunityStrategy(spec);
+  if (!opportunityStrategy) return null;
+  return {
+    searchThemes: opportunityStrategy.searchThemes,
+    queries: opportunityStrategy.queries,
+    opportunityStrategy,
+  };
 }
 
 export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: string): SearchIntentPlan {
@@ -162,8 +127,11 @@ export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: str
     id: "theme_direct_opportunity",
     themeName: "直接机会入口",
     intentType: "direct_opportunity" as const,
-    sourceArchetype: "官方公告 / 报名申请 / 招采入口",
+    sourceArchetype: "official_event_site" as const,
+    sourceArchetypeLabel: "官方公告 / 报名申请 / 招采入口",
+    queryFamily: "direct actionable opportunity",
     whyThisTheme: "优先寻找能直接报名、申报、投稿、投标或申请的页面。",
+    priority: 1,
   };
   themeSeeds.push({
     ...directTheme,
@@ -178,8 +146,11 @@ export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: str
     id: "theme_business_lead",
     themeName: "可行动线索",
     intentType: "business_lead" as const,
-    sourceArchetype: "采购合作 / 供应商入库 / 招聘与 BD 入口",
+    sourceArchetype: "procurement_or_supplier_portal" as const,
+    sourceArchetypeLabel: "采购合作 / 供应商入库 / 招聘与 BD 入口",
+    queryFamily: "contactable business lead",
     whyThisTheme: "很多行业机会不是公开报名页，而是需要联系确认的采购、合作、招聘或客户线索。",
+    priority: 2,
   };
   themeSeeds.push({
     ...leadTheme,
@@ -194,8 +165,11 @@ export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: str
     id: "theme_watch_signal",
     themeName: "观察信号",
     intentType: "watch_signal" as const,
-    sourceArchetype: "协会日历 / 新闻公告 / 趋势和计划信号",
+    sourceArchetype: "association_member_directory" as const,
+    sourceArchetypeLabel: "协会日历 / 新闻公告 / 趋势和计划信号",
+    queryFamily: "watch signal",
     whyThisTheme: "保留短期不能直接行动但能提示下一轮监控方向的来源。",
+    priority: 3,
   };
   themeSeeds.push({
     ...watchTheme,
@@ -210,8 +184,11 @@ export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: str
     id: "theme_reference_case",
     themeName: "参考案例与规则",
     intentType: "reference_case" as const,
-    sourceArchetype: "往届案例 / 规则费用 / 获奖名单 / 方案参考",
+    sourceArchetype: "reference_case_source" as const,
+    sourceArchetypeLabel: "往届案例 / 规则费用 / 获奖名单 / 方案参考",
+    queryFamily: "reference case",
     whyThisTheme: "用参考案例、费用规则和往届信息帮助用户改材料、定打法和避风险。",
+    priority: 4,
   };
   themeSeeds.push({
     ...referenceTheme,
@@ -229,8 +206,11 @@ export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: str
       id: "theme_configured_source",
       themeName: "指定来源复核",
       intentType: "direct_opportunity" as const,
-      sourceArchetype: "用户指定官网 / 平台 / 协会来源",
+      sourceArchetype: "official_event_site" as const,
+      sourceArchetypeLabel: "用户指定官网 / 平台 / 协会来源",
+      queryFamily: "configured source review",
       whyThisTheme: "用户指定的信号源优先复核，但只代表搜索发现，不代表字段已核验。",
+      priority: 5,
     };
     const sourceName = firstUserSource?.name || firstManualSource || "指定来源";
     const sourceUrl = firstUserSource?.url || "";
@@ -250,8 +230,11 @@ export function buildSearchIntentPlan(spec: RadarRequirementSpec, baseQuery: str
     themeName: theme.themeName,
     intentType: theme.intentType,
     sourceArchetype: theme.sourceArchetype,
+    sourceArchetypeLabel: theme.sourceArchetypeLabel,
+    queryFamily: theme.queryFamily,
     queryExamples: theme.queries.slice(0, MAX_QUERIES_PER_THEME).map((item) => item.query),
     whyThisTheme: theme.whyThisTheme,
+    priority: theme.priority,
   }));
   const queries = uniqueQueries(selected.flatMap((theme) => theme.queries.slice(0, MAX_QUERIES_PER_THEME))).slice(0, MAX_THEMES * MAX_QUERIES_PER_THEME);
   return { searchThemes, queries };

@@ -26,7 +26,7 @@ import { parseJsonWithRepair } from "../utils/json-repair";
 import { getLlmMode } from "../demo/data-mode";
 import { buildRadarProfileSummary, questionsToConfirmPayload } from "./radar-profile-summary";
 import { buildRadarVersionSpec } from "./radar-version-builder";
-import { extractGenericMockRequirement, interpretRequirement } from "./radar-requirement-interpreter";
+import { extractGenericMockRequirement, extractIdentity, interpretRequirement } from "./radar-requirement-interpreter";
 import {
   RADAR_GENERATOR_SYSTEM_PROMPT,
   RADAR_GENERATOR_USER_PROMPT,
@@ -85,6 +85,18 @@ function createEmptySourceStrategy(): SourceStrategy {
 /** Mock mode uses a generic semantic fallback and leaves unknown fields empty. */
 function createMockExtractedInfo(description: string): ExtractedRequirementInfo {
   return extractGenericMockRequirement(description);
+}
+
+function preserveExplicitIdentity(info: ExtractedRequirementInfo, description: string): ExtractedRequirementInfo {
+  const explicitIdentity = extractIdentity(description.trim());
+  if (!explicitIdentity) return info;
+  return {
+    ...info,
+    client_identity: {
+      ...info.client_identity,
+      business_type: explicitIdentity,
+    },
+  };
 }
 
 // ============================================================
@@ -218,6 +230,9 @@ function normalizeExtractedInfo(raw: unknown): ExtractedRequirementInfo {
     },
     action_scenario: (obj.action_scenario ?? {}) as ExtractedRequirementInfo["action_scenario"],
     report_format: (obj.report_format ?? {}) as ExtractedRequirementInfo["report_format"],
+    opportunity_strategy: obj.opportunity_strategy && typeof obj.opportunity_strategy === "object"
+      ? obj.opportunity_strategy as ExtractedRequirementInfo["opportunity_strategy"]
+      : undefined,
   };
 }
 
@@ -268,6 +283,7 @@ export class RadarGenerator {
       // 真实模式：调用 LLM
       extractedInfo = await this.extractInfoViaLLM(fullDescription);
     }
+    extractedInfo = preserveExplicitIdentity(extractedInfo, fullDescription);
 
     const interpretation = interpretRequirement(fullDescription, extractedInfo);
 
@@ -280,7 +296,12 @@ export class RadarGenerator {
     spec.primary_subject = profileSummary.identity;
     spec.profile_version = spec.profile_version ?? 1;
     spec.profile_summary = profileSummary;
-    const radarVersion = buildRadarVersionSpec({ spec, description: fullDescription, profileSummary });
+    const radarVersion = buildRadarVersionSpec({
+      spec,
+      description: fullDescription,
+      profileSummary,
+      strategyDraft: extractedInfo.opportunity_strategy,
+    });
     spec.radar_version = radarVersion;
 
     // 校验完整率

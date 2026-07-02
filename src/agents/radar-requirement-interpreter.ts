@@ -25,7 +25,7 @@ function cleanPhrase(value: string): string {
     .trim();
 }
 
-function extractIdentity(text: string): string {
+export function extractIdentity(text: string): string {
   const direct = text.match(/(?:^|[\n。；;])\s*(?:我|我们)(?:是一名|是一家|是|代表)([^，,。\n；;]{1,40})/);
   if (direct?.[1]) return cleanPhrase(direct[1]);
 

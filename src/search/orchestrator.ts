@@ -53,6 +53,7 @@ import {
 } from "./source-hints";
 import { buildUnopenedFieldEvidence, fetchLiveEvidence, type LiveEvidenceFetchResult } from "./live-evidence";
 import { buildSearchIntentPlan, type SearchIntentPlan, type SearchQueryFamilyItem } from "./search-intent-planner";
+import { normalizeOpportunityIntent } from "./opportunity-strategy";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -266,22 +267,33 @@ function buildCustomMockResults(spec: RadarRequirementSpec, query: string): Sear
     || legacyCoreKeywords
     || "自定义机会";
   const region = spec.region_scope?.primary_regions?.[0] || spec.client_profile?.regions?.[0] || "全国";
+  const queryFamilies = spec.radar_version?.queryFamilies ?? [];
+  const primaryKind = normalizeOpportunityIntent(queryFamilies[0]?.resultBucket || queryFamilies[0]?.intentType || "direct_opportunity");
+  const leadFamily = queryFamilies.find((family) => {
+    const kind = normalizeOpportunityIntent(family.resultBucket || family.intentType);
+    return kind === "business_lead" || kind === "channel_partner_lead" || kind === "customer_lead";
+  });
+  const secondaryKind = leadFamily
+    ? normalizeOpportunityIntent(leadFamily.resultBucket || leadFamily.intentType)
+    : primaryKind;
   return [
     {
       title: `${region}${target}机会演示样例`,
       url: mockDemoUrl("custom", 1, target),
-      snippet: `【演示数据，未真实核验】${target}相关机会信号样例，适合按当前自定义雷达画像验证搜索、筛选和报告流程。`,
+      snippet: `【演示数据，未真实核验】${target}相关机会信号样例，包含演示报名、申请或合作入口，仅用于验证当前雷达流程。`,
       source_provider: "mock",
       source_type: "web",
       published_at: "2026-07-15",
+      semantic_type: primaryKind,
     },
     {
       title: `${target}公开信号演示样例`,
       url: mockDemoUrl("custom", 2, target),
-      snippet: `【演示数据，未真实核验】围绕${target}的公开来源信号样例，真实截止时间、资格、联系人和行动价值均需后续核验。`,
+      snippet: `【演示数据，未真实核验】围绕${target}的可联系线索样例，真实需求、合作条件、联系人和行动价值均需后续核验。`,
       source_provider: "mock",
       source_type: "web",
       published_at: "2026-07-22",
+      semantic_type: secondaryKind,
     },
   ];
 }
@@ -361,6 +373,9 @@ function semanticKindLabel(kind: OpportunityKind | undefined): string {
   const labels: Record<OpportunityKind, string> = {
     direct_opportunity: "直接机会",
     business_lead: "可行动线索",
+    channel_partner_lead: "渠道合作线索",
+    customer_lead: "潜在客户线索",
+    association_directory: "协会 / 会员目录",
     watch_signal: "观察信号",
     reference_case: "参考案例",
     rejected: "已降权来源",
@@ -370,17 +385,19 @@ function semanticKindLabel(kind: OpportunityKind | undefined): string {
 
 function applySemanticCardMark(card: OpportunityCard, result: SearchResult): OpportunityCard {
   const kind = result.semantic_type ?? card.opportunity_kind ?? "direct_opportunity";
+  const actionableLead = kind === "business_lead" || kind === "channel_partner_lead" || kind === "customer_lead";
   card.opportunity_kind = kind;
   card.type = semanticKindLabel(kind);
   if (card.assessment) {
     card.assessment.kind = kind;
-    card.assessment.actionStatus = kind === "business_lead" ? "prepare" : card.assessment.actionStatus;
+    card.assessment.actionStatus = actionableLead ? "prepare" : card.assessment.actionStatus;
     card.action_status = card.assessment.actionStatus;
   }
-  if (kind === "business_lead") {
-    const disclaimer = "类型：可行动线索；状态：需联系确认；不能当作采购、招聘、报名或合作机会已经成立。";
-    card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), "可行动线索", "需联系确认"]));
-    card.next_action = `联系来源方确认采购、合作、招聘或报名条件；${card.next_action || "先复核来源与行动入口。"}`;
+  if (actionableLead) {
+    const leadLabel = semanticKindLabel(kind);
+    const disclaimer = `类型：${leadLabel}；状态：需联系确认；不能当作采购、招聘、报名、客户需求或合作机会已经成立。`;
+    card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), leadLabel, "需联系确认", "待复核"]));
+    card.next_action = `联系来源方确认真实需求、合作条件和行动入口；${card.next_action || "先复核来源与行动入口。"}`;
     card.risk_note = card.risk_note ? `${card.risk_note} ${disclaimer}` : disclaimer;
     card.source_disclaimer = card.source_disclaimer
       ? `${card.source_disclaimer} ${disclaimer}`
@@ -424,6 +441,9 @@ interface CandidateQuality {
 }
 
 const BUSINESS_LEAD_RE = /客户线索|销售线索|潜在客户|合作入口|合作机会|供应商|入库|招商|渠道|伙伴|联系|contact|partner|supplier|vendor|careers|招聘|岗位|BD|商机|采购部门|征集.*供应商/i;
+const CHANNEL_PARTNER_RE = /渠道伙伴|渠道合作|经销商|代理商|实施伙伴|channel partner|reseller|distributor partner|implementation partner/i;
+const CUSTOMER_LEAD_RE = /潜在客户|客户线索|目标客户|需求单位|采购方|customer lead|prospect|buyer lead/i;
+const ASSOCIATION_DIRECTORY_RE = /协会.{0,12}(会员|成员).{0,8}目录|会员目录|成员目录|association.{0,20}member.{0,12}directory|member directory/i;
 const WATCH_SIGNAL_RE = /观察|趋势|计划|日历|排期|预告|即将|未来|动态|动向|预算|需求上升|calendar|trend|roadmap|pipeline|upcoming|watch/i;
 const REFERENCE_CASE_RE = /案例|复盘|往届|获奖名单|规则|费用|条款|资格|指南|白皮书|报告|reference|case|rules|fee|eligibility|winner|shortlist|guideline/i;
 const DIRECT_ACTION_RE = /报名|申报|申请|参赛|赛事通知|赛程|采购公告|招标公告|询价公告|投标|投稿|征集|申请入口|报名入口|官方公告|公开赛|锦标赛|大会|摊位|展位|供应商招募|イベント|棋戦|calendar|event|events|tournament|championship|registration|entry|apply|application|tender|rfp|procurement|submission|open call/i;
@@ -433,19 +453,24 @@ function semanticTypeForResult(result: SearchResult): OpportunityKind {
   if (result.semantic_type) return result.semantic_type;
   const text = resultText(result);
   if (REJECTED_RE.test(text)) return "rejected";
+  if (ASSOCIATION_DIRECTORY_RE.test(text)) return "association_directory";
   if (REFERENCE_CASE_RE.test(text)) return "reference_case";
+  if (CHANNEL_PARTNER_RE.test(text)) return "channel_partner_lead";
+  if (CUSTOMER_LEAD_RE.test(text)) return "customer_lead";
   if (BUSINESS_LEAD_RE.test(text) && !/采购公告|招标公告|询价公告|投标|报名入口|申请入口|registration|tender|rfp/i.test(text)) {
     return "business_lead";
   }
   if (DIRECT_ACTION_RE.test(text)) return "direct_opportunity";
   if (WATCH_SIGNAL_RE.test(text)) return "watch_signal";
-  return result.intent_type === "business_lead"
-    ? "business_lead"
-    : result.intent_type === "reference_case"
-      ? "reference_case"
-      : result.intent_type === "watch_signal"
-        ? "watch_signal"
-        : "watch_signal";
+  if (
+    result.intent_type === "business_lead" ||
+    result.intent_type === "channel_partner_lead" ||
+    result.intent_type === "customer_lead" ||
+    result.intent_type === "association_directory" ||
+    result.intent_type === "reference_case" ||
+    result.intent_type === "watch_signal"
+  ) return result.intent_type;
+  return "watch_signal";
 }
 
 function candidateQuality(result: SearchResult): CandidateQuality {
@@ -467,7 +492,7 @@ function candidateQuality(result: SearchResult): CandidateQuality {
   if (semanticType === "direct_opportunity") {
     return { status: "actionable", reason: "包含报名、赛程、公告或申请入口等行动信号" };
   }
-  if (semanticType === "business_lead") {
+  if (semanticType === "business_lead" || semanticType === "channel_partner_lead" || semanticType === "customer_lead") {
     return { status: "actionable", reason: "包含合作、客户线索、供应商入库或联系确认信号" };
   }
   return { status: "unknown", reason: "未识别到明确行动入口，保留为观察候选" };
@@ -475,7 +500,7 @@ function candidateQuality(result: SearchResult): CandidateQuality {
 
 function isKeyCandidate(result: SearchResult): boolean {
   const semanticType = semanticTypeForResult(result);
-  return semanticType === "direct_opportunity" || semanticType === "business_lead";
+  return semanticType === "direct_opportunity" || semanticType === "business_lead" || semanticType === "channel_partner_lead" || semanticType === "customer_lead";
 }
 
 function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): number {
@@ -536,8 +561,10 @@ function fallbackQueryItem(query: string): SearchQueryFamilyItem {
     language: detectQueryLanguage(query),
     themeName: "基础查询",
     intentType: "direct_opportunity",
-    sourceArchetype: "通用机会来源",
-    queryFamily: "broad_discovery",
+    sourceArchetype: "official_event_site",
+    sourceArchetypeLabel: "通用机会来源",
+    queryFamily: "basic discovery",
+    queryVariant: "broad_discovery",
   };
 }
 
@@ -555,6 +582,14 @@ function buildSearchPlan(
       : (spec.opportunity_scope?.primary_opportunity_types ?? []),
     searchThemes: intentPlan.searchThemes,
     queries,
+    ...(intentPlan.opportunityStrategy ? {
+      opportunityStrategy: {
+        radarVersion: intentPlan.opportunityStrategy.radarVersion,
+        sourceArchetypes: intentPlan.opportunityStrategy.sourceArchetypes,
+        resultBucketPolicy: intentPlan.opportunityStrategy.resultBucketPolicy,
+        evidenceReadPriority: intentPlan.opportunityStrategy.evidenceReadPriority,
+      },
+    } : {}),
     configuredSources: configuredSourcesFromSpec(spec),
     exclusions: spec.filter_rules?.must_exclude ?? [],
     maxCandidates,
@@ -596,7 +631,9 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       themeName: result.search_theme,
       intentType: result.intent_type,
       sourceArchetype: result.source_archetype,
+      sourceArchetypeLabel: result.source_archetype_label,
       queryFamily: result.query_family,
+      queryVariant: result.query_variant,
     };
   });
 }
@@ -617,12 +654,14 @@ function buildCandidateAccounting(
   };
 }
 
-function queryMeta(item: SearchQueryFamilyItem): Pick<SearchExecutionLog["queryExecutions"][number], "themeName" | "intentType" | "sourceArchetype" | "queryFamily"> {
+function queryMeta(item: SearchQueryFamilyItem): Pick<SearchExecutionLog["queryExecutions"][number], "themeName" | "intentType" | "sourceArchetype" | "sourceArchetypeLabel" | "queryFamily" | "queryVariant"> {
   return {
     themeName: item.themeName,
     intentType: item.intentType,
     sourceArchetype: item.sourceArchetype,
+    sourceArchetypeLabel: item.sourceArchetypeLabel,
     queryFamily: item.queryFamily,
+    queryVariant: item.queryVariant,
   };
 }
 
@@ -634,7 +673,9 @@ function annotateResultsWithQueryMeta(results: SearchResult[], item: SearchQuery
       search_theme: item.themeName,
       intent_type: item.intentType,
       source_archetype: item.sourceArchetype,
+      source_archetype_label: item.sourceArchetypeLabel,
       query_family: item.queryFamily,
+      query_variant: item.queryVariant,
     };
     annotated.semantic_type = semanticTypeForResult(annotated);
     return annotated;
@@ -853,7 +894,7 @@ export class SearchOrchestrator {
       try {
         rawResults = this.dataMode === "mock" && isTableTennisRadar(spec, searchQuery)
           ? buildTableTennisMockResults()
-          : this.dataMode === "mock" && radarType === "custom"
+          : this.dataMode === "mock" && (radarType === "custom" || Boolean(spec.radar_version))
             ? buildCustomMockResults(spec, searchQuery)
             : loadDemoSearchResults(radarType, this.dataMode);
         rawResults = annotateResultsWithQueryMeta(rawResults, baseQueryItem);
@@ -1034,8 +1075,10 @@ export class SearchOrchestrator {
               ...(hint.siteFilter ? { sourceDomain: hint.siteFilter } : {}),
               themeName: "指定来源复核",
               intentType: "direct_opportunity",
-              sourceArchetype: hint.siteFilter ? `指定站点：${hint.siteFilter}` : "用户指定来源",
-              queryFamily: "source_hint",
+              sourceArchetype: "official_event_site",
+              sourceArchetypeLabel: hint.siteFilter ? `指定站点：${hint.siteFilter}` : "用户指定来源",
+              queryFamily: "configured source review",
+              queryVariant: "source_hint",
             };
             const result = await searchProviderWithRetry(sourceHintProvider, hintQueryItem, {
               max_results: Math.min(this.maxResultsPerProvider, 5),
@@ -1144,7 +1187,24 @@ export class SearchOrchestrator {
     let aiPassed: AIFilterItem[];
     let aiFilterSkipped = 0;
     let aiFilterExecuted = 0;
-    if (this.dataMode === "live" && providerRouting) {
+    if (this.dataMode === "mock") {
+      // Demo candidates are intentionally synthetic. A live LLM may correctly
+      // reject them as non-real opportunities, which would break the explicit
+      // "演示数据查看流程" mode. Keep mock search deterministic; live search
+      // continues through evidence-aware filtering below.
+      aiPassed = buildSkipFetchItems(ruleResult.passed);
+      if (this.opportunityStore) {
+        for (const result of ruleResult.passed) {
+          const normalizedGuid = normalizeUrl(result.url);
+          const dedupKey = computeDedupKey(result.title, result.url, normalizedGuid);
+          const existing = this.opportunityStore.getByDedupKey(dedupKey);
+          if (existing?.card.ai_analysis) aiFilterSkipped += 1;
+          else aiFilterExecuted += 1;
+        }
+      } else {
+        aiFilterExecuted = ruleResult.passed.length;
+      }
+    } else if (this.dataMode === "live" && providerRouting) {
       aiPassed = buildSkipFetchItems(ruleResult.passed, liveEvidence?.contentsByUrl, this.enableContentFetch);
       aiFilterExecuted = ruleResult.passed.length;
     } else if (this.enableContentFetch) {

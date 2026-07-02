@@ -1,4 +1,4 @@
-import type { SearchIntentType } from "./radar-mvp-contracts";
+import type { OpportunityKind, SearchIntentType, SearchQueryVariant } from "./radar-mvp-contracts";
 
 export type RadarVersionId = `V${number}.${number}`;
 
@@ -18,11 +18,15 @@ export interface RadarVersionRevisionNote {
 
 export interface RadarVersionQueryFamily {
   familyName: string;
-  intentType: SearchIntentType | "channel_partner_lead" | "retail_customer_lead" | "association_directory";
+  intentType: SearchIntentType | "retail_customer_lead";
   sourceArchetype: string;
   queries: string[];
+  queryVariants?: Array<{
+    query: string;
+    variant: SearchQueryVariant;
+  }>;
   whyThisFamily: string;
-  resultBucket?: string;
+  resultBucket?: OpportunityKind | "retail_customer_lead";
 }
 
 export interface RadarVersionScoringRule {

@@ -70,8 +70,8 @@ export function evidenceStatusFromEvidence(
 
 function actionStatusForKind(kind: OpportunityKind, grade: "S" | "A" | "B" | "C" | undefined): ActionStatus {
   if (kind === "rejected") return "drop";
-  if (kind === "watch_signal" || kind === "reference_case") return "monitor";
-  if (kind === "business_lead") return grade === "S" || grade === "A" ? "act_now" : "prepare";
+  if (kind === "watch_signal" || kind === "reference_case" || kind === "association_directory") return "monitor";
+  if (kind === "business_lead" || kind === "channel_partner_lead" || kind === "customer_lead") return grade === "S" || grade === "A" ? "act_now" : "prepare";
   return grade === "S" || grade === "A" ? "act_now" : grade ? "prepare" : "drop";
 }
 

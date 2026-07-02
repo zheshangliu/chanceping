@@ -797,7 +797,8 @@ function uniqueList(items: string[], limit: number): string[] {
 }
 
 function actionDecision(input: RadarReportInput, opps: OpportunityCard[]): ReportActionDecision {
-  const actionable = opps.filter((opp) => opp.opportunity_kind === "direct_opportunity" || opp.opportunity_kind === "business_lead");
+  const actionableKinds = new Set(["direct_opportunity", "business_lead", "channel_partner_lead", "customer_lead"]);
+  const actionable = opps.filter((opp) => actionableKinds.has(opp.opportunity_kind ?? ""));
   if (actionable.some((opp) => !isDemoOpportunity(opp) && (getVisibleLevel(opp) === "S" || getVisibleLevel(opp) === "A"))) {
     return "Attack";
   }
@@ -833,6 +834,12 @@ function buildMaterialGaps(opps: OpportunityCard[]): string[] {
   } else {
     gaps.push("模型判断：先补充更明确的地区、机会类型和指定信号源，提升下一轮搜索命中率。");
   }
+  if (opps.some((opp) => opp.opportunity_kind === "channel_partner_lead")) {
+    gaps.push("模型判断：渠道伙伴线索需要补充产品定位、目标客群、合作模式、覆盖地区和伙伴支持材料。");
+  }
+  if (opps.some((opp) => opp.opportunity_kind === "customer_lead")) {
+    gaps.push("模型判断：潜在客户线索需要补充客户画像、采购场景、价值证明和首轮外联材料。");
+  }
   return uniqueList(gaps, 5);
 }
 
@@ -840,26 +847,32 @@ function buildRecommendedAngles(spec: RadarRequirementSpec, opps: OpportunityCar
   const identity = spec.client_profile?.business_type || spec.client_profile?.client_type || "当前用户";
   const target = fmtArr(spec.opportunity_scope?.primary_opportunity_types);
   const top = opps[0];
+  const angles: string[] = [];
   if (!top) {
-    return [
+    angles.push(
       `模型判断：先把「${identity}」的雷达包装成持续监控 ${target} 的观察雷达，下一轮优先补足来源和地区。`,
-    ];
-  }
-  if (top.opportunity_kind === "business_lead") {
-    return [
+    );
+  } else if (top.opportunity_kind === "business_lead") {
+    angles.push(
       `模型判断：把「${top.title}」作为可行动线索处理，先确认对方是否真实有采购、合作、招聘或报名需求。`,
       `模型判断：外联时不要声称对方意向已经证实，用「看到公开信号，想确认是否开放合作」作为开场。`,
-    ];
-  }
-  if (top.opportunity_kind === "direct_opportunity") {
-    return [
+    );
+  } else if (top.opportunity_kind === "direct_opportunity") {
+    angles.push(
       `模型判断：把「${top.title}」作为本周优先核验入口，先核对官方页面、截止时间和资格要求。`,
       `模型判断：若核验通过，再围绕「${identity}」与 ${target} 的匹配点准备提交材料。`,
-    ];
+    );
+  } else {
+    angles.push(`模型判断：「${top.title}」更适合作为观察或参考，不建议直接当作已经成立的机会行动。`);
   }
-  return [
-    `模型判断：「${top.title}」更适合作为观察或参考，不建议直接当作已经成立的机会行动。`,
-  ];
+
+  if (opps.some((opp) => opp.opportunity_kind === "channel_partner_lead")) {
+    angles.push("模型判断：渠道伙伴线索：先核对伙伴覆盖地区、产品适配和合作机制，再决定是否投入外联。");
+  }
+  if (opps.some((opp) => opp.opportunity_kind === "customer_lead")) {
+    angles.push("模型判断：潜在客户线索：先验证真实需求、采购窗口和决策路径，不把公开页面当作已确认采购意向。");
+  }
+  return uniqueList(angles, 6);
 }
 
 function buildRiskNotes(opps: OpportunityCard[]): string[] {
@@ -874,14 +887,18 @@ function buildRiskNotes(opps: OpportunityCard[]): string[] {
   ], 6);
 }
 
-function buildNextActions(opps: OpportunityCard[]): string[] {
+function buildNextActions(input: RadarReportInput, opps: OpportunityCard[]): string[] {
   const top = opps[0];
   if (!top) {
-    return [
+    const emptyActions = [
       "模型判断：补充 2-3 个指定信号源或官网名称。",
       "模型判断：放宽地区或时间窗口后重新盯一次。",
       "模型判断：保存为长期雷达，让系统持续监控新信号。",
     ];
+    if ((input.rawCandidates ?? []).some((candidate) => candidate.semanticType === "association_directory")) {
+      emptyActions.unshift("模型判断：协会目录：先建立目标名单，再逐个寻找公开联系入口；目录本身不是已确认机会。");
+    }
+    return emptyActions;
   }
   const actions = [
     `模型判断：今天先打开「${top.title}」来源，逐项复核行动入口、资格、费用和截止时间。`,
@@ -891,6 +908,15 @@ function buildNextActions(opps: OpportunityCard[]): string[] {
   const businessLead = opps.find((opp) => opp.opportunity_kind === "business_lead");
   if (businessLead) {
     actions.push(`模型判断：对「${businessLead.title}」只做联系确认，不把它当作采购、招聘或合作已经成立的机会。`);
+  }
+  if ((input.rawCandidates ?? []).some((candidate) => candidate.semanticType === "association_directory")) {
+    actions.push("模型判断：协会目录：先建立目标名单，再逐个寻找公开联系入口；目录本身不是已确认机会。");
+  }
+  if (opps.some((opp) => opp.opportunity_kind === "channel_partner_lead")) {
+    actions.push("模型判断：渠道伙伴先按地区、客户覆盖和合作模式排序，再逐一联系确认。");
+  }
+  if (opps.some((opp) => opp.opportunity_kind === "customer_lead")) {
+    actions.push("模型判断：潜在客户先验证业务场景、采购周期和决策角色，不预设已有采购意向。");
   }
   actions.push("模型判断：保存本轮报告，下一轮对比新增来源、失败来源和低行动性来源变化。");
   return uniqueList(actions, 5);
@@ -919,7 +945,7 @@ function buildMvpActionLayer(input: RadarReportInput, opps: OpportunityCard[]): 
     "",
     "### next_actions: 本周建议动作",
     "",
-    ...buildNextActions(opps).map((item, index) => `${index + 1}. ${item}`),
+    ...buildNextActions(input, opps).map((item, index) => `${index + 1}. ${item}`),
     "",
     "### monitoring_keywords: 下一轮监控关键词",
     "",
