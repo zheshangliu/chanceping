@@ -13,6 +13,7 @@
 
 import type { ActionStatus, EvidenceStatus, OpportunityKind, ScoreBasis } from "../schema/radar-mvp-contracts";
 import type { SearchIntentType, SearchQueryVariant, SourceArchetypeId } from "../schema/radar-mvp-contracts";
+import type { CandidateRelevanceAssessment } from "./candidate-relevance";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -54,6 +55,8 @@ export interface SearchResult {
   query_variant?: SearchQueryVariant;
   /** Q.1 内部审计：结果语义分桶。 */
   semantic_type?: OpportunityKind;
+  /** Q.6-A internal audit: candidate-to-radar fit based on search evidence. */
+  relevance_assessment?: CandidateRelevanceAssessment;
 }
 
 /** Chat-first MVP：搜索运行审计中的原始候选摘要。 */
@@ -77,6 +80,8 @@ export interface RawCandidateAudit {
   sourceArchetypeLabel?: string;
   queryFamily?: string;
   queryVariant?: SearchQueryVariant;
+  /** Q.6-A: evidence-based fit assessment; search evidence, not a verified opportunity fact. */
+  relevanceAssessment?: CandidateRelevanceAssessment;
 }
 
 /**

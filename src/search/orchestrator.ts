@@ -56,6 +56,7 @@ import { buildSearchIntentPlan, type SearchIntentPlan, type SearchQueryFamilyIte
 import { normalizeOpportunityIntent } from "./opportunity-strategy";
 import { getSearchCostLimits, normalizeSearchQuery, type SearchCostLimits } from "./search-cost-guard";
 import { buildKeywordPack } from "./keyword-pack";
+import { applyCandidateRelevanceGate } from "./candidate-relevance";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -695,6 +696,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       sourceArchetypeLabel: result.source_archetype_label,
       queryFamily: result.query_family,
       queryVariant: result.query_variant,
+      relevanceAssessment: result.relevance_assessment,
     };
   });
 }
@@ -1252,9 +1254,16 @@ export class SearchOrchestrator {
       };
     }
 
-    const candidateResults = this.dataMode === "live" && providerRouting
-      ? rawResults.filter(isKeyCandidate)
-      : rawResults;
+    let candidateResults: SearchResult[];
+    if (this.dataMode === "live" && providerRouting && spec.radar_version) {
+      const relevanceGate = applyCandidateRelevanceGate(rawResults, spec);
+      rawResults = relevanceGate.assessedResults;
+      candidateResults = relevanceGate.accepted.filter(isKeyCandidate);
+    } else {
+      candidateResults = this.dataMode === "live" && providerRouting
+        ? rawResults.filter(isKeyCandidate)
+        : rawResults;
+    }
 
     if (this.dataMode === "live" && providerRouting && this.enableContentFetch && candidateResults.length > 0) {
       liveEvidence = await fetchLiveEvidence(candidateResults, {

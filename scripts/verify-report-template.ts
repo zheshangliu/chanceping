@@ -257,7 +257,26 @@ const emptyResult = generateRadarReport({
   opportunities: [],
 });
 
+const profileFieldResult = generateRadarReport({
+  spec: {
+    ...spec,
+    core_goals: {
+      ...spec.core_goals,
+      priority_order: ["未来60天内", "权威来源"],
+    },
+  },
+  radar_type: "custom",
+  period_start: "2026-06-24",
+  period_end: "2026-06-30",
+  profile: {
+    地域范围: "中国、国际；找到可报名且来源真实的比赛",
+    时间范围: "中国、国际；找到可报名且来源真实的比赛",
+  },
+  opportunities: [],
+});
+
 const emptyMd = emptyResult.markdown || "";
+const profileFieldMd = profileFieldResult.markdown || "";
 const reportGenerator = fs.readFileSync(
   path.resolve(process.cwd(), "src/agents/radar-report-generator.ts"),
   "utf-8",
@@ -289,6 +308,14 @@ if (!emptyMd.includes("| 来源 | 状态 | 结果数 | 说明 |")) {
 if (!emptyMd.includes("decision: Monitor") || !emptyMd.includes("monitoring_keywords:")) {
   failed++;
   console.log("FAIL empty report missing action layer monitor decision");
+}
+if (!profileFieldMd.includes("- 地域范围：中国、国际")) {
+  failed++;
+  console.log("FAIL report profile should prefer structured region fields");
+}
+if (!profileFieldMd.includes("- 时间范围：未来60天内")) {
+  failed++;
+  console.log("FAIL report profile should derive an actual time window instead of duplicating region/goal text");
 }
 if (failed === 0) console.log("PASS report template matches MVP structure");
 process.exit(failed > 0 ? 1 : 0);

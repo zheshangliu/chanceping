@@ -627,6 +627,27 @@ function fmtUnknownArr(value: unknown): string {
   return "暂无";
 }
 
+function hasTimeSignal(value: string): boolean {
+  return /(?:未来|接下来)?\s*\d+\s*(?:天|周|个月|月|年)|本周|本月|近期|长期|季度|截止|before|within\s+\d+\s+(?:days?|weeks?|months?)/i.test(value);
+}
+
+function mvpTimeRange(input: RadarReportInput): string {
+  const profileValue = fmtUnknownArr(getProfileValue(input.profile, "时间范围"));
+  const candidates = [
+    profileValue,
+    ...(input.spec.radar_version?.highValueCriteria ?? []),
+    ...(input.spec.radar_version?.defaultAssumptions ?? []),
+    ...(input.spec.core_goals.priority_order ?? []),
+    input.spec.core_goals.success_definition,
+  ];
+  for (const candidate of candidates) {
+    const parts = String(candidate ?? "").split(/[；;]/).map((part) => part.trim()).filter(Boolean);
+    const match = parts.find(hasTimeSignal);
+    if (match) return match;
+  }
+  return "近期可行动机会";
+}
+
 function buildMvpHeader(spec: RadarRequirementSpec, periodStart: string, periodEnd: string): string {
   const radarName = spec.core_goals.primary_goal || spec.client_profile.business_type || "我的机会雷达";
   return [
@@ -678,13 +699,15 @@ function buildMvpProfile(input: RadarReportInput): string {
   const sourceNames = fmtUnknownArr(getProfileValue(profile, "指定信号源")) !== "暂无"
     ? fmtUnknownArr(getProfileValue(profile, "指定信号源"))
     : fmtArr(mvpSourceNames(spec));
+  const structuredRegions = fmtArr([...(region.primary_regions ?? []), ...(region.secondary_regions ?? [])]);
+  const profileRegions = fmtUnknownArr(getProfileValue(profile, "地域范围"));
   const lines = [
     "## 1. 雷达画像",
     "",
     `- 用户身份：${fmtUnknownArr(getProfileValue(profile, "用户身份")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "用户身份")) : fmtStr(cp.business_type || cp.client_type)}`,
     `- 关注机会：${fmtUnknownArr(getProfileValue(profile, "关注机会")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "关注机会")) : fmtArr(scope.primary_opportunity_types)}`,
-    `- 地域范围：${fmtUnknownArr(getProfileValue(profile, "地域范围")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "地域范围")) : fmtArr([...(region.primary_regions ?? []), ...(region.secondary_regions ?? [])])}`,
-    `- 时间范围：${fmtUnknownArr(getProfileValue(profile, "时间范围")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "时间范围")) : fmtStr(goals.success_definition)}`,
+    `- 地域范围：${structuredRegions !== "暂无" ? structuredRegions : profileRegions}`,
+    `- 时间范围：${mvpTimeRange(input)}`,
     `- 指定信号源：${sourceNames}`,
     `- 排除内容：${fmtUnknownArr(getProfileValue(profile, "排除内容")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "排除内容")) : fmtArr([...(scope.excluded_opportunity_types ?? []), ...(filters.must_exclude ?? [])])}`,
     `- 排序偏好：${fmtUnknownArr(getProfileValue(profile, "排序偏好")) !== "暂无" ? fmtUnknownArr(getProfileValue(profile, "排序偏好")) : fmtArr(goals.priority_order)}`,
