@@ -73,6 +73,13 @@ interface ParsedJudgeResponse {
 
 const DEFAULT_MAX_CANDIDATES = 12;
 
+const KEY_OPPORTUNITY_TYPES = new Set<OpportunityKind>([
+  "direct_opportunity",
+  "business_lead",
+  "channel_partner_lead",
+  "customer_lead",
+]);
+
 const CANDIDATE_TYPES = new Set<CandidateJudgeType>([
   "key_opportunity",
   "actionable_lead",
@@ -444,6 +451,7 @@ function safeDomain(url: string): string {
 
 function shouldJudge(result: SearchResult): boolean {
   if (result.relevance_assessment?.decision === "reject") return false;
+  if (result.original_semantic_type && KEY_OPPORTUNITY_TYPES.has(result.original_semantic_type)) return true;
   return result.semantic_type === "direct_opportunity" ||
     result.semantic_type === "business_lead" ||
     result.semantic_type === "channel_partner_lead" ||
@@ -528,11 +536,14 @@ export async function applyCandidateJudgeGate(
 
   const assessedResults = results.map((result, index) => {
     const assessment = assessmentsByIndex.get(index) ?? fallbackJudge(result, spec, options);
+    const restoredKeySemantic = result.original_semantic_type && KEY_OPPORTUNITY_TYPES.has(result.original_semantic_type)
+      ? result.original_semantic_type
+      : undefined;
     const nextSemanticType: OpportunityKind = assessment.decision === "reject"
       ? "rejected"
       : assessment.decision === "downgrade_to_watch_signal"
         ? "watch_signal"
-        : result.semantic_type ?? (assessment.candidate_type === "key_opportunity" ? "direct_opportunity" : "business_lead");
+        : restoredKeySemantic ?? result.semantic_type ?? (assessment.candidate_type === "key_opportunity" ? "direct_opportunity" : "business_lead");
     const assessed: SearchResult = {
       ...result,
       original_semantic_type: result.original_semantic_type ?? result.semantic_type,

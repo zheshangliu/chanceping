@@ -260,6 +260,10 @@ function assessRanking(result: SearchResult, spec: RadarRequirementSpec, options
   };
 }
 
+function isWeakAuthorityForKeyCard(assessment: CandidateRankingAssessment): boolean {
+  return assessment.authorityTier === "aggregator" || assessment.authorityTier === "reference_or_news";
+}
+
 export function rankCandidateResults(
   results: SearchResult[],
   spec: RadarRequirementSpec,
@@ -281,8 +285,15 @@ export function rankCandidateResults(
   const overflowUrls = new Set<string>();
   const includedTitles: string[] = [];
   const duplicateUrls = new Set<string>();
+  const weakAuthorityUrls = new Set<string>();
+  const hasPrimaryAcceptedCandidate = sorted.some((item) => isAcceptedKeyCandidate(item.result) && !isWeakAuthorityForKeyCard(item.assessment));
   for (const item of sorted) {
     if (!isAcceptedKeyCandidate(item.result)) continue;
+    if (hasPrimaryAcceptedCandidate && isWeakAuthorityForKeyCard(item.assessment)) {
+      weakAuthorityUrls.add(item.result.url);
+      overflowUrls.add(item.result.url);
+      continue;
+    }
     const titleKey = normalizedTitle(item.result);
     const duplicate = includedTitles.some((included) => sameTopicTitle(included, titleKey));
     if (duplicate) {
@@ -310,7 +321,11 @@ export function rankCandidateResults(
       reasonCodes: capStatus === "excluded_by_cap"
         ? [
           ...item.assessment.reasonCodes,
-          duplicateUrls.has(item.result.url) ? "near_duplicate_key_candidate" : "key_card_cap_exceeded",
+          weakAuthorityUrls.has(item.result.url)
+            ? "weak_authority_downgraded_by_primary_candidate"
+            : duplicateUrls.has(item.result.url)
+              ? "near_duplicate_key_candidate"
+              : "key_card_cap_exceeded",
         ]
         : item.assessment.reasonCodes,
     };

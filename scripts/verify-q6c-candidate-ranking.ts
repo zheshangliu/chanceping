@@ -121,6 +121,8 @@ const authorityResult = rankCandidateResults(authoritySample, spec, {
 check("official government/procurement source outranks aggregator", authorityResult.keyCandidates[0]?.url.includes("gd.gov.cn"), authorityResult.keyCandidates.map((item) => item.url).join(" | "));
 check("reference/news page is not first key candidate", !authorityResult.keyCandidates[0]?.url.includes("news.example.com"), authorityResult.keyCandidates[0]?.url ?? "");
 check("ranking assessment is written to all audit results", authorityResult.assessedResults.every((item) => ranking(item)), "missing ranking assessment");
+check("aggregator is excluded when a credible primary candidate exists", !authorityResult.keyCandidates.some((item) => item.url.includes("bidcenter.com.cn")), authorityResult.keyCandidates.map((item) => `${item.title}:${ranking(item)?.authorityTier}:${ranking(item)?.capStatus}`).join(" | "));
+check("excluded aggregator remains in audit as watch signal", authorityResult.assessedResults.some((item) => item.url.includes("bidcenter.com.cn") && ranking(item)?.capStatus === "excluded_by_cap" && item.semantic_type === "watch_signal"), JSON.stringify(authorityResult.assessedResults.map((item) => ({ title: item.title, authority: ranking(item)?.authorityTier, cap: ranking(item)?.capStatus, semantic: item.semantic_type, reasons: ranking(item)?.reasonCodes }))));
 
 const staleSample = [
   candidate(

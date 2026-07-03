@@ -468,6 +468,28 @@ async function main(): Promise<void> {
   check("near duplicate key cards keep only one included", deduped.keyCandidates.length === 1, deduped.keyCandidates.map((item) => item.title).join(" | "));
   check("near duplicate stays in audit as watch", deduped.assessedResults.some((item) => item.candidate_ranking_assessment?.reasonCodes.includes("near_duplicate_key_candidate") && item.semantic_type === "watch_signal"), JSON.stringify(deduped.assessedResults.map((item) => ({ title: item.title, type: item.semantic_type, reasons: item.candidate_ranking_assessment?.reasonCodes }))));
 
+  const restoredCandidate = result(
+    "深圳跨境电商展览会",
+    "跨境电商展会面向卖家和服务商开放报名，提供平台招商、卖家活动和供应链合作入口。",
+    "watch_signal",
+    "marketplace_partner_page",
+    "https://ecommerce.example.com/seller-expo-register",
+  );
+  restoredCandidate.original_semantic_type = "direct_opportunity";
+  const restoredPageGate = applyCandidatePageTypeGate([restoredCandidate], profiles.crossBorderEcommerce, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  const restoredJudgeGate = await applyCandidateJudgeGate(restoredPageGate.assessedResults, profiles.crossBorderEcommerce, new AlwaysAcceptAdapter(), {
+    mode: "llm",
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  const restoredRanking = rankCandidateResults(restoredJudgeGate.assessedResults, profiles.crossBorderEcommerce, {
+    maxKeyCandidates: 5,
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check("LLM accepted candidate restores original key semantic bucket", restoredJudgeGate.assessedResults[0]?.semantic_type === "direct_opportunity", JSON.stringify(restoredJudgeGate.assessedResults[0]));
+  check("restored accepted candidate becomes included key card", restoredRanking.keyCandidates.length === 1 && restoredRanking.keyCandidates[0]?.candidate_ranking_assessment?.capStatus === "included", JSON.stringify(restoredRanking.assessedResults.map((item) => ({ title: item.title, semantic: item.semantic_type, original: item.original_semantic_type, cap: item.candidate_ranking_assessment?.capStatus }))));
+
   const aiStrategy = buildOpportunityStrategy(profiles.aiStartup);
   const aiQueries = aiStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
   check("AI startup query recovery includes action/source variants", /hackathon|developer challenge|startup credits|cloud startup program|accelerator application/.test(aiQueries), aiQueries);
