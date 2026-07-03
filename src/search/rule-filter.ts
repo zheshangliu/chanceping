@@ -18,8 +18,10 @@
 
 import type { SearchResult } from "./types";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
+import type { OpportunityKind } from "../schema/radar-mvp-contracts";
 import { validateLink } from "../utils/link-validator";
 import { normalizeUrl } from "../utils/url-normalizer";
+import { keywordPackMatches, type KeywordPack } from "./keyword-pack";
 
 /** 规则粗筛结果 */
 export interface RuleFilterResult {
@@ -29,6 +31,13 @@ export interface RuleFilterResult {
   rejected: SearchResult[];
   /** 拒绝原因映射：url → 原因 */
   reject_reasons: Map<string, string>;
+}
+
+export interface RuleFilterOptions {
+  /** Q.5: dynamic keyword pack derived from RadarVersionSpec/query families. */
+  keywordPack?: KeywordPack;
+  /** Q.5: let key semantic candidates from radar-version queries pass the literal keyword gate. */
+  allowRadarVersionSemanticCandidates?: boolean;
 }
 
 /**
@@ -96,6 +105,19 @@ function containsAny(text: string, keywords: string[]): boolean {
   });
 }
 
+const KEY_SEMANTIC_CANDIDATES = new Set<OpportunityKind>([
+  "direct_opportunity",
+  "business_lead",
+  "channel_partner_lead",
+  "customer_lead",
+]);
+
+function isRadarVersionSemanticCandidate(result: SearchResult, options?: RuleFilterOptions): boolean {
+  if (!options?.allowRadarVersionSemanticCandidates) return false;
+  if (!result.semantic_type || !KEY_SEMANTIC_CANDIDATES.has(result.semantic_type)) return false;
+  return Boolean(result.query_family || result.search_theme || result.intent_type || result.source_archetype);
+}
+
 /**
  * T10 第一层：规则粗筛。
  *
@@ -106,6 +128,7 @@ function containsAny(text: string, keywords: string[]): boolean {
 export function ruleFilter(
   results: SearchResult[],
   spec: RadarRequirementSpec,
+  options?: RuleFilterOptions,
 ): RuleFilterResult {
   const passed: SearchResult[] = [];
   const rejected: SearchResult[] = [];
@@ -127,7 +150,7 @@ export function ruleFilter(
   const mustExclude: string[] = spec?.filter_rules?.must_exclude ?? [];
 
   // 是否启用关键词规则（无关键词策略时全部通过此规则）
-  const hasKeywordStrategy = coreKeywordsZh.length > 0 || coreKeywordsEn.length > 0;
+  const hasKeywordStrategy = Boolean(options?.keywordPack) || coreKeywordsZh.length > 0 || coreKeywordsEn.length > 0;
 
   for (const result of results) {
     // 边界情况：缺字段
@@ -141,8 +164,11 @@ export function ruleFilter(
 
     // 规则 1：关键词匹配
     if (hasKeywordStrategy) {
-      const kwMatched = containsAny(text, coreKeywordsZh) || containsAny(text, coreKeywordsEn);
-      if (!kwMatched) {
+      const kwMatched = options?.keywordPack
+        ? keywordPackMatches(text, options.keywordPack)
+        : containsAny(text, coreKeywordsZh) || containsAny(text, coreKeywordsEn);
+      const semanticCandidateAllowed = !kwMatched && isRadarVersionSemanticCandidate(result, options);
+      if (!kwMatched && !semanticCandidateAllowed) {
         rejected.push(result);
         rejectReasons.set(url, "关键词不匹配");
         continue;

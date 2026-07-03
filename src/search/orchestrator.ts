@@ -55,6 +55,7 @@ import { buildUnopenedFieldEvidence, fetchLiveEvidence, type LiveEvidenceFetchRe
 import { buildSearchIntentPlan, type SearchIntentPlan, type SearchQueryFamilyItem } from "./search-intent-planner";
 import { normalizeOpportunityIntent } from "./opportunity-strategy";
 import { getSearchCostLimits, normalizeSearchQuery, type SearchCostLimits } from "./search-cost-guard";
+import { buildKeywordPack } from "./keyword-pack";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -411,6 +412,22 @@ function applySemanticCardMark(card: OpportunityCard, result: SearchResult): Opp
       }));
     }
   }
+  if (kind === "association_directory") {
+    const disclaimer = "类型：线索资源；状态：待复核 / 需联系确认；协会或会员目录不代表已确认采购、合作或客户需求。";
+    card.sourceBadges = Array.from(new Set([...(card.sourceBadges ?? []), "线索资源", "协会 / 会员目录", "待复核"]));
+    card.next_action = `从目录中筛选潜在合作对象，逐一联系确认真实需求、合作条件和下一步入口；${card.next_action || "先复核来源与行动入口。"}`;
+    card.risk_note = card.risk_note ? `${card.risk_note} ${disclaimer}` : disclaimer;
+    card.source_disclaimer = card.source_disclaimer
+      ? `${card.source_disclaimer} ${disclaimer}`
+      : disclaimer;
+    if (card.assessment) {
+      card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+        ...item,
+        basis: "model_judgment",
+        reason: `${item.reason}；${disclaimer}`,
+      }));
+    }
+  }
   return card;
 }
 
@@ -501,7 +518,10 @@ function candidateQuality(result: SearchResult): CandidateQuality {
 
 function isKeyCandidate(result: SearchResult): boolean {
   const semanticType = semanticTypeForResult(result);
-  return semanticType === "direct_opportunity" || semanticType === "business_lead" || semanticType === "channel_partner_lead" || semanticType === "customer_lead";
+  return semanticType === "direct_opportunity" ||
+    semanticType === "business_lead" ||
+    semanticType === "channel_partner_lead" ||
+    semanticType === "customer_lead";
 }
 
 function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): number {
@@ -1260,7 +1280,12 @@ export class SearchOrchestrator {
     }
 
     // 步骤 3：第一层规则粗筛
-    const ruleResult = ruleFilter(candidateResults, spec);
+    const ruleResult = ruleFilter(candidateResults, spec, this.dataMode === "live" && providerRouting && spec.radar_version
+      ? {
+        keywordPack: buildKeywordPack(spec),
+        allowRadarVersionSemanticCandidates: true,
+      }
+      : undefined);
 
     // 边界情况：规则粗筛全部失败
     if (ruleResult.passed.length === 0) {
