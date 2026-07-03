@@ -358,5 +358,12 @@ export function reviseRadarVersion(input: RadarRevisionRequest): RadarRevisionRe
     suggestedName: nextRadarVersion.oneSentencePositioning || `${nextTargetUser || "我的"}机会雷达`,
     confirmationPrompt: `我已把雷达升级为 ${nextVersion}。请确认是否按 ${nextVersion} 盯一次。`,
     shouldSearchAfterConfirm: true,
+    revisionSource: "deterministic",
+    llmValidation: {
+      attempted: false,
+      used: false,
+      fallbackUsed: false,
+      errors: [],
+    },
   };
 }

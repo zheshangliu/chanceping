@@ -41,6 +41,7 @@ import { RadarGenerator } from "../../agents/radar-generator";
 import { getCurrentUser } from "../../agents/user-context";
 import { RadarQuotaChecker } from "../../agents/radar-quota";
 import { reviseRadarVersion } from "../../agents/radar-version-reviser";
+import { reviseRadarVersionWithLlm } from "../../agents/radar-version-llm-reviser";
 
 /** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
 function kindToRadarType(kind: RadarKind): RadarType {
@@ -197,7 +198,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
       return c.json(errorResponse("BAD_REQUEST", "previousSpec、previousRadarVersion、userMessage、trigger 必填", Date.now() - start, 400), 400);
     }
     try {
-      const result = reviseRadarVersion(body);
+      const wantsLlmRevision = body.revisionMode === "llm"
+        || (body.revisionMode === "auto"
+          && process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM === "true"
+          && process.env.LLM_MODE === "live");
+      const result = wantsLlmRevision
+        ? await reviseRadarVersionWithLlm(body, ctx.llmAdapter)
+        : reviseRadarVersion(body);
       return c.json({
         success: true,
         data: result satisfies RadarReviseResponseData,

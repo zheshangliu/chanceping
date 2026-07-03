@@ -90,6 +90,8 @@ export interface RadarRevisionRequest {
   previousSpec: RadarRequirementSpec;
   previousRadarVersion: RadarVersionSpec;
   resultFeedback?: RadarResultFeedback;
+  /** Q.7-C: explicit opt-in for LLM assisted revision. Default remains deterministic. */
+  revisionMode?: "deterministic" | "llm" | "auto";
 }
 
 export interface RadarRevisionResult {
@@ -99,4 +101,15 @@ export interface RadarRevisionResult {
   suggestedName: string;
   confirmationPrompt: string;
   shouldSearchAfterConfirm: boolean;
+  /** Q.7-C: tells tests/UI whether the strategy draft came from deterministic or LLM-assisted revision. */
+  revisionSource?: "deterministic" | "llm" | "llm_fallback";
+  /** Q.7-C: safe diagnostics, never includes prompts or API keys. */
+  llmValidation?: {
+    attempted: boolean;
+    used: boolean;
+    fallbackUsed: boolean;
+    errors: string[];
+    provider?: string;
+    model?: string;
+  };
 }
