@@ -57,6 +57,7 @@ import { normalizeOpportunityIntent } from "./opportunity-strategy";
 import { getSearchCostLimits, normalizeSearchQuery, type SearchCostLimits } from "./search-cost-guard";
 import { buildKeywordPack } from "./keyword-pack";
 import { applyCandidateRelevanceGate } from "./candidate-relevance";
+import { applyCandidatePageTypeGate } from "./candidate-page-type";
 import { applyCandidateJudgeGate } from "./candidate-llm-judge";
 import { rankCandidateResults } from "./candidate-ranking";
 
@@ -700,6 +701,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       queryFamily: result.query_family,
       queryVariant: result.query_variant,
       relevanceAssessment: result.relevance_assessment,
+      pageTypeAssessment: result.page_type_assessment,
       candidateJudgeAssessment: result.candidate_judge_assessment,
       candidateRankingAssessment: result.candidate_ranking_assessment,
     };
@@ -1263,7 +1265,8 @@ export class SearchOrchestrator {
     let candidateResults: SearchResult[];
     if (this.dataMode === "live" && providerRouting && spec.radar_version) {
       const relevanceGate = applyCandidateRelevanceGate(rawResults, spec);
-      const judgeGate = await applyCandidateJudgeGate(relevanceGate.assessedResults, spec, this.llmAdapter);
+      const pageTypeGate = applyCandidatePageTypeGate(relevanceGate.assessedResults, spec);
+      const judgeGate = await applyCandidateJudgeGate(pageTypeGate.assessedResults, spec, this.llmAdapter);
       const ranking = rankCandidateResults(judgeGate.assessedResults, spec);
       rawResults = ranking.assessedResults;
       candidateResults = ranking.keyCandidates.filter(isKeyCandidate);

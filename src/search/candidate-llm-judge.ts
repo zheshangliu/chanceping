@@ -86,11 +86,19 @@ const DECISIONS = new Set<CandidateJudgeDecision>(["accept", "downgrade_to_watch
 
 const STUDENT_ONLY_RE = /大学生|高校学生|学生参赛|高校参赛队伍|college student|university student/i;
 const KIDS_CODING_RE = /少儿编程|青少年编程|儿童编程|k12|steam|科创活动|学校合作|课程采购/i;
+const GENERIC_PROGRAMMING_CONTEST_RE = /程序设计竞赛|编程大赛|算法大赛|hackathon|algorithm contest|coding competition|programming contest|icpc|acm/i;
+const KIDS_OR_ORG_ACTION_RE = /少儿|青少年|儿童|k12|中小学|小学|培训机构|学校合作|课程采购|承办|招生|scratch|steam|机器人/i;
+const NEGATED_KIDS_ORG_RE = /(?:未|不|没有).{0,18}(少儿编程机构|培训机构|机构).{0,18}(承办|招生|课程|合作)|no .{0,40}(kids coding|training institution|school partner)/i;
 const RENOVATION_RE = /装修|翻新|家具安装|室内改造|装修改造|renovation|furniture installation/i;
-const ENVIRONMENT_EQUIPMENT_RE = /环保设备|除尘|废气治理|污水处理|环保项目|绿色改造|节能环保设备|industrial environmental/i;
-const NEGATED_ENVIRONMENT_EQUIPMENT_RE = /不(?:包含|含|涉及).{0,8}(环保设备|除尘|废气治理|污水处理)|without.{0,30}(environmental equipment|dust collector|waste gas treatment)/i;
+const GREENING_OR_GENERIC_ENV_RE = /绿化|环境整治|环境提升|景观改造|保洁|环卫|greening|landscape|sanitation/i;
+const ENVIRONMENT_EQUIPMENT_RE = /环保设备|除尘|废气治理|污水处理|环保项目|绿色改造|节能环保设备|环保治理|废水治理|industrial environmental/i;
+const NEGATED_ENVIRONMENT_EQUIPMENT_RE = /(?:不|未)(?:包含|含|涉及|明确).{0,12}(环保设备|除尘|废气治理|污水处理|环保治理)|without.{0,30}(environmental equipment|dust collector|waste gas treatment)/i;
+const GENERIC_PLATFORM_FLOW_RE = /注册流程|账号登录|平台操作|使用说明|登录步骤|registration flow|login steps/i;
+const PDF_REFERENCE_RE = /\.pdf|^\[pdf\]|pdf 材料|pdf报告|白皮书|经验|指南|协商/i;
 const JOB_AGGREGATOR_RE = /招聘平台|聚合招聘|jobsdb|boss直聘|indeed|linkedin|猎聘|智联|前程无忧|job board|job listing aggregator/i;
 const NEWS_OR_REFERENCE_RE = /趋势|指南|规则|历史|案例|新闻|报道|分析|报告|百科|reference|case|guide|news|history|wikipedia/i;
+const WEDDING_CONTEXT_RE = /婚庆|婚礼|婚宴|wedding/i;
+const WEDDING_ACTION_RE = /酒店|会所|宴会厅|品牌合作|异业合作|供应商招募|婚礼供应商|venue|hotel|supplier|partner/i;
 const DIRECT_ACTION_RE = /报名|申请|申报|征集|招标|投标|采购|供应商|入库|投稿|展位|参展|合作|招募|registration|application|apply|tender|procurement|supplier|vendor|submit|exhibitor|partner/i;
 const EXPLICIT_NO_ACTION_RE = /不提供.{0,12}(报名|申请|合作|采购|投稿|入口)|没有.{0,12}(报名|申请|合作|采购|投稿|入口)|no .{0,40}(application|registration|contact|entry)/i;
 
@@ -165,33 +173,67 @@ function fallbackJudge(result: SearchResult, spec: RadarRequirementSpec, options
     return hardRejectAssessment("页面明确缺少可执行入口", options);
   }
 
-  const kidsCodingRadar = KIDS_CODING_RE.test(radarText);
-  if (kidsCodingRadar && STUDENT_ONLY_RE.test(text) && !KIDS_CODING_RE.test(text)) {
+  const page = result.page_type_assessment;
+  if (page?.keyCardEligibility === "reject") {
+    return hardRejectAssessment(`页面类型 ${page.pageType} 不是可执行机会入口：${page.reason}`, options);
+  }
+  if (page?.keyCardEligibility === "downgrade" && page.pageType !== "directory_page") {
     return {
-      candidate_type: "reject",
-      beneficiary_fit: "mismatch",
-      action_fit: "mismatch",
+      candidate_type: page.pageType === "trend_article" || page.pageType === "news_article" ? "reference_case" : "watch_signal",
+      beneficiary_fit: page.beneficiaryFit === "mismatch" ? "mismatch" : "partial",
+      action_fit: page.actionEntryFit === "fit" ? "partial" : "unknown",
       source_fit: "partial",
-      freshness_fit: "valid",
-      relevance_score: 25,
-      decision: "reject",
-      reason: "该机会面向大学生个人参赛者，不是少儿编程机构的招生、课程采购或承办合作机会。",
+      freshness_fit: "uncertain",
+      relevance_score: 42,
+      decision: "downgrade_to_watch_signal",
+      reason: `页面类型 ${page.pageType} 更像导航、资讯、模板或弱入口，暂不进入重点机会卡。`,
       basis: "deterministic_fallback",
       assessedAt: nowIso(options),
     };
   }
 
+  const kidsCodingRadar = KIDS_CODING_RE.test(radarText);
+  if (kidsCodingRadar && STUDENT_ONLY_RE.test(text) && (!KIDS_CODING_RE.test(text) || NEGATED_KIDS_ORG_RE.test(text))) {
+    return hardRejectAssessment("该机会面向大学生个人参赛者，不是少儿编程机构的招生、课程采购或承办合作机会。", options);
+  }
+  if (kidsCodingRadar && GENERIC_PROGRAMMING_CONTEST_RE.test(text) && (!KIDS_OR_ORG_ACTION_RE.test(text) || NEGATED_KIDS_ORG_RE.test(text))) {
+    return hardRejectAssessment("该编程赛事未显示面向少儿编程机构、学校合作、课程采购、承办或招生动作。", options);
+  }
+
   const environmentRadar = ENVIRONMENT_EQUIPMENT_RE.test(radarText);
-  if (environmentRadar && RENOVATION_RE.test(text) && (NEGATED_ENVIRONMENT_EQUIPMENT_RE.test(text) || !ENVIRONMENT_EQUIPMENT_RE.test(text))) {
+  if (environmentRadar && GENERIC_PLATFORM_FLOW_RE.test(text) && (NEGATED_ENVIRONMENT_EQUIPMENT_RE.test(text) || !/(招标|采购|项目|tender|procurement|rfp)/i.test(text))) {
+    return hardRejectAssessment("该页面只是平台注册或登录流程，未明确环保设备、废气治理、污水处理、除尘设备采购或具体招标项目。", options);
+  }
+  if (environmentRadar && (RENOVATION_RE.test(text) || GREENING_OR_GENERIC_ENV_RE.test(text)) && (NEGATED_ENVIRONMENT_EQUIPMENT_RE.test(text) || !ENVIRONMENT_EQUIPMENT_RE.test(text))) {
+    return hardRejectAssessment("采购范围是普通装修或家具安装，不是工业环保设备、废气治理或园区绿色改造项目。", options);
+  }
+
+  if (PDF_REFERENCE_RE.test(text) && /(不是|未|不含|没有).{0,18}(采购公告|供应商|入库|招标|投标|报名|合作|入口)/.test(text)) {
     return {
-      candidate_type: "reject",
-      beneficiary_fit: "mismatch",
-      action_fit: "mismatch",
+      candidate_type: "reference_case",
+      beneficiary_fit: "partial",
+      action_fit: "unknown",
       source_fit: "partial",
-      freshness_fit: "valid",
-      relevance_score: 20,
-      decision: "reject",
-      reason: "采购范围是普通装修或家具安装，不是工业环保设备、废气治理或园区绿色改造项目。",
+      freshness_fit: "uncertain",
+      relevance_score: 36,
+      decision: "downgrade_to_watch_signal",
+      reason: "该 PDF 更像报告、经验材料或参考资料，缺少采购公告、供应商入库、投标或合作入口。",
+      basis: "deterministic_fallback",
+      assessedAt: nowIso(options),
+    };
+  }
+
+  const weddingRadar = WEDDING_CONTEXT_RE.test(radarText);
+  if (weddingRadar && NEWS_OR_REFERENCE_RE.test(text) && !WEDDING_ACTION_RE.test(text)) {
+    return {
+      candidate_type: "reference_case",
+      beneficiary_fit: "partial",
+      action_fit: "unknown",
+      source_fit: "partial",
+      freshness_fit: "uncertain",
+      relevance_score: 38,
+      decision: "downgrade_to_watch_signal",
+      reason: "该页面更像婚庆趋势、城市宣传或新闻参考，缺少酒店会所、品牌合作或供应商招募入口。",
       basis: "deterministic_fallback",
       assessedAt: nowIso(options),
     };
@@ -360,6 +402,9 @@ function buildJudgeRequest(results: SearchResult[], spec: RadarRequirementSpec):
       snippet: result.snippet,
       semanticType: result.semantic_type,
       sourceArchetype: result.source_archetype,
+      pageType: result.page_type_assessment?.pageType,
+      pageIntentFit: result.page_type_assessment?.pageIntentFit,
+      actionEntryFit: result.page_type_assessment?.actionEntryFit,
       publishedAt: result.published_at,
       q6aDecision: result.relevance_assessment?.decision,
       q6aReasons: result.relevance_assessment?.reasonCodes ?? [],
@@ -372,6 +417,7 @@ function buildJudgeRequest(results: SearchResult[], spec: RadarRequirementSpec):
         content: [
           "你是 ChancePing 的候选机会二次裁判。只基于输入的搜索摘要和雷达画像判断，不得编造事实。",
           "你的任务是判断候选是否真正服务当前用户、动作是否是当前用户可执行动作、来源是否像直接机会入口。",
+          "必须同时判断 beneficiary_fit、action_fit、source_fit、pageIntentFit 和 actionEntryFit；页面是首页、栏目、模板、XLS、趋势文章、政策规划或弱聚合页时，通常降级或拒绝。",
           "禁止编造截止时间、费用、资格、联系人、采购意向、招聘委托、报名状态或版权义务。",
           "如果只是聚合页、资讯、参考案例、目录或受益人不是当前用户，降级或拒绝。",
           "只返回 JSON，格式：{\"candidates\":[{\"url\":\"...\",\"candidate_type\":\"key_opportunity|actionable_lead|watch_signal|reference_case|reject\",\"beneficiary_fit\":\"fit|partial|mismatch|unknown\",\"action_fit\":\"fit|partial|mismatch|unknown\",\"source_fit\":\"fit|partial|mismatch|unknown\",\"freshness_fit\":\"valid|stale|uncertain|unknown\",\"relevance_score\":0,\"decision\":\"accept|downgrade_to_watch_signal|reject\",\"reason\":\"一句中文理由\"}]}",
@@ -423,6 +469,16 @@ export async function judgeCandidateBatch(
     return selected.map((result, index) => {
       const item = items.find((entry) => entry.url === result.url) ?? items[index];
       const normalized = normalizeParsedItem(item, fallback[index], options);
+      if (fallback[index].basis === "hard_rule") {
+        return fallback[index];
+      }
+      const page = result.page_type_assessment;
+      if (page?.keyCardEligibility === "downgrade" && page.pageType !== "directory_page") {
+        return fallback[index];
+      }
+      if (fallback[index].decision === "downgrade_to_watch_signal" && /PDF|报告、经验材料|参考资料/.test(fallback[index].reason)) {
+        return fallback[index];
+      }
       if (result.relevance_assessment?.decision === "reject") {
         return hardRejectAssessment(`沿用 Q.6-A 硬拒绝：${result.relevance_assessment.reasonCodes.join("、") || "候选不匹配"}`, options);
       }

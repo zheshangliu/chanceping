@@ -108,13 +108,46 @@ function inferQueryVariant(query: string): SearchQueryVariant {
   return "broad_discovery";
 }
 
+function recoveryVariants(family: RadarVersionQueryFamily): Array<{ query: string; variant: SearchQueryVariant }> {
+  const text = [
+    family.familyName,
+    family.intentType,
+    family.sourceArchetype,
+    family.whyThisFamily,
+    ...(family.queries ?? []),
+  ].join(" ").toLowerCase();
+  const variants: Array<{ query: string; variant: SearchQueryVariant }> = [];
+
+  if (/ai|agent|hackathon|developer|startup|cloud|accelerator|创业|开发者|云厂商|大赛|黑客松/.test(text)) {
+    variants.push(
+      { query: "AI Agent Hackathon developer challenge application 2026", variant: "action_keyword" },
+      { query: "cloud startup program startup credits accelerator application 2026", variant: "source_archetype" },
+    );
+  }
+  if (/seller|marketplace|cross-border|ecommerce|e-commerce|fulfillment|warehouse|平台|卖家|跨境电商|平台招商|大促|海外仓|履约/.test(text)) {
+    variants.push(
+      { query: "marketplace seller program platform campaign application 2026", variant: "action_keyword" },
+      { query: "marketplace partner fulfillment partner overseas warehouse partner", variant: "source_archetype" },
+    );
+  }
+  return variants;
+}
+
 function explicitVariants(family: RadarVersionQueryFamily): Array<{ query: string; variant: SearchQueryVariant }> {
   const supplied = family.queryVariants?.filter((item) => item.query.trim()).slice(0, MAX_QUERIES_PER_THEME) ?? [];
   if (supplied.length > 0) return supplied;
-  return family.queries
+  const base = family.queries
     .filter((query) => query.trim())
-    .slice(0, MAX_QUERIES_PER_THEME)
     .map((query) => ({ query, variant: inferQueryVariant(query) }));
+  const seen = new Set<string>();
+  return [...base, ...recoveryVariants(family)]
+    .filter((item) => {
+      const key = item.query.toLowerCase().replace(/\s+/g, " ").trim();
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, MAX_QUERIES_PER_THEME);
 }
 
 function uniqueSourceArchetypes(labels: string[]): Array<{ id: SourceArchetypeId; label: string }> {

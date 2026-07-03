@@ -84,6 +84,33 @@ function textOf(result: SearchResult): string {
   return normalize(`${result.title} ${result.snippet} ${domainOf(result.url)}`);
 }
 
+function normalizedTitle(result: SearchResult): string {
+  return normalize(result.title)
+    .replace(/[\[\]【】()（）「」『』“”"'`·.,，。:：;；!?！？|｜\-_—–\s]+/g, "")
+    .replace(/\b20\d{2}\b/g, "")
+    .replace(/(新闻|报道|转载|来源|官网|官方网站|网站|页面)$/g, "")
+    .trim();
+}
+
+function sameTopicTitle(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const aTailNumber = a.match(/(\d{1,3})$/)?.[1];
+  const bTailNumber = b.match(/(\d{1,3})$/)?.[1];
+  if (aTailNumber && bTailNumber && aTailNumber !== bTailNumber) return false;
+  const shorter = a.length <= b.length ? a : b;
+  const longer = a.length > b.length ? a : b;
+  if (shorter.length >= 14 && longer.includes(shorter)) return true;
+  const grams = new Set<string>();
+  for (let i = 0; i <= shorter.length - 2; i += 1) grams.add(shorter.slice(i, i + 2));
+  if (grams.size === 0) return false;
+  let overlap = 0;
+  for (const gram of grams) {
+    if (longer.includes(gram)) overlap += 1;
+  }
+  return shorter.length >= 12 && overlap / grams.size >= 0.86;
+}
+
 function specSourceText(spec: RadarRequirementSpec): string {
   const radar = spec.radar_version;
   return normalize([
@@ -141,6 +168,17 @@ function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick
     tier = tier === "aggregator" ? tier : "reference_or_news";
     reasonCodes.push("news_or_reference");
   }
+  const page = result.page_type_assessment;
+  if (page?.keyCardEligibility === "reject") {
+    score -= 80;
+    reasonCodes.push("page_type_rejected");
+  } else if (page?.keyCardEligibility === "downgrade") {
+    score -= page.pageType === "directory_page" ? 20 : 55;
+    reasonCodes.push(`page_type_${page.pageType}_downgraded`);
+  } else if (page?.keyCardEligibility === "eligible") {
+    score += 10;
+    reasonCodes.push(`page_type_${page.pageType}_eligible`);
+  }
 
   return {
     authorityTier: tier,
@@ -193,6 +231,7 @@ function semanticScore(result: SearchResult): Pick<CandidateRankingAssessment, "
 
 function isAcceptedKeyCandidate(result: SearchResult): boolean {
   if (result.candidate_judge_assessment && result.candidate_judge_assessment.decision !== "accept") return false;
+  if (result.page_type_assessment && result.page_type_assessment.keyCardEligibility !== "eligible") return false;
   return Boolean(result.semantic_type && KEY_SEMANTIC_TYPES.has(result.semantic_type));
 }
 
@@ -240,10 +279,23 @@ export function rankCandidateResults(
 
   const keyUrls = new Set<string>();
   const overflowUrls = new Set<string>();
+  const includedTitles: string[] = [];
+  const duplicateUrls = new Set<string>();
   for (const item of sorted) {
     if (!isAcceptedKeyCandidate(item.result)) continue;
-    if (keyUrls.size < maxKeyCandidates) keyUrls.add(item.result.url);
-    else overflowUrls.add(item.result.url);
+    const titleKey = normalizedTitle(item.result);
+    const duplicate = includedTitles.some((included) => sameTopicTitle(included, titleKey));
+    if (duplicate) {
+      duplicateUrls.add(item.result.url);
+      overflowUrls.add(item.result.url);
+      continue;
+    }
+    if (keyUrls.size < maxKeyCandidates) {
+      keyUrls.add(item.result.url);
+      includedTitles.push(titleKey);
+    } else {
+      overflowUrls.add(item.result.url);
+    }
   }
 
   const assessedResults = sorted.map((item) => {
@@ -256,7 +308,10 @@ export function rankCandidateResults(
       ...item.assessment,
       capStatus,
       reasonCodes: capStatus === "excluded_by_cap"
-        ? [...item.assessment.reasonCodes, "key_card_cap_exceeded"]
+        ? [
+          ...item.assessment.reasonCodes,
+          duplicateUrls.has(item.result.url) ? "near_duplicate_key_candidate" : "key_card_cap_exceeded",
+        ]
         : item.assessment.reasonCodes,
     };
     const semantic_type: OpportunityKind | undefined = capStatus === "excluded_by_cap"

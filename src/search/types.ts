@@ -16,6 +16,7 @@ import type { SearchIntentType, SearchQueryVariant, SourceArchetypeId } from "..
 import type { CandidateRelevanceAssessment } from "./candidate-relevance";
 import type { CandidateJudgeAssessment } from "./candidate-llm-judge";
 import type { CandidateRankingAssessment } from "./candidate-ranking";
+import type { CandidatePageTypeAssessment } from "./candidate-page-type";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -61,6 +62,8 @@ export interface SearchResult {
   original_semantic_type?: OpportunityKind;
   /** Q.6-A internal audit: candidate-to-radar fit based on search evidence. */
   relevance_assessment?: CandidateRelevanceAssessment;
+  /** Q.6-D internal audit: page surface and action-entry fit; not source verification. */
+  page_type_assessment?: CandidatePageTypeAssessment;
   /** Q.6-B internal audit: bounded LLM/fallback candidate judge; not a verified fact. */
   candidate_judge_assessment?: CandidateJudgeAssessment;
   /** Q.6-C internal audit: source authority/ranking/card cap metadata; not a verified fact. */
@@ -90,6 +93,8 @@ export interface RawCandidateAudit {
   queryVariant?: SearchQueryVariant;
   /** Q.6-A: evidence-based fit assessment; search evidence, not a verified opportunity fact. */
   relevanceAssessment?: CandidateRelevanceAssessment;
+  /** Q.6-D: page type/action entry fit assessment; search evidence, not a verified opportunity fact. */
+  pageTypeAssessment?: CandidatePageTypeAssessment;
   /** Q.6-B: candidate judge result; used for relevance gating, not source verification. */
   candidateJudgeAssessment?: CandidateJudgeAssessment;
   /** Q.6-C: ranking and card cap result; used for card selection, not source verification. */
