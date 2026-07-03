@@ -53,6 +53,24 @@ function extractWantedOpportunity(text: string, expectedOpportunityType?: string
   return undefined;
 }
 
+function isActionRefinement(value?: string): boolean {
+  if (!value) return false;
+  return hasAny(value, [/报名|申请|提交|入口|截止|可行动|registration|application|submit|deadline|entry/i]);
+}
+
+function looksLikeValueCriterion(value?: string): boolean {
+  if (!value) return false;
+  return hasAny(value, [/奖金|奖项|资源|云资源|展示|上架|激励|联系人|官方复核|高价值|prize|cloud|showcase/i]);
+}
+
+function bestPreviousOpportunity(values: string[]): string {
+  const candidates = values
+    .map((value) => String(value || "").trim())
+    .filter(Boolean)
+    .filter((value) => !looksLikeValueCriterion(value));
+  return firstNonEmpty(...candidates, values.find(Boolean));
+}
+
 function extractNegativeRules(text: string, rejectedReason?: string): string[] {
   const combined = `${text}\n${rejectedReason ?? ""}`;
   const rules: string[] = [];
@@ -223,7 +241,7 @@ function uniqueFamilies(families: RadarVersionQueryFamily[], limit = 8): RadarVe
   const seen = new Set<string>();
   const output: RadarVersionQueryFamily[] = [];
   for (const family of families) {
-    const key = `${family.familyName}::${family.sourceArchetype}`;
+    const key = family.familyName === "revision action route" ? family.familyName : `${family.familyName}::${family.sourceArchetype}`;
     if (seen.has(key)) continue;
     seen.add(key);
     output.push(family);
@@ -245,6 +263,14 @@ export function reviseRadarVersion(input: RadarRevisionRequest): RadarRevisionRe
 
   const targetIdentity = extractIdentity(combinedMessage);
   const wantedOpportunity = extractWantedOpportunity(combinedMessage, resultFeedback?.expectedOpportunityType);
+  const previousMainOpportunity = bestPreviousOpportunity([
+    ...(previous.opportunityIntents ?? []),
+    input.previousSpec.core_goals?.primary_goal,
+    ...(input.previousSpec.opportunity_scope?.primary_opportunity_types ?? []),
+  ]);
+  const effectiveOpportunity = isActionRefinement(wantedOpportunity) && previousMainOpportunity
+    ? `${previousMainOpportunity}（${wantedOpportunity}）`
+    : wantedOpportunity;
   const criteria = actionCriteria(combinedMessage, wantedOpportunity);
   const negativeRules = extractNegativeRules(combinedMessage, resultFeedback?.rejectedReason);
   const sources = sourcePreferences(combinedMessage);
@@ -265,7 +291,7 @@ export function reviseRadarVersion(input: RadarRevisionRequest): RadarRevisionRe
   const nextTargetUser = firstNonEmpty(targetIdentity, previous.targetUser, input.previousSpec.client_profile?.business_type);
   const revisionFamily = buildRevisionQueryFamily({
     targetUser: nextTargetUser,
-    wantedOpportunity,
+    wantedOpportunity: effectiveOpportunity,
     criteria: unique([...criteria, ...diff.highValueCriteriaChanges], 8),
     sources: unique([...sources, ...previous.prioritySourceArchetypes], 8),
   });
@@ -273,7 +299,7 @@ export function reviseRadarVersion(input: RadarRevisionRequest): RadarRevisionRe
     ...previous,
     version: nextVersion,
     targetUser: nextTargetUser,
-    opportunityIntents: unique([wantedOpportunity, ...criteria, ...(previous.opportunityIntents ?? [])], 12),
+    opportunityIntents: unique([effectiveOpportunity, wantedOpportunity, ...criteria, ...(previous.opportunityIntents ?? [])], 12),
     highValueCriteria: unique([...criteria, ...diff.highValueCriteriaChanges, ...diff.added, ...(previous.highValueCriteria ?? [])], 12),
     exclusionRules: unique([...diff.exclusionChanges, ...diff.downweighted.map((item) => `降权：${item}`), ...(previous.exclusionRules ?? [])], 12),
     prioritySourceArchetypes: unique([...sources, ...diff.sourceShifts, ...(previous.prioritySourceArchetypes ?? [])], 12),
@@ -294,12 +320,12 @@ export function reviseRadarVersion(input: RadarRevisionRequest): RadarRevisionRe
     },
     core_goals: {
       ...input.previousSpec.core_goals,
-      ...(wantedOpportunity ? { primary_goal: wantedOpportunity } : {}),
+      ...(effectiveOpportunity ? { primary_goal: effectiveOpportunity } : {}),
       secondary_goals: unique([wantedOpportunity, ...criteria, ...(input.previousSpec.core_goals?.secondary_goals ?? [])], 10),
     },
     opportunity_scope: {
       ...input.previousSpec.opportunity_scope,
-      primary_opportunity_types: unique([wantedOpportunity, ...(input.previousSpec.opportunity_scope?.primary_opportunity_types ?? [])], 10),
+      primary_opportunity_types: unique([effectiveOpportunity, wantedOpportunity, ...(input.previousSpec.opportunity_scope?.primary_opportunity_types ?? [])], 10),
       excluded_opportunity_types: unique([...diff.exclusionChanges, ...(input.previousSpec.opportunity_scope?.excluded_opportunity_types ?? [])], 12),
       must_have_conditions: unique([...criteria, ...(input.previousSpec.opportunity_scope?.must_have_conditions ?? [])], 12),
     },

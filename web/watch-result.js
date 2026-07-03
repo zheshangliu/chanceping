@@ -40,11 +40,13 @@
       <div class="watch-action-row saved-radar-actions">
         <button id="btn-view-saved-radar-detail" class="btn-primary">查看本次雷达详情</button>
         <button id="btn-back-to-radar-list" class="btn-secondary">返回我的雷达列表</button>
+        <button id="btn-result-feedback-revise" class="btn-secondary">这些结果不对，修改雷达</button>
       </div>
     ` : `
       <div class="watch-action-row">
         <button id="btn-save-watch-radar" class="btn-primary">保存为长期雷达，之后持续盯</button>
         <button id="btn-adjust-watch-profile" class="btn-secondary">${escapeHtml(adjustButtonText)}</button>
+        <button id="btn-result-feedback-revise" class="btn-secondary">这些结果不对，修改雷达</button>
         ${hasRunIssue ? '<button id="btn-retry-watch-search" class="btn-secondary">重试搜索</button>' : ""}
       </div>
     `;
@@ -93,7 +95,26 @@
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
       if (window.showRadarProfileDraftFromResult) window.showRadarProfileDraftFromResult(currentResult);
     });
+    document.getElementById("btn-result-feedback-revise")?.addEventListener("click", openRadarResultFeedback);
     document.getElementById("btn-copy-markdown")?.addEventListener("click", () => copyMarkdown(markdown));
+  }
+
+  function openRadarResultFeedback() {
+    if (!currentResult) return;
+    const rejectedCardTitles = (currentResult.opportunityCards || [])
+      .slice(0, 3)
+      .map((card) => card.title)
+      .filter(Boolean);
+    if (window.showRadarRevisionFromResultFeedback) {
+      window.showRadarRevisionFromResultFeedback({
+        ...currentResult,
+        resultFeedback: {
+          rejectedCardTitles,
+          rejectedReason: "这些结果不符合我想要的机会类型或行动入口",
+          freeText: "这些结果不对，请先修改雷达策略，再让我确认新版雷达。",
+        },
+      });
+    }
   }
 
   function renderRunOutcomeNotice(result) {

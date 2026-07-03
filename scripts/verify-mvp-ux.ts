@@ -58,6 +58,10 @@ check("画像优先范围不重复显示", profileJs.includes("regionText === ti
 check("画像确认展示默认假设", profileJs.includes('renderProfileField("默认假设"'));
 check("雷达版本确认主按钮文案正确", profileJs.includes("确认，按 V1.0 盯一次") || profileJs.includes("确认，按 ${escapeHtml(radarVersion.version)} 盯一次"));
 check("雷达版本确认次按钮文案正确", profileJs.includes("继续修改雷达"));
+check("Q7 revision API is called from profile UI", profileJs.includes("/api/radars/revise"));
+check("Q7 revision card explains version diff", profileJs.includes("本次版本变化") || profileJs.includes("radarDiff"));
+check("Q7 continue modify explains radar upgrade", profileJs.includes("升级雷达") || profileJs.includes("先升级雷达"));
+check("Q7 profile UI can receive result feedback", profileJs.includes("showRadarRevisionFromResultFeedback"));
 check("画像确认不直接展示技术字段", !profileJs.includes("providerRouting") && !profileJs.includes("provider_routing"));
 check("含正在理解你的需求 loading", profileJs.includes("正在理解你的需求"));
 check("澄清闸门标题正确", profileJs.includes("我还需要确认几个关键点"));
@@ -86,6 +90,8 @@ check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_
 check("live 失败或结果不足提示可切回演示数据", watchResultJs.includes("Live 真实搜索失败") && watchResultJs.includes("切回演示数据查看流程"));
 check("失败或无结果仍可保存雷达", watchResultJs.includes("本轮真实搜索结果不足，但雷达已生成") && watchResultJs.includes("runOutcome") && watchResultJs.includes("保存为长期雷达"));
 check("失败或无结果提供调整策略和重试搜索", watchResultJs.includes("调整雷达策略") && watchResultJs.includes("重试搜索"));
+check("Q7 result page has radar feedback entry", watchResultJs.includes("这些结果不对，修改雷达"));
+check("Q7 result feedback dispatches radar revision", watchResultJs.includes("openRadarResultFeedback"));
 check("Markdown 报告默认摘要并可展开", watchResultJs.includes("报告摘要") && watchResultJs.includes("查看完整 Markdown 报告"));
 check("Markdown 支持复制", watchResultJs.includes("复制 Markdown"));
 check("保存按钮文案说明持续盯", watchResultJs.includes("保存为长期雷达，之后持续盯"));

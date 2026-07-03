@@ -81,6 +81,7 @@
     "verify:q6i": "tsx scripts/verify-q6i-ownership.ts",
     "verify:q6j": "tsx scripts/verify-q6j-gate-calibration.ts",
     "verify:q7": "tsx scripts/verify-q7-radar-evolution.ts",
+    "verify:q7:demo": "tsx scripts/verify-q7-ai-competition-demo.ts",
     "q6:no-card-funnel": "node scripts/run-q6j-no-card-funnel.mjs",
     "verify:q6": "tsx scripts/verify-q6-candidate-dataset.ts && tsx scripts/verify-q6-candidate-relevance.ts && tsx scripts/verify-q6b-candidate-judge.ts && tsx scripts/verify-q6c-candidate-ranking.ts && tsx scripts/verify-q6d-page-type-beneficiary.ts && tsx scripts/verify-q6h-primary-source.ts && tsx scripts/verify-q6i-ownership.ts && tsx scripts/verify-q6j-gate-calibration.ts",
     "q6:selected-live": "node scripts/run-q6-selected-live-diagnostics.mjs",

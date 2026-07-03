@@ -141,7 +141,9 @@
     const strategyQuestions = buildStrategyClarificationQuestions(text, generatedData);
     const backendQuestions = normalizeBackendQuestions(generatedData?.questionsToConfirm || generatedData?.spec?.questions_to_confirm);
     const backendScore = Math.min(100, Math.max(backendCompleteness, backendConfidence || 0));
-    const score = backendConfidence > 0 ? Math.round(backendConfidence) : Math.min(100, Math.round(Math.max(frontendScore, backendScore)));
+    const hasEnoughRadarSeed = signals.identity && signals.opportunityType && hasAny(text, [/盯|雷达|监控|寻找|找|想找|机会/]);
+    const scoreBase = backendConfidence > 0 ? Math.round(backendConfidence) : Math.min(100, Math.round(Math.max(frontendScore, backendScore)));
+    const score = hasEnoughRadarSeed ? Math.max(scoreBase, CLARITY_DIRECT_THRESHOLD) : scoreBase;
     const fallbackQuestions = strategyQuestions.length > 0 ? [] : backendQuestions.length > 0 ? [] : buildFallbackQuestions(signals, score);
     const questions = [...strategyQuestions, ...backendQuestions, ...fallbackQuestions]
       .filter((question, index, arr) => arr.findIndex((item) => item.key === question.key || item.question === question.question) === index)
@@ -253,6 +255,7 @@
           ${renderProfileField("默认假设", radarVersion.defaultAssumptions || profile.默认假设)}
           ${(radarVersion.revisionNotes || []).length ? renderProfileField("本次修订", radarVersion.revisionNotes.map((item) => item.detail || item)) : ""}
         </div>
+        ${renderRadarDiff(draft.radarDiff)}
         <label class="source-hints-field" for="source-hints-input">
           <span>指定信号源（可选）</span>
           <textarea id="source-hints-input" rows="4" placeholder="每行一个官网、网址或平台名称&#10;https://www.ittf.com/&#10;https://worldtabletennis.com/&#10;中国乒协官网">${escapeHtml(sourceHintTextFromProfile(profile))}</textarea>
@@ -264,11 +267,7 @@
       </section>
     `;
     document.getElementById("btn-confirm-radar-profile")?.addEventListener("click", confirmRadarProfile);
-    document.getElementById("btn-edit-radar-profile")?.addEventListener("click", () => {
-      const input = document.getElementById("home-input");
-      if (input) input.value = currentDraft?.description || "";
-      if (window.switchTab) window.switchTab("home");
-    });
+    document.getElementById("btn-edit-radar-profile")?.addEventListener("click", () => renderRevisionInput(currentDraft, "strategy_adjustment"));
   }
 
   function renderClarificationGate(draft) {
@@ -309,6 +308,102 @@
         <strong>${escapeHtml(arrayText(value))}</strong>
       </div>
     `;
+  }
+
+  function renderRadarDiff(diff) {
+    if (!diff || typeof diff !== "object") return "";
+    const rows = [
+      ["新增", diff.added],
+      ["移除", diff.removed],
+      ["提高权重", diff.upweighted],
+      ["降低权重", diff.downweighted],
+      ["默认假设变化", diff.assumptionChanges],
+      ["查询方向变化", diff.queryShifts],
+      ["来源方向变化", diff.sourceShifts],
+      ["高价值标准变化", diff.highValueCriteriaChanges],
+      ["排除规则变化", diff.exclusionChanges],
+    ].filter(([, value]) => Array.isArray(value) && value.length > 0);
+    if (rows.length === 0) return "";
+    return `
+      <div class="radar-diff-panel">
+        <h4>本次版本变化：${escapeHtml(diff.fromVersion)} → ${escapeHtml(diff.toVersion)}</h4>
+        <p>${escapeHtml(diff.summary || "雷达策略已更新。")}</p>
+        <div class="radar-profile-grid">
+          ${rows.map(([label, values]) => renderProfileField(label, values)).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRevisionInput(draft, trigger) {
+    const root = document.getElementById("watch-result-root");
+    if (!root || !draft) return;
+    const radarVersion = radarVersionFromDraft(draft);
+    const feedback = draft.resultFeedback || {};
+    const feedbackSummary = uniqueTextList([
+      feedback.expectedOpportunityType ? `我想要：${feedback.expectedOpportunityType}` : "",
+      feedback.rejectedReason ? `不要：${feedback.rejectedReason}` : "",
+      ...(feedback.rejectedCardTitles || []).slice(0, 3).map((title) => `不满意结果：${title}`),
+      feedback.freeText || "",
+    ]).join("\n");
+    root.innerHTML = `
+      <section class="radar-profile-card revision-card">
+        <div class="watch-result-header">
+          <h3>继续修改雷达 ${escapeHtml(radarVersion.version)}</h3>
+          <p>告诉我哪里不对，我会先升级雷达，再让你确认。</p>
+        </div>
+        <textarea id="radar-revision-message" rows="5" placeholder="例如：我不是学生，我是 OPC 创业者；不要展会资讯，只要可报名比赛；优先奖金、云资源和展示机会">${escapeHtml(feedbackSummary)}</textarea>
+        <div class="radar-profile-actions">
+          <button id="btn-submit-radar-revision" class="btn-primary">生成新版雷达</button>
+          <button id="btn-cancel-radar-revision">返回当前版本</button>
+        </div>
+      </section>
+    `;
+    document.getElementById("btn-submit-radar-revision")?.addEventListener("click", () => submitRadarRevision(trigger || "strategy_adjustment"));
+    document.getElementById("btn-cancel-radar-revision")?.addEventListener("click", () => renderProfileCard(currentDraft));
+  }
+
+  async function submitRadarRevision(trigger) {
+    if (!currentDraft) return;
+    const userMessage = document.getElementById("radar-revision-message")?.value?.trim() || "";
+    if (!userMessage) {
+      if (window.showToast) showToast("请先告诉我哪里不对", "warning");
+      return;
+    }
+    const root = document.getElementById("watch-result-root");
+    if (root) {
+      root.innerHTML = `
+        <div class="watch-loading-card">
+          <strong>正在升级雷达</strong>
+          <p>我会先把反馈写进雷达版本，再让你确认是否按新版去盯。</p>
+        </div>
+      `;
+    }
+    try {
+      const gen = await postJson("/api/radars/revise", {
+        previousSpec: currentDraft.spec,
+        previousRadarVersion: radarVersionFromDraft(currentDraft),
+        userMessage,
+        trigger,
+        description: currentDraft.description,
+        resultFeedback: currentDraft.resultFeedback || undefined,
+      });
+      currentDraft = {
+        ...currentDraft,
+        description: `${currentDraft.description || ""}\n\n[雷达修订]\n${userMessage}`.trim(),
+        spec: gen.data.spec,
+        profile: profileFromSpec(gen.data.spec),
+        radarVersion: gen.data.radarVersion,
+        radarDiff: gen.data.radarDiff,
+        suggestedName: gen.data.suggestedName || currentDraft.suggestedName,
+        resultFeedback: undefined,
+        clarification: { score: 100, questions: [], shouldAsk: false, needsBackground: false, defaultAssumptions: [] },
+      };
+      renderProfileCard(currentDraft);
+    } catch (err) {
+      if (window.showToast) showToast(err.message || "升级雷达失败", "error");
+      renderRevisionInput(currentDraft, trigger);
+    }
   }
 
   async function createRadarProfileDraft({ description }) {
@@ -471,6 +566,24 @@
     renderProfileCard(currentDraft);
   }
 
+  function showRadarRevisionFromResultFeedback(result) {
+    if (!result) return;
+    switchToResult();
+    currentDraft = {
+      description: result.description || "",
+      spec: result.spec,
+      profile: result.profile || profileFromSpec(result.spec),
+      radarVersion: result.radarVersion || result.spec?.radar_version,
+      suggestedName: result.suggestedName || "我的机会雷达",
+      radarId: result.radarId,
+      resultFeedback: result.resultFeedback || {},
+      questions: [],
+      clarification: { score: 100, questions: [], shouldAsk: false, needsBackground: false, defaultAssumptions: [] },
+      clarificationRounds: 0,
+    };
+    renderRevisionInput(currentDraft, "result_feedback");
+  }
+
   async function postJson(url, body) {
     const res = await fetch(url, {
       method: "POST",
@@ -486,4 +599,5 @@
   window.confirmRadarProfile = confirmRadarProfile;
   window.runTemplateWatch = runTemplateWatch;
   window.showRadarProfileDraftFromResult = showRadarProfileDraftFromResult;
+  window.showRadarRevisionFromResultFeedback = showRadarRevisionFromResultFeedback;
 })();
