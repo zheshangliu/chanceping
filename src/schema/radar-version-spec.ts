@@ -1,4 +1,5 @@
 import type { OpportunityKind, SearchIntentType, SearchQueryVariant } from "./radar-mvp-contracts";
+import type { RadarRequirementSpec } from "./radar-requirement-spec";
 
 export type RadarVersionId = `V${number}.${number}`;
 
@@ -52,4 +53,50 @@ export interface RadarVersionSpec {
   defaultAssumptions: string[];
   revisionNotes: RadarVersionRevisionNote[];
   resultBuckets: string[];
+}
+
+export type RadarRevisionTrigger =
+  | "requirement_correction"
+  | "strategy_adjustment"
+  | "result_feedback"
+  | "source_feedback";
+
+export interface RadarVersionDiff {
+  fromVersion: RadarVersionId;
+  toVersion: RadarVersionId;
+  summary: string;
+  added: string[];
+  removed: string[];
+  upweighted: string[];
+  downweighted: string[];
+  assumptionChanges: string[];
+  queryShifts: string[];
+  sourceShifts: string[];
+  highValueCriteriaChanges: string[];
+  exclusionChanges: string[];
+}
+
+export interface RadarResultFeedback {
+  rejectedCardTitles?: string[];
+  expectedOpportunityType?: string;
+  rejectedReason?: string;
+  freeText?: string;
+}
+
+export interface RadarRevisionRequest {
+  description?: string;
+  userMessage: string;
+  trigger: RadarRevisionTrigger;
+  previousSpec: RadarRequirementSpec;
+  previousRadarVersion: RadarVersionSpec;
+  resultFeedback?: RadarResultFeedback;
+}
+
+export interface RadarRevisionResult {
+  spec: RadarRequirementSpec;
+  radarVersion: RadarVersionSpec;
+  radarDiff: RadarVersionDiff;
+  suggestedName: string;
+  confirmationPrompt: string;
+  shouldSearchAfterConfirm: boolean;
 }

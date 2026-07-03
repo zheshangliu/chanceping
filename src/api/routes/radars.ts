@@ -20,7 +20,17 @@
 
 import { Hono } from "hono";
 import type { AppContext } from "../context";
-import type { ApiResponse, RadarCreateRequest, RadarUpdateRequest, RadarRunRequest, RadarRunResult, RadarGenerateRequest, RadarGenerateResponseData } from "../types";
+import type {
+  ApiResponse,
+  RadarCreateRequest,
+  RadarUpdateRequest,
+  RadarRunRequest,
+  RadarRunResult,
+  RadarGenerateRequest,
+  RadarGenerateResponseData,
+  RadarReviseRequest,
+  RadarReviseResponseData,
+} from "../types";
 import { SearchOrchestrator } from "../../search/orchestrator";
 import { getDataMode } from "../../demo/data-mode";
 import { resolveSearchDataMode, validateLiveSearchResult } from "../../config/local-live-search";
@@ -30,6 +40,7 @@ import type { RadarKind, RadarStatus, RadarSchedule } from "../../schema/radar";
 import { RadarGenerator } from "../../agents/radar-generator";
 import { getCurrentUser } from "../../agents/user-context";
 import { RadarQuotaChecker } from "../../agents/radar-quota";
+import { reviseRadarVersion } from "../../agents/radar-version-reviser";
 
 /** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
 function kindToRadarType(kind: RadarKind): RadarType {
@@ -166,6 +177,36 @@ export function radarsRoutes(ctx: AppContext): Hono {
     } catch (err) {
       return c.json(
         errorResponse("RADAR_GENERATION_FAILED", err instanceof Error ? err.message : String(err), Date.now() - start, 500),
+        500,
+      );
+    }
+  });
+
+  // ============================================================
+  // POST /revise - Q.7 雷达版本草稿修订（不自动搜索、不自动持久化）
+  // ============================================================
+  app.post("/revise", async (c) => {
+    const start = Date.now();
+    let body: RadarReviseRequest;
+    try {
+      body = await c.req.json();
+    } catch {
+      return c.json(errorResponse("BAD_REQUEST", "请求体不是合法 JSON", Date.now() - start, 400), 400);
+    }
+    if (!body.previousSpec || !body.previousRadarVersion || !body.userMessage || !body.trigger) {
+      return c.json(errorResponse("BAD_REQUEST", "previousSpec、previousRadarVersion、userMessage、trigger 必填", Date.now() - start, 400), 400);
+    }
+    try {
+      const result = reviseRadarVersion(body);
+      return c.json({
+        success: true,
+        data: result satisfies RadarReviseResponseData,
+        error: null,
+        duration_ms: Date.now() - start,
+      } satisfies ApiResponse<RadarReviseResponseData>);
+    } catch (err) {
+      return c.json(
+        errorResponse("RADAR_REVISION_FAILED", err instanceof Error ? err.message : String(err), Date.now() - start, 500),
         500,
       );
     }

@@ -8,7 +8,7 @@
 
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { RadarProfileSummary } from "../schema/radar-profile-summary";
-import type { RadarVersionSpec } from "../schema/radar-version-spec";
+import type { RadarRevisionRequest, RadarRevisionResult, RadarVersionSpec } from "../schema/radar-version-spec";
 import type { ProviderRouting, RadarPreferredSearchMode, RadarPrivacy, RadarRun } from "../schema/radar";
 import type { ScoredOpportunity } from "../search/types";
 import type { RawCandidateAudit } from "../search/types";
@@ -257,3 +257,9 @@ export interface RadarGenerateResponseData {
   /** Chat-first radar builder: executable version spec used by confirmation card and planner */
   radarVersion?: RadarVersionSpec;
 }
+
+/** Q.7 雷达版本修订请求 */
+export type RadarReviseRequest = RadarRevisionRequest;
+
+/** Q.7 雷达版本修订响应 */
+export interface RadarReviseResponseData extends RadarRevisionResult {}
