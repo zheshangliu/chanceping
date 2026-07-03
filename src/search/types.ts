@@ -15,6 +15,7 @@ import type { ActionStatus, EvidenceStatus, OpportunityKind, ScoreBasis } from "
 import type { SearchIntentType, SearchQueryVariant, SourceArchetypeId } from "../schema/radar-mvp-contracts";
 import type { CandidateRelevanceAssessment } from "./candidate-relevance";
 import type { CandidateJudgeAssessment } from "./candidate-llm-judge";
+import type { CandidateRankingAssessment } from "./candidate-ranking";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -56,10 +57,14 @@ export interface SearchResult {
   query_variant?: SearchQueryVariant;
   /** Q.1 内部审计：结果语义分桶。 */
   semantic_type?: OpportunityKind;
+  /** Q.6 audit: original semantic bucket before relevance/judge/ranking gates mutate card eligibility. */
+  original_semantic_type?: OpportunityKind;
   /** Q.6-A internal audit: candidate-to-radar fit based on search evidence. */
   relevance_assessment?: CandidateRelevanceAssessment;
   /** Q.6-B internal audit: bounded LLM/fallback candidate judge; not a verified fact. */
   candidate_judge_assessment?: CandidateJudgeAssessment;
+  /** Q.6-C internal audit: source authority/ranking/card cap metadata; not a verified fact. */
+  candidate_ranking_assessment?: CandidateRankingAssessment;
 }
 
 /** Chat-first MVP：搜索运行审计中的原始候选摘要。 */
@@ -87,6 +92,8 @@ export interface RawCandidateAudit {
   relevanceAssessment?: CandidateRelevanceAssessment;
   /** Q.6-B: candidate judge result; used for relevance gating, not source verification. */
   candidateJudgeAssessment?: CandidateJudgeAssessment;
+  /** Q.6-C: ranking and card cap result; used for card selection, not source verification. */
+  candidateRankingAssessment?: CandidateRankingAssessment;
 }
 
 /**

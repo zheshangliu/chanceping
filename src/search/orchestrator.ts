@@ -58,6 +58,7 @@ import { getSearchCostLimits, normalizeSearchQuery, type SearchCostLimits } from
 import { buildKeywordPack } from "./keyword-pack";
 import { applyCandidateRelevanceGate } from "./candidate-relevance";
 import { applyCandidateJudgeGate } from "./candidate-llm-judge";
+import { rankCandidateResults } from "./candidate-ranking";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -678,7 +679,8 @@ function mapSourceCoverage(checks: SourceHintCheck[]): SourceCoverageItem[] {
 function buildRawCandidateAudits(results: SearchResult[], query: string): RawCandidateAudit[] {
   return results.map((result, index) => {
     const quality = candidateQuality(result);
-    const semanticType = semanticTypeForResult(result);
+    const finalSemanticType = semanticTypeForResult(result);
+    const semanticType = result.original_semantic_type ?? finalSemanticType;
     return {
       id: `raw_${index + 1}`,
       query: result.search_query || query,
@@ -687,7 +689,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       snippet: result.snippet,
       sourceDomain: domainOf(result.url),
       sourceType: result.source_type ?? "search_snippet",
-      status: semanticType === "rejected" ? "rejected" : "raw",
+      status: finalSemanticType === "rejected" ? "rejected" : "raw",
       qualityStatus: quality.status,
       qualityReason: quality.reason,
       semanticType,
@@ -699,6 +701,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       queryVariant: result.query_variant,
       relevanceAssessment: result.relevance_assessment,
       candidateJudgeAssessment: result.candidate_judge_assessment,
+      candidateRankingAssessment: result.candidate_ranking_assessment,
     };
   });
 }
@@ -743,6 +746,7 @@ function annotateResultsWithQueryMeta(results: SearchResult[], item: SearchQuery
       query_variant: item.queryVariant,
     };
     annotated.semantic_type = semanticTypeForResult(annotated);
+    annotated.original_semantic_type = annotated.semantic_type;
     return annotated;
   });
 }
@@ -1260,8 +1264,9 @@ export class SearchOrchestrator {
     if (this.dataMode === "live" && providerRouting && spec.radar_version) {
       const relevanceGate = applyCandidateRelevanceGate(rawResults, spec);
       const judgeGate = await applyCandidateJudgeGate(relevanceGate.assessedResults, spec, this.llmAdapter);
-      rawResults = judgeGate.assessedResults;
-      candidateResults = judgeGate.accepted.filter(isKeyCandidate);
+      const ranking = rankCandidateResults(judgeGate.assessedResults, spec);
+      rawResults = ranking.assessedResults;
+      candidateResults = ranking.keyCandidates.filter(isKeyCandidate);
     } else {
       candidateResults = this.dataMode === "live" && providerRouting
         ? rawResults.filter(isKeyCandidate)

@@ -331,6 +331,7 @@ export function applyCandidateRelevanceGate(
       result.semantic_type === "watch_signal";
     const assessed: SearchResult = {
       ...result,
+      original_semantic_type: result.original_semantic_type ?? result.semantic_type,
       relevance_assessment: relevanceAssessment,
       ...(relevanceAssessment.decision === "downgrade_to_watch_signal" && !preserveObservationBucket
         ? { semantic_type: "watch_signal" as const }

@@ -478,6 +478,7 @@ export async function applyCandidateJudgeGate(
         : result.semantic_type ?? (assessment.candidate_type === "key_opportunity" ? "direct_opportunity" : "business_lead");
     const assessed: SearchResult = {
       ...result,
+      original_semantic_type: result.original_semantic_type ?? result.semantic_type,
       candidate_judge_assessment: assessment,
       semantic_type: nextSemanticType,
     };
