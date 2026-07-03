@@ -120,14 +120,14 @@ function recoveryVariants(family: RadarVersionQueryFamily): Array<{ query: strin
 
   if (/ai|agent|hackathon|developer|startup|cloud|accelerator|创业|开发者|云厂商|大赛|黑客松/.test(text)) {
     variants.push(
-      { query: "AI Agent Hackathon developer challenge application 2026", variant: "action_keyword" },
-      { query: "cloud startup program startup credits accelerator application 2026", variant: "source_archetype" },
+      { query: "AI Agent Hackathon developer challenge AI application contest application 2026", variant: "action_keyword" },
+      { query: "Qwen Alibaba Cloud AWS Google Cloud Microsoft for Startups cloud credits startup program accelerator application 2026", variant: "source_archetype" },
     );
   }
   if (/seller|marketplace|cross-border|ecommerce|e-commerce|fulfillment|warehouse|平台|卖家|跨境电商|平台招商|大促|海外仓|履约/.test(text)) {
     variants.push(
-      { query: "marketplace seller program platform campaign application 2026", variant: "action_keyword" },
-      { query: "marketplace partner fulfillment partner overseas warehouse partner", variant: "source_archetype" },
+      { query: "marketplace seller program seller registration Shopee Lazada TikTok Shop Amazon Global Selling 2026", variant: "action_keyword" },
+      { query: "marketplace partner platform campaign fulfillment partner overseas warehouse partner", variant: "source_archetype" },
     );
   }
   return variants;

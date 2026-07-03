@@ -177,20 +177,6 @@ function fallbackJudge(result: SearchResult, spec: RadarRequirementSpec, options
   if (page?.keyCardEligibility === "reject") {
     return hardRejectAssessment(`页面类型 ${page.pageType} 不是可执行机会入口：${page.reason}`, options);
   }
-  if (page?.keyCardEligibility === "downgrade" && page.pageType !== "directory_page") {
-    return {
-      candidate_type: page.pageType === "trend_article" || page.pageType === "news_article" ? "reference_case" : "watch_signal",
-      beneficiary_fit: page.beneficiaryFit === "mismatch" ? "mismatch" : "partial",
-      action_fit: page.actionEntryFit === "fit" ? "partial" : "unknown",
-      source_fit: "partial",
-      freshness_fit: "uncertain",
-      relevance_score: 42,
-      decision: "downgrade_to_watch_signal",
-      reason: `页面类型 ${page.pageType} 更像导航、资讯、模板或弱入口，暂不进入重点机会卡。`,
-      basis: "deterministic_fallback",
-      assessedAt: nowIso(options),
-    };
-  }
 
   const kidsCodingRadar = KIDS_CODING_RE.test(radarText);
   if (kidsCodingRadar && STUDENT_ONLY_RE.test(text) && (!KIDS_CODING_RE.test(text) || NEGATED_KIDS_ORG_RE.test(text))) {
@@ -218,6 +204,21 @@ function fallbackJudge(result: SearchResult, spec: RadarRequirementSpec, options
       relevance_score: 36,
       decision: "downgrade_to_watch_signal",
       reason: "该 PDF 更像报告、经验材料或参考资料，缺少采购公告、供应商入库、投标或合作入口。",
+      basis: "deterministic_fallback",
+      assessedAt: nowIso(options),
+    };
+  }
+
+  if (page?.keyCardEligibility === "downgrade" && page.pageType !== "directory_page") {
+    return {
+      candidate_type: page.pageType === "trend_article" || page.pageType === "news_article" ? "reference_case" : "watch_signal",
+      beneficiary_fit: page.beneficiaryFit === "mismatch" ? "mismatch" : "partial",
+      action_fit: page.actionEntryFit === "fit" ? "partial" : "unknown",
+      source_fit: "partial",
+      freshness_fit: "uncertain",
+      relevance_score: 42,
+      decision: "downgrade_to_watch_signal",
+      reason: `页面类型 ${page.pageType} 更像导航、资讯、模板或弱入口，暂不进入重点机会卡。`,
       basis: "deterministic_fallback",
       assessedAt: nowIso(options),
     };

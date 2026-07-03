@@ -382,6 +382,43 @@ async function main(): Promise<void> {
   );
   check("environment platform registration flow is not equipment opportunity", environmentPlatformRegistration.candidate_judge_assessment?.decision !== "accept", environmentPlatformRegistration.candidate_judge_assessment?.reason ?? "");
 
+  pageCase(
+    "information_disclosure",
+    false,
+    result("信息公开 news information - 广东省环境科学研究院", "机构信息公开栏目，包含新闻和公开信息索引，没有环保设备采购、废气治理或除尘设备招标入口。", "direct_opportunity", "procurement_or_supplier_portal", "https://www.gdei.example.cn/news-information"),
+    profiles.environmentVendor,
+  );
+  pageCase(
+    "about_us",
+    false,
+    result("关于我们_EDF - 美国环保协会", "机构介绍页面，说明组织使命和项目方向，没有供应商入库、合作提交或采购入口。", "business_lead", "reseller_partner_page", "https://edf.example.org/about-us"),
+    profiles.environmentVendor,
+  );
+  pageCase(
+    "institution_profile",
+    false,
+    result("广东环境保护工程职业学院大型仪器设备共享平台", "院校平台介绍和机构信息页面，没有明确采购公告、供应商入库或招标入口。", "business_lead", "procurement_or_supplier_portal", "https://college.example.edu.cn/platform/profile"),
+    profiles.environmentVendor,
+  );
+  pageCase(
+    "platform_intro",
+    false,
+    result("首创环保电子商务平台介绍", "介绍平台能力和注册须知，没有具体环保设备采购、招标项目或供应商提交入口。", "direct_opportunity", "procurement_or_supplier_portal", "https://ecp.example.cn/platform-intro"),
+    profiles.environmentVendor,
+  );
+
+  const llmUpgradeInformationDisclosure = await judgeDecisionWithUpgradeAttempt(
+    result("信息公开 news information - 广东省环境科学研究院", "机构信息公开栏目，包含新闻和公开信息索引，没有环保设备采购、废气治理或除尘设备招标入口。", "direct_opportunity", "procurement_or_supplier_portal", "https://www.gdei.example.cn/news-information"),
+    profiles.environmentVendor,
+  );
+  check("LLM cannot upgrade information disclosure page into key card", llmUpgradeInformationDisclosure.candidate_judge_assessment?.decision !== "accept", llmUpgradeInformationDisclosure.candidate_judge_assessment?.reason ?? "");
+
+  const llmUpgradeAboutUs = await judgeDecisionWithUpgradeAttempt(
+    result("关于我们_EDF - 美国环保协会", "机构介绍页面，说明组织使命和项目方向，没有供应商入库、合作提交或采购入口。", "business_lead", "reseller_partner_page", "https://edf.example.org/about-us"),
+    profiles.environmentVendor,
+  );
+  check("LLM cannot upgrade about-us page into key card", llmUpgradeAboutUs.candidate_judge_assessment?.decision !== "accept", llmUpgradeAboutUs.candidate_judge_assessment?.reason ?? "");
+
   const aggregator = assessCandidatePageType(
     result("推荐公告招标网_广东省招标_其他环保设备招标网_招标信息网站", "招标平台聚合环保招标采购信息列表，需打开原公告确认。", "direct_opportunity", "procurement_or_supplier_portal", "https://www.bidsite.example.cn/huanbao/list"),
     profiles.environmentVendor,
@@ -434,10 +471,12 @@ async function main(): Promise<void> {
   const aiStrategy = buildOpportunityStrategy(profiles.aiStartup);
   const aiQueries = aiStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
   check("AI startup query recovery includes action/source variants", /hackathon|developer challenge|startup credits|cloud startup program|accelerator application/.test(aiQueries), aiQueries);
+  check("AI startup query recovery includes cloud/provider variants", /qwen|alibaba cloud|aws|google cloud|microsoft for startups|ai application contest/.test(aiQueries), aiQueries);
 
   const ecommerceStrategy = buildOpportunityStrategy(profiles.crossBorderEcommerce);
   const ecommerceQueries = ecommerceStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
   check("cross-border ecommerce query recovery includes marketplace seller variants", /seller program|marketplace partner|platform campaign|fulfillment partner|overseas warehouse/.test(ecommerceQueries), ecommerceQueries);
+  check("cross-border ecommerce query recovery includes platform-specific variants", /shopee|lazada|tiktok shop|amazon global selling|seller registration/.test(ecommerceQueries), ecommerceQueries);
 
   if (failed > 0) {
     console.error(`Q.6-D page type and beneficiary strictness: ${failed} FAIL`);

@@ -248,12 +248,38 @@ const emptyResult = generateRadarReport({
     },
   ] as any,
   candidateAccounting: {
-    rawCount: 0,
-    deduplicatedCount: 0,
-    assessedCount: 0,
+    rawCount: 3,
+    deduplicatedCount: 3,
+    assessedCount: 3,
     acceptedCount: 0,
-    rejectedCount: 0,
+    rejectedCount: 3,
   },
+  rawCandidates: [
+    {
+      id: "raw-watch-1",
+      query: "跨境电商 seller program",
+      title: "Shopee 2025 本地化履约业务招商大会",
+      url: "https://seller.example.org/shopee-local-fulfillment",
+      sourceDomain: "seller.example.org",
+      sourceType: "web",
+      status: "raw",
+      semanticType: "watch_signal",
+      qualityStatus: "unknown",
+      qualityReason: "报名信息疑似过期，需下轮复核平台入口",
+    },
+    {
+      id: "raw-watch-2",
+      query: "marketplace seller registration",
+      title: "Amazon Global Selling 开店入口",
+      url: "https://sell.amazon.example.org/global-selling",
+      sourceDomain: "sell.amazon.example.org",
+      sourceType: "web",
+      status: "raw",
+      semanticType: "business_lead",
+      qualityStatus: "unknown",
+      qualityReason: "卖家入口存在，但未形成本轮重点卡",
+    },
+  ] as any,
   opportunities: [],
 });
 
@@ -308,6 +334,22 @@ if (!emptyMd.includes("| 来源 | 状态 | 结果数 | 说明 |")) {
 if (!emptyMd.includes("decision: Monitor") || !emptyMd.includes("monitoring_keywords:")) {
   failed++;
   console.log("FAIL empty report missing action layer monitor decision");
+}
+if (!emptyMd.includes("本轮未找到足够证据进入重点机会卡")) {
+  failed++;
+  console.log("FAIL empty report missing no-card evidence statement");
+}
+if (!emptyMd.includes("观察线索") || !emptyMd.includes("Shopee 2025 本地化履约业务招商大会")) {
+  failed++;
+  console.log("FAIL empty report missing observation signals");
+}
+if (!emptyMd.includes("为什么没有进入重点卡") || !emptyMd.includes("报名信息疑似过期")) {
+  failed++;
+  console.log("FAIL empty report missing downgrade reasons");
+}
+if (!emptyMd.includes("下一轮建议") || !emptyMd.includes("source / query")) {
+  failed++;
+  console.log("FAIL empty report missing next-round source/query guidance");
 }
 if (!profileFieldMd.includes("- 地域范围：中国、国际")) {
   failed++;

@@ -945,6 +945,41 @@ function buildNextActions(input: RadarReportInput, opps: OpportunityCard[]): str
   return uniqueList(actions, 5);
 }
 
+function noCardObservationCandidates(input: RadarReportInput): RawCandidateAudit[] {
+  return (input.rawCandidates ?? [])
+    .filter((candidate) => candidate.title || candidate.url)
+    .filter((candidate) => candidate.semanticType !== "rejected")
+    .slice(0, 8);
+}
+
+function buildNoCardObservationBlock(input: RadarReportInput, opps: OpportunityCard[]): string[] {
+  if (opps.length > 0) return [];
+  const observations = noCardObservationCandidates(input);
+  const lines = [
+    "### no_card_observations: 无重点卡时的观察线索",
+    "",
+    "- 本轮未找到足够证据进入重点机会卡；这不等于没有信号，而是当前搜索发现不足以支持直接行动。",
+    "",
+  ];
+  if (observations.length === 0) {
+    lines.push("- 观察线索：暂无可列出的观察线索。");
+  } else {
+    lines.push("- 观察线索：");
+    observations.forEach((candidate) => {
+      const reason = candidate.qualityReason || candidate.relevanceAssessment?.reasonCodes?.join("、") || candidate.candidateJudgeAssessment?.reason || "证据不足，需下轮复核";
+      lines.push(`  - ${candidate.title || candidate.url}：${candidate.url}（${reason}）`);
+    });
+  }
+  lines.push(
+    "",
+    "- 为什么没有进入重点卡：候选缺少明确行动入口、字段级证据不足、来源页面偏观察 / 参考，或时间窗口和资格仍需复核。",
+    "- 下一轮建议：补充优先平台、国家 / 地区、时间窗口和具体机会类型；同时改用更强 source / query 方向继续搜索。",
+    "- source / query 方向：优先加入官方平台、供应商 / 卖家入口、申请 / 报名 / 入库 / 合作关键词，以及用户指定信号源。",
+    "",
+  );
+  return lines;
+}
+
 function buildMvpActionLayer(input: RadarReportInput, opps: OpportunityCard[]): string {
   const decision = actionDecision(input, opps);
   const lines = [
@@ -954,6 +989,7 @@ function buildMvpActionLayer(input: RadarReportInput, opps: OpportunityCard[]): 
     "",
     `- decision: ${decision}（模型判断）`,
     "",
+    ...buildNoCardObservationBlock(input, opps),
     "### recommended_angle: 推荐打法 / 包装角度",
     "",
     ...buildRecommendedAngles(input.spec, opps).map((item) => `- ${item}`),

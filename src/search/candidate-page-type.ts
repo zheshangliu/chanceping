@@ -14,11 +14,16 @@ export type CandidatePageType =
   | "company_careers_page"
   | "official_event_detail"
   | "homepage"
+  | "about_us"
+  | "institution_profile"
   | "category_page"
   | "department_index"
+  | "information_disclosure"
   | "xls_summary"
   | "pdf_summary_without_action"
+  | "pdf_policy_material"
   | "template_page"
+  | "platform_intro"
   | "trend_article"
   | "news_article"
   | "calendar_page"
@@ -57,7 +62,7 @@ export interface CandidatePageTypeGateResult {
 }
 
 const ACTION_ENTRY_RE = /报名|申请|申报|提交|投标|投稿|征集|招募|入驻|供应商|入库|展商|展位|摊位|合作|联系|职位|招聘|registration|register|apply|application|submit|tender|rfp|procurement|supplier|vendor|partner|exhibitor|booth|career|careers|job|vacancy/i;
-const NEGATED_ACTION_ENTRY_RE = /未(?:提供|明确|找到).{0,16}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|供应商|入库|合作|联系|入口)|不(?:提供|含|包含).{0,16}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|供应商|入库|合作|联系|入口)|no .{0,30}(application|registration|contact|entry|supplier|partner)/i;
+const NEGATED_ACTION_ENTRY_RE = /未(?:提供|明确|找到).{0,20}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|采购|招标|供应商|入库|合作|联系|入口)|没有(?:提供|明确|找到)?.{0,20}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|采购|招标|供应商|入库|合作|联系|入口)|不(?:提供|含|包含).{0,20}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|采购|招标|供应商|入库|合作|联系|入口)|no .{0,30}(application|registration|contact|entry|supplier|partner|procurement|tender)/i;
 const DIRECT_NOTICE_RE = /公告|通知|公示|notice|announcement/i;
 const TENDER_RE = /招标|投标|采购公告|询价|竞争性磋商|中标|tender|rfp|procurement|bidding/i;
 const OPEN_CALL_RE = /公开征集|作品征集|征稿|投稿|open call|submission|call for/i;
@@ -74,6 +79,10 @@ const PDF_SUMMARY_RE = /\.pdf(?:$|\?)|pdf/i;
 const TEMPLATE_RE = /模板|表格模板|template/i;
 const TREND_RE = /趋势|白皮书|市场规模|行业报告|trend|white paper|market report/i;
 const NEWS_RE = /新闻|报道|快讯|转载|news|press release|media/i;
+const ABOUT_US_RE = /关于我们|机构介绍|组织介绍|公司简介|about us|about-us|who we are/i;
+const INSTITUTION_PROFILE_RE = /机构主页|机构概况|机构简介|学院|研究院|共享平台|institution profile|organization profile/i;
+const INFORMATION_DISCLOSURE_RE = /信息公开|公开信息|news information|information disclosure|public information/i;
+const PLATFORM_INTRO_RE = /平台介绍|平台能力|平台注册须知|平台操作指南|platform intro|platform introduction|platform overview/i;
 const CALENDAR_RE = /日历|赛历|calendar|schedule/i;
 const FAQ_RE = /faq|常见问题|问答|帮助中心/i;
 const POLICY_RE = /行动方案|规划|政策解读|指导意见|plan|roadmap|policy/i;
@@ -139,10 +148,15 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (XLS_RE.test(text)) return "xls_summary";
   if (TEMPLATE_RE.test(text)) return "template_page";
   if (FAQ_RE.test(text)) return "faq_page";
+  if (ABOUT_US_RE.test(text)) return "about_us";
+  if (INFORMATION_DISCLOSURE_RE.test(text)) return "information_disclosure";
+  if (INSTITUTION_PROFILE_RE.test(text) && !hasDirectActionEntry(text)) return "institution_profile";
+  if (PLATFORM_INTRO_RE.test(text)) return "platform_intro";
   if (DEPARTMENT_RE.test(text)) return "department_index";
   if (isLikelyHomepage(result)) return "homepage";
   if (POLICY_RE.test(text) && !hasDirectActionEntry(text)) return "policy_plan";
   if (AGGREGATOR_RE.test(text)) return "aggregator_page";
+  if (PDF_SUMMARY_RE.test(text) && POLICY_RE.test(text)) return "pdf_policy_material";
   if (PDF_SUMMARY_RE.test(text) && !hasDirectActionEntry(text)) return "pdf_summary_without_action";
   if (TREND_RE.test(text)) return "trend_article";
   if (CALENDAR_RE.test(text) && !REGISTRATION_RE.test(text)) return "calendar_page";
@@ -183,8 +197,8 @@ function assessmentFor(pageType: CandidatePageType, result: SearchResult, spec: 
     "official_event_detail",
   ];
   const hardWeakTypes: CandidatePageType[] = ["xls_summary", "template_page"];
-  const navigationTypes: CandidatePageType[] = ["homepage", "category_page", "department_index", "calendar_page", "generic_procurement_column"];
-  const informationTypes: CandidatePageType[] = ["trend_article", "news_article", "faq_page", "policy_plan", "pdf_summary_without_action"];
+  const navigationTypes: CandidatePageType[] = ["homepage", "category_page", "department_index", "calendar_page", "generic_procurement_column", "information_disclosure", "institution_profile", "platform_intro"];
+  const informationTypes: CandidatePageType[] = ["about_us", "trend_article", "news_article", "faq_page", "policy_plan", "pdf_summary_without_action", "pdf_policy_material"];
 
   if (directOpportunityTypes.includes(pageType)) {
     pageIntentFit = "opportunity_entry";
