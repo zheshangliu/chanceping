@@ -165,7 +165,9 @@ function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick
     tier = "aggregator";
     reasonCodes.push("aggregator_or_platform");
   }
-  if (NEWS_DOMAIN_RE.test(domain) || /新闻|报道|趋势|指南|百科|历史|规则/.test(text)) {
+  const actionEntryPage = result.page_type_assessment?.keyCardEligibility === "eligible";
+  const referenceTextSignal = /新闻|报道|趋势|指南|百科|历史/.test(text) || (/规则/.test(text) && !actionEntryPage);
+  if (NEWS_DOMAIN_RE.test(domain) || referenceTextSignal) {
     score -= 35;
     tier = tier === "aggregator" ? tier : "reference_or_news";
     reasonCodes.push("news_or_reference");

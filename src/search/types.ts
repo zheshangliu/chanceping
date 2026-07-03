@@ -88,6 +88,8 @@ export interface RawCandidateAudit {
   qualityReason?: string;
   /** MVP Q.1: semantic result bucket, used for cards/report grouping but not as verified fact. */
   semanticType?: OpportunityKind;
+  /** Q.6-J: semantic bucket after gates mutate card eligibility; diagnostic only. */
+  finalSemanticType?: OpportunityKind;
   themeName?: string;
   intentType?: SearchIntentType;
   sourceArchetype?: SourceArchetypeId;

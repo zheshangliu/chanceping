@@ -93,6 +93,7 @@ const DEPARTMENT_RE = /下属单位|机构职能|组织机构|内设机构|部�
 const CATEGORY_RE = /栏目|列表|频道|专题|category|list|index/i;
 const DIRECTORY_RE = /目录|名录|会员|成员|协会成员|directory|member list|members/i;
 const AGGREGATOR_RE = /聚合|招标采购信息|采购与招标网|招标网|招标信息网站|推荐公告|采招网|必联网|bidcenter|chinabidding|qianlima|indeed|linkedin|猎聘|智联|boss直聘|job board/i;
+const SPAM_OR_GAMBLING_RE = /beplay|全站登陆|博彩|赌博|casino|betting|sportsbook/i;
 const GENERIC_CATEGORY_TITLE_RE = /^(?:招标采购|采购公告|招标公告|招聘信息|职位信息|活动资讯)\s*[-|｜—]/i;
 
 const DIRECT_KEY_TYPES = new Set<OpportunityKind>([
@@ -154,6 +155,12 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (XLS_RE.test(text)) return "xls_summary";
   if (TEMPLATE_RE.test(text)) return "template_page";
   if (FAQ_RE.test(text)) return "faq_page";
+  if (SPAM_OR_GAMBLING_RE.test(text)) return "aggregator_page";
+  if (DIRECTORY_RE.test(text) && PARTNER_RE.test(text)) return "partner_program";
+  if (DIRECTORY_RE.test(text)) return "directory_page";
+  if (sourceIntegrity.kind === "generic_document") return "generic_procurement_column";
+  if (sourceIntegrity.kind === "weak_aggregator" || sourceIntegrity.kind === "weak_social") return "aggregator_page";
+  if (CAREERS_RE.test(text) && !NEGATED_ACTION_ENTRY_RE.test(text)) return "company_careers_page";
   if (ABOUT_US_RE.test(text)) return "about_us";
   if (INFORMATION_DISCLOSURE_RE.test(text)) return "information_disclosure";
   if (INSTITUTION_PROFILE_RE.test(text) && !hasDirectActionEntry(text)) return "institution_profile";
@@ -161,8 +168,6 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (DEPARTMENT_RE.test(text)) return "department_index";
   if (isLikelyHomepage(result)) return "homepage";
   if (GENERIC_CATEGORY_TITLE_RE.test(normalizedTitle)) return "category_page";
-  if (sourceIntegrity.kind === "generic_document") return "generic_procurement_column";
-  if (sourceIntegrity.kind === "weak_aggregator" || sourceIntegrity.kind === "weak_social") return "aggregator_page";
   if (POLICY_RE.test(text) && !hasDirectActionEntry(text)) return "policy_plan";
   if (AGGREGATOR_RE.test(text)) return "aggregator_page";
   if (PDF_SUMMARY_RE.test(text) && POLICY_RE.test(text)) return "pdf_policy_material";
@@ -171,8 +176,6 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (CALENDAR_RE.test(text) && !REGISTRATION_RE.test(text)) return "calendar_page";
   if (NEWS_RE.test(text) && !hasDirectActionEntry(text)) return "news_article";
   if (sourceIntegrity.kind === "weak_reference") return "news_article";
-  if (DIRECTORY_RE.test(text) && PARTNER_RE.test(text)) return "partner_program";
-  if (DIRECTORY_RE.test(text)) return "directory_page";
   if (SUPPLIER_RE.test(text)) return "supplier_onboarding";
   if (TENDER_RE.test(text)) return "tender_notice";
   if (OPEN_CALL_RE.test(text)) return "open_call";
@@ -180,7 +183,6 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (EXHIBITOR_RE.test(text)) return "exhibitor_application";
   if (PARTNER_RE.test(text)) return "partner_program";
   if (FORM_RE.test(text)) return "application_form";
-  if (CAREERS_RE.test(text)) return "company_careers_page";
   if (EVENT_DETAIL_RE.test(text) && DIRECT_NOTICE_RE.test(text)) return "official_event_detail";
   if (CATEGORY_RE.test(text) && !hasDirectActionEntry(text)) return "category_page";
   return "unknown";

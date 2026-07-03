@@ -464,6 +464,13 @@ function shouldJudge(result: SearchResult): boolean {
     result.relevance_assessment?.decision === "downgrade_to_watch_signal";
 }
 
+function keySemanticFromJudge(assessment: CandidateJudgeAssessment): OpportunityKind | undefined {
+  if (assessment.decision !== "accept") return undefined;
+  if (assessment.candidate_type === "key_opportunity") return "direct_opportunity";
+  if (assessment.candidate_type === "actionable_lead") return "business_lead";
+  return undefined;
+}
+
 export async function judgeCandidateBatch(
   results: SearchResult[],
   spec: RadarRequirementSpec,
@@ -544,11 +551,15 @@ export async function applyCandidateJudgeGate(
     const restoredKeySemantic = result.original_semantic_type && KEY_OPPORTUNITY_TYPES.has(result.original_semantic_type)
       ? result.original_semantic_type
       : undefined;
+    const currentKeySemantic = result.semantic_type && KEY_OPPORTUNITY_TYPES.has(result.semantic_type)
+      ? result.semantic_type
+      : undefined;
+    const judgedKeySemantic = keySemanticFromJudge(assessment);
     const nextSemanticType: OpportunityKind = assessment.decision === "reject"
       ? "rejected"
       : assessment.decision === "downgrade_to_watch_signal"
         ? "watch_signal"
-        : restoredKeySemantic ?? result.semantic_type ?? (assessment.candidate_type === "key_opportunity" ? "direct_opportunity" : "business_lead");
+        : restoredKeySemantic ?? currentKeySemantic ?? judgedKeySemantic ?? result.semantic_type ?? "business_lead";
     const assessed: SearchResult = {
       ...result,
       original_semantic_type: result.original_semantic_type ?? result.semantic_type,

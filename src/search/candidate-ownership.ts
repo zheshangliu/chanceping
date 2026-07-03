@@ -85,6 +85,8 @@ const ENVIRONMENT_EQUIPMENT_SCOPE_RE = /环保设备|废气治理|废水治理|�
 const NEGATED_ENVIRONMENT_SCOPE_RE = /(?:没有|未|不|无).{0,28}(环保设备|废气治理|废水治理|污水处理|除尘|环保治理|设备采购|招标|供应商|投标)|no .{0,50}(environmental equipment|dust collector|waste gas|wastewater|tender|procurement|supplier)/i;
 const POLICY_OR_INFO_RE = /政策|规划|行动方案|实施方案|认定|新闻|栏目|首页|机构介绍|信息公开|policy|plan|roadmap|news|about us|information/i;
 const GREENING_OR_RENOVATION_RE = /绿化|景观|保洁|环卫|装修|翻新|家具|renovation|greening|landscape|sanitation/i;
+const GREEN_CERTIFICATION_APPLICATION_RE = /绿色工厂|绿色园区|绿色制造|绿色低碳|green factory|green park|green manufacturing/i;
+const CERTIFICATION_APPLICATION_ACTION_RE = /申报|认证|认定|申请|提交材料|certification|application/i;
 
 function normalize(value: unknown): string {
   return String(value ?? "").normalize("NFKC").toLowerCase().replace(/\s+/g, " ").trim();
@@ -253,6 +255,16 @@ export function assessCandidateOwnership(
         ownershipDecision: "downgrade_to_watch_signal",
         ownershipReason: "该页面更像政策、栏目、新闻或机构信息，未显示环保设备供应商可投标或提交材料的动作。",
         reasonCodes: ["environment_policy_or_info_only"],
+      }, options);
+    }
+    if (GREEN_CERTIFICATION_APPLICATION_RE.test(text) && CERTIFICATION_APPLICATION_ACTION_RE.test(text) && !BID_ACTION_RE.test(text)) {
+      return assessment({
+        pageAudience: "buyer",
+        currentUserActionMode: "observe_only",
+        opportunityRoleForUser: "watch_signal",
+        ownershipDecision: "downgrade_to_watch_signal",
+        ownershipReason: "绿色工厂、绿色园区或绿色制造认证申报面向被认定企业，不是工业环保设备供应商可投标的设备采购或治理项目。",
+        reasonCodes: ["environment_green_certification_not_supplier_project"],
       }, options);
     }
     if (BID_ACTION_RE.test(text) && ENVIRONMENT_EQUIPMENT_SCOPE_RE.test(text) && !NEGATED_ENVIRONMENT_SCOPE_RE.test(text)) {

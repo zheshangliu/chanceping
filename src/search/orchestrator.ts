@@ -697,6 +697,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       qualityStatus: quality.status,
       qualityReason: quality.reason,
       semanticType,
+      finalSemanticType,
       themeName: result.search_theme,
       intentType: result.intent_type,
       sourceArchetype: result.source_archetype,
