@@ -57,6 +57,7 @@ import { normalizeOpportunityIntent } from "./opportunity-strategy";
 import { getSearchCostLimits, normalizeSearchQuery, type SearchCostLimits } from "./search-cost-guard";
 import { buildKeywordPack } from "./keyword-pack";
 import { applyCandidateRelevanceGate } from "./candidate-relevance";
+import { applyCandidateJudgeGate } from "./candidate-llm-judge";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -697,6 +698,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       queryFamily: result.query_family,
       queryVariant: result.query_variant,
       relevanceAssessment: result.relevance_assessment,
+      candidateJudgeAssessment: result.candidate_judge_assessment,
     };
   });
 }
@@ -1257,8 +1259,9 @@ export class SearchOrchestrator {
     let candidateResults: SearchResult[];
     if (this.dataMode === "live" && providerRouting && spec.radar_version) {
       const relevanceGate = applyCandidateRelevanceGate(rawResults, spec);
-      rawResults = relevanceGate.assessedResults;
-      candidateResults = relevanceGate.accepted.filter(isKeyCandidate);
+      const judgeGate = await applyCandidateJudgeGate(relevanceGate.assessedResults, spec, this.llmAdapter);
+      rawResults = judgeGate.assessedResults;
+      candidateResults = judgeGate.accepted.filter(isKeyCandidate);
     } else {
       candidateResults = this.dataMode === "live" && providerRouting
         ? rawResults.filter(isKeyCandidate)

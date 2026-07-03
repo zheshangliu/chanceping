@@ -14,6 +14,7 @@
 import type { ActionStatus, EvidenceStatus, OpportunityKind, ScoreBasis } from "../schema/radar-mvp-contracts";
 import type { SearchIntentType, SearchQueryVariant, SourceArchetypeId } from "../schema/radar-mvp-contracts";
 import type { CandidateRelevanceAssessment } from "./candidate-relevance";
+import type { CandidateJudgeAssessment } from "./candidate-llm-judge";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -57,6 +58,8 @@ export interface SearchResult {
   semantic_type?: OpportunityKind;
   /** Q.6-A internal audit: candidate-to-radar fit based on search evidence. */
   relevance_assessment?: CandidateRelevanceAssessment;
+  /** Q.6-B internal audit: bounded LLM/fallback candidate judge; not a verified fact. */
+  candidate_judge_assessment?: CandidateJudgeAssessment;
 }
 
 /** Chat-first MVP：搜索运行审计中的原始候选摘要。 */
@@ -82,6 +85,8 @@ export interface RawCandidateAudit {
   queryVariant?: SearchQueryVariant;
   /** Q.6-A: evidence-based fit assessment; search evidence, not a verified opportunity fact. */
   relevanceAssessment?: CandidateRelevanceAssessment;
+  /** Q.6-B: candidate judge result; used for relevance gating, not source verification. */
+  candidateJudgeAssessment?: CandidateJudgeAssessment;
 }
 
 /**
