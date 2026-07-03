@@ -73,6 +73,7 @@
     "verify:search-cost-guard": "tsx scripts/verify-search-cost-guard.ts",
     "verify:q3": "tsx scripts/verify-q3-saveable-failed-run.ts",
     "verify:q5": "tsx scripts/verify-q5-live-candidate-admission.ts",
+    "verify:q6:dataset": "tsx scripts/verify-q6-candidate-dataset.ts",
     "verify:q5-r:harness": "node scripts/verify-q5-r-harness.mjs",
     "q5-r:golden8-diagnostics": "node scripts/run-q5-r-api-validation.mjs golden8-diagnostics",
     "q5-r:golden8-report": "node scripts/run-q5-r-api-validation.mjs golden8-report",

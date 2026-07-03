@@ -1,0 +1,137 @@
+{
+  "version": "Q6-0-v1",
+  "profiles": {
+    "go_player": {
+      "targetUser": "围棋选手",
+      "businessContext": "寻找可报名或可参与的围棋赛事与训练机会",
+      "opportunityIntents": ["围棋公开赛", "职业定段赛", "奖金赛事", "训练营"],
+      "highValueCriteria": ["有报名入口", "面向围棋选手", "未来仍可行动"],
+      "exclusionRules": ["电子游戏", "培训广告"],
+      "prioritySourceArchetypes": ["围棋协会官网", "赛事官网"],
+      "queryFamily": "围棋赛事报名",
+      "query": "围棋 公开赛 报名 2026"
+    },
+    "table_tennis_player": {
+      "targetUser": "乒乓球选手",
+      "businessContext": "寻找未来可报名的国内外乒乓球比赛",
+      "opportunityIntents": ["乒乓球公开赛", "WTT赛事", "ITTF比赛"],
+      "highValueCriteria": ["有报名或参赛入口", "面向选手"],
+      "exclusionRules": ["培训广告", "视频集锦"],
+      "prioritySourceArchetypes": ["WTT官网", "ITTF官网", "中国乒协官网"],
+      "queryFamily": "乒乓球赛事报名",
+      "query": "table tennis open registration 2026"
+    },
+    "wedding_company": {
+      "targetUser": "广州婚庆公司",
+      "businessContext": "寻找高端婚礼客户和酒店、会所、品牌合作机会",
+      "opportunityIntents": ["婚礼项目", "酒店合作", "品牌联名", "供应商招募"],
+      "highValueCriteria": ["有合作入口", "可联系决策方", "广州或大湾区"],
+      "exclusionRules": ["婚礼趋势文章", "个人求职"],
+      "prioritySourceArchetypes": ["酒店合作页", "供应商门户", "品牌合作页"],
+      "queryFamily": "酒店婚礼供应商合作",
+      "query": "广州 酒店 婚礼 供应商 合作"
+    },
+    "welfare_supplier": {
+      "targetUser": "员工福利和节日礼品供应商",
+      "businessContext": "寻找广东和香港企业福利采购、工会项目与礼品招标",
+      "opportunityIntents": ["企业福利采购", "工会福利项目", "节日礼品招标", "供应商入库"],
+      "highValueCriteria": ["采购或入库入口", "供应商可参与"],
+      "exclusionRules": ["加盟广告", "系统教程"],
+      "prioritySourceArchetypes": ["采购公告", "供应商门户", "工会官网"],
+      "queryFamily": "福利采购与供应商征集",
+      "query": "广东 员工福利 礼品 供应商 征集"
+    },
+    "headhunter": {
+      "targetUser": "跨境财务岗位猎头顾问",
+      "businessContext": "寻找香港、新加坡、广州有跨境财务、资金、税务、内控招聘需求的公司",
+      "opportunityIntents": ["公司招聘需求", "跨境财务岗位", "资金税务内控岗位"],
+      "highValueCriteria": ["公司直接招聘", "可识别招聘公司", "岗位近期开放"],
+      "exclusionRules": ["求职培训", "猎头本人招聘"],
+      "prioritySourceArchetypes": ["公司官网招聘页", "企业联系人页面"],
+      "queryFamily": "企业财务岗位招聘信号",
+      "query": "site:company.com careers financial controller Hong Kong"
+    },
+    "heritage_company": {
+      "targetUser": "岭南非遗文创公司",
+      "businessContext": "寻找文创征集、博物馆合作、伴手礼采购和非遗展会",
+      "opportunityIntents": ["文创征集", "博物馆文创合作", "伴手礼采购", "非遗展会"],
+      "highValueCriteria": ["作品或供应商可申请", "仍在征集期"],
+      "exclusionRules": ["纯历史介绍", "培训广告"],
+      "prioritySourceArchetypes": ["博物馆官网", "文旅部门官网", "公开征集页"],
+      "queryFamily": "博物馆文创征集",
+      "query": "博物馆 文创产品 征集 2026"
+    },
+    "photographer": {
+      "targetUser": "自由摄影师",
+      "businessContext": "寻找国内和日本未来两个月可投稿的摄影比赛、征稿与展览征集",
+      "opportunityIntents": ["摄影比赛", "摄影征稿", "展览征集"],
+      "highValueCriteria": ["个人摄影师可投稿", "有投稿入口", "未截止"],
+      "exclusionRules": ["摄影课程", "器材广告"],
+      "prioritySourceArchetypes": ["摄影协会官网", "公开征集页", "美术馆官网"],
+      "queryFamily": "摄影比赛投稿",
+      "query": "摄影大赛 征稿 2026 投稿"
+    },
+    "pet_brand": {
+      "targetUser": "宠物用品品牌",
+      "businessContext": "寻找宠物展会、渠道、商超采购、平台活动和行业奖项",
+      "opportunityIntents": ["宠物展商申请", "渠道合作", "商超采购", "平台活动"],
+      "highValueCriteria": ["品牌或供应商可申请", "有展位或合作入口"],
+      "exclusionRules": ["宠物培训", "宠物百科"],
+      "prioritySourceArchetypes": ["宠物展官网", "供应商门户", "渠道合作页"],
+      "queryFamily": "宠物展商和渠道机会",
+      "query": "pet expo exhibitor application 2026"
+    },
+    "saas_company": {
+      "targetUser": "出海东南亚的B2B商品交易SaaS公司",
+      "businessContext": "寻找零售行业展会、渠道伙伴、POS ERP合作和代理商线索",
+      "opportunityIntents": ["零售展会", "渠道伙伴", "代理商", "POS ERP合作"],
+      "highValueCriteria": ["面向零售行业", "有合作或参展入口", "东南亚"],
+      "exclusionRules": ["纯AI大会", "纯金融科技新闻"],
+      "prioritySourceArchetypes": ["零售协会", "经销商目录", "合作伙伴页面", "展会官网"],
+      "queryFamily": "东南亚零售渠道伙伴",
+      "query": "Southeast Asia retail POS reseller partner"
+    },
+    "environment_vendor": {
+      "targetUser": "工业环保设备供应商",
+      "businessContext": "寻找广东和长三角环保项目招标、政府采购与园区改造",
+      "opportunityIntents": ["环保设备招标", "政府采购", "园区绿色改造"],
+      "highValueCriteria": ["设备供应商可投标", "有采购范围", "项目仍可参与"],
+      "exclusionRules": ["装修工程", "环保科普"],
+      "prioritySourceArchetypes": ["政府采购页", "招标公告", "园区项目公告"],
+      "queryFamily": "工业环保设备招标",
+      "query": "广东 工业环保设备 招标 采购"
+    }
+  },
+  "cases": [
+    {"id":"q6-001","profile":"go_player","scenario":"positive_direct","candidate":{"title":"2026全国业余围棋公开赛报名通知","url":"https://weiqi.example.org/open-2026","snippet":"面向业余围棋选手开放报名，查看竞赛规程与报名入口。","semanticType":"direct_opportunity","sourceArchetype":"official_event_site","publishedAt":"2026-07-01"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-002","profile":"go_player","scenario":"subject_mismatch","candidate":{"title":"2026英雄联盟围棋主题电竞挑战赛","url":"https://esports.example.org/go-theme","snippet":"电子游戏玩家报名参加线上电竞挑战。","semanticType":"direct_opportunity","sourceArchetype":"official_event_site","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-003","profile":"go_player","scenario":"action_mismatch","candidate":{"title":"围棋历史与规则介绍","url":"https://culture.example.org/go-history","snippet":"介绍围棋起源、规则和文化，不提供赛事报名。","semanticType":"direct_opportunity","sourceArchetype":"reference_case_source"},"expected":{"decision":"downgrade_to_watch_signal","critical":false}},
+    {"id":"q6-004","profile":"table_tennis_player","scenario":"positive_direct","candidate":{"title":"2026 ITTF World Masters Championships entry information","url":"https://ittf.example.org/masters-entry","snippet":"Players can submit entries through the official registration route.","semanticType":"direct_opportunity","sourceArchetype":"official_event_site","publishedAt":"2026-06-20"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-005","profile":"table_tennis_player","scenario":"low_action_video","candidate":{"title":"WTT Champions highlights video","url":"https://video.example.org/wtt-highlights","snippet":"Watch the best rallies and match highlights.","semanticType":"direct_opportunity","sourceArchetype":"reference_case_source","publishedAt":"2026-06-18"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-006","profile":"table_tennis_player","scenario":"stale_year","candidate":{"title":"2025乒乓球公开赛赛事通知","url":"https://sports.example.org/tt-2025","snippet":"2025年度赛事安排与参赛说明。","semanticType":"direct_opportunity","sourceArchetype":"official_event_site","publishedAt":"2025-03-01"},"expected":{"decision":"downgrade_to_watch_signal","critical":false}},
+    {"id":"q6-007","profile":"wedding_company","scenario":"positive_lead","candidate":{"title":"广州高端酒店婚礼供应商合作招募","url":"https://hotel.example.org/wedding-vendor","snippet":"酒店宴会团队邀请婚礼策划与布置供应商提交合作资料。","semanticType":"channel_partner_lead","sourceArchetype":"reseller_partner_page","publishedAt":"2026-06-30"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-008","profile":"wedding_company","scenario":"reference_not_opportunity","candidate":{"title":"2026奢华婚礼流行趋势","url":"https://magazine.example.org/wedding-trends","snippet":"编辑盘点本年度婚礼配色、婚纱和场地趋势。","semanticType":"business_lead","sourceArchetype":"reference_case_source","publishedAt":"2026-06-01"},"expected":{"decision":"downgrade_to_watch_signal","critical":true}},
+    {"id":"q6-009","profile":"wedding_company","scenario":"target_mismatch","candidate":{"title":"婚礼策划师招聘","url":"https://jobs.example.org/wedding-planner","snippet":"婚庆公司招聘全职婚礼策划师，求职者可投递简历。","semanticType":"business_lead","sourceArchetype":"company_careers_or_contact","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-010","profile":"welfare_supplier","scenario":"positive_direct","candidate":{"title":"广东某集团2026年员工节日福利礼品供应商征集","url":"https://procurement.example.org/welfare-vendor","snippet":"面向礼品供应商公开征集，提供入库材料清单与提交方式。","semanticType":"direct_opportunity","sourceArchetype":"procurement_or_supplier_portal","publishedAt":"2026-07-02"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-011","profile":"welfare_supplier","scenario":"generic_system_notice","candidate":{"title":"职工福利管理系统升级通知","url":"https://system.example.org/welfare-upgrade","snippet":"系统将在周末维护，用户需重新登录。","semanticType":"business_lead","sourceArchetype":"official_event_site","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-012","profile":"welfare_supplier","scenario":"target_mismatch","candidate":{"title":"员工福利专员招聘","url":"https://jobs.example.org/benefits-specialist","snippet":"企业招聘薪酬福利专员，候选人可投递。","semanticType":"business_lead","sourceArchetype":"company_careers_or_contact","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-013","profile":"headhunter","scenario":"positive_lead","candidate":{"title":"Group Tax Director - Hong Kong Careers","url":"https://company.example.org/careers/tax-director","snippet":"The employer is hiring a Group Tax Director for its cross-border expansion team.","semanticType":"business_lead","sourceArchetype":"company_careers_or_contact","publishedAt":"2026-07-01"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-014","profile":"headhunter","scenario":"source_mismatch","candidate":{"title":"跨境财务职业发展指南","url":"https://blog.example.org/finance-career-guide","snippet":"文章讨论财务人才职业路径，没有具体招聘公司或职位入口。","semanticType":"business_lead","sourceArchetype":"reference_case_source","publishedAt":"2026-06-01"},"expected":{"decision":"downgrade_to_watch_signal","critical":true}},
+    {"id":"q6-015","profile":"headhunter","scenario":"target_mismatch","candidate":{"title":"猎头顾问招聘启事","url":"https://agency.example.org/jobs/recruiter","snippet":"猎头公司招聘顾问加入团队。","semanticType":"business_lead","sourceArchetype":"company_careers_or_contact","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-016","profile":"heritage_company","scenario":"positive_direct","candidate":{"title":"2026博物馆文创产品公开征集","url":"https://museum.example.org/open-call-2026","snippet":"面向文创企业与设计团队征集产品方案，附申请入口。","semanticType":"direct_opportunity","sourceArchetype":"open_call_submission_page","publishedAt":"2026-07-01"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-017","profile":"heritage_company","scenario":"expired_deadline","candidate":{"title":"2026非遗伴手礼征集公告","url":"https://culture.example.org/gift-call","snippet":"申报截止时间为2026年5月30日。","semanticType":"direct_opportunity","sourceArchetype":"open_call_submission_page","publishedAt":"2026-04-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-018","profile":"heritage_company","scenario":"reference_not_opportunity","candidate":{"title":"岭南非遗项目历史名录","url":"https://archive.example.org/heritage-list","snippet":"介绍历年代表性非遗项目与传承人。","semanticType":"direct_opportunity","sourceArchetype":"reference_case_source"},"expected":{"decision":"downgrade_to_watch_signal","critical":false}},
+    {"id":"q6-019","profile":"photographer","scenario":"positive_direct","candidate":{"title":"2026城市影像摄影作品征集","url":"https://gallery.example.org/photo-call","snippet":"自由摄影师可在线投稿，征集期至2026年8月20日。","semanticType":"direct_opportunity","sourceArchetype":"open_call_submission_page","publishedAt":"2026-07-01"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-020","profile":"photographer","scenario":"target_mismatch","candidate":{"title":"摄影师全职岗位招聘","url":"https://jobs.example.org/photographer","snippet":"电商公司招聘全职产品摄影师，求职者提交简历。","semanticType":"business_lead","sourceArchetype":"company_careers_or_contact","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-021","profile":"photographer","scenario":"positive_direct","candidate":{"title":"写真コンテスト2026 作品募集","url":"https://photo.example.jp/contest-2026","snippet":"国内外の写真家が応募できる写真コンテスト。オンライン応募受付中。","semanticType":"direct_opportunity","sourceArchetype":"open_call_submission_page","publishedAt":"2026-06-28"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-022","profile":"pet_brand","scenario":"positive_direct","candidate":{"title":"Asia Pet Expo 2026 Exhibitor Application","url":"https://petexpo.example.org/exhibitor","snippet":"Pet product brands may apply for an exhibitor booth and distributor matching.","semanticType":"direct_opportunity","sourceArchetype":"exhibitor_sponsor_page","publishedAt":"2026-07-01"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-023","profile":"pet_brand","scenario":"subject_mismatch","candidate":{"title":"宠物行为训练师认证课程","url":"https://training.example.org/pet-course","snippet":"报名参加犬只训练课程并获得个人证书。","semanticType":"direct_opportunity","sourceArchetype":"official_event_site","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-024","profile":"pet_brand","scenario":"reference_not_opportunity","candidate":{"title":"全球宠物市场规模报告","url":"https://research.example.org/pet-market","snippet":"报告分析宠物用品行业增长趋势，无申请或合作入口。","semanticType":"business_lead","sourceArchetype":"reference_case_source","publishedAt":"2026-06-15"},"expected":{"decision":"downgrade_to_watch_signal","critical":false}},
+    {"id":"q6-025","profile":"saas_company","scenario":"positive_lead","candidate":{"title":"ASEAN Retail POS Reseller Partner Program","url":"https://pos.example.org/partners","snippet":"B2B retail software providers can contact the regional team to join the reseller program.","semanticType":"channel_partner_lead","sourceArchetype":"reseller_partner_page","publishedAt":"2026-06-25"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-026","profile":"saas_company","scenario":"subject_mismatch","candidate":{"title":"Southeast Asia FinTech AI Summit","url":"https://fintech.example.org/summit","snippet":"Conference news about banking AI with no retail SaaS partner or exhibitor route.","semanticType":"direct_opportunity","sourceArchetype":"official_event_site","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-027","profile":"saas_company","scenario":"positive_directory","candidate":{"title":"Singapore Retail Association Member Directory","url":"https://retail.example.sg/members","snippet":"Directory of retailers and technology solution partners; entries require contact confirmation.","semanticType":"association_directory","sourceArchetype":"association_member_directory","publishedAt":"2026-06-20"},"expected":{"decision":"downgrade_to_watch_signal","critical":false}},
+    {"id":"q6-028","profile":"environment_vendor","scenario":"positive_direct","candidate":{"title":"广东工业园区废气治理设备采购招标","url":"https://gov.example.cn/tender/air-treatment","snippet":"采购工业废气治理与除尘设备，供应商可按公告投标。","semanticType":"direct_opportunity","sourceArchetype":"procurement_or_supplier_portal","publishedAt":"2026-07-02"},"expected":{"decision":"accept","critical":true}},
+    {"id":"q6-029","profile":"environment_vendor","scenario":"action_mismatch","candidate":{"title":"某办公楼房间装修改造采购公告","url":"https://gov.example.cn/tender/room-renovation","snippet":"采购范围为办公楼室内装修与家具安装。","semanticType":"direct_opportunity","sourceArchetype":"procurement_or_supplier_portal","publishedAt":"2026-07-01"},"expected":{"decision":"reject","critical":true}},
+    {"id":"q6-030","profile":"environment_vendor","scenario":"unknown_date","candidate":{"title":"制造业绿色改造项目供应商征集","url":"https://park.example.cn/vendor-call","snippet":"园区征集节能环保设备与技术供应商，具体时间需联系确认。","semanticType":"business_lead","sourceArchetype":"procurement_or_supplier_portal"},"expected":{"decision":"accept","critical":false}}
+  ]
+}
