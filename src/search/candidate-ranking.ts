@@ -249,7 +249,17 @@ function semanticScore(result: SearchResult): Pick<CandidateRankingAssessment, "
 }
 
 function isAcceptedKeyCandidate(result: SearchResult): boolean {
-  if (result.candidate_judge_assessment && result.candidate_judge_assessment.decision !== "accept") return false;
+  if (result.candidate_judge_assessment?.decision === "reject") return false;
+  if (
+    result.candidate_judge_assessment?.decision === "downgrade_to_watch_signal" &&
+    !result.ownership_assessment?.reasonCodes.some((code) =>
+      code === "headhunter_company_hiring_signal" ||
+      code === "environment_vendor_can_bid"
+    )
+  ) {
+    return false;
+  }
+  if (result.ownership_assessment && result.ownership_assessment.ownershipDecision !== "accept") return false;
   if (result.page_type_assessment && result.page_type_assessment.keyCardEligibility !== "eligible") return false;
   return Boolean(result.semantic_type && KEY_SEMANTIC_TYPES.has(result.semantic_type));
 }
@@ -274,7 +284,16 @@ function assessRanking(result: SearchResult, spec: RadarRequirementSpec, options
     semanticScore: semantic.semanticScore,
     totalScore,
     capStatus: isAcceptedKeyCandidate(result) ? "included" : "not_key_candidate",
-    reasonCodes: [...authority.reasonCodes, ...freshness.reasonCodes, ...semantic.reasonCodes],
+    reasonCodes: [
+      ...authority.reasonCodes,
+      ...freshness.reasonCodes,
+      ...semantic.reasonCodes,
+      ...(result.candidate_judge_assessment?.decision === "downgrade_to_watch_signal" &&
+        result.ownership_assessment?.ownershipDecision === "accept"
+        ? ["ownership_accepts_after_judge_downgrade"]
+        : []),
+      ...(result.ownership_assessment?.reasonCodes ?? []),
+    ],
     rankedAt: options.now.toISOString(),
   };
 }

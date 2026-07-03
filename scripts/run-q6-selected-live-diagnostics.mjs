@@ -36,6 +36,7 @@ for (const id of IDS) {
     const cards = Array.isArray(search.opportunityCards) ? search.opportunityCards : [];
     const decisions = { accept: 0, downgrade_to_watch_signal: 0, reject: 0, unknown: 0 };
     const judgeDecisions = { accept: 0, downgrade_to_watch_signal: 0, reject: 0, unknown: 0 };
+    const ownershipDecisions = { accept: 0, downgrade_to_watch_signal: 0, reject: 0, unknown: 0 };
     const capStatuses = { included: 0, excluded_by_cap: 0, not_key_candidate: 0, unknown: 0 };
     const pageTypes = new Map();
     const reasons = new Map();
@@ -45,6 +46,9 @@ for (const id of IDS) {
       pageType: candidate.pageTypeAssessment?.pageType || "unknown",
       pageEligibility: candidate.pageTypeAssessment?.keyCardEligibility || "unknown",
       judge: candidate.candidateJudgeAssessment?.decision || "unknown",
+      ownership: candidate.ownershipAssessment?.ownershipDecision || "unknown",
+      ownershipAction: candidate.ownershipAssessment?.currentUserActionMode || "unknown",
+      ownershipRole: candidate.ownershipAssessment?.opportunityRoleForUser || "unknown",
       cap: candidate.candidateRankingAssessment?.capStatus || "unknown",
       authority: candidate.candidateRankingAssessment?.authorityTier || "unknown",
       score: candidate.candidateRankingAssessment?.totalScore ?? "",
@@ -54,6 +58,8 @@ for (const id of IDS) {
       decisions[decision] = (decisions[decision] || 0) + 1;
       const judgeDecision = candidate.candidateJudgeAssessment?.decision || "unknown";
       judgeDecisions[judgeDecision] = (judgeDecisions[judgeDecision] || 0) + 1;
+      const ownershipDecision = candidate.ownershipAssessment?.ownershipDecision || "unknown";
+      ownershipDecisions[ownershipDecision] = (ownershipDecisions[ownershipDecision] || 0) + 1;
       const capStatus = candidate.candidateRankingAssessment?.capStatus || "unknown";
       capStatuses[capStatus] = (capStatuses[capStatus] || 0) + 1;
       const pageType = candidate.pageTypeAssessment?.pageType || "unknown";
@@ -68,6 +74,7 @@ for (const id of IDS) {
       raw: raw.length,
       decisions,
       judgeDecisions,
+      ownershipDecisions,
       capStatuses,
       pageTypeSummary: [...pageTypes.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([type, count]) => `${type}(${count})`),
       cards: cards.length,
@@ -85,7 +92,7 @@ for (const id of IDS) {
 const withCards = rows.filter((row) => row.ok && row.cards > 0).length;
 const failed = rows.filter((row) => !row.ok || row.outcome === "failed").length;
 const markdown = [
-  "# Q.6-H Selected 10 Live Diagnostic",
+  "# Q.6-I Selected 10 Live Diagnostic",
   "",
   `生成时间：${new Date().toISOString()}`,
   "",
@@ -99,29 +106,31 @@ const markdown = [
   "- Q.6-D 重点检查页面是否为可执行入口，首页、栏目、XLS、模板、趋势文章、泛政策规划默认不得进入重点卡。",
   "- Q.6-C 默认重点候选最多 5 个；超过上限或近似重复的 key candidates 降到观察层，raw audit 保留原始 semantic bucket。",
   "- Q.6-H 将弱聚合、社交转载、泛采购文件、过期行动页和平台说明页挡在重点卡外，并为具名弱候选预留最多 2 条主来源反查查询。",
+  "- Q.6-I 判断页面受益人和当前用户行动主体；日历、政策、竞品招聘服务页、范围不匹配的泛招标不得冒充重点机会。",
   "",
   "## 候选漏斗",
   "",
-  "| # | 运行 | raw | Q6A accept | Judge accept | cap included | cards | page types | 前三张卡 | 主要原因 |",
-  "|---:|---|---:|---:|---:|---:|---:|---|---|---|",
+  "| # | 运行 | raw | Q6A accept | Judge accept | Ownership accept | cap included | cards | page types | 前三张卡 | 主要原因 |",
+  "|---:|---|---:|---:|---:|---:|---:|---:|---|---|---|",
   ...rows.map((row) => row.ok
-    ? `| ${row.id} | ${escapeCell(row.outcome)} | ${row.raw} | ${row.decisions.accept} | ${row.judgeDecisions.accept} | ${row.capStatuses.included} | ${row.cards} | ${escapeCell(row.pageTypeSummary.join("；"))} | ${escapeCell(row.cardTitles.join("；") || "无")} | ${escapeCell(row.topReasons.join("；"))} |`
-    : `| ${row.id} | 失败 | 0 | 0 | 0 | 0 | 0 | 无 | 无 | ${escapeCell(row.error)} |`),
+    ? `| ${row.id} | ${escapeCell(row.outcome)} | ${row.raw} | ${row.decisions.accept} | ${row.judgeDecisions.accept} | ${row.ownershipDecisions.accept} | ${row.capStatuses.included} | ${row.cards} | ${escapeCell(row.pageTypeSummary.join("；"))} | ${escapeCell(row.cardTitles.join("；") || "无")} | ${escapeCell(row.topReasons.join("；"))} |`
+    : `| ${row.id} | 失败 | 0 | 0 | 0 | 0 | 0 | 0 | 无 | 无 | ${escapeCell(row.error)} |`),
   "",
   "## 前五 raw audit",
   "",
   "| # | 前五候选审计 |",
   "|---:|---|",
   ...rows.map((row) => row.ok
-    ? `| ${row.id} | ${escapeCell(row.topAudit.map((item) => `${item.title} [${item.semanticType}/${item.pageType}:${item.pageEligibility}/${item.judge}/${item.cap}/${item.authority}/${item.score}]`).join("；"))} |`
+    ? `| ${row.id} | ${escapeCell(row.topAudit.map((item) => `${item.title} [${item.semanticType}/${item.pageType}:${item.pageEligibility}/judge:${item.judge}/own:${item.ownership}:${item.ownershipAction}:${item.ownershipRole}/cap:${item.cap}/${item.authority}/${item.score}]`).join("；"))} |`
     : `| ${row.id} | ${escapeCell(row.error)} |`),
   "",
   "## 使用边界",
   "",
   "- 本轮使用 Q.6-D page-type gate；页面类型判断仅基于搜索摘要和 URL，不是字段级核验事实。",
-  "- 本轮使用 Q.6-B 有限候选裁判；LLM 只能基于搜索摘要和雷达版本判断，不得补造字段事实。",
-  "- 本轮使用 Q.6-C 来源权威性排序和卡片上限；排序结果不是字段级核验事实。",
-  "- 无卡片不自动等于产品失败：可能是当前小样本没有足够证据，但不得静默回退演示数据。",
+"- 本轮使用 Q.6-B 有限候选裁判；LLM 只能基于搜索摘要和雷达版本判断，不得补造字段事实。",
+"- 本轮使用 Q.6-C 来源权威性排序和卡片上限；排序结果不是字段级核验事实。",
+"- 本轮使用 Q.6-I 受益人和行动主体判断；ownership 不是事实核验，只用于防止错配候选进入重点卡。",
+"- 无卡片不自动等于产品失败：可能是当前小样本没有足够证据，但不得静默回退演示数据。",
 ].join("\n");
 
 await writeFile("Q6_D_Selected_10_Live_Diagnostic.md", `${markdown}\n`, "utf8");

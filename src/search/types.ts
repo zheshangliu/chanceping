@@ -17,6 +17,7 @@ import type { CandidateRelevanceAssessment } from "./candidate-relevance";
 import type { CandidateJudgeAssessment } from "./candidate-llm-judge";
 import type { CandidateRankingAssessment } from "./candidate-ranking";
 import type { CandidatePageTypeAssessment } from "./candidate-page-type";
+import type { CandidateOwnershipAssessment } from "./candidate-ownership";
 
 /** 搜索结果来源类型 */
 export type SearchSourceType = "web" | "rss" | "social" | "gov";
@@ -68,6 +69,8 @@ export interface SearchResult {
   candidate_judge_assessment?: CandidateJudgeAssessment;
   /** Q.6-C internal audit: source authority/ranking/card cap metadata; not a verified fact. */
   candidate_ranking_assessment?: CandidateRankingAssessment;
+  /** Q.6-I internal audit: beneficiary/action-owner fit for the current user; not source verification. */
+  ownership_assessment?: CandidateOwnershipAssessment;
 }
 
 /** Chat-first MVP：搜索运行审计中的原始候选摘要。 */
@@ -99,6 +102,8 @@ export interface RawCandidateAudit {
   candidateJudgeAssessment?: CandidateJudgeAssessment;
   /** Q.6-C: ranking and card cap result; used for card selection, not source verification. */
   candidateRankingAssessment?: CandidateRankingAssessment;
+  /** Q.6-I: beneficiary/action-owner fit for the current user; used for key-card gating. */
+  ownershipAssessment?: CandidateOwnershipAssessment;
 }
 
 /**

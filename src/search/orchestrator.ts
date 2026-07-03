@@ -59,6 +59,7 @@ import { buildKeywordPack } from "./keyword-pack";
 import { applyCandidateRelevanceGate } from "./candidate-relevance";
 import { applyCandidatePageTypeGate } from "./candidate-page-type";
 import { applyCandidateJudgeGate } from "./candidate-llm-judge";
+import { applyCandidateOwnershipGate } from "./candidate-ownership";
 import { rankCandidateResults } from "./candidate-ranking";
 import { buildPrimarySourceRecoveryQueries } from "./primary-source-recovery";
 
@@ -706,6 +707,7 @@ function buildRawCandidateAudits(results: SearchResult[], query: string): RawCan
       pageTypeAssessment: result.page_type_assessment,
       candidateJudgeAssessment: result.candidate_judge_assessment,
       candidateRankingAssessment: result.candidate_ranking_assessment,
+      ownershipAssessment: result.ownership_assessment,
     };
   });
 }
@@ -1300,7 +1302,8 @@ export class SearchOrchestrator {
       const relevanceGate = applyCandidateRelevanceGate(rawResults, spec);
       const pageTypeGate = applyCandidatePageTypeGate(relevanceGate.assessedResults, spec);
       const judgeGate = await applyCandidateJudgeGate(pageTypeGate.assessedResults, spec, this.llmAdapter);
-      const ranking = rankCandidateResults(judgeGate.assessedResults, spec);
+      const ownershipGate = applyCandidateOwnershipGate(judgeGate.assessedResults, spec);
+      const ranking = rankCandidateResults(ownershipGate.assessedResults, spec);
       rawResults = ranking.assessedResults;
       candidateResults = ranking.keyCandidates.filter(isKeyCandidate);
     } else {
