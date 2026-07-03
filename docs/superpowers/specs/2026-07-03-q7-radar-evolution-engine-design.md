@@ -6,6 +6,16 @@ Q.6 ends at Q.6-J. Q.7 starts the product core: every customer message should im
 
 Q.7 first round does not require Random 20, Golden 20, login, paid plans, source-marketplace, WeChat source, large UI rebuild, V1.7 source transparency, or further Q.6 industry-specific filtering. Random 20 and Golden 20 move after Q.7, where they test whether radar revision improves unfamiliar industries.
 
+## Execution Guardrails
+
+Q.7-A / Q.7-B must follow these guardrails:
+
+1. The revision engine can start deterministic, but it must be implemented as generic radar revision patterns. The AI competition path is a demo scenario, not an `if AI competition` product branch.
+2. Tests must verify structured `RadarVersionSpec` changes, not only diff copy. A valid revision must update relevant fields such as `highValueCriteria`, `exclusionRules`, `prioritySourceArchetypes`, `queryFamilies` or `opportunityIntents`, `defaultAssumptions`, and `confirmation_status.user_confirmed = false`.
+3. User confirmation gates execution. A revised radar version must show its diff first; search must not run until the user confirms that draft version.
+4. Result feedback must be stored as structured revision input. It cannot be only appended to `description`; it must enter the revision flow as `trigger = "result_feedback"` and influence exclusions, high-value criteria, query shifts, and source shifts.
+5. Q.7 first round does not add full version history, but names and contracts should leave room for `versionHistory`, `diffHistory`, `confirmedVersion`, and `draftVersion`.
+
 ## Goal
 
 Build a generic Radar Revision Loop and use the AI competition radar as the first polished demo scenario.
@@ -149,7 +159,7 @@ export interface RadarRevisionResult {
 
 Q.7 first round does not add full version history storage. The current spec stores the current `radar_version`. The latest diff is returned to the frontend and is also folded into `radar_version.revisionNotes`.
 
-Full version history can be added later as a separate milestone.
+Full version history can be added later as a separate milestone. Q.7 should avoid names that block future `versionHistory`, `diffHistory`, `confirmedVersion`, or `draftVersion` storage.
 
 ## API Design
 
@@ -211,7 +221,7 @@ Do:
 - Preserve the original target identity unless the user explicitly changes it.
 - Translate negative feedback into exclusion rules and downweighted source/query families.
 - Translate positive clarification into high-value criteria, source archetypes, query families, and scoring rules.
-- Keep result feedback as radar strategy feedback, not as facts about sources.
+- Keep result feedback as structured radar strategy feedback, not as facts about sources.
 - Keep search caps unchanged.
 
 Do not:
@@ -282,6 +292,15 @@ After search results:
   - `我要更可行动的结果`
 
 The next step is revision, not blind re-search.
+
+Result feedback must carry structured fields where possible:
+
+- `expectedOpportunityType`
+- `rejectedReason`
+- `rejectedCardTitles`
+- `freeText`
+
+These fields should become strategy changes such as exclusion rules, downweighted result types, high-value criteria changes, query shifts, and source shifts.
 
 ## AI Competition Demo
 

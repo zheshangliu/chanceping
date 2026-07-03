@@ -8,6 +8,16 @@
 
 **Tech Stack:** TypeScript, Hono API routes, existing local JSON stores, existing plain JS frontend, existing DeepSeek commercial live LLM profile, existing Playwright/Puppeteer-style browser smoke scripts.
 
+## Q.7 Execution Amendments
+
+These amendments are mandatory for Q.7-A / Q.7-B:
+
+1. `RadarVersionReviser` may be deterministic in the first round, but it must be a generic revision-pattern engine. The AI competition scenario is a demo and regression sample, not an industry branch.
+2. `verify:q7` must assert real `RadarVersionSpec` field changes, including `highValueCriteria`, `exclusionRules`, `prioritySourceArchetypes`, `queryFamilies` or `opportunityIntents`, `defaultAssumptions`, and `confirmation_status.user_confirmed = false`.
+3. A revised radar is a draft. The frontend must show `RadarDiff` and wait for user confirmation before search.
+4. Result feedback must use `trigger = "result_feedback"` and structured fields (`expectedOpportunityType`, `rejectedReason`, `rejectedCardTitles`, `freeText`) to change radar strategy. It must not only append text to `description`.
+5. Q.7 does not implement full version history, but contracts and naming must leave room for `versionHistory`, `diffHistory`, `confirmedVersion`, and `draftVersion`.
+
 ---
 
 ## File Structure
@@ -306,13 +316,28 @@ check("revision returns a higher version", revised.radarVersion.version !== prev
 check("revision diff mentions target correction", revised.radarDiff.added.join(" ").includes("OPC") || revised.radarDiff.summary.includes("OPC"));
 check("revision keeps search confirmation gated", revised.shouldSearchAfterConfirm === true);
 check("revision writes revision notes", revised.radarVersion.revisionNotes.length > 0);
+check("revision updates high value criteria", JSON.stringify(revised.radarVersion.highValueCriteria).includes("奖金") || JSON.stringify(revised.radarVersion.highValueCriteria).includes("云资源"));
+check("revision updates exclusions", JSON.stringify(revised.radarVersion.exclusionRules).includes("学生") || JSON.stringify(revised.radarVersion.exclusionRules).includes("展会"));
+check("revision updates source strategy", revised.radarVersion.prioritySourceArchetypes.length >= previousVersion.prioritySourceArchetypes.length);
+check("revision updates query strategy", revised.radarVersion.queryFamilies.length > previousVersion.queryFamilies.length || revised.radarVersion.opportunityIntents.length >= previousVersion.opportunityIntents.length);
+check("revision records default assumptions", JSON.stringify(revised.radarVersion.defaultAssumptions).includes("创业者") || JSON.stringify(revised.radarVersion.defaultAssumptions).includes("开发者"));
+check("revision requires re-confirmation", revised.spec.confirmation_status?.user_confirmed === false);
 ```
 
 - [ ] Run `verify:q7` and confirm it fails because `radar-version-reviser.ts` does not exist.
 
 - [ ] Create `src/agents/radar-version-reviser.ts`.
 
-Implement the first deterministic generic reviser:
+Implement the first deterministic generic reviser. The implementation should extract generic revision signals such as identity shift, opportunity-type shift, high-value criteria, exclusions, source preference, action route preference, and result feedback. It must not use an AI competition industry branch.
+
+The reviser should also convert structured `resultFeedback` into radar strategy changes:
+
+- `expectedOpportunityType` → `opportunityIntents`, `highValueCriteria`, and query shifts
+- `rejectedReason` → `exclusionRules`, downweighted items, and high-value criteria changes
+- `rejectedCardTitles` → revision notes and downweighted examples
+- `freeText` → same generic signal extraction as direct user messages
+
+Implementation starter:
 
 ```ts
 import type {
@@ -445,6 +470,28 @@ export function reviseRadarVersion(input: RadarRevisionRequest): RadarRevisionRe
     shouldSearchAfterConfirm: true,
   };
 }
+```
+
+Before finalizing Task 2, add a focused result-feedback test:
+
+```ts
+const feedbackRevision = reviseRadarVersion({
+  previousSpec: revised.spec,
+  previousRadarVersion: revised.radarVersion,
+  userMessage: "这些结果不对",
+  trigger: "result_feedback",
+  resultFeedback: {
+    expectedOpportunityType: "可报名 AI 比赛",
+    rejectedReason: "不要展会资讯和行业新闻",
+    rejectedCardTitles: ["某 AI 展会资讯"],
+    freeText: "我要能报名、能提交作品的入口。",
+  },
+});
+
+check("result feedback stays structured", feedbackRevision.spec.confirmation_status?.last_user_feedback?.includes("这些结果不对") === true);
+check("result feedback changes exclusions", JSON.stringify(feedbackRevision.radarVersion.exclusionRules).includes("展会"));
+check("result feedback changes high value criteria", JSON.stringify(feedbackRevision.radarVersion.highValueCriteria).includes("报名") || JSON.stringify(feedbackRevision.radarVersion.highValueCriteria).includes("提交"));
+check("result feedback changes query/source shifts", feedbackRevision.radarDiff.queryShifts.length + feedbackRevision.radarDiff.sourceShifts.length > 0);
 ```
 
 - [ ] Run focused tests.
