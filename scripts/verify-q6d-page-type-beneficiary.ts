@@ -206,6 +206,28 @@ const profiles = {
       family("AI 创业者可申请项目", "direct_opportunity", "official_event_site", ["AI startup program application"]),
     ],
   }),
+  goPlayer: toSpec({
+    targetUser: "围棋选手",
+    businessContext: "寻找国内外围棋公开赛、职业定段赛、奖金赛事和协会赛事报名机会",
+    opportunityIntents: ["围棋公开赛", "职业定段赛", "奖金赛事", "协会赛事报名"],
+    highValueCriteria: ["有竞赛规程或报名入口", "面向围棋选手", "官方协会或棋院来源"],
+    exclusionRules: ["电子游戏", "培训广告"],
+    prioritySourceArchetypes: ["围棋协会官网", "棋院官网", "赛事官网"],
+    queryFamilies: [
+      family("围棋赛事报名入口", "direct_opportunity", "official_event_site", ["围棋 公开赛 报名 竞赛规程"]),
+    ],
+  }),
+  tableTennisPlayer: toSpec({
+    targetUser: "乒乓球选手",
+    businessContext: "寻找国内外可报名的乒乓球公开赛和协会赛事",
+    opportunityIntents: ["乒乓球公开赛", "协会赛事报名"],
+    highValueCriteria: ["有竞赛规程或报名入口", "面向乒乓球选手"],
+    exclusionRules: ["培训广告"],
+    prioritySourceArchetypes: ["WTT 官网", "ITTF 官网", "中国乒协官网"],
+    queryFamilies: [
+      family("乒乓球赛事报名入口", "direct_opportunity", "official_event_site", ["乒乓球 公开赛 报名 竞赛规程"]),
+    ],
+  }),
   crossBorderEcommerce: toSpec({
     targetUser: "跨境电商卖家或服务商",
     businessContext: "寻找平台招商、大促报名、卖家活动、供应链合作和海外仓履约合作",
@@ -382,6 +404,18 @@ async function main(): Promise<void> {
   );
   check("environment platform registration flow is not equipment opportunity", environmentPlatformRegistration.candidate_judge_assessment?.decision !== "accept", environmentPlatformRegistration.candidate_judge_assessment?.reason ?? "");
 
+  const genericHardTechMarket = await judgeDecision(
+    result("北大首发招募| 星火国际科创市集・首批硬科技企业入驻招募", "面向硬科技企业开放市集入驻招募，未说明少儿编程机构、学校课程采购、课后服务或青少年科创活动合作。", "direct_opportunity", "business_matching_platform", "https://innovation.example.org/hard-tech-market"),
+    profiles.kidsCoding,
+  );
+  check("kids coding rejects generic hard-tech market entry", genericHardTechMarket.candidate_judge_assessment?.decision === "reject", genericHardTechMarket.candidate_judge_assessment?.reason ?? "");
+
+  const genericCloudPartner = await judgeDecision(
+    result("渠道合作伙伴计划- 阿里云 - Alibaba Cloud", "云厂商渠道合作伙伴计划，面向软件服务商和集成商，未说明少儿编程课程、学校合作或课后服务采购。", "channel_partner_lead", "reseller_partner_page", "https://cloud.example.com/partners"),
+    profiles.kidsCoding,
+  );
+  check("kids coding rejects generic cloud partner program", genericCloudPartner.candidate_judge_assessment?.decision === "reject", genericCloudPartner.candidate_judge_assessment?.reason ?? "");
+
   pageCase(
     "information_disclosure",
     false,
@@ -499,6 +533,26 @@ async function main(): Promise<void> {
   const ecommerceQueries = ecommerceStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
   check("cross-border ecommerce query recovery includes marketplace seller variants", /seller program|marketplace partner|platform campaign|fulfillment partner|overseas warehouse/.test(ecommerceQueries), ecommerceQueries);
   check("cross-border ecommerce query recovery includes platform-specific variants", /shopee|lazada|tiktok shop|amazon global selling|seller registration/.test(ecommerceQueries), ecommerceQueries);
+  check("cross-border ecommerce query recovery includes seller-center and campaign-entry variants", /seller center|seller centre|campaign registration|supplier portal|vendor registration/.test(ecommerceQueries), ecommerceQueries);
+
+  const goStrategy = buildOpportunityStrategy(profiles.goPlayer);
+  const goQueries = goStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
+  check("go player query recovery includes official entry/regulation variants", /competition regulations|entry|association notice|竞赛规程|报名入口|协会通知/.test(goQueries), goQueries);
+  check("go player query recovery includes multilingual go association variants", /nihon kiin|日本棋院|korea baduk|韩国棋院|中国围棋协会|igo tournament/.test(goQueries), goQueries);
+
+  const tableTennisStrategy = buildOpportunityStrategy(profiles.tableTennisPlayer);
+  const tableTennisQueries = tableTennisStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
+  check("non-go tournament strategy does not receive go recovery queries", !/nihon kiin|korea baduk|中国围棋协会|igo tournament/.test(tableTennisQueries), tableTennisQueries);
+
+  const headhunterStrategy = buildOpportunityStrategy(profiles.headhunter);
+  const headhunterQueries = headhunterStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
+  check("headhunter query recovery includes company career/source variants", /company careers|official careers|career page|contact page|招聘官网/.test(headhunterQueries), headhunterQueries);
+  check("headhunter query recovery includes expansion hiring signal variants", /ipo expansion|overseas expansion|treasury controller|tax manager|internal control|资金|税务|内控/.test(headhunterQueries), headhunterQueries);
+
+  const kidsStrategy = buildOpportunityStrategy(profiles.kidsCoding);
+  const kidsQueries = kidsStrategy?.queries.map((item) => item.query.toLowerCase()).join(" | ") ?? "";
+  check("kids coding query recovery includes procurement/cooperation variants", /课后服务|课程采购|教育局 采购|学校 科创|after-school|course procurement/.test(kidsQueries), kidsQueries);
+  check("kids coding query recovery avoids university contest as primary recovery", !/大学生程序设计竞赛|icpc|acm/.test(kidsQueries), kidsQueries);
 
   if (failed > 0) {
     console.error(`Q.6-D page type and beneficiary strictness: ${failed} FAIL`);

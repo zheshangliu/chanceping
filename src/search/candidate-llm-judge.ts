@@ -93,9 +93,11 @@ const DECISIONS = new Set<CandidateJudgeDecision>(["accept", "downgrade_to_watch
 
 const STUDENT_ONLY_RE = /大学生|高校学生|学生参赛|高校参赛队伍|college student|university student/i;
 const KIDS_CODING_RE = /少儿编程|青少年编程|儿童编程|k12|steam|科创活动|学校合作|课程采购/i;
+const KIDS_CONTEXT_RE = /少儿编程|青少年|儿童|k12|中小学|小学|学校合作|教育局|课后服务|课程采购|课程合作|科创活动|编程课程|机器人|scratch|steam/i;
 const GENERIC_PROGRAMMING_CONTEST_RE = /程序设计竞赛|编程大赛|算法大赛|hackathon|algorithm contest|coding competition|programming contest|icpc|acm/i;
 const KIDS_OR_ORG_ACTION_RE = /少儿|青少年|儿童|k12|中小学|小学|培训机构|学校合作|课程采购|承办|招生|scratch|steam|机器人/i;
 const NEGATED_KIDS_ORG_RE = /(?:未|不|没有).{0,18}(少儿编程机构|培训机构|机构).{0,18}(承办|招生|课程|合作)|no .{0,40}(kids coding|training institution|school partner)/i;
+const NEGATED_KIDS_CONTEXT_RE = /(?:未|不|没有|无).{0,40}(少儿编程|培训机构|学校|课程|课后服务|青少年|儿童|k12|承办|招生|合作)|no .{0,60}(kids|school|course|after-school|training institution)/i;
 const RENOVATION_RE = /装修|翻新|家具安装|室内改造|装修改造|renovation|furniture installation/i;
 const GREENING_OR_GENERIC_ENV_RE = /绿化|环境整治|环境提升|景观改造|保洁|环卫|greening|landscape|sanitation/i;
 const ENVIRONMENT_EQUIPMENT_RE = /环保设备|除尘|废气治理|污水处理|环保项目|绿色改造|节能环保设备|环保治理|废水治理|industrial environmental/i;
@@ -191,6 +193,9 @@ function fallbackJudge(result: SearchResult, spec: RadarRequirementSpec, options
   }
   if (kidsCodingRadar && GENERIC_PROGRAMMING_CONTEST_RE.test(text) && (!KIDS_OR_ORG_ACTION_RE.test(text) || NEGATED_KIDS_ORG_RE.test(text))) {
     return hardRejectAssessment("该编程赛事未显示面向少儿编程机构、学校合作、课程采购、承办或招生动作。", options);
+  }
+  if (kidsCodingRadar && DIRECT_ACTION_RE.test(text) && (!KIDS_CONTEXT_RE.test(text) || NEGATED_KIDS_CONTEXT_RE.test(text))) {
+    return hardRejectAssessment("该候选有报名、入驻或合作动作，但未显示面向少儿编程机构、学校课程采购、课后服务或青少年科创活动。", options);
   }
 
   const environmentRadar = ENVIRONMENT_EQUIPMENT_RE.test(radarText);

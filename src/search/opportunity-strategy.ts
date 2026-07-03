@@ -126,8 +126,26 @@ function recoveryVariants(family: RadarVersionQueryFamily): Array<{ query: strin
   }
   if (/seller|marketplace|cross-border|ecommerce|e-commerce|fulfillment|warehouse|平台|卖家|跨境电商|平台招商|大促|海外仓|履约/.test(text)) {
     variants.push(
-      { query: "marketplace seller program seller registration Shopee Lazada TikTok Shop Amazon Global Selling 2026", variant: "action_keyword" },
-      { query: "marketplace partner platform campaign fulfillment partner overseas warehouse partner", variant: "source_archetype" },
+      { query: "marketplace seller center seller centre campaign registration supplier portal vendor registration 2026", variant: "action_keyword" },
+      { query: "Shopee Lazada TikTok Shop Amazon Global Selling seller registration marketplace partner fulfillment overseas warehouse", variant: "source_archetype" },
+    );
+  }
+  if (/围棋|棋院|baduk|(?:^|\s)igo(?:\s|$)|\bgo (?:tournament|championship)|职业定段赛|围棋公开赛|围棋协会/.test(text)) {
+    variants.push(
+      { query: "go tournament entry competition regulations association notice registration 2026", variant: "action_keyword" },
+      { query: "中国围棋协会 日本棋院 Nihon Kiin Korea Baduk Association IGO tournament entry", variant: "official_source" },
+    );
+  }
+  if (/headhunter|猎头|finance|financial|treasury|tax|controller|internal control|ipo|careers?|招聘|岗位|职位|财务|资金|税务|内控/.test(text)) {
+    variants.push(
+      { query: "company careers official careers career page contact page treasury controller tax manager internal control hiring", variant: "official_source" },
+      { query: "IPO expansion overseas expansion finance treasury tax internal control hiring Hong Kong Singapore Guangzhou", variant: "action_keyword" },
+    );
+  }
+  if (/少儿编程|青少年编程|儿童编程|kids coding|k12|steam|课后服务|课程采购|学校合作|科创活动|承办|招生/.test(text)) {
+    variants.push(
+      { query: "少儿编程 学校 科创 活动 承办 课程采购 招标", variant: "action_keyword" },
+      { query: "课后服务 教育局 采购 少儿编程 课程合作 after-school course procurement", variant: "source_archetype" },
     );
   }
   return variants;
