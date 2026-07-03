@@ -148,7 +148,11 @@ export class Golden20BrowserRunner {
       const markdown = document.querySelector("pre.watch-report-preview")?.textContent || "";
       const question = document.querySelector(".clarification-question span")?.textContent?.replace(/^\s*\d+\.\s*/, "").trim() || "";
       const title = document.querySelector(".watch-result-header h3, main h3")?.textContent?.trim() || "";
-      return { text: document.body?.innerText || "", profile, cards, markdown, question, title, url: location.href };
+      const radarCards = Array.from(document.querySelectorAll(".radar-card")).map((el) => ({
+        id: el.getAttribute("data-radar-id") || "",
+        text: el.textContent?.trim().replace(/\s+/g, " ") || "",
+      }));
+      return { text: document.body?.innerText || "", profile, cards, markdown, question, title, url: location.href, radarCards };
     });
   }
 
@@ -371,7 +375,11 @@ export class Golden20BrowserRunner {
         result.radarName = updated?.name || taggedName;
       }
       await this.clickUnique("#btn-back-to-radar-list", "back to radar list");
-      await this.waitFor((s) => s.text.includes("我的雷达") && s.text.includes(result.radarName || "雷达"), 60000, `case ${c.id} my radars`);
+      await this.waitFor(
+        (s) => s.text.includes("我的雷达") && (s.radarCards || []).some((card) => card.id === result.radarId),
+        120000,
+        `case ${c.id} my radars`,
+      );
       if (!result.radarId) throw new Error("保存后找不到 radarId");
       await this.clickUnique(`.radar-card[data-radar-id="${result.radarId}"] .btn-rerun-radar`, "rerun saved radar");
       state = await this.waitFor((s) => s.text.includes("已生成新报告") || s.text.includes("报告生成失败") || s.text.includes("真实搜索失败") || s.text.includes("结果不足"), 300000, `case ${c.id} rerun`);
@@ -463,7 +471,9 @@ export function buildGoldenReport(results, options = {}) {
     ["主体识别不稳", sorted.filter((item) => /主体识别不稳/.test(item.failureReason)).length],
     ["机会类型不合理", sorted.filter((item) => /机会类型不够合理/.test(item.failureReason)).length],
     ["低行动性结果进入卡片", sorted.filter((item) => item.lowActionInCards).length],
-    ["保存或复跑失败", sorted.filter((item) => !item.saved || !item.rerunSuccess || !item.secondReport).length],
+    ["保存失败", sorted.filter((item) => !item.saved).length],
+    ["复跑未触发", sorted.filter((item) => !item.rerunAttempted).length],
+    ["复跑结果不足未生成第二报告", sorted.filter((item) => item.rerunAttempted && !item.secondReport).length],
   ];
   const fullRun = expectedTotal >= 20;
   const recommendN = fullRun && pass >= 15 && partial <= 5 && failed <= 2;

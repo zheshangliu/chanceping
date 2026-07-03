@@ -626,6 +626,17 @@ function limitSearchIntentPlan(plan: SearchIntentPlan, limits: SearchCostLimits)
   return { searchThemes, queries, ...(opportunityStrategy ? { opportunityStrategy } : {}) };
 }
 
+function reserveLiveSourceHintSlots(limits: SearchCostLimits, spec: RadarRequirementSpec, dataMode: DataMode): SearchCostLimits {
+  if (dataMode !== "live") return limits;
+  const sourceHintCount = buildSourceHintSearches(spec, "").length + buildManualSourceSearches(spec, "").length;
+  if (sourceHintCount <= 0) return limits;
+  const reservedSlots = Math.min(5, sourceHintCount, Math.max(0, limits.maxQueriesPerRun - 1));
+  return {
+    ...limits,
+    maxQueriesPerRun: Math.max(1, limits.maxQueriesPerRun - reservedSlots),
+  };
+}
+
 function mapSourceCoverage(checks: SourceHintCheck[]): SourceCoverageItem[] {
   return checks.map((check) => ({
     sourceName: check.sourceName,
@@ -919,7 +930,8 @@ export class SearchOrchestrator {
     const radarType = inferRadarType(spec);
     const searchQuery = query && query.trim() ? query.trim() : buildQueryFromSpec(spec);
     const searchCostLimits = getSearchCostLimits();
-    const intentPlan = limitSearchIntentPlan(buildSearchIntentPlan(spec, searchQuery), searchCostLimits);
+    const intentPlanLimits = reserveLiveSourceHintSlots(searchCostLimits, spec, this.dataMode);
+    const intentPlan = limitSearchIntentPlan(buildSearchIntentPlan(spec, searchQuery), intentPlanLimits);
     const baseQueryItem = intentPlan.queries[0] ?? fallbackQueryItem(searchQuery);
     const reservedLiveQueryKeys = new Set(intentPlan.queries.map(queryItemKey));
     let sourceHintChecks: SourceHintCheck[] = [];
