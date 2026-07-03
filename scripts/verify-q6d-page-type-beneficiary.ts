@@ -468,17 +468,17 @@ async function main(): Promise<void> {
 
   const duplicateA = result(
     "广州海珠举办婚庆创新赋能大赛，向社会征集三大婚恋幸福地标",
-    "新闻报道婚庆创新赋能大赛和地标征集。",
+    "婚庆创新赋能大赛主办方发布地标征集通知，可按页面提交方案。",
     "direct_opportunity",
-    "reference_case_source",
-    "https://news-a.example.com/wedding",
+    "open_call_submission_page",
+    "https://wedding-event.test/open-call",
   );
   const duplicateB = result(
     "广州海珠举办婚庆创新赋能大赛，向社会征集三大“婚恋幸福地标”打造",
-    "转载同一婚庆创新赋能大赛和地标征集新闻。",
+    "同一婚庆创新赋能大赛地标征集入口，可在线提交方案。",
     "direct_opportunity",
-    "reference_case_source",
-    "https://news-b.example.com/wedding-copy",
+    "open_call_submission_page",
+    "https://wedding-event.test/open-call-copy",
   );
   for (const candidate of [duplicateA, duplicateB]) {
     candidate.relevance_assessment = assessCandidateRelevance(candidate, profiles.weddingCompany, { now: new Date("2026-07-03T00:00:00+08:00") });

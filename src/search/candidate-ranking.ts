@@ -1,6 +1,7 @@
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { OpportunityKind, SourceArchetypeId } from "../schema/radar-mvp-contracts";
 import type { SearchResult } from "./types";
+import { assessCandidateSourceIntegrity } from "./primary-source-recovery";
 
 export type CandidateAuthorityTier =
   | "official_or_primary"
@@ -128,6 +129,7 @@ function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick
   const reasonCodes: string[] = [];
   let score = 30;
   let tier: CandidateAuthorityTier = "unknown";
+  const sourceIntegrity = assessCandidateSourceIntegrity(result);
 
   if (result.source_archetype && HIGH_AUTHORITY_SOURCE_TYPES.has(result.source_archetype)) {
     score += 35;
@@ -167,6 +169,23 @@ function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick
     score -= 35;
     tier = tier === "aggregator" ? tier : "reference_or_news";
     reasonCodes.push("news_or_reference");
+  }
+  if (sourceIntegrity.kind === "trusted_primary") {
+    score += 35;
+    tier = "official_or_primary";
+    reasonCodes.push(...sourceIntegrity.reasonCodes);
+  } else if (sourceIntegrity.kind === "weak_aggregator" || sourceIntegrity.kind === "weak_social") {
+    score -= 60;
+    tier = "aggregator";
+    reasonCodes.push(...sourceIntegrity.reasonCodes);
+  } else if (sourceIntegrity.kind === "generic_document") {
+    score -= 55;
+    tier = "reference_or_news";
+    reasonCodes.push(...sourceIntegrity.reasonCodes);
+  } else if (sourceIntegrity.kind === "weak_reference") {
+    score -= 45;
+    tier = "reference_or_news";
+    reasonCodes.push(...sourceIntegrity.reasonCodes);
   }
   const page = result.page_type_assessment;
   if (page?.keyCardEligibility === "reject") {
@@ -286,10 +305,15 @@ export function rankCandidateResults(
   const includedTitles: string[] = [];
   const duplicateUrls = new Set<string>();
   const weakAuthorityUrls = new Set<string>();
-  const hasPrimaryAcceptedCandidate = sorted.some((item) => isAcceptedKeyCandidate(item.result) && !isWeakAuthorityForKeyCard(item.assessment));
+  const staleUrls = new Set<string>();
   for (const item of sorted) {
     if (!isAcceptedKeyCandidate(item.result)) continue;
-    if (hasPrimaryAcceptedCandidate && isWeakAuthorityForKeyCard(item.assessment)) {
+    if (item.assessment.freshnessScore <= 10) {
+      staleUrls.add(item.result.url);
+      overflowUrls.add(item.result.url);
+      continue;
+    }
+    if (isWeakAuthorityForKeyCard(item.assessment)) {
       weakAuthorityUrls.add(item.result.url);
       overflowUrls.add(item.result.url);
       continue;
@@ -323,6 +347,8 @@ export function rankCandidateResults(
           ...item.assessment.reasonCodes,
           weakAuthorityUrls.has(item.result.url)
             ? "weak_authority_downgraded_by_primary_candidate"
+            : staleUrls.has(item.result.url)
+              ? "stale_candidate_excluded_from_key_card"
             : duplicateUrls.has(item.result.url)
               ? "near_duplicate_key_candidate"
               : "key_card_cap_exceeded",

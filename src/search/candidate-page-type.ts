@@ -1,6 +1,7 @@
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { OpportunityKind } from "../schema/radar-mvp-contracts";
 import type { SearchResult } from "./types";
+import { assessCandidateSourceIntegrity } from "./primary-source-recovery";
 
 export type CandidatePageType =
   | "official_notice"
@@ -83,6 +84,8 @@ const ABOUT_US_RE = /关于我们|机构介绍|组织介绍|公司简介|about u
 const INSTITUTION_PROFILE_RE = /机构主页|机构概况|机构简介|学院|研究院|共享平台|institution profile|organization profile/i;
 const INFORMATION_DISCLOSURE_RE = /信息公开|公开信息|news information|information disclosure|public information/i;
 const PLATFORM_INTRO_RE = /平台介绍|平台能力|平台注册须知|平台操作指南|platform intro|platform introduction|platform overview/i;
+const PLATFORM_ROLLOUT_RE = /推广(?:统一)?应用.{0,24}(?:采购)?(?:电子交易)?平台|平台.{0,16}推广应用|电子交易系统.{0,16}(?:通知|推广|使用)/i;
+const PLATFORM_TERMS_RE = /服务须知|服务条款|线上签署|使用条件|用户协议|service terms|terms of service/i;
 const CALENDAR_RE = /日历|赛历|calendar|schedule/i;
 const FAQ_RE = /faq|常见问题|问答|帮助中心/i;
 const POLICY_RE = /行动方案|规划|政策解读|指导意见|plan|roadmap|policy/i;
@@ -90,6 +93,7 @@ const DEPARTMENT_RE = /下属单位|机构职能|组织机构|内设机构|部�
 const CATEGORY_RE = /栏目|列表|频道|专题|category|list|index/i;
 const DIRECTORY_RE = /目录|名录|会员|成员|协会成员|directory|member list|members/i;
 const AGGREGATOR_RE = /聚合|招标采购信息|采购与招标网|招标网|招标信息网站|推荐公告|采招网|必联网|bidcenter|chinabidding|qianlima|indeed|linkedin|猎聘|智联|boss直聘|job board/i;
+const GENERIC_CATEGORY_TITLE_RE = /^(?:招标采购|采购公告|招标公告|招聘信息|职位信息|活动资讯)\s*[-|｜—]/i;
 
 const DIRECT_KEY_TYPES = new Set<OpportunityKind>([
   "direct_opportunity",
@@ -145,15 +149,20 @@ function hasDirectActionEntry(text: string): boolean {
 }
 
 function classifyPageType(result: SearchResult, text: string): CandidatePageType {
+  const sourceIntegrity = assessCandidateSourceIntegrity(result);
+  const normalizedTitle = normalize(result.title);
   if (XLS_RE.test(text)) return "xls_summary";
   if (TEMPLATE_RE.test(text)) return "template_page";
   if (FAQ_RE.test(text)) return "faq_page";
   if (ABOUT_US_RE.test(text)) return "about_us";
   if (INFORMATION_DISCLOSURE_RE.test(text)) return "information_disclosure";
   if (INSTITUTION_PROFILE_RE.test(text) && !hasDirectActionEntry(text)) return "institution_profile";
-  if (PLATFORM_INTRO_RE.test(text)) return "platform_intro";
+  if (PLATFORM_INTRO_RE.test(text) || PLATFORM_ROLLOUT_RE.test(text) || PLATFORM_TERMS_RE.test(text)) return "platform_intro";
   if (DEPARTMENT_RE.test(text)) return "department_index";
   if (isLikelyHomepage(result)) return "homepage";
+  if (GENERIC_CATEGORY_TITLE_RE.test(normalizedTitle)) return "category_page";
+  if (sourceIntegrity.kind === "generic_document") return "generic_procurement_column";
+  if (sourceIntegrity.kind === "weak_aggregator" || sourceIntegrity.kind === "weak_social") return "aggregator_page";
   if (POLICY_RE.test(text) && !hasDirectActionEntry(text)) return "policy_plan";
   if (AGGREGATOR_RE.test(text)) return "aggregator_page";
   if (PDF_SUMMARY_RE.test(text) && POLICY_RE.test(text)) return "pdf_policy_material";
@@ -161,6 +170,7 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (TREND_RE.test(text)) return "trend_article";
   if (CALENDAR_RE.test(text) && !REGISTRATION_RE.test(text)) return "calendar_page";
   if (NEWS_RE.test(text) && !hasDirectActionEntry(text)) return "news_article";
+  if (sourceIntegrity.kind === "weak_reference") return "news_article";
   if (DIRECTORY_RE.test(text) && PARTNER_RE.test(text)) return "partner_program";
   if (DIRECTORY_RE.test(text)) return "directory_page";
   if (SUPPLIER_RE.test(text)) return "supplier_onboarding";

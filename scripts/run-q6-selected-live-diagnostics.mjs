@@ -85,7 +85,7 @@ for (const id of IDS) {
 const withCards = rows.filter((row) => row.ok && row.cards > 0).length;
 const failed = rows.filter((row) => !row.ok || row.outcome === "failed").length;
 const markdown = [
-  "# Q.6-D Selected 10 Live Diagnostic",
+  "# Q.6-H Selected 10 Live Diagnostic",
   "",
   `生成时间：${new Date().toISOString()}`,
   "",
@@ -98,6 +98,7 @@ const markdown = [
   "- Q.6-A `accept` 后会经过 Q.6-D page-type gate、Q.6-B LLM/fallback candidate judge 与 Q.6-C source ranking/card cap。",
   "- Q.6-D 重点检查页面是否为可执行入口，首页、栏目、XLS、模板、趋势文章、泛政策规划默认不得进入重点卡。",
   "- Q.6-C 默认重点候选最多 5 个；超过上限或近似重复的 key candidates 降到观察层，raw audit 保留原始 semantic bucket。",
+  "- Q.6-H 将弱聚合、社交转载、泛采购文件、过期行动页和平台说明页挡在重点卡外，并为具名弱候选预留最多 2 条主来源反查查询。",
   "",
   "## 候选漏斗",
   "",

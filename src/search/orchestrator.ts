@@ -60,6 +60,7 @@ import { applyCandidateRelevanceGate } from "./candidate-relevance";
 import { applyCandidatePageTypeGate } from "./candidate-page-type";
 import { applyCandidateJudgeGate } from "./candidate-llm-judge";
 import { rankCandidateResults } from "./candidate-ranking";
+import { buildPrimarySourceRecoveryQueries } from "./primary-source-recovery";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -653,8 +654,9 @@ function limitSearchIntentPlan(plan: SearchIntentPlan, limits: SearchCostLimits)
 function reserveLiveSourceHintSlots(limits: SearchCostLimits, spec: RadarRequirementSpec, dataMode: DataMode): SearchCostLimits {
   if (dataMode !== "live") return limits;
   const sourceHintCount = buildSourceHintSearches(spec, "").length + buildManualSourceSearches(spec, "").length;
-  if (sourceHintCount <= 0) return limits;
-  const reservedSlots = Math.min(5, sourceHintCount, Math.max(0, limits.maxQueriesPerRun - 1));
+  const recoverySlotCount = spec.radar_version ? 2 : 0;
+  const reservedSlots = Math.min(5, sourceHintCount + recoverySlotCount, Math.max(0, limits.maxQueriesPerRun - 1));
+  if (reservedSlots <= 0) return limits;
   return {
     ...limits,
     maxQueriesPerRun: Math.max(1, limits.maxQueriesPerRun - reservedSlots),
@@ -961,7 +963,7 @@ export class SearchOrchestrator {
     const searchQuery = query && query.trim() ? query.trim() : buildQueryFromSpec(spec);
     const searchCostLimits = getSearchCostLimits();
     const intentPlanLimits = reserveLiveSourceHintSlots(searchCostLimits, spec, this.dataMode);
-    const intentPlan = limitSearchIntentPlan(buildSearchIntentPlan(spec, searchQuery), intentPlanLimits);
+    let intentPlan = limitSearchIntentPlan(buildSearchIntentPlan(spec, searchQuery), intentPlanLimits);
     const baseQueryItem = intentPlan.queries[0] ?? fallbackQueryItem(searchQuery);
     const reservedLiveQueryKeys = new Set(intentPlan.queries.map(queryItemKey));
     let sourceHintChecks: SourceHintCheck[] = [];
@@ -1233,6 +1235,37 @@ export class SearchOrchestrator {
         allResults = this.dataMode === "live"
           ? deduplicateByUrL([...hintedResults, ...allResults])
           : deduplicateByUrL([...allResults, ...hintedResults]);
+      }
+
+      const recoveryProvider = primaryProviders[0] ?? fallbackProviders[0];
+      const recoveryCapacity = Math.min(2, Math.max(0, searchCostLimits.maxQueriesPerRun - reservedLiveQueryKeys.size));
+      const recoveryQueryItems = recoveryProvider && spec.radar_version
+        ? buildPrimarySourceRecoveryQueries(allResults, spec, recoveryCapacity)
+          .filter((item) => !reservedLiveQueryKeys.has(queryItemKey(item)))
+        : [];
+      if (recoveryProvider && recoveryQueryItems.length > 0) {
+        recoveryQueryItems.forEach((item) => reservedLiveQueryKeys.add(queryItemKey(item)));
+        const recoveryResults = await Promise.all(recoveryQueryItems.map(async (queryItem) => {
+          const result = await searchProviderWithRetry(recoveryProvider, queryItem, {
+            max_results: Math.min(this.maxResultsPerProvider, searchCostLimits.maxResultsPerQuery),
+          });
+          queryExecutions.push(result.log);
+          if (result.error) errors.push(`主来源反查失败: ${result.error}`);
+          return result.results;
+        }));
+        rawProviderResultCount += recoveryResults.reduce((sum, items) => sum + items.length, 0);
+        allResults = deduplicateByUrL([...recoveryResults.flat(), ...allResults]);
+        const combinedQueries = [...intentPlan.queries, ...recoveryQueryItems];
+        intentPlan = {
+          ...intentPlan,
+          queries: combinedQueries,
+          ...(intentPlan.opportunityStrategy ? {
+            opportunityStrategy: {
+              ...intentPlan.opportunityStrategy,
+              queries: combinedQueries,
+            },
+          } : {}),
+        };
       }
 
       if (this.dataMode === "live" && providerRouting) {
