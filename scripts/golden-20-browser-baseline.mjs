@@ -96,21 +96,22 @@ export function selectGoldenCaseIdsForLiveMode(options = {}) {
 }
 
 async function ensureDir(url) {
-  await mkdir(dirname(fileURLToPath(url)), { recursive: true });
+  const target = url instanceof URL ? fileURLToPath(url) : url;
+  await mkdir(dirname(target), { recursive: true });
 }
 
-export async function loadGoldenResults() {
+export async function loadGoldenResults(resultFile = RESULT_FILE) {
   try {
-    const parsed = JSON.parse(await readFile(RESULT_FILE, "utf-8"));
+    const parsed = JSON.parse(await readFile(resultFile, "utf-8"));
     return Array.isArray(parsed.results) ? parsed.results : [];
   } catch {
     return [];
   }
 }
 
-async function saveGoldenResults(results) {
-  await ensureDir(RESULT_FILE);
-  await writeFile(RESULT_FILE, JSON.stringify({
+export async function saveGoldenResults(results, resultFile = RESULT_FILE) {
+  await ensureDir(resultFile);
+  await writeFile(resultFile, JSON.stringify({
     generatedAt: new Date().toISOString(),
     results: [...results].sort((a, b) => a.id - b.id),
   }, null, 2), "utf-8");
@@ -122,11 +123,13 @@ export class Golden20BrowserRunner {
     baseUrl = "http://localhost:3000",
     testRadarNamePrefix = "Golden Q4 Test",
     protectExistingRadars = true,
+    resultFile = RESULT_FILE,
   }) {
     this.tab = tab;
     this.baseUrl = baseUrl;
     this.testRadarNamePrefix = testRadarNamePrefix;
     this.protectExistingRadars = protectExistingRadars;
+    this.resultFile = resultFile;
     this.createdRadarIds = new Set();
   }
 
@@ -414,8 +417,8 @@ export class Golden20BrowserRunner {
     result.recommendations = grade.suggestions.length > 0 ? grade.suggestions : ["继续观察 Golden 20 中的共性问题"];
     result.failureClasses = grade.failureClasses ?? (result.failureReason ? ["主链路失败"] : []);
 
-    const existing = await loadGoldenResults();
-    await saveGoldenResults(existing.filter((item) => item.id !== result.id).concat(result));
+    const existing = await loadGoldenResults(this.resultFile);
+    await saveGoldenResults(existing.filter((item) => item.id !== result.id).concat(result), this.resultFile);
     return result;
   }
 }

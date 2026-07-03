@@ -246,7 +246,8 @@ export class SerperProvider implements SearchProvider {
     const cached = getCachedSearchResults(cacheInput);
     this.lastSearchMeta = { cacheStatus: cached.status, queryHash: cached.queryHash };
     if (cached.status === "hit") {
-      return (cached.results ?? []).map((result) => ({ ...result }));
+      const max = options?.max_results ?? DEFAULT_MAX_RESULTS;
+      return (cached.results ?? []).slice(0, max).map((result) => ({ ...result }));
     }
     console.info(`[SearchCostGuard] provider=serper cache miss queryHash=${cached.queryHash}`);
     recordSerperCallOrThrow();

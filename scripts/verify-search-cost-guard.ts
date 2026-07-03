@@ -126,14 +126,14 @@ async function verifyRunCapsAndDedup(): Promise<void> {
   }
 }
 
-function makeSerperPayload(title: string): unknown {
+function makeSerperPayload(title: string, count = 1): unknown {
   return {
-    organic: [{
-      title,
-      link: `https://real.example.com/${encodeURIComponent(title)}`,
+    organic: Array.from({ length: count }, (_, index) => ({
+      title: `${title} ${index + 1}`,
+      link: `https://real.example.com/${encodeURIComponent(title)}-${index + 1}`,
       snippet: "真实搜索测试结果，包含报名、申请和联系信号。",
       date: "2026-07-02",
-    }],
+    })),
   };
 }
 
@@ -147,15 +147,16 @@ async function verifySerperCache(): Promise<void> {
   process.env.SERPER_DAILY_SOFT_BUDGET = "90";
   globalThis.fetch = (async () => {
     fetchCount += 1;
-    return new Response(JSON.stringify(makeSerperPayload(`缓存测试 ${fetchCount}`)), { status: 200 });
+    return new Response(JSON.stringify(makeSerperPayload(`缓存测试 ${fetchCount}`, 5)), { status: 200 });
   }) as typeof fetch;
 
   try {
     const provider = new SerperProvider({ apiKey: "test-serper-key", mockMode: false });
     const first = await provider.search("  Cache   Query 测试  ", { max_results: 5, language: "zh", region: "cn" });
-    const second = await provider.search("cache query 测试", { max_results: 5, language: "zh", region: "cn" });
+    const second = await provider.search("cache query 测试", { max_results: 2, language: "zh", region: "cn" });
     check("Serper cache hit does not call fetch twice", fetchCount === 1, `fetchCount=${fetchCount}`);
     check("Serper cache returns cached results", first[0]?.url === second[0]?.url, JSON.stringify({ first: first[0]?.url, second: second[0]?.url }));
+    check("Serper cache hit still respects max_results", first.length === 5 && second.length === 2, JSON.stringify({ first: first.length, second: second.length }));
   } finally {
     globalThis.fetch = originalFetch;
     process.env = originalEnv;
