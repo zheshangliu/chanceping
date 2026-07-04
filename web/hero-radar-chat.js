@@ -248,10 +248,20 @@
     `;
   }
 
+  function syncHeroEntryVisibility() {
+    const chatStarted = heroRadarChatState.messages.length > 0;
+    [".home-input-area", ".home-helper", ".hero-demo-prompts"].forEach((selector) => {
+      const element = document.querySelector(selector);
+      if (element) element.hidden = chatStarted;
+    });
+  }
+
   function renderHeroRadarChat() {
     const root = document.getElementById("hero-radar-chat-root");
     if (!root) return;
-    const messages = heroRadarChatState.messages.length > 0
+    const chatStarted = heroRadarChatState.messages.length > 0;
+    syncHeroEntryVisibility();
+    const messages = chatStarted
       ? heroRadarChatState.messages
       : [{
         id: "hero_welcome",
@@ -276,10 +286,10 @@
         <div class="hero-chat-messages">
           ${messages.map(renderMessage).join("")}
         </div>
-        <div class="hero-chat-input-row">
+        ${chatStarted ? `<div class="hero-chat-input-row">
           <textarea id="hero-radar-chat-input" rows="2" placeholder="继续告诉我：你是谁、不要什么、什么结果才算有用"></textarea>
           <button id="hero-radar-chat-send" class="primary-btn" ${heroRadarChatState.isBusy ? "disabled" : ""}>发送</button>
-        </div>
+        </div>` : ""}
       </section>
     `;
     root.querySelector("#hero-chat-reset")?.addEventListener("click", resetHeroRadarChat);
@@ -477,6 +487,7 @@
   window.renderRadarArtifact = renderRadarArtifact;
   window.renderReportArtifact = renderReportArtifact;
   window.renderHeroRadarChat = renderHeroRadarChat;
+  window.syncHeroEntryVisibility = syncHeroEntryVisibility;
   window.resetHeroRadarChat = resetHeroRadarChat;
   window.startHeroRadarChat = startHeroRadarChat;
   window.confirmHeroRadar = confirmHeroRadar;

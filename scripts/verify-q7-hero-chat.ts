@@ -63,6 +63,8 @@ async function run() {
   check("radar version diff is collapsed by default", heroChatJs.includes("查看本次修改"));
   check("hero chat shows a three-step beginner guide", heroChatJs.includes("1. 说需求") && heroChatJs.includes("2. 看雷达") && heroChatJs.includes("3. 确认后搜索"));
   check("hero chat can reset the current demo", heroChatJs.includes("hero-chat-reset") && heroChatJs.includes("resetHeroRadarChat"));
+  check("hero chat becomes the only input after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-input-area") && heroChatJs.includes(".hero-demo-prompts"));
+  check("chat composer is hidden until the radar conversation starts", heroChatJs.includes("chatStarted ? `") && heroChatJs.includes("hero-chat-input-row"));
   check("home routes primary input to hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
   check("demo prompt chips only fill input", homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));
