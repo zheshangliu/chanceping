@@ -105,7 +105,17 @@ async function main(): Promise<void> {
     if (modalButtonVisible < 1) fail("radar artifact should expose centered modal button");
     await page.click("[data-action='open-radar-modal']");
     await page.waitForSelector(".hero-artifact-modal[open]", { timeout: 5_000 });
-    await page.keyboard.press("Escape");
+    const modalBox = await page.$eval(".hero-artifact-modal[open]", (el: any) => {
+      const rect = el.getBoundingClientRect();
+      const viewport = globalThis as any;
+      return {
+        centerOffsetX: Math.abs(rect.left + rect.width / 2 - viewport.innerWidth / 2),
+        centerOffsetY: Math.abs(rect.top + rect.height / 2 - viewport.innerHeight / 2),
+      };
+    });
+    if (modalBox.centerOffsetX > 12 || modalBox.centerOffsetY > 12) fail("radar modal should be centered in viewport");
+    await page.click("[data-action='close-hero-modal']");
+    await page.waitForSelector(".hero-artifact-modal[open]", { hidden: true, timeout: 5_000 });
 
     await page.type("#hero-radar-chat-input", "我不是学生，我是 OPC 创业者，优先奖金、云资源、能上架展示的比赛。");
     await page.click("#hero-radar-chat-send");
@@ -126,6 +136,14 @@ async function main(): Promise<void> {
       const buttons = Array.from(doc.querySelectorAll(".hero-confirm-radar-btn")) as any[];
       buttons[buttons.length - 1]?.click();
     });
+    await page.waitForFunction(() => {
+      const doc = (globalThis as any).document;
+      return (doc.querySelector(".hero-progress-artifact")?.textContent || "").includes("正在搜索官方赛事页");
+    }, { timeout: 5_000 });
+    await page.waitForFunction(() => {
+      const doc = (globalThis as any).document;
+      return (doc.querySelector(".hero-progress-artifact")?.textContent || "").includes("正在生成机会卡和 Markdown 报告");
+    }, { timeout: 10_000 });
     await page.waitForSelector(".hero-report-artifact", { timeout: 20_000 });
     const reportText = await page.$eval(".hero-report-artifact", (el: any) => el.textContent || "");
     if (!reportText.includes("查看本次机会卡")) fail("chat report artifact missing view-cards action");

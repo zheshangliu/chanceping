@@ -621,13 +621,17 @@ textarea {
 .home-container {
   max-width: 960px;
   margin: 0 auto;
+  min-height: calc(100vh - 102px);
   padding: 32px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
 }
 
 .home-hero {
-  min-height: 34vh;
-  display: flex;
+  min-height: 0;
+  display: none;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
@@ -771,10 +775,7 @@ textarea {
 }
 
 .home-helper {
-  color: var(--text-secondary);
-  font-size: 13px;
-  margin: 0;
-  text-align: center;
+  display: none;
 }
 
 /* ============================================================
@@ -3688,6 +3689,27 @@ body.hero-chat-active .hero-radar-chat-root {
   background: var(--bg-secondary);
 }
 
+.hero-progress-artifact {
+  max-height: 118px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.hero-progress-artifact p {
+  opacity: 0.72;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.hero-progress-artifact p + p {
+  margin-top: 6px;
+}
+
+.hero-progress-artifact p.active {
+  opacity: 1;
+  transform: translateX(3px);
+  color: var(--text-primary);
+}
+
 .hero-radar-artifact.compact {
   display: flex;
   align-items: center;
@@ -4014,11 +4036,18 @@ body.hero-chat-active .hero-chat-main {
 .hero-artifact-modal {
   width: min(760px, calc(100vw - 32px));
   max-height: min(760px, calc(100vh - 48px));
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
   padding: 0;
   border: 0;
   border-radius: 16px;
   background: transparent;
   color: var(--text-primary);
+  z-index: 1000;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.42);
 }
 
 .hero-artifact-modal::backdrop {

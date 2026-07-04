@@ -67,13 +67,23 @@
   }
 
   function addMessage(role, content, artifact) {
-    heroRadarChatState.messages.push({
+    const message = {
       id: uid(role),
       role,
       content,
       artifact,
       createdAt: new Date().toISOString(),
-    });
+    };
+    heroRadarChatState.messages.push(message);
+    saveState();
+    renderHeroRadarChat();
+    return message;
+  }
+
+  function updateMessageArtifact(messageId, updater) {
+    const message = findMessageById(messageId);
+    if (!message) return;
+    message.artifact = typeof updater === "function" ? updater(message.artifact || {}) : updater;
     saveState();
     renderHeroRadarChat();
   }
@@ -246,9 +256,10 @@
 
   function renderProgressArtifact(message) {
     const steps = asArray(message.artifact?.steps);
+    const activeStepCount = Math.max(1, Math.min(Number(message.artifact?.activeStepCount) || steps.length, steps.length));
     return `
-      <article class="hero-progress-artifact">
-        ${steps.map((step) => `<p>${escapeHtml(step)}</p>`).join("")}
+      <article class="hero-progress-artifact" aria-live="polite">
+        ${steps.slice(0, activeStepCount).map((step, index) => `<p class="${index === activeStepCount - 1 ? "active" : ""}">${escapeHtml(step)}</p>`).join("")}
       </article>
     `;
   }
@@ -370,14 +381,13 @@
     if (!root) return;
     const chatStarted = heroRadarChatState.messages.length > 0;
     syncHeroEntryVisibility();
+    if (!chatStarted) {
+      root.innerHTML = "";
+      return;
+    }
     const messages = chatStarted
       ? heroRadarChatState.messages
-      : [{
-        id: "hero_welcome",
-        role: "assistant",
-        content: "告诉我你的 AI 产品和你想找的机会，我会先帮你画一个可确认的机会雷达。",
-        createdAt: new Date().toISOString(),
-      }];
+      : [];
     root.innerHTML = `
       <section class="hero-chat-workspace">
         ${renderHeroSidebar()}
@@ -536,15 +546,18 @@
       ...draft,
       spec: confirmedSpec,
     };
-    addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
+    const progressSteps = [
+      "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+      "正在筛选可报名、可提交作品、可申请资源的机会……",
+      "正在排除展会资讯、培训广告和学生专属结果……",
+      "正在生成机会卡和 Markdown 报告……",
+    ];
+    const progressMessage = addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
       type: "progress",
-      steps: [
-        "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
-        "正在筛选可报名、可提交作品、可申请资源的机会……",
-        "正在排除展会资讯、培训广告和学生专属结果……",
-        "正在生成机会卡和 Markdown 报告……",
-      ],
+      steps: progressSteps,
+      activeStepCount: 1,
     });
+    const progressTimer = startProgressTicker(progressMessage.id, progressSteps.length);
     try {
       const search = await postJson("/api/search", {
         spec: confirmedSpec,
@@ -591,10 +604,35 @@
       addMessage("assistant", `这次盯机会失败：${err.message || "未知错误"}。雷达已经确认，你可以继续补充条件后再让我修订。`);
       if (window.showToast) window.showToast(err.message || "盯机会失败", "error");
     } finally {
+      stopProgressTicker(progressTimer);
+      updateMessageArtifact(progressMessage.id, (artifact) => ({
+        ...artifact,
+        activeStepCount: progressSteps.length,
+      }));
       heroRadarChatState.isBusy = false;
       saveState();
       renderHeroRadarChat();
     }
+  }
+
+  function startProgressTicker(messageId, maxSteps) {
+    let activeStepCount = 1;
+    const timerId = window.setInterval(() => {
+      activeStepCount = Math.min(activeStepCount + 1, maxSteps);
+      updateMessageArtifact(messageId, (artifact) => ({
+        ...artifact,
+        activeStepCount,
+      }));
+      if (activeStepCount >= maxSteps) {
+        // Keep the last line visible while search/report generation completes.
+        window.clearInterval(timerId);
+      }
+    }, 900);
+    return timerId;
+  }
+
+  function stopProgressTicker(timerId) {
+    if (timerId) window.clearInterval(timerId);
   }
 
   function viewHeroCards() {
