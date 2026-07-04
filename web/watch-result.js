@@ -509,5 +509,12 @@
     return json;
   }
 
+  function showWatchResult(result) {
+    currentResult = result;
+    switchToResult();
+    renderResult(currentResult);
+  }
+
   window.runWatchNow = runWatchNow;
+  window.showWatchResult = showWatchResult;
 })();

@@ -301,15 +301,79 @@
 
   async function confirmHeroRadar() {
     if (!heroRadarChatState.currentDraft || heroRadarChatState.isBusy) return;
-    heroRadarChatState.currentDraft.spec = markSpecConfirmed(heroRadarChatState.currentDraft.spec);
-    addMessage("assistant", `已确认 ${heroRadarChatState.currentDraft.radarVersion?.version || "当前雷达"}。下一步会按这版雷达去盯机会。`, {
+    heroRadarChatState.isBusy = true;
+    const draft = heroRadarChatState.currentDraft;
+    const confirmedSpec = markSpecConfirmed(draft.spec);
+    heroRadarChatState.currentDraft = {
+      ...draft,
+      spec: confirmedSpec,
+    };
+    addMessage("assistant", `已确认 ${draft.radarVersion?.version || "当前雷达"}，我开始按这版雷达盯一次。`, {
       type: "progress",
-      steps: ["正在准备搜索计划……", "确认后才会调用搜索与报告生成。"],
+      steps: [
+        "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+        "正在筛选可报名、可提交作品、可申请资源的机会……",
+        "正在排除展会资讯、培训广告和学生专属结果……",
+        "正在生成机会卡和 Markdown 报告……",
+      ],
     });
-    saveState();
+    try {
+      const search = await postJson("/api/search", {
+        spec: confirmedSpec,
+        query: draft.description || draft.radarVersion?.oneSentencePositioning || "AI entrepreneur competition hackathon developer challenge cloud credits application",
+        ...(window.getChancePingSearchMode?.() ? { search_mode: window.getChancePingSearchMode() } : {}),
+      });
+      const cards = search.opportunityCards || [];
+      const sourceHintChecks = search.sourceCoverage || search.sourceHintChecks || [];
+      const report = await postJson("/api/reports/generate", {
+        spec: confirmedSpec,
+        radar_type: "custom",
+        opportunities: cards,
+        sourceHintChecks,
+        candidateAccounting: search.candidateAccounting,
+        executionLog: search.executionLog,
+        rawCandidates: search.rawCandidates || [],
+        run_id: search.run?.id,
+        profile: confirmedSpec.profile_summary || confirmedSpec.profile,
+      });
+      heroRadarChatState.currentResult = {
+        runId: search.run?.id,
+        reportId: report.reportId,
+        description: draft.description,
+        spec: confirmedSpec,
+        profile: confirmedSpec.profile_summary || confirmedSpec.profile,
+        radarVersion: draft.radarVersion,
+        suggestedName: draft.suggestedName || "AI 创业者机会雷达",
+        opportunityCards: cards,
+        sourceHintChecks,
+        candidateAccounting: search.candidateAccounting,
+        rawCandidates: search.rawCandidates || [],
+        executionLog: search.executionLog,
+        runOutcome: search.runOutcome,
+        searchMode: window.getChancePingSearchMode?.(),
+        markdown: report.markdown,
+      };
+      addMessage("assistant", "本次机会雷达报告已生成。我先把 Markdown 发在这里，你也可以打开机会卡查看完整结果。", {
+        type: "report",
+        markdown: report.markdown,
+        runId: search.run?.id,
+        reportId: report.reportId,
+      });
+    } catch (err) {
+      addMessage("assistant", `这次盯机会失败：${err.message || "未知错误"}。雷达已经确认，你可以继续补充条件后再让我修订。`);
+      if (window.showToast) window.showToast(err.message || "盯机会失败", "error");
+    } finally {
+      heroRadarChatState.isBusy = false;
+      saveState();
+      renderHeroRadarChat();
+    }
   }
 
   function viewHeroCards() {
+    if (heroRadarChatState.currentResult && typeof window.showWatchResult === "function") {
+      window.showWatchResult(heroRadarChatState.currentResult);
+      return;
+    }
     if (window.switchTab) window.switchTab("watch-result");
   }
 

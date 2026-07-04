@@ -45,8 +45,11 @@ async function run() {
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
   check("hero chat calls generate endpoint", heroChatJs.includes("/api/radars/generate"));
   check("hero chat calls revise endpoint", heroChatJs.includes("/api/radars/revise"));
+  check("hero chat calls search endpoint after confirmation", heroChatJs.includes("/api/search") && heroChatJs.indexOf("/api/search") > heroChatJs.indexOf("async function confirmHeroRadar"));
+  check("hero chat calls report generation after search", heroChatJs.includes("/api/reports/generate") && heroChatJs.indexOf("/api/reports/generate") > heroChatJs.indexOf("/api/search"));
   check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
+  check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
   check("home routes primary input to hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
 
