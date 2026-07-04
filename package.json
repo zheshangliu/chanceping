@@ -6,7 +6,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "dev": "tsx src/api/server.ts",
+    "dev": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial LLM_MODE=live tsx src/api/server.ts",
+    "dev:mock": "DATA_MODE=mock LLM_MODE=mock tsx src/api/server.ts",
     "dev:local": "CHANCEPING_LOAD_API_ENV=true tsx src/api/server.ts",
     "start": "tsx src/api/server.ts",
     "quick-start": "bash scripts/quick-start.sh",
@@ -66,6 +67,7 @@
     "verify:report-template": "tsx scripts/verify-report-template.ts",
     "verify:mvp-browser": "tsx scripts/verify-mvp-browser-smoke.ts",
     "verify:api-env": "tsx scripts/verify-api-env.ts",
+    "verify:local-live-dev": "tsx scripts/verify-local-live-dev.ts",
     "verify:live-mvp": "CHANCEPING_LOAD_API_ENV=true DATA_MODE=live LLM_MODE=mock tsx scripts/verify-live-mvp.ts",
     "verify:live-provider-health": "CHANCEPING_LOAD_API_ENV=true tsx scripts/verify-live-provider-health.ts",
     "verify:live-llm": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial DATA_MODE=mock LLM_MODE=live tsx scripts/verify-live-llm.ts",
