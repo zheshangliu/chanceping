@@ -142,7 +142,7 @@ async function main(): Promise<void> {
     }, { timeout: 5_000 });
     await page.waitForFunction(() => {
       const doc = (globalThis as any).document;
-      return (doc.querySelector(".hero-progress-artifact")?.textContent || "").includes("正在生成机会卡和 Markdown 报告");
+      return (doc.querySelector(".hero-progress-artifact")?.textContent || "").includes("正在生成报告摘要、机会卡和 Markdown 报告");
     }, { timeout: 10_000 });
     await page.waitForSelector(".hero-report-artifact", { timeout: 20_000 });
     const reportText = await page.$eval(".hero-report-artifact", (el: any) => el.textContent || "");

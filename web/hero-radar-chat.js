@@ -12,6 +12,28 @@
     isBusy: false,
   };
 
+  const CUSTOMER_LABELS = {
+    direct_opportunity: "可直接行动的比赛机会",
+    business_lead: "需要联系确认的合作线索",
+    channel_partner_lead: "潜在渠道或伙伴线索",
+    customer_lead: "潜在客户线索",
+    association_directory: "协会或赛事目录",
+    watch_signal: "观察信号",
+    reference_case: "参考案例",
+    rejected: "已降权或淘汰",
+    official_event_site: "官方赛事页",
+    official_announcement: "官方公告",
+    application_portal: "报名/提交入口",
+    developer_platform_challenge_page: "开发者挑战赛页面",
+    cloud_provider_activity_page: "云厂商活动页",
+    hackathon_platform: "Hackathon 平台",
+    competition_platform: "比赛平台",
+    association_directory_page: "协会或行业目录页",
+    partner_directory: "合作伙伴目录",
+    open_call_submission_page: "开放征集/提交入口",
+    reference_case_source: "参考案例来源",
+  };
+
   function uid(prefix) {
     return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
   }
@@ -29,6 +51,17 @@
     if (Array.isArray(value)) return value.filter(Boolean);
     if (typeof value === "string" && value.trim()) return [value.trim()];
     return [];
+  }
+
+  function customerLabel(value) {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "";
+    if (CUSTOMER_LABELS[raw]) return CUSTOMER_LABELS[raw];
+    return raw
+      .replace(/\b(direct_opportunity|business_lead|channel_partner_lead|customer_lead|association_directory|watch_signal|reference_case)\b/g, (token) => CUSTOMER_LABELS[token] || token)
+      .replace(/\b(official_event_site|official_announcement|application_portal|developer_platform_challenge_page|cloud_provider_activity_page|hackathon_platform|competition_platform|partner_directory|open_call_submission_page)\b/g, (token) => CUSTOMER_LABELS[token] || token)
+      .replace(/_/g, " ")
+      .replace(/\s*\|\s*/g, " / ");
   }
 
   async function postJson(url, body) {
@@ -88,8 +121,9 @@
     renderHeroRadarChat();
   }
 
-  function renderList(title, items) {
-    const list = [...new Set(asArray(items).map(formatReadableItem).filter(Boolean))];
+  function renderList(title, items, fallbackItems = []) {
+    const sourceItems = asArray(items).length > 0 ? items : fallbackItems;
+    const list = [...new Set(asArray(sourceItems).map(formatReadableItem).filter(Boolean))];
     if (list.length === 0) return "";
     return `
       <div class="hero-artifact-field">
@@ -102,7 +136,7 @@
   function formatReadableItem(item) {
     if (item == null) return "";
     if (typeof item === "string" || typeof item === "number" || typeof item === "boolean") {
-      return String(item);
+      return customerLabel(item);
     }
     if (Array.isArray(item)) {
       return item.map(formatReadableItem).filter(Boolean).join(" / ");
@@ -110,11 +144,13 @@
     if (typeof item === "object") {
       const title = item.themeName || item.queryFamily || item.name || item.label || item.sourceArchetype || item.intentType;
       const examples = asArray(item.queryExamples).slice(0, 2).map(formatReadableItem).filter(Boolean);
+      const intent = customerLabel(item.intentType);
+      const source = customerLabel(item.sourceArchetype);
       const parts = [
-        title,
-        item.intentType && item.intentType !== title ? item.intentType : "",
-        item.sourceArchetype && item.sourceArchetype !== title ? item.sourceArchetype : "",
-        examples.length ? `例如：${examples.join("；")}` : "",
+        customerLabel(title),
+        intent && intent !== customerLabel(title) ? `类型：${intent}` : "",
+        source && source !== customerLabel(title) ? `来源：${source}` : "",
+        examples.length ? `示例关键词：${examples.join("；")}` : "",
       ].filter(Boolean);
       if (parts.length > 0) return parts.join("｜");
       return Object.values(item).flatMap((value) => asArray(value).map(formatReadableItem)).filter(Boolean).slice(0, 3).join(" / ");
@@ -238,13 +274,15 @@
     return `
       <article class="hero-report-artifact">
         <div class="hero-artifact-topline">
-          <span class="hero-artifact-kicker">Markdown Report</span>
+          <span class="hero-artifact-kicker">机会雷达报告</span>
           ${artifact.runId ? `<span class="hero-version-pill">${escapeHtml(artifact.runId)}</span>` : ""}
         </div>
         <div class="hero-report-summary">
-          <strong>本次搜索出 ${escapeHtml(summary.total)} 条有效机会</strong>
-          <span>${escapeHtml(summary.levelText)}</span>
-          ${summary.topTitle ? `<p>优先查看：${escapeHtml(summary.topTitle)}</p>` : `<p>本轮没有把观察信号冒充为重点机会。</p>`}
+          <strong>本次搜索出 ${escapeHtml(summary.total)} 条可查看机会</strong>
+          <span>评级分布：${escapeHtml(summary.levelText)}</span>
+          ${summary.topTitle ? `<p>建议先处理：${escapeHtml(summary.topTitle)}</p>` : `<p>本轮没有把观察信号冒充为重点机会。</p>`}
+          <p>待复核提醒：报名资格、费用、截止时间以官方页面为准。</p>
+          <p>结果不对？直接在下方告诉我，我会先升级雷达，再重新盯一次。</p>
         </div>
         <div class="hero-artifact-actions">
           <button class="secondary-btn" data-action="open-report-modal" data-message-id="${escapeHtml(message.id)}">查看完整 Markdown 报告</button>
@@ -284,7 +322,14 @@
             ${renderList("什么算高价值", payload.highValueCriteria)}
             ${renderList("不盯什么", payload.exclusionRules)}
             ${renderList("优先看哪些来源", payload.prioritySourceArchetypes)}
-            ${renderList("会用哪些查询方向", payload.queryFamilies)}
+            ${renderList("我会怎么找", payload.queryFamilies, [
+              "从官方比赛页、云厂商开发者活动页和 Hackathon 平台开始",
+              "优先寻找报名、提交作品、申请资源等行动入口",
+            ])}
+            ${renderList("为什么这样找", payload.searchThemes, [
+              "这版雷达优先能报名、能提交作品、能申请资源的结果",
+              "展会资讯、培训广告、学生专属和无行动入口页面会降权",
+            ])}
             ${renderList("默认假设", payload.defaultAssumptions)}
             ${renderList("还缺哪些信息", payload.missingConfig)}
           </div>
@@ -314,7 +359,7 @@
         <div class="hero-modal-card hero-report-modal-card">
           <button class="hero-modal-close" type="button" data-action="close-hero-modal">关闭</button>
           <div class="hero-artifact-topline">
-            <span class="hero-artifact-kicker">Markdown Report</span>
+            <span class="hero-artifact-kicker">完整 Markdown 报告</span>
           </div>
           <pre class="hero-report-markdown">${escapeHtml(markdown)}</pre>
         </div>
@@ -550,7 +595,8 @@
       "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
       "正在筛选可报名、可提交作品、可申请资源的机会……",
       "正在排除展会资讯、培训广告和学生专属结果……",
-      "正在生成机会卡和 Markdown 报告……",
+      "正在核对来源可信度，避免把资讯当成机会……",
+      "正在生成报告摘要、机会卡和 Markdown 报告……",
     ];
     const progressMessage = addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
       type: "progress",

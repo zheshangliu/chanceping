@@ -69,11 +69,15 @@ async function run() {
   check("radar modal is fixed and centered", styles.includes(".hero-artifact-modal") && styles.includes("position: fixed") && styles.includes("translate(-50%, -50%)"));
   check("report artifact uses centered modal trigger", heroChatJs.includes("data-action=\"open-report-modal\"") && heroChatJs.includes("hero-report-summary"));
   check("report artifact keeps cards button", heroChatJs.includes("查看本次机会卡"));
+  check("report modal uses Chinese demo label", heroChatJs.includes("完整 Markdown 报告"));
   check("my radars renders latest radar version", radarsJs.includes("getRadarVersionLabel") && radarsJs.includes("radar-version-badge"));
   check("my radars has edit radar entry", radarsJs.includes("btn-edit-radar") && radarsJs.includes("editRadarFromCard"));
   check("edit radar returns to chat home", radarsJs.includes("window.openHeroRadarEditor") || radarsJs.includes('window.switchTab("home")'));
   check("hero chat formats object fields for customers", heroChatJs.includes("formatReadableItem") && !heroChatJs.includes("escapeHtml(item)</li>"));
+  check("hero chat translates technical enum labels for customers", heroChatJs.includes("CUSTOMER_LABELS") && heroChatJs.includes("可直接行动的比赛机会"));
   check("hero chat hides technical radar fields by default", heroChatJs.includes("查看完整雷达细节"));
+  check("radar modal copy explains strategy in customer language", heroChatJs.includes("我会怎么找") && heroChatJs.includes("为什么这样找"));
+  check("radar modal has readable strategy fallback", heroChatJs.includes("优先寻找报名、提交作品、申请资源") && heroChatJs.includes("展会资讯、培训广告、学生专属"));
   check("hero chat only latest draft can be confirmed", heroChatJs.includes("isLatestDraft") && heroChatJs.includes("这版已被新版替代"));
   check("hero chat prevents duplicate report generation", heroChatJs.includes("confirmedVersion") && heroChatJs.includes("alreadyConfirmed"));
   check("hero chat collapses replaced radar versions", heroChatJs.includes("hero-radar-artifact compact") && heroChatJs.includes("已升级到"));
@@ -82,6 +86,7 @@ async function run() {
   check("hero chat shows a three-step beginner guide", heroChatJs.includes("1. 说需求") && heroChatJs.includes("2. 看雷达") && heroChatJs.includes("3. 确认后搜索"));
   check("hero chat can reset the current demo", heroChatJs.includes("hero-chat-reset") && heroChatJs.includes("resetHeroRadarChat"));
   check("search progress is revealed step by step", heroChatJs.includes("activeStepCount") && heroChatJs.includes("startProgressTicker"));
+  check("search progress explains source verification and report summary", heroChatJs.includes("正在核对来源可信度") && heroChatJs.includes("正在生成报告摘要"));
   check("hero chat becomes the only visible workspace after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-hero") && heroChatJs.includes(".home-input-area") && heroChatJs.includes("hero-chat-active"));
   check("hidden elements cannot be overridden by flex styles", styles.includes("[hidden]") && styles.includes("display: none !important"));
   check("chat mode hides legacy top navigation", styles.includes("body.hero-chat-active .top-bar") && styles.includes("body.hero-chat-active .tab-nav"));
@@ -90,6 +95,7 @@ async function run() {
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
   check("demo prompt chips only fill input", homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));
   check("hero chat runs before legacy template fallback", homeJs.indexOf("window.startHeroRadarChat") > -1 && homeJs.indexOf("window.startHeroRadarChat") < homeJs.indexOf("window.runTemplateWatch"));
+  check("report artifact tells user next action and feedback loop", heroChatJs.includes("建议先处理") && heroChatJs.includes("结果不对？直接在下方告诉我"));
 
   const app = createApp(createAppContext());
   const initial = await post(app, "/api/radars/generate", {
