@@ -101,8 +101,10 @@ window.switchTab = switchTab;
 window.showToast = showToast;
 
 function hideLegacyTemplatesForHero() {
-  const block = document.querySelector(".home-examples-block");
-  if (block) block.hidden = true;
+  [".home-examples-block", ".hero-demo-prompts"].forEach((selector) => {
+    const block = document.querySelector(selector);
+    if (block) block.hidden = true;
+  });
 }
 
 window.hideLegacyTemplatesForHero = hideLegacyTemplatesForHero;
