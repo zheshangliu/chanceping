@@ -1,0 +1,78 @@
+import { existsSync, readFileSync } from "node:fs";
+import { createApp } from "../src/api/app";
+import { createAppContext } from "../src/api/context";
+
+let pass = 0;
+let fail = 0;
+
+function check(name: string, condition: boolean, detail = "") {
+  if (condition) {
+    pass += 1;
+    console.log(`PASS ${name}`);
+  } else {
+    fail += 1;
+    console.error(`FAIL ${name}${detail ? `: ${detail}` : ""}`);
+  }
+}
+
+function read(path: string): string {
+  return existsSync(path) ? readFileSync(path, "utf8") : "";
+}
+
+async function post(app: ReturnType<typeof createApp>, path: string, body: unknown) {
+  const response = await app.request(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = await response.json() as { success: boolean; data?: any; error?: any };
+  check(`${path} returns 200`, response.status === 200, String(response.status));
+  check(`${path} succeeds`, json.success === true, JSON.stringify(json.error ?? {}));
+  return json.data;
+}
+
+async function run() {
+  const html = read("web/index.html");
+  const heroChatJs = read("web/hero-radar-chat.js");
+  const homeJs = read("web/home.js");
+
+  check("hero chat script exists", existsSync("web/hero-radar-chat.js"));
+  check("index loads hero chat script", html.includes("/hero-radar-chat.js"));
+  check("index has hero chat root", html.includes("hero-radar-chat-root"));
+  check("hero chat defines message state", heroChatJs.includes("heroRadarChatState"));
+  check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
+  check("hero chat calls generate endpoint", heroChatJs.includes("/api/radars/generate"));
+  check("hero chat calls revise endpoint", heroChatJs.includes("/api/radars/revise"));
+  check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
+  check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
+  check("home routes primary input to hero chat", homeJs.includes("startHeroRadarChat") || heroChatJs.includes("startHeroRadarChat"));
+  check("old template buttons can be hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero"));
+
+  const app = createApp(createAppContext());
+  const initial = await post(app, "/api/radars/generate", {
+    description: "我是个人开发者，想找 AI 比赛机会，帮我盯一下。",
+  });
+  check("initial API returns Radar V1.0", initial.radarVersion?.version === "V1.0", initial.radarVersion?.version ?? "");
+
+  const revised = await post(app, "/api/radars/revise", {
+    previousSpec: initial.spec,
+    previousRadarVersion: initial.radarVersion || initial.spec.radar_version,
+    userMessage: "我不是学生，我是 OPC 创业者，优先奖金、云资源、能上架展示的比赛。",
+    trigger: "requirement_correction",
+  });
+  check("revision API returns newer radar version", revised.radarVersion?.version !== "V1.0", revised.radarVersion?.version ?? "");
+  check("revision API keeps draft unconfirmed", revised.spec?.confirmation_status?.user_confirmed === false);
+}
+
+run()
+  .then(() => {
+    if (fail > 0) {
+      console.error(`Q.7 hero chat: ${pass} PASS / ${fail} FAIL`);
+      process.exit(1);
+    }
+    console.log(`Q.7 hero chat: ${pass} PASS / 0 FAIL`);
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

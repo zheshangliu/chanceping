@@ -100,6 +100,13 @@ function showToast(message, type) {
 window.switchTab = switchTab;
 window.showToast = showToast;
 
+function hideLegacyTemplatesForHero() {
+  const block = document.querySelector(".home-examples-block");
+  if (block) block.hidden = true;
+}
+
+window.hideLegacyTemplatesForHero = hideLegacyTemplatesForHero;
+
 function syncLiveSearchPreference(urlParams) {
   const requested = urlParams.get("live_search");
   if (requested === "1" || requested === "true") {

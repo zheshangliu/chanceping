@@ -82,6 +82,7 @@
     "verify:q6j": "tsx scripts/verify-q6j-gate-calibration.ts",
     "verify:q7": "tsx scripts/verify-q7-radar-evolution.ts",
     "verify:q7:demo": "tsx scripts/verify-q7-ai-competition-demo.ts",
+    "verify:q7:hero-chat": "tsx scripts/verify-q7-hero-chat.ts",
     "verify:q7:llm-reviser": "tsx scripts/verify-q7-llm-reviser.ts",
     "verify:q7:random-ai": "tsx scripts/verify-q7-ai-entrepreneur-random.ts",
     "q6:no-card-funnel": "node scripts/run-q6j-no-card-funnel.mjs",
