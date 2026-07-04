@@ -3513,10 +3513,41 @@ textarea {
   font-size: 13px;
 }
 
+.hero-chat-header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .hero-chat-header strong {
   color: var(--text-primary);
   font-size: 14px;
   font-weight: 600;
+}
+
+.hero-chat-reset {
+  flex: none;
+  padding: 5px 9px;
+  color: var(--text-secondary);
+  background: transparent;
+}
+
+.hero-chat-guide {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+.hero-chat-guide span {
+  padding: 9px 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: 12px;
+}
+
+.hero-chat-guide span + span {
+  border-left: 1px solid var(--border);
 }
 
 .hero-chat-messages {
@@ -3587,6 +3618,27 @@ textarea {
   background: var(--bg-secondary);
 }
 
+.hero-radar-artifact.compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.hero-radar-artifact.compact > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hero-radar-artifact.compact strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .hero-artifact-topline {
   display: flex;
   align-items: center;
@@ -3625,6 +3677,25 @@ textarea {
   margin-top: 12px;
 }
 
+.hero-artifact-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.hero-radar-details {
+  margin-top: 10px;
+  color: var(--text-secondary);
+}
+
+.hero-radar-details summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 13px;
+}
+
 .hero-artifact-field {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -3645,11 +3716,31 @@ textarea {
 }
 
 .hero-radar-diff {
-  display: grid;
-  gap: 8px;
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--border);
+}
+
+.hero-radar-diff summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.hero-radar-diff summary strong {
+  color: var(--text-primary);
+}
+
+.hero-radar-diff summary span {
+  margin-left: 8px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.hero-radar-diff-body {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 .hero-diff-row {
@@ -3672,9 +3763,31 @@ textarea {
   margin-top: 12px;
 }
 
+.hero-next-step {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.hero-next-step strong {
+  color: var(--text-primary);
+}
+
 .hero-artifact-actions span {
   color: var(--text-secondary);
   font-size: 13px;
+}
+
+.hero-artifact-note {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
 }
 
 .hero-report-artifact pre {
@@ -3689,7 +3802,8 @@ textarea {
 @media (max-width: 860px) {
   .watch-result-grid,
   .radar-profile-grid,
-  .hero-artifact-grid {
+  .hero-artifact-grid,
+  .hero-artifact-summary-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3700,6 +3814,11 @@ textarea {
   .watch-save-copy {
     max-width: none;
     text-align: left;
+  }
+
+  .hero-radar-artifact.compact {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .watch-action-row {
@@ -3714,5 +3833,11 @@ textarea {
   .hero-chat-input-row,
   .hero-diff-row {
     grid-template-columns: 1fr;
+  }
+
+  .hero-chat-header > div {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
   }
 }

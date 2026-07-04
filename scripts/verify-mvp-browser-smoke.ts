@@ -99,19 +99,22 @@ async function main(): Promise<void> {
     await page.click("#home-watch-btn");
     await page.waitForSelector('[data-hero-radar-version="V1.0"]', { timeout: 10_000 });
     let heroText = await page.$eval("#hero-radar-chat-root", (el: any) => el.textContent || "");
-    if (!heroText.includes("Radar Artifact") || !heroText.includes("V1.0")) fail("chat should show Radar V1.0 artifact");
+    if (!heroText.includes("机会雷达") || !heroText.includes("V1.0")) fail("chat should show Radar V1.0 artifact");
+    if (heroText.includes("[object Object]")) fail("radar artifact should not expose raw object text");
 
     await page.type("#hero-radar-chat-input", "我不是学生，我是 OPC 创业者，优先奖金、云资源、能上架展示的比赛。");
     await page.click("#hero-radar-chat-send");
     await page.waitForSelector('[data-hero-radar-version="V1.1"]', { timeout: 10_000 });
     heroText = await page.$eval("#hero-radar-chat-root", (el: any) => el.textContent || "");
-    if (!heroText.includes("OPC") || !heroText.includes("本次版本变化")) fail("chat should show V1.1 diff with OPC correction");
+    if (!heroText.includes("OPC") || !heroText.includes("本次主要修改")) fail("chat should show V1.1 diff with OPC correction");
 
     await page.type("#hero-radar-chat-input", "不要展会资讯，我要能报名、能提交作品的比赛。");
     await page.click("#hero-radar-chat-send");
     await page.waitForSelector('[data-hero-radar-version="V1.2"]', { timeout: 10_000 });
     heroText = await page.$eval("#hero-radar-chat-root", (el: any) => el.textContent || "");
     if (!heroText.includes("展会") || !heroText.includes("报名")) fail("chat should show V1.2 diff for expo exclusion and registration focus");
+    const confirmButtonCount = await page.$$eval(".hero-confirm-radar-btn", (items: any[]) => items.length);
+    if (confirmButtonCount !== 1) fail(`only latest radar version should be confirmable: ${confirmButtonCount}`);
 
     await page.evaluate(() => {
       const doc = (globalThis as any).document;

@@ -7,6 +7,7 @@
     messages: [],
     currentDraft: null,
     currentResult: null,
+    confirmedVersion: null,
     isBusy: false,
   };
 
@@ -57,6 +58,7 @@
       heroRadarChatState.messages = parsed.messages;
       heroRadarChatState.currentDraft = parsed.currentDraft || null;
       heroRadarChatState.currentResult = parsed.currentResult || null;
+      heroRadarChatState.confirmedVersion = parsed.confirmedVersion || null;
     } catch {
       sessionStorage.removeItem(STORAGE_KEY);
     }
@@ -75,14 +77,37 @@
   }
 
   function renderList(title, items) {
-    const list = asArray(items);
+    const list = [...new Set(asArray(items).map(formatReadableItem).filter(Boolean))];
     if (list.length === 0) return "";
     return `
       <div class="hero-artifact-field">
         <strong>${escapeHtml(title)}</strong>
-        <ul>${list.slice(0, 5).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+        <ul>${list.slice(0, 4).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
       </div>
     `;
+  }
+
+  function formatReadableItem(item) {
+    if (item == null) return "";
+    if (typeof item === "string" || typeof item === "number" || typeof item === "boolean") {
+      return String(item);
+    }
+    if (Array.isArray(item)) {
+      return item.map(formatReadableItem).filter(Boolean).join(" / ");
+    }
+    if (typeof item === "object") {
+      const title = item.themeName || item.queryFamily || item.name || item.label || item.sourceArchetype || item.intentType;
+      const examples = asArray(item.queryExamples).slice(0, 2).map(formatReadableItem).filter(Boolean);
+      const parts = [
+        title,
+        item.intentType && item.intentType !== title ? item.intentType : "",
+        item.sourceArchetype && item.sourceArchetype !== title ? item.sourceArchetype : "",
+        examples.length ? `例如：${examples.join("；")}` : "",
+      ].filter(Boolean);
+      if (parts.length > 0) return parts.join("｜");
+      return Object.values(item).flatMap((value) => asArray(value).map(formatReadableItem)).filter(Boolean).slice(0, 3).join(" / ");
+    }
+    return String(item);
   }
 
   function renderDiffList(title, items) {
@@ -96,45 +121,80 @@
     `;
   }
 
+  function summarizeDiff(diff) {
+    const highlights = [
+      ...asArray(diff.added),
+      ...asArray(diff.upweighted),
+      ...asArray(diff.downweighted),
+      ...asArray(diff.exclusionChanges),
+    ].map(formatReadableItem).filter(Boolean);
+    return [...new Set(highlights)].slice(0, 3).join("；") || "已根据你的反馈更新雷达";
+  }
+
   function renderRadarArtifact(message) {
     const artifact = message.artifact || {};
     const payload = artifact.payload || {};
     const diff = artifact.diff || {};
     const version = artifact.version || payload.version || "V1.0";
-    const confirmed = artifact.status === "confirmed" || payload.confirmation_status?.user_confirmed === true;
+    const alreadyConfirmed = heroRadarChatState.confirmedVersion === version;
+    const confirmed = alreadyConfirmed || artifact.status === "confirmed" || payload.confirmation_status?.user_confirmed === true;
+    const currentVersion = heroRadarChatState.currentDraft?.radarVersion?.version;
+    const isLatestDraft = currentVersion === version && !alreadyConfirmed && !heroRadarChatState.currentResult;
+    const isReplacedDraft = !confirmed && currentVersion && currentVersion !== version;
+    if (isReplacedDraft) {
+      return `
+        <article class="hero-radar-artifact compact" data-hero-radar-version="${escapeHtml(version)}">
+          <div>
+            <span class="hero-version-pill">${escapeHtml(version)}</span>
+            <strong>${escapeHtml(payload.oneSentencePositioning || payload.name || "AI 创业者机会雷达")}</strong>
+          </div>
+          <span class="hero-artifact-note">已升级到 ${escapeHtml(currentVersion)}，请看下面的最新雷达。</span>
+        </article>
+      `;
+    }
     return `
       <article class="hero-radar-artifact" data-hero-radar-version="${escapeHtml(version)}">
         <div class="hero-artifact-topline">
-          <span class="hero-artifact-kicker">Radar Artifact</span>
+          <span class="hero-artifact-kicker">机会雷达</span>
           <span class="hero-version-pill">${escapeHtml(version)}</span>
           <span class="hero-status-pill ${confirmed ? "confirmed" : "draft"}">${confirmed ? "已确认" : "待确认"}</span>
         </div>
         <h3>${escapeHtml(payload.oneSentencePositioning || payload.name || "AI 创业者机会雷达")}</h3>
         <p>${escapeHtml(payload.businessContext || payload.summary || "我会先把你的复杂需求整理成可执行的机会雷达。")}</p>
-        <div class="hero-artifact-grid">
+        <div class="hero-artifact-summary-grid">
           ${renderList("你是", payload.targetUser)}
           ${renderList("这版雷达会盯", payload.opportunityIntents)}
-          ${renderList("什么算高价值", payload.highValueCriteria)}
           ${renderList("不盯什么", payload.exclusionRules)}
-          ${renderList("优先看哪些来源", payload.prioritySourceArchetypes)}
-          ${renderList("会用哪些查询方向", payload.queryFamilies)}
-          ${renderList("默认假设", payload.defaultAssumptions)}
         </div>
-        ${diff && Object.keys(diff).length > 0 ? `
-          <div class="hero-radar-diff">
-            <strong>本次版本变化</strong>
-            ${renderDiffList("新增", diff.added)}
-            ${renderDiffList("移除", diff.removed)}
-            ${renderDiffList("提高权重", diff.upweighted)}
-            ${renderDiffList("降低权重", diff.downweighted)}
-            ${renderDiffList("查询变化", diff.queryShifts)}
-            ${renderDiffList("来源变化", diff.sourceShifts)}
-            ${renderDiffList("高价值标准变化", diff.highValueCriteriaChanges)}
-            ${renderDiffList("排除规则变化", diff.exclusionChanges)}
+        <details class="hero-radar-details">
+          <summary>查看完整雷达细节</summary>
+          <div class="hero-artifact-grid">
+            ${renderList("什么算高价值", payload.highValueCriteria)}
+            ${renderList("优先看哪些来源", payload.prioritySourceArchetypes)}
+            ${renderList("会用哪些查询方向", payload.queryFamilies)}
+            ${renderList("默认假设", payload.defaultAssumptions)}
           </div>
+        </details>
+        ${diff && Object.keys(diff).length > 0 ? `
+          <details class="hero-radar-diff">
+            <summary><strong>本次主要修改：</strong>${escapeHtml(summarizeDiff(diff))}<span>查看本次修改</span></summary>
+            <div class="hero-radar-diff-body">
+              ${renderDiffList("新增", diff.added)}
+              ${renderDiffList("移除", diff.removed)}
+              ${renderDiffList("提高权重", diff.upweighted)}
+              ${renderDiffList("降低权重", diff.downweighted)}
+              ${renderDiffList("查询变化", diff.queryShifts)}
+              ${renderDiffList("来源变化", diff.sourceShifts)}
+              ${renderDiffList("高价值标准变化", diff.highValueCriteriaChanges)}
+              ${renderDiffList("排除规则变化", diff.exclusionChanges)}
+            </div>
+          </details>
         ` : ""}
+        ${isLatestDraft ? `<p class="hero-next-step"><strong>现在只需要做一个选择：</strong>确认这版开始搜索，或者在下方继续告诉我哪里不准。</p>` : ""}
         <div class="hero-artifact-actions">
-          <button class="btn-primary hero-confirm-radar-btn" data-action="confirm-hero-radar">确认，按 ${escapeHtml(version)} 盯一次</button>
+          ${isLatestDraft
+            ? `<button class="btn-primary hero-confirm-radar-btn" data-action="confirm-hero-radar">确认，按 ${escapeHtml(version)} 盯一次</button>`
+            : `<span class="hero-artifact-note">${confirmed ? `已按 ${escapeHtml(version)} 跑过一次。` : isReplacedDraft ? "这版已被新版替代，请确认最新雷达。" : "等待新版雷达确认。"}</span>`}
           <span>不准的话，直接在聊天框继续说，我会先升级雷达。</span>
         </div>
       </article>
@@ -202,8 +262,16 @@
     root.innerHTML = `
       <section class="hero-chat-shell">
         <div class="hero-chat-header">
-          <span>AI 创业者机会雷达</span>
-          <strong>一个聊天窗口，一个正在成长的雷达</strong>
+          <div>
+            <span>AI 创业者机会雷达</span>
+            <strong>一个聊天窗口，一个正在成长的雷达</strong>
+          </div>
+          <button id="hero-chat-reset" class="hero-chat-reset" type="button">重新开始</button>
+        </div>
+        <div class="hero-chat-guide" aria-label="新手使用步骤">
+          <span>1. 说需求</span>
+          <span>2. 看雷达</span>
+          <span>3. 确认后搜索</span>
         </div>
         <div class="hero-chat-messages">
           ${messages.map(renderMessage).join("")}
@@ -214,6 +282,7 @@
         </div>
       </section>
     `;
+    root.querySelector("#hero-chat-reset")?.addEventListener("click", resetHeroRadarChat);
     root.querySelector("#hero-radar-chat-send")?.addEventListener("click", () => {
       const input = root.querySelector("#hero-radar-chat-input");
       const value = input?.value?.trim();
@@ -233,6 +302,18 @@
     root.querySelectorAll("[data-action='view-hero-cards']").forEach((button) => {
       button.addEventListener("click", () => viewHeroCards());
     });
+  }
+
+  function resetHeroRadarChat() {
+    heroRadarChatState.messages = [];
+    heroRadarChatState.currentDraft = null;
+    heroRadarChatState.currentResult = null;
+    heroRadarChatState.confirmedVersion = null;
+    heroRadarChatState.isBusy = false;
+    sessionStorage.removeItem(STORAGE_KEY);
+    renderHeroRadarChat();
+    document.getElementById("home-input")?.focus();
+    window.showToast?.("已清空当前演示，可以重新描述需求", "success");
   }
 
   function normalizeGenerateResult(data, description) {
@@ -258,6 +339,8 @@
         const data = await postJson("/api/radars/generate", { description: text });
         heroRadarChatState.currentDraft = normalizeGenerateResult(data, text);
       } else {
+        heroRadarChatState.confirmedVersion = null;
+        heroRadarChatState.currentResult = null;
         const data = await postJson("/api/radars/revise", {
           previousSpec: heroRadarChatState.currentDraft.spec,
           previousRadarVersion: heroRadarChatState.currentDraft.radarVersion,
@@ -303,12 +386,20 @@
     if (!heroRadarChatState.currentDraft || heroRadarChatState.isBusy) return;
     heroRadarChatState.isBusy = true;
     const draft = heroRadarChatState.currentDraft;
+    const version = draft.radarVersion?.version || "当前雷达";
+    const alreadyConfirmed = heroRadarChatState.confirmedVersion === version && heroRadarChatState.currentResult;
+    if (alreadyConfirmed) {
+      heroRadarChatState.isBusy = false;
+      addMessage("assistant", `这版 ${version} 已经跑过一次了。你可以查看本次机会卡，或继续告诉我哪里不准，我先升级雷达。`);
+      return;
+    }
     const confirmedSpec = markSpecConfirmed(draft.spec);
+    heroRadarChatState.confirmedVersion = version;
     heroRadarChatState.currentDraft = {
       ...draft,
       spec: confirmedSpec,
     };
-    addMessage("assistant", `已确认 ${draft.radarVersion?.version || "当前雷达"}，我开始按这版雷达盯一次。`, {
+    addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
       type: "progress",
       steps: [
         "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
@@ -386,6 +477,7 @@
   window.renderRadarArtifact = renderRadarArtifact;
   window.renderReportArtifact = renderReportArtifact;
   window.renderHeroRadarChat = renderHeroRadarChat;
+  window.resetHeroRadarChat = resetHeroRadarChat;
   window.startHeroRadarChat = startHeroRadarChat;
   window.confirmHeroRadar = confirmHeroRadar;
   window.viewHeroCards = viewHeroCards;

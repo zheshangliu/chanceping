@@ -54,6 +54,15 @@ async function run() {
   check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
   check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
+  check("hero chat formats object fields for customers", heroChatJs.includes("formatReadableItem") && !heroChatJs.includes("escapeHtml(item)</li>"));
+  check("hero chat hides technical radar fields by default", heroChatJs.includes("查看完整雷达细节"));
+  check("hero chat only latest draft can be confirmed", heroChatJs.includes("isLatestDraft") && heroChatJs.includes("这版已被新版替代"));
+  check("hero chat prevents duplicate report generation", heroChatJs.includes("confirmedVersion") && heroChatJs.includes("alreadyConfirmed"));
+  check("hero chat collapses replaced radar versions", heroChatJs.includes("hero-radar-artifact compact") && heroChatJs.includes("已升级到"));
+  check("latest radar card gives one clear next step", heroChatJs.includes("现在只需要做一个选择"));
+  check("radar version diff is collapsed by default", heroChatJs.includes("查看本次修改"));
+  check("hero chat shows a three-step beginner guide", heroChatJs.includes("1. 说需求") && heroChatJs.includes("2. 看雷达") && heroChatJs.includes("3. 确认后搜索"));
+  check("hero chat can reset the current demo", heroChatJs.includes("hero-chat-reset") && heroChatJs.includes("resetHeroRadarChat"));
   check("home routes primary input to hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
   check("demo prompt chips only fill input", homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));
