@@ -32,8 +32,9 @@ const reportGenerator = read("src/agents/radar-report-generator.ts");
 const radarsRoute = read("src/api/routes/radars.ts");
 const userContext = read("src/agents/user-context.ts");
 
-check("首页聚焦 AI 创业者 Hero Demo", html.includes("AI 创业者机会雷达"));
-check("首页副标题说明聊天式机会雷达", html.includes("像聊天一样说清楚你的 AI 比赛"));
+check("首页聚焦 AI 赛事雷达", html.includes("AI 赛事雷达"));
+check("首页主提示词直白", html.includes("今天你想找什么机会？"));
+check("首页副标题说明聊天式机会雷达", html.includes("像聊天一样说清楚你想找的 AI 比赛"));
 check("首页主按钮文案为开始画雷达", html.includes("开始画雷达") || homeJs.includes("开始画雷达"));
 check("首页说明确认雷达后再搜索", html.includes("你确认雷达后，系统才会开始搜索"));
 check("首页包含单雷达聊天工作台", html.includes("hero-radar-chat-root") && html.includes("/hero-radar-chat.js"));

@@ -87,7 +87,7 @@ async function main(): Promise<void> {
     await page.goto(baseUrl, { waitUntil: "networkidle0" });
     await page.waitForSelector("#hero-radar-chat-root", { timeout: 5_000 });
     const titleText = await page.$eval(".home-title", (el: any) => el.textContent || "");
-    if (!titleText.includes("AI 创业者机会雷达")) fail("home should focus the AI entrepreneur hero demo");
+    if (!titleText.includes("AI 赛事雷达")) fail("home should focus the AI event radar demo");
     const examplesHidden = await page.$eval(".home-examples-block", (el: any) => Boolean(el.hidden));
     if (!examplesHidden) fail("legacy multi-template examples should be hidden on hero path");
     const bodyText = await page.$eval("body", (el: any) => el.textContent || "");
@@ -101,6 +101,11 @@ async function main(): Promise<void> {
     let heroText = await page.$eval("#hero-radar-chat-root", (el: any) => el.textContent || "");
     if (!heroText.includes("机会雷达") || !heroText.includes("V1.0")) fail("chat should show Radar V1.0 artifact");
     if (heroText.includes("[object Object]")) fail("radar artifact should not expose raw object text");
+    const modalButtonVisible = await page.$$eval("[data-action='open-radar-modal']", (items: any[]) => items.length);
+    if (modalButtonVisible < 1) fail("radar artifact should expose centered modal button");
+    await page.click("[data-action='open-radar-modal']");
+    await page.waitForSelector(".hero-artifact-modal[open]", { timeout: 5_000 });
+    await page.keyboard.press("Escape");
 
     await page.type("#hero-radar-chat-input", "我不是学生，我是 OPC 创业者，优先奖金、云资源、能上架展示的比赛。");
     await page.click("#hero-radar-chat-send");
@@ -125,6 +130,10 @@ async function main(): Promise<void> {
     const reportText = await page.$eval(".hero-report-artifact", (el: any) => el.textContent || "");
     if (!reportText.includes("查看本次机会卡")) fail("chat report artifact missing view-cards action");
     if (!reportText.includes("Markdown") && !reportText.includes("机会雷达报告")) fail("chat report artifact missing markdown report text");
+    const summaryText = await page.$eval(".hero-report-summary", (el: any) => el.textContent || "");
+    if (!summaryText.includes("有效机会") && !summaryText.includes("本次搜索")) fail("report artifact should show concise summary");
+    const reportModalButtons = await page.$$eval("[data-action='open-report-modal']", (items: any[]) => items.length);
+    if (reportModalButtons < 1) fail("report artifact should expose centered markdown modal button");
 
     const clickedCards = await clickButtonByText(page, "查看本次机会卡");
     if (!clickedCards) fail("view cards button not clickable");

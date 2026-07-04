@@ -35,6 +35,7 @@ async function run() {
   const html = read("web/index.html");
   const heroChatJs = read("web/hero-radar-chat.js");
   const homeJs = read("web/home.js");
+  const radarsJs = read("web/radars.js");
   const webUiRoute = read("src/api/routes/web-ui.ts");
 
   check("hero chat script exists", existsSync("web/hero-radar-chat.js"));
@@ -42,8 +43,13 @@ async function run() {
   check("web UI serves hero chat script", webUiRoute.includes("/hero-radar-chat.js") && webUiRoute.includes('serveFile("hero-radar-chat.js"'));
   check("index has hero chat root", html.includes("hero-radar-chat-root"));
   check("hero chat root is visible in primary path", /id="hero-radar-chat-root"[^>]*>/.test(html) && !/id="hero-radar-chat-root"[^>]*hidden/.test(html));
-  check("home copy focuses AI entrepreneur hero demo", html.includes("AI 创业者机会雷达"));
-  check("home offers one AI entrepreneur demo path", html.includes("hero-demo-prompts") && html.includes("OPC 创业者") && html.includes("不要展会资讯"));
+  check("home copy uses AI event radar hero demo", html.includes("AI 赛事雷达"));
+  check("homepage primary prompt is direct", html.includes("今天你想找什么机会？"));
+  const homeInputCount = (html.match(/id="home-input"/g) || []).length;
+  check("homepage has exactly one primary home input", homeInputCount === 1, String(homeInputCount));
+  check("homepage old chat confirmation input is not part of customer primary path", html.includes('class="tab-btn advanced-tab" data-tab="chat" hidden>需求确认</button>'));
+  check("home watch button says AI radar action", html.includes("开始画雷达") || html.includes("开始盯机会"));
+  check("home offers one AI event radar demo path", html.includes("hero-demo-prompts") && html.includes("OPC 创业者") && html.includes("不要展会资讯"));
   check("home does not expose old multi-industry template buttons", !html.includes('data-template-id="ai_events"') && !html.includes('data-template-id="policy"') && !html.includes('data-template-id="heritage"'));
   check("hero chat defines message state", heroChatJs.includes("heroRadarChatState"));
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
@@ -54,6 +60,14 @@ async function run() {
   check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
   check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
+  check("hero chat script renders GPT-like sidebar", heroChatJs.includes("hero-radar-sidebar") && heroChatJs.includes("AI 赛事雷达"));
+  check("hero chat uses separate user and assistant bubbles", heroChatJs.includes("hero-chat-message user") && heroChatJs.includes("hero-chat-message assistant"));
+  check("radar artifact uses centered modal trigger", heroChatJs.includes("data-action=\"open-radar-modal\"") && heroChatJs.includes("hero-artifact-modal"));
+  check("report artifact uses centered modal trigger", heroChatJs.includes("data-action=\"open-report-modal\"") && heroChatJs.includes("hero-report-summary"));
+  check("report artifact keeps cards button", heroChatJs.includes("查看本次机会卡"));
+  check("my radars renders latest radar version", radarsJs.includes("getRadarVersionLabel") && radarsJs.includes("radar-version-badge"));
+  check("my radars has edit radar entry", radarsJs.includes("btn-edit-radar") && radarsJs.includes("editRadarFromCard"));
+  check("edit radar returns to chat home", radarsJs.includes("window.openHeroRadarEditor") || radarsJs.includes('window.switchTab("home")'));
   check("hero chat formats object fields for customers", heroChatJs.includes("formatReadableItem") && !heroChatJs.includes("escapeHtml(item)</li>"));
   check("hero chat hides technical radar fields by default", heroChatJs.includes("查看完整雷达细节"));
   check("hero chat only latest draft can be confirmed", heroChatJs.includes("isLatestDraft") && heroChatJs.includes("这版已被新版替代"));

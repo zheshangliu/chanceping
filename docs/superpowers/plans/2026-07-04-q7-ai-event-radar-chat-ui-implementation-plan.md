@@ -25,6 +25,33 @@ Current product decisions:
 - Markdown report: centered modal
 - Full UI-QA tooling is not part of this implementation. Only lightweight screenshot hooks are added after the first UI pass.
 
+## Scope Boundary
+
+This implementation is the first `Q.7 UI Shell` for the AI 赛事雷达 hero demo. It makes the product feel like a Chat-First Radar Workspace, but it is not the final Living Radar backend.
+
+In scope:
+
+- One visible hero demo: AI 赛事雷达.
+- GPT-style customer-facing shell.
+- Compact radar/report artifacts in the chat timeline.
+- Centered modals for full radar and Markdown details.
+- Confirmation-gated search and report return in the chat.
+- My Radars edit entry that returns to the chat surface.
+
+Out of scope:
+
+- Full `RadarChatWindow` / `RadarChatMessage` persistence.
+- Full `RadarMemorySummary` or long-term chat memory.
+- A new LLM Radar Interpreter/Reviser backend.
+- Multi-radar chat routing beyond the existing bridge entry.
+- Any weakening of Q.5/Q.6 search and candidate gates.
+
+Follow-up milestones after this UI shell:
+
+- `Q.7-H`: LLM Radar Interpreter / Reviser quality pass.
+- `Q.7-I`: Radar chat window, message, and memory summary data layer.
+- `Q.7-J`: AI 赛事雷达 hero demo polish for recording.
+
 ## File Structure
 
 Modify these files:
