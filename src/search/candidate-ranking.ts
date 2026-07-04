@@ -65,7 +65,7 @@ const MID_AUTHORITY_SOURCE_TYPES = new Set<SourceArchetypeId>([
 ]);
 
 const AGGREGATOR_DOMAIN_RE = /bidcenter|zhaobiao|chinabidding|qianlima|caizhaowang|采购与招标网|采招|jobsdb|indeed|boss|zhipin|liepin|51job|linkedin|facebook/i;
-const NEWS_DOMAIN_RE = /news|sina|sohu|163\.com|qq\.com|toutiao|thepaper|ifeng|medium|blog|zhihu|wikipedia|baike/i;
+const NEWS_DOMAIN_RE = /news|sina|sohu|163\.com|qq\.com|toutiao|thepaper|ifeng|medium|blog|zhihu|wikipedia|baike|qbitai|36kr|huxiu|jiqizhixin|leiphone/i;
 const GOV_OR_INSTITUTION_DOMAIN_RE = /\.gov(?:\.cn)?$|gov\.cn$|\.edu(?:\.cn)?$|\.org$|ac\.cn$|org\.cn$/i;
 const DIRECT_OFFICIAL_DOMAIN_RE = /(wtt|ittf|nihonkiin|baduk|go\.or|gov\.cn|ccgp|mofcom|chinatax|customs|hkpc|enterprise|procurement)/i;
 
@@ -166,8 +166,9 @@ function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick
     reasonCodes.push("aggregator_or_platform");
   }
   const actionEntryPage = result.page_type_assessment?.keyCardEligibility === "eligible";
+  const officialGovNews = GOV_OR_INSTITUTION_DOMAIN_RE.test(domain) && /新闻|报道|通知|公告/.test(text);
   const referenceTextSignal = /新闻|报道|趋势|指南|百科|历史/.test(text) || (/规则/.test(text) && !actionEntryPage);
-  if (NEWS_DOMAIN_RE.test(domain) || referenceTextSignal) {
+  if ((NEWS_DOMAIN_RE.test(domain) || referenceTextSignal) && !officialGovNews) {
     score -= 35;
     tier = tier === "aggregator" ? tier : "reference_or_news";
     reasonCodes.push("news_or_reference");

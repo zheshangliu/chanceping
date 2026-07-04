@@ -1138,7 +1138,7 @@ function buildUncheckedSourceLines(input: RadarReportInput): string[] {
   if (unchecked.length === 0) {
     return ["- 暂无未检查来源，或本轮未传入 rawCandidates。"];
   }
-  return unchecked.map((candidate) => `- ${candidate.title || candidate.url}：${candidate.url}（未进入前 3 个 URL 有限读取范围）`);
+  return unchecked.map((candidate) => `- ${candidate.title || candidate.url}：${candidate.url}（已搜索到，但本轮未打开正文核验）`);
 }
 
 function buildLowActionSourceLines(input: RadarReportInput): string[] {

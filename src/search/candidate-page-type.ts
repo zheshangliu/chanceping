@@ -139,6 +139,29 @@ function isLikelyHomepage(result: SearchResult): boolean {
   return /\/(?:home|index)(?:\.html?)?$/.test(path);
 }
 
+function isOfficialGovernmentDomain(result: SearchResult): boolean {
+  try {
+    const domain = new URL(result.url).hostname.replace(/^www\./, "").toLowerCase();
+    return domain === "gov.cn" || domain.endsWith(".gov.cn") || domain.endsWith(".gov.com.cn");
+  } catch {
+    return false;
+  }
+}
+
+function isConcreteEventPlatformRoot(result: SearchResult, text: string): boolean {
+  try {
+    const url = new URL(result.url);
+    const domain = url.hostname.replace(/^www\./, "").toLowerCase();
+    const path = url.pathname.replace(/\/+$/, "");
+    const eventSubdomain = /(?:^|\.)(?:devpost|dorahacks|lablab|kaggle|eventbrite)\./i.test(domain) &&
+      !/^(?:devpost|dorahacks|lablab|kaggle|eventbrite)\./i.test(domain);
+    if (!eventSubdomain || (path !== "" && path !== "/")) return false;
+  } catch {
+    return false;
+  }
+  return /hackathon|马拉松|比赛|竞赛|大赛|challenge|contest|competition|developer|开发者|qwen|通义|ai/i.test(text);
+}
+
 function wantsLeadResource(spec: RadarRequirementSpec): boolean {
   const text = specText(spec);
   return /线索|客户|渠道|代理|经销|会员目录|名录|联系人|招聘需求|外联|lead|partner|reseller|distributor|directory|contact|careers?/i.test(text);
@@ -166,6 +189,7 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (INSTITUTION_PROFILE_RE.test(text) && !hasDirectActionEntry(text)) return "institution_profile";
   if (PLATFORM_INTRO_RE.test(text) || PLATFORM_ROLLOUT_RE.test(text) || PLATFORM_TERMS_RE.test(text)) return "platform_intro";
   if (DEPARTMENT_RE.test(text)) return "department_index";
+  if (isConcreteEventPlatformRoot(result, text)) return hasDirectActionEntry(text) ? "registration_page" : "official_event_detail";
   if (isLikelyHomepage(result)) return "homepage";
   if (GENERIC_CATEGORY_TITLE_RE.test(normalizedTitle)) return "category_page";
   if (POLICY_RE.test(text) && !hasDirectActionEntry(text)) return "policy_plan";
@@ -232,7 +256,9 @@ function assessmentFor(pageType: CandidatePageType, result: SearchResult, spec: 
     pageIntentFit = "information";
     actionEntryFit = actionEntry ? "partial" : "mismatch";
     keyCardEligibility = "downgrade";
-    reasonCodes.push("information_page_not_key_entry");
+    reasonCodes.push(pageType === "news_article" && isOfficialGovernmentDomain(result)
+      ? "official_government_news_observation_source"
+      : "information_page_not_key_entry");
   } else if (pageType === "directory_page") {
     pageIntentFit = wantsLeadResource(spec) ? "lead_resource" : "navigation";
     actionEntryFit = wantsLeadResource(spec) ? "partial" : actionEntryFit;

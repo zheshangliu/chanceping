@@ -5,7 +5,9 @@ import type { SearchProvider } from "../src/search/provider-registry";
 import { providerRegistry } from "../src/search/provider-registry";
 import { assessCandidatePageType, applyCandidatePageTypeGate } from "../src/search/candidate-page-type";
 import { rankCandidateResults } from "../src/search/candidate-ranking";
+import { isHighPriorityEvidenceSource, isOfficialGovernmentNews, prioritizeEvidenceReadCandidates } from "../src/search/evidence-read-priority";
 import { SearchOrchestrator } from "../src/search/orchestrator";
+import { JinaReaderFetcher } from "../src/search/content/jina-reader";
 import {
   assessCandidateSourceIntegrity,
   buildPrimarySourceRecoveryQueries,
@@ -144,6 +146,60 @@ const procurementCategory = candidate(
   "https://www.gdpepe.edu.cn/zbgg/list.htm",
   "招标采购栏目列表，需进入具体项目公告确认采购范围和投标入口。",
 );
+const qwenDevpost = candidate(
+  "Global AI Hackathon Series with Qwen Cloud",
+  "https://qwencloud-hackathon.devpost.com/",
+  "Join the Qwen Cloud hackathon. Participants can register, submit projects and compete for cloud credits.",
+);
+const devpostCategory = candidate(
+  "Artificial Intelligence Hackathons on Devpost",
+  "https://devpost.com/c/artificial-intelligence",
+  "Browse artificial intelligence hackathons and projects, including Global AI Hackathon Series with Qwen Cloud.",
+);
+const dorahacksHackathon = candidate(
+  "AI Agent Hackathon 2026 - DoraHacks",
+  "https://dorahacks.io/hackathon/ai-agent-2026/detail",
+  "Official hackathon page with registration and submission details.",
+);
+const govNews = candidate(
+  "广东省科技厅发布人工智能创新挑战赛报名通知",
+  "https://gdstc.gd.gov.cn/zwgk_n/tzgg/content/post_ai_contest.html",
+  "政府官网新闻通知，发布人工智能创新挑战赛报名安排和提交入口。",
+);
+const youtubeVideo = candidate(
+  "AI Hackathon highlights - YouTube",
+  "https://www.youtube.com/watch?v=fixture",
+  "AI hackathon video highlights.",
+);
+const organizerRegistration = {
+  ...candidate(
+    "Future Intelligence Challenge 2026 - Registration",
+    "https://future-intelligence.example.com/competition/register",
+    "Official organizer registration page. Apply and submit before the deadline.",
+  ),
+  source_archetype: "official_event_site" as const,
+};
+const officialHackathonDetail = {
+  ...candidate(
+    "AI Hackathon 2026 | Hackathons @ Berkeley",
+    "https://ai.hackberkeley.org/",
+    "Official event page for the 2026 AI Hackathon at Berkeley.",
+  ),
+  source_archetype: "official_event_site" as const,
+};
+const genericAiNews = {
+  ...candidate(
+    "AI hackathon industry news roundup",
+    "https://news.example.com/ai-hackathon-roundup",
+    "News roundup covering several past and future AI hackathons.",
+  ),
+  source_archetype: "official_event_site" as const,
+};
+const aiMediaReport = candidate(
+  "AI创业者集结！2026新一代人工智能（深圳）创业创新大赛正式启动",
+  "https://www.qbitai.com/2026/06/432581.html",
+  "媒体报道赛事启动，提到参赛团队和产业资源，但不是主办方官方报名页。",
+);
 
 check("Glassdoor is a weak aggregator", assessCandidateSourceIntegrity(glassdoor).kind === "weak_aggregator");
 check("Douyin is a weak social source", assessCandidateSourceIntegrity(douyin).kind === "weak_social");
@@ -153,6 +209,27 @@ check("exhibition listing site is a weak aggregator", assessCandidateSourceInteg
 check("procurement reposting site is a weak aggregator", assessCandidateSourceIntegrity(tenderAggregator).kind === "weak_aggregator");
 check("job listing site is a weak aggregator", assessCandidateSourceIntegrity(jobAggregator).kind === "weak_aggregator");
 check("news repost is a weak reference source", assessCandidateSourceIntegrity(newsRepost).kind === "weak_reference");
+check("AI industry media report is a weak reference source", assessCandidateSourceIntegrity(aiMediaReport).kind === "weak_reference");
+check("gov.cn news is official government news", isOfficialGovernmentNews(govNews), JSON.stringify(govNews));
+check("specific Qwen Cloud Devpost page is high-priority evidence", isHighPriorityEvidenceSource(qwenDevpost, radarSpec), JSON.stringify(qwenDevpost));
+check("DoraHacks concrete hackathon page is high-priority evidence", isHighPriorityEvidenceSource(dorahacksHackathon, radarSpec), JSON.stringify(dorahacksHackathon));
+check("organizer registration page is high-priority evidence", isHighPriorityEvidenceSource(organizerRegistration, radarSpec), JSON.stringify(organizerRegistration));
+check("official event detail is high-priority without snippet action words", isHighPriorityEvidenceSource(officialHackathonDetail, radarSpec), JSON.stringify(officialHackathonDetail));
+check("Devpost category page is not high-priority evidence", !isHighPriorityEvidenceSource(devpostCategory, radarSpec), JSON.stringify(devpostCategory));
+check("YouTube highlights are not high-priority evidence", !isHighPriorityEvidenceSource(youtubeVideo, radarSpec), JSON.stringify(youtubeVideo));
+check("generic non-government news is not high-priority evidence", !isHighPriorityEvidenceSource(genericAiNews, radarSpec), JSON.stringify(genericAiNews));
+
+const evidenceReadList = prioritizeEvidenceReadCandidates({
+  keyCandidates: [qwenDevpost],
+  rawCandidates: [devpostCategory, dorahacksHackathon, officialHackathonDetail, govNews, youtubeVideo, genericAiNews],
+  maxUrls: 1,
+  spec: radarSpec,
+});
+check("all high-priority evidence sources are read beyond fallback cap", evidenceReadList.length === 4, evidenceReadList.map((item) => item.url).join(" | "));
+check("priority evidence includes Qwen Cloud Devpost", evidenceReadList.some((item) => item.url.includes("qwencloud-hackathon.devpost.com")), evidenceReadList.map((item) => item.url).join(" | "));
+check("priority evidence includes DoraHacks concrete page", evidenceReadList.some((item) => item.url.includes("dorahacks.io/hackathon/ai-agent-2026")), evidenceReadList.map((item) => item.url).join(" | "));
+check("priority evidence includes gov.cn official news", evidenceReadList.some((item) => item.url.includes("gdstc.gd.gov.cn")), evidenceReadList.map((item) => item.url).join(" | "));
+check("priority evidence excludes category/social low-value pages", !evidenceReadList.some((item) => item.url.includes("devpost.com/c/") || item.url.includes("youtube.com")), evidenceReadList.map((item) => item.url).join(" | "));
 
 const glassdoorPage = assessCandidatePageType(glassdoor, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const douyinPage = assessCandidatePageType(douyin, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
@@ -167,9 +244,13 @@ check("procurement platform rollout is not a key opportunity", platformRolloutPa
 const serviceTermsPage = assessCandidatePageType(serviceTerms, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const procurementCategoryPage = assessCandidatePageType(procurementCategory, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const newsRepostPage = assessCandidatePageType(newsRepost, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
+const qwenDevpostPage = assessCandidatePageType(qwenDevpost, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
+const aiMediaReportPage = assessCandidatePageType(aiMediaReport, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 check("platform service terms are not a key opportunity", serviceTermsPage.keyCardEligibility !== "eligible", JSON.stringify(serviceTermsPage));
 check("procurement category page is not a key opportunity", procurementCategoryPage.keyCardEligibility !== "eligible", JSON.stringify(procurementCategoryPage));
 check("news repost requires original source before key card", newsRepostPage.keyCardEligibility !== "eligible", JSON.stringify(newsRepostPage));
+check("specific event-platform root page can be key-card eligible", qwenDevpostPage.keyCardEligibility === "eligible", JSON.stringify(qwenDevpostPage));
+check("non-government AI media report cannot be a key card", aiMediaReportPage.keyCardEligibility !== "eligible", JSON.stringify(aiMediaReportPage));
 
 const recoveryQueries = buildPrimarySourceRecoveryQueries([glassdoor, douyin, genericPdf], radarSpec, 2);
 check("named social candidate produces one primary-source recovery query", recoveryQueries.length === 1, JSON.stringify(recoveryQueries));
@@ -244,6 +325,27 @@ async function verifyOrchestratorRecovery(): Promise<void> {
   }
 }
 
+async function verifyDirectEvidenceRead(): Promise<void> {
+  const originalFetch = globalThis.fetch;
+  const requestedUrls: string[] = [];
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    requestedUrls.push(String(input));
+    return new Response(`<!doctype html><html><head><title>Official AI Hackathon Registration</title></head><body><main><h1>Official AI Hackathon Registration</h1><p>Applications are open until 2026-09-30. Submit your project through the official entry form.</p></main></body></html>`, {
+      status: 200,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }) as typeof fetch;
+  try {
+    const fetcher = new JinaReaderFetcher({ mockMode: false, preferDirect: true, timeoutMs: 1000 });
+    const content = await fetcher.fetch("https://organizer.example.com/hackathon/register");
+    check("live evidence direct read succeeds without Jina", content.fetch_success === true && content.word_count > 0, JSON.stringify(content));
+    check("direct read preserves official page title", content.title.includes("Official AI Hackathon Registration"), content.title);
+    check("successful direct read does not call Jina", requestedUrls.length === 1 && !requestedUrls[0]?.includes("r.jina.ai"), requestedUrls.join(" | "));
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+}
+
 async function verifyRecoveryNoResultStaysHonest(): Promise<void> {
   const providerName = "q6h_empty_recovery_provider";
   const previous = providerRegistry.get(providerName);
@@ -291,6 +393,7 @@ async function verifyRecoveryNoResultStaysHonest(): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  await verifyDirectEvidenceRead();
   await verifyOrchestratorRecovery();
   await verifyRecoveryNoResultStaysHonest();
   console.log(`Q.6-H primary source recovery: ${passed} PASS / ${failed} FAIL`);

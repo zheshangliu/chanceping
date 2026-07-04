@@ -13,6 +13,7 @@
 
 import type { CleanedContent } from "../types";
 import { cleanContent } from "./content-cleaner";
+import { validateLink } from "../../utils/link-validator";
 
 /** Jina Reader 配置 */
 export interface JinaReaderConfig {
@@ -22,6 +23,8 @@ export interface JinaReaderConfig {
   mockMode?: boolean;
   /** 真实抓取超时，毫秒。 */
   timeoutMs?: number;
+  /** Live evidence 可先直读公开网页，失败后再回退 Jina Reader。 */
+  preferDirect?: boolean;
 }
 
 /** Jina Reader 端点前缀 */
@@ -156,12 +159,14 @@ export class JinaReaderFetcher {
   private readonly apiKey: string;
   private readonly mockMode: boolean;
   private readonly timeoutMs: number;
+  private readonly preferDirect: boolean;
 
   constructor(config?: Partial<JinaReaderConfig>) {
     this.apiKey = config?.apiKey ?? "";
     // 显式 mockMode 优先，否则默认 Mock（验证脚本不测试真实网络）
     this.mockMode = config?.mockMode ?? true;
     this.timeoutMs = config?.timeoutMs ?? 15000;
+    this.preferDirect = config?.preferDirect ?? false;
   }
 
   /**
@@ -208,6 +213,99 @@ export class JinaReaderFetcher {
 
   /** 真实抓取：调用 Jina Reader API */
   private async fetchReal(url: string): Promise<CleanedContent> {
+    if (this.preferDirect) {
+      const direct = await this.fetchDirect(url);
+      if (direct.fetch_success && direct.word_count > 0) return direct;
+      const jina = await this.fetchViaJina(url);
+      if (jina.fetch_success) return jina;
+      return {
+        ...jina,
+        fetch_error: `Direct fetch: ${direct.fetch_error ?? "empty content"}; Jina Reader: ${jina.fetch_error ?? "failed"}`,
+      };
+    }
+    return this.fetchViaJina(url);
+  }
+
+  private async fetchDirect(url: string): Promise<CleanedContent> {
+    const linkCheck = validateLink(url);
+    if (!linkCheck.valid) {
+      return {
+        url,
+        title: "",
+        main_text: "",
+        word_count: 0,
+        fetch_success: false,
+        fetch_error: `Direct fetch blocked: ${linkCheck.reason ?? "unsafe URL"}`,
+      };
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "text/html,application/xhtml+xml,text/plain,application/json;q=0.8,*/*;q=0.1",
+          "User-Agent": "Mozilla/5.0 (compatible; ChancePing/1.0; +https://chanceping.local)",
+        },
+        redirect: "follow",
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        return {
+          url,
+          title: "",
+          main_text: "",
+          word_count: 0,
+          fetch_success: false,
+          fetch_error: `Direct fetch HTTP ${response.status}`,
+        };
+      }
+
+      const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+      if (contentType && !/(?:text\/|application\/(?:xhtml\+xml|json))/.test(contentType)) {
+        return {
+          url,
+          title: "",
+          main_text: "",
+          word_count: 0,
+          fetch_success: false,
+          fetch_error: `Direct fetch unsupported content type: ${contentType}`,
+        };
+      }
+
+      const contentLength = Number(response.headers.get("content-length") ?? 0);
+      if (Number.isFinite(contentLength) && contentLength > 2_000_000) {
+        return {
+          url,
+          title: "",
+          main_text: "",
+          word_count: 0,
+          fetch_success: false,
+          fetch_error: `Direct fetch content too large: ${contentLength}`,
+        };
+      }
+
+      const rawText = (await response.text()).slice(0, 2_000_000);
+      return cleanContent(rawText, url, { maxChars: DEFAULT_MAX_CHARS });
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      return {
+        url,
+        title: "",
+        main_text: "",
+        word_count: 0,
+        fetch_success: false,
+        fetch_error: err instanceof Error && err.name === "AbortError"
+          ? `Direct fetch timeout after ${this.timeoutMs}ms`
+          : `Direct fetch failed: ${errorMsg}`,
+      };
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  private async fetchViaJina(url: string): Promise<CleanedContent> {
     const jinaUrl = `${JINA_PREFIX}${url}`;
 
     const headers: Record<string, string> = {

@@ -62,6 +62,7 @@ import { applyCandidateJudgeGate } from "./candidate-llm-judge";
 import { applyCandidateOwnershipGate } from "./candidate-ownership";
 import { rankCandidateResults } from "./candidate-ranking";
 import { buildPrimarySourceRecoveryQueries } from "./primary-source-recovery";
+import { prioritizeEvidenceReadCandidates } from "./evidence-read-priority";
 
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
@@ -1313,9 +1314,18 @@ export class SearchOrchestrator {
         : rawResults;
     }
 
-    if (this.dataMode === "live" && providerRouting && this.enableContentFetch && candidateResults.length > 0) {
-      liveEvidence = await fetchLiveEvidence(candidateResults, {
+    const evidenceReadCandidates = this.dataMode === "live" && providerRouting && this.enableContentFetch
+      ? prioritizeEvidenceReadCandidates({
+        keyCandidates: candidateResults,
+        rawCandidates: rawResults,
         maxUrls: searchCostLimits.maxReadUrlsPerRun,
+        spec,
+      })
+      : [];
+
+    if (this.dataMode === "live" && providerRouting && this.enableContentFetch && evidenceReadCandidates.length > 0) {
+      liveEvidence = await fetchLiveEvidence(evidenceReadCandidates, {
+        maxUrls: evidenceReadCandidates.length,
         timeoutMs: 8000,
       });
       openedUrls.push(...liveEvidence.openedUrls);

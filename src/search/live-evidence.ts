@@ -178,7 +178,7 @@ export async function fetchLiveEvidence(
   const maxUrls = options.maxUrls ?? DEFAULT_LIVE_EVIDENCE_LIMIT;
   const timeoutMs = options.timeoutMs ?? DEFAULT_LIVE_EVIDENCE_TIMEOUT_MS;
   const targets = uniqueByUrl(results).slice(0, Math.max(0, maxUrls));
-  const fetcher = new JinaReaderFetcher({ mockMode: false, timeoutMs });
+  const fetcher = new JinaReaderFetcher({ mockMode: false, timeoutMs, preferDirect: true });
   const contentsByUrl = new Map<string, CleanedContent>();
   const fieldEvidenceByUrl = new Map<string, FieldEvidenceItem[]>();
   const openedUrls: SearchExecutionLog["openedUrls"] = [];

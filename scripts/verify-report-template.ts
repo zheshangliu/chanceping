@@ -319,6 +319,14 @@ if (!reportGenerator.includes("candidateAccounting")) {
   failed++;
   console.log("FAIL report statistics are not wired to CandidateAccounting");
 }
+if (reportGenerator.includes("未进入前 3 个 URL 有限读取范围")) {
+  failed++;
+  console.log("FAIL report should not expose stale fixed URL-read limit wording");
+}
+if (!reportGenerator.includes("已搜索到，但本轮未打开正文核验")) {
+  failed++;
+  console.log("FAIL report should explain unchecked sources in user-facing language");
+}
 if (!emptyMd.includes("本轮没有发现足够匹配、可行动的机会。")) {
   failed++;
   console.log("FAIL empty report missing no-result statement");

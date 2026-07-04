@@ -20,8 +20,8 @@ export interface CandidateSourceIntegrityAssessment {
 
 const WEAK_AGGREGATOR_DOMAIN_RE = /(?:^|\.)(?:glassdoor|indeed|jobsdb|zhaopin|zhipin|liepin|51job|linkedin|gaoxiaojob|bidcenter|chinabidding|qianlima|caizhaowang|onezh|hnzbcgxxw)\./i;
 const WEAK_SOCIAL_DOMAIN_RE = /(?:^|\.)(?:douyin|tiktok|xiaohongshu|weibo|bilibili|facebook|instagram|youtube)\./i;
-const NEWS_OR_REFERENCE_DOMAIN_RE = /(?:^|\.)(?:news|sina|sohu|163|qq|toutiao|thepaper|ifeng|zhihu|medium|xinhuanet)\./i;
-const TRUSTED_PRIMARY_DOMAIN_RE = /\.gov(?:\.cn)?$|\.edu(?:\.cn)?$|\.ac\.cn$|(?:^|\.)(?:ccgp|mofcom|chinatax|customs|wtt|ittf|nihonkiin|baduk)\./i;
+const NEWS_OR_REFERENCE_DOMAIN_RE = /(?:^|\.)(?:news|sina|sohu|163|qq|toutiao|thepaper|ifeng|zhihu|medium|xinhuanet|qbitai|36kr|huxiu|jiqizhixin|leiphone)\./i;
+const TRUSTED_PRIMARY_DOMAIN_RE = /\.gov(?:\.cn)?$|\.gov\.com\.cn$|\.edu(?:\.cn)?$|\.ac\.cn$|(?:^|\.)(?:ccgp|mofcom|chinatax|customs|wtt|ittf|nihonkiin|baduk)\./i;
 const GENERIC_DOCUMENT_TITLE_RE = /^(?:\[pdf\]\s*)?(?:(?:[\u4e00-\u9fff]{2,12})(?:省|市|县))?(?:政府采购)?(?:项目)?(?:公开)?(?:招标|采购)(?:文件|需求书)(?:\s*[-—]\s*[\u4e00-\u9fff]{2,16})?$/i;
 const GENERIC_LIST_TITLE_RE = /\b\d+\s+[^|]{0,40}jobs? in\b|\bjobs? in\b|招聘职位列表|职位列表|岗位汇总|job listings?|glassdoor/i;
 const NAMED_ACTION_RE = /征集|大赛|精品展|展览|展会|交易会|赛事|公开赛|项目|招标|采购|供应商|报名|投稿|open call|submission|competition|tournament|trade fair|tender|procurement|supplier/i;
@@ -98,6 +98,34 @@ function hasSpecificRecoverableTitle(result: SearchResult): boolean {
   return NAMED_ACTION_RE.test(title) || /[“"][^”"]{2,}[”"]/.test(title);
 }
 
+function clueRecoveryQueries(result: SearchResult): SearchQueryFamilyItem[] {
+  const text = `${result.title} ${result.snippet} ${result.url}`;
+  const items: SearchQueryFamilyItem[] = [];
+  if (/qwen\s*cloud|qwencloud|通义|阿里云/i.test(text) && /hackathon|马拉松|competition|challenge|contest|比赛|竞赛|大赛/i.test(text)) {
+    items.push({
+      query: "Qwen Cloud Hackathon Devpost official application",
+      language: "en",
+      themeName: "可信主来源反查",
+      intentType: "direct_opportunity",
+      sourceArchetype: "official_event_site",
+      sourceArchetypeLabel: "候选对应的主办方、发布方或比赛官方页面",
+      queryFamily: "primary source recovery",
+      queryVariant: "official_source",
+    });
+    items.push({
+      query: "site:devpost.com Qwen Cloud Hackathon",
+      language: "en",
+      themeName: "可信主来源反查",
+      intentType: "direct_opportunity",
+      sourceArchetype: "official_event_site",
+      sourceArchetypeLabel: "候选对应的主办方、发布方或比赛官方页面",
+      queryFamily: "primary source recovery",
+      queryVariant: "source_archetype",
+    });
+  }
+  return items;
+}
+
 export function buildPrimarySourceRecoveryQueries(
   results: SearchResult[],
   _spec: RadarRequirementSpec,
@@ -107,6 +135,15 @@ export function buildPrimarySourceRecoveryQueries(
   const seen = new Set<string>();
   const queries: SearchQueryFamilyItem[] = [];
   for (const result of results) {
+    for (const item of clueRecoveryQueries(result)) {
+      const key = item.query.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      queries.push(item);
+      if (queries.length >= limit) break;
+    }
+    if (queries.length >= limit) break;
+
     const integrity = assessCandidateSourceIntegrity(result);
     if (integrity.kind !== "weak_social" && integrity.kind !== "weak_aggregator" && integrity.kind !== "weak_reference") continue;
     if (!hasSpecificRecoverableTitle(result)) continue;
