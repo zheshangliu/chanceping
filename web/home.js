@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderMvpTemplates(input);
   hideLegacyTemplatesForHero();
+  bindHeroDemoPrompts(input);
   window.setTimeout(detachAdvancedPanelsForCustomerPath, 0);
 
   document.getElementById("home-attach-btn")?.addEventListener("click", () => {
@@ -170,6 +171,14 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedTemplate = null;
         })
         .catch((err) => showToast(err.message || "生成雷达失败", "error"));
+      return;
+    }
+
+    if (selectedTemplate && window.runTemplateWatch) {
+      window.runTemplateWatch({
+        ...selectedTemplate,
+        description: text,
+      }).catch((err) => showToast(err.message || "盯机会失败", "error"));
       return;
     }
 
@@ -206,6 +215,15 @@ function renderMvpTemplates(input) {
       input.value = selectedTemplate?.description || "";
       root.querySelectorAll(".mvp-template-btn").forEach((item) => item.classList.remove("active"));
       btn.classList.add("active");
+    });
+  });
+}
+
+function bindHeroDemoPrompts(input) {
+  document.querySelectorAll(".hero-demo-prompt").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      input.value = btn.dataset.heroPrompt || "";
+      input.focus();
     });
   });
 }

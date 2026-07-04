@@ -11,6 +11,7 @@
  *   - GET /source-hints.js → web/source-hints.js（MVP UX Rescue 新增）
  *   - GET /radar-profile.js → web/radar-profile.js（MVP UX Rescue 新增）
  *   - GET /watch-result.js → web/watch-result.js（MVP UX Rescue 新增）
+ *   - GET /hero-radar-chat.js → web/hero-radar-chat.js（Q.7-D 新增）
  *   - GET /requirement-chat.js → web/requirement-chat.js（Task 038 新增）
  *   - GET /search.js  → web/search.js（Task 039 新增）
  *   - GET /watch-rules-editor.js → web/watch-rules-editor.js
@@ -126,6 +127,10 @@ export function webUiRoutes(): Hono {
   app.get(
     "/watch-result.js",
     serveFile("watch-result.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/hero-radar-chat.js",
+    serveFile("hero-radar-chat.js", "application/javascript; charset=utf-8"),
   );
   app.get(
     "/requirement-chat.js",

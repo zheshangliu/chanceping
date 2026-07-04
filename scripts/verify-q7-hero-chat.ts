@@ -35,12 +35,16 @@ async function run() {
   const html = read("web/index.html");
   const heroChatJs = read("web/hero-radar-chat.js");
   const homeJs = read("web/home.js");
+  const webUiRoute = read("src/api/routes/web-ui.ts");
 
   check("hero chat script exists", existsSync("web/hero-radar-chat.js"));
   check("index loads hero chat script", html.includes("/hero-radar-chat.js"));
+  check("web UI serves hero chat script", webUiRoute.includes("/hero-radar-chat.js") && webUiRoute.includes('serveFile("hero-radar-chat.js"'));
   check("index has hero chat root", html.includes("hero-radar-chat-root"));
   check("hero chat root is visible in primary path", /id="hero-radar-chat-root"[^>]*>/.test(html) && !/id="hero-radar-chat-root"[^>]*hidden/.test(html));
   check("home copy focuses AI entrepreneur hero demo", html.includes("AI 创业者机会雷达"));
+  check("home offers one AI entrepreneur demo path", html.includes("hero-demo-prompts") && html.includes("OPC 创业者") && html.includes("不要展会资讯"));
+  check("home does not expose old multi-industry template buttons", !html.includes('data-template-id="ai_events"') && !html.includes('data-template-id="policy"') && !html.includes('data-template-id="heritage"'));
   check("hero chat defines message state", heroChatJs.includes("heroRadarChatState"));
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
   check("hero chat calls generate endpoint", heroChatJs.includes("/api/radars/generate"));
@@ -52,6 +56,8 @@ async function run() {
   check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
   check("home routes primary input to hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
+  check("demo prompt chips only fill input", homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));
+  check("hero chat runs before legacy template fallback", homeJs.indexOf("window.startHeroRadarChat") > -1 && homeJs.indexOf("window.startHeroRadarChat") < homeJs.indexOf("window.runTemplateWatch"));
 
   const app = createApp(createAppContext());
   const initial = await post(app, "/api/radars/generate", {

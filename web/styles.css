@@ -3468,6 +3468,33 @@ textarea {
   max-width: 900px;
 }
 
+.hero-demo-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px auto 0;
+  max-width: 900px;
+}
+
+.hero-demo-prompt {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font: inherit;
+}
+
+.hero-demo-prompt:hover,
+.hero-demo-prompt:focus {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  outline: none;
+}
+
 .hero-chat-shell {
   border: 1px solid var(--border);
   border-radius: 8px;
