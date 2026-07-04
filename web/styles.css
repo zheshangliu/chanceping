@@ -3463,9 +3463,206 @@ textarea {
   border-color: var(--accent);
 }
 
+.hero-radar-chat-root {
+  margin: 24px auto 0;
+  max-width: 900px;
+}
+
+.hero-chat-shell {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.hero-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.hero-chat-header strong {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.hero-chat-messages {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.hero-chat-message {
+  display: flex;
+}
+
+.hero-chat-message.user {
+  justify-content: flex-end;
+}
+
+.hero-chat-message.assistant,
+.hero-chat-message.system_event {
+  justify-content: flex-start;
+}
+
+.hero-chat-bubble {
+  max-width: min(760px, 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.hero-chat-message.user .hero-chat-bubble {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg-primary));
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+}
+
+.hero-chat-bubble p {
+  margin: 0;
+}
+
+.hero-chat-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+.hero-chat-input-row textarea {
+  min-height: 56px;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.hero-radar-artifact,
+.hero-report-artifact,
+.hero-progress-artifact {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--bg-secondary);
+}
+
+.hero-artifact-topline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hero-artifact-kicker,
+.hero-version-pill,
+.hero-status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.hero-status-pill.confirmed {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 40%, var(--border));
+}
+
+.hero-status-pill.draft {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 40%, var(--border));
+}
+
+.hero-artifact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.hero-artifact-field {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--bg-primary);
+}
+
+.hero-artifact-field strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.hero-artifact-field ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.hero-radar-diff {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.hero-diff-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.hero-diff-row p {
+  color: var(--text-primary);
+}
+
+.hero-artifact-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.hero-artifact-actions span {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.hero-report-artifact pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
 @media (max-width: 860px) {
   .watch-result-grid,
-  .radar-profile-grid {
+  .radar-profile-grid,
+  .hero-artifact-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3484,5 +3681,11 @@ textarea {
 
   .watch-action-row button {
     flex: 1 1 160px;
+  }
+
+  .hero-chat-header,
+  .hero-chat-input-row,
+  .hero-diff-row {
+    grid-template-columns: 1fr;
   }
 }

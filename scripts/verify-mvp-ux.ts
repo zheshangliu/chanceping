@@ -32,14 +32,14 @@ const reportGenerator = read("src/agents/radar-report-generator.ts");
 const radarsRoute = read("src/api/routes/radars.ts");
 const userContext = read("src/agents/user-context.ts");
 
-check("首页标题更直白", html.includes("告诉我你想盯什么机会"));
-check("首页副标题说明本周机会", html.includes("AI 会帮你找出本周值得行动的机会"));
-check("首页主按钮文案为盯机会", html.includes("盯机会") || homeJs.includes("盯机会"));
-check("首页含先看结果再保存的辅助文案", html.includes("先看结果，觉得有用再保存为长期雷达"));
-check("首页说明可以直接说一段话", html.includes("你可以直接说一段话"));
+check("首页聚焦 AI 创业者 Hero Demo", html.includes("AI 创业者机会雷达"));
+check("首页副标题说明聊天式机会雷达", html.includes("像聊天一样说清楚你的 AI 比赛"));
+check("首页主按钮文案为开始画雷达", html.includes("开始画雷达") || homeJs.includes("开始画雷达"));
+check("首页说明确认雷达后再搜索", html.includes("你确认雷达后，系统才会开始搜索"));
+check("首页包含单雷达聊天工作台", html.includes("hero-radar-chat-root") && html.includes("/hero-radar-chat.js"));
 check("首页不再显示选择雷达文案", !html.includes("选择雷达："));
 check("附件按钮说明文件作为画像补充", homeJs.includes("文件会作为画像补充材料使用，不会直接当作机会结果。"));
-check("模板入口文案为试试看这些例子", html.includes("试试看这些例子") || homeJs.includes("试试看这些例子"));
+check("旧模板入口不作为 Hero 主路径", homeJs.includes("hideLegacyTemplatesForHero();"));
 check(
   "可见主导航包含三个客户入口",
   /data-tab="home"/.test(html) && /data-tab="watch-result"/.test(html) && /data-tab="radars"/.test(html),
@@ -49,7 +49,8 @@ check("watch-result.js 被引入", html.includes("/watch-result.js"));
 check("模板文件被引入", html.includes("/mvp-templates.js"));
 check("画像确认脚本被引入", html.includes("/radar-profile.js"));
 check("source hints 脚本被引入", html.includes("/source-hints.js"));
-check("自由输入走画像确认", homeJs.includes("createRadarProfileDraft") || profileJs.includes("createRadarProfileDraft"));
+check("自由输入优先进入 hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
+check("旧画像确认逻辑仍保留兼容", homeJs.includes("createRadarProfileDraft") || profileJs.includes("createRadarProfileDraft"));
 check("模板含预置画像", templatesJs.includes("profile") && templatesJs.includes("用户身份"));
 check("画像确认支持指定信号源", profileJs.includes("source-hints-input") || sourceHintsJs.includes("applySourceHintsToSpec"));
 check("雷达版本卡标题升级为 V1.0 策略", profileJs.includes("雷达 V1.0 策略卡") || profileJs.includes("雷达 ${escapeHtml(radarVersion.version)} 策略卡"));

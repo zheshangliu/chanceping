@@ -149,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!input || !watchBtn) return;
 
   renderMvpTemplates(input);
+  hideLegacyTemplatesForHero();
   window.setTimeout(detachAdvancedPanelsForCustomerPath, 0);
 
   document.getElementById("home-attach-btn")?.addEventListener("click", () => {
@@ -162,11 +163,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (selectedTemplate && window.runTemplateWatch) {
-      window.runTemplateWatch({
-        ...selectedTemplate,
-        description: text,
-      }).catch((err) => showToast(err.message || "盯机会失败", "error"));
+    if (window.startHeroRadarChat) {
+      window.startHeroRadarChat(text)
+        .then(() => {
+          input.value = "";
+          selectedTemplate = null;
+        })
+        .catch((err) => showToast(err.message || "生成雷达失败", "error"));
       return;
     }
 

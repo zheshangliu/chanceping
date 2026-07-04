@@ -39,14 +39,16 @@ async function run() {
   check("hero chat script exists", existsSync("web/hero-radar-chat.js"));
   check("index loads hero chat script", html.includes("/hero-radar-chat.js"));
   check("index has hero chat root", html.includes("hero-radar-chat-root"));
+  check("hero chat root is visible in primary path", /id="hero-radar-chat-root"[^>]*>/.test(html) && !/id="hero-radar-chat-root"[^>]*hidden/.test(html));
+  check("home copy focuses AI entrepreneur hero demo", html.includes("AI 创业者机会雷达"));
   check("hero chat defines message state", heroChatJs.includes("heroRadarChatState"));
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
   check("hero chat calls generate endpoint", heroChatJs.includes("/api/radars/generate"));
   check("hero chat calls revise endpoint", heroChatJs.includes("/api/radars/revise"));
   check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
-  check("home routes primary input to hero chat", homeJs.includes("startHeroRadarChat") || heroChatJs.includes("startHeroRadarChat"));
-  check("old template buttons can be hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero"));
+  check("home routes primary input to hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
+  check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
 
   const app = createApp(createAppContext());
   const initial = await post(app, "/api/radars/generate", {
