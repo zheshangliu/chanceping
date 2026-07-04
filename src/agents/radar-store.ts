@@ -34,6 +34,15 @@ import {
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import { computeNextRunAt } from "../api/routes/radars";
 
+function nextIsoTimestamp(previousIso?: string): string {
+  const now = new Date();
+  const previousMs = previousIso ? new Date(previousIso).getTime() : Number.NaN;
+  if (Number.isFinite(previousMs) && now.getTime() <= previousMs) {
+    return new Date(previousMs + 1).toISOString();
+  }
+  return now.toISOString();
+}
+
 // ============================================================
 // Input / Filter 类型
 // ============================================================
@@ -272,7 +281,7 @@ export class JsonRadarStore implements RadarStore {
       ...("schedule" in patch ? { schedule: patch.schedule } : {}),
       // V1.6-06 watchRules 使用 in 检查 key 是否存在，传 undefined 表示显式清空
       ...("watchRules" in patch ? { watchRules: patch.watchRules } : {}),
-      updatedAt: new Date().toISOString(),
+      updatedAt: nextIsoTimestamp(radar.updatedAt),
     };
 
     this.radars.set(id, updated);
@@ -285,7 +294,7 @@ export class JsonRadarStore implements RadarStore {
       return null;
     }
 
-    const now = new Date().toISOString();
+    const now = nextIsoTimestamp(radar.updatedAt);
     const archived: Radar = {
       ...radar,
       status: "archived",

@@ -121,6 +121,39 @@ function testRadarStoreCRUD(): void {
   check("7.1 update name 已改", updated?.name === "改名");
   check("7.2 update updatedAt 已更新", updated?.updatedAt !== originalUpdatedAt);
 
+  const RealDate = Date;
+  const fixedIso = "2026-01-01T00:00:00.000Z";
+  class FixedDate extends RealDate {
+    constructor(value?: string | number | Date) {
+      if (value === undefined) {
+        super(fixedIso);
+      } else {
+        super(value);
+      }
+    }
+
+    static now(): number {
+      return new RealDate(fixedIso).getTime();
+    }
+  }
+  try {
+    globalThis.Date = FixedDate as DateConstructor;
+    cleanupTempFiles();
+    const fixedStore = new JsonRadarStore({ file_path: TEMP_RADARS_FILE });
+    const fixedRadar = fixedStore.create({ name: "同毫秒测试雷达", kind: "custom" });
+    const fixedUpdated = fixedStore.update(fixedRadar.id, { name: "同毫秒改名" });
+    check(
+      "7.3 update updatedAt 同毫秒也单调前进",
+      fixedUpdated !== null
+        && fixedUpdated.updatedAt !== fixedRadar.updatedAt
+        && new RealDate(fixedUpdated.updatedAt).getTime() > new RealDate(fixedRadar.updatedAt).getTime(),
+      `before=${fixedRadar.updatedAt}, after=${fixedUpdated?.updatedAt}`,
+    );
+  } finally {
+    globalThis.Date = RealDate;
+    cleanupTempFiles();
+  }
+
   // 8. archive(id) → status=archived, deletedAt 有值
   const archived = store.archive(radar.id);
   check("8. archive 返回非 null", archived !== null);
