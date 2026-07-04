@@ -121,6 +121,15 @@
     return parts.length > 0 ? parts.join("；") : "按已确认画像持续寻找匹配机会。";
   }
 
+  function getRadarVersionLabel(radar) {
+    const version = radar?.spec?.radar_version?.version
+      || radar?.spec?.radarVersion?.version
+      || radar?.spec?.version
+      || radar?.currentVersion
+      || "V1.0";
+    return String(version);
+  }
+
   // ============================================================
   // 加载雷达列表
   // ============================================================
@@ -229,6 +238,7 @@
       </div>
       <h4 class="radar-name">${escapeHtml(radar.name || "未命名雷达")}</h4>
       <div class="radar-status-text">${escapeHtml(statusLabel)}</div>
+      <span class="radar-version-badge">${escapeHtml(getRadarVersionLabel(radar))}</span>
       <div class="radar-card-profile">
         <span class="radar-card-profile-label">画像摘要</span>
         <p>${escapeHtml(profileSummary)}</p>
@@ -236,12 +246,18 @@
       <div class="radar-last-run"><span>上次运行时间</span>${escapeHtml(lastRun)}</div>
       <div class="radar-last-run"><span>上次运行状态</span>${escapeHtml(lastRunStatus)}</div>
       <div class="radar-card-actions">
+        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
         <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
         <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRun ? "" : "disabled"} title="${canRun ? "" : "雷达运行中后可再次盯机会"}">再次盯机会</button>
         <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
       </div>
       <div class="radar-rerun-status" aria-live="polite"></div>
     `;
+
+    const editBtn = card.querySelector(".btn-edit-radar");
+    if (editBtn) {
+      editBtn.addEventListener("click", () => editRadarFromCard(radar));
+    }
 
     // 绑定详情按钮
     const detailBtn = card.querySelector(".btn-detail");
@@ -261,6 +277,15 @@
       deleteBtn.addEventListener("click", () => deleteRadarFromCard(radar.id, radar.name, deleteBtn));
     }
     return card;
+  }
+
+  function editRadarFromCard(radar) {
+    if (window.openHeroRadarEditor) {
+      window.openHeroRadarEditor(radar);
+      return;
+    }
+    if (window.switchTab) window.switchTab("home");
+    document.getElementById("home-input")?.focus();
   }
 
   async function deleteRadarFromCard(radarId, radarName, btn) {
