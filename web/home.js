@@ -77,6 +77,11 @@ function switchTab(tabName) {
   if (CUSTOMER_TABS.has(tabName)) {
     window.setTimeout(detachAdvancedPanelsForCustomerPath, 0);
   }
+  if (tabName === "home") {
+    window.syncHeroEntryVisibility?.();
+  } else {
+    document.body.classList.remove("hero-chat-active");
+  }
   // Task 040: 派发 tab-switched 事件，供 opportunities.js / reports.js 监听加载
   window.dispatchEvent(new CustomEvent("tab-switched", { detail: { tab: tabName } }));
 }

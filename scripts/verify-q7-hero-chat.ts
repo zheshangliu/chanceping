@@ -36,6 +36,7 @@ async function run() {
   const heroChatJs = read("web/hero-radar-chat.js");
   const homeJs = read("web/home.js");
   const radarsJs = read("web/radars.js");
+  const styles = read("web/styles.css");
   const webUiRoute = read("src/api/routes/web-ui.ts");
 
   check("hero chat script exists", existsSync("web/hero-radar-chat.js"));
@@ -49,7 +50,7 @@ async function run() {
   check("homepage has exactly one primary home input", homeInputCount === 1, String(homeInputCount));
   check("homepage old chat confirmation input is not part of customer primary path", html.includes('class="tab-btn advanced-tab" data-tab="chat" hidden>需求确认</button>'));
   check("home watch button says AI radar action", html.includes("开始画雷达") || html.includes("开始盯机会"));
-  check("home offers one AI event radar demo path", html.includes("hero-demo-prompts") && html.includes("OPC 创业者") && html.includes("不要展会资讯"));
+  check("home demo prompt chips are hidden, not customer-facing templates", html.includes("hero-demo-prompts") && /class="hero-demo-prompts"[^>]*hidden/.test(html));
   check("home does not expose old multi-industry template buttons", !html.includes('data-template-id="ai_events"') && !html.includes('data-template-id="policy"') && !html.includes('data-template-id="heritage"'));
   check("hero chat defines message state", heroChatJs.includes("heroRadarChatState"));
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
@@ -77,7 +78,9 @@ async function run() {
   check("radar version diff is collapsed by default", heroChatJs.includes("查看本次修改"));
   check("hero chat shows a three-step beginner guide", heroChatJs.includes("1. 说需求") && heroChatJs.includes("2. 看雷达") && heroChatJs.includes("3. 确认后搜索"));
   check("hero chat can reset the current demo", heroChatJs.includes("hero-chat-reset") && heroChatJs.includes("resetHeroRadarChat"));
-  check("hero chat becomes the only input after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-input-area") && heroChatJs.includes(".hero-demo-prompts"));
+  check("hero chat becomes the only visible workspace after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-hero") && heroChatJs.includes(".home-input-area") && heroChatJs.includes("hero-chat-active"));
+  check("hidden elements cannot be overridden by flex styles", styles.includes("[hidden]") && styles.includes("display: none !important"));
+  check("chat mode hides legacy top navigation", styles.includes("body.hero-chat-active .top-bar") && styles.includes("body.hero-chat-active .tab-nav"));
   check("chat composer is hidden until the radar conversation starts", heroChatJs.includes("chatStarted ? `") && heroChatJs.includes("hero-chat-input-row"));
   check("home routes primary input to hero chat", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("startHeroRadarChat(text"));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));

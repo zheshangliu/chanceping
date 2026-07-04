@@ -70,6 +70,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html, body {
   height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
@@ -3512,6 +3516,28 @@ textarea {
   max-width: 900px;
 }
 
+body.hero-chat-active .top-bar,
+body.hero-chat-active .tab-nav {
+  display: none;
+}
+
+body.hero-chat-active .tab-content {
+  min-height: 100vh;
+  padding: 0;
+}
+
+body.hero-chat-active .home-container {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+body.hero-chat-active .hero-radar-chat-root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
 .hero-demo-prompts {
   display: flex;
   flex-wrap: wrap;
@@ -3867,6 +3893,18 @@ textarea {
   overflow: hidden;
   background: var(--bg-secondary);
   text-align: left;
+}
+
+body.hero-chat-active .hero-chat-workspace {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+body.hero-chat-active .hero-chat-main {
+  min-height: 100vh;
 }
 
 .hero-radar-sidebar {

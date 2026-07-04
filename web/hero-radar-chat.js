@@ -353,7 +353,13 @@
 
   function syncHeroEntryVisibility() {
     const chatStarted = heroRadarChatState.messages.length > 0;
-    [".home-input-area", ".home-helper", ".hero-demo-prompts"].forEach((selector) => {
+    const homeIsActive = document.getElementById("panel-home")?.classList.contains("active") !== false;
+    document.body.classList.toggle("hero-chat-active", chatStarted && homeIsActive);
+    [".home-examples-block", ".hero-demo-prompts"].forEach((selector) => {
+      const element = document.querySelector(selector);
+      if (element) element.hidden = true;
+    });
+    [".home-hero", ".home-input-area", ".home-helper"].forEach((selector) => {
       const element = document.querySelector(selector);
       if (element) element.hidden = chatStarted;
     });
