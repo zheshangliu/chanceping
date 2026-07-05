@@ -2,6 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "chanceping_hero_radar_chat_state";
+  const LAST_CHAT_WINDOW_KEY = "chanceping_hero_radar_chat_window_id";
   const SIDEBAR_COLLAPSED_KEY = "chanceping-sidebar-collapsed";
   const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
   const AI_EVENT_SAMPLE_ROOM = {
@@ -90,6 +91,13 @@
     return json.data;
   }
 
+  async function getJson(url) {
+    const res = await fetch(url);
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error?.message || "请求失败");
+    return json.data;
+  }
+
   async function patchJson(url, body) {
     const res = await fetch(url, {
       method: "PATCH",
@@ -132,6 +140,7 @@
       .then((windowData) => {
         heroRadarChatState.chatWindowId = windowData.id;
         if (windowData.radarId) heroRadarChatState.boundRadarId = windowData.radarId;
+        rememberLastChatWindow(windowData.id);
         saveState();
         return windowData.id;
       })
@@ -153,6 +162,7 @@
           linkedRunId: message.artifact?.runId,
           linkedReportId: message.artifact?.reportId,
           artifactType: artifactTypeForPersistence(message.artifact),
+          artifactPayload: message.artifact || undefined,
         });
       })
       .catch(() => {
@@ -161,10 +171,15 @@
   }
 
   function updateRadarChatWindow(patch) {
+    const payload = {
+      ...patch,
+      ...(!("draftSnapshot" in patch) && heroRadarChatState.currentDraft ? { draftSnapshot: heroRadarChatState.currentDraft } : {}),
+      ...(!("currentResultSnapshot" in patch) && heroRadarChatState.currentResult ? { currentResultSnapshot: heroRadarChatState.currentResult } : {}),
+    };
     ensureRadarChatWindow()
       .then((chatWindowId) => {
         if (!chatWindowId) return null;
-        return patchJson(`/api/radar-chats/${chatWindowId}`, patch);
+        return patchJson(`/api/radar-chats/${chatWindowId}`, payload);
       })
       .catch(() => {
         // Keep chat usable even when the local persistence API is unavailable.
@@ -207,6 +222,31 @@
     }
   }
 
+  function rememberLastChatWindow(chatWindowId) {
+    if (!chatWindowId) return;
+    try {
+      localStorage.setItem(LAST_CHAT_WINDOW_KEY, chatWindowId);
+    } catch {
+      // Reload recovery is best-effort.
+    }
+  }
+
+  function forgetLastChatWindow() {
+    try {
+      localStorage.removeItem(LAST_CHAT_WINDOW_KEY);
+    } catch {
+      // Ignore storage errors.
+    }
+  }
+
+  function getLastChatWindowId() {
+    try {
+      return localStorage.getItem(LAST_CHAT_WINDOW_KEY) || "";
+    } catch {
+      return "";
+    }
+  }
+
   function restoreState() {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
@@ -222,6 +262,9 @@
       heroRadarChatState.confirmedVersion = parsed.confirmedVersion || null;
       heroRadarChatState.copiedRadarId = parsed.copiedRadarId || null;
       heroRadarChatState.chatWindowId = parsed.chatWindowId || null;
+      if (heroRadarChatState.chatWindowId) {
+        rememberLastChatWindow(heroRadarChatState.chatWindowId);
+      }
       if (Object.prototype.hasOwnProperty.call(parsed, "boundRadarId")) {
         heroRadarChatState.boundRadarId = parsed.boundRadarId || null;
       }
@@ -235,6 +278,47 @@
     } catch {
       heroRadarChatState.sidebarCollapsed = false;
     }
+  }
+
+  function restoreMessageFromBackend(message) {
+    return {
+      id: message.id || uid(message.role || "message"),
+      role: message.role === "user" ? "user" : "assistant",
+      content: message.content || "",
+      artifact: message.artifactPayload || (message.artifactType ? {
+        type: message.artifactType,
+        version: message.linkedRadarVersion,
+        runId: message.linkedRunId,
+        reportId: message.linkedReportId,
+      } : undefined),
+      createdAt: message.createdAt || new Date().toISOString(),
+    };
+  }
+
+  async function restoreStateFromBackend() {
+    if (heroRadarChatState.messages.length > 0) return false;
+    const chatWindowId = getLastChatWindowId();
+    if (!chatWindowId) return false;
+    const detail = await getJson(`/api/radar-chats/${encodeURIComponent(chatWindowId)}`);
+    const windowData = detail.window;
+    const messages = Array.isArray(detail.messages) ? detail.messages : [];
+    if (!windowData || messages.length === 0) return false;
+    heroRadarChatState.chatWindowId = windowData.id;
+    heroRadarChatState.boundRadarId = windowData.radarId || heroRadarChatState.boundRadarId;
+    heroRadarChatState.currentDraft = windowData.draftSnapshot || null;
+    heroRadarChatState.currentResult = windowData.currentResultSnapshot || null;
+    if (heroRadarChatState.currentResult) {
+      window.persistWatchResult?.(heroRadarChatState.currentResult);
+    }
+    heroRadarChatState.confirmedVersion = windowData.currentConfirmedRadarVersion || null;
+    heroRadarChatState.messages = messages.map(restoreMessageFromBackend);
+    heroRadarChatState.pendingFirstMessage = "";
+    heroRadarChatState.modal = null;
+    heroRadarChatState.isBusy = false;
+    rememberLastChatWindow(windowData.id);
+    saveState();
+    renderHeroRadarChat();
+    return true;
   }
 
   function addMessage(role, content, artifact) {
@@ -741,6 +825,7 @@
     heroRadarChatState.pendingFirstMessage = "";
     heroRadarChatState.modal = null;
     heroRadarChatState.isBusy = false;
+    forgetLastChatWindow();
   }
 
   async function openHeroRadarWindow() {
@@ -1038,6 +1123,9 @@
   document.addEventListener("DOMContentLoaded", () => {
     restoreState();
     renderHeroRadarChat();
+    restoreStateFromBackend().catch(() => {
+      // Session storage remains the primary fast path; backend recovery is best-effort.
+    });
   });
 
   window.heroRadarChatState = heroRadarChatState;
@@ -1045,6 +1133,7 @@
   window.renderRadarArtifact = renderRadarArtifact;
   window.renderReportArtifact = renderReportArtifact;
   window.renderHeroRadarChat = renderHeroRadarChat;
+  window.restoreStateFromBackend = restoreStateFromBackend;
   window.syncHeroEntryVisibility = syncHeroEntryVisibility;
   window.resetHeroRadarChat = resetHeroRadarChat;
   window.toggleHeroSidebar = toggleHeroSidebar;

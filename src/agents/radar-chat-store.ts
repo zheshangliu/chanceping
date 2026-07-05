@@ -35,6 +35,8 @@ export interface RadarChatWindow {
   draftRadarVersion?: string;
   latestRunId?: string;
   latestReportId?: string;
+  draftSnapshot?: unknown;
+  currentResultSnapshot?: unknown;
   memorySummary: RadarMemorySummary;
   createdAt: string;
   updatedAt: string;
@@ -50,6 +52,7 @@ export interface RadarChatMessage {
   linkedRunId?: string;
   linkedReportId?: string;
   artifactType?: RadarChatArtifactType;
+  artifactPayload?: unknown;
   createdAt: string;
 }
 
@@ -69,6 +72,8 @@ export interface RadarChatWindowUpdateInput {
   draftRadarVersion?: string;
   latestRunId?: string;
   latestReportId?: string;
+  draftSnapshot?: unknown;
+  currentResultSnapshot?: unknown;
   memorySummary?: Partial<Omit<RadarMemorySummary, "updatedAt">>;
 }
 
@@ -79,6 +84,7 @@ export interface RadarChatMessageCreateInput {
   linkedRunId?: string;
   linkedReportId?: string;
   artifactType?: RadarChatArtifactType;
+  artifactPayload?: unknown;
 }
 
 export interface RadarChatWindowListFilter {
@@ -224,6 +230,8 @@ export class JsonRadarChatStore implements RadarChatStore {
       ...("draftRadarVersion" in patch ? { draftRadarVersion: patch.draftRadarVersion } : {}),
       ...("latestRunId" in patch ? { latestRunId: patch.latestRunId } : {}),
       ...("latestReportId" in patch ? { latestReportId: patch.latestReportId } : {}),
+      ...("draftSnapshot" in patch ? { draftSnapshot: patch.draftSnapshot } : {}),
+      ...("currentResultSnapshot" in patch ? { currentResultSnapshot: patch.currentResultSnapshot } : {}),
       memorySummary: mergeMemorySummary(existing.memorySummary, patch.memorySummary, updatedAt),
       updatedAt,
     };
@@ -258,6 +266,7 @@ export class JsonRadarChatStore implements RadarChatStore {
       ...(input.linkedRunId ? { linkedRunId: input.linkedRunId } : {}),
       ...(input.linkedReportId ? { linkedReportId: input.linkedReportId } : {}),
       ...(input.artifactType ? { artifactType: input.artifactType } : {}),
+      ...("artifactPayload" in input ? { artifactPayload: input.artifactPayload } : {}),
       createdAt: now,
     };
     const messages = this.messages.get(chatWindowId) ?? [];

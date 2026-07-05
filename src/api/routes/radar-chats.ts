@@ -17,6 +17,12 @@ function asOptionalString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
+function asJsonPayload(value: unknown): unknown | undefined {
+  if (value === null) return null;
+  if (Array.isArray(value)) return value;
+  return value && typeof value === "object" ? value : undefined;
+}
+
 function isMessageRole(value: unknown): value is RadarChatMessageRole {
   return value === "user" || value === "assistant" || value === "system_event";
 }
@@ -111,6 +117,8 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       ...("draftRadarVersion" in body ? { draftRadarVersion: asOptionalString(body.draftRadarVersion) } : {}),
       ...("latestRunId" in body ? { latestRunId: asOptionalString(body.latestRunId) } : {}),
       ...("latestReportId" in body ? { latestReportId: asOptionalString(body.latestReportId) } : {}),
+      ...("draftSnapshot" in body ? { draftSnapshot: asJsonPayload(body.draftSnapshot) } : {}),
+      ...("currentResultSnapshot" in body ? { currentResultSnapshot: asJsonPayload(body.currentResultSnapshot) } : {}),
     };
     const updated = store.update(id, patch);
     if (!updated) {
@@ -140,6 +148,7 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       linkedRunId: asOptionalString(body.linkedRunId),
       linkedReportId: asOptionalString(body.linkedReportId),
       artifactType,
+      ...("artifactPayload" in body ? { artifactPayload: asJsonPayload(body.artifactPayload) } : {}),
     });
     if (!message) {
       return c.json(errorResponse("RADAR_CHAT_NOT_FOUND", "雷达聊天窗口不存在", Date.now() - start, 404), 404);
