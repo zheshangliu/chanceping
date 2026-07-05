@@ -134,15 +134,15 @@ async function run() {
   check("report artifact has demo-ready conclusion and action layer", heroChatJs.includes("本轮结论") && heroChatJs.includes("先做这 3 件事") && heroChatJs.includes("待复核提醒"));
   check("result page exposes reusable opportunity card grid", watchResultJs.includes("renderOpportunityCardGrid") && watchResultJs.includes("watch-opportunity-grid"));
   check("result page surfaces top 3 action strip", watchResultJs.includes("renderTopActionStrip") && watchResultJs.includes("先看这 3 个") && styles.includes(".watch-top-actions"));
-  check("result opportunity cards use customer-facing labels", watchResultJs.includes("formatOpportunityKindForCustomer") && watchResultJs.includes("机会性质") && watchResultJs.includes("复核状态"));
-  check("result opportunity cards use demo-friendly action copy", watchResultJs.includes("为什么值得看") && watchResultJs.includes("现在先做什么") && watchResultJs.includes("来源怎么复核"));
+  check("result opportunity cards use customer-facing labels", watchResultJs.includes("formatOpportunityKindForCustomer") && watchResultJs.includes("watch-card-decision-row") && watchResultJs.includes("优先复核"));
+  check("result opportunity cards use demo-friendly action copy", watchResultJs.includes("为什么值得看") && watchResultJs.includes("本周先做") && watchResultJs.includes("来源入口"));
   check("result page hero demo title is AI event radar", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("AI 赛事雷达"));
   check("result page puts report summary after opportunity cards", watchResultJs.indexOf("watch-opportunity-grid") > -1 && watchResultJs.indexOf("report-summary") > watchResultJs.indexOf("watch-opportunity-grid"));
   check("my radar view enters the shared result surface", radarsJs.includes("查看机会和报告") && radarsJs.includes("window.showWatchResult"));
   check("result page has one radar revision action", watchResultJs.includes("调整雷达画像") && !watchResultJs.includes("这些结果不对，修改雷达"));
   check("result page card grid CSS is responsive", styles.includes(".watch-opportunity-grid") && styles.includes("repeat(auto-fit, minmax(260px, 1fr))"));
   check("my radar cards hide raw last run status", !radarsJs.includes("上次运行状态"));
-  check("my radar cards use customer-friendly saved status", radarsJs.includes("getCustomerRadarStatusLabel") && radarsJs.includes("上次已完成") && radarsJs.includes("等待首次运行"));
+  check("my radar cards use customer-friendly saved status", radarsJs.includes("getCustomerRadarStatusLabel") && radarsJs.includes("上次已完成") && radarsJs.includes("还没跑过"));
   check("my radar cards keep customer-facing actions only", radarsJs.includes("编辑雷达") && radarsJs.includes("查看机会和报告") && radarsJs.includes("删除雷达") && !radarsJs.includes(">再次盯机会</button>"));
   check("detail page does not show activation action", !radarDetailJs.includes(">激活</button>"));
   check("detail archive label becomes delete radar", radarDetailJs.includes("删除雷达") && !radarDetailJs.includes(">归档</button>"));

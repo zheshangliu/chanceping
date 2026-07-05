@@ -87,12 +87,12 @@ check("含正在搜索机会 loading", watchResultJs.includes("正在搜索机�
 check("含正在生成机会报告 loading", watchResultJs.includes("正在生成机会报告"));
 check("机会卡片按用户关心顺序渲染", [
   "为什么值得看",
-  "报名 / 截止",
-  "现在先做什么",
-  "来源怎么复核",
+  "本周先做",
+  "截止时间",
+  "来源入口",
 ].every((text) => watchResultJs.includes(text)));
-check("机会卡片展示四维状态标签", ["watch-card-meta", "opportunity_kind", "evidence_status", "action_status"].every((text) => watchResultJs.includes(text)));
-check("机会卡片能把 mock 显示为演示来源", watchResultJs.includes("演示来源，未真实核验") && watchResultJs.includes("来源说明"));
+check("机会卡片展示客户决策标签", ["watch-card-decision-row", "getPriorityCue", "优先复核"].every((text) => watchResultJs.includes(text)));
+check("机会卡片能把 mock 显示为演示来源", watchResultJs.includes("演示来源，未真实核验") && watchResultJs.includes("来源入口"));
 check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_no_results", "not_checked", "invalid_url", "name_only"].every((text) => watchResultJs.includes(text)));
 check("live 失败或结果不足提示可切回演示数据", watchResultJs.includes("Live 真实搜索失败") && watchResultJs.includes("切回演示数据查看流程"));
 check("失败或无结果仍可保存雷达", watchResultJs.includes("本轮真实搜索结果不足，但雷达已生成") && watchResultJs.includes("runOutcome") && watchResultJs.includes("保存为长期雷达"));
@@ -109,7 +109,7 @@ check("保存成功后不自动跳转我的雷达", !watchResultJs.includes("已
 check("空结果页含可行动建议", ["放宽地区", "减少排除条件", "增加指定信号源", "保存为长期雷达继续监控"].every((text) => watchResultJs.includes(text)));
 check(
   "我的雷达卡片使用客户语言入口",
-  ["画像摘要", "上次完成", "等待首次运行", "编辑雷达", "查看机会和报告", "删除雷达"].every((text) => radarsJs.includes(text))
+  ["这支雷达在盯", "上次已完成", "还没跑过", "编辑雷达", "查看机会和报告", "删除雷达"].every((text) => radarsJs.includes(text))
     && !radarsJs.includes("上次运行状态")
     && !radarsJs.includes(">再次盯机会</button>"),
 );

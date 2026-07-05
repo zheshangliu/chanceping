@@ -2587,6 +2587,13 @@ textarea {
   line-height: 1.55;
 }
 
+.radar-card-next-step {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .radar-card-actions {
   display: flex;
   flex-wrap: wrap;
@@ -3459,7 +3466,7 @@ textarea {
 .watch-opportunity-card {
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 14px;
+  padding: 16px;
   background: var(--bg-primary);
   box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
 }
@@ -3531,25 +3538,25 @@ textarea {
   display: flex;
   gap: 8px;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   line-height: 1.45;
   font-weight: 700;
 }
 
-.watch-card-meta {
+.watch-card-decision-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.watch-card-meta span {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2px 6px;
-  color: var(--text-secondary);
+.watch-card-decision-row span {
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: var(--text-primary);
   font-size: 12px;
-  background: var(--bg-secondary);
+  background: color-mix(in srgb, var(--accent) 5%, var(--bg-secondary));
 }
 
 .watch-card-fields {
@@ -3566,7 +3573,7 @@ textarea {
 }
 
 .watch-card-fields dt {
-  color: var(--text-secondary);
+  color: var(--accent);
   font-size: 12px;
   font-weight: 700;
 }
@@ -3598,9 +3605,9 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 26px;
-  height: 22px;
-  border-radius: 4px;
+  min-width: 42px;
+  height: 24px;
+  border-radius: 999px;
   background: var(--bg-tertiary);
   color: var(--text-primary);
   font-size: 12px;

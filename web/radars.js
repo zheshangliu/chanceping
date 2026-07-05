@@ -254,10 +254,11 @@
       <div class="radar-status-text">${escapeHtml(customerStatusLabel)}</div>
       <span class="radar-version-badge">${escapeHtml(getRadarVersionLabel(radar))}</span>
       <div class="radar-card-profile">
-        <span class="radar-card-profile-label">画像摘要</span>
+        <span class="radar-card-profile-label">这支雷达在盯</span>
         <p>${escapeHtml(profileSummary)}</p>
       </div>
-      <div class="radar-last-run"><span>${radar.lastRunAt ? "上次完成" : "运行状态"}</span>${escapeHtml(radar.lastRunAt ? lastRun : "等待首次运行")}</div>
+      <div class="radar-last-run"><span>最近一次</span>${escapeHtml(radar.lastRunAt ? lastRun : "还没跑过")}</div>
+      <p class="radar-card-next-step">要改需求就继续聊天编辑；要看本轮结果就打开机会和报告。</p>
       <div class="radar-card-actions">
         <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
         <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
@@ -374,6 +375,7 @@
     if (latestReport?.filename) {
       lines.push("", `完整报告可在雷达详情页下载：${latestReport.filename}`);
     }
+    lines.push("", "需要继续调准？点击“调整雷达画像”，我会回到聊天窗口先升级雷达，再让你确认。");
     return lines.join("\n");
   }
 

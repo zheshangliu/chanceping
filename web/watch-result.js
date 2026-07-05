@@ -201,12 +201,12 @@
     const url = card.official_source_url || card.url || "#";
     const isDemo = card.is_demo_data === true || card.data_mode === "mock" || /演示|测试数据|mock/i.test(`${card.risk_note || ""}${card.source_disclaimer || ""}`);
     const isLive = card.data_mode === "live" || /搜索发现|待复核/.test(`${card.source_disclaimer || ""}`);
+    const sourceDomain = getSourceDomain(url);
     const source = isDemo
       ? "<span>演示来源，未真实核验</span>"
       : url && url !== "#"
-        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${isLive ? "查看搜索发现来源" : "官方来源"}</a>`
+        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">打开来源${sourceDomain ? `：${escapeHtml(sourceDomain)}` : ""}</a>`
         : `<span>${isLive ? "搜索来源暂未明确" : "官方来源暂未明确"}</span>`;
-    const sourceLabel = isDemo ? "来源说明" : isLive ? "搜索发现来源" : "官方来源";
     const opportunityKind = formatOpportunityKindForCustomer(card.opportunity_kind || card.opportunityKind || card.type || "机会");
     const evidenceStatus = formatEvidenceStatusForCustomer(card.evidence_status || card.evidenceStatus || "model_judgment");
     const actionStatus = formatActionStatusForCustomer(card.action_status || card.actionStatus || "prepare");
@@ -217,15 +217,15 @@
     return `
       <article class="watch-opportunity-card">
         <header class="card-header">
-          <span class="level-badge level-${escapeHtml((card.visible_level || "C").toLowerCase())}">${escapeHtml(card.visible_level || "C")}</span>
+          <span class="level-badge level-${escapeHtml((card.visible_level || "C").toLowerCase())}">${escapeHtml(card.visible_level || "C")} 级</span>
           ${isDemo || !url || url === "#"
             ? `<span>${escapeHtml(card.title || "未知机会")}</span>`
             : `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(card.title || "未知机会")}</a>`}
         </header>
-        <div class="watch-card-meta">
-          <span data-field="opportunity_kind">机会性质：${escapeHtml(opportunityKind)}</span>
-          <span data-field="evidence_status">复核状态：${escapeHtml(evidenceStatus)}</span>
-          <span data-field="action_status">下一步：${escapeHtml(actionStatus)}</span>
+        <div class="watch-card-decision-row" aria-label="本轮判断">
+          <span>${escapeHtml(getPriorityCue(card.visible_level))}</span>
+          <span>${escapeHtml(opportunityKind)}</span>
+          <span>${escapeHtml(evidenceStatus)}</span>
         </div>
         <dl class="watch-card-fields">
           <div>
@@ -233,20 +233,37 @@
             <dd>${escapeHtml(reason)}</dd>
           </div>
           <div>
-            <dt>报名 / 截止</dt>
-            <dd>${escapeHtml(card.deadline || "未明确")}</dd>
-          </div>
-          <div>
-            <dt>现在先做什么</dt>
+            <dt>本周先做</dt>
             <dd>${escapeHtml(card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || defaultAction)}</dd>
           </div>
           <div>
-            <dt>来源怎么复核</dt>
+            <dt>截止时间</dt>
+            <dd>${escapeHtml(card.deadline || "暂未从来源中确认")}</dd>
+          </div>
+          <div>
+            <dt>来源入口</dt>
             <dd>${source}</dd>
           </div>
         </dl>
       </article>
     `;
+  }
+
+  function getPriorityCue(level) {
+    const normalized = String(level || "C").trim().toUpperCase();
+    if (normalized === "S") return "强烈优先";
+    if (normalized === "A") return "优先复核";
+    if (normalized === "B") return "可以备选";
+    return "先收藏观察";
+  }
+
+  function getSourceDomain(url) {
+    try {
+      if (!url || url === "#") return "";
+      return new URL(url).hostname.replace(/^www\./, "");
+    } catch {
+      return "";
+    }
   }
 
   function formatOpportunityKindForCustomer(value) {
