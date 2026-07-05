@@ -569,7 +569,7 @@
         </div>
         <div class="hero-report-summary">
           <strong>本轮结论：本次搜索出 ${escapeHtml(summary.total)} 条可查看机会</strong>
-          <span>评级分布：${escapeHtml(summary.levelText)}</span>
+          <span>评级分布：${escapeHtml(summary.levelText)}。S 级优先行动，A 级优先复核，B/C 级先观察。</span>
           ${summary.topCards.length > 0 ? `
             <div class="hero-report-top-list">
               <p><strong>本次建议先看：</strong><span>${escapeHtml(buildReportRecommendation(summary))}</span></p>
@@ -580,7 +580,7 @@
             <strong>先做这 3 件事</strong>
             <ol>${actionItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>
           </div>
-          <p><strong>待复核提醒：</strong>搜索发现不等于已核验事实；报名资格、费用、截止时间和奖项义务都以官方页面为准。</p>
+          <p><strong>待复核提醒：</strong>搜索发现，不等于已核验事实；报名资格、费用、截止时间和奖项义务都以官方页面为准。</p>
           <p><strong>完整来源和字段证据：</strong>请点“查看本次机会卡”，我会把来源入口、待复核字段和行动建议集中放在那里。</p>
           <p>结果不对？直接在下方告诉我，我会先升级雷达，再重新盯一次。</p>
         </div>
