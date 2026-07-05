@@ -42,6 +42,7 @@ import { getCurrentUser } from "../../agents/user-context";
 import { RadarQuotaChecker } from "../../agents/radar-quota";
 import { reviseRadarVersion } from "../../agents/radar-version-reviser";
 import { reviseRadarVersionWithLlm } from "../../agents/radar-version-llm-reviser";
+import type { RadarRevisionChatContext } from "../../schema/radar-version-spec";
 
 /** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
 function kindToRadarType(kind: RadarKind): RadarType {
@@ -54,6 +55,49 @@ function kindToRadarType(kind: RadarKind): RadarType {
 /** 构造错误响应 */
 function errorResponse(code: string, message: string, durationMs: number, status: number) {
   return { success: false, data: null, error: { code, message }, duration_ms: durationMs } satisfies ApiResponse;
+}
+
+function resolveChatWindowId(body: RadarReviseRequest): string | undefined {
+  const value = body.chatWindowId ?? body.chat_window_id;
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function hydrateRadarRevisionChatContext(body: RadarReviseRequest, ctx: AppContext): RadarReviseRequest {
+  const chatWindowId = resolveChatWindowId(body);
+  if (!chatWindowId || !ctx.radarChatStore) {
+    return body.chatContext ? body : { ...body, ...(chatWindowId ? { chatWindowId } : {}) };
+  }
+  const chatWindow = ctx.radarChatStore.get(chatWindowId);
+  if (!chatWindow) {
+    return { ...body, chatWindowId };
+  }
+  const recentMessages = ctx.radarChatStore
+    .listMessages(chatWindowId)
+    .slice(-12)
+    .map((message) => ({
+      role: message.role,
+      content: message.content,
+      ...(message.linkedRadarVersion ? { linkedRadarVersion: message.linkedRadarVersion } : {}),
+      ...(message.linkedRunId ? { linkedRunId: message.linkedRunId } : {}),
+      ...(message.linkedReportId ? { linkedReportId: message.linkedReportId } : {}),
+      ...(message.artifactType ? { artifactType: message.artifactType } : {}),
+      createdAt: message.createdAt,
+    }));
+  const chatContext: RadarRevisionChatContext = {
+    ...(body.chatContext ?? {}),
+    chatWindowId,
+    ...(chatWindow.radarId ? { radarId: chatWindow.radarId } : {}),
+    title: chatWindow.title,
+    ...(chatWindow.currentConfirmedRadarVersion ? { currentConfirmedRadarVersion: chatWindow.currentConfirmedRadarVersion } : {}),
+    ...(chatWindow.draftRadarVersion ? { draftRadarVersion: chatWindow.draftRadarVersion } : {}),
+    memorySummary: chatWindow.memorySummary,
+    recentMessages,
+  };
+  return {
+    ...body,
+    chatWindowId,
+    chatContext,
+  };
 }
 
 // ============================================================
@@ -198,13 +242,14 @@ export function radarsRoutes(ctx: AppContext): Hono {
       return c.json(errorResponse("BAD_REQUEST", "previousSpec、previousRadarVersion、userMessage、trigger 必填", Date.now() - start, 400), 400);
     }
     try {
-      const wantsLlmRevision = body.revisionMode === "llm"
-        || (body.revisionMode === "auto"
+      const revisionInput = hydrateRadarRevisionChatContext(body, ctx);
+      const wantsLlmRevision = revisionInput.revisionMode === "llm"
+        || (revisionInput.revisionMode === "auto"
           && process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM === "true"
           && process.env.LLM_MODE === "live");
       const result = wantsLlmRevision
-        ? await reviseRadarVersionWithLlm(body, ctx.llmAdapter)
-        : reviseRadarVersion(body);
+        ? await reviseRadarVersionWithLlm(revisionInput, ctx.llmAdapter)
+        : reviseRadarVersion(revisionInput);
       return c.json({
         success: true,
         data: result satisfies RadarReviseResponseData,

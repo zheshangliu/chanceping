@@ -813,12 +813,13 @@
     heroRadarChatState.isBusy = true;
     heroRadarChatState.pendingFirstMessage = "";
     addMessage("user", text);
+    const chatWindowId = await ensureRadarChatWindow();
     addMessage("assistant", heroRadarChatState.currentDraft
       ? "收到，我会先让 DeepSeek 理解这句话，生成新版雷达草案；你确认后我才会搜索。"
       : "我先让 DeepSeek 理解你的需求，把复杂人话整理成 AI 赛事雷达 V1.0。");
     try {
       if (!heroRadarChatState.currentDraft) {
-        const data = await postJson("/api/radars/generate", { description: text });
+        const data = await postJson("/api/radars/generate", { description: text, chatWindowId });
         heroRadarChatState.currentDraft = normalizeGenerateResult(data, text);
       } else {
         heroRadarChatState.confirmedVersion = null;
@@ -829,6 +830,7 @@
           userMessage: text,
           trigger: options.trigger || "requirement_correction",
           revisionMode: options.revisionMode || "auto",
+          chatWindowId,
         });
         heroRadarChatState.currentDraft = {
           spec: data.spec,

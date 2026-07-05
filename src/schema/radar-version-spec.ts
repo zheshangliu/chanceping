@@ -83,6 +83,37 @@ export interface RadarResultFeedback {
   freeText?: string;
 }
 
+export interface RadarRevisionChatContextMessage {
+  role: "user" | "assistant" | "system_event";
+  content: string;
+  linkedRadarVersion?: string;
+  linkedRunId?: string;
+  linkedReportId?: string;
+  artifactType?: "radar" | "report" | "progress";
+  createdAt?: string;
+}
+
+export interface RadarRevisionMemorySummary {
+  summary: string;
+  targetUser?: string;
+  watchingFor: string[];
+  exclusions: string[];
+  confirmedRules: string[];
+  rejectedPatterns: string[];
+  lastFeedback?: string;
+  updatedAt?: string;
+}
+
+export interface RadarRevisionChatContext {
+  chatWindowId?: string;
+  radarId?: string;
+  title?: string;
+  currentConfirmedRadarVersion?: string;
+  draftRadarVersion?: string;
+  memorySummary?: RadarRevisionMemorySummary;
+  recentMessages?: RadarRevisionChatContextMessage[];
+}
+
 export interface RadarRevisionRequest {
   description?: string;
   userMessage: string;
@@ -90,6 +121,11 @@ export interface RadarRevisionRequest {
   previousSpec: RadarRequirementSpec;
   previousRadarVersion: RadarVersionSpec;
   resultFeedback?: RadarResultFeedback;
+  /** Q.7-J: one chat window = one radar; optional context id used by API to hydrate memory. */
+  chatWindowId?: string;
+  chat_window_id?: string;
+  /** Q.7-J: bounded chat memory for LLM radar revision. */
+  chatContext?: RadarRevisionChatContext;
   /** Q.7-C: explicit opt-in for LLM assisted revision. Default remains deterministic. */
   revisionMode?: "deterministic" | "llm" | "auto";
 }
@@ -111,5 +147,12 @@ export interface RadarRevisionResult {
     errors: string[];
     provider?: string;
     model?: string;
+  };
+  /** Q.7-J: safe diagnostics that context was used, never includes raw prompts or secrets. */
+  chatContextUsed?: boolean;
+  chatContext?: {
+    chatWindowId?: string;
+    memorySummaryUsed: boolean;
+    messageCount: number;
   };
 }

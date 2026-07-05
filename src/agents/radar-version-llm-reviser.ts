@@ -2,6 +2,7 @@ import type { LLMAdapter } from "./llm-adapter";
 import { reviseRadarVersion } from "./radar-version-reviser";
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type {
+  RadarRevisionChatContext,
   RadarRevisionRequest,
   RadarRevisionResult,
   RadarVersionDiff,
@@ -299,19 +300,65 @@ function fallbackResult(input: RadarRevisionRequest, errors: string[], options?:
       ...(options?.provider ? { provider: options.provider } : {}),
       ...(options?.model ? { model: options.model } : {}),
     },
+    ...buildChatContextDiagnostics(input.chatContext),
   };
 }
 
+function buildChatContextDiagnostics(context?: RadarRevisionChatContext): Pick<RadarRevisionResult, "chatContextUsed" | "chatContext"> {
+  if (!context) return { chatContextUsed: false };
+  return {
+    chatContextUsed: true,
+    chatContext: {
+      ...(context.chatWindowId ? { chatWindowId: context.chatWindowId } : {}),
+      memorySummaryUsed: Boolean(context.memorySummary),
+      messageCount: context.recentMessages?.length ?? 0,
+    },
+  };
+}
+
+function compactChatContext(context?: RadarRevisionChatContext): string {
+  if (!context) return "";
+  const memory = context.memorySummary;
+  const recentMessages = (context.recentMessages ?? [])
+    .slice(-12)
+    .map((message) => ({
+      role: message.role,
+      content: message.content.slice(0, 500),
+      ...(message.linkedRadarVersion ? { linkedRadarVersion: message.linkedRadarVersion } : {}),
+      ...(message.artifactType ? { artifactType: message.artifactType } : {}),
+    }));
+  return JSON.stringify({
+    chatWindowId: context.chatWindowId,
+    radarId: context.radarId,
+    title: context.title,
+    currentConfirmedRadarVersion: context.currentConfirmedRadarVersion,
+    draftRadarVersion: context.draftRadarVersion,
+    memorySummary: memory ? {
+      summary: memory.summary,
+      targetUser: memory.targetUser,
+      watchingFor: memory.watchingFor,
+      exclusions: memory.exclusions,
+      confirmedRules: memory.confirmedRules,
+      rejectedPatterns: memory.rejectedPatterns,
+      lastFeedback: memory.lastFeedback,
+    } : undefined,
+    recentMessages,
+  });
+}
+
 function buildPrompt(input: RadarRevisionRequest, base: RadarRevisionResult): string {
+  const chatContext = compactChatContext(input.chatContext);
   return [
     "你是 ChancePing 的雷达版本修订器。你的任务不是搜索，不是生成机会卡，而是根据用户反馈修订 RadarVersionSpec。",
     "只输出 JSON object，不要 Markdown，不要解释。",
     "硬性规则：不得输出 opportunityCards、opportunities、searchResults、sourceCandidates、rawCandidates；不得编造搜索结果、截止时间、联系人、采购意向或报名状态。",
     "必须保持用户确认闸门：新版本只是 draft，用户确认前不能搜索。",
+    "如果提供了 radar chat context，必须结合该雷达窗口的 memorySummary、最近聊天和用户已确认/否定规则来理解本次反馈。不要只看当前一句话；除非用户明确否定，否则保留历史确认过的身份、机会类型、排除项和高价值标准。",
     "JSON 结构：{ radarVersion: Partial<RadarVersionSpec>, radarDiff: Partial<RadarVersionDiff>, suggestedName: string, confirmationPrompt: string }。",
     "请优先更新 targetUser、opportunityIntents、highValueCriteria、exclusionRules、prioritySourceArchetypes、queryFamilies、defaultAssumptions。",
     `用户本次反馈：${input.userMessage}`,
     `触发类型：${input.trigger}`,
+    chatContext ? `雷达聊天窗口上下文（用于理解本次修订，不是搜索结果）：${chatContext}` : "",
     `上一版雷达：${JSON.stringify(input.previousRadarVersion)}`,
     `本地确定性草稿：${JSON.stringify({
       version: base.radarVersion.version,
@@ -376,5 +423,6 @@ export async function reviseRadarVersionWithLlm(
       ...(options.provider ? { provider: options.provider } : {}),
       ...(options.model ? { model: options.model } : {}),
     },
+    ...buildChatContextDiagnostics(input.chatContext),
   };
 }
