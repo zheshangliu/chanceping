@@ -159,10 +159,11 @@ function cleanupTmpFiles(): void {
 // ============================================================
 
 async function runPublicAiEventsTests(): Promise<void> {
-  console.log("\n[公共页] AI 赛事情报雷达");
+  console.log("\n[公共页] 盯比赛 · 全球 AI 赛事导航");
   const page = await textGet("/ai-events");
   logPublicCheck("GET /ai-events returns 200", page.status === 200, `status=${page.status}`);
-  logPublicCheck("page has public title", page.text.includes("AI 赛事情报雷达"));
+  logPublicCheck("page has public title", page.text.includes("盯比赛 · 全球 AI 赛事导航"));
+  logPublicCheck("page has English name", page.text.includes("AI Contest Navigator"));
   logPublicCheck("page loads public page script", page.text.includes("/ai-events.js"));
 
   const api = await apiGet("/api/public/ai-events");
