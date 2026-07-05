@@ -167,13 +167,27 @@ async function runPublicAiEventsTests(): Promise<void> {
   logPublicCheck("page loads public page script", page.text.includes("/ai-events.js"));
 
   const api = await apiGet("/api/public/ai-events");
-  const apiBody = api.data as { success?: boolean; data?: { items?: unknown[] } };
+  const apiBody = api.data as {
+    success?: boolean;
+    data?: {
+      items?: Array<Record<string, unknown>>;
+      sourceNetwork?: unknown[];
+      stats?: { candidateCount?: number; displayableCount?: number; sourceCount?: number };
+    };
+  };
   const serialized = JSON.stringify(api.data ?? {});
   logPublicCheck("GET /api/public/ai-events returns 200", api.status === 200, `status=${api.status}`);
   logPublicCheck("public API succeeds", apiBody.success === true, serialized.slice(0, 160));
   logPublicCheck("public API returns items array", Array.isArray(apiBody.data?.items), serialized.slice(0, 160));
+  logPublicCheck("public API returns 30+ candidate cards", (apiBody.data?.stats?.candidateCount ?? 0) >= 30, serialized.slice(0, 160));
+  logPublicCheck("public API returns 15+ displayable cards", (apiBody.data?.stats?.displayableCount ?? 0) >= 15, serialized.slice(0, 160));
+  logPublicCheck("public API returns 8+ source network entries", (apiBody.data?.sourceNetwork?.length ?? 0) >= 8, serialized.slice(0, 160));
+  logPublicCheck("public API includes Qwen Cloud source", /Qwen Cloud|qwencloud-hackathon\.devpost\.com/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API includes TRAE source", /TRAE|trae\.ai/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API keeps needs-review evidence language", /待复核|搜索发现|needs_review|search_discovered/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API hides internal radarId", !serialized.includes("radarId"));
   logPublicCheck("public API hides internal run_id", !serialized.includes("run_id"));
+  logPublicCheck("public API hides API keys", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(serialized));
 }
 
 async function runE2ETests(): Promise<void> {

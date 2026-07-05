@@ -84,6 +84,7 @@
     "verify:q6j": "tsx scripts/verify-q6j-gate-calibration.ts",
     "verify:q7": "tsx scripts/verify-q7-radar-evolution.ts",
     "verify:q7:ai-events-page": "tsx scripts/verify-q7-ai-events-page.ts",
+    "verify:q7:ai-events-source-network": "tsx scripts/verify-q7-ai-events-source-network.ts",
     "verify:q7:demo": "tsx scripts/verify-q7-ai-competition-demo.ts",
     "verify:q7:live-demo": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial LLM_MODE=live DATA_MODE=live tsx scripts/verify-q7-ai-event-live-demo.ts",
     "verify:q7:hero-chat": "tsx scripts/verify-q7-hero-chat.ts",

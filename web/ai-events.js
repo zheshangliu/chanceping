@@ -78,6 +78,7 @@
 
   let currentLanguage = localStorage.getItem("chanceping_ai_events_lang") || "zh";
   let latestItems = [];
+  let latestSources = [];
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -141,6 +142,18 @@
       : `<article class="ai-event-card ai-event-card-loading">${escapeHtml(t("empty"))}</article>`;
   }
 
+  function renderSources(sources) {
+    const list = document.getElementById("ai-events-source-list");
+    if (!list || !Array.isArray(sources) || sources.length === 0) return;
+    list.innerHTML = sources
+      .slice(0, 16)
+      .map((source) => {
+        const label = source.name || source.domain || source.url || "Source";
+        return `<li>${escapeHtml(label)}</li>`;
+      })
+      .join("");
+  }
+
   function applyLanguage(nextLanguage) {
     currentLanguage = nextLanguage === "en" ? "en" : "zh";
     localStorage.setItem("chanceping_ai_events_lang", currentLanguage);
@@ -168,7 +181,11 @@
       const res = await fetch("/api/public/ai-events");
       const json = await res.json();
       if (!json.success) throw new Error(json.error?.message || t("failed"));
-      latestItems = Array.isArray(json.data?.items) ? json.data.items : [];
+      latestItems = Array.isArray(json.data?.items)
+        ? json.data.items.filter((item) => item && item.displayable !== false)
+        : [];
+      latestSources = Array.isArray(json.data?.sourceNetwork) ? json.data.sourceNetwork : [];
+      renderSources(latestSources);
       renderItems(latestItems);
     } catch (err) {
       if (count) count.textContent = t("failed");
