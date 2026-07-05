@@ -597,14 +597,14 @@ textarea {
 .home-container {
   max-width: none;
   margin: 0;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   padding: 0;
   display: block;
   text-align: center;
 }
 
 .home-ai-shell {
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   background: var(--bg-primary);
@@ -614,7 +614,7 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   padding: 18px 16px;
   border-right: 1px solid var(--border);
   background: var(--bg-secondary);
@@ -677,7 +677,7 @@ textarea {
 }
 
 .home-main-stage {
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -916,6 +916,10 @@ textarea {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   text-align: left;
+}
+
+.home-preview-tray[hidden] {
+  display: none !important;
 }
 
 .home-preview-card {
@@ -3781,13 +3785,8 @@ textarea {
   max-width: 900px;
 }
 
-body.hero-chat-active .top-bar,
-body.hero-chat-active .tab-nav {
-  display: none;
-}
-
 body.hero-chat-active .tab-content {
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   padding: 0;
 }
 
@@ -4224,14 +4223,14 @@ body.hero-chat-active .hero-radar-chat-root {
 
 body.hero-chat-active .hero-chat-workspace {
   width: 100vw;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   margin: 0;
   border: 0;
   border-radius: 0;
 }
 
 body.hero-chat-active .hero-chat-main {
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
 }
 
 .hero-radar-sidebar {

@@ -118,7 +118,7 @@ async function run() {
   check("homepage keeps prompt chips hidden before and after chat starts", heroChatJs.includes("promptChips.hidden = true") && homeJs.includes('".hero-demo-prompts"'));
   check("hero chat becomes the only visible workspace after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-hero") && heroChatJs.includes(".home-input-area") && heroChatJs.includes("hero-chat-active"));
   check("hidden elements cannot be overridden by flex styles", styles.includes("[hidden]") && styles.includes("display: none !important"));
-  check("chat mode hides legacy top navigation", styles.includes("body.hero-chat-active .top-bar") && styles.includes("body.hero-chat-active .tab-nav"));
+  check("chat mode keeps total-console top navigation", !styles.includes("body.hero-chat-active .top-bar,\nbody.hero-chat-active .tab-nav") && styles.includes("min-height: calc(100vh - 100px);"));
   check("home AI event shell keeps top banner and tab nav", !styles.includes("body.hero-home-shell .top-bar") && !styles.includes("body.hero-home-shell .tab-nav"));
   check("chat composer is hidden until the radar conversation starts", heroChatJs.includes("chatStarted ? `") && heroChatJs.includes("hero-chat-input-row"));
   check("chat send button has visible accent active state", styles.includes("#hero-radar-chat-send:not(:disabled)") && styles.includes("var(--accent)"));
