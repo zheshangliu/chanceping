@@ -595,7 +595,7 @@
             <strong>ChancePing</strong>
             <span>盯机会</span>
           </div>
-          <button class="hero-sidebar-collapse" type="button" data-action="toggle-sidebar" title="折叠侧栏" aria-label="折叠侧栏">☰</button>
+          <button class="hero-sidebar-collapse" type="button" data-action="toggle-sidebar" title="折叠或展开雷达侧边栏" aria-label="折叠或展开雷达侧边栏">☰</button>
         </div>
         <div class="hero-sidebar-section hero-sidebar-current-radar">
           <span class="hero-sidebar-label">当前雷达</span>

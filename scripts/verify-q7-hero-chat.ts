@@ -76,7 +76,7 @@ async function run() {
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
   check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
   check("hero chat script renders GPT-like sidebar", heroChatJs.includes("hero-radar-sidebar") && heroChatJs.includes("AI 赛事雷达"));
-  check("hero sidebar has a collapse button", heroChatJs.includes("hero-sidebar-collapse") && heroChatJs.includes("折叠侧栏"));
+  check("hero sidebar has a collapse button", heroChatJs.includes("hero-sidebar-collapse") && heroChatJs.includes("折叠或展开雷达侧边栏"));
   check("hero sidebar persists collapsed state", heroChatJs.includes("chanceping-sidebar-collapsed") && heroChatJs.includes("localStorage"));
   check("hero sidebar has collapsed rendering state", heroChatJs.includes("sidebarCollapsed") && heroChatJs.includes("hero-sidebar-collapsed"));
   check("hero sidebar collapsed CSS keeps icon rail usable", styles.includes(".hero-chat-workspace.sidebar-collapsed") && styles.includes("64px"));

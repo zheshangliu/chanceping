@@ -57,12 +57,18 @@ function errorResponse(code: string, message: string, durationMs: number, status
   return { success: false, data: null, error: { code, message }, duration_ms: durationMs } satisfies ApiResponse;
 }
 
-function resolveChatWindowId(body: RadarReviseRequest): string | undefined {
+type RadarChatContextRequest = {
+  chatWindowId?: string;
+  chat_window_id?: string;
+  chatContext?: RadarRevisionChatContext;
+};
+
+function resolveChatWindowId(body: RadarChatContextRequest): string | undefined {
   const value = body.chatWindowId ?? body.chat_window_id;
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
-function hydrateRadarRevisionChatContext(body: RadarReviseRequest, ctx: AppContext): RadarReviseRequest {
+function hydrateRadarChatContext<T extends RadarChatContextRequest>(body: T, ctx: AppContext): T & { chatWindowId?: string; chatContext?: RadarRevisionChatContext } {
   const chatWindowId = resolveChatWindowId(body);
   if (!chatWindowId || !ctx.radarChatStore) {
     return body.chatContext ? body : { ...body, ...(chatWindowId ? { chatWindowId } : {}) };
@@ -98,6 +104,42 @@ function hydrateRadarRevisionChatContext(body: RadarReviseRequest, ctx: AppConte
     chatWindowId,
     chatContext,
   };
+}
+
+function buildChatContextDiagnostics(context?: RadarRevisionChatContext): RadarGenerateResponseData["chatContext"] | undefined {
+  if (!context) return undefined;
+  return {
+    ...(context.chatWindowId ? { chatWindowId: context.chatWindowId } : {}),
+    memorySummaryUsed: Boolean(context.memorySummary),
+    messageCount: context.recentMessages?.length ?? 0,
+  };
+}
+
+function appendRadarGenerateChatContext(description: string, context?: RadarRevisionChatContext): string {
+  if (!context) return description;
+  const memory = context.memorySummary;
+  const recentMessages = (context.recentMessages ?? [])
+    .slice(-12)
+    .map((message) => `${message.role}: ${message.content.slice(0, 500)}`);
+  const lines = [
+    description.trim(),
+    "",
+    "[雷达窗口上下文]",
+    context.title ? `窗口标题：${context.title}` : "",
+    context.currentConfirmedRadarVersion ? `已确认版本：${context.currentConfirmedRadarVersion}` : "",
+    context.draftRadarVersion ? `草稿版本：${context.draftRadarVersion}` : "",
+    memory?.summary ? `长期摘要：${memory.summary}` : "",
+    memory?.targetUser ? `用户身份：${memory.targetUser}` : "",
+    memory?.watchingFor?.length ? `持续关注：${memory.watchingFor.join("、")}` : "",
+    memory?.exclusions?.length ? `排除：${memory.exclusions.join("、")}` : "",
+    memory?.confirmedRules?.length ? `已确认规则：${memory.confirmedRules.join("、")}` : "",
+    memory?.rejectedPatterns?.length ? `用户否定过：${memory.rejectedPatterns.join("、")}` : "",
+    memory?.lastFeedback ? `最近反馈：${memory.lastFeedback}` : "",
+    recentMessages.length ? `最近对话：\n${recentMessages.join("\n")}` : "",
+    "",
+    "请把上述上下文视为该雷达窗口的已知背景；如果本次用户描述较短，不要丢失已确认的身份、机会类型、排除规则和高价值标准。",
+  ].filter(Boolean);
+  return lines.join("\n");
 }
 
 // ============================================================
@@ -208,7 +250,10 @@ export function radarsRoutes(ctx: AppContext): Hono {
 
     try {
       const generator = new RadarGenerator(ctx.llmAdapter);
-      const result = await generator.generate(body.description, body.uploaded_text);
+      const generateInput = hydrateRadarChatContext(body, ctx);
+      const descriptionWithContext = appendRadarGenerateChatContext(generateInput.description, generateInput.chatContext);
+      const result = await generator.generate(descriptionWithContext, generateInput.uploaded_text);
+      const chatContext = buildChatContextDiagnostics(generateInput.chatContext);
       const data: RadarGenerateResponseData = {
         spec: result.spec,
         suggestedName: result.suggestedName,
@@ -217,6 +262,8 @@ export function radarsRoutes(ctx: AppContext): Hono {
         questionsToConfirm: result.questionsToConfirm,
         profileSummary: result.profileSummary,
         radarVersion: result.radarVersion,
+        chatContextUsed: Boolean(generateInput.chatContext),
+        ...(chatContext ? { chatContext } : {}),
       };
       return c.json({ success: true, data, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
     } catch (err) {
@@ -242,7 +289,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       return c.json(errorResponse("BAD_REQUEST", "previousSpec、previousRadarVersion、userMessage、trigger 必填", Date.now() - start, 400), 400);
     }
     try {
-      const revisionInput = hydrateRadarRevisionChatContext(body, ctx);
+      const revisionInput = hydrateRadarChatContext(body, ctx);
       const wantsLlmRevision = revisionInput.revisionMode === "llm"
         || (revisionInput.revisionMode === "auto"
           && process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM === "true"

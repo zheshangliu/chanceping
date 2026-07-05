@@ -8,7 +8,7 @@
 
 import type { RadarRequirementSpec } from "../schema/radar-requirement-spec";
 import type { RadarProfileSummary } from "../schema/radar-profile-summary";
-import type { RadarRevisionRequest, RadarRevisionResult, RadarVersionSpec } from "../schema/radar-version-spec";
+import type { RadarRevisionChatContext, RadarRevisionRequest, RadarRevisionResult, RadarVersionSpec } from "../schema/radar-version-spec";
 import type { ProviderRouting, RadarPreferredSearchMode, RadarPrivacy, RadarRun } from "../schema/radar";
 import type { ScoredOpportunity } from "../search/types";
 import type { RawCandidateAudit } from "../search/types";
@@ -238,6 +238,12 @@ export interface RadarGenerateRequest {
   description: string;
   /** 可选的上传文件解析文本 */
   uploaded_text?: string;
+  /** Q.7-K：一个聊天窗口对应一个雷达；生成首版雷达时可读取窗口上下文。 */
+  chatWindowId?: string;
+  /** Q.7-K：兼容 snake_case 调用方。 */
+  chat_window_id?: string;
+  /** Q.7-K：可选显式上下文；通常由 API 根据 chatWindowId 注入。 */
+  chatContext?: RadarRevisionChatContext;
 }
 
 /** AI 生成雷达响应数据 */
@@ -256,6 +262,14 @@ export interface RadarGenerateResponseData {
   profileSummary?: RadarProfileSummary;
   /** Chat-first radar builder: executable version spec used by confirmation card and planner */
   radarVersion?: RadarVersionSpec;
+  /** Q.7-K：是否使用过雷达聊天窗口上下文。 */
+  chatContextUsed?: boolean;
+  /** Q.7-K：安全诊断；不回传完整聊天内容。 */
+  chatContext?: {
+    chatWindowId?: string;
+    memorySummaryUsed: boolean;
+    messageCount: number;
+  };
 }
 
 /** Q.7 雷达版本修订请求 */

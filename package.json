@@ -6,7 +6,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc",
-    "dev": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial LLM_MODE=live tsx src/api/server.ts",
+    "dev": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=commercial LLM_MODE=live tsx src/api/server.ts",
     "dev:mock": "DATA_MODE=mock LLM_MODE=mock tsx src/api/server.ts",
     "dev:local": "CHANCEPING_LOAD_API_ENV=true tsx src/api/server.ts",
     "start": "tsx src/api/server.ts",
@@ -87,6 +87,7 @@
     "verify:q7:hero-chat": "tsx scripts/verify-q7-hero-chat.ts",
     "verify:q7:chat-window": "tsx scripts/verify-q7-chat-window.ts",
     "verify:q7:chat-context": "tsx scripts/verify-q7-chat-context.ts",
+    "verify:q7:generate-context": "tsx scripts/verify-q7-generate-context.ts",
     "verify:q7:llm-reviser": "tsx scripts/verify-q7-llm-reviser.ts",
     "verify:q7:random-ai": "tsx scripts/verify-q7-ai-entrepreneur-random.ts",
     "ui:q7:screenshots": "tsx scripts/capture-q7-ui-screenshots.ts",
