@@ -3896,6 +3896,7 @@ body.hero-chat-active .hero-radar-chat-root {
 
 .hero-chat-message {
   display: flex;
+  min-width: 0;
 }
 
 .hero-chat-message.user {
@@ -3966,11 +3967,13 @@ body.hero-chat-active .hero-radar-chat-root {
 .hero-radar-artifact,
 .hero-report-artifact,
 .hero-progress-artifact {
+  min-width: 0;
   margin-top: 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 14px;
   background: var(--bg-secondary);
+  overflow-wrap: anywhere;
 }
 
 .hero-progress-artifact {
@@ -4514,6 +4517,10 @@ body.hero-chat-active .hero-chat-main {
     grid-template-columns: 1fr;
   }
 
+  .hero-chat-workspace.sidebar-collapsed {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
   .hero-radar-sidebar {
     border-right: 0;
     border-bottom: 1px solid var(--border);
@@ -4521,6 +4528,32 @@ body.hero-chat-active .hero-chat-main {
 
   .hero-chat-main {
     min-height: 560px;
+    min-width: 0;
+    width: 100%;
+    max-width: calc(100vw - 56px);
+  }
+
+  .hero-chat-main .hero-chat-messages {
+    padding: 16px;
+  }
+
+  .hero-chat-bubble {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-chat-message.assistant,
+  .hero-chat-message.system_event {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hero-chat-message.user {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .watch-result-grid,

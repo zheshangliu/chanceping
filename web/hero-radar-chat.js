@@ -597,6 +597,15 @@
       event.preventDefault();
       closeHeroModal();
     });
+    scrollHeroChatToLatest();
+  }
+
+  function scrollHeroChatToLatest() {
+    window.requestAnimationFrame(() => {
+      const latestMessage = document.querySelector(".hero-chat-message:last-of-type");
+      if (!latestMessage) return;
+      latestMessage.scrollIntoView({ block: "end", behavior: "smooth" });
+    });
   }
 
   function clearHeroRadarConversation() {
@@ -805,6 +814,11 @@
         searchMode: window.getChancePingSearchMode?.(),
         markdown: report.markdown,
       };
+      updateMessageArtifact(progressMessage.id, (artifact) => ({
+        ...artifact,
+        activeStepCount: progressSteps.length,
+        currentProgressLine: "已完成：机会卡和 Markdown 报告已生成，可以先看摘要或打开完整结果。",
+      }));
       addMessage("assistant", "本次机会雷达报告已生成。我先把 Markdown 发在这里，你也可以打开机会卡查看完整结果。", {
         type: "report",
         markdown: report.markdown,
@@ -813,14 +827,14 @@
         cards,
       });
     } catch (err) {
+      updateMessageArtifact(progressMessage.id, (artifact) => ({
+        ...artifact,
+        currentProgressLine: "已停止：这次搜索或报告生成失败，雷达已保留，可以调整后重试。",
+      }));
       addMessage("assistant", `这次盯机会失败：${err.message || "未知错误"}。雷达已经确认，你可以继续补充条件后再让我修订。`);
       if (window.showToast) window.showToast(err.message || "盯机会失败", "error");
     } finally {
       stopProgressTicker(progressTimer);
-      updateMessageArtifact(progressMessage.id, (artifact) => ({
-        ...artifact,
-        activeStepCount: progressSteps.length,
-      }));
       heroRadarChatState.isBusy = false;
       saveState();
       renderHeroRadarChat();
