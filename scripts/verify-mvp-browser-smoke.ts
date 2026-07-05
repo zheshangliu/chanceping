@@ -221,12 +221,11 @@ async function main(): Promise<void> {
     await page.click("#btn-back-to-radar-list");
     currentStage = "wait radar list";
     await page.waitForSelector("#panel-radars.active", { timeout: 10_000 });
-    await page.waitForFunction(() => {
-      const doc = (globalThis as any).document;
-      const text = doc.querySelector("#panel-radars")?.textContent || "";
-      return text.includes("查看机会和报告") || text.includes("再次盯机会");
-    }, { timeout: 10_000 });
-    const radarPanelText = await page.$eval("#panel-radars", (el: any) => el.textContent || "");
+    await page.waitForSelector("#radars-list-view .radar-command-card", { visible: true, timeout: 10_000 });
+    await page.waitForSelector("#radars-list-view .radar-command-card .btn-edit-radar", { visible: true, timeout: 10_000 });
+    await page.waitForSelector("#radars-list-view .radar-command-card .btn-rerun-radar", { visible: true, timeout: 10_000 });
+    await page.waitForSelector("#radars-list-view .radar-command-card .btn-view-radar-detail", { visible: true, timeout: 10_000 });
+    const radarPanelText = await page.$eval("#radars-list-view", (el: any) => el.innerText || el.textContent || "");
     if (!radarPanelText.includes("编辑雷达") || !radarPanelText.includes("查看机会和报告")) {
       fail("saved hero radar missing customer-facing edit/result actions");
     }
