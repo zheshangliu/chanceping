@@ -4314,6 +4314,10 @@ body.hero-chat-active .hero-chat-main {
   gap: 8px;
 }
 
+.hero-chat-workspace.sidebar-collapsed .sidebar-brand-logo {
+  display: none;
+}
+
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-brand-text,
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-label,
 .hero-chat-workspace.sidebar-collapsed .hero-new-radar-btn,
@@ -4329,7 +4333,7 @@ body.hero-chat-active .hero-chat-main {
 }
 
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-radar::before {
-  content: "雷";
+  content: "AI";
   display: grid;
   place-items: center;
   width: 100%;

@@ -176,6 +176,25 @@
     return String(item);
   }
 
+  function buildReadableRadarTitle(payload) {
+    const targetUser = formatReadableItem(payload?.targetUser).replace(/\s+/g, " ").trim();
+    const rawTitle = String(payload?.oneSentencePositioning || payload?.name || "AI 赛事雷达")
+      .replace(/机会机会雷达/g, "机会雷达")
+      .replace(/雷达雷达/g, "雷达")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (targetUser && rawTitle.length > 34) {
+      const cleanTarget = targetUser
+        .replace(/ \/ AI 产品创业者/g, "")
+        .replace(/AI 产品创业者/g, "AI 创业者")
+        .replace(/大湾区的\s*/g, "大湾区 ")
+        .replace(/的$/, "")
+        .slice(0, 18);
+      return `${cleanTarget} 的 AI 赛事雷达`.replace(/\s+/g, " ");
+    }
+    return rawTitle || "AI 赛事雷达";
+  }
+
   function renderDiffList(title, items) {
     const list = asArray(items);
     if (list.length === 0) return "";
@@ -307,11 +326,11 @@
     return `
       <article class="hero-radar-artifact" data-hero-radar-version="${escapeHtml(version)}">
         <div class="hero-artifact-topline">
-          <span class="hero-artifact-kicker">机会雷达</span>
+          <span class="hero-artifact-kicker">AI 赛事雷达</span>
           <span class="hero-version-pill">${escapeHtml(version)}</span>
           <span class="hero-status-pill ${confirmed ? "confirmed" : "draft"}">${confirmed ? "已确认" : "待确认"}</span>
         </div>
-        <h3>${escapeHtml(payload.oneSentencePositioning || payload.name || "AI 赛事雷达")}</h3>
+        <h3>${escapeHtml(buildReadableRadarTitle(payload))}</h3>
         <p>${escapeHtml(payload.businessContext || payload.summary || "我会先把你的复杂需求整理成可执行的机会雷达。")}</p>
         <div class="hero-artifact-summary-grid">
           ${renderList("你是", payload.targetUser)}
@@ -323,10 +342,10 @@
         ` : ""}
         ${isLatestDraft ? `<p class="hero-next-step"><strong>现在只需要做一个选择：</strong>确认这版开始搜索，或者在下方继续告诉我哪里不准。</p>` : ""}
         <div class="hero-artifact-actions">
-          <button class="secondary-btn" data-action="open-radar-modal" data-version="${escapeHtml(version)}" title="查看完整雷达细节">查看雷达画像</button>
+          <button class="secondary-btn" data-action="open-radar-modal" data-version="${escapeHtml(version)}" title="打开完整雷达画像">打开雷达画像</button>
           ${isLatestDraft
             ? `<button class="btn-primary hero-confirm-radar-btn" data-action="confirm-hero-radar">确认，按 ${escapeHtml(version)} 盯一次</button>`
-            : `<span class="hero-artifact-note">${confirmed ? `已按 ${escapeHtml(version)} 跑过一次。` : isReplacedDraft ? "这版已被新版替代，请确认最新雷达。" : "等待新版雷达确认。"}</span>`}
+            : `<span class="hero-artifact-note">${confirmed ? `已按 ${escapeHtml(version)} 跑过一次。` : isReplacedDraft ? "这版已被新版替代，请确认最新雷达。" : "等待你确认新版雷达。"}</span>`}
           <span>不准的话，直接在聊天框继续说，我会先升级雷达。</span>
         </div>
       </article>
@@ -394,7 +413,7 @@
             <span class="hero-artifact-kicker">AI 赛事雷达</span>
             <span class="hero-version-pill">${escapeHtml(version)}</span>
           </div>
-          <h3>${escapeHtml(payload.oneSentencePositioning || payload.name || "AI 赛事雷达")}</h3>
+          <h3>${escapeHtml(buildReadableRadarTitle(payload))}</h3>
           <div class="hero-artifact-grid">
             ${renderList("你是", payload.targetUser)}
             ${renderList("这版雷达会盯", payload.opportunityIntents)}

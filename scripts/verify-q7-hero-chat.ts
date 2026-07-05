@@ -96,7 +96,7 @@ async function run() {
   check("edit radar returns to chat home", radarsJs.includes("window.openHeroRadarEditor") || radarsJs.includes('window.switchTab("home")'));
   check("hero chat formats object fields for customers", heroChatJs.includes("formatReadableItem") && !heroChatJs.includes("escapeHtml(item)</li>"));
   check("hero chat translates technical enum labels for customers", heroChatJs.includes("CUSTOMER_LABELS") && heroChatJs.includes("可直接行动的比赛机会"));
-  check("hero chat hides technical radar fields by default", heroChatJs.includes("查看完整雷达细节"));
+  check("hero chat hides technical radar fields by default", heroChatJs.includes("打开完整雷达画像"));
   check("radar modal copy explains strategy in customer language", heroChatJs.includes("我会怎么找") && heroChatJs.includes("为什么这样找"));
   check("radar modal has readable strategy fallback", heroChatJs.includes("优先寻找报名、提交作品、申请资源") && heroChatJs.includes("展会资讯、培训广告、学生专属"));
   check("hero chat only latest draft can be confirmed", heroChatJs.includes("isLatestDraft") && heroChatJs.includes("这版已被新版替代"));
