@@ -216,6 +216,9 @@
       heroRadarChatState.messages = parsed.messages;
       heroRadarChatState.currentDraft = parsed.currentDraft || null;
       heroRadarChatState.currentResult = parsed.currentResult || null;
+      if (heroRadarChatState.currentResult) {
+        window.persistWatchResult?.(heroRadarChatState.currentResult);
+      }
       heroRadarChatState.confirmedVersion = parsed.confirmedVersion || null;
       heroRadarChatState.copiedRadarId = parsed.copiedRadarId || null;
       heroRadarChatState.chatWindowId = parsed.chatWindowId || null;
@@ -494,6 +497,7 @@
             <ol>${actionItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>
           </div>
           <p><strong>待复核提醒：</strong>搜索发现不等于已核验事实；报名资格、费用、截止时间和奖项义务都以官方页面为准。</p>
+          <p><strong>完整来源和字段证据：</strong>请点“查看本次机会卡”，我会把来源入口、待复核字段和行动建议集中放在那里。</p>
           <p>结果不对？直接在下方告诉我，我会先升级雷达，再重新盯一次。</p>
         </div>
         <div class="hero-artifact-actions">
@@ -910,7 +914,7 @@
       type: "progress",
       steps: progressSteps,
       activeStepCount: 1,
-      currentProgressLine: "已收到确认，正在准备调用搜索和报告链路……",
+      currentProgressLine: "已收到确认，正在准备调用搜索和报告链路；不用刷新页面，我会持续更新这里……",
     });
     const progressTimer = startProgressTicker(progressMessage.id, progressSteps.length);
     try {
@@ -949,6 +953,7 @@
         searchMode: window.getChancePingSearchMode?.(),
         markdown: report.markdown,
       };
+      window.persistWatchResult?.(heroRadarChatState.currentResult);
       updateRadarChatWindow({
         latestRunId: search.run?.id,
         latestReportId: report.reportId,
@@ -985,13 +990,13 @@
     let activeStepCount = 1;
     let logIndex = 0;
     const progressLogMessages = [
-      "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合。",
-      "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页。",
-      "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面。",
-      "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段。",
-      "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果。",
-      "DeepSeek：正在基于证据生成报告摘要、行动建议和风险提醒。",
-      "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤。",
+      "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
+      "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
+      "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
+      "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
+      "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
+      "DeepSeek：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+      "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤；不用刷新页面，我会持续更新这里。",
     ];
     const timerId = window.setInterval(() => {
       activeStepCount = Math.min(activeStepCount + 1, maxSteps);

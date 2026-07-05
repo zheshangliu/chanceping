@@ -108,7 +108,7 @@ textarea {
 
 .logo {
   max-height: 40px;
-  width: auto;
+  width: 92px;
   margin-right: 12px;
   object-fit: contain;
   vertical-align: middle;
@@ -556,6 +556,11 @@ textarea {
 
   .brand {
     font-size: 16px;
+  }
+
+  .logo {
+    width: 78px;
+    max-height: 36px;
   }
 
   .tab-nav {

@@ -54,6 +54,7 @@ async function run() {
   check("home watch button says AI radar action", html.includes("开始画雷达") || html.includes("开始盯机会"));
   check("homepage includes total-console style radar sidebar", html.includes("home-radar-sidebar") && html.includes("新雷达") && html.includes("AI 赛事雷达"));
   check("homepage keeps global banner and customer tabs", html.includes('class="top-bar"') && html.includes('data-tab="home"') && html.includes('data-tab="radars"'));
+  check("global banner uses full Chinese logo asset", html.includes("ChancePing_cn_logo_transparent.png") && styles.includes("width: 92px"));
   check("homepage does not render middle hero radar card board", !html.includes("home-radar-board") && !html.includes("继续你的雷达"));
   const homeRadarCardCount = (html.match(/class="home-radar-card/g) || []).length;
   check("homepage does not render middle template cards", homeRadarCardCount === 0, String(homeRadarCardCount));
@@ -115,6 +116,7 @@ async function run() {
   check("search progress explains source verification and report summary", heroChatJs.includes("正在核对来源可信度") && heroChatJs.includes("正在生成报告摘要"));
   check("search progress uses one-line current work status", heroChatJs.includes("currentProgressLine") && heroChatJs.includes("hero-progress-current") && !heroChatJs.includes("appendProgressLog"));
   check("progress line shows user-visible provider work without hidden chain of thought", heroChatJs.includes("Serper") && heroChatJs.includes("DeepSeek") && !heroChatJs.includes("内部思维链"));
+  check("progress line reassures novice users that work is continuing", heroChatJs.includes("不用刷新页面") && heroChatJs.includes("持续更新"));
   check("homepage keeps prompt chips hidden before and after chat starts", heroChatJs.includes("promptChips.hidden = true") && homeJs.includes('".hero-demo-prompts"'));
   check("hero chat becomes the only visible workspace after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-hero") && heroChatJs.includes(".home-input-area") && heroChatJs.includes("hero-chat-active"));
   check("hidden elements cannot be overridden by flex styles", styles.includes("[hidden]") && styles.includes("display: none !important"));
@@ -132,10 +134,14 @@ async function run() {
   check("hero chat runs before legacy template fallback", homeJs.indexOf("window.startHeroRadarChat") > -1 && homeJs.indexOf("window.startHeroRadarChat") < homeJs.indexOf("window.runTemplateWatch"));
   check("report artifact tells user next action and feedback loop", heroChatJs.includes("buildReportRecommendation") && heroChatJs.includes("结果不对？直接在下方告诉我"));
   check("report artifact has demo-ready conclusion and action layer", heroChatJs.includes("本轮结论") && heroChatJs.includes("先做这 3 件事") && heroChatJs.includes("待复核提醒"));
+  check("report artifact tells users where to inspect full source evidence", heroChatJs.includes("完整来源和字段证据") && heroChatJs.includes("查看本次机会卡"));
   check("result page exposes reusable opportunity card grid", watchResultJs.includes("renderOpportunityCardGrid") && watchResultJs.includes("watch-opportunity-grid"));
+  check("result page restores latest chat report when top tab is opened", watchResultJs.includes("LAST_WATCH_RESULT_KEY") && watchResultJs.includes("tab-switched") && heroChatJs.includes("persistWatchResult"));
   check("result page surfaces top 3 action strip", watchResultJs.includes("renderTopActionStrip") && watchResultJs.includes("先看这 3 个") && styles.includes(".watch-top-actions"));
   check("result opportunity cards use customer-facing labels", watchResultJs.includes("formatOpportunityKindForCustomer") && watchResultJs.includes("watch-card-decision-row") && watchResultJs.includes("优先复核"));
   check("result opportunity cards use demo-friendly action copy", watchResultJs.includes("为什么值得看") && watchResultJs.includes("本周先做") && watchResultJs.includes("来源入口"));
+  check("result opportunity cards avoid raw chip labels", watchResultJs.includes("建议：") && watchResultJs.includes("性质：") && watchResultJs.includes("证据："));
+  check("result report summary points users to source evidence cards", watchResultJs.includes("完整来源、字段证据和排除原因") && watchResultJs.includes("查看机会卡"));
   check("result page hero demo title is AI event radar", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("AI 赛事雷达"));
   check("result page puts report summary after opportunity cards", watchResultJs.indexOf("watch-opportunity-grid") > -1 && watchResultJs.indexOf("report-summary") > watchResultJs.indexOf("watch-opportunity-grid"));
   check("my radar view enters the shared result surface", radarsJs.includes("查看机会和报告") && radarsJs.includes("window.showWatchResult"));

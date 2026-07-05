@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  const LAST_WATCH_RESULT_KEY = "chanceping:last-watch-result";
   let currentResult = null;
 
   function escapeHtml(value) {
@@ -14,6 +15,33 @@
 
   function switchToResult() {
     if (window.switchTab) window.switchTab("watch-result");
+  }
+
+  function persistWatchResult(result) {
+    if (!result) return;
+    try {
+      sessionStorage.setItem(LAST_WATCH_RESULT_KEY, JSON.stringify(result));
+    } catch (err) {
+      // 缓存失败不影响主链路，顶部结果页只是少一个恢复入口。
+    }
+  }
+
+  function readPersistedWatchResult() {
+    try {
+      const raw = sessionStorage.getItem(LAST_WATCH_RESULT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function restoreLatestWatchResult() {
+    if (currentResult) return currentResult;
+    const persisted = readPersistedWatchResult();
+    if (!persisted) return null;
+    currentResult = persisted;
+    renderResult(currentResult);
+    return currentResult;
   }
 
   function renderLoading(description, step) {
@@ -223,9 +251,9 @@
             : `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(card.title || "未知机会")}</a>`}
         </header>
         <div class="watch-card-decision-row" aria-label="本轮判断">
-          <span>${escapeHtml(getPriorityCue(card.visible_level))}</span>
-          <span>${escapeHtml(opportunityKind)}</span>
-          <span>${escapeHtml(evidenceStatus)}</span>
+          <span>建议：${escapeHtml(getPriorityCue(card.visible_level))}</span>
+          <span>性质：${escapeHtml(opportunityKind)}</span>
+          <span>证据：${escapeHtml(evidenceStatus)}</span>
         </div>
         <dl class="watch-card-fields">
           <div>
@@ -361,6 +389,7 @@
             ${topCards.map((title) => `<li>${escapeHtml(title)}</li>`).join("")}
           </ul>
         ` : ""}
+        <p>完整来源、字段证据和排除原因请点上方机会卡查看；搜索发现不等于已核验事实。</p>
       </div>
     `;
   }
@@ -624,10 +653,22 @@
 
   function showWatchResult(result) {
     currentResult = result;
+    persistWatchResult(currentResult);
     switchToResult();
     renderResult(currentResult);
   }
 
+  window.addEventListener("tab-switched", (event) => {
+    if (event?.detail?.tab === "watch-result") restoreLatestWatchResult();
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector(".tab-btn.active")?.dataset?.tab === "watch-result") {
+      restoreLatestWatchResult();
+    }
+  });
+
   window.runWatchNow = runWatchNow;
   window.showWatchResult = showWatchResult;
+  window.persistWatchResult = persistWatchResult;
+  window.restoreLatestWatchResult = restoreLatestWatchResult;
 })();
