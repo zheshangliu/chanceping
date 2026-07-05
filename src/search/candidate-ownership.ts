@@ -66,11 +66,12 @@ const KEY_OPPORTUNITY_TYPES = new Set<OpportunityKind>([
   "customer_lead",
 ]);
 
-const DIRECT_ACTION_RE = /报名|報名|参赛|參賽|申请|申請|申报|申報|提交|entry|entries|entry form|registration|register|apply|application|submit/i;
+const DIRECT_ACTION_RE = /报名|報名|参赛|參賽|申请|申請|申报|申報|提交|entry|entries|entry form|registration|register|apply|application|submit|join\s+(?:hackathon|challenge|contest|competition)|join\s+the\s+(?:hackathon|challenge|contest|competition)/i;
+const EVENT_PARTICIPATION_SIGNAL_RE = /(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松).{0,80}(?:compete|prizes?|cash|cloud credits?|tracks?|requirements)|(?:compete|prizes?|cash|cloud credits?|tracks?|requirements).{0,80}(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松)/i;
 const BID_ACTION_RE = /招标|投标|采购公告|竞争性磋商|询价|供应商|入库|废气治理|污水处理|除尘设备|环保设备|tender|rfp|procurement|supplier|vendor|bid/i;
 const CONTACT_ACTION_RE = /联系|官网招聘|公司招聘|careers?|contact|jobs?|vacanc|hiring/i;
 const CALENDAR_OR_NEWS_RE = /日历|赛历|赛程|calendar|schedule|新闻|报道|公示|视频|集锦|news|highlights/i;
-const NO_ENTRY_RE = /没有|未(?:提供|明确|找到)|不(?:提供|含|包含)|no .{0,30}(entry|registration|application|apply|contact)/i;
+const NO_ENTRY_RE = /(?:没有|未(?:提供|明确|找到)|不(?:提供|含|包含)).{0,24}(?:报名|申请|参赛|提交|入口|路径|联系方式|entry|registration|application|apply|contact)|(?:报名入口|申请入口|参赛入口|提交入口|报名路径|申请路径|参赛路径|提交路径|入口|路径|联系方式|entry|registration|application|apply|contact).{0,16}(?:没有|未(?:提供|明确|找到)|不(?:提供|含|包含))|no .{0,30}(entry|registration|application|apply|contact)/i;
 const ATHLETE_RE = /选手|运动员|player|athlete/i;
 const TABLE_TENNIS_RE = /乒乓球|table tennis|wtt|ittf/i;
 const HEADHUNTER_RE = /猎头|headhunter|recruiter|recruitment consultant/i;
@@ -87,6 +88,8 @@ const POLICY_OR_INFO_RE = /政策|规划|行动方案|实施方案|认定|新闻
 const GREENING_OR_RENOVATION_RE = /绿化|景观|保洁|环卫|装修|翻新|家具|renovation|greening|landscape|sanitation/i;
 const GREEN_CERTIFICATION_APPLICATION_RE = /绿色工厂|绿色园区|绿色制造|绿色低碳|green factory|green park|green manufacturing/i;
 const CERTIFICATION_APPLICATION_ACTION_RE = /申报|认证|认定|申请|提交材料|certification|application/i;
+const AI_EVENT_RADAR_RE = /(?:^|[^a-z])ai(?:[^a-z]|$)|人工智能|agent|hackathon|马拉松|开发者|vibe|coding|op[cс]|比赛|竞赛|大赛|challenge|contest|competition/i;
+const AI_EVENT_ENTRY_DOMAIN_RE = /forum\.trae\.cn|devpost\.com|dorahacks\.io|lablab\.ai|openhackathons\.org|kaggle\.com|microsoft\.com|google(?:cloud)?\.com|aws(?:\.amazon)?\.com|aliyun|tencent|github\.com|huggingface\.co|producthunt\.com/i;
 
 function normalize(value: unknown): string {
   return String(value ?? "").normalize("NFKC").toLowerCase().replace(/\s+/g, " ").trim();
@@ -131,6 +134,15 @@ function hasCurrentKeyIntent(result: SearchResult): boolean {
   return Boolean(result.semantic_type && KEY_OPPORTUNITY_TYPES.has(result.semantic_type));
 }
 
+function isOfficialAiEventActionEntry(result: SearchResult, radarText: string, text: string): boolean {
+  if (!AI_EVENT_RADAR_RE.test(radarText)) return false;
+  const sourceText = `${result.url} ${result.source_archetype ?? ""} ${result.intent_type ?? ""}`.toLowerCase();
+  const isOfficialEntry = result.source_archetype === "official_event_site" || AI_EVENT_ENTRY_DOMAIN_RE.test(sourceText);
+  if (!isOfficialEntry) return false;
+  if (!AI_EVENT_RADAR_RE.test(text)) return false;
+  return (DIRECT_ACTION_RE.test(text) || EVENT_PARTICIPATION_SIGNAL_RE.test(text)) && !NO_ENTRY_RE.test(text);
+}
+
 export function assessCandidateOwnership(
   result: SearchResult,
   spec: RadarRequirementSpec,
@@ -151,7 +163,7 @@ export function assessCandidateOwnership(
         reasonCodes: ["athlete_calendar_without_registration"],
       }, options);
     }
-    if (DIRECT_ACTION_RE.test(text) && !NO_ENTRY_RE.test(text)) {
+    if ((DIRECT_ACTION_RE.test(text) || EVENT_PARTICIPATION_SIGNAL_RE.test(text)) && !NO_ENTRY_RE.test(text)) {
       return assessment({
         pageAudience: "current_user",
         currentUserActionMode: /报名|報名|参赛|參賽|entry|registration|register/i.test(text) ? "register" : "apply",
@@ -311,6 +323,17 @@ export function assessCandidateOwnership(
     }, options);
   }
 
+  if (isOfficialAiEventActionEntry(result, radarText, text)) {
+    return assessment({
+      pageAudience: "current_user",
+      currentUserActionMode: /报名|報名|参赛|參賽|entry|registration|register/i.test(text) ? "register" : "apply",
+      opportunityRoleForUser: "direct_opportunity",
+      ownershipDecision: "accept",
+      ownershipReason: "官方 AI 赛事入口包含报名、参赛或提交动作，当前 OPC / 开发者可作为直接行动主体，但仍需复核资格与截止时间。",
+      reasonCodes: ["official_ai_event_user_can_register"],
+    }, options);
+  }
+
   if (!hasCurrentKeyIntent(result)) {
     return assessment({
       pageAudience: "unclear",
@@ -333,7 +356,7 @@ export function assessCandidateOwnership(
         reasonCodes: ["generic_supplier_can_bid"],
       }, options);
     }
-    if (DIRECT_ACTION_RE.test(text) && !NO_ENTRY_RE.test(text)) {
+    if ((DIRECT_ACTION_RE.test(text) || EVENT_PARTICIPATION_SIGNAL_RE.test(text)) && !NO_ENTRY_RE.test(text)) {
       return assessment({
         pageAudience: "current_user",
         currentUserActionMode: /报名|報名|参赛|參賽|entry|registration|register/i.test(text) ? "register" : "apply",

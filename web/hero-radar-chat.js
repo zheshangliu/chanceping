@@ -2,12 +2,23 @@
   "use strict";
 
   const STORAGE_KEY = "chanceping_hero_radar_chat_state";
+  const SIDEBAR_COLLAPSED_KEY = "chanceping-sidebar-collapsed";
+  const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
+  const AI_EVENT_SAMPLE_ROOM = {
+    id: "ai-event-sample-room",
+    name: "AI 赛事雷达",
+    version: "V1.0",
+    isSampleRoom: true,
+  };
 
   const heroRadarChatState = {
     messages: [],
     currentDraft: null,
     currentResult: null,
     confirmedVersion: null,
+    copiedRadarId: null,
+    pendingFirstMessage: "",
+    sidebarCollapsed: false,
     modal: null,
     isBusy: false,
   };
@@ -93,9 +104,16 @@
       heroRadarChatState.currentDraft = parsed.currentDraft || null;
       heroRadarChatState.currentResult = parsed.currentResult || null;
       heroRadarChatState.confirmedVersion = parsed.confirmedVersion || null;
+      heroRadarChatState.copiedRadarId = parsed.copiedRadarId || null;
+      heroRadarChatState.pendingFirstMessage = parsed.pendingFirstMessage || "";
       heroRadarChatState.modal = parsed.modal || null;
     } catch {
       sessionStorage.removeItem(STORAGE_KEY);
+    }
+    try {
+      heroRadarChatState.sidebarCollapsed = localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
+    } catch {
+      heroRadarChatState.sidebarCollapsed = false;
     }
   }
 
@@ -203,6 +221,13 @@
 
   function summarizeOpportunityCards(cards) {
     const list = Array.isArray(cards) ? cards : [];
+    const levelRank = { S: 0, A: 1, B: 2, C: 3 };
+    const sorted = [...list].sort((a, b) => {
+      const aLevel = levelRank[a.visible_level || a.level] ?? 9;
+      const bLevel = levelRank[b.visible_level || b.level] ?? 9;
+      if (aLevel !== bLevel) return aLevel - bLevel;
+      return (b.backend_score || b.score || 0) - (a.backend_score || a.score || 0);
+    });
     const levelCounts = list.reduce((acc, card) => {
       const level = card.visible_level || card.level || "待复核";
       acc[level] = (acc[level] || 0) + 1;
@@ -211,11 +236,51 @@
     const levelText = ["S", "A", "B", "C"]
       .map((level) => `${level} 级 ${levelCounts[level] || 0} 条`)
       .join("，");
+    const topCards = sorted
+      .filter((card) => card.title)
+      .slice(0, 3)
+      .map((card) => ({
+        title: card.title,
+        level: card.visible_level || card.level || "待复核",
+        reason: card.match_reason || card.next_action || "与本版 AI 赛事雷达相关，建议打开来源复核。",
+      }));
     return {
       total: list.length,
       levelText,
-      topTitle: list[0]?.title || "",
+      topTitle: topCards[0]?.title || "",
+      topCards,
+      levelCounts,
     };
+  }
+
+  function buildReportRecommendation(summary) {
+    const counts = summary?.levelCounts || {};
+    if ((counts.S || 0) + (counts.A || 0) > 0) {
+      return "优先处理 S/A 级机会，先复核官方报名入口、截止时间和参赛资格。";
+    }
+    if ((counts.B || 0) > 0) {
+      return "本轮先复核 B 级机会，确认官方入口和截止时间后再决定是否投入。";
+    }
+    if ((counts.C || 0) > 0) {
+      return "本轮多为观察线索，先追溯官方来源，不要直接当作可报名机会。";
+    }
+    return "本轮没有足够强的行动机会，建议继续补充信号源或调整雷达。";
+  }
+
+  function buildHeroActionItems(summary) {
+    const top = summary?.topCards || [];
+    if (top.length > 0) {
+      return [
+        `先打开 ${top[0].title} 的官方来源，复核报名入口、截止时间和参赛资格。`,
+        "把 S/A 级机会需要的项目介绍、Demo 链接、团队资料和作品说明先整理出来。",
+        "把不符合 OPC / 个人开发者的学生专属、展会资讯或纯新闻结果反馈给我，我会先升级雷达。",
+      ];
+    }
+    return [
+      "补充更明确的地区、平台或主办方，例如 Qwen、TRAE、Devpost、DoraHacks。",
+      "放宽或调整排除条件后重新确认雷达，再跑一次搜索。",
+      "增加你愿意参加的机会形态，例如奖金赛、云资源扶持、产品展示或 Hackathon。",
+    ];
   }
 
   function renderRadarArtifact(message) {
@@ -271,6 +336,7 @@
   function renderReportArtifact(message) {
     const artifact = message.artifact || {};
     const summary = summarizeOpportunityCards(artifact.cards || heroRadarChatState.currentResult?.opportunityCards || []);
+    const actionItems = buildHeroActionItems(summary);
     return `
       <article class="hero-report-artifact">
         <div class="hero-artifact-topline">
@@ -278,10 +344,19 @@
           ${artifact.runId ? `<span class="hero-version-pill">${escapeHtml(artifact.runId)}</span>` : ""}
         </div>
         <div class="hero-report-summary">
-          <strong>本次搜索出 ${escapeHtml(summary.total)} 条可查看机会</strong>
+          <strong>本轮结论：本次搜索出 ${escapeHtml(summary.total)} 条可查看机会</strong>
           <span>评级分布：${escapeHtml(summary.levelText)}</span>
-          ${summary.topTitle ? `<p>建议先处理：${escapeHtml(summary.topTitle)}</p>` : `<p>本轮没有把观察信号冒充为重点机会。</p>`}
-          <p>待复核提醒：报名资格、费用、截止时间以官方页面为准。</p>
+          ${summary.topCards.length > 0 ? `
+            <div class="hero-report-top-list">
+              <p><strong>本次建议先看：</strong><span>${escapeHtml(buildReportRecommendation(summary))}</span></p>
+              <ol>${summary.topCards.map((card) => `<li><span>${escapeHtml(card.level)} 级</span>${escapeHtml(card.title)}</li>`).join("")}</ol>
+            </div>
+          ` : `<p>本轮没有把观察信号冒充为重点机会。</p>`}
+          <div class="hero-report-action-layer">
+            <strong>先做这 3 件事</strong>
+            <ol>${actionItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>
+          </div>
+          <p><strong>待复核提醒：</strong>搜索发现不等于已核验事实；报名资格、费用、截止时间和奖项义务都以官方页面为准。</p>
           <p>结果不对？直接在下方告诉我，我会先升级雷达，再重新盯一次。</p>
         </div>
         <div class="hero-artifact-actions">
@@ -295,9 +370,13 @@
   function renderProgressArtifact(message) {
     const steps = asArray(message.artifact?.steps);
     const activeStepCount = Math.max(1, Math.min(Number(message.artifact?.activeStepCount) || steps.length, steps.length));
+    const currentProgressLine = message.artifact?.currentProgressLine || steps[activeStepCount - 1] || "正在处理本次机会雷达……";
     return `
       <article class="hero-progress-artifact" aria-live="polite">
-        ${steps.slice(0, activeStepCount).map((step, index) => `<p class="${index === activeStepCount - 1 ? "active" : ""}">${escapeHtml(step)}</p>`).join("")}
+        <div class="hero-progress-current" aria-label="当前工作状态">
+          <span class="hero-progress-dot" aria-hidden="true"></span>
+          <span>${escapeHtml(currentProgressLine)}</span>
+        </div>
       </article>
     `;
   }
@@ -370,18 +449,22 @@
   function renderHeroSidebar() {
     const version = heroRadarChatState.currentDraft?.radarVersion?.version || "V1.0";
     const activeName = heroRadarChatState.currentDraft?.suggestedName || "AI 赛事雷达";
+    const hasDraft = Boolean(heroRadarChatState.currentDraft);
     return `
       <aside class="hero-radar-sidebar" aria-label="雷达列表">
         <div class="hero-sidebar-brand">
-          <strong>ChancePing</strong>
-          <span>盯机会</span>
+          <img src="/assets/logo.png?v=20260705" alt="" class="sidebar-brand-logo" />
+          <div class="hero-sidebar-brand-text">
+            <strong>ChancePing</strong>
+            <span>盯机会</span>
+          </div>
+          <button class="hero-sidebar-collapse" type="button" data-action="toggle-sidebar" title="折叠侧栏" aria-label="折叠侧栏">☰</button>
         </div>
-        <button class="hero-new-radar-btn" type="button" data-action="new-hero-radar">新雷达</button>
-        <div class="hero-sidebar-section">
-          <span class="hero-sidebar-label">我的雷达</span>
+        <div class="hero-sidebar-section hero-sidebar-current-radar">
+          <span class="hero-sidebar-label">当前雷达</span>
           <button class="hero-sidebar-radar active" type="button" data-action="focus-hero-radar">
             <span>${escapeHtml(activeName)}</span>
-            <small>${escapeHtml(version)}</small>
+            <small>${hasDraft ? `${escapeHtml(version)} · 正在成长` : `${escapeHtml(version)} · Hero Demo`}</small>
           </button>
         </div>
       </aside>
@@ -411,11 +494,12 @@
     const chatStarted = heroRadarChatState.messages.length > 0;
     const homeIsActive = document.getElementById("panel-home")?.classList.contains("active") !== false;
     document.body.classList.toggle("hero-chat-active", chatStarted && homeIsActive);
-    [".home-examples-block", ".hero-demo-prompts"].forEach((selector) => {
-      const element = document.querySelector(selector);
-      if (element) element.hidden = true;
-    });
-    [".home-hero", ".home-input-area", ".home-helper"].forEach((selector) => {
+    document.body.classList.toggle("hero-home-shell", !chatStarted && homeIsActive);
+    const examplesBlock = document.querySelector(".home-examples-block");
+    if (examplesBlock) examplesBlock.hidden = true;
+    const promptChips = document.querySelector(".hero-demo-prompts");
+    if (promptChips) promptChips.hidden = true;
+    [".home-hero", ".home-input-area", ".home-helper", ".home-ai-shell"].forEach((selector) => {
       const element = document.querySelector(selector);
       if (element) element.hidden = chatStarted;
     });
@@ -434,7 +518,7 @@
       ? heroRadarChatState.messages
       : [];
     root.innerHTML = `
-      <section class="hero-chat-workspace">
+      <section class="hero-chat-workspace ${heroRadarChatState.sidebarCollapsed ? "sidebar-collapsed hero-sidebar-collapsed" : ""}">
         ${renderHeroSidebar()}
         <div class="hero-chat-main">
           <div class="hero-chat-header" aria-label="1. 说需求 2. 看雷达 3. 确认后搜索">
@@ -448,7 +532,7 @@
             ${messages.map(renderMessage).join("")}
           </div>
           ${chatStarted ? `<div class="hero-chat-input-row">
-            <textarea id="hero-radar-chat-input" rows="2" placeholder="继续告诉我：你是谁、不要什么、什么结果才算有用"></textarea>
+            <textarea id="hero-radar-chat-input" rows="2" placeholder="继续告诉我：你是谁、不要什么、什么结果才算有用">${escapeHtml(heroRadarChatState.pendingFirstMessage || "")}</textarea>
             <button id="hero-radar-chat-send" class="primary-btn" ${heroRadarChatState.isBusy ? "disabled" : ""}>发送</button>
           </div>` : ""}
         </div>
@@ -457,7 +541,7 @@
       </section>
     `;
     root.querySelector("#hero-chat-reset")?.addEventListener("click", resetHeroRadarChat);
-    root.querySelector("[data-action='new-hero-radar']")?.addEventListener("click", resetHeroRadarChat);
+    root.querySelector("[data-action='toggle-sidebar']")?.addEventListener("click", toggleHeroSidebar);
     root.querySelector("[data-action='focus-hero-radar']")?.addEventListener("click", () => {
       root.querySelector("#hero-radar-chat-input")?.focus();
     });
@@ -466,6 +550,7 @@
       const value = input?.value?.trim();
       if (!value) return;
       input.value = "";
+      heroRadarChatState.pendingFirstMessage = "";
       startHeroRadarChat(value).catch((err) => window.showToast?.(err.message || "雷达修订失败", "error"));
     });
     root.querySelector("#hero-radar-chat-input")?.addEventListener("keydown", (event) => {
@@ -495,17 +580,59 @@
     });
   }
 
-  function resetHeroRadarChat() {
+  function clearHeroRadarConversation() {
     heroRadarChatState.messages = [];
     heroRadarChatState.currentDraft = null;
     heroRadarChatState.currentResult = null;
     heroRadarChatState.confirmedVersion = null;
+    heroRadarChatState.copiedRadarId = null;
+    heroRadarChatState.pendingFirstMessage = "";
     heroRadarChatState.modal = null;
     heroRadarChatState.isBusy = false;
+  }
+
+  async function openHeroRadarWindow() {
+    if (window.switchTab) window.switchTab("home");
+    if (heroRadarChatState.messages.length === 0) {
+      heroRadarChatState.pendingFirstMessage = HERO_DEMO_PROMPT;
+      addMessage("assistant", "继续编辑 AI 赛事雷达。我已把默认需求放到底部输入框，你可以直接发送，也可以先改成自己的需求。");
+    } else {
+      if (!heroRadarChatState.currentDraft && !heroRadarChatState.pendingFirstMessage) {
+        heroRadarChatState.pendingFirstMessage = HERO_DEMO_PROMPT;
+      }
+      saveState();
+      renderHeroRadarChat();
+    }
+    window.setTimeout(() => document.getElementById("hero-radar-chat-input")?.focus(), 0);
+  }
+
+  async function createNewHeroRadarWindow(initialMessage = "") {
+    if (window.switchTab) window.switchTab("home");
+    clearHeroRadarConversation();
+    const text = String(initialMessage || "").trim();
+    heroRadarChatState.pendingFirstMessage = text;
+    addMessage("assistant", text
+      ? "这会成为一个新的雷达窗口。我已经把你的需求放到下方输入框里，等你点击发送后，我再开始画雷达。"
+      : "这会成为一个新的雷达窗口。请在下方输入你想找什么机会，我会先画雷达，再让你确认。");
+    window.setTimeout(() => document.getElementById("hero-radar-chat-input")?.focus(), 0);
+  }
+
+  function resetHeroRadarChat() {
+    clearHeroRadarConversation();
     sessionStorage.removeItem(STORAGE_KEY);
     renderHeroRadarChat();
     document.getElementById("home-input")?.focus();
     window.showToast?.("已清空当前演示，可以重新描述需求", "success");
+  }
+
+  function toggleHeroSidebar() {
+    heroRadarChatState.sidebarCollapsed = !heroRadarChatState.sidebarCollapsed;
+    try {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(heroRadarChatState.sidebarCollapsed));
+    } catch {
+      // UI still updates when storage is unavailable.
+    }
+    renderHeroRadarChat();
   }
 
   function normalizeGenerateResult(data, description) {
@@ -521,11 +648,24 @@
   async function startHeroRadarChat(message, options = {}) {
     const text = String(message || "").trim();
     if (!text || heroRadarChatState.isBusy) return;
+    if (options.autoSend === false && !heroRadarChatState.currentDraft) {
+      heroRadarChatState.pendingFirstMessage = text;
+      if (heroRadarChatState.messages.length === 0) {
+        addMessage("assistant", "我已经把你的需求放到下方输入框里。等待你点击发送后，我再开始理解需求并生成 AI 赛事雷达。");
+      } else {
+        saveState();
+        renderHeroRadarChat();
+      }
+      const input = document.getElementById("hero-radar-chat-input");
+      input?.focus();
+      return;
+    }
     heroRadarChatState.isBusy = true;
+    heroRadarChatState.pendingFirstMessage = "";
     addMessage("user", text);
     addMessage("assistant", heroRadarChatState.currentDraft
-      ? "收到，我会先根据这句话升级雷达版本，确认后再搜索。"
-      : "我先把你的需求整理成 AI 赛事雷达 V1.0。");
+      ? "收到，我会先让 DeepSeek 理解这句话，生成新版雷达草案；你确认后我才会搜索。"
+      : "我先让 DeepSeek 理解你的需求，把复杂人话整理成 AI 赛事雷达 V1.0。");
     try {
       if (!heroRadarChatState.currentDraft) {
         const data = await postJson("/api/radars/generate", { description: text });
@@ -555,6 +695,10 @@
         payload: heroRadarChatState.currentDraft.radarVersion,
         diff: heroRadarChatState.currentDraft.radarDiff,
       });
+    } catch (err) {
+      const message = err?.message || "未知错误";
+      addMessage("assistant", `雷达理解或修订失败：${message}。我没有开始搜索，也没有保存新版雷达；你可以稍后重试，或把需求说得更具体一点。`);
+      if (window.showToast) window.showToast(message, "error");
     } finally {
       heroRadarChatState.isBusy = false;
       saveState();
@@ -593,6 +737,7 @@
     };
     const progressSteps = [
       "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+      "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
       "正在筛选可报名、可提交作品、可申请资源的机会……",
       "正在排除展会资讯、培训广告和学生专属结果……",
       "正在核对来源可信度，避免把资讯当成机会……",
@@ -602,6 +747,7 @@
       type: "progress",
       steps: progressSteps,
       activeStepCount: 1,
+      currentProgressLine: "已收到确认，正在准备调用搜索和报告链路……",
     });
     const progressTimer = startProgressTicker(progressMessage.id, progressSteps.length);
     try {
@@ -645,6 +791,7 @@
         markdown: report.markdown,
         runId: search.run?.id,
         reportId: report.reportId,
+        cards,
       });
     } catch (err) {
       addMessage("assistant", `这次盯机会失败：${err.message || "未知错误"}。雷达已经确认，你可以继续补充条件后再让我修订。`);
@@ -663,16 +810,25 @@
 
   function startProgressTicker(messageId, maxSteps) {
     let activeStepCount = 1;
+    let logIndex = 0;
+    const progressLogMessages = [
+      "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合。",
+      "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页。",
+      "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面。",
+      "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段。",
+      "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果。",
+      "DeepSeek：正在基于证据生成报告摘要、行动建议和风险提醒。",
+      "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤。",
+    ];
     const timerId = window.setInterval(() => {
       activeStepCount = Math.min(activeStepCount + 1, maxSteps);
+      const nextLine = `${new Date().toLocaleTimeString()} ${progressLogMessages[logIndex % progressLogMessages.length]}`;
+      logIndex += 1;
       updateMessageArtifact(messageId, (artifact) => ({
         ...artifact,
         activeStepCount,
+        currentProgressLine: nextLine,
       }));
-      if (activeStepCount >= maxSteps) {
-        // Keep the last line visible while search/report generation completes.
-        window.clearInterval(timerId);
-      }
     }, 900);
     return timerId;
   }
@@ -703,11 +859,15 @@
   });
 
   window.heroRadarChatState = heroRadarChatState;
+  window.CHANCEPING_AI_EVENT_DEMO_PROMPT = HERO_DEMO_PROMPT;
   window.renderRadarArtifact = renderRadarArtifact;
   window.renderReportArtifact = renderReportArtifact;
   window.renderHeroRadarChat = renderHeroRadarChat;
   window.syncHeroEntryVisibility = syncHeroEntryVisibility;
   window.resetHeroRadarChat = resetHeroRadarChat;
+  window.toggleHeroSidebar = toggleHeroSidebar;
+  window.openHeroRadarWindow = openHeroRadarWindow;
+  window.createNewHeroRadarWindow = createNewHeroRadarWindow;
   window.startHeroRadarChat = startHeroRadarChat;
   window.confirmHeroRadar = confirmHeroRadar;
   window.viewHeroCards = viewHeroCards;

@@ -81,6 +81,7 @@ function switchTab(tabName) {
     window.syncHeroEntryVisibility?.();
   } else {
     document.body.classList.remove("hero-chat-active");
+    document.body.classList.remove("hero-home-shell");
   }
   // Task 040: 派发 tab-switched 事件，供 opportunities.js / reports.js 监听加载
   window.dispatchEvent(new CustomEvent("tab-switched", { detail: { tab: tabName } }));
@@ -164,6 +165,22 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("文件会作为画像补充材料使用，不会直接当作机会结果。", "warning");
   });
 
+  document.querySelectorAll("[data-action='open-ai-event-radar']").forEach((button) => button.addEventListener("click", () => {
+    if (window.openHeroRadarWindow) {
+      window.openHeroRadarWindow();
+      return;
+    }
+    showToast("AI 赛事雷达窗口还没准备好", "warning");
+  }));
+
+  document.querySelector("[data-action='create-new-radar']")?.addEventListener("click", () => {
+    if (window.createNewHeroRadarWindow) {
+      window.createNewHeroRadarWindow("");
+      return;
+    }
+    showToast("新雷达窗口还没准备好", "warning");
+  });
+
   watchBtn.addEventListener("click", () => {
     const text = input.value.trim();
     if (!text) {
@@ -171,8 +188,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (window.createNewHeroRadarWindow) {
+      window.createNewHeroRadarWindow(text)
+        .then(() => {
+          input.value = "";
+          selectedTemplate = null;
+        })
+        .catch((err) => showToast(err.message || "创建雷达窗口失败", "error"));
+      return;
+    }
+
     if (window.startHeroRadarChat) {
-      window.startHeroRadarChat(text)
+      window.startHeroRadarChat(text, { autoSend: false })
         .then(() => {
           input.value = "";
           selectedTemplate = null;
@@ -227,9 +254,9 @@ function renderMvpTemplates(input) {
 }
 
 function bindHeroDemoPrompts(input) {
-  document.querySelectorAll(".hero-demo-prompt").forEach((btn) => {
+  document.querySelectorAll("[data-hero-prompt]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      input.value = btn.dataset.heroPrompt || "";
+      input.value = btn.dataset.heroPrompt || window.CHANCEPING_AI_EVENT_DEMO_PROMPT || "";
       input.focus();
     });
   });

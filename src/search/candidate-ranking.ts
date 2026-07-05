@@ -67,7 +67,8 @@ const MID_AUTHORITY_SOURCE_TYPES = new Set<SourceArchetypeId>([
 const AGGREGATOR_DOMAIN_RE = /bidcenter|zhaobiao|chinabidding|qianlima|caizhaowang|采购与招标网|采招|jobsdb|indeed|boss|zhipin|liepin|51job|linkedin|facebook/i;
 const NEWS_DOMAIN_RE = /news|sina|sohu|163\.com|qq\.com|toutiao|thepaper|ifeng|medium|blog|zhihu|wikipedia|baike|qbitai|36kr|huxiu|jiqizhixin|leiphone/i;
 const GOV_OR_INSTITUTION_DOMAIN_RE = /\.gov(?:\.cn)?$|gov\.cn$|\.edu(?:\.cn)?$|\.org$|ac\.cn$|org\.cn$/i;
-const DIRECT_OFFICIAL_DOMAIN_RE = /(wtt|ittf|nihonkiin|baduk|go\.or|gov\.cn|ccgp|mofcom|chinatax|customs|hkpc|enterprise|procurement)/i;
+const DIRECT_OFFICIAL_DOMAIN_RE = /(wtt|ittf|nihonkiin|baduk|go\.or|gov\.cn|ccgp|mofcom|chinatax|customs|hkpc|enterprise|procurement|devpost|dorahacks|lablab|qwencloud-hackathon|forum\.trae\.cn|trae)/i;
+const STUDENT_ONLY_TEXT_RE = /大学生|研究生|高校学生|学生专属|学生参赛|student only|students only|college student|university student/i;
 
 function normalize(value: unknown): string {
   return String(value ?? "").normalize("NFKC").toLowerCase();
@@ -78,6 +79,29 @@ function domainOf(url: string): string {
     return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
   } catch {
     return "";
+  }
+}
+
+function isConcreteEventPlatformRoot(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    const domain = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    const path = parsed.pathname.replace(/\/+$/, "");
+    const eventSubdomain = /(?:^|\.)(?:devpost|dorahacks|lablab|kaggle|eventbrite)\./i.test(domain) &&
+      !/^(?:devpost|dorahacks|lablab|kaggle|eventbrite)\./i.test(domain);
+    return eventSubdomain && (path === "" || path === "/");
+  } catch {
+    return false;
+  }
+}
+
+function isEventPlatformManagementSubpage(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    const domain = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    return domain === "devpost.com" && /^\/submit-to\/[^/]+\/manage(?:\/|$)/i.test(parsed.pathname);
+  } catch {
+    return false;
   }
 }
 
@@ -122,6 +146,18 @@ function specSourceText(spec: RadarRequirementSpec): string {
   ].filter(Boolean).join(" "));
 }
 
+function specFitText(spec: RadarRequirementSpec): string {
+  const radar = spec.radar_version;
+  return normalize([
+    radar?.targetUser,
+    radar?.businessContext,
+    ...(radar?.highValueCriteria ?? []),
+    ...(radar?.exclusionRules ?? []),
+    spec.client_profile?.business_type,
+    spec.core_goals?.primary_goal,
+  ].filter(Boolean).join(" "));
+}
+
 function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick<CandidateRankingAssessment, "authorityTier" | "authorityScore" | "reasonCodes"> {
   const domain = domainOf(result.url);
   const text = textOf(result);
@@ -159,6 +195,20 @@ function sourceAuthority(result: SearchResult, spec: RadarRequirementSpec): Pick
       if (tier === "unknown") tier = "credible_secondary";
       reasonCodes.push("matches_priority_source_text");
     }
+  }
+  const fitText = specFitText(spec);
+  if (/opc|个人开发者|创业者|小团队|非学生|排除学生|学生专属/i.test(fitText) && STUDENT_ONLY_TEXT_RE.test(text)) {
+    score -= 55;
+    reasonCodes.push("student_only_mismatch_for_opc_radar");
+  }
+  if (isConcreteEventPlatformRoot(result.url)) {
+    score += 35;
+    if (tier === "unknown") tier = "credible_secondary";
+    reasonCodes.push("concrete_event_platform_root");
+  }
+  if (isEventPlatformManagementSubpage(result.url)) {
+    score -= 70;
+    reasonCodes.push("event_platform_management_subpage");
   }
   if (AGGREGATOR_DOMAIN_RE.test(domain) || /聚合|招标平台|招聘平台|综合列表/.test(text)) {
     score -= 45;
@@ -310,7 +360,7 @@ export function rankCandidateResults(
   spec: RadarRequirementSpec,
   options: CandidateRankingOptions = {},
 ): CandidateRankingResult {
-  const maxKeyCandidates = Math.max(1, Math.min(options.maxKeyCandidates ?? DEFAULT_MAX_KEY_CANDIDATES, 10));
+  const maxKeyCandidates = Math.max(1, Math.min(options.maxKeyCandidates ?? DEFAULT_MAX_KEY_CANDIDATES, 20));
   const now = options.now ?? new Date();
   const assessed = results.map((result, index) => ({
     result,

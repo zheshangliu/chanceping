@@ -83,11 +83,24 @@ function reviewNeededFromEvidence(
     .map((field) => `${FIELD_LABELS[field]}待复核`);
 }
 
-function assertNoForbiddenOverclaim(text: string): void {
-  const hit = FORBIDDEN_OVERCLAIMS.find((claim) => text.includes(claim));
-  if (hit) {
-    throw new Error(`live LLM 报告解释包含不允许的已核验断言：${hit}`);
-  }
+function safeReviewPhrase(claim: string): string {
+  if (/报名资格/.test(claim)) return "报名资格待复核";
+  if (/费用/.test(claim)) return "费用待复核";
+  if (/截止日期/.test(claim)) return "截止日期待复核";
+  if (/联系人/.test(claim)) return "联系人待复核";
+  if (/报名状态/.test(claim)) return "报名状态待复核";
+  if (/版权义务/.test(claim)) return "版权义务待复核";
+  return "关键事实待复核";
+}
+
+function sanitizeForbiddenOverclaims(text: string): string {
+  return FORBIDDEN_OVERCLAIMS.reduce((result, claim) => (
+    result.split(claim).join(safeReviewPhrase(claim))
+  ), text);
+}
+
+function safeCompactText(value: unknown, fallback: string, maxLength = 160): string {
+  return sanitizeForbiddenOverclaims(compactText(value, fallback, maxLength));
 }
 
 function buildPromptPayload(input: RadarReportInput): Record<string, unknown> {
@@ -150,18 +163,16 @@ function normalizeExplanation(
     const opp = input.opportunities[index];
     const evidenceReview = reviewNeededFromEvidence(opp?.field_evidence ?? []);
     const normalized = {
-      title: compactText(record.title, opp?.title ?? `机会 ${index + 1}`, 120),
-      opportunityValue: compactText(record.opportunity_value, "模型判断：与画像存在匹配，但价值需结合来源复核。"),
-      suggestedAction: compactText(record.suggested_action, "先核对官方来源中的行动入口和关键条件。"),
-      riskNote: compactText(record.risk_note, "关键事实未全部核验，行动前需复核。"),
-      evidenceBasis: compactText(record.evidence_basis, "基于搜索发现、字段 evidence status 和机会卡匹配理由。"),
-      reviewNeeded: Array.from(new Set([...stringArray(record.review_needed), ...evidenceReview])).slice(0, 6),
+      title: safeCompactText(record.title, opp?.title ?? `机会 ${index + 1}`, 120),
+      opportunityValue: safeCompactText(record.opportunity_value, "模型判断：与画像存在匹配，但价值需结合来源复核。"),
+      suggestedAction: safeCompactText(record.suggested_action, "先核对官方来源中的行动入口和关键条件。"),
+      riskNote: safeCompactText(record.risk_note, "关键事实未全部核验，行动前需复核。"),
+      evidenceBasis: safeCompactText(record.evidence_basis, "基于搜索发现、字段 evidence status 和机会卡匹配理由。"),
+      reviewNeeded: Array.from(new Set([...stringArray(record.review_needed).map(sanitizeForbiddenOverclaims), ...evidenceReview])).slice(0, 6),
     };
-    assertNoForbiddenOverclaim(Object.values(normalized).flat().join(" "));
     return normalized;
   });
-  const globalNotes = stringArray(obj.global_notes).map((note) => compactText(note, "模型判断，需复核", 180));
-  assertNoForbiddenOverclaim([...globalNotes, ...items.flatMap((item) => Object.values(item).flat())].join(" "));
+  const globalNotes = stringArray(obj.global_notes).map((note) => safeCompactText(note, "模型判断，需复核", 180));
 
   return {
     profile,

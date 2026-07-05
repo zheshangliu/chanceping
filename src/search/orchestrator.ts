@@ -40,7 +40,7 @@ import { deduplicateByUrL } from "./radar-router";
 import { loadDemoSearchResults } from "../demo";
 import { classifySources } from "./source-classifier";
 import { extractEvidenceBatch } from "./evidence-extractor";
-import { mapToCard } from "./opportunity-card-mapper";
+import { applyAiEventConcreteEntryGuard, mapToCard, sortOpportunityCardsForDisplay } from "./opportunity-card-mapper";
 import {
   buildMockSourceHintChecks,
   buildManualSourceSearches,
@@ -471,7 +471,7 @@ const CUSTOMER_LEAD_RE = /潜在客户|客户线索|目标客户|需求单位|�
 const ASSOCIATION_DIRECTORY_RE = /协会.{0,12}(会员|成员).{0,8}目录|会员目录|成员目录|association.{0,20}member.{0,12}directory|member directory/i;
 const WATCH_SIGNAL_RE = /观察|趋势|计划|日历|排期|预告|即将|未来|动态|动向|预算|需求上升|calendar|trend|roadmap|pipeline|upcoming|watch/i;
 const REFERENCE_CASE_RE = /案例|复盘|往届|获奖名单|规则|费用|条款|资格|指南|白皮书|报告|reference|case|rules|fee|eligibility|winner|shortlist|guideline/i;
-const DIRECT_ACTION_RE = /报名|申报|申请|参赛|赛事通知|赛程|采购公告|招标公告|询价公告|投标|投稿|征集|申请入口|报名入口|官方公告|公开赛|锦标赛|大会|摊位|展位|供应商招募|イベント|棋戦|calendar|event|events|tournament|championship|registration|entry|apply|application|tender|rfp|procurement|submission|open call/i;
+const DIRECT_ACTION_RE = /报名|申报|申请|参赛|赛事通知|赛程|采购公告|招标公告|询价公告|投标|投稿|征集|申请入口|报名入口|官方公告|公开赛|锦标赛|大会|摊位|展位|供应商招募|イベント|棋戦|calendar|event|events|tournament|championship|registration|entry|apply|application|tender|rfp|procurement|submission|open call|join\s+(?:hackathon|challenge|contest|competition)|join\s+the\s+(?:hackathon|challenge|contest|competition)|(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松).{0,80}(?:compete|prizes?|cash|cloud credits?|tracks?|requirements)|(?:compete|prizes?|cash|cloud credits?|tracks?|requirements).{0,80}(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松)/i;
 const REJECTED_RE = /视频|集锦|youtube|playlist|百科|维基|wikipedia|baike|新闻转载|转载|综合新闻|news roundup|培训广告|培训班|训练营|课程|camp|course|知乎|专栏|博客|科普|入门|指南|升段|升级|zhihu|column|blog|guide|explainer|新浪|搜狐|网易|腾讯新闻|今日头条|澎湃|凤凰网|sports\.sina|sohu|163\.com|qq\.com|toutiao|thepaper|ifeng/i;
 
 function semanticTypeForResult(result: SearchResult): OpportunityKind {
@@ -551,7 +551,7 @@ function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): 
   if (sourceTokens.some((token) => token && normalizeSourceToken(text).includes(token))) {
     score += 45;
   }
-  if (/报名|申报|申请|参赛|赛事|比赛|公开赛|锦标赛|日程|赛程|大会|イベント|棋戦|calendar|event|events|tournament|championship|champions|registration|entry/i.test(text)) {
+  if (/报名|申报|申请|参赛|赛事|比赛|公开赛|锦标赛|日程|赛程|大会|イベント|棋戦|calendar|event|events|tournament|championship|champions|registration|entry|hackathon|challenge|contest|compete|prizes?|cloud credits?|tracks?/i.test(text)) {
     score += 30;
   }
   if (candidateQuality(result).status === "low_action") {
@@ -882,10 +882,10 @@ function buildSkipFetchItems(
       content: emptyContent,
       relevance: SKIP_FETCH_RELEVANCE,
       reason: fetched?.fetch_success
-        ? "Live Evidence MVP：已有限读取网页正文，LLM 仍保持 mock 轻量评估"
+        ? "已读取网页正文，正在按雷达画像判断机会价值；字段结论仍以官方页面复核为准"
         : markUnfetchedAsNotFetched
-          ? "Live Evidence MVP：未读取正文，仅保留搜索发现并标记待复核"
-          : "跳过内容抓取，固定相关度 50",
+          ? "未读取正文，仅根据搜索摘要保留为待复核线索"
+          : "跳过正文读取，先按搜索摘要进入初筛",
     };
   });
 }
@@ -1305,7 +1305,9 @@ export class SearchOrchestrator {
       const pageTypeGate = applyCandidatePageTypeGate(relevanceGate.assessedResults, spec);
       const judgeGate = await applyCandidateJudgeGate(pageTypeGate.assessedResults, spec, this.llmAdapter);
       const ownershipGate = applyCandidateOwnershipGate(judgeGate.assessedResults, spec);
-      const ranking = rankCandidateResults(ownershipGate.assessedResults, spec);
+      const ranking = rankCandidateResults(ownershipGate.assessedResults, spec, {
+        maxKeyCandidates: inferRadarType(spec) === "ai_competition" ? 16 : undefined,
+      });
       rawResults = ranking.assessedResults;
       candidateResults = ranking.keyCandidates.filter(isKeyCandidate);
     } else {
@@ -1535,6 +1537,7 @@ export class SearchOrchestrator {
           applyLiveSearchCardMark(card, opp.search_result, fieldEvidence);
         }
         applySemanticCardMark(card, opp.search_result);
+        applyAiEventConcreteEntryGuard(card, oppSources);
         // V1.6-07：写入 AI 精筛 reason 到 card.ai_analysis（供下次增量复用）
         const aiAnalysis = aiAnalysisByUrl.get(oppUrl);
         if (aiAnalysis) {
@@ -1542,6 +1545,7 @@ export class SearchOrchestrator {
         }
         return card;
       });
+      opportunityCards = sortOpportunityCardsForDisplay(opportunityCards);
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
       errors.push(`来源透明处理失败: ${errMsg}`);

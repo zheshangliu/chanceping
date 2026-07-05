@@ -62,8 +62,9 @@ export interface CandidatePageTypeGateResult {
   assessedResults: SearchResult[];
 }
 
-const ACTION_ENTRY_RE = /报名|申请|申报|提交|投标|投稿|征集|招募|入驻|供应商|入库|展商|展位|摊位|合作|联系|职位|招聘|registration|register|apply|application|submit|tender|rfp|procurement|supplier|vendor|partner|exhibitor|booth|career|careers|job|vacancy/i;
+const ACTION_ENTRY_RE = /报名|申请|申报|提交|投标|投稿|征集|招募|入驻|供应商|入库|展商|展位|摊位|合作|联系|职位|招聘|registration|register|apply|application|submit|tender|rfp|procurement|supplier|vendor|partner|exhibitor|booth|career|careers|job|vacancy|join\s+(?:hackathon|challenge|contest|competition)|join\s+the\s+(?:hackathon|challenge|contest|competition)/i;
 const NEGATED_ACTION_ENTRY_RE = /未(?:提供|明确|找到).{0,20}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|采购|招标|供应商|入库|合作|联系|入口)|没有(?:提供|明确|找到)?.{0,20}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|采购|招标|供应商|入库|合作|联系|入口)|不(?:提供|含|包含).{0,20}(报名|申请|申报|提交|投标|投稿|征集|招募|入驻|采购|招标|供应商|入库|合作|联系|入口)|no .{0,30}(application|registration|contact|entry|supplier|partner|procurement|tender)/i;
+const EVENT_PARTICIPATION_SIGNAL_RE = /(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松).{0,80}(?:compete|prizes?|cash|cloud credits?|tracks?|requirements)|(?:compete|prizes?|cash|cloud credits?|tracks?|requirements).{0,80}(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松)/i;
 const DIRECT_NOTICE_RE = /公告|通知|公示|notice|announcement/i;
 const TENDER_RE = /招标|投标|采购公告|询价|竞争性磋商|中标|tender|rfp|procurement|bidding/i;
 const OPEN_CALL_RE = /公开征集|作品征集|征稿|投稿|open call|submission|call for/i;
@@ -139,6 +140,28 @@ function isLikelyHomepage(result: SearchResult): boolean {
   return /\/(?:home|index)(?:\.html?)?$/.test(path);
 }
 
+function isEventPlatformUtilitySubpage(result: SearchResult): boolean {
+  try {
+    const url = new URL(result.url);
+    const domain = url.hostname.replace(/^www\./, "").toLowerCase();
+    if (!/(?:^|\.)(?:devpost|dorahacks|lablab|kaggle|eventbrite)\./i.test(domain)) return false;
+    return /^\/(?:resources|participants|rules|updates|submissions?)(?:\/|$)/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
+function isTraeOfficialCompetitionPage(result: SearchResult, text: string): boolean {
+  try {
+    const url = new URL(result.url);
+    const domain = url.hostname.replace(/^www\./, "").toLowerCase();
+    if (domain !== "forum.trae.cn") return false;
+  } catch {
+    return false;
+  }
+  return /trae/i.test(text) && /ai|创造力|创作|vibe|coding|比赛|大赛|竞赛|报名|提交|规则|challenge|contest|competition/i.test(text);
+}
+
 function isOfficialGovernmentDomain(result: SearchResult): boolean {
   try {
     const domain = new URL(result.url).hostname.replace(/^www\./, "").toLowerCase();
@@ -169,7 +192,11 @@ function wantsLeadResource(spec: RadarRequirementSpec): boolean {
 
 function hasDirectActionEntry(text: string): boolean {
   if (NEGATED_ACTION_ENTRY_RE.test(text)) return false;
-  return ACTION_ENTRY_RE.test(text) || TENDER_RE.test(text) || OPEN_CALL_RE.test(text) || SUPPLIER_RE.test(text);
+  return ACTION_ENTRY_RE.test(text) ||
+    EVENT_PARTICIPATION_SIGNAL_RE.test(text) ||
+    TENDER_RE.test(text) ||
+    OPEN_CALL_RE.test(text) ||
+    SUPPLIER_RE.test(text);
 }
 
 function classifyPageType(result: SearchResult, text: string): CandidatePageType {
@@ -189,6 +216,8 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (INSTITUTION_PROFILE_RE.test(text) && !hasDirectActionEntry(text)) return "institution_profile";
   if (PLATFORM_INTRO_RE.test(text) || PLATFORM_ROLLOUT_RE.test(text) || PLATFORM_TERMS_RE.test(text)) return "platform_intro";
   if (DEPARTMENT_RE.test(text)) return "department_index";
+  if (isEventPlatformUtilitySubpage(result)) return hasDirectActionEntry(text) ? "registration_page" : "official_event_detail";
+  if (isTraeOfficialCompetitionPage(result, text)) return hasDirectActionEntry(text) ? "registration_page" : "official_event_detail";
   if (isConcreteEventPlatformRoot(result, text)) return hasDirectActionEntry(text) ? "registration_page" : "official_event_detail";
   if (isLikelyHomepage(result)) return "homepage";
   if (GENERIC_CATEGORY_TITLE_RE.test(normalizedTitle)) return "category_page";

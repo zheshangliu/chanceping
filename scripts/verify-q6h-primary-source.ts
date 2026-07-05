@@ -4,7 +4,10 @@ import type { SearchResult } from "../src/search/types";
 import type { SearchProvider } from "../src/search/provider-registry";
 import { providerRegistry } from "../src/search/provider-registry";
 import { assessCandidatePageType, applyCandidatePageTypeGate } from "../src/search/candidate-page-type";
+import { applyCandidateJudgeGate } from "../src/search/candidate-llm-judge";
+import { applyCandidateOwnershipGate } from "../src/search/candidate-ownership";
 import { rankCandidateResults } from "../src/search/candidate-ranking";
+import { applyCandidateRelevanceGate } from "../src/search/candidate-relevance";
 import { isHighPriorityEvidenceSource, isOfficialGovernmentNews, prioritizeEvidenceReadCandidates } from "../src/search/evidence-read-priority";
 import { SearchOrchestrator } from "../src/search/orchestrator";
 import { JinaReaderFetcher } from "../src/search/content/jina-reader";
@@ -50,6 +53,43 @@ function spec(): RadarRequirementSpec {
     }],
     scoringRules: [],
     reportTemplate: ["重点机会", "观察来源"],
+    missingConfig: [],
+    defaultAssumptions: [],
+    revisionNotes: [],
+    resultBuckets: ["direct_opportunity", "watch_signal"],
+  };
+  return value;
+}
+
+function aiEventSpec(): RadarRequirementSpec {
+  const value = createDefaultSpec();
+  value.client_profile.client_type = "大湾区 OPC";
+  value.client_profile.business_type = "OPC / AI 创业者";
+  value.core_goals.primary_goal = "搜索大湾区乃至海外可参加的 AI 马拉松、Hackathon 和开发者挑战赛";
+  value.opportunity_scope.primary_opportunity_types = ["AI 马拉松", "AI Hackathon", "开发者挑战赛"];
+  value.keyword_strategy.core_keywords_zh = ["AI 马拉松", "AI 比赛", "开发者挑战赛"];
+  value.keyword_strategy.core_keywords_en = ["AI hackathon", "developer challenge", "Qwen Cloud"];
+  value.radar_version = {
+    version: "V1.0",
+    oneSentencePositioning: "大湾区 OPC 的 AI 赛事雷达",
+    targetUser: "大湾区 OPC / AI 创业者",
+    businessContext: "希望发现可报名、可提交作品、可申请云资源或奖金的 AI 马拉松和开发者挑战赛。",
+    opportunityIntents: ["AI 马拉松", "AI Hackathon", "开发者挑战赛"],
+    highValueCriteria: ["有报名入口", "可提交作品", "有奖金或云资源", "适合个人开发者或 OPC"],
+    exclusionRules: ["展会资讯", "培训广告", "学生专属结果", "规则介绍"],
+    prioritySourceArchetypes: ["official_event_site", "hackathon platform", "cloud vendor developer program"],
+    queryFamilies: [{
+      familyName: "Qwen Cloud / Devpost Hackathon",
+      intentType: "direct_opportunity",
+      sourceArchetype: "official event site / hackathon platform",
+      queries: [
+        "Qwen Cloud Hackathon Devpost official application",
+        "site:devpost.com Qwen Cloud Hackathon",
+      ],
+      whyThisFamily: "Devpost 具体赛事页通常包含报名、提交作品、截止时间和云资源信息。",
+    }],
+    scoringRules: [],
+    reportTemplate: ["重点机会", "待复核项"],
     missingConfig: [],
     defaultAssumptions: [],
     revisionNotes: [],
@@ -151,6 +191,21 @@ const qwenDevpost = candidate(
   "https://qwencloud-hackathon.devpost.com/",
   "Join the Qwen Cloud hackathon. Participants can register, submit projects and compete for cloud credits.",
 );
+const qwenDevpostJoinOnly = candidate(
+  "Global AI Hackathon Series with Qwen Cloud : Build your ... - Devpost",
+  "https://qwencloud-hackathon.devpost.com",
+  "Deadline: Jul 9, 2026 @ 2:00pm PDT · Join hackathon · Global AI Hackathon Series with Qwen Cloud.",
+);
+const qwenDevpostPrizeOnly = candidate(
+  "Global AI Hackathon Series with Qwen Cloud : Build your ... - Devpost",
+  "https://qwencloud-hackathon.devpost.com",
+  "Build your own AI Agent on Qwen Cloud - compete for $70K in prizes across five tracks. Requirements · Hackathon Sponsors · Prizes · Devpost Achievements · Judges.",
+);
+const qwenDevpostManageSubmission = candidate(
+  "Global AI Hackathon Series with Qwen Cloud - Devpost",
+  "https://devpost.com/submit-to/29966-global-ai-hackathon-series-with-qwen-cloud/manage/submissions",
+  "Deadline: Jul 9, 2026 @ 2:00pm PDT · Join hackathon · Global AI Hackathon Series with Qwen Cloud. Overview · My projects · Participants (6486).",
+);
 const devpostCategory = candidate(
   "Artificial Intelligence Hackathons on Devpost",
   "https://devpost.com/c/artificial-intelligence",
@@ -245,11 +300,15 @@ const serviceTermsPage = assessCandidatePageType(serviceTerms, radarSpec, { now:
 const procurementCategoryPage = assessCandidatePageType(procurementCategory, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const newsRepostPage = assessCandidatePageType(newsRepost, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const qwenDevpostPage = assessCandidatePageType(qwenDevpost, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
+const qwenDevpostJoinOnlyPage = assessCandidatePageType(qwenDevpostJoinOnly, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
+const qwenDevpostPrizeOnlyPage = assessCandidatePageType(qwenDevpostPrizeOnly, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const aiMediaReportPage = assessCandidatePageType(aiMediaReport, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 check("platform service terms are not a key opportunity", serviceTermsPage.keyCardEligibility !== "eligible", JSON.stringify(serviceTermsPage));
 check("procurement category page is not a key opportunity", procurementCategoryPage.keyCardEligibility !== "eligible", JSON.stringify(procurementCategoryPage));
 check("news repost requires original source before key card", newsRepostPage.keyCardEligibility !== "eligible", JSON.stringify(newsRepostPage));
 check("specific event-platform root page can be key-card eligible", qwenDevpostPage.keyCardEligibility === "eligible", JSON.stringify(qwenDevpostPage));
+check("Devpost root page with Join hackathon is key-card eligible", qwenDevpostJoinOnlyPage.keyCardEligibility === "eligible", JSON.stringify(qwenDevpostJoinOnlyPage));
+check("Devpost root page with compete/prize signals is key-card eligible", qwenDevpostPrizeOnlyPage.keyCardEligibility === "eligible", JSON.stringify(qwenDevpostPrizeOnlyPage));
 check("non-government AI media report cannot be a key card", aiMediaReportPage.keyCardEligibility !== "eligible", JSON.stringify(aiMediaReportPage));
 
 const recoveryQueries = buildPrimarySourceRecoveryQueries([glassdoor, douyin, genericPdf], radarSpec, 2);
@@ -268,6 +327,187 @@ check("weak sources never become key cards even without a primary candidate", ra
 const stalePageGate = applyCandidatePageTypeGate([staleCampaign], radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 const staleRanking = rankCandidateResults(stalePageGate.assessedResults, radarSpec, { now: new Date("2026-07-03T00:00:00+08:00") });
 check("explicitly stale action page cannot become a key card", staleRanking.keyCandidates.length === 0, JSON.stringify(staleRanking.assessedResults));
+
+async function verifyQwenDevpostJoinActionSurvivesFullGate(): Promise<void> {
+  const specForAiEvent = aiEventSpec();
+  const candidateFromSerper = {
+    ...qwenDevpostJoinOnly,
+    source_archetype: "official_event_site" as const,
+    search_query: "Qwen Cloud Hackathon Devpost official application",
+    search_theme: "Qwen Cloud / Devpost Hackathon",
+    query_family: "Qwen Cloud / Devpost Hackathon",
+    query_variant: "official_source" as const,
+    intent_type: "direct_opportunity" as const,
+  };
+  const relevance = applyCandidateRelevanceGate([candidateFromSerper], specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost Join hackathon passes relevance gate",
+    relevance.accepted.length === 1,
+    JSON.stringify(relevance.assessedResults[0]?.relevance_assessment),
+  );
+  const pageGate = applyCandidatePageTypeGate(relevance.assessedResults, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost Join hackathon passes page-type gate",
+    pageGate.eligible.length === 1,
+    JSON.stringify(pageGate.assessedResults[0]?.page_type_assessment),
+  );
+  const emptyJudgeAdapter: LLMAdapter = {
+    async chat() {
+      return { content: "{\"candidates\":[]}", parsed: { candidates: [] } };
+    },
+  };
+  const judged = await applyCandidateJudgeGate(pageGate.assessedResults, specForAiEvent, emptyJudgeAdapter, {
+    mode: "llm",
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost Join hackathon fallback judge accepts action entry",
+    judged.accepted.length === 1,
+    JSON.stringify(judged.assessedResults[0]?.candidate_judge_assessment),
+  );
+  const owned = applyCandidateOwnershipGate(judged.assessedResults, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost Join hackathon ownership accepts current user action",
+    owned.accepted.length === 1,
+    JSON.stringify(owned.assessedResults[0]?.ownership_assessment),
+  );
+  const ranked = rankCandidateResults(owned.assessedResults, specForAiEvent, {
+    maxKeyCandidates: 5,
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost Join hackathon materializes as key card",
+    ranked.keyCandidates.some((item) => item.url.includes("qwencloud-hackathon.devpost.com")),
+    JSON.stringify(ranked.assessedResults.map((item) => ({
+      title: item.title,
+      semantic: item.semantic_type,
+      cap: item.candidate_ranking_assessment?.capStatus,
+      reasons: item.candidate_ranking_assessment?.reasonCodes,
+    }))),
+  );
+}
+
+async function verifyQwenDevpostPrizeSignalsSurviveFullGate(): Promise<void> {
+  const specForAiEvent = aiEventSpec();
+  const candidateFromSerper = {
+    ...qwenDevpostPrizeOnly,
+    source_archetype: "official_event_site" as const,
+    search_query: "Qwen Cloud Hackathon Devpost official application",
+    search_theme: "Qwen Cloud / Devpost Hackathon",
+    query_family: "Qwen Cloud / Devpost Hackathon",
+    query_variant: "official_source" as const,
+    intent_type: "direct_opportunity" as const,
+  };
+  const relevance = applyCandidateRelevanceGate([candidateFromSerper], specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost prize/compete signals pass relevance gate",
+    relevance.accepted.length === 1,
+    JSON.stringify(relevance.assessedResults[0]?.relevance_assessment),
+  );
+  const pageGate = applyCandidatePageTypeGate(relevance.assessedResults, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost prize/compete signals pass page-type gate",
+    pageGate.eligible.length === 1,
+    JSON.stringify(pageGate.assessedResults[0]?.page_type_assessment),
+  );
+  const emptyJudgeAdapter: LLMAdapter = {
+    async chat() {
+      return { content: "{\"candidates\":[]}", parsed: { candidates: [] } };
+    },
+  };
+  const judged = await applyCandidateJudgeGate(pageGate.assessedResults, specForAiEvent, emptyJudgeAdapter, {
+    mode: "llm",
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost prize/compete fallback judge accepts concrete event root",
+    judged.accepted.length === 1,
+    JSON.stringify(judged.assessedResults[0]?.candidate_judge_assessment),
+  );
+  const owned = applyCandidateOwnershipGate(judged.assessedResults, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost prize/compete ownership accepts current user action",
+    owned.accepted.length === 1,
+    JSON.stringify(owned.assessedResults[0]?.ownership_assessment),
+  );
+  const ranked = rankCandidateResults(owned.assessedResults, specForAiEvent, {
+    maxKeyCandidates: 5,
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  check(
+    "Qwen Devpost prize/compete page materializes as key card",
+    ranked.keyCandidates.some((item) => item.url === "https://qwencloud-hackathon.devpost.com"),
+    JSON.stringify(ranked.assessedResults.map((item) => ({
+      title: item.title,
+      semantic: item.semantic_type,
+      cap: item.candidate_ranking_assessment?.capStatus,
+      reasons: item.candidate_ranking_assessment?.reasonCodes,
+    }))),
+  );
+}
+
+async function runAiEventFullGate(results: SearchResult[], maxKeyCandidates = 5) {
+  const specForAiEvent = aiEventSpec();
+  const prepared = results.map((result) => ({
+    ...result,
+    source_archetype: "official_event_site" as const,
+    search_query: "Qwen Cloud Hackathon Devpost official application",
+    search_theme: "Qwen Cloud / Devpost Hackathon",
+    query_family: "Qwen Cloud / Devpost Hackathon",
+    query_variant: "official_source" as const,
+    intent_type: "direct_opportunity" as const,
+  }));
+  const relevance = applyCandidateRelevanceGate(prepared, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  const pageGate = applyCandidatePageTypeGate(relevance.assessedResults, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  const emptyJudgeAdapter: LLMAdapter = {
+    async chat() {
+      return { content: "{\"candidates\":[]}", parsed: { candidates: [] } };
+    },
+  };
+  const judged = await applyCandidateJudgeGate(pageGate.assessedResults, specForAiEvent, emptyJudgeAdapter, {
+    mode: "llm",
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  const owned = applyCandidateOwnershipGate(judged.assessedResults, specForAiEvent, {
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+  return rankCandidateResults(owned.assessedResults, specForAiEvent, {
+    maxKeyCandidates,
+    now: new Date("2026-07-03T00:00:00+08:00"),
+  });
+}
+
+async function verifyQwenEventRootBeatsDevpostManageSubmission(): Promise<void> {
+  const ranked = await runAiEventFullGate([qwenDevpostManageSubmission, qwenDevpostPrizeOnly], 1);
+  check(
+    "Qwen event root outranks Devpost manage/submissions URL",
+    ranked.keyCandidates[0]?.url === "https://qwencloud-hackathon.devpost.com",
+    JSON.stringify(ranked.assessedResults.map((item) => ({
+      title: item.title,
+      url: item.url,
+      semantic: item.semantic_type,
+      cap: item.candidate_ranking_assessment?.capStatus,
+      score: item.candidate_ranking_assessment?.totalScore,
+      reasons: item.candidate_ranking_assessment?.reasonCodes,
+    }))),
+  );
+}
 
 const llmAdapter: LLMAdapter = {
   async chat() {
@@ -393,6 +633,9 @@ async function verifyRecoveryNoResultStaysHonest(): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  await verifyQwenDevpostJoinActionSurvivesFullGate();
+  await verifyQwenDevpostPrizeSignalsSurviveFullGate();
+  await verifyQwenEventRootBeatsDevpostManageSubmission();
   await verifyDirectEvidenceRead();
   await verifyOrchestratorRecovery();
   await verifyRecoveryNoResultStaysHonest();

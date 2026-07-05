@@ -101,6 +101,28 @@ function hasSpecificRecoverableTitle(result: SearchResult): boolean {
 function clueRecoveryQueries(result: SearchResult): SearchQueryFamilyItem[] {
   const text = `${result.title} ${result.snippet} ${result.url}`;
   const items: SearchQueryFamilyItem[] = [];
+  if (/trae/i.test(text) && /AI|人工智能|创造力|创作|vibe|coding|competition|challenge|contest|比赛|大赛|竞赛/i.test(text)) {
+    items.push({
+      query: "site:forum.trae.cn TRAE AI 创造力大赛 报名",
+      language: "zh",
+      themeName: "可信主来源反查",
+      intentType: "direct_opportunity",
+      sourceArchetype: "official_event_site",
+      sourceArchetypeLabel: "候选对应的主办方、发布方或比赛官方页面",
+      queryFamily: "primary source recovery",
+      queryVariant: "official_source",
+    });
+    items.push({
+      query: "TRAE AI 创造力大赛 官方 报名 规则",
+      language: "zh",
+      themeName: "可信主来源反查",
+      intentType: "direct_opportunity",
+      sourceArchetype: "official_event_site",
+      sourceArchetypeLabel: "候选对应的主办方、发布方或比赛官方页面",
+      queryFamily: "primary source recovery",
+      queryVariant: "action_keyword",
+    });
+  }
   if (/qwen\s*cloud|qwencloud|通义|阿里云/i.test(text) && /hackathon|马拉松|competition|challenge|contest|比赛|竞赛|大赛/i.test(text)) {
     items.push({
       query: "Qwen Cloud Hackathon Devpost official application",

@@ -40,7 +40,7 @@ export interface CandidateRelevanceGateResult {
 type ActionClass = "registration" | "procurement" | "partnership" | "employment" | "submission" | "grant" | "market_access";
 
 const ACTION_PATTERNS: Record<ActionClass, RegExp> = {
-  registration: /报名|参赛|注册|entry|entries|registration|register|apply|application|応募|募集/i,
+  registration: /报名|参赛|注册|entry|entries|registration|register|apply|application|応募|募集|join\s+(?:hackathon|challenge|contest|competition)|join\s+the\s+(?:hackathon|challenge|contest|competition)/i,
   procurement: /招标|投标|采购|供应商|入库|征集供应商|tender|procurement|supplier|vendor/i,
   partnership: /合作|伙伴|代理|渠道|经销|分销|联名|赞助|partner|reseller|distributor|collaboration|sponsor/i,
   employment: /招聘|岗位|职位|猎头|用人|hiring|career|careers|job|jobs|vacancy|recruit/i,
@@ -48,6 +48,7 @@ const ACTION_PATTERNS: Record<ActionClass, RegExp> = {
   grant: /申报|补贴|资助|扶持|grant|subsidy|funding|accelerator/i,
   market_access: /参展|展商|展位|摊位|入驻|市集|快闪|曝光|exhibitor|booth|marketplace|pop-up/i,
 };
+const EVENT_PARTICIPATION_SIGNAL_RE = /(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松).{0,80}(?:compete|prizes?|cash|cloud credits?|tracks?|requirements)|(?:compete|prizes?|cash|cloud credits?|tracks?|requirements).{0,80}(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松)/i;
 
 const GENERIC_TERMS = new Set([
   "机会", "项目", "寻找", "相关", "近期", "未来", "国内外", "官网", "官方", "页面", "平台", "公司", "企业", "选手", "供应商",
@@ -154,9 +155,41 @@ function matchingExclusion(text: string, exclusions: string[]): string | undefin
 }
 
 function actionClasses(text: string): ActionClass[] {
-  return (Object.entries(ACTION_PATTERNS) as Array<[ActionClass, RegExp]>)
+  const classes = (Object.entries(ACTION_PATTERNS) as Array<[ActionClass, RegExp]>)
     .filter(([, pattern]) => pattern.test(text))
     .map(([name]) => name);
+  if (EVENT_PARTICIPATION_SIGNAL_RE.test(text) && !classes.includes("registration")) {
+    classes.push("registration");
+  }
+  return classes;
+}
+
+function domainOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+function isOfficialAiEventActionEntry(result: SearchResult, text: string): boolean {
+  const domain = domainOf(result.url);
+  const officialEventSource = result.source_archetype === "official_event_site";
+  if (!officialEventSource) return false;
+  if (!/(?:^|[^a-z])ai(?:[^a-z]|$)|人工智能|agent|qwen|通义|trae|hackathon|马拉松|challenge|contest|competition|比赛|竞赛|大赛|开发者|vibe|coding/i.test(text)) {
+    return false;
+  }
+  if (!(ACTION_PATTERNS.registration.test(text) || ACTION_PATTERNS.submission.test(text) || EVENT_PARTICIPATION_SIGNAL_RE.test(text))) {
+    return false;
+  }
+  return domain === "forum.trae.cn" ||
+    /^[a-z0-9-]+\.devpost\.com$/i.test(domain) ||
+    /(?:^|\.)dorahacks\.io$/i.test(domain) ||
+    /(?:^|\.)lablab\.ai$/i.test(domain) ||
+    /(?:^|\.)openhackathons\.org$/i.test(domain) ||
+    /(?:^|\.)microsoft\.com$/i.test(domain) ||
+    /(?:^|\.)google(?:cloud)?\.com$/i.test(domain) ||
+    /(?:^|\.)aws(?:\.amazon)?\.com$/i.test(domain);
 }
 
 function targetFitFor(resultText: string, spec: RadarRequirementSpec, desiredActions: ActionClass[]): CandidateFitDimension {
@@ -240,9 +273,10 @@ export function assessCandidateRelevance(
     ...(spec.radar_version?.exclusionRules ?? []),
   ].map(normalize).filter(Boolean);
   const exclusion = matchingExclusion(text, exclusions);
+  const officialAiEventActionEntry = isOfficialAiEventActionEntry(result, text);
 
-  const subjectFit = overlaps.length > 0
-    ? fit("match", [`命中雷达主题词：${overlaps.join("、")}`])
+  const subjectFit = overlaps.length > 0 || officialAiEventActionEntry
+    ? fit("match", overlaps.length > 0 ? [`命中雷达主题词：${overlaps.join("、")}`] : ["官方 AI 赛事入口包含报名、参赛或提交动作"])
     : fit("mismatch", ["候选正文未命中雷达版本的行业或机会主题"]);
   const targetFit = targetFitFor(text, spec, desiredActions);
   const actionFit = NEGATED_ACTION_RE.test(text)
@@ -261,6 +295,8 @@ export function assessCandidateRelevance(
     result.semantic_type === "customer_lead";
   const opportunityFit = semanticKey && subjectFit.status === "match" && actionFit.status === "match"
     ? fit("match", ["语义分桶、主题和行动信号共同支持机会判断"])
+    : officialAiEventActionEntry && actionFit.status === "match"
+      ? fit("match", ["官方 AI 赛事入口与报名/提交动作共同支持机会判断"])
     : semanticKey
       ? fit("unknown", ["搜索语义分桶存在，但缺少主题或行动证据交叉支持"])
       : fit("mismatch", [`语义分桶 ${result.semantic_type ?? "unknown"} 不属于重点机会类型`]);
@@ -274,6 +310,9 @@ export function assessCandidateRelevance(
   } else if (freshness.expired) {
     decision = "reject";
     reasonCodes.push("expired_deadline");
+  } else if (officialAiEventActionEntry && actionFit.status === "match" && sourceFit.status !== "mismatch") {
+    decision = "accept";
+    reasonCodes.push("official_ai_event_registration_entry");
   } else if ((INFORMATIONAL_RE.test(text) && opportunityFit.status !== "match") || sourceFit.status === "mismatch") {
     decision = "downgrade_to_watch_signal";
     reasonCodes.push(sourceFit.status === "mismatch" ? "source_mismatch" : "generic_information");

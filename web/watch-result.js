@@ -35,24 +35,22 @@
     const sourceHintChecks = result.sourceHintChecks || [];
     const runOutcome = result.runOutcome || {};
     const hasRunIssue = runOutcome.status && runOutcome.status !== "succeeded";
-    const adjustButtonText = hasRunIssue ? "调整雷达策略" : "调整画像";
     const actionHtml = result.radarId ? `
       <div class="watch-action-row saved-radar-actions">
         <button id="btn-view-saved-radar-detail" class="btn-primary">查看本次雷达详情</button>
         <button id="btn-back-to-radar-list" class="btn-secondary">返回我的雷达列表</button>
-        <button id="btn-result-feedback-revise" class="btn-secondary">这些结果不对，修改雷达</button>
+        <button id="btn-adjust-watch-profile" class="btn-secondary">调整雷达画像</button>
       </div>
     ` : `
       <div class="watch-action-row">
         <button id="btn-save-watch-radar" class="btn-primary">保存为长期雷达，之后持续盯</button>
-        <button id="btn-adjust-watch-profile" class="btn-secondary">${escapeHtml(adjustButtonText)}</button>
-        <button id="btn-result-feedback-revise" class="btn-secondary">这些结果不对，修改雷达</button>
+        <button id="btn-adjust-watch-profile" class="btn-secondary">调整雷达画像</button>
         ${hasRunIssue ? '<button id="btn-retry-watch-search" class="btn-secondary">重试搜索</button>' : ""}
       </div>
     `;
     root.innerHTML = `
       <div class="watch-result-header">
-        <h3>${escapeHtml(result.suggestedName || "本次盯机会结果")}</h3>
+        <h3>${escapeHtml(getDisplayRadarTitle(result))}</h3>
         <p>${escapeHtml(result.description)}</p>
       </div>
       ${renderRunOutcomeNotice(result)}
@@ -64,11 +62,12 @@
         </div>
       </div>
       <div class="watch-result-grid">
-        <section>
+        <section class="watch-opportunity-section">
           <h4>机会卡片</h4>
-          ${cards.length === 0 ? renderEmptyState(result) : cards.map(renderCard).join("")}
+          ${renderTopActionStrip(cards)}
+          ${renderOpportunityCardGrid(cards, result)}
         </section>
-        <section>
+        <section class="watch-report-section">
           <div class="watch-report-title-row">
             <h4>报告摘要</h4>
             <button id="btn-copy-markdown" class="btn-secondary">复制 Markdown</button>
@@ -93,10 +92,22 @@
       btn.addEventListener("click", retryCurrentSearch);
     });
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
+      if (window.showRadarRevisionFromResultFeedback) {
+        openRadarResultFeedback();
+        return;
+      }
       if (window.showRadarProfileDraftFromResult) window.showRadarProfileDraftFromResult(currentResult);
     });
-    document.getElementById("btn-result-feedback-revise")?.addEventListener("click", openRadarResultFeedback);
     document.getElementById("btn-copy-markdown")?.addEventListener("click", () => copyMarkdown(markdown));
+  }
+
+  function getDisplayRadarTitle(result) {
+    const radarVersionName = result?.radarVersion?.oneSentencePositioning || result?.radarVersion?.name || "";
+    const suggested = result?.suggestedName || radarVersionName || "";
+    if (/AI|赛事|Hackathon|马拉松|开发者挑战|云资源|OPC/i.test(`${suggested} ${result?.description || ""}`)) {
+      return "AI 赛事雷达";
+    }
+    return suggested || "本次盯机会结果";
   }
 
   function openRadarResultFeedback() {
@@ -156,7 +167,37 @@
     `;
   }
 
-  function renderCard(card) {
+  function renderOpportunityCardGrid(cards, result) {
+    if (!cards || cards.length === 0) return renderEmptyState(result);
+    return `
+      <div class="watch-opportunity-grid">
+        ${cards.map(renderOpportunityCard).join("")}
+      </div>
+    `;
+  }
+
+  function renderTopActionStrip(cards) {
+    const topCards = (cards || []).slice(0, 3);
+    if (topCards.length === 0) return "";
+    return `
+      <div class="watch-top-actions" aria-label="先看这 3 个">
+        <div>
+          <strong>先看这 3 个</strong>
+          <span>我把本轮最值得先打开复核的机会放在前面。</span>
+        </div>
+        <ol>
+          ${topCards.map((card) => `
+            <li>
+              <span>${escapeHtml(card.visible_level || "C")} 级</span>
+              <p>${escapeHtml(card.title || "未命名机会")}</p>
+            </li>
+          `).join("")}
+        </ol>
+      </div>
+    `;
+  }
+
+  function renderOpportunityCard(card) {
     const url = card.official_source_url || card.url || "#";
     const isDemo = card.is_demo_data === true || card.data_mode === "mock" || /演示|测试数据|mock/i.test(`${card.risk_note || ""}${card.source_disclaimer || ""}`);
     const isLive = card.data_mode === "live" || /搜索发现|待复核/.test(`${card.source_disclaimer || ""}`);
@@ -166,12 +207,13 @@
         ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${isLive ? "查看搜索发现来源" : "官方来源"}</a>`
         : `<span>${isLive ? "搜索来源暂未明确" : "官方来源暂未明确"}</span>`;
     const sourceLabel = isDemo ? "来源说明" : isLive ? "搜索发现来源" : "官方来源";
-    const opportunityKind = card.opportunity_kind || card.opportunityKind || card.type || "机会";
-    const evidenceStatus = card.evidence_status || card.evidenceStatus || "model_judgment";
-    const actionStatus = card.action_status || card.actionStatus || "建议确认";
+    const opportunityKind = formatOpportunityKindForCustomer(card.opportunity_kind || card.opportunityKind || card.type || "机会");
+    const evidenceStatus = formatEvidenceStatusForCustomer(card.evidence_status || card.evidenceStatus || "model_judgment");
+    const actionStatus = formatActionStatusForCustomer(card.action_status || card.actionStatus || "prepare");
     const defaultAction = isDemo
-      ? "先保存雷达验证流程；接入真实搜索后再复核来源和行动要求。"
-      : "先打开官方来源确认报名要求。";
+      ? "先把这条当作演示样例；接入真实搜索后再复核来源和行动要求。"
+      : "先打开来源页面，确认报名入口、截止时间、参赛资格和材料要求。";
+    const reason = toCustomerEvidenceText(card.match_reason || card.fitReason || card.ai_analysis || card.relevance_reason || "与当前雷达画像匹配。");
     return `
       <article class="watch-opportunity-card">
         <header class="card-header">
@@ -181,30 +223,84 @@
             : `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(card.title || "未知机会")}</a>`}
         </header>
         <div class="watch-card-meta">
-          <span data-field="opportunity_kind">类型：${escapeHtml(opportunityKind)}</span>
-          <span data-field="evidence_status">证据：${escapeHtml(evidenceStatus)}</span>
-          <span data-field="action_status">行动：${escapeHtml(actionStatus)}</span>
+          <span data-field="opportunity_kind">机会性质：${escapeHtml(opportunityKind)}</span>
+          <span data-field="evidence_status">复核状态：${escapeHtml(evidenceStatus)}</span>
+          <span data-field="action_status">下一步：${escapeHtml(actionStatus)}</span>
         </div>
         <dl class="watch-card-fields">
           <div>
-            <dt>为什么适合你</dt>
-            <dd>${escapeHtml(card.match_reason || card.fitReason || card.ai_analysis || card.relevance_reason || "与当前雷达画像匹配。")}</dd>
+            <dt>为什么值得看</dt>
+            <dd>${escapeHtml(reason)}</dd>
           </div>
           <div>
-            <dt>截止时间</dt>
+            <dt>报名 / 截止</dt>
             <dd>${escapeHtml(card.deadline || "未明确")}</dd>
           </div>
           <div>
-            <dt>建议动作</dt>
+            <dt>现在先做什么</dt>
             <dd>${escapeHtml(card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || defaultAction)}</dd>
           </div>
           <div>
-            <dt>${escapeHtml(sourceLabel)}</dt>
+            <dt>来源怎么复核</dt>
             <dd>${source}</dd>
           </div>
         </dl>
       </article>
     `;
+  }
+
+  function formatOpportunityKindForCustomer(value) {
+    const kind = String(value || "").trim();
+    const labels = {
+      direct_opportunity: "可报名 / 可行动赛事",
+      business_lead: "需要联系确认的合作线索",
+      channel_partner_lead: "潜在渠道或伙伴线索",
+      customer_lead: "潜在客户线索",
+      watch_signal: "观察信号",
+      reference_case: "参考案例",
+      rejected: "已降权结果",
+    };
+    return labels[kind] || kind.replace(/_/g, " ") || "机会";
+  }
+
+  function formatEvidenceStatusForCustomer(value) {
+    const status = String(value || "").trim();
+    const labels = {
+      verified: "已读取来源，关键字段仍建议复核",
+      partially_verified: "部分字段有来源支持",
+      needs_review: "搜索发现，待打开官方页复核",
+      model_judgment: "模型判断，待复核",
+      unverified: "未核验，待复核",
+      not_found: "未找到字段证据",
+      failed: "来源读取失败",
+    };
+    return labels[status] || status.replace(/_/g, " ") || "待复核";
+  }
+
+  function formatActionStatusForCustomer(value) {
+    const status = String(value || "").trim();
+    const labels = {
+      act_now: "优先打开官方入口",
+      prepare: "准备材料并复核报名入口",
+      monitor: "先收藏观察",
+      drop: "暂不行动",
+    };
+    return labels[status] || status.replace(/_/g, " ") || "先复核来源";
+  }
+
+  function toCustomerEvidenceText(value) {
+    const text = String(value || "").trim();
+    if (!text) return "与当前雷达画像匹配。";
+    if (/Live Evidence MVP|LLM\s*仍保持\s*mock|mock\s*轻量评估/i.test(text)) {
+      if (/未读取正文|仅保留搜索发现|待复核/.test(text)) {
+        return "搜索发现来源，尚未读取完整正文；请先打开官方入口复核报名、截止时间和参赛资格。";
+      }
+      if (/已有限读取|已读取网页正文/.test(text)) {
+        return "已读取来源页面的部分正文；关键字段仍以官方页面复核为准。";
+      }
+      return "搜索发现来源，字段仍需复核；不要直接当作已确认机会。";
+    }
+    return text;
   }
 
   function getSearchModeRequest(preferredMode) {

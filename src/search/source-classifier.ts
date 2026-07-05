@@ -121,6 +121,68 @@ function domainMatches(hostname: string, pattern: string): boolean {
   return hostname === pattern || hostname.endsWith("." + pattern);
 }
 
+function normalize(value: unknown): string {
+  return String(value ?? "").normalize("NFKC").toLowerCase();
+}
+
+function eventText(result: SearchResult): string {
+  return normalize(`${result.title} ${result.snippet} ${result.url}`);
+}
+
+function hasAiEventSignal(result: SearchResult): boolean {
+  return /(?:^|[^a-z])ai(?:[^a-z]|$)|人工智能|agent|qwen|通义|trae|hackathon|马拉松|challenge|contest|competition|比赛|竞赛|大赛|开发者|vibe|coding/.test(eventText(result));
+}
+
+function hasActionOrCompetitionSignal(result: SearchResult): boolean {
+  return /报名|参赛|注册|提交|作品|入口|截止|奖金|云资源|奖池|registration|register|apply|application|submit|submission|deadline|prize|track|credits|grant|compete/.test(eventText(result));
+}
+
+function isConcreteDevpostEventSource(url: string, domain: string, result: SearchResult): boolean {
+  try {
+    const parsed = new URL(url);
+    const path = parsed.pathname.replace(/\/+$/, "").toLowerCase();
+    if (!/^[a-z0-9-]+\.devpost\.com$/.test(domain)) return false;
+    if (path !== "" && path !== "/" && !/^\/(?:rules|resources|updates|submissions?)$/.test(path)) return false;
+    return hasAiEventSignal(result) || hasActionOrCompetitionSignal(result);
+  } catch {
+    return false;
+  }
+}
+
+function isConcreteHackathonPlatformSource(url: string, domain: string, result: SearchResult): boolean {
+  try {
+    const parsed = new URL(url);
+    const path = parsed.pathname.replace(/\/+$/, "").toLowerCase();
+    if (domain === "dorahacks.io" && /^\/hackathon\/[^/]+\/detail$/i.test(path)) return hasAiEventSignal(result) || hasActionOrCompetitionSignal(result);
+    if (domain === "lablab.ai" && /^\/(?:event|hackathon|challenge)\/[^/]+/i.test(path)) return hasAiEventSignal(result) || hasActionOrCompetitionSignal(result);
+    if (domain === "www.openhackathons.org" || domain === "openhackathons.org") {
+      return /\/siteevent\//i.test(path) && (hasAiEventSignal(result) || hasActionOrCompetitionSignal(result));
+    }
+    if (domain === "info.microsoft.com" && /hackathon.*registration|registration.*hackathon/i.test(path)) return true;
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+function isTraeCompetitionOfficialSource(url: string, domain: string, result: SearchResult): boolean {
+  try {
+    const parsed = new URL(url);
+    const path = parsed.pathname.toLowerCase();
+    if (domain !== "forum.trae.cn") return false;
+    if (!/^\/(?:t\/topic\/\d+|c\/38-category\/(?:38|39-category\/39)?)/i.test(path)) return false;
+    return hasAiEventSignal(result) || hasActionOrCompetitionSignal(result);
+  } catch {
+    return false;
+  }
+}
+
+function isConcreteAiEventOfficialSource(url: string, domain: string, result: SearchResult): boolean {
+  return isConcreteDevpostEventSource(url, domain, result) ||
+    isConcreteHackathonPlatformSource(url, domain, result) ||
+    isTraeCompetitionOfficialSource(url, domain, result);
+}
+
 /**
  * 确定来源类型。
  *
@@ -134,6 +196,12 @@ function determineSourceType(url: string, domain: string, result: SearchResult):
 
   // 教育域名（后缀匹配）
   if (EDU_DOMAINS.some((suffix) => domain.endsWith(suffix))) {
+    return "official";
+  }
+
+  // Devpost / DoraHacks / Lablab / TRAE 等具体赛事入口是本轮 AI 赛事 Demo 的主办方/承载平台来源。
+  // 仍只代表“搜索发现的官方/主入口”，字段事实必须继续走 evidence 状态，不可直接当作已核验事实。
+  if (isConcreteAiEventOfficialSource(url, domain, result)) {
     return "official";
   }
 

@@ -8,7 +8,7 @@
  *   - PreviewRenderer：实时解析预览渲染
  *   - TestRunner：规则测试面板逻辑
  *   - TabManager：Tab 切换管理
- *   - ThemeManager：暗色/浅色主题切换
+ *   - ThemeManager：固定浅色主题
  *   - ShortcutManager：快捷键绑定
  *   - API：后端 API 调用封装
  *   - WatchRulesEditor：主控制器
@@ -436,35 +436,17 @@
   };
 
   // ============================================================
-  // ThemeManager：暗色/浅色主题切换
+  // ThemeManager：固定浅色主题
   // ============================================================
 
   const ThemeManager = {
     init() {
-      const toggle = document.getElementById("theme-toggle");
-      if (!toggle) return;
-      toggle.addEventListener("click", () => this.toggle());
-
-      // 从 localStorage 恢复主题
-      const saved = localStorage.getItem("chanceping-theme");
-      if (saved) {
-        this.apply(saved);
-      }
+      this.apply();
     },
 
-    toggle() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme") || "dark";
-      this.apply(current === "dark" ? "light" : "dark");
-    },
-
-    apply(theme) {
-      document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem("chanceping-theme", theme);
-      const toggle = document.getElementById("theme-toggle");
-      if (toggle) {
-        toggle.textContent = theme === "dark" ? "🌙" : "☀️";
-      }
+    apply() {
+      document.documentElement.setAttribute("data-theme", "light");
+      localStorage.removeItem("chanceping-theme");
     },
   };
 

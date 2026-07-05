@@ -44,7 +44,10 @@ const BASE = "http://localhost:3999";
 const TOTAL_STEPS = 13;
 let passCount = 0;
 let failCount = 0;
+let publicPassCount = 0;
+let publicFailCount = 0;
 const failures: Array<{ step: number; name: string; reason: string; actual: string }> = [];
+const publicFailures: Array<{ name: string; reason: string }> = [];
 
 interface StepResult {
   step: number;
@@ -69,6 +72,18 @@ function logStep(result: StepResult): void {
       reason: result.reason ?? "未知",
       actual: JSON.stringify(result.actual ?? "").slice(0, 200),
     });
+  }
+}
+
+function logPublicCheck(name: string, passed: boolean, reason = ""): void {
+  if (passed) {
+    publicPassCount++;
+    console.log(`  [公共页] ${name} ✓`);
+  } else {
+    publicFailCount++;
+    console.log(`  [公共页] ${name} ✗`);
+    if (reason) console.log(`    原因: ${reason}`);
+    publicFailures.push({ name, reason });
   }
 }
 
@@ -99,6 +114,11 @@ async function apiGet(apiPath: string): Promise<{ status: number; data: unknown 
     return { status: res.status, data: { _rawText: text } };
   }
   return { status: res.status, data: json };
+}
+
+async function textGet(apiPath: string): Promise<{ status: number; text: string }> {
+  const res = await fetch(`${BASE}${apiPath}`);
+  return { status: res.status, text: await res.text() };
 }
 
 /** 从 API 响应提取 data 字段 */
@@ -137,6 +157,23 @@ function cleanupTmpFiles(): void {
 // ============================================================
 // 4. 13 步 E2E 验证
 // ============================================================
+
+async function runPublicAiEventsTests(): Promise<void> {
+  console.log("\n[公共页] AI 赛事情报雷达");
+  const page = await textGet("/ai-events");
+  logPublicCheck("GET /ai-events returns 200", page.status === 200, `status=${page.status}`);
+  logPublicCheck("page has public title", page.text.includes("AI 赛事情报雷达"));
+  logPublicCheck("page loads public page script", page.text.includes("/ai-events.js"));
+
+  const api = await apiGet("/api/public/ai-events");
+  const apiBody = api.data as { success?: boolean; data?: { items?: unknown[] } };
+  const serialized = JSON.stringify(api.data ?? {});
+  logPublicCheck("GET /api/public/ai-events returns 200", api.status === 200, `status=${api.status}`);
+  logPublicCheck("public API succeeds", apiBody.success === true, serialized.slice(0, 160));
+  logPublicCheck("public API returns items array", Array.isArray(apiBody.data?.items), serialized.slice(0, 160));
+  logPublicCheck("public API hides internal radarId", !serialized.includes("radarId"));
+  logPublicCheck("public API hides internal run_id", !serialized.includes("run_id"));
+}
 
 async function runE2ETests(): Promise<void> {
   let conversationId = "";
@@ -530,6 +567,7 @@ async function main(): Promise<void> {
   console.log("[启动] 服务器已就绪\n");
 
   try {
+    await runPublicAiEventsTests();
     await runE2ETests();
   } finally {
     // 关闭服务器
@@ -545,6 +583,7 @@ async function main(): Promise<void> {
   console.log("============================================================");
   console.log(`  通过: ${passCount}/${TOTAL_STEPS}`);
   console.log(`  失败: ${failCount}/${TOTAL_STEPS}`);
+  console.log(`  公共页: ${publicPassCount} PASS / ${publicFailCount} FAIL`);
   if (failures.length > 0) {
     console.log("\n失败步骤：");
     for (const f of failures) {
@@ -553,11 +592,17 @@ async function main(): Promise<void> {
       console.log(`    实际: ${f.actual}`);
     }
   }
+  if (publicFailures.length > 0) {
+    console.log("\n公共页失败：");
+    for (const f of publicFailures) {
+      console.log(`  ${f.name}${f.reason ? `: ${f.reason}` : ""}`);
+    }
+  }
   console.log("============================================================");
-  console.log(`总计: ${passCount} PASS / ${failCount} FAIL`);
+  console.log(`总计: ${passCount + publicPassCount} PASS / ${failCount + publicFailCount} FAIL`);
   console.log("============================================================\n");
 
-  if (failCount > 0) {
+  if (failCount > 0 || publicFailCount > 0) {
     process.exit(1);
   }
 }

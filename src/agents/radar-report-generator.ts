@@ -123,7 +123,9 @@ function fmtStr(v: string | undefined): string {
 
 /** 字符串数组格式化：用「、」连接；空 → 「暂无」 */
 function fmtArr(v: string[] | undefined): string {
-  return Array.isArray(v) && v.length > 0 ? v.join("、") : "暂无";
+  if (!Array.isArray(v) || v.length === 0) return "暂无";
+  const items = normalizeListItems(v);
+  return items.length > 0 ? uniqueList(items, items.length).join("、") : "暂无";
 }
 
 /** URL 格式化：空 → 「需人工复核」 */
@@ -621,10 +623,25 @@ function getProfileValue(profile: unknown, key: string): unknown {
 
 function fmtUnknownArr(value: unknown): string {
   if (Array.isArray(value)) {
-    return value.length > 0 ? value.map((item) => String(item)).join("、") : "暂无";
+    const items = normalizeListItems(value.map((item) => String(item)));
+    return items.length > 0 ? uniqueList(items, items.length).join("、") : "暂无";
   }
-  if (typeof value === "string" && value.trim()) return value;
+  if (typeof value === "string" && value.trim()) return dedupeJoinedText(value);
   return "暂无";
+}
+
+function dedupeJoinedText(value: string): string {
+  const trimmed = value.trim();
+  const parts = normalizeListItems([trimmed]);
+  if (parts.length <= 1) return trimmed;
+  return uniqueList(parts, parts.length).join("、");
+}
+
+function normalizeListItems(items: string[]): string[] {
+  return items
+    .flatMap((item) => item.split(/[、,，;；\n]+/))
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function hasTimeSignal(value: string): boolean {
@@ -685,6 +702,167 @@ function buildMvpOverview(stats: RadarReportResult["stats"], topOpps: Opportunit
     lines.push("- 建议继续监控：是。");
   }
   lines.push("");
+  return lines.join("\n");
+}
+
+function isAiEventHeroReport(input: RadarReportInput): boolean {
+  const text = [
+    input.spec.primary_subject,
+    input.spec.client_profile?.client_type,
+    input.spec.client_profile?.industry,
+    input.spec.client_profile?.business_type,
+    input.spec.core_goals?.primary_goal,
+    input.spec.core_goals?.success_definition,
+    ...(input.spec.core_goals?.action_intent ?? []),
+    ...(input.spec.opportunity_scope?.primary_opportunity_types ?? []),
+    ...(input.spec.opportunity_scope?.secondary_opportunity_types ?? []),
+    ...(input.spec.keyword_strategy?.core_keywords_zh ?? []),
+    ...(input.spec.keyword_strategy?.core_keywords_en ?? []),
+    ...(input.spec.keyword_strategy?.expanded_keywords_zh ?? []),
+    ...(input.spec.keyword_strategy?.expanded_keywords_en ?? []),
+    input.spec.radar_version?.oneSentencePositioning,
+    input.spec.radar_version?.businessContext,
+    ...(input.spec.radar_version?.opportunityIntents ?? []),
+    ...(input.spec.radar_version?.prioritySourceArchetypes ?? []),
+    ...input.opportunities.map((opp) => `${opp.title} ${opp.type} ${opp.organizer}`),
+  ].filter(Boolean).join(" ");
+  return /(?:^|[^a-z])ai(?:[^a-z]|$)|人工智能|Agent|Hackathon|黑客松|马拉松|开发者挑战|Qwen|TRAE|Devpost|DoraHacks|Lablab|Kaggle|Vibe Coding|云资源/i.test(text)
+    && /比赛|赛事|大赛|竞赛|challenge|contest|competition|hackathon|创作赛/i.test(text);
+}
+
+function buildAiDemoAngle(opp: OpportunityCard): string {
+  const text = `${opp.title} ${opp.type} ${opp.organizer}`.toLowerCase();
+  if (/trae|ai ide|vibe/.test(text)) {
+    return "推荐用「ChancePing / AI 赛事雷达」做可体验 Demo，重点展示从聊天生成雷达、搜索机会、输出报告的闭环。";
+  }
+  if (/qwen|通义|devpost/.test(text)) {
+    return "推荐用「ChancePing AI Opportunity Radar Agent」做工程化 Agent 版本，强调搜索、抽取、评分、报告和复跑能力。";
+  }
+  if (/agent/.test(text)) {
+    return "推荐作为 AI Agent 方向的参赛 / 观察机会，优先评估是否需要线下参与、云资源和企业命题适配度。";
+  }
+  return "推荐先作为 AI 赛事备选机会，核验报名入口、截止时间、资格要求和是否适合个人开发者 / OPC。";
+}
+
+function buildAiDemoPlan(opp: OpportunityCard): string {
+  const text = `${opp.title} ${opp.type} ${opp.organizer}`.toLowerCase();
+  if (/qwen|通义|devpost/.test(text)) {
+    return [
+      "项目名：ChancePing AI Opportunity Radar Agent",
+      "",
+      "核心架构：",
+      "- Search Agent：搜索 AI 赛事、Hackathon、开发者挑战和云资源扶持",
+      "- Extract Agent：抽取主办方、截止时间、奖金、资格和提交入口",
+      "- Scoring Agent：按 S/A/B/C 和行动价值评分",
+      "- Report Agent：生成 Markdown 报告和机会卡",
+      "- Radar Agent：根据用户反馈升级 Radar Version",
+    ].join("\n");
+  }
+  if (/trae|ai ide|vibe/.test(text)) {
+    return [
+      "项目名：ChancePing｜AI 赛事机会雷达 Demo",
+      "",
+      "MVP Demo：",
+      "1. 用户用自然语言说清楚想找 AI 赛事机会",
+      "2. 系统生成 AI 赛事雷达 V1.0 / V1.1 / V1.2",
+      "3. 用户确认雷达后开始搜索",
+      "4. 系统输出机会卡和 Markdown 报告",
+      "5. 用户反馈结果不准时，雷达继续升级",
+    ].join("\n");
+  }
+  return [
+    "项目名：ChancePing｜AI 赛事机会雷达",
+    "",
+    "执行打法：",
+    "1. 先核验官方报名入口、截止时间和资格",
+    "2. 再判断是否适合 ChancePing 当前 Demo",
+    "3. 最后决定立即报名、保存观察或归档",
+  ].join("\n");
+}
+
+function buildAiEventHeroDemoBrief(input: RadarReportInput, opps: OpportunityCard[], stats: RadarReportResult["stats"]): string {
+  if (!isAiEventHeroReport(input)) return "";
+  const ranked = opps.slice(0, 10);
+  const sOpps = ranked.filter((opp) => getVisibleLevel(opp) === "S");
+  const aOpps = ranked.filter((opp) => getVisibleLevel(opp) === "A");
+  const top = ranked[0];
+  const lines: string[] = [
+    "## Demo 补充｜今日总判断",
+    "",
+    "> 本节用于 AI 赛事雷达 Hero Demo，格式参考人工执行版日报；所有报名资格、费用、截止时间、版权义务仍以官方页面为准。",
+    "",
+  ];
+  if (!top) {
+    lines.push("今天这轮雷达没有找到足够可行动的 AI 赛事机会，建议补充指定平台或放宽地区后继续监控。", "");
+    return lines.join("\n");
+  }
+  lines.push(
+    `今天这轮雷达的结论很明确：优先核验 ${ranked.slice(0, 3).map((opp) => `「${opp.title}」`).join("、")}，先判断哪些能服务 ChancePing 参赛 Demo。`,
+    "",
+    "### 今日最值得行动",
+    "",
+  );
+  ranked.slice(0, 3).forEach((opp, index) => {
+    lines.push(`${index + 1}. **${opp.title}**`);
+    lines.push(`   - 等级：${getVisibleLevel(opp)}`);
+    lines.push(`   - 建议：${fmtStr(opp.next_action)}`);
+  });
+  lines.push(
+    "",
+    "### 今日机会总表",
+    "",
+    "| 等级 | 赛事 / 机会 | 方向 | 截止时间 | 今日动作 | 原始来源 |",
+    "|---|---|---|---|---|---|",
+  );
+  ranked.forEach((opp) => {
+    lines.push(`| ${getVisibleLevel(opp)} | ${opp.title} | ${fmtStr(opp.type)} | ${fmtStr(opp.deadline)} | ${fmtStr(opp.next_action)} | ${fmtUrl(opp.official_source_url)} |`);
+  });
+  lines.push(
+    "",
+    `### 本轮机会池`,
+    "",
+    `- 总机会：${stats.total_opportunities} 条`,
+    `- S 级：${stats.s_count} 条`,
+    `- A 级：${stats.a_count} 条`,
+    `- B 级：${stats.b_count} 条`,
+    `- C 级：${stats.c_count} 条`,
+    "",
+    "## Demo 补充｜重点机会详解",
+    "",
+  );
+  const detailPool = sOpps.length > 0 ? sOpps : [...aOpps, ...ranked];
+  const seenDetailKeys = new Set<string>();
+  const detailOpps = detailPool.filter((opp) => {
+    const key = `${opp.official_source_url || opp.application_url || opp.title}`.trim().toLowerCase();
+    if (seenDetailKeys.has(key)) return false;
+    seenDetailKeys.add(key);
+    return true;
+  }).slice(0, 3);
+  detailOpps.slice(0, 4).forEach((opp, index) => {
+    lines.push(`### ${index + 1}. ${getVisibleLevel(opp)}级｜${opp.title}`);
+    lines.push("");
+    lines.push(`- **推荐动作**：${fmtStr(opp.next_action)}`);
+    lines.push(`- **赛事类型**：${fmtStr(opp.type)}`);
+    lines.push(`- **截止时间**：${fmtStr(opp.deadline)}`);
+    lines.push(`- **奖励 / 资源**：${fmtStr(opp.reward_or_value)}`);
+    lines.push(`- **参赛门槛**：${fmtStr(opp.eligibility)}`);
+    lines.push(`- **适合 ChancePing 吗**：${buildAiDemoAngle(opp)}`);
+    lines.push(`- **综合评分**：${Math.round(opp.backend_score ?? 0)} / 100（模型判断，待复核）`);
+    lines.push("");
+    lines.push("#### 推荐参赛方案");
+    lines.push("");
+    lines.push("```text");
+    lines.push(buildAiDemoPlan(opp));
+    lines.push("```");
+    lines.push("");
+    lines.push("#### 原始来源");
+    lines.push("");
+    lines.push(`- ${fmtUrl(opp.official_source_url)}`);
+    if (opp.application_url && opp.application_url !== opp.official_source_url) {
+      lines.push(`- 报名 / 提交入口：${fmtUrl(opp.application_url)}`);
+    }
+    lines.push("");
+  });
   return lines.join("\n");
 }
 
@@ -1388,11 +1566,13 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
   const cardOpps = [...sOpps, ...aOpps, ...bOpps, ...cOpps];
 
   const rankedOpps = [...sOpps, ...aOpps, ...bOpps, ...cOpps];
+  const aiEventHeroDemoBrief = buildAiEventHeroDemoBrief(input, rankedOpps, stats);
   const parts: string[] = [
     buildMvpHeader(spec, period_start, period_end),
     buildMvpDemoNotice(opportunities),
     buildMvpProfile(input),
     buildMvpOverview(stats, rankedOpps),
+    ...(aiEventHeroDemoBrief ? [aiEventHeroDemoBrief] : []),
     buildMvpOpportunityTable(rankedOpps),
     buildMvpOpportunityDetails(rankedOpps),
     buildMvpActionList(rankedOpps),

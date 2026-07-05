@@ -124,7 +124,7 @@ function checkHtmlStructure(): void {
   check("T26 含'盯机会'主按钮", html.includes("盯机会"));
 
   // 引入 JS 文件
-  check("引入 home.js", html.includes('src="/home.js"'));
+  check("引入 home.js", /src="\/home\.js(?:\?[^"]*)?"/.test(html));
   check("引入 mvp-templates.js", html.includes('src="/mvp-templates.js"'));
   check("引入 radar-profile.js", html.includes('src="/radar-profile.js"'));
   check("引入 watch-result.js", html.includes('src="/watch-result.js"'));

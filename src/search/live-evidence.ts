@@ -124,26 +124,31 @@ function buildFailedFieldEvidence(result: SearchResult, content: CleanedContent,
   );
 }
 
-function buildSuccessfulFieldEvidence(result: SearchResult, content: CleanedContent, checkedAt: string): FieldEvidenceItem[] {
+export function buildSuccessfulFieldEvidence(result: SearchResult, content: CleanedContent, checkedAt: string): FieldEvidenceItem[] {
   const text = content.main_text ?? "";
   const title = content.title || result.title;
   const registration = matchAny(text, [
     /(报名|申请|参赛|申込|エントリー|参加|신청|참가|register|apply|entry)[^\n。；;]{0,80}/i,
+    /(join\s+(?:the\s+)?hackathon|submit\s+(?:your\s+)?project|register\s+(?:at|via|through|on)[^\n。；;]{0,100})/i,
   ]);
   const deadline = matchAny(text, [
     /(?:截止|报名截止|申请截止|申込締切|締切|deadline)[日期时间：:\s]*(\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?|\d{1,2}[-/月]\d{1,2}日?)/i,
+    /(?:deadline|submissions?\s+(?:close|due)|entries?\s+(?:close|due))[日期时间：:\s]*([A-Z][a-z]{2,9}\s+\d{1,2},\s*\d{4}(?:\s*@\s*[^。\n；;.]+)?)/i,
     /(\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?)\s*(?:截止|到期|结束|締切)/,
+    /([A-Z][a-z]{2,9}\s+\d{1,2},\s*\d{4}(?:\s*@\s*[^。\n；;.]+)?)\s*(?:deadline|due|close|closes|ends)/i,
   ]);
   const fee = matchAny(text, [
-    /(?:报名费|参赛费|费用|fee|entry fee)[：:\s]*([^。\n；;]{1,80})/i,
-    /(?:無料|free of charge|no fee|免报名费|不收取报名费)/i,
+    /(?:报名费|参赛费|费用|entry fee|\bfee\b)[：:\s]*([^。\n；;]{1,80})/i,
+    /(?:無料|free of charge|no fee|no entry fee|free to enter|免报名费|不收取报名费)/i,
   ]);
   const eligibility = matchAny(text, [
-    /(?:参赛资格|适合对象|参赛条件|报名条件|eligibility|参加資格|応募資格)[：:\s]*([^。\n；;]{1,120})/i,
-    /(?:面向|対象)[：:\s]*([^。\n；;]{1,120})/,
+    /(?:参赛资格|适合对象|参赛条件|报名条件|eligibility|参加資格|応募資格)[：:\s]*([^。.\n；;]{1,120})/i,
+    /(?:eligible\s+for|open\s+to)[：:\s]*([^。.\n；;]{1,120})/i,
+    /(?:面向|対象)[：:\s]*([^。.\n；;]{1,120})/,
   ]);
   const contact = matchAny(text, [
     /(?:报名链接|报名地址|申请入口|申込|エントリー|apply|register)[：:\s]*(https?:\/\/[^\s\n]+)/i,
+    /(?:register|apply|submit|entry)\s+(?:at|via|through|on)\s*(https?:\/\/[^\s\n]+)/i,
     /(?:联系方式|联系人|contact|問い合わせ|お問い合わせ)[：:\s]*([^。\n；;]{1,100})/i,
     /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/,
   ]);

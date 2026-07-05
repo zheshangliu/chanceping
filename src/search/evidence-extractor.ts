@@ -22,25 +22,31 @@ import { generateEvidenceId, shouldReviewEvidence } from "../schema/evidence-ite
 /** 截止日期提取 */
 const DEADLINE_PATTERNS = [
   /(?:截止|报名截止|申报截止|提交截止|deadline)[日期时间：:\s]*(\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?)/i,
+  /(?:deadline|submissions?\s+(?:close|due)|entries?\s+(?:close|due))[日期时间：:\s]*([A-Z][a-z]{2,9}\s+\d{1,2},\s*\d{4}(?:\s*@\s*[^。\n；;.]+)?)/i,
   /(\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?)\s*(?:截止|到期|结束)/,
+  /([A-Z][a-z]{2,9}\s+\d{1,2},\s*\d{4}(?:\s*@\s*[^。\n；;.]+)?)\s*(?:deadline|due|close|closes|ends)/i,
 ];
 
 /** 主办方提取 */
 const ORGANIZER_PATTERNS = [
-  /(?:主办方|主办单位|organizers?)[：:\s]*(.+?)(?:[。\n；;])/,
-  /(?:承办方|承办单位)[：:\s]*(.+?)(?:[。\n；;])/,
+  /(?:主办方|主办单位|organizers?)[：:\s]*(.+?)(?:[。.\n；;])/,
+  /(?:承办方|承办单位)[：:\s]*(.+?)(?:[。.\n；;])/,
 ];
 
 /** 奖励提取 */
 const REWARD_PATTERNS = [
   /(?:奖金|奖励|奖品|prize|reward)[总额：:\s]*([\d,.万亿千元元人民币￥$]+[^。\n；;]*)/,
   /(?:补贴|资助|扶持)[金额：:\s]*([\d,.万亿千元元人民币￥$]+[^。\n；;]*)/,
+  /(\$[\d,.]+[kKmM]?(?:\s+in)?\s+(?:prizes?|cash|credits?|cloud credits?)[^。.\n；;]*)/i,
+  /(?:prize\s*pool|prizes?|rewards?)[^$￥\d\n]{0,60}([$￥][\d,.]+[kKmM]?[^。.\n；;]*)/i,
+  /((?:cloud|compute|api|model)\s+credits?[^。.\n；;]{0,80})/i,
 ];
 
 /** 适合对象提取 */
 const ELIGIBILITY_PATTERNS = [
-  /(?:参赛资格|适合对象|参赛条件|报名条件|eligibility)[：:\s]*(.+?)(?:[。\n；;])/,
-  /(?:面向|针对)[：:\s]*(.+?)(?:[。\n；;])/,
+  /(?:参赛资格|适合对象|参赛条件|报名条件|eligibility)[：:\s]*(.+?)(?:[。.\n；;])/i,
+  /(?:eligible\s+for|open\s+to)[：:\s]*(.+?)(?:[。.\n；;])/i,
+  /(?:面向|针对)[：:\s]*(.+?)(?:[。.\n；;])/,
 ];
 
 /** 地区提取 */
@@ -52,11 +58,12 @@ const REGION_PATTERNS = [
 /** 报名链接提取 */
 const APPLICATION_URL_PATTERNS = [
   /(?:报名链接|报名地址|apply|register)[：:\s]*(https?:\/\/[^\s\n]+)/i,
+  /(?:register|apply|submit|entry)\s+(?:at|via|through|on)\s*(https?:\/\/[^\s\n]+)/i,
 ];
 
 /** 联系方式提取 */
 const CONTACT_PATTERNS = [
-  /(?:联系方式|联系人|contact)[：:\s]*([^。\n；;]+)/,
+  /(?:联系方式|联系人|contact)[：:\s]*([^。.\n；;]+)/,
   /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/,
   /(电话|Tel|TEL)[：:\s]*([\d-]+)/,
 ];

@@ -9,7 +9,7 @@
  *   3. Web UI 路由注册检查（2 项）
  *   4. 静态文件服务检查（app.request()，6 项）
  *   5. HTML 结构检查（5 项）
- *   6. CSS 变量检查（3 项）
+ *   6. 固定浅色主题检查（3 项）
  *   7. 工程约束自检（3 项）
  *
  * 测试策略：
@@ -164,26 +164,30 @@ function testHtmlStructure(): void {
 }
 
 // ============================================================
-// 6. CSS 变量检查
+// 6. 固定浅色主题检查
 // ============================================================
 
 function testCssVariables(): void {
-  section("6. CSS 变量检查");
+  section("6. 固定浅色主题检查");
 
+  const htmlPath = path.resolve(process.cwd(), "web/index.html");
+  const html = fs.readFileSync(htmlPath, "utf-8");
   const cssPath = path.resolve(process.cwd(), "web/styles.css");
   const css = fs.readFileSync(cssPath, "utf-8");
+  const jsPath = path.resolve(process.cwd(), "web/watch-rules-editor.js");
+  const js = fs.readFileSync(jsPath, "utf-8");
 
   check(
-    css.includes('[data-theme="dark"]'),
-    "6.1 定义暗色主题 data-theme=dark",
+    html.includes('data-theme="light"'),
+    "6.1 HTML 默认使用浅色主题 data-theme=light",
   );
   check(
-    css.includes('[data-theme="light"]'),
-    "6.2 定义浅色主题 data-theme=light",
+    css.includes(":root") && css.includes('[data-theme="light"]'),
+    "6.2 定义浅色主题 CSS 变量",
   );
   check(
-    css.includes("--bg-primary") && css.includes("--accent"),
-    "6.3 定义 CSS 变量色板（--bg-primary / --accent 等）",
+    !html.includes("theme-toggle") && !js.includes("theme-toggle"),
+    "6.3 不再提供明暗主题切换按钮",
   );
 }
 

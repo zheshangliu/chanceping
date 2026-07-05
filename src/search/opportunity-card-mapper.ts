@@ -58,6 +58,8 @@ export function mapToCard(
 
   // 步骤 5：从证据项提取字段值
   const evidenceMap = buildEvidenceMap(evidence);
+  const evidenceTitle = evidenceMap.title?.value;
+  const displayTitle = isUsableEvidenceTitle(evidenceTitle) ? evidenceTitle! : title;
 
   // 步骤 6：确定可见等级（含 S 级硬规则）
   const visibleLevel = mapVisibleLevel(scored.visible_level);
@@ -68,7 +70,7 @@ export function mapToCard(
   // 步骤 7：构建卡片（填充所有必填字段）
   const card: OpportunityCard = {
     // 核心字段（必填）
-    title: evidenceMap.title?.value ?? title,
+    title: displayTitle,
     type: radarId ?? "ai_competition",
     organizer: evidenceMap.organizer?.value ?? "",
     region: evidenceMap.region?.value ?? "",
@@ -100,12 +102,16 @@ export function mapToCard(
     recommendedActions: buildRecommendedActions(visibleLevel, evidenceMap),
   };
   applySLevelGuard(card, sources);
+  applyExpiredDeadlineGuard(card);
+  applyAiEventConcreteEntryGuard(card, sources);
+  applyAiEventSupportOrListingPageGuard(card);
+  applyAiEventMediaOnlyGuard(card, sources);
   const evidenceStatus = evidenceStatusFromEvidence(card.evidenceIds, 2);
   const assessment: OpportunityAssessment = {
     opportunityId: card.guid || card.official_source_url,
     kind: scored.opportunity_kind ?? "direct_opportunity",
     evidenceStatus,
-    actionStatus: scored.action_status ?? "prepare",
+    actionStatus: card.status === "expired" ? "drop" : (scored.action_status ?? "prepare"),
     score: card.backend_score,
     ...(card.visible_level === "D" ? {} : { grade: card.visible_level }),
     scoringPolicyVersion: "mvp-2026-07-01",
@@ -128,6 +134,200 @@ export function mapToCard(
   card.assessment = assessment;
 
   return card;
+}
+
+function isUsableEvidenceTitle(value: string | undefined): boolean {
+  if (!value) return false;
+  const normalized = value.normalize("NFKC").trim().toLowerCase();
+  if (!normalized) return false;
+  if (/^(javascript is disabled|enable javascript|access denied|forbidden|not found|403|404|error)$/.test(normalized)) {
+    return false;
+  }
+  return true;
+}
+
+export function applyAiEventConcreteEntryGuard(card: OpportunityCard, sources: SourceCandidate[]): OpportunityCard {
+  if (card.status === "expired" || card.visible_level === "D") return card;
+  if (card.visible_level === "S" || card.visible_level === "A") return card;
+  if (card.backend_score < 50) return card;
+  if (!hasOfficialOrPrimaryEventSource(card, sources)) return card;
+  if (!isConcreteAiEventEntry(card.official_source_url || card.application_url)) return card;
+
+  const text = `${card.title} ${card.type} ${card.organizer} ${card.official_source_url} ${card.application_url}`.normalize("NFKC").toLowerCase();
+  if (!/(ai|人工智能|agent|hackathon|challenge|competition|contest|qwen|cloud|developer|vibe|coding|开发者|赛事|比赛|马拉松)/i.test(text)) {
+    return card;
+  }
+
+  card.visible_level = "A";
+  card.backend_score = Math.max(card.backend_score, 82);
+  card.decision = determineDecision(card.visible_level, card.backend_score);
+  card.match_reason = buildAiEventConcreteEntryReason(card);
+  card.next_action = "打开官方页面，复核报名入口、截止时间、参赛资格和材料要求";
+  card.risk_note = [
+    card.risk_note,
+    "搜索发现已进入优先核验；报名资格、费用、截止时间、版权义务和作品提交要求仍以官方页面为准。",
+  ].filter(Boolean).join("；");
+  card.recommendedActions = [
+    "打开官方页面复核报名入口",
+    "确认截止时间、奖金或云资源、参赛资格",
+    "准备项目说明、Demo、代码仓库或提交材料",
+  ];
+  if (card.assessment) {
+    card.assessment.score = card.backend_score;
+    card.assessment.grade = card.visible_level;
+    card.assessment.actionStatus = card.action_status ?? card.assessment.actionStatus;
+    card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+      ...item,
+      score: card.backend_score,
+      reason: card.match_reason,
+    }));
+  }
+  return card;
+}
+
+export function applyAiEventMediaOnlyGuard(card: OpportunityCard, sources: SourceCandidate[]): OpportunityCard {
+  if (!isAiEventCard(card)) return card;
+  if (!isWeakNonGovMediaOnlySource(sources)) return card;
+  if (card.visible_level === "D") return card;
+
+  card.visible_level = "C";
+  card.backend_score = Math.min(card.backend_score, 64);
+  card.decision = determineDecision(card.visible_level, card.backend_score);
+  card.next_action = "先追溯官方报名页或主办方公告，再决定是否行动";
+  card.risk_note = [
+    card.risk_note,
+    "当前仅为非官方媒体线索，不能替代报名入口、截止时间、资格和奖项的字段级核验。",
+  ].filter(Boolean).join("；");
+  if (card.assessment) {
+    card.assessment.score = card.backend_score;
+    card.assessment.grade = card.visible_level;
+    card.assessment.actionStatus = card.action_status ?? card.assessment.actionStatus;
+    card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+      ...item,
+      score: card.backend_score,
+      reason: card.match_reason,
+    }));
+  }
+  return card;
+}
+
+export function applyAiEventSupportOrListingPageGuard(card: OpportunityCard): OpportunityCard {
+  if (!isAiEventCard(card)) return card;
+  if (!isAiEventSupportOrListingPage(card.official_source_url || card.application_url)) return card;
+  if (card.visible_level === "D") return card;
+
+  card.visible_level = "C";
+  card.backend_score = Math.min(card.backend_score, 64);
+  card.decision = determineDecision(card.visible_level, card.backend_score);
+  card.next_action = "作为发现入口保留，优先追溯具体赛事报名页、提交页或官方公告后再行动";
+  card.risk_note = [
+    card.risk_note,
+    "当前页面更像列表、资源或辅助页面，不应替代具体比赛报名入口、截止时间和资格核验。",
+  ].filter(Boolean).join("；");
+  if (card.assessment) {
+    card.assessment.score = card.backend_score;
+    card.assessment.grade = card.visible_level;
+    card.assessment.actionStatus = card.action_status ?? card.assessment.actionStatus;
+    card.assessment.scoreItems = card.assessment.scoreItems.map((item) => ({
+      ...item,
+      score: card.backend_score,
+      reason: card.match_reason,
+    }));
+  }
+  return card;
+}
+
+function isAiEventCard(card: OpportunityCard): boolean {
+  return /(?:^|[^a-z])ai(?:[^a-z]|$)|人工智能|Agent|Hackathon|黑客松|马拉松|开发者挑战|Vibe Coding|TRAE|Qwen|Devpost|DoraHacks|Lablab/i.test(
+    `${card.title} ${card.type} ${card.organizer} ${card.match_reason} ${card.fitReason ?? ""} ${card.riskSummary ?? ""} ${card.official_source_url} ${card.application_url}`,
+  );
+}
+
+function isAiEventSupportOrListingPage(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    const path = parsed.pathname.replace(/\/+$/, "").toLowerCase();
+    if (/^[a-z0-9-]+\.devpost\.com$/.test(host) && /^\/(?:participants|resources|rules|updates|submissions?)$/.test(path)) {
+      return true;
+    }
+    if (host === "lablab.ai" && /^\/(?:ai-hackathons|hackathons|events|challenges)$/.test(path)) {
+      return true;
+    }
+    if (host === "forum.trae.cn" && /^\/(?:latest|top|categories)$/.test(path)) {
+      return true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+function isWeakNonGovMediaOnlySource(sources: SourceCandidate[]): boolean {
+  if (sources.length === 0) return false;
+  return sources.every((source) => {
+    const text = `${source.url} ${source.mediaName} ${source.sourceType}`.toLowerCase();
+    if (/gov\.cn|\.gov\b|edu\.cn|forum\.trae\.cn|devpost|dorahacks|lablab|kaggle|openhackathons|microsoft|google|aws|aliyun|tencent|github|huggingface|producthunt/.test(text)) {
+      return false;
+    }
+    return source.sourceType === "media_general" ||
+      source.sourceType === "media_authoritative" ||
+      /news|新闻|财中社|36kr|qbitai|sina|sohu|163\.com|qq\.com|zhihu|x\.com|twitter|csdn/.test(text);
+  });
+}
+
+export function sortOpportunityCardsForDisplay(cards: OpportunityCard[]): OpportunityCard[] {
+  const levelRank: Record<CardVisibleLevel, number> = { S: 0, A: 1, B: 2, C: 3, D: 4 };
+  return cards
+    .slice()
+    .sort((a, b) => {
+      const rankDiff = (levelRank[a.visible_level] ?? 5) - (levelRank[b.visible_level] ?? 5);
+      if (rankDiff !== 0) return rankDiff;
+      return (b.backend_score ?? 0) - (a.backend_score ?? 0);
+    });
+}
+
+function hasOfficialOrPrimaryEventSource(card: OpportunityCard, sources: SourceCandidate[]): boolean {
+  const sourceText = `${card.official_source_url} ${card.application_url} ${sources.map((source) => `${source.url} ${source.sourceType} ${source.mediaName}`).join(" ")}`.toLowerCase();
+  const hasOfficialSource = sources.some((source) => source.isOfficial || source.sourceType === "official");
+  const hasConcreteEventPlatform = isConcreteAiEventEntry(card.official_source_url) || isConcreteAiEventEntry(card.application_url);
+  const weakMediaOnly = sources.length > 0 && sources.every((source) =>
+    source.sourceType === "media_general" ||
+    source.sourceType === "media_authoritative" ||
+    /news|新闻|财中社|36kr|qbitai|sina|sohu|163\.com|qq\.com/.test(`${source.url} ${source.mediaName}`.toLowerCase())
+  );
+  return !weakMediaOnly && (hasOfficialSource || hasConcreteEventPlatform || /devpost|dorahacks|lablab|openhackathons|kaggle|huggingface|producthunt|github/.test(sourceText));
+}
+
+function isConcreteAiEventEntry(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    const path = parsed.pathname.replace(/\/+$/, "").toLowerCase();
+    if (/^[a-z0-9-]+\.devpost\.com$/.test(host)) return path === "" || path === "/";
+    if (/dorahacks\.io$/.test(host) && /hackathon|buidl|grant/.test(path)) return true;
+    if (/lablab\.ai$/.test(host) && /^\/(?:event|hackathon|challenge)\/[^/]+/.test(path)) return true;
+    if (/openhackathons\.org$/.test(host) && /siteevent|hackathon|challenge/.test(path)) return true;
+    if (/kaggle\.com$/.test(host) && /competition|challenge/.test(path)) return true;
+    if (/huggingface\.co$/.test(host) && /space|event|hackathon|challenge|competition/.test(path)) return true;
+    if (/producthunt\.com$/.test(host) && /golden-kitty|award|hackathon|launch|startup/.test(path)) return true;
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+function buildAiEventConcreteEntryReason(card: OpportunityCard): string {
+  const domain = (() => {
+    try {
+      return new URL(card.official_source_url || card.application_url).hostname.replace(/^www\./, "");
+    } catch {
+      return "官方页面";
+    }
+  })();
+  return `这是具体 AI 赛事 / 黑客松入口，来源为 ${domain}，适合优先复核报名入口、截止时间、奖励资源和作品提交要求。`;
 }
 
 /**
@@ -153,6 +353,20 @@ export function applySLevelGuard(card: OpportunityCard, sources?: SourceCandidat
     card.backend_score = Math.min(card.backend_score, 84);
   }
 
+  return card;
+}
+
+export function applyExpiredDeadlineGuard(card: OpportunityCard, now: Date = new Date()): OpportunityCard {
+  if (!isExpiredDeadline(card.deadline, now)) return card;
+  card.visible_level = "D";
+  card.status = "expired";
+  card.decision = "archive";
+  card.backend_score = Math.min(card.backend_score, 39);
+  card.next_action = "已过期，建议归档或仅作为参考案例";
+  card.risk_note = [card.risk_note, `已识别截止时间 ${card.deadline} 早于当前日期，不建议作为本轮行动机会。`]
+    .filter(Boolean)
+    .join("；");
+  card.recommendedActions = ["归档为参考案例", "下一轮继续搜索仍可报名的赛事"];
   return card;
 }
 
@@ -251,6 +465,28 @@ function mapVisibleLevel(level: SearchVisibleLevel): CardVisibleLevel {
   // CardVisibleLevel: "S" | "A" | "B" | "C" | "D"
   if (level === "hidden") return "D";
   return level as CardVisibleLevel;
+}
+
+function isExpiredDeadline(value: string | undefined, now: Date): boolean {
+  const deadline = parseDeadlineDate(value);
+  if (!deadline) return false;
+  const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  return deadline.getTime() < today.getTime();
+}
+
+function parseDeadlineDate(value: string | undefined): Date | null {
+  if (!value) return null;
+  const text = String(value).normalize("NFKC");
+  const match = text.match(/\b(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?\b/);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return null;
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) return null;
+  return parsed;
 }
 
 /** 确定行动决策 */

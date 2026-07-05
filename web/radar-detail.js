@@ -4,10 +4,9 @@
  *
  * 职责：
  *   - 加载雷达详情（GET /api/radars/:id）
- *   - 渲染基本信息 + Spec 摘要 + 操作按钮（激活/手动运行/编辑/归档）
- *   - 激活雷达（POST /api/radars/:id/activate）
+ *   - 渲染基本信息 + Spec 摘要 + 操作按钮（运行/编辑/删除）
  *   - 手动运行（POST /api/radars/:id/run），展示返回的机会卡片
- *   - 运行历史展示（从 radar.lastRunAt / lastRunStatus 推算）
+ *   - 历史报告展示
  *
  * 纯 JS，无框架，无构建工具。复用全局 showToast / backToList。
  */
@@ -252,12 +251,10 @@
           <span class="radar-kind-badge kind-${escapeHtml(radar.kind || "custom")}">${escapeHtml(kindLabel)}</span>
           ${isBuiltin ? '<span class="builtin-tag">内置</span>' : ""}
           <span class="radar-status-dot status-${escapeHtml(radar.status || "draft")}"></span>
-          <span class="radar-status-text">${escapeHtml(statusLabel)}</span>
           <div class="radar-detail-actions">
-            <button class="btn-primary btn-activate" id="radar-activate-btn" ${!isDraft || isBuiltin ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可激活" : !isDraft ? "仅草稿状态可激活" : ""}">激活</button>
             <button class="btn-primary btn-run" id="radar-run-btn" ${!isActive ? "disabled" : ""} title="${!isActive ? "仅运行中状态可再次盯机会" : ""}">再次盯机会</button>
-            <button class="btn-edit" id="radar-edit-btn" ${isBuiltin || isArchived ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可编辑" : isArchived ? "已归档不可编辑" : ""}">编辑</button>
-            <button class="btn-archive" id="radar-archive-btn" ${isBuiltin || isArchived ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可归档" : isArchived ? "已归档" : ""}">归档</button>
+            <button class="btn-edit" id="radar-edit-btn" ${isBuiltin || isArchived ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可编辑" : isArchived ? "该雷达已删除" : ""}">编辑雷达</button>
+            <button class="btn-archive" id="radar-archive-btn" ${isBuiltin || isArchived ? "disabled" : ""} title="${isBuiltin ? "内置雷达不可删除" : isArchived ? "该雷达已删除" : ""}">删除雷达</button>
           </div>
           <div class="radar-rerun-status" id="radar-detail-rerun-status" aria-live="polite"></div>
         </div>
@@ -299,17 +296,9 @@
           </div>
         </div>
 
-        <div class="radar-detail-section radar-run-history">
-          <h4>运行历史</h4>
-          <div id="radar-run-history-list">
-            <p class="placeholder">加载中...</p>
-          </div>
-        </div>
-
         <div class="radar-detail-section radar-report-history">
           <div class="radar-section-heading">
             <h4>历史报告</h4>
-            <button class="btn-primary" id="radar-generate-report-btn" disabled title="需要先运行雷达并产生机会">生成 Markdown 报告</button>
           </div>
           <div id="radar-report-history-list">
             <p class="placeholder">加载中...</p>
@@ -331,11 +320,6 @@
       if (typeof window.backToList === "function") window.backToList();
     });
 
-    const activateBtn = document.getElementById("radar-activate-btn");
-    if (activateBtn) activateBtn.addEventListener("click", () => {
-      if (!activateBtn.disabled) activateRadar(radar.id);
-    });
-
     const runBtn = document.getElementById("radar-run-btn");
     if (runBtn) runBtn.addEventListener("click", () => {
       if (!runBtn.disabled) runRadar(radar.id);
@@ -351,11 +335,6 @@
     const archiveBtn = document.getElementById("radar-archive-btn");
     if (archiveBtn) archiveBtn.addEventListener("click", () => {
       if (!archiveBtn.disabled) archiveRadar(radar.id);
-    });
-
-    const reportBtn = document.getElementById("radar-generate-report-btn");
-    if (reportBtn) reportBtn.addEventListener("click", () => {
-      if (!reportBtn.disabled) generateRadarReport(radar.id);
     });
 
     // V1.6-05:定时设置区事件绑定
@@ -611,7 +590,7 @@
     `).join("");
     container.innerHTML = `
       <table class="report-history-table">
-        <thead><tr><th>开始时间</th><th>状态</th><th>机会数</th><th>入库 Key</th><th>报告</th></tr></thead>
+        <thead><tr><th>开始时间</th><th>状态</th><th>机会数</th><th>记录数</th><th>报告</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     `;
@@ -783,9 +762,9 @@
       ? "演示来源，未真实核验"
       : searchResult.source_provider || data.source_name || data.source_type || "未知";
     const reason = data.relevance_reason || data.match_reason || data.ai_analysis || "";
-    const score = data.chance_score || {};
-    const totalScore = score.total != null ? score.total : (data.backend_score || 0);
-    const ids = (entry && entry.radarIds) || data.radarIds || ((entry && entry.radarId) || data.radarId ? [(entry && entry.radarId) || data.radarId] : []);
+    const recommendation = data.visible_level || data.score_label || "值得关注";
+    const nextAction = data.next_action || (Array.isArray(data.recommendedActions) ? data.recommendedActions[0] : "") || "先打开来源确认行动入口。";
+    const deadline = data.deadline || "未明确";
 
     card.innerHTML = `
       <div class="card-header">
@@ -796,42 +775,40 @@
       </div>
       <div class="card-meta">
         <span class="card-source">${escapeHtml(source)}</span>
-        ${(() => {
-          // V1.5 评审v2：同时检查 radarId（旧字段）和 radarIds（多雷达归属）
-          return ids.length > 0 ? `<span class="card-radar-tag">雷达: ${escapeHtml(ids.join(", "))}</span>` : "";
-        })()}
+        <span class="card-radar-tag">推荐度：${escapeHtml(String(recommendation))}</span>
       </div>
-      ${reason ? `<div class="card-reason">💡 ${escapeHtml(reason)}</div>` : ""}
-      <div class="card-total-score">ChanceScore: ${escapeHtml(String(totalScore))}分</div>
+      ${reason ? `<div class="card-reason">为什么值得看：${escapeHtml(reason)}</div>` : ""}
+      <div class="card-reason">截止时间：${escapeHtml(deadline)}</div>
+      <div class="card-reason">建议动作：${escapeHtml(nextAction)}</div>
     `;
     return card;
   }
 
   // ============================================================
-  // 归档雷达
+  // 删除雷达
   // ============================================================
 
   /**
-   * 归档雷达（DELETE /api/radars/:id）。
+   * 删除雷达（DELETE /api/radars/:id）。
    * @param {string} radarId - 雷达 ID
    */
   async function archiveRadar(radarId) {
     if (!radarId) return;
-    if (!confirm("确认归档此雷达？归档后 3 天物理删除。")) return;
+    if (!confirm("确认删除这个雷达？删除后它会从“我的雷达”列表移除，历史机会和报告仍会保留。")) return;
     try {
       const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}`, {
         method: "DELETE",
       });
       const json = await res.json();
       if (json.success) {
-        if (window.showToast) showToast("雷达已归档", "success");
+        if (window.showToast) showToast("雷达已删除", "success");
         if (typeof window.backToList === "function") window.backToList();
       } else {
-        const msg = json.error?.message || "归档失败";
-        if (window.showToast) showToast(`归档失败：${msg}`, "error");
+        const msg = json.error?.message || "删除失败";
+        if (window.showToast) showToast(`删除失败：${msg}`, "error");
       }
     } catch (err) {
-      if (window.showToast) showToast("归档失败：网络错误", "error");
+      if (window.showToast) showToast("删除失败：网络错误", "error");
     }
   }
 
@@ -882,7 +859,7 @@
       if (window.showToast) showToast("报告生成失败：网络错误", "error");
     } finally {
       if (btn) {
-        btn.textContent = "生成 Markdown 报告";
+        btn.textContent = "生成报告";
       }
       updateReportButtonState();
     }

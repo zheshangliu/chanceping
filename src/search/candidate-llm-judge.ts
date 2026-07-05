@@ -108,7 +108,8 @@ const JOB_AGGREGATOR_RE = /招聘平台|聚合招聘|jobsdb|boss直聘|indeed|li
 const NEWS_OR_REFERENCE_RE = /趋势|指南|规则|历史|案例|新闻|报道|分析|报告|百科|reference|case|guide|news|history|wikipedia/i;
 const WEDDING_CONTEXT_RE = /婚庆|婚礼|婚宴|wedding/i;
 const WEDDING_ACTION_RE = /酒店|会所|宴会厅|品牌合作|异业合作|供应商招募|婚礼供应商|venue|hotel|supplier|partner/i;
-const DIRECT_ACTION_RE = /报名|申请|申报|征集|招标|投标|采购|供应商|入库|投稿|展位|参展|合作|招募|registration|application|apply|tender|procurement|supplier|vendor|submit|exhibitor|partner/i;
+const DIRECT_ACTION_RE = /报名|申请|申报|征集|招标|投标|采购|供应商|入库|投稿|展位|参展|合作|招募|registration|application|apply|tender|procurement|supplier|vendor|submit|exhibitor|partner|join\s+(?:hackathon|challenge|contest|competition)|join\s+the\s+(?:hackathon|challenge|contest|competition)/i;
+const EVENT_PARTICIPATION_SIGNAL_RE = /(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松).{0,80}(?:compete|prizes?|cash|cloud credits?|tracks?|requirements)|(?:compete|prizes?|cash|cloud credits?|tracks?|requirements).{0,80}(?:hackathon|challenge|contest|competition|比赛|竞赛|大赛|马拉松)/i;
 const EXPLICIT_NO_ACTION_RE = /不提供.{0,12}(报名|申请|合作|采购|投稿|入口)|没有.{0,12}(报名|申请|合作|采购|投稿|入口)|no .{0,40}(application|registration|contact|entry)/i;
 
 function normalize(value: unknown): string {
@@ -300,7 +301,7 @@ function fallbackJudge(result: SearchResult, spec: RadarRequirementSpec, options
     };
   }
 
-  const hasAction = DIRECT_ACTION_RE.test(text);
+  const hasAction = DIRECT_ACTION_RE.test(text) || EVENT_PARTICIPATION_SIGNAL_RE.test(text);
   const actionableLead = result.semantic_type === "business_lead" ||
     result.semantic_type === "channel_partner_lead" ||
     result.semantic_type === "customer_lead";

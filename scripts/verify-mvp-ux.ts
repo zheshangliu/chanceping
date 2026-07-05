@@ -39,7 +39,7 @@ check("首页主按钮文案为开始画雷达", html.includes("开始画雷达"
 check("首页说明确认雷达后再搜索", html.includes("你确认雷达后，系统才会开始搜索"));
 check("首页包含单雷达聊天工作台", html.includes("hero-radar-chat-root") && html.includes("/hero-radar-chat.js"));
 check("首页不再显示选择雷达文案", !html.includes("选择雷达："));
-check("附件按钮说明文件作为画像补充", homeJs.includes("文件会作为画像补充材料使用，不会直接当作机会结果。"));
+check("首页主输入隐藏附件上传入口", /id="home-attach-btn"[^>]*hidden/.test(html));
 check("旧模板入口不作为 Hero 主路径", homeJs.includes("hideLegacyTemplatesForHero();"));
 check(
   "可见主导航包含三个客户入口",
@@ -82,17 +82,22 @@ check("结果页按画像运行", watchResultJs.includes("profile") && watchResu
 check("本地 live search 通过 URL/localStorage 显式开启", homeJs.includes("live_search") && homeJs.includes("chanceping_live_search") && homeJs.includes("getChancePingSearchMode"));
 check("产品主路径可透传 search_mode=live", watchResultJs.includes("getSearchModeRequest") && watchResultJs.includes("search_mode: \"live\"") && radarsJs.includes("getSearchModeRequest") && radarDetailJs.includes("getSearchModeRequest"));
 check("保存长期雷达会记住本地 live 试跑偏好", watchResultJs.includes("preferredSearchMode: \"live\"") && radarsRoute.includes("radar.preferredSearchMode"));
-check("模板路径允许调整画像", watchResultJs.includes("调整画像") && profileJs.includes("showRadarProfileDraftFromResult"));
+check("模板路径允许调整雷达画像", watchResultJs.includes("调整雷达画像") && profileJs.includes("showRadarProfileDraftFromResult"));
 check("含正在搜索机会 loading", watchResultJs.includes("正在搜索机会"));
 check("含正在生成机会报告 loading", watchResultJs.includes("正在生成机会报告"));
-check("机会卡片按用户关心顺序渲染", ["为什么适合你", "截止时间", "建议动作"].every((text) => watchResultJs.includes(text)));
+check("机会卡片按用户关心顺序渲染", [
+  "为什么值得看",
+  "报名 / 截止",
+  "现在先做什么",
+  "来源怎么复核",
+].every((text) => watchResultJs.includes(text)));
 check("机会卡片展示四维状态标签", ["watch-card-meta", "opportunity_kind", "evidence_status", "action_status"].every((text) => watchResultJs.includes(text)));
 check("机会卡片能把 mock 显示为演示来源", watchResultJs.includes("演示来源，未真实核验") && watchResultJs.includes("来源说明"));
 check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_no_results", "not_checked", "invalid_url", "name_only"].every((text) => watchResultJs.includes(text)));
 check("live 失败或结果不足提示可切回演示数据", watchResultJs.includes("Live 真实搜索失败") && watchResultJs.includes("切回演示数据查看流程"));
 check("失败或无结果仍可保存雷达", watchResultJs.includes("本轮真实搜索结果不足，但雷达已生成") && watchResultJs.includes("runOutcome") && watchResultJs.includes("保存为长期雷达"));
 check("失败或无结果提供调整策略和重试搜索", watchResultJs.includes("调整雷达策略") && watchResultJs.includes("重试搜索"));
-check("Q7 result page has radar feedback entry", watchResultJs.includes("这些结果不对，修改雷达"));
+check("Q7 result page has unified radar feedback entry", watchResultJs.includes("调整雷达画像") && watchResultJs.includes("openRadarResultFeedback"));
 check("Q7 result feedback dispatches radar revision", watchResultJs.includes("openRadarResultFeedback"));
 check("Markdown 报告默认摘要并可展开", watchResultJs.includes("报告摘要") && watchResultJs.includes("查看完整 Markdown 报告"));
 check("Markdown 支持复制", watchResultJs.includes("复制 Markdown"));
@@ -102,7 +107,12 @@ check("保存成功反馈说明绑定我的雷达", watchResultJs.includes("已�
 check("保存成功后提供详情和列表两个选择", ["查看本次雷达详情", "返回我的雷达列表", "btn-view-saved-radar-detail", "btn-back-to-radar-list"].every((text) => watchResultJs.includes(text)));
 check("保存成功后不自动跳转我的雷达", !watchResultJs.includes("已保存为长期雷达，并生成了绑定报告\", \"success\");\n      window.setTimeout"));
 check("空结果页含可行动建议", ["放宽地区", "减少排除条件", "增加指定信号源", "保存为长期雷达继续监控"].every((text) => watchResultJs.includes(text)));
-check("我的雷达卡片使用客户语言入口", ["画像摘要", "上次运行时间", "上次运行状态", "查看机会和报告", "再次盯机会"].every((text) => radarsJs.includes(text)));
+check(
+  "我的雷达卡片使用客户语言入口",
+  ["画像摘要", "上次完成", "等待首次运行", "编辑雷达", "查看机会和报告", "删除雷达"].every((text) => radarsJs.includes(text))
+    && !radarsJs.includes("上次运行状态")
+    && !radarsJs.includes(">再次盯机会</button>"),
+);
 check("我的雷达卡片不展示 Provider 调试字段", !radarsJs.includes("radar-providers"));
 check("再次盯机会会自动生成报告", radarsJs.includes("/api/reports/generate") && radarsJs.includes("run_id") && radarsJs.includes("reportId"));
 check("再次盯机会状态文案完整", ["正在重新盯机会", "正在生成报告", "已生成新报告", "查看本次报告"].every((text) => radarsJs.includes(text)));

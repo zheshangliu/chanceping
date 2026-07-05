@@ -97,6 +97,13 @@
     return json;
   }
 
+  async function getJson(url) {
+    const res = await fetch(url);
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error?.message || "请求失败");
+    return json;
+  }
+
   function getSearchModeRequest() {
     const mode = typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined;
     return mode === "live" ? { search_mode: "live" } : {};
@@ -128,6 +135,14 @@
       || radar?.currentVersion
       || "V1.0";
     return String(version);
+  }
+
+  function getCustomerRadarStatusLabel(radar) {
+    if (radar?.status === "archived") return "已删除";
+    if (radar?.status === "paused") return "已暂停";
+    if (radar?.lastRunAt) return "上次已完成";
+    if (radar?.status === "draft") return "待确认";
+    return "已保存";
   }
 
   // ============================================================
@@ -222,13 +237,12 @@
 
     const kindLabel = RADAR_KIND_LABELS[radar.kind] || "自定义";
     const statusLabel = RADAR_STATUS_LABELS[radar.status] || radar.status;
+    const customerStatusLabel = getCustomerRadarStatusLabel(radar);
     const builtinTag = radar.isBuiltin
       ? '<span class="builtin-tag">内置</span>'
       : "";
     const lastRun = formatTime(radar.lastRunAt);
-    const lastRunStatus = radar.lastRunStatus || "尚未运行";
     const profileSummary = buildProfileSummaryText(radar);
-    const canRun = radar.status === "active";
 
     card.innerHTML = `
       ${builtinTag}
@@ -237,18 +251,16 @@
         <span class="radar-status-dot status-${escapeHtml(radar.status || "draft")}" title="${escapeHtml(statusLabel)}"></span>
       </div>
       <h4 class="radar-name">${escapeHtml(radar.name || "未命名雷达")}</h4>
-      <div class="radar-status-text">${escapeHtml(statusLabel)}</div>
+      <div class="radar-status-text">${escapeHtml(customerStatusLabel)}</div>
       <span class="radar-version-badge">${escapeHtml(getRadarVersionLabel(radar))}</span>
       <div class="radar-card-profile">
         <span class="radar-card-profile-label">画像摘要</span>
         <p>${escapeHtml(profileSummary)}</p>
       </div>
-      <div class="radar-last-run"><span>上次运行时间</span>${escapeHtml(lastRun)}</div>
-      <div class="radar-last-run"><span>上次运行状态</span>${escapeHtml(lastRunStatus)}</div>
+      <div class="radar-last-run"><span>${radar.lastRunAt ? "上次完成" : "运行状态"}</span>${escapeHtml(radar.lastRunAt ? lastRun : "等待首次运行")}</div>
       <div class="radar-card-actions">
         <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
         <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
-        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRun ? "" : "disabled"} title="${canRun ? "" : "雷达运行中后可再次盯机会"}">再次盯机会</button>
         <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
       </div>
       <div class="radar-rerun-status" aria-live="polite"></div>
@@ -263,13 +275,7 @@
     const detailBtn = card.querySelector(".btn-detail");
     if (detailBtn) {
       detailBtn.addEventListener("click", () => {
-        goToDetail(radar.id);
-      });
-    }
-    const rerunBtn = card.querySelector(".btn-rerun-radar");
-    if (rerunBtn) {
-      rerunBtn.addEventListener("click", () => {
-        if (!rerunBtn.disabled) rerunRadarFromCard(radar, rerunBtn);
+        viewRadarOpportunityResult(radar);
       });
     }
     const deleteBtn = card.querySelector(".btn-delete-radar");
@@ -309,6 +315,66 @@
   function goToHomeForNewRadar() {
     if (window.switchTab) window.switchTab("home");
     document.getElementById("home-input")?.focus();
+  }
+
+  async function viewRadarOpportunityResult(radar) {
+    if (!radar?.id) return;
+    if (typeof window.showWatchResult !== "function") {
+      goToDetail(radar.id);
+      return;
+    }
+    try {
+      const [opportunities, runs, reports] = await Promise.all([
+        getJson(`/api/opportunities?radar_id=${encodeURIComponent(radar.id)}&page_size=50`),
+        getJson(`/api/radars/${encodeURIComponent(radar.id)}/runs?limit=1`),
+        getJson(`/api/reports?radar_id=${encodeURIComponent(radar.id)}`),
+      ]);
+      const entries = opportunities.data?.entries || opportunities.data || [];
+      const cards = (Array.isArray(entries) ? entries : [])
+        .map((entry) => entry.card || entry)
+        .filter(Boolean);
+      const latestRun = Array.isArray(runs.data) ? runs.data[0] : null;
+      const latestReport = Array.isArray(reports.data) ? reports.data[0] : null;
+      window.showWatchResult({
+        radarId: radar.id,
+        runId: latestRun?.id,
+        reportId: latestReport?.id || latestRun?.reportId,
+        suggestedName: radar.name || "我的机会雷达",
+        description: buildProfileSummaryText(radar) || "这是你保存的长期雷达，本页展示已入库机会和最新报告状态。",
+        opportunityCards: cards,
+        markdown: buildRadarResultMarkdown(radar, cards, latestReport, latestRun),
+        runOutcome: latestRun?.runOutcome || { status: cards.length > 0 ? "succeeded" : "no_results" },
+        savedMessage: "这是我的雷达中的已保存结果；需要继续优化时，可以调整雷达画像。",
+      });
+    } catch (err) {
+      if (window.showToast) showToast(`加载机会和报告失败：${err instanceof Error ? err.message : "网络错误"}`, "error");
+      goToDetail(radar.id);
+    }
+  }
+
+  function buildRadarResultMarkdown(radar, cards, latestReport, latestRun) {
+    const lines = [
+      `# ${radar.name || "我的机会雷达"}｜机会和报告`,
+      "",
+      `- 雷达版本：${getRadarVersionLabel(radar)}`,
+      `- 已入库机会：${cards.length} 条`,
+      latestRun?.id ? `- 最近运行：${latestRun.id}` : "- 最近运行：暂无",
+      latestReport?.id ? `- 最新报告：${latestReport.id}` : "- 最新报告：暂无",
+      "",
+      "## 本次建议先看",
+    ];
+    const topCards = cards.slice(0, 5);
+    if (topCards.length === 0) {
+      lines.push("- 暂无已入库机会，可以点击“再次盯机会”生成新一轮结果。");
+    } else {
+      for (const card of topCards) {
+        lines.push(`- ${card.title || "未命名机会"}：${card.next_action || card.match_reason || "先打开来源确认行动入口。"}`);
+      }
+    }
+    if (latestReport?.filename) {
+      lines.push("", `完整报告可在雷达详情页下载：${latestReport.filename}`);
+    }
+    return lines.join("\n");
   }
 
   function setRerunStatus(btn, html) {

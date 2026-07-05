@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +9,9 @@
 <body>
   <!-- 顶部导航栏 -->
   <header class="top-bar">
-    <img src="/assets/logo.png" alt="ChancePing 盯机会" class="logo" />
+    <img src="/assets/logo.png?v=20260705" alt="ChancePing 盯机会" class="logo" />
     <h1 class="brand">ChancePing 盯机会<span class="demo-badge" id="demo-badge" style="display:none;">Demo 模式</span></h1>
     <div class="header-actions">
-      <button id="theme-toggle" title="切换主题 (暗色/浅色)">🌙</button>
       <span class="status-indicator" id="api-status" title="API 连接状态">●</span>
     </div>
   </header>
@@ -34,25 +33,68 @@
     <!-- Tab 1: 首页 -->
     <section class="tab-panel active" id="panel-home">
       <div class="home-container">
-        <div class="home-hero">
-          <img src="/assets/logo.png" alt="ChancePing 盯机会" class="home-logo" />
-          <h2 class="home-title">AI 赛事雷达</h2>
-          <p class="home-subtitle">像聊天一样说清楚你想找的 AI 比赛、Hackathon、云资源和产品展示机会</p>
-        </div>
-        <div class="home-examples-block">
-          <p class="examples-label">试试看这些例子</p>
-          <div class="home-examples" id="mvp-template-list"></div>
-        </div>
-        <div class="home-input-area">
-          <button class="attach-btn" id="home-attach-btn" title="上传文件（PDF/Word/Excel/图片）">📎</button>
-          <textarea id="home-input" placeholder="今天你想找什么机会？" rows="2"></textarea>
-          <button id="home-watch-btn" class="primary-btn">开始画雷达</button>
-        </div>
-        <p class="home-helper">先把 AI 赛事雷达聊准。你确认雷达后，系统才会开始搜索并把报告发回聊天窗口。</p>
-        <div class="hero-demo-prompts" aria-label="AI 赛事雷达演示路径" hidden>
-          <button class="hero-demo-prompt" data-hero-prompt="我是个人开发者，想找 AI 比赛机会，帮我盯一下。">个人开发者找 AI 比赛</button>
-          <button class="hero-demo-prompt" data-hero-prompt="我不是学生，我是 OPC 创业者，优先奖金、云资源、能上架展示的比赛。">升级为 OPC 创业者</button>
-          <button class="hero-demo-prompt" data-hero-prompt="不要展会资讯，我要能报名、能提交作品的比赛。">排除展会，只要报名入口</button>
+        <div class="home-ai-shell">
+          <aside class="home-radar-sidebar" aria-label="雷达窗口">
+            <div class="home-sidebar-brand">
+              <img src="/assets/logo.png?v=20260705" alt="" class="sidebar-brand-logo" />
+              <div class="home-sidebar-brand-text">
+                <strong>ChancePing</strong>
+                <span>盯机会</span>
+              </div>
+            </div>
+            <button class="home-new-radar" type="button" data-action="create-new-radar">新雷达</button>
+            <div class="home-sidebar-section">
+              <span>最近</span>
+              <button class="home-radar-window active" type="button" data-action="open-ai-event-radar">
+                <strong>AI 赛事雷达</strong>
+                <small>V1.0 · Hero Demo</small>
+              </button>
+            </div>
+          </aside>
+          <section class="home-main-stage" aria-label="AI 赛事雷达入口">
+            <div class="home-hero">
+              <img src="/assets/logo.png?v=20260705" alt="ChancePing 盯机会" class="home-logo" />
+              <h2 class="home-title">AI 赛事雷达</h2>
+              <p class="home-subtitle">像聊天一样说清楚你想找的 AI 比赛、Hackathon、云资源和产品展示机会</p>
+            </div>
+            <div class="home-examples-block" hidden>
+              <p class="examples-label">试试看这些例子</p>
+              <div class="home-examples" id="mvp-template-list"></div>
+            </div>
+            <div class="home-input-area">
+              <button class="attach-btn" id="home-attach-btn" title="上传文件（PDF/Word/Excel/图片）" hidden>📎</button>
+              <textarea id="home-input" placeholder="今天你想找什么机会？" rows="2" data-demo-prompt="我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。"></textarea>
+              <button id="home-watch-btn" class="primary-btn">开始画雷达</button>
+            </div>
+            <p class="home-helper">先把 AI 赛事雷达聊准。你确认雷达后，系统才会开始搜索并把报告发回聊天窗口。</p>
+            <div class="hero-demo-prompts" aria-label="AI 赛事雷达演示路径" hidden>
+              <button class="hero-demo-prompt" data-hero-prompt="我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。">AI 赛事雷达 Demo</button>
+              <button class="hero-demo-prompt" data-hero-prompt="我不是学生，我是 OPC 创业者，优先奖金、云资源、能上架展示的比赛。">OPC 创业者</button>
+              <button class="hero-demo-prompt" data-hero-prompt="不要展会资讯，我要能报名、能提交作品的比赛。">只要报名入口</button>
+            </div>
+            <section class="home-preview-tray" aria-label="AI 赛事雷达工作流预览">
+              <article class="home-preview-card">
+                <span>雷达画像</span>
+                <strong>先把人话画成 V1.0 雷达</strong>
+                <p>你是谁、要盯什么、不盯什么、什么算高价值。</p>
+              </article>
+              <article class="home-preview-card">
+                <span>运行进度</span>
+                <strong>搜索、读取、筛选会持续显示</strong>
+                <p>Serper 找来源，DeepSeek 按证据解释，不让你以为卡住。</p>
+              </article>
+              <article class="home-preview-card">
+                <span>先看这 3 个</span>
+                <strong>把行动价值最高的机会放前面</strong>
+                <p>优先可报名、可提交作品、可申请云资源的机会。</p>
+              </article>
+              <article class="home-preview-card">
+                <span>Markdown 报告</span>
+                <strong>报告回到聊天窗口</strong>
+                <p>摘要先看，完整 Markdown 和机会卡可点开查看。</p>
+              </article>
+            </section>
+          </section>
         </div>
         <div id="hero-radar-chat-root" class="hero-radar-chat-root"></div>
       </div>
@@ -345,8 +387,8 @@ $北京
   <script src="/source-hints.js"></script>
   <script src="/radar-profile.js"></script>
   <script src="/watch-result.js"></script>
-  <script src="/hero-radar-chat.js"></script>
-  <script src="/home.js"></script>
+  <script src="/hero-radar-chat.js?v=q7g2"></script>
+  <script src="/home.js?v=q7g2"></script>
   <script src="/requirement-chat.js"></script>
   <script src="/search.js"></script>
   <script src="/opportunities.js"></script>

@@ -105,6 +105,7 @@ export function webUiRoutes(): Hono {
 
   // 根路径 → index.html
   app.get("/", serveFile("index.html", "text/html; charset=utf-8"));
+  app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
 
   // 静态资源
   app.get("/styles.css", serveFile("styles.css", "text/css; charset=utf-8"));
@@ -131,6 +132,10 @@ export function webUiRoutes(): Hono {
   app.get(
     "/hero-radar-chat.js",
     serveFile("hero-radar-chat.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/ai-events.js",
+    serveFile("ai-events.js", "application/javascript; charset=utf-8"),
   );
   app.get(
     "/requirement-chat.js",

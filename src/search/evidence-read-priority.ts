@@ -43,6 +43,31 @@ function isGovCnDomain(domain: string): boolean {
   return domain === "gov.cn" || domain.endsWith(".gov.cn") || domain.endsWith(".gov.com.cn");
 }
 
+function isConcreteDevpostEventPage(result: SearchResult): boolean {
+  try {
+    const url = new URL(result.url);
+    const domain = url.hostname.replace(/^www\./, "").toLowerCase();
+    const path = url.pathname.toLowerCase().replace(/\/+$/, "");
+    return domain.endsWith(".devpost.com") &&
+      domain !== "devpost.com" &&
+      (path === "" || path === "/" || /^\/(?:rules|resources|submissions?|updates)$/.test(path));
+  } catch {
+    return false;
+  }
+}
+
+function isTraeCompetitionPage(result: SearchResult): boolean {
+  const text = textOf(result);
+  try {
+    const url = new URL(result.url);
+    const domain = url.hostname.replace(/^www\./, "").toLowerCase();
+    if (domain !== "forum.trae.cn") return false;
+  } catch {
+    return false;
+  }
+  return /trae/i.test(text) && /ai|创造力|创作|vibe|coding|比赛|大赛|竞赛|报名|提交|规则|challenge|contest|competition/i.test(text);
+}
+
 export function isOfficialGovernmentNews(result: SearchResult): boolean {
   const domain = domainOf(result.url);
   if (!isGovCnDomain(domain)) return false;
@@ -66,7 +91,10 @@ function hasActionSignal(result: SearchResult): boolean {
 function isLowPriorityReadSource(result: SearchResult): boolean {
   const text = textOf(result);
   const domain = domainOf(result.url);
-  return /(?:^|\.)(?:youtube|instagram|facebook|reddit|tiktok|douyin|xiaohongshu|weibo|bilibili)\./i.test(domain) ||
+  if (isConcreteDevpostEventPage(result) || isTraeCompetitionPage(result)) return false;
+  return /(?:^|\.)(?:x|twitter|youtube|instagram|facebook|reddit|tiktok|douyin|xiaohongshu|weibo|bilibili|linkedin|zhihu)\./i.test(domain) ||
+    /(?:^|\.)(?:linkedin|zhihu)\.com$/i.test(domain) ||
+    /\/(?:pulse|discover\/what-is|what-is|blog|guide|guides|learn|resources\/what-is)(?:[-/?#]|$)/i.test(text) ||
     /视频|集锦|百科|维基|规则介绍|历史活动|往届|回顾|培训广告|培训班|课程|泛资讯|论坛讨论|youtube|playlist|wikipedia|baike|rules|history|recap/i.test(text);
 }
 
@@ -78,7 +106,7 @@ function isAggregateOrCategoryPage(result: SearchResult): boolean {
     const path = url.pathname.toLowerCase();
     if (domain === "devpost.com" && (/^\/c\//.test(path) || /^\/hackathons?\/?$/.test(path) || /^\/software\/?$/.test(path))) return true;
     if (domain === "dorahacks.io" && (/^\/hackathon\/?$/.test(path) || /^\/hackathons?\/?$/.test(path))) return true;
-    if (domain === "lablab.ai" && (/^\/event\/?$/.test(path) || /^\/events\/?$/.test(path))) return true;
+    if (domain === "lablab.ai" && (/^\/?$/.test(path) || /^\/ai-hackathons?\/?$/.test(path) || /^\/event\/?$/.test(path) || /^\/events\/?$/.test(path))) return true;
   } catch {
     // fall through to text heuristics
   }
@@ -89,12 +117,13 @@ function isGenericNonGovernmentNews(result: SearchResult): boolean {
   if (isOfficialGovernmentNews(result)) return false;
   const domain = domainOf(result.url);
   const text = textOf(result);
-  return /(?:^|\.)(?:news|sina|sohu|163|qq|toutiao|thepaper|ifeng|zhihu|medium)\./i.test(domain) ||
+  return /(?:^|\.)(?:news|sina|sohu|163|qq|toutiao|thepaper|ifeng|zhihu|medium|linkedin)\./i.test(domain) ||
     /新闻|报道|快讯|转载|news roundup|press release|media report/i.test(text);
 }
 
 function isConcreteEventPlatformPage(result: SearchResult, spec?: RadarRequirementSpec): boolean {
   const domain = domainOf(result.url);
+  if (isConcreteDevpostEventPage(result)) return hasAiEventClue(result, spec) || hasActionSignal(result);
   if (!/(?:^|\.)(?:devpost|dorahacks|lablab|kaggle|hackathon|eventbrite)\./i.test(domain)) return false;
   if (isAggregateOrCategoryPage(result)) return false;
   return hasAiEventClue(result, spec) || hasActionSignal(result);
@@ -105,11 +134,14 @@ function isOfficialActionSource(result: SearchResult): boolean {
   const domain = domainOf(result.url);
   const officialLike = isGovCnDomain(domain) ||
     /\.edu(?:\.cn)?$|\.ac\.cn$|\.org$|org\.cn$/i.test(domain) ||
-    /(?:^|\.)(?:alibabacloud|aliyun|qwen|aws|googlecloud|cloud\.google|microsoft|azure|tencentcloud|huaweicloud|baidu|volcengine)\./i.test(domain);
+    /(?:^|\.)(?:alibabacloud|aliyun|qwen|aws|googlecloud|cloud\.google|microsoft|azure|tencentcloud|huaweicloud|baidu|volcengine|trae)\./i.test(domain) ||
+    isConcreteDevpostEventPage(result) ||
+    isTraeCompetitionPage(result);
   return officialLike && hasActionSignal(result) && !isAggregateOrCategoryPage(result);
 }
 
 function isSpecificOfficialEventPage(result: SearchResult, spec?: RadarRequirementSpec): boolean {
+  if (isTraeCompetitionPage(result) || isConcreteDevpostEventPage(result)) return hasAiEventClue(result, spec) || hasActionSignal(result);
   return result.source_archetype === "official_event_site" &&
     hasAiEventClue(result, spec) &&
     !isAggregateOrCategoryPage(result) &&
@@ -134,6 +166,8 @@ function isPlannedActionEntry(result: SearchResult): boolean {
 
 export function isHighPriorityEvidenceSource(result: SearchResult, spec?: RadarRequirementSpec): boolean {
   if (isLowPriorityReadSource(result) && !isOfficialGovernmentNews(result)) return false;
+  if (isGenericNonGovernmentNews(result) && !isOfficialGovernmentNews(result)) return false;
+  if (isAggregateOrCategoryPage(result) && !isConcreteDevpostEventPage(result) && !isTraeCompetitionPage(result)) return false;
   return isOfficialGovernmentNews(result) ||
     isConcreteEventPlatformPage(result, spec) ||
     isSpecificOfficialEventPage(result, spec) ||

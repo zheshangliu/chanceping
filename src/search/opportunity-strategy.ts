@@ -48,6 +48,180 @@ const ACTION_RE = /报名|申请|申报|招标|采购|投稿|投标|入驻|注�
 const SOURCE_RE = /官方|官网|协会|目录|平台|portal|directory|association|official|marketplace|agency|chamber/i;
 const REGION_RE = /中国|广东|广州|深圳|香港|新加坡|马来西亚|泰国|越南|印尼|日本|韩国|东南亚|国际|asean|southeast asia|singapore|malaysia|thailand|vietnam|indonesia|japan|korea/i;
 
+function normalizedKey(value: string): string {
+  return value.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function aiEventStrategyText(spec: RadarRequirementSpec, families: RadarVersionQueryFamily[]): string {
+  return [
+    spec.primary_subject,
+    spec.client_profile?.client_type,
+    spec.client_profile?.industry,
+    spec.client_profile?.business_type,
+    spec.core_goals?.primary_goal,
+    spec.core_goals?.success_definition,
+    ...(spec.core_goals?.action_intent ?? []),
+    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
+    ...(spec.opportunity_scope?.secondary_opportunity_types ?? []),
+    ...(spec.opportunity_scope?.must_have_conditions ?? []),
+    ...(spec.opportunity_scope?.nice_to_have_conditions ?? []),
+    ...(spec.region_scope?.primary_regions ?? []),
+    ...(spec.region_scope?.secondary_regions ?? []),
+    ...(spec.keyword_strategy?.core_keywords_zh ?? []),
+    ...(spec.keyword_strategy?.core_keywords_en ?? []),
+    ...(spec.keyword_strategy?.expanded_keywords_zh ?? []),
+    ...(spec.keyword_strategy?.expanded_keywords_en ?? []),
+    ...(spec.source_strategy?.official_sites ?? []),
+    ...(spec.source_strategy?.platforms ?? []),
+    ...(spec.source_strategy?.manual_sources ?? []),
+    ...(spec.radar_version?.opportunityIntents ?? []),
+    ...(spec.radar_version?.highValueCriteria ?? []),
+    ...(spec.radar_version?.prioritySourceArchetypes ?? []),
+    spec.radar_version?.oneSentencePositioning,
+    spec.radar_version?.targetUser,
+    spec.radar_version?.businessContext,
+    ...families.flatMap((family) => [
+      family.familyName,
+      family.intentType,
+      family.sourceArchetype,
+      family.whyThisFamily,
+      ...(family.queries ?? []),
+      ...(family.queryVariants ?? []).map((item) => item.query),
+    ]),
+  ].filter(Boolean).join(" ");
+}
+
+function shouldApplyAiEventHeroExpansion(spec: RadarRequirementSpec, families: RadarVersionQueryFamily[]): boolean {
+  const text = aiEventStrategyText(spec, families);
+  const hasAiSubject = /(?:^|[^a-z])ai(?:[^a-z]|$)|人工智能|大模型|agent|aigc|llm|qwen|通义|trae|developer|cloud/i.test(text);
+  const hasDeveloperAiProxy = /OPC|个人开发者|开发者|独立开发者|创业者/i.test(text)
+    && /云资源|上架|展示|提交作品|开发者挑战|hackathon|challenge|developer contest|developer competition/i.test(text);
+  const hasEventIntent = /比赛|赛事|大赛|竞赛|马拉松|黑客松|hackathon|challenge|contest|competition|game jam|创作赛|开发者挑战/i.test(text);
+  const hasParticipantSignal = /报名|参加|参赛|提交|投稿|申请|作品|奖金|云资源|展示|opportunity|apply|application|registration|entry|submit|prize|credits|showcase|OPC|个人开发者|创业者/i.test(text);
+  return (hasAiSubject || hasDeveloperAiProxy) && hasEventIntent && hasParticipantSignal;
+}
+
+function aiEventRegionLabel(spec: RadarRequirementSpec): string {
+  const regions = [
+    ...(spec.region_scope?.primary_regions ?? []),
+    ...(spec.region_scope?.secondary_regions ?? []),
+  ].map((item) => item.trim()).filter(Boolean);
+  if (regions.some((item) => /大湾区|湾区|广州|深圳|香港|澳门|广东/.test(item))) return "大湾区";
+  if (regions.length > 0) return regions.slice(0, 2).join(" / ");
+  if (spec.region_scope?.overseas_allowed || spec.region_scope?.global_allowed) return "大湾区及海外";
+  return "全球";
+}
+
+function aiEventHeroFamilies(spec: RadarRequirementSpec): RadarVersionQueryFamily[] {
+  const region = aiEventRegionLabel(spec);
+  return [
+    {
+      familyName: `${region} AI 赛事直接入口`,
+      intentType: "direct_opportunity",
+      sourceArchetype: "official event site / organizer announcement",
+      queries: [
+        `${region} AI Hackathon 报名 AI 马拉松 开发者挑战 2026`,
+        `${region} 人工智能 创新大赛 报名 AI 比赛 2026`,
+        `Greater Bay Area AI hackathon registration developer challenge 2026`,
+      ],
+      queryVariants: [
+        { query: `${region} AI Hackathon 报名 AI 马拉松 开发者挑战 2026`, variant: "region_language" },
+        { query: `${region} 人工智能 创新大赛 报名 AI 比赛 2026`, variant: "action_keyword" },
+        { query: "Greater Bay Area AI hackathon registration developer challenge 2026", variant: "region_language" },
+      ],
+      whyThisFamily: "把用户说的 AI 马拉松 / AI 比赛翻译成 Hackathon、开发者挑战和官方报名入口，优先保留地域相关机会。",
+      resultBucket: "direct_opportunity",
+    },
+    {
+      familyName: "Qwen Cloud / Devpost Hackathon",
+      intentType: "direct_opportunity",
+      sourceArchetype: "official event site / hackathon platform",
+      queries: [
+        "Qwen Cloud Hackathon Devpost official application",
+        "site:devpost.com Qwen Cloud Hackathon",
+        "Devpost AI hackathon registration Qwen Cloud 2026",
+      ],
+      queryVariants: [
+        { query: "Qwen Cloud Hackathon Devpost official application", variant: "official_source" },
+        { query: "site:devpost.com Qwen Cloud Hackathon", variant: "source_archetype" },
+        { query: "Devpost AI hackathon registration Qwen Cloud 2026", variant: "action_keyword" },
+      ],
+      whyThisFamily: "Devpost、Qwen Cloud 这类具体赛事页通常直接包含报名、提交作品和奖项信息，是 AI 赛事雷达的高价值入口。",
+      resultBucket: "direct_opportunity",
+    },
+    {
+      familyName: "TRAE / AI IDE / Vibe Coding 赛事",
+      intentType: "direct_opportunity",
+      sourceArchetype: "developer challenge page",
+      queries: [
+        "site:forum.trae.cn TRAE AI 创造力大赛 报名",
+        "TRAE AI 创造力大赛 官方 报名 规则",
+        "AI IDE Vibe Coding Hackathon registration cloud credits",
+      ],
+      queryVariants: [
+        { query: "site:forum.trae.cn TRAE AI 创造力大赛 报名", variant: "official_source" },
+        { query: "TRAE AI 创造力大赛 官方 报名 规则", variant: "action_keyword" },
+        { query: "AI IDE Vibe Coding Hackathon registration cloud credits", variant: "source_archetype" },
+      ],
+      whyThisFamily: "AI IDE、Vibe Coding、TRAE 类比赛更贴近 OPC / 个人开发者展示产品、提交作品和争取云资源的目标。",
+      resultBucket: "direct_opportunity",
+    },
+    {
+      familyName: "DoraHacks / Lablab / AI Agent Hackathon",
+      intentType: "direct_opportunity",
+      sourceArchetype: "hackathon platform / AI agent challenge page",
+      queries: [
+        "DoraHacks AI hackathon registration cloud credits",
+        "Lablab AI Agent Hackathon registration",
+        "AI Agent Hackathon developer challenge registration 2026",
+      ],
+      queryVariants: [
+        { query: "DoraHacks AI hackathon registration cloud credits", variant: "source_archetype" },
+        { query: "Lablab AI Agent Hackathon registration", variant: "official_source" },
+        { query: "AI Agent Hackathon developer challenge registration 2026", variant: "action_keyword" },
+      ],
+      whyThisFamily: "Hackathon 平台和 AI Agent 赛事常有可报名、可提交作品、可拿资源的短周期机会。",
+      resultBucket: "direct_opportunity",
+    },
+    {
+      familyName: "云厂商开发者挑战与 AI 创业扶持",
+      intentType: "direct_opportunity",
+      sourceArchetype: "cloud vendor developer program / startup showcase",
+      queries: [
+        "AWS Google Cloud Microsoft Azure AI developer challenge registration cloud credits",
+        "Kaggle GitHub Hugging Face AI competition developer challenge registration",
+        "Product Hunt AI Grant startup showcase 阿里云 腾讯云 AI 开发者大赛 报名 云资源",
+      ],
+      queryVariants: [
+        { query: "AWS Google Cloud Microsoft Azure AI developer challenge registration cloud credits", variant: "official_source" },
+        { query: "Kaggle GitHub Hugging Face AI competition developer challenge registration", variant: "source_archetype" },
+        { query: "Product Hunt AI Grant startup showcase 阿里云 腾讯云 AI 开发者大赛 报名 云资源", variant: "action_keyword" },
+      ],
+      whyThisFamily: "云厂商挑战赛、开发者平台、AI Grant 和产品展示平台往往提供奖金、云资源、产品展示或上架机会，适合作为 AI 赛事雷达的主线来源。",
+      resultBucket: "direct_opportunity",
+    },
+  ];
+}
+
+function expandAiEventHeroFamilies(spec: RadarRequirementSpec, families: RadarVersionQueryFamily[]): RadarVersionQueryFamily[] {
+  if (!shouldApplyAiEventHeroExpansion(spec, families)) return families;
+  const seen = new Set<string>();
+  const expanded: RadarVersionQueryFamily[] = [];
+  for (const family of aiEventHeroFamilies(spec)) {
+    const key = normalizedKey(family.familyName);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    expanded.push(family);
+  }
+  for (const family of families) {
+    const key = normalizedKey(family.familyName);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    expanded.push(family);
+  }
+  return expanded.slice(0, MAX_THEMES);
+}
+
 export const RESULT_BUCKET_POLICY: OpportunityStrategy["resultBucketPolicy"] = {
   direct_opportunity: "key_opportunity",
   business_lead: "actionable_lead",
@@ -185,7 +359,8 @@ function uniqueSourceArchetypes(labels: string[]): Array<{ id: SourceArchetypeId
 
 export function buildOpportunityStrategy(spec: RadarRequirementSpec): OpportunityStrategy | null {
   const radarVersion = spec.radar_version;
-  const families = radarVersion?.queryFamilies?.slice(0, MAX_THEMES) ?? [];
+  const rawFamilies = radarVersion?.queryFamilies ?? [];
+  const families = expandAiEventHeroFamilies(spec, rawFamilies);
   if (!radarVersion || families.length === 0) return null;
 
   const searchThemes: SearchTheme[] = families.map((family, index) => {
