@@ -55,6 +55,11 @@ async function run() {
   check("homepage includes total-console style radar sidebar", html.includes("home-radar-sidebar") && html.includes("新雷达") && html.includes("AI 赛事雷达"));
   check("homepage keeps global banner and customer tabs", html.includes('class="top-bar"') && html.includes('data-tab="home"') && html.includes('data-tab="radars"'));
   check("global banner uses full Chinese logo asset", html.includes("ChancePing_cn_logo_transparent.png") && styles.includes("width: 92px"));
+  check("Q7G uses blue tech primary token", styles.includes("--accent: #2563eb") && styles.includes("--accent-hover: #1d4ed8") && styles.includes("--signal-cyan: #06b6d4"));
+  check("Q7G no longer uses pink as brand primary", !styles.includes("--accent: #e94560") && !styles.includes("rgba(233, 69, 96"));
+  check("homepage composer is large enough for natural language", styles.includes("min-height: 88px") && styles.includes("width: min(820px, 100%)"));
+  check("chat composer is large enough on desktop and mobile", styles.includes("min-height: 88px") && styles.includes("min-height: 108px") && styles.includes("border-radius: 18px"));
+  check("homepage composer keeps file upload hidden for Q7G", html.includes('id="home-attach-btn"') && /id="home-attach-btn"[^>]*hidden/.test(html));
   check("homepage does not render middle hero radar card board", !html.includes("home-radar-board") && !html.includes("继续你的雷达"));
   const homeRadarCardCount = (html.match(/class="home-radar-card/g) || []).length;
   check("homepage does not render middle template cards", homeRadarCardCount === 0, String(homeRadarCardCount));
@@ -92,7 +97,7 @@ async function run() {
   check("report artifact uses centered modal trigger", heroChatJs.includes("data-action=\"open-report-modal\"") && heroChatJs.includes("hero-report-summary"));
   check("report artifact keeps cards button", heroChatJs.includes("查看本次机会卡"));
   check("report modal uses Chinese demo label", heroChatJs.includes("完整 Markdown 报告"));
-  check("my radars renders latest radar version", radarsJs.includes("getRadarVersionLabel") && radarsJs.includes("radar-version-badge"));
+  check("my radars renders latest radar version", radarsJs.includes("getRadarVersionLabel") && radarsJs.includes("radar-command-metrics") && radarsJs.includes("版本"));
   check("my radars has edit radar entry", radarsJs.includes("btn-edit-radar") && radarsJs.includes("editRadarFromCard"));
   check("edit radar returns to chat home", radarsJs.includes("window.openHeroRadarEditor") || radarsJs.includes('window.switchTab("home")'));
   check("hero chat formats object fields for customers", heroChatJs.includes("formatReadableItem") && !heroChatJs.includes("escapeHtml(item)</li>"));
@@ -138,6 +143,8 @@ async function run() {
   check("result page exposes reusable opportunity card grid", watchResultJs.includes("renderOpportunityCardGrid") && watchResultJs.includes("watch-opportunity-grid"));
   check("result page restores latest chat report when top tab is opened", watchResultJs.includes("LAST_WATCH_RESULT_KEY") && watchResultJs.includes("tab-switched") && heroChatJs.includes("persistWatchResult"));
   check("result page surfaces top 3 action strip", watchResultJs.includes("renderTopActionStrip") && watchResultJs.includes("先看这 3 个") && styles.includes(".watch-top-actions"));
+  check("result page renders opportunity pipeline board", watchResultJs.includes("renderOpportunityPipeline") && watchResultJs.includes("机会管道看板") && styles.includes(".watch-pipeline-board"));
+  check("result pipeline has four customer lanes", watchResultJs.includes("立即行动") && watchResultJs.includes("复核资格") && watchResultJs.includes("持续观察") && watchResultJs.includes("淘汰原因"));
   check("result opportunity cards use customer-facing labels", watchResultJs.includes("formatOpportunityKindForCustomer") && watchResultJs.includes("watch-card-decision-row") && watchResultJs.includes("优先复核"));
   check("result opportunity cards use demo-friendly action copy", watchResultJs.includes("为什么值得看") && watchResultJs.includes("本周先做") && watchResultJs.includes("来源入口"));
   check("result opportunity cards avoid raw chip labels", watchResultJs.includes("建议：") && watchResultJs.includes("性质：") && watchResultJs.includes("证据："));
@@ -145,11 +152,13 @@ async function run() {
   check("result page hero demo title is AI event radar", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("AI 赛事雷达"));
   check("result page puts report summary after opportunity cards", watchResultJs.indexOf("watch-opportunity-grid") > -1 && watchResultJs.indexOf("report-summary") > watchResultJs.indexOf("watch-opportunity-grid"));
   check("my radar view enters the shared result surface", radarsJs.includes("查看机会和报告") && radarsJs.includes("window.showWatchResult"));
+  check("my radar view uses intelligence command center copy", html.includes("情报流指挥台") && radarsJs.includes("radar-command-card") && styles.includes(".radar-command-metrics"));
+  check("my radar cards show version status last run and new count", radarsJs.includes("版本") && radarsJs.includes("状态") && radarsJs.includes("上次运行") && radarsJs.includes("本次新增"));
   check("result page has one radar revision action", watchResultJs.includes("调整雷达画像") && !watchResultJs.includes("这些结果不对，修改雷达"));
   check("result page card grid CSS is responsive", styles.includes(".watch-opportunity-grid") && styles.includes("repeat(auto-fit, minmax(260px, 1fr))"));
   check("my radar cards hide raw last run status", !radarsJs.includes("上次运行状态"));
   check("my radar cards use customer-friendly saved status", radarsJs.includes("getCustomerRadarStatusLabel") && radarsJs.includes("上次已完成") && radarsJs.includes("还没跑过"));
-  check("my radar cards keep customer-facing actions only", radarsJs.includes("编辑雷达") && radarsJs.includes("查看机会和报告") && radarsJs.includes("删除雷达") && !radarsJs.includes(">再次盯机会</button>"));
+  check("my radar cards keep customer-facing actions only", radarsJs.includes("编辑雷达") && radarsJs.includes("再次盯机会") && radarsJs.includes("查看机会和报告") && radarsJs.includes("删除雷达"));
   check("detail page does not show activation action", !radarDetailJs.includes(">激活</button>"));
   check("detail archive label becomes delete radar", radarDetailJs.includes("删除雷达") && !radarDetailJs.includes(">归档</button>"));
   check("delete radar has second confirmation", radarDetailJs.includes("确认删除这个雷达") && radarDetailJs.includes("DELETE"));

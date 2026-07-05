@@ -145,6 +145,27 @@
     return "已保存";
   }
 
+  function getRadarNewOpportunityCount(radar) {
+    const candidates = [
+      radar?.lastRunOpportunityCount,
+      radar?.latestOpportunityCount,
+      radar?.opportunityCount,
+      radar?.stats?.acceptedCount,
+      radar?.stats?.opportunityCount,
+    ];
+    for (const value of candidates) {
+      if (Number.isFinite(Number(value))) return `${Number(value)} 条`;
+    }
+    return radar?.lastRunAt ? "待复核" : "待首次运行";
+  }
+
+  function getRadarHealthCopy(radar) {
+    if (radar?.status === "archived") return "已归档，不再自动运行。";
+    if (radar?.status === "paused") return "已暂停，需要恢复后再继续盯。";
+    if (!radar?.lastRunAt) return "还没跑过，建议先点“再次盯机会”生成第一轮结果。";
+    return "可以继续复跑，也可以进入聊天窗口调整雷达画像。";
+  }
+
   // ============================================================
   // 加载雷达列表
   // ============================================================
@@ -230,7 +251,7 @@
    */
   function buildRadarCard(radar) {
     const card = document.createElement("div");
-    card.className = "radar-card";
+    card.className = "radar-card radar-command-card";
     card.dataset.radarId = radar.id || "";
     card.dataset.kind = radar.kind || "custom";
     card.dataset.status = radar.status || "draft";
@@ -243,24 +264,48 @@
       : "";
     const lastRun = formatTime(radar.lastRunAt);
     const profileSummary = buildProfileSummaryText(radar);
+    const versionLabel = getRadarVersionLabel(radar);
+    const newCount = getRadarNewOpportunityCount(radar);
+    const canRerun = radar.status !== "archived";
 
     card.innerHTML = `
       ${builtinTag}
-      <div class="radar-card-header">
-        <span class="radar-kind-badge kind-${escapeHtml(radar.kind || "custom")}">${escapeHtml(kindLabel)}</span>
-        <span class="radar-status-dot status-${escapeHtml(radar.status || "draft")}" title="${escapeHtml(statusLabel)}"></span>
+      <div class="radar-command-header">
+        <div>
+          <span class="radar-kind-badge kind-${escapeHtml(radar.kind || "custom")}">${escapeHtml(kindLabel)}</span>
+          <h4 class="radar-name">${escapeHtml(radar.name || "未命名雷达")}</h4>
+        </div>
+        <span class="radar-command-state">
+          <span class="radar-status-dot status-${escapeHtml(radar.status || "draft")}" title="${escapeHtml(statusLabel)}"></span>
+          ${escapeHtml(customerStatusLabel)}
+        </span>
       </div>
-      <h4 class="radar-name">${escapeHtml(radar.name || "未命名雷达")}</h4>
-      <div class="radar-status-text">${escapeHtml(customerStatusLabel)}</div>
-      <span class="radar-version-badge">${escapeHtml(getRadarVersionLabel(radar))}</span>
+      <div class="radar-command-metrics" aria-label="雷达状态摘要">
+        <div>
+          <span>版本</span>
+          <strong>${escapeHtml(versionLabel)}</strong>
+        </div>
+        <div>
+          <span>状态</span>
+          <strong>${escapeHtml(customerStatusLabel)}</strong>
+        </div>
+        <div>
+          <span>上次运行</span>
+          <strong>${escapeHtml(radar.lastRunAt ? lastRun : "还没跑过")}</strong>
+        </div>
+        <div>
+          <span>本次新增</span>
+          <strong>${escapeHtml(newCount)}</strong>
+        </div>
+      </div>
       <div class="radar-card-profile">
-        <span class="radar-card-profile-label">这支雷达在盯</span>
+        <span class="radar-card-profile-label">情报流摘要</span>
         <p>${escapeHtml(profileSummary)}</p>
       </div>
-      <div class="radar-last-run"><span>最近一次</span>${escapeHtml(radar.lastRunAt ? lastRun : "还没跑过")}</div>
-      <p class="radar-card-next-step">要改需求就继续聊天编辑；要看本轮结果就打开机会和报告。</p>
+      <p class="radar-card-next-step">${escapeHtml(getRadarHealthCopy(radar))}</p>
       <div class="radar-card-actions">
         <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
+        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRerun ? "" : "disabled"}>再次盯机会</button>
         <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
         <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
       </div>
@@ -270,6 +315,10 @@
     const editBtn = card.querySelector(".btn-edit-radar");
     if (editBtn) {
       editBtn.addEventListener("click", () => editRadarFromCard(radar));
+    }
+    const rerunBtn = card.querySelector(".btn-rerun-radar");
+    if (rerunBtn) {
+      rerunBtn.addEventListener("click", () => rerunRadarFromCard(radar, rerunBtn));
     }
 
     // 绑定详情按钮

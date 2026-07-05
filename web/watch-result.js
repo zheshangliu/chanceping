@@ -91,9 +91,18 @@
       </div>
       <div class="watch-result-grid">
         <section class="watch-opportunity-section">
-          <h4>机会卡片</h4>
+          <div class="watch-section-heading">
+            <div>
+              <h4>机会管道看板</h4>
+              <p>先看能立刻行动的，再复核资格、持续观察，最后保留本轮降权原因。</p>
+            </div>
+          </div>
           ${renderTopActionStrip(cards)}
-          ${renderOpportunityCardGrid(cards, result)}
+          ${renderOpportunityPipeline(cards, result)}
+          <details class="watch-all-cards-details">
+            <summary>查看全部机会卡</summary>
+            ${renderOpportunityCardGrid(cards, result)}
+          </details>
         </section>
         <section class="watch-report-section">
           <div class="watch-report-title-row">
@@ -202,6 +211,132 @@
         ${cards.map(renderOpportunityCard).join("")}
       </div>
     `;
+  }
+
+  function renderOpportunityPipeline(cards, result) {
+    if (!cards || cards.length === 0) return renderEmptyState(result);
+    const lanes = [
+      {
+        key: "immediate",
+        title: "立即行动",
+        desc: "建议本周优先打开官方入口，复核报名、提交作品或申请资源路径。",
+        items: [],
+      },
+      {
+        key: "review",
+        title: "复核资格",
+        desc: "方向匹配，但还需要确认资格、费用、截止时间或主办方字段。",
+        items: [],
+      },
+      {
+        key: "monitor",
+        title: "持续观察",
+        desc: "可作为下一轮监控线索，不直接包装成已确认机会。",
+        items: [],
+      },
+      {
+        key: "rejected",
+        title: "淘汰原因",
+        desc: "低行动性、弱页面、过期或与当前雷达不匹配的结果。",
+        items: [],
+      },
+    ];
+    const laneMap = Object.fromEntries(lanes.map((lane) => [lane.key, lane]));
+    cards.forEach((card, index) => {
+      const key = classifyOpportunityLane(card, index);
+      laneMap[key]?.items.push(card);
+    });
+    return `
+      <div class="watch-pipeline-board" aria-label="机会管道看板">
+        ${lanes.map((lane) => `
+          <article class="watch-pipeline-lane lane-${escapeHtml(lane.key)}">
+            <header>
+              <div>
+                <h5>${escapeHtml(lane.title)}</h5>
+                <p>${escapeHtml(lane.desc)}</p>
+              </div>
+              <span>${lane.items.length}</span>
+            </header>
+            <div class="watch-pipeline-list">
+              ${lane.items.length > 0
+                ? lane.items.slice(0, 5).map((card) => renderPipelineCard(card, lane.key)).join("")
+                : `<div class="watch-pipeline-empty">${escapeHtml(getPipelineEmptyCopy(lane.key))}</div>`}
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function classifyOpportunityLane(card, index) {
+    const level = String(card.visible_level || card.level || "C").trim().toUpperCase();
+    const semantic = String(card.semantic_type || card.opportunity_kind || card.opportunityKind || card.type || "").toLowerCase();
+    const action = String(card.action_status || card.actionStatus || card.next_action || "").toLowerCase();
+    const evidence = String(card.evidence_status || card.evidenceStatus || "").toLowerCase();
+    const reason = String(card.rejection_reason || card.rejectedReason || card.risk_note || card.source_disclaimer || "").toLowerCase();
+    if (/reject|rejected|淘汰|降权|low_action|not_for_current_user|mismatch/.test(`${semantic} ${action} ${reason}`)) {
+      return "rejected";
+    }
+    if (/watch_signal|reference_case|observe|monitor|观察|参考/.test(`${semantic} ${action}`) || level === "C") {
+      return "monitor";
+    }
+    if ((level === "S" || level === "A") && index < 5 && !/unverified|not_found|failed|unknown/.test(evidence)) {
+      return "immediate";
+    }
+    if (/direct_opportunity|business_lead|channel_partner_lead|customer_lead|apply|register|submit|contact|bid|prepare/.test(`${semantic} ${action}`)) {
+      return level === "B" || /needs_review|model_judgment|partially_verified|unverified|unknown/.test(evidence) ? "review" : "immediate";
+    }
+    return "review";
+  }
+
+  function renderPipelineCard(card, laneKey) {
+    const url = card.official_source_url || card.url || "";
+    const domain = getSourceDomain(url) || "待复核来源";
+    const level = String(card.visible_level || "C").trim().toUpperCase();
+    const title = card.title || "未命名机会";
+    const nextAction = card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || getPipelineDefaultAction(laneKey);
+    const reason = toCustomerEvidenceText(card.match_reason || card.fitReason || card.ai_analysis || card.relevance_reason || "");
+    return `
+      <div class="watch-pipeline-card level-${escapeHtml(level.toLowerCase())}">
+        <div class="pipeline-card-top">
+          <span>${escapeHtml(level)} 级</span>
+          <small>${escapeHtml(domain)}</small>
+        </div>
+        <strong>${escapeHtml(title)}</strong>
+        <p>${escapeHtml(reason || getPipelineDefaultReason(laneKey))}</p>
+        <em>${escapeHtml(nextAction)}</em>
+      </div>
+    `;
+  }
+
+  function getPipelineEmptyCopy(laneKey) {
+    const copy = {
+      immediate: "本轮暂未形成强行动项。",
+      review: "暂无需要单独复核的候选。",
+      monitor: "暂无观察信号。",
+      rejected: "暂无明确淘汰项。",
+    };
+    return copy[laneKey] || "暂无结果。";
+  }
+
+  function getPipelineDefaultAction(laneKey) {
+    const copy = {
+      immediate: "打开来源，复核报名入口和截止时间。",
+      review: "先复核资格、费用、截止时间和主办方。",
+      monitor: "加入下一轮监控关键词。",
+      rejected: "本轮不行动，仅保留原因。",
+    };
+    return copy[laneKey] || "先复核来源。";
+  }
+
+  function getPipelineDefaultReason(laneKey) {
+    const copy = {
+      immediate: "与当前雷达画像高度匹配，建议优先复核。",
+      review: "方向匹配，但证据字段仍需确认。",
+      monitor: "可作为趋势或来源线索继续观察。",
+      rejected: "当前证据不足或行动性偏弱。",
+    };
+    return copy[laneKey] || "与当前雷达画像相关。";
   }
 
   function renderTopActionStrip(cards) {
