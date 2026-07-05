@@ -17,11 +17,15 @@
     currentResult: null,
     confirmedVersion: null,
     copiedRadarId: null,
+    chatWindowId: null,
+    boundRadarId: AI_EVENT_SAMPLE_ROOM.id,
     pendingFirstMessage: "",
     sidebarCollapsed: false,
     modal: null,
     isBusy: false,
   };
+
+  let pendingChatWindowRequest = null;
 
   const CUSTOMER_LABELS = {
     direct_opportunity: "可直接行动的比赛机会",
@@ -86,6 +90,115 @@
     return json.data;
   }
 
+  async function patchJson(url, body) {
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error?.message || "请求失败");
+    return json.data;
+  }
+
+  async function putJson(url, body) {
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.error?.message || "请求失败");
+    return json.data;
+  }
+
+  function artifactTypeForPersistence(artifact) {
+    if (!artifact || typeof artifact !== "object") return undefined;
+    if (artifact.type === "radar" || artifact.type === "report" || artifact.type === "progress") {
+      return artifact.type;
+    }
+    return undefined;
+  }
+
+  async function ensureRadarChatWindow() {
+    if (heroRadarChatState.chatWindowId) return heroRadarChatState.chatWindowId;
+    if (pendingChatWindowRequest) return pendingChatWindowRequest;
+    const draft = heroRadarChatState.currentDraft;
+    pendingChatWindowRequest = postJson("/api/radar-chats", {
+      radarId: heroRadarChatState.boundRadarId || heroRadarChatState.copiedRadarId || undefined,
+      title: draft?.suggestedName || "AI 赛事雷达",
+      draftRadarVersion: draft?.radarVersion?.version || "V1.0",
+    })
+      .then((windowData) => {
+        heroRadarChatState.chatWindowId = windowData.id;
+        if (windowData.radarId) heroRadarChatState.boundRadarId = windowData.radarId;
+        saveState();
+        return windowData.id;
+      })
+      .catch(() => null)
+      .finally(() => {
+        pendingChatWindowRequest = null;
+      });
+    return pendingChatWindowRequest;
+  }
+
+  function persistChatMessage(message) {
+    ensureRadarChatWindow()
+      .then((chatWindowId) => {
+        if (!chatWindowId) return null;
+        return postJson(`/api/radar-chats/${chatWindowId}/messages`, {
+          role: message.role === "user" ? "user" : "assistant",
+          content: message.content || artifactTypeForPersistence(message.artifact) || " ",
+          linkedRadarVersion: message.artifact?.version || heroRadarChatState.currentDraft?.radarVersion?.version,
+          linkedRunId: message.artifact?.runId,
+          linkedReportId: message.artifact?.reportId,
+          artifactType: artifactTypeForPersistence(message.artifact),
+        });
+      })
+      .catch(() => {
+        // Persistence is best-effort; the UI must not block if the local store is unavailable.
+      });
+  }
+
+  function updateRadarChatWindow(patch) {
+    ensureRadarChatWindow()
+      .then((chatWindowId) => {
+        if (!chatWindowId) return null;
+        return patchJson(`/api/radar-chats/${chatWindowId}`, patch);
+      })
+      .catch(() => {
+        // Keep chat usable even when the local persistence API is unavailable.
+      });
+  }
+
+  function buildMemorySummaryFromDraft(extra = {}) {
+    const version = heroRadarChatState.currentDraft?.radarVersion || {};
+    const summary = version.oneSentencePositioning || heroRadarChatState.currentDraft?.description || "AI 赛事雷达正在学习你的需求。";
+    return {
+      summary,
+      targetUser: formatReadableItem(version.targetUser),
+      watchingFor: [
+        ...asArray(version.opportunityIntents),
+        ...asArray(version.highValueCriteria),
+      ].map(formatReadableItem).filter(Boolean).slice(0, 12),
+      exclusions: asArray(version.exclusionRules).map(formatReadableItem).filter(Boolean).slice(0, 12),
+      confirmedRules: asArray(version.highValueCriteria).map(formatReadableItem).filter(Boolean).slice(0, 8),
+      rejectedPatterns: asArray(version.exclusionRules).map(formatReadableItem).filter(Boolean).slice(0, 8),
+      ...extra,
+    };
+  }
+
+  function persistMemorySummary(extra = {}) {
+    ensureRadarChatWindow()
+      .then((chatWindowId) => {
+        if (!chatWindowId) return null;
+        return putJson(`/api/radar-chats/${chatWindowId}/memory-summary`, buildMemorySummaryFromDraft(extra));
+      })
+      .catch(() => {
+        // Non-blocking persistence.
+      });
+  }
+
   function saveState() {
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(heroRadarChatState));
@@ -105,6 +218,10 @@
       heroRadarChatState.currentResult = parsed.currentResult || null;
       heroRadarChatState.confirmedVersion = parsed.confirmedVersion || null;
       heroRadarChatState.copiedRadarId = parsed.copiedRadarId || null;
+      heroRadarChatState.chatWindowId = parsed.chatWindowId || null;
+      if (Object.prototype.hasOwnProperty.call(parsed, "boundRadarId")) {
+        heroRadarChatState.boundRadarId = parsed.boundRadarId || null;
+      }
       heroRadarChatState.pendingFirstMessage = parsed.pendingFirstMessage || "";
       heroRadarChatState.modal = parsed.modal || null;
     } catch {
@@ -128,6 +245,7 @@
     heroRadarChatState.messages.push(message);
     saveState();
     renderHeroRadarChat();
+    persistChatMessage(message);
     return message;
   }
 
@@ -614,6 +732,8 @@
     heroRadarChatState.currentResult = null;
     heroRadarChatState.confirmedVersion = null;
     heroRadarChatState.copiedRadarId = null;
+    heroRadarChatState.chatWindowId = null;
+    heroRadarChatState.boundRadarId = AI_EVENT_SAMPLE_ROOM.id;
     heroRadarChatState.pendingFirstMessage = "";
     heroRadarChatState.modal = null;
     heroRadarChatState.isBusy = false;
@@ -621,6 +741,7 @@
 
   async function openHeroRadarWindow() {
     if (window.switchTab) window.switchTab("home");
+    heroRadarChatState.boundRadarId = AI_EVENT_SAMPLE_ROOM.id;
     if (heroRadarChatState.messages.length === 0) {
       heroRadarChatState.pendingFirstMessage = HERO_DEMO_PROMPT;
       addMessage("assistant", "继续编辑 AI 赛事雷达。我已把默认需求放到底部输入框，你可以直接发送，也可以先改成自己的需求。");
@@ -637,6 +758,7 @@
   async function createNewHeroRadarWindow(initialMessage = "") {
     if (window.switchTab) window.switchTab("home");
     clearHeroRadarConversation();
+    heroRadarChatState.boundRadarId = null;
     const text = String(initialMessage || "").trim();
     heroRadarChatState.pendingFirstMessage = text;
     addMessage("assistant", text
@@ -716,6 +838,11 @@
           description: `${heroRadarChatState.currentDraft.description || ""}\n${text}`.trim(),
         };
       }
+      updateRadarChatWindow({
+        title: heroRadarChatState.currentDraft.suggestedName || "AI 赛事雷达",
+        draftRadarVersion: heroRadarChatState.currentDraft.radarVersion?.version || "V1.0",
+      });
+      persistMemorySummary({ lastFeedback: text });
       addMessage("assistant", `我把雷达更新为 ${heroRadarChatState.currentDraft.radarVersion?.version || "V1.0"}，你先确认这版是否准确。`, {
         type: "radar",
         version: heroRadarChatState.currentDraft.radarVersion?.version,
@@ -763,6 +890,12 @@
       ...draft,
       spec: confirmedSpec,
     };
+    updateRadarChatWindow({
+      title: draft.suggestedName || "AI 赛事雷达",
+      currentConfirmedRadarVersion: version,
+      draftRadarVersion: version,
+    });
+    persistMemorySummary();
     const progressSteps = [
       "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
       "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
@@ -814,6 +947,11 @@
         searchMode: window.getChancePingSearchMode?.(),
         markdown: report.markdown,
       };
+      updateRadarChatWindow({
+        latestRunId: search.run?.id,
+        latestReportId: report.reportId,
+        currentConfirmedRadarVersion: version,
+      });
       updateMessageArtifact(progressMessage.id, (artifact) => ({
         ...artifact,
         activeStepCount: progressSteps.length,
@@ -880,6 +1018,10 @@
 
   function openHeroRadarEditor(radar) {
     if (window.switchTab) window.switchTab("home");
+    if (radar?.id) {
+      heroRadarChatState.chatWindowId = null;
+      heroRadarChatState.boundRadarId = radar.id;
+    }
     const name = radar?.name || "AI 赛事雷达";
     addMessage("assistant", `已打开「${name}」的雷达窗口。你可以直接告诉我哪里要改，我会先生成新版雷达给你确认。`);
     const input = document.getElementById("hero-radar-chat-input") || document.getElementById("home-input");

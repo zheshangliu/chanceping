@@ -1,0 +1,133 @@
+import { existsSync, readFileSync, rmSync } from "node:fs";
+import { createApp } from "../src/api/app";
+import { createAppContext } from "../src/api/context";
+
+let pass = 0;
+let fail = 0;
+
+function check(name: string, condition: boolean, detail = "") {
+  if (condition) {
+    pass += 1;
+    console.log(`PASS ${name}`);
+  } else {
+    fail += 1;
+    console.error(`FAIL ${name}${detail ? `: ${detail}` : ""}`);
+  }
+}
+
+function read(path: string): string {
+  return existsSync(path) ? readFileSync(path, "utf8") : "";
+}
+
+async function json<T>(response: Response): Promise<T> {
+  return await response.json() as T;
+}
+
+async function run() {
+  rmSync("data/q7-chat-window-test", { recursive: true, force: true });
+  process.env.CHANCEPING_RADAR_CHAT_STORE_PATH = "data/q7-chat-window-test/radar-chat-windows.json";
+
+  const storeSource = read("src/agents/radar-chat-store.ts");
+  const contextSource = read("src/api/context.ts");
+  const appSource = read("src/api/app.ts");
+  const routeSource = read("src/api/routes/radar-chats.ts");
+  const heroChatSource = read("web/hero-radar-chat.js");
+
+  check("radar chat store exists", existsSync("src/agents/radar-chat-store.ts"));
+  check("radar chat route exists", existsSync("src/api/routes/radar-chats.ts"));
+  check("AppContext exposes radarChatStore", contextSource.includes("radarChatStore"));
+  check("createApp registers /api/radar-chats", appSource.includes('"/api/radar-chats"') && appSource.includes("radarChatRoutes"));
+  check("store defines RadarChatWindow", storeSource.includes("RadarChatWindow"));
+  check("store defines RadarChatMessage", storeSource.includes("RadarChatMessage"));
+  check("store defines RadarMemorySummary", storeSource.includes("RadarMemorySummary"));
+  check("store can list by radarId", storeSource.includes("listByRadarId"));
+  check("route supports message append", routeSource.includes("/:id/messages"));
+  check("route supports memory summary update", routeSource.includes("/:id/memory-summary"));
+  check("hero chat persists to radar chat API", heroChatSource.includes("/api/radar-chats"));
+  check("hero chat tracks chatWindowId", heroChatSource.includes("chatWindowId"));
+
+  const ctx = createAppContext();
+  if (!ctx.radarChatStore) {
+    throw new Error("createAppContext did not create radarChatStore");
+  }
+  const app = createApp(ctx);
+
+  const createResponse = await app.request("/api/radar-chats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      radarId: "radar_ai_event_demo",
+      title: "AI 赛事雷达",
+      userId: "demo_user",
+    }),
+  });
+  const createJson = await json<{ success: boolean; data?: any; error?: any }>(createResponse);
+  check("POST /api/radar-chats returns 200", createResponse.status === 200, String(createResponse.status));
+  check("POST /api/radar-chats succeeds", createJson.success === true, JSON.stringify(createJson.error ?? {}));
+  const chatWindow = createJson.data;
+  check("chat window id uses radar_chat_ prefix", typeof chatWindow?.id === "string" && chatWindow.id.startsWith("radar_chat_"), chatWindow?.id ?? "");
+  check("chat window binds radarId", chatWindow?.radarId === "radar_ai_event_demo", chatWindow?.radarId ?? "");
+  check("chat window has memory summary", typeof chatWindow?.memorySummary?.summary === "string");
+
+  const messageResponse = await app.request(`/api/radar-chats/${chatWindow?.id}/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      role: "user",
+      content: "我是 OPC 创业者，只要可报名 AI 比赛。",
+      linkedRadarVersion: "V1.0",
+    }),
+  });
+  const messageJson = await json<{ success: boolean; data?: any; error?: any }>(messageResponse);
+  check("POST /messages returns 200", messageResponse.status === 200, String(messageResponse.status));
+  check("POST /messages succeeds", messageJson.success === true, JSON.stringify(messageJson.error ?? {}));
+  check("message has stable id", typeof messageJson.data?.message?.id === "string" && messageJson.data.message.id.startsWith("radar_msg_"));
+
+  const summaryResponse = await app.request(`/api/radar-chats/${chatWindow?.id}/memory-summary`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      targetUser: "OPC 创业者",
+      watchingFor: ["AI 比赛", "Hackathon"],
+      exclusions: ["展会资讯", "学生专属"],
+      summary: "OPC 创业者寻找可报名 AI 赛事机会。",
+    }),
+  });
+  const summaryJson = await json<{ success: boolean; data?: any; error?: any }>(summaryResponse);
+  check("PUT /memory-summary returns 200", summaryResponse.status === 200, String(summaryResponse.status));
+  check("PUT /memory-summary succeeds", summaryJson.success === true, JSON.stringify(summaryJson.error ?? {}));
+  check("memory summary keeps exclusions", summaryJson.data?.memorySummary?.exclusions?.includes("学生专属") === true);
+
+  const detailResponse = await app.request(`/api/radar-chats/${chatWindow?.id}`);
+  const detailJson = await json<{ success: boolean; data?: any; error?: any }>(detailResponse);
+  check("GET /api/radar-chats/:id returns 200", detailResponse.status === 200, String(detailResponse.status));
+  check("detail includes appended messages", Array.isArray(detailJson.data?.messages) && detailJson.data.messages.length === 1, JSON.stringify(detailJson.data?.messages ?? []));
+  check("detail includes updated memory summary", detailJson.data?.window?.memorySummary?.targetUser === "OPC 创业者");
+
+  const listResponse = await app.request("/api/radar-chats?radar_id=radar_ai_event_demo");
+  const listJson = await json<{ success: boolean; data?: any; error?: any }>(listResponse);
+  check("GET /api/radar-chats?radar_id returns 200", listResponse.status === 200, String(listResponse.status));
+  check("list by radarId contains window", Array.isArray(listJson.data) && listJson.data.some((item: any) => item.id === chatWindow?.id));
+
+  ctx.radarChatStore.save();
+  const freshCtx = createAppContext();
+  if (!freshCtx.radarChatStore) {
+    throw new Error("fresh createAppContext did not create radarChatStore");
+  }
+  const reloaded = freshCtx.radarChatStore.get(chatWindow.id);
+  check("chat window persists after reload", reloaded?.id === chatWindow.id);
+  check("chat messages persist after reload", freshCtx.radarChatStore.listMessages(chatWindow.id).length === 1);
+}
+
+run()
+  .then(() => {
+    if (fail > 0) {
+      console.error(`Q.7-I chat window: ${pass} PASS / ${fail} FAIL`);
+      process.exit(1);
+    }
+    console.log(`Q.7-I chat window: ${pass} PASS / 0 FAIL`);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

@@ -85,6 +85,7 @@
     "verify:q7": "tsx scripts/verify-q7-radar-evolution.ts",
     "verify:q7:demo": "tsx scripts/verify-q7-ai-competition-demo.ts",
     "verify:q7:hero-chat": "tsx scripts/verify-q7-hero-chat.ts",
+    "verify:q7:chat-window": "tsx scripts/verify-q7-chat-window.ts",
     "verify:q7:llm-reviser": "tsx scripts/verify-q7-llm-reviser.ts",
     "verify:q7:random-ai": "tsx scripts/verify-q7-ai-entrepreneur-random.ts",
     "ui:q7:screenshots": "tsx scripts/capture-q7-ui-screenshots.ts",

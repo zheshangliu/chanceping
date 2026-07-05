@@ -21,6 +21,8 @@ import type { RadarStore, RadarRunStore } from "../agents/radar-store";
 import { RadarRegistry } from "../agents/radar-registry";
 import { JsonReportStore } from "../agents/report-store";
 import type { ReportStore } from "../agents/report-store";
+import { JsonRadarChatStore } from "../agents/radar-chat-store";
+import type { RadarChatStore } from "../agents/radar-chat-store";
 
 /** 会话池中的条目 */
 interface ConversationEntry {
@@ -50,6 +52,8 @@ export interface AppContext {
   radarRegistry: RadarRegistry;
   /** V1.5-08 新增：报告元数据存储 */
   reportStore: ReportStore;
+  /** Q.7-I 新增：一个聊天窗口绑定一个雷达的上下文存储 */
+  radarChatStore?: RadarChatStore;
 }
 
 /**
@@ -74,6 +78,7 @@ export function createAppContext(): AppContext {
 
   // V1.5-08 新增：报告元数据存储（构造时自动 load）
   const reportStore = new JsonReportStore();
+  const radarChatStore = new JsonRadarChatStore();
 
   return {
     llmAdapter,
@@ -86,5 +91,6 @@ export function createAppContext(): AppContext {
     radarRunStore,
     radarRegistry,
     reportStore,
+    radarChatStore,
   };
 }
