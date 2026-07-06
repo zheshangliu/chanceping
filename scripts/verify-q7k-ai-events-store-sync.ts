@@ -1,0 +1,152 @@
+import fs from "fs";
+import path from "path";
+import { LocalFileStore } from "../src/agents/opportunity-store";
+import { buildPublicAiEventFeed } from "../src/public/ai-events-publisher";
+import {
+  hydratePublicAiEventImages,
+  PUBLIC_AI_EVENTS_RADAR_ID,
+  syncPublicAiEventsToStore,
+} from "../src/public/ai-events-store-sync";
+
+let passCount = 0;
+let failCount = 0;
+
+function check(name: string, condition: boolean, detail = ""): void {
+  if (condition) {
+    passCount += 1;
+    console.log(`[PASS] ${name}`);
+  } else {
+    failCount += 1;
+    console.error(`[FAIL] ${name}${detail ? `: ${detail}` : ""}`);
+  }
+}
+
+function cardExtras(card: unknown): Record<string, unknown> {
+  return card as Record<string, unknown>;
+}
+
+console.log("\n[Q7K AI Events Store Sync] Public feed to opportunity store checks\n");
+
+const tmpDir = path.resolve(process.cwd(), "data", ".tmp");
+fs.mkdirSync(tmpDir, { recursive: true });
+const storePath = path.join(tmpDir, "q7k-ai-events-store-sync.json");
+if (fs.existsSync(storePath)) {
+  fs.rmSync(storePath);
+}
+
+const store = new LocalFileStore({ file_path: storePath, auto_flush: false });
+const referenceNow = "2026-07-06T00:00:00.000Z";
+const feedBeforeSync = buildPublicAiEventFeed([], undefined, {
+  lifecycle: "all",
+  page: 1,
+  pageSize: 60,
+  now: referenceNow,
+});
+
+const result = syncPublicAiEventsToStore(store, undefined, { now: referenceNow });
+const publicRadarEntries = store.list({
+  radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+  page: 1,
+  page_size: 1000,
+  sort_by: "deadline",
+  sort_order: "asc",
+}).entries;
+const serialized = JSON.stringify(publicRadarEntries);
+
+check("sync returns public radar id", result.radarId === PUBLIC_AI_EVENTS_RADAR_ID, JSON.stringify(result));
+check("sync imports public feed candidates", result.syncedCount >= feedBeforeSync.stats.filteredCount, JSON.stringify(result));
+check("public radar query sees synced entries", publicRadarEntries.length >= feedBeforeSync.stats.filteredCount, `entries=${publicRadarEntries.length}, feed=${feedBeforeSync.stats.filteredCount}`);
+check("each synced entry includes public radar id", publicRadarEntries.every((entry) => entry.radarIds?.includes(PUBLIC_AI_EVENTS_RADAR_ID)), publicRadarEntries.slice(0, 3).map((entry) => JSON.stringify(entry.radarIds)).join("; "));
+check("synced cards remain AI competition radar type", publicRadarEntries.every((entry) => entry.radar_type === "ai_competition"), publicRadarEntries.slice(0, 3).map((entry) => entry.radar_type).join(", "));
+check("synced cards expose official source URLs", publicRadarEntries.every((entry) => entry.card.official_source_url.startsWith("http")), publicRadarEntries.slice(0, 3).map((entry) => entry.card.official_source_url).join(", "));
+check("synced cards keep public image metadata", publicRadarEntries.every((entry) => typeof cardExtras(entry.card).coverImageUrl === "string" && typeof cardExtras(entry.card).imageStatus === "string"), serialized.slice(0, 240));
+check("synced cards keep event metadata", publicRadarEntries.every((entry) => typeof cardExtras(entry.card).eventModeLabel === "string" && typeof cardExtras(entry.card).participantTypeLabel === "string" && typeof cardExtras(entry.card).rewardTypeLabel === "string"), serialized.slice(0, 240));
+check("synced cards do not push review burden wording into public-facing fields", !/待复核|needs_review|needs review|review required/i.test(serialized), serialized.slice(0, 240));
+check("sync reports real image coverage separately", typeof result.imageCoverageCount === "number" && result.imageCoverageCount >= 0, JSON.stringify(result));
+
+const totalAfterFirstSync = store.list({
+  radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+  page: 1,
+  page_size: 1000,
+}).total;
+const result2 = syncPublicAiEventsToStore(store, undefined, { now: referenceNow });
+const totalAfterSecondSync = store.list({
+  radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+  page: 1,
+  page_size: 1000,
+}).total;
+
+check("sync is idempotent", totalAfterSecondSync === totalAfterFirstSync, `first=${totalAfterFirstSync}, second=${totalAfterSecondSync}, result=${JSON.stringify(result2)}`);
+
+async function runImageHydrationCheck(): Promise<void> {
+  const hydrated = await hydratePublicAiEventImages(store, {
+    limit: 1,
+    fetchHtml: async () => `
+      <html>
+        <head>
+          <meta property="og:title" content="Hydrated AI Event" />
+          <meta property="og:image" content="https://official-ai-event.example.org/cover.png" />
+        </head>
+        <body><a href="/register">Register now</a></body>
+      </html>
+    `,
+  });
+  const hydratedEntries = store.list({
+    radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+    page: 1,
+    page_size: 1000,
+  }).entries;
+  check("image hydrator writes source image metadata", hydrated.hydratedCount === 1 && hydratedEntries.some((entry) => cardExtras(entry.card).imageStatus === "source_image" && cardExtras(entry.card).coverImageUrl === "https://official-ai-event.example.org/cover.png"), JSON.stringify(hydrated));
+}
+
+async function runProductApiPathCheck(): Promise<void> {
+  process.env.DATA_MODE = "mock";
+  process.env.LLM_MODE = "mock";
+  process.env.STORE_TYPE = "meili";
+  process.env.MEILI_MOCK = "true";
+
+  const { createApp } = await import("../src/api/app");
+  const { createAppContext } = await import("../src/api/context");
+  const ctx = createAppContext();
+  const app = createApp(ctx);
+  const syncResponse = await app.request("/api/public/ai-events/sync", { method: "POST" });
+  const syncJson = await syncResponse.json() as {
+    success?: boolean;
+    data?: { radarId?: string; totalForPublicRadar?: number; syncedCount?: number };
+  };
+  const opportunitiesResponse = await app.request(`/api/opportunities?radar_id=${PUBLIC_AI_EVENTS_RADAR_ID}&page_size=1000`);
+  const opportunitiesJson = await opportunitiesResponse.json() as {
+    success?: boolean;
+    data?: { total?: number; entries?: Array<Record<string, unknown>> };
+  };
+  const apiSerialized = JSON.stringify({ syncJson, opportunitiesJson });
+
+  check("product sync API returns 200", syncResponse.status === 200, `status=${syncResponse.status}`);
+  check("product sync API succeeds", syncJson.success === true, apiSerialized.slice(0, 240));
+  check("product sync API returns public radar id", syncJson.data?.radarId === PUBLIC_AI_EVENTS_RADAR_ID, apiSerialized.slice(0, 240));
+  check("product opportunities API returns 200", opportunitiesResponse.status === 200, `status=${opportunitiesResponse.status}`);
+  check("product opportunities API sees public synced entries", Number(opportunitiesJson.data?.total ?? 0) >= Number(syncJson.data?.syncedCount ?? 0), apiSerialized.slice(0, 240));
+  check("product API keeps public image fields", apiSerialized.includes("coverImageUrl") && apiSerialized.includes("imageStatus"), apiSerialized.slice(0, 240));
+  check("product API does not leak env keys", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(apiSerialized), apiSerialized.slice(0, 240));
+}
+
+runImageHydrationCheck()
+  .then(runProductApiPathCheck)
+  .then(() => {
+    if (fs.existsSync(storePath)) {
+      fs.rmSync(storePath);
+    }
+    console.log(`\nQ7K AI events store sync checks: ${passCount} PASS / ${failCount} FAIL`);
+    if (failCount > 0) {
+      process.exit(1);
+    }
+  })
+  .catch((error) => {
+    failCount += 1;
+    console.error("[FAIL] product API path threw", error);
+    if (fs.existsSync(storePath)) {
+      fs.rmSync(storePath);
+    }
+    console.log(`\nQ7K AI events store sync checks: ${passCount} PASS / ${failCount} FAIL`);
+    process.exit(1);
+  });

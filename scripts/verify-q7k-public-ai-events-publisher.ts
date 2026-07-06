@@ -155,6 +155,34 @@ const historicalFeed = buildPublicAiEventFeed([
 });
 check("historical feed contains expired opportunities", historicalFeed.items.some((item) => item.lifecycleStatus === "historical" && item.title.includes("Historical AI Event")), JSON.stringify(historicalFeed.items.slice(0, 3)));
 
+const unknownDeadlineFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "Unknown Deadline AI Event：未知截止时间",
+    official_source_url: "https://unknown-deadline-ai-event.example.org/",
+    deadline: "9999-12-31",
+  }), { dedup_key: "unknown-deadline-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("unknown deadline sentinel is hidden from public display", unknownDeadlineFeed.items[0]?.deadlineDisplay === "见官网" && unknownDeadlineFeed.items[0]?.deadlineSortKey === "9999-12-31", JSON.stringify(unknownDeadlineFeed.items[0]));
+
+const closedTitleFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "AI Agent 全球专项赛已截止：标题标记历史赛事",
+    official_source_url: "https://closed-title-ai-event.example.org/",
+    deadline: "9999-12-31",
+  }), { dedup_key: "closed-title-entry" }),
+], emptySeedData, {
+  lifecycle: "historical",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("closed title signal moves unknown-date event to historical feed", closedTitleFeed.items.some((item) => item.title.includes("已截止") && item.lifecycleStatus === "historical"), JSON.stringify(closedTitleFeed.items));
+
 const creatorFeed = buildPublicAiEventFeed([
   makeEntry(makeCard({
     title: "AI Creator Challenge：短视频与自媒体创作赛",

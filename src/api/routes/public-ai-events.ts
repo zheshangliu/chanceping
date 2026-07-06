@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import type { AppContext } from "../context";
 import type { ApiResponse } from "../types";
 import { buildPublicAiEventFeed, type PublicAiEventLifecycle } from "../../public/ai-events-publisher";
+import { hydratePublicAiEventImages, syncPublicAiEventsToStore } from "../../public/ai-events-store-sync";
 
 function parseLifecycle(value: string | undefined): PublicAiEventLifecycle | "all" {
   if (value === "historical" || value === "history") return "historical";
@@ -36,6 +37,29 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
     return c.json({
       success: true,
       data,
+      error: null,
+      duration_ms: Date.now() - start,
+    } satisfies ApiResponse);
+  });
+
+  app.post("/ai-events/sync", (c) => {
+    const start = Date.now();
+    const result = syncPublicAiEventsToStore(ctx.store);
+    return c.json({
+      success: true,
+      data: result,
+      error: null,
+      duration_ms: Date.now() - start,
+    } satisfies ApiResponse);
+  });
+
+  app.post("/ai-events/hydrate-images", async (c) => {
+    const start = Date.now();
+    const limit = parsePositiveInt(c.req.query("limit"), 12, 50);
+    const result = await hydratePublicAiEventImages(ctx.store, { limit });
+    return c.json({
+      success: true,
+      data: result,
       error: null,
       duration_ms: Date.now() - start,
     } satisfies ApiResponse);

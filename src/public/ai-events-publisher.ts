@@ -144,7 +144,7 @@ function getDomain(urlOrDomain: string): string {
 
 function normalizePublicText(value: string | undefined | null, fallback: string): string {
   const raw = String(value ?? "").trim();
-  if (!raw || /^(待复核|needs review|review)$/i.test(raw)) return fallback;
+  if (!raw || /^(9999-12-31|0000-00-00|待复核|needs review|review|unknown|tbd|n\/a|null|undefined)$/i.test(raw)) return fallback;
   return raw
     .replace(/待复核/g, fallback)
     .replace(/需自行复核/g, "请以官方页面确认")
@@ -187,11 +187,13 @@ function formatDateKey(date: Date | null, lifecycle: PublicAiEventLifecycle): st
 }
 
 function inferLifecycle(input: {
+  title?: string;
   status?: string;
   deadline?: string;
   evidenceStatus?: string;
   candidateType?: string;
 }, referenceDate: Date): PublicAiEventLifecycle {
+  if (/已截止|已结束|报名结束|closed|ended|past event|archive/i.test(String(input.title ?? ""))) return "historical";
   if (HISTORICAL_STATUSES.has(String(input.status ?? ""))) return "historical";
   if (input.evidenceStatus === "historical_reference" || input.candidateType === "reference_case") return "historical";
   const deadlineDate = parseDeadlineDate(input.deadline);
@@ -551,6 +553,7 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
   const typeText = `${card.type} ${card.opportunity_kind ?? ""}`;
   const sourceType = inferSourceType(sourceDomain, typeText);
   const lifecycleStatus = inferLifecycle({
+    title: card.title,
     status: card.status,
     deadline: card.deadline,
     evidenceStatus: card.evidence_status,
@@ -670,6 +673,7 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
 function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate: Date): PublicAiEventCard {
   const domain = candidate.sourceDomain === "multiple" ? getDomain(candidate.officialUrl) : candidate.sourceDomain;
   const lifecycleStatus = inferLifecycle({
+    title: candidate.title,
     deadline: candidate.deadline,
     evidenceStatus: candidate.evidenceStatus,
     candidateType: candidate.candidateType,
