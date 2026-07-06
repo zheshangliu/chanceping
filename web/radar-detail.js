@@ -32,6 +32,8 @@
     archived: "已归档",
   };
 
+  const PUBLIC_AI_EVENTS_RADAR_ID = "public_ai_events";
+
   // ============================================================
   // 状态
   // ============================================================
@@ -85,6 +87,57 @@
   function getSearchModeRequest() {
     const mode = typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined;
     return mode === "live" ? { search_mode: "live" } : {};
+  }
+
+  function radarSearchText(radar) {
+    const spec = radar?.spec || {};
+    const chunks = [
+      radar?.id,
+      radar?.name,
+      radar?.kind,
+      spec.oneSentencePositioning,
+      spec.profile_summary?.identity,
+      spec.profile_summary?.target,
+      spec.client_profile?.business_type,
+      spec.client_profile?.client_type,
+      spec.opportunity_scope?.primary_opportunity_types,
+      spec.core_goals?.primary_goal,
+    ];
+    return chunks
+      .flatMap((item) => Array.isArray(item) ? item : [item])
+      .filter(Boolean)
+      .map(String)
+      .join(" ");
+  }
+
+  function isAiEventsHeroRadar(radar) {
+    const text = radarSearchText(radar);
+    const hasContestIntent = /AI\s*赛事|AI\s*比赛|比赛|赛事|Hackathon|黑客松|马拉松|开发者挑战|报名|参赛|提交作品/i.test(text);
+    const hasAiOrHeroContext = /AI|OPC|个人开发者|云资源|开发者|Qwen|Devpost|DoraHacks|Lablab|Kaggle/i.test(text);
+    return hasContestIntent && hasAiOrHeroContext;
+  }
+
+  function getOpportunityRadarIdForView(radar) {
+    return isAiEventsHeroRadar(radar) ? PUBLIC_AI_EVENTS_RADAR_ID : radar?.id;
+  }
+
+  function displayDeadline(value) {
+    const text = String(value || "").trim();
+    if (!text || text === "9999-12-31" || text === "0000-00-00" || /^9999-12-31/.test(text)) return "见官网";
+    return text;
+  }
+
+  function isCurrentPublicAiEventCard(card) {
+    const lifecycle = String(card?.lifecycleStatus || card?.lifecycle_status || "").toLowerCase();
+    const title = String(card?.title || "");
+    if (lifecycle === "historical" || lifecycle === "expired") return false;
+    if (/已截止|已结束|报名结束|closed|ended|past event|archive/i.test(title)) return false;
+    return true;
+  }
+
+  function filterPublicAiEventCardsForView(entries, isPublicAiEventsBridge) {
+    if (!isPublicAiEventsBridge) return entries;
+    return entries.filter((entry) => isCurrentPublicAiEventCard(entry.card || entry));
   }
 
   function list(values) {
@@ -290,7 +343,8 @@
         </div>
 
         <div class="radar-detail-section radar-stored-opportunities">
-          <h4>已入库机会</h4>
+          <h4>${isAiEventsHeroRadar(radar) ? "已入库机会（AI Events 公共赛事库）" : "已入库机会"}</h4>
+          ${isAiEventsHeroRadar(radar) ? '<p class="placeholder">这里和公开页 /aievents 读取同一批公共赛事库机会；再次盯机会和编辑仍作用于你的长期雷达。</p>' : ""}
           <div id="radar-stored-opportunity-list">
             <p class="placeholder">加载中...</p>
           </div>
@@ -601,13 +655,16 @@
     if (!list) return;
     list.innerHTML = '<p class="placeholder">加载中...</p>';
     try {
-      const res = await fetch(`/api/opportunities?radar_id=${encodeURIComponent(radarId)}`);
+      const opportunityRadarId = getOpportunityRadarIdForView(currentRadar) || radarId;
+      const pageSize = opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID ? 1000 : 20;
+      const res = await fetch(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${pageSize}&sort_by=deadline&sort_order=asc`);
       const json = await res.json();
       if (json.success && json.data && Array.isArray(json.data.entries)) {
-        currentOpportunityCards = json.data.entries
+        const filteredEntries = filterPublicAiEventCardsForView(json.data.entries, opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID);
+        currentOpportunityCards = filteredEntries
           .map((entry) => entry.card)
           .filter(Boolean);
-        renderStoredOpportunities(json.data.entries);
+        renderStoredOpportunities(filteredEntries);
       } else {
         currentOpportunityCards = [];
         list.innerHTML = '<p class="placeholder">暂无入库机会</p>';
@@ -764,7 +821,7 @@
     const reason = data.relevance_reason || data.match_reason || data.ai_analysis || "";
     const recommendation = data.visible_level || data.score_label || "值得关注";
     const nextAction = data.next_action || (Array.isArray(data.recommendedActions) ? data.recommendedActions[0] : "") || "先打开来源确认行动入口。";
-    const deadline = data.deadline || "未明确";
+    const deadline = displayDeadline(data.deadline);
 
     card.innerHTML = `
       <div class="card-header">

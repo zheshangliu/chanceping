@@ -36,6 +36,8 @@
     archived: "已归档",
   };
 
+  const PUBLIC_AI_EVENTS_RADAR_ID = "public_ai_events";
+
   // ============================================================
   // 工具函数
   // ============================================================
@@ -84,6 +86,55 @@
   function kindToRadarType(kind) {
     if (kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") return kind;
     return "ai_competition";
+  }
+
+  function radarSearchText(radar) {
+    const spec = radar?.spec || {};
+    const chunks = [
+      radar?.id,
+      radar?.name,
+      radar?.kind,
+      spec.oneSentencePositioning,
+      spec.profile_summary?.identity,
+      spec.profile_summary?.target,
+      spec.client_profile?.business_type,
+      spec.client_profile?.client_type,
+      spec.opportunity_scope?.primary_opportunity_types,
+      spec.core_goals?.primary_goal,
+    ];
+    return chunks
+      .flatMap((item) => Array.isArray(item) ? item : [item])
+      .filter(Boolean)
+      .map(String)
+      .join(" ");
+  }
+
+  function isAiEventsHeroRadar(radar) {
+    const text = radarSearchText(radar);
+    const hasContestIntent = /AI\s*赛事|AI\s*比赛|比赛|赛事|Hackathon|黑客松|马拉松|开发者挑战|报名|参赛|提交作品/i.test(text);
+    const hasAiOrHeroContext = /AI|OPC|个人开发者|云资源|开发者|Qwen|Devpost|DoraHacks|Lablab|Kaggle/i.test(text);
+    return hasContestIntent && hasAiOrHeroContext;
+  }
+
+  function getOpportunityRadarIdForView(radar) {
+    return isAiEventsHeroRadar(radar) ? PUBLIC_AI_EVENTS_RADAR_ID : radar?.id;
+  }
+
+  function getOpportunityPageSizeForView(radar) {
+    return isAiEventsHeroRadar(radar) ? 1000 : 50;
+  }
+
+  function isCurrentPublicAiEventCard(card) {
+    const lifecycle = String(card?.lifecycleStatus || card?.lifecycle_status || "").toLowerCase();
+    const title = String(card?.title || "");
+    if (lifecycle === "historical" || lifecycle === "expired") return false;
+    if (/已截止|已结束|报名结束|closed|ended|past event|archive/i.test(title)) return false;
+    return true;
+  }
+
+  function filterPublicAiEventCardsForView(cards, publicAiEventsBridge) {
+    if (!publicAiEventsBridge) return cards;
+    return cards.filter(isCurrentPublicAiEventCard);
   }
 
   async function postJson(url, body) {
@@ -374,27 +425,38 @@
       return;
     }
     try {
+      const opportunityRadarId = getOpportunityRadarIdForView(radar);
+      const publicAiEventsBridge = opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID && opportunityRadarId !== radar.id;
+      const opportunityPageSize = getOpportunityPageSizeForView(radar);
       const [opportunities, runs, reports] = await Promise.all([
-        getJson(`/api/opportunities?radar_id=${encodeURIComponent(radar.id)}&page_size=50`),
+        getJson(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${opportunityPageSize}&sort_by=deadline&sort_order=asc`),
         getJson(`/api/radars/${encodeURIComponent(radar.id)}/runs?limit=1`),
         getJson(`/api/reports?radar_id=${encodeURIComponent(radar.id)}`),
       ]);
       const entries = opportunities.data?.entries || opportunities.data || [];
-      const cards = (Array.isArray(entries) ? entries : [])
+      const rawCards = (Array.isArray(entries) ? entries : [])
         .map((entry) => entry.card || entry)
         .filter(Boolean);
+      const cards = filterPublicAiEventCardsForView(rawCards, publicAiEventsBridge);
       const latestRun = Array.isArray(runs.data) ? runs.data[0] : null;
       const latestReport = Array.isArray(reports.data) ? reports.data[0] : null;
       window.showWatchResult({
         radarId: radar.id,
+        sourceRadarId: radar.id,
+        opportunityRadarId,
+        publicAiEventsBridge,
         runId: latestRun?.id,
         reportId: latestReport?.id || latestRun?.reportId,
-        suggestedName: radar.name || "我的机会雷达",
-        description: buildProfileSummaryText(radar) || "这是你保存的长期雷达，本页展示已入库机会和最新报告状态。",
+        suggestedName: publicAiEventsBridge ? "AI 赛事雷达" : (radar.name || "我的机会雷达"),
+        description: publicAiEventsBridge
+          ? buildPublicAiEventsResultDescription(radar, cards)
+          : (buildProfileSummaryText(radar) || "这是你保存的长期雷达，本页展示已入库机会和最新报告状态。"),
         opportunityCards: cards,
-        markdown: buildRadarResultMarkdown(radar, cards, latestReport, latestRun),
+        markdown: buildRadarResultMarkdown(radar, cards, latestReport, latestRun, { publicAiEventsBridge, opportunityRadarId }),
         runOutcome: latestRun?.runOutcome || { status: cards.length > 0 ? "succeeded" : "no_results" },
-        savedMessage: "这是我的雷达中的已保存结果；需要继续优化时，可以调整雷达画像。",
+        savedMessage: publicAiEventsBridge
+          ? `这里展示 AI Events 公共赛事库中当前有效的 ${cards.length} 条机会；编辑和再次盯机会仍会回到你的长期雷达。`
+          : "这是我的雷达中的已保存结果；需要继续优化时，可以调整雷达画像。",
       });
     } catch (err) {
       if (window.showToast) showToast(`加载机会和报告失败：${err instanceof Error ? err.message : "网络错误"}`, "error");
@@ -402,17 +464,27 @@
     }
   }
 
-  function buildRadarResultMarkdown(radar, cards, latestReport, latestRun) {
+  function buildPublicAiEventsResultDescription(radar, cards) {
+    const currentCount = cards.filter((card) => {
+      const lifecycle = String(card.lifecycleStatus || card.lifecycle_status || "").toLowerCase();
+      return lifecycle !== "historical" && lifecycle !== "expired";
+    }).length;
+    return `这是 ${radar.name || "AI 赛事雷达"} 绑定的 AI Events 公共赛事库。本页展示后台已入库的当前有效 AI 赛事机会 ${currentCount || cards.length} 条；公共页 /aievents 也读取同一批数据。`;
+  }
+
+  function buildRadarResultMarkdown(radar, cards, latestReport, latestRun, options = {}) {
+    const publicAiEventsBridge = options.publicAiEventsBridge === true;
     const lines = [
-      `# ${radar.name || "我的机会雷达"}｜机会和报告`,
+      `# ${publicAiEventsBridge ? "AI 赛事雷达" : (radar.name || "我的机会雷达")}｜机会和报告`,
       "",
       `- 雷达版本：${getRadarVersionLabel(radar)}`,
+      publicAiEventsBridge ? `- 机会来源：AI Events 公共赛事库（${options.opportunityRadarId || PUBLIC_AI_EVENTS_RADAR_ID}）` : "",
       `- 已入库机会：${cards.length} 条`,
       latestRun?.id ? `- 最近运行：${latestRun.id}` : "- 最近运行：暂无",
       latestReport?.id ? `- 最新报告：${latestReport.id}` : "- 最新报告：暂无",
       "",
       "## 本次建议先看",
-    ];
+    ].filter((line) => line !== "");
     const topCards = cards.slice(0, 5);
     if (topCards.length === 0) {
       lines.push("- 暂无已入库机会，可以点击“再次盯机会”生成新一轮结果。");

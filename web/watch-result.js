@@ -147,6 +147,12 @@
     return suggested || "本次盯机会结果";
   }
 
+  function displayDeadline(value) {
+    const text = String(value || "").trim();
+    if (!text || text === "9999-12-31" || text === "0000-00-00" || /^9999-12-31/.test(text)) return "见官网";
+    return text;
+  }
+
   function openRadarResultFeedback() {
     if (!currentResult) return;
     const rejectedCardTitles = (currentResult.opportunityCards || [])
@@ -401,7 +407,7 @@
           </div>
           <div>
             <dt>截止时间</dt>
-            <dd>${escapeHtml(card.deadline || "暂未从来源中确认")}</dd>
+            <dd>${escapeHtml(displayDeadline(card.deadline))}</dd>
           </div>
           <div>
             <dt>来源入口</dt>
