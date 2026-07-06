@@ -36,6 +36,7 @@ check("page keeps CTA back to console", html.includes('href="/?live_search=1"') 
 check("page loads public API with pagination params", js.includes("/api/public/ai-events?status=") && js.includes("page_size"));
 check("page still renders opportunity cards", js.includes("renderItem") && html.includes("ai-events-grid"));
 check("page has current/history filters", html.includes("ai-events-filter-current") && html.includes("ai-events-filter-historical"));
+check("history entry uses contest wording", html.includes("历史赛事") && js.includes("historicalTab: \"历史赛事\""), html.slice(html.indexOf("ai-events-filter-historical") - 80, html.indexOf("ai-events-filter-historical") + 160));
 check("page has category filter container", html.includes("ai-events-category-filter") && js.includes("currentCategory"));
 check("page requests category param", js.includes("category=") && js.includes("data-ai-events-category"));
 check("page renders AI contest category labels", js.includes("AI Agent / 智能体") && js.includes("Vibe Coding / AI 编程") && js.includes("AIGC 内容 / 自媒体"));

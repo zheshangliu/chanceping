@@ -64,6 +64,10 @@ check("synced cards keep event metadata", publicRadarEntries.every((entry) => ty
 check("synced cards do not push review burden wording into public-facing fields", !/待复核|needs_review|needs review|review required/i.test(serialized), serialized.slice(0, 240));
 check("sync reports real image coverage separately", typeof result.imageCoverageCount === "number" && result.imageCoverageCount >= 0, JSON.stringify(result));
 
+const publicRouteSource = fs.readFileSync(path.resolve(process.cwd(), "src/api/routes/public-ai-events.ts"), "utf8");
+const imageSyncSource = fs.readFileSync(path.resolve(process.cwd(), "src/public/ai-events-store-sync.ts"), "utf8");
+check("image hydration default can process the second batch", /parsePositiveInt\(c\.req\.query\("limit"\),\s*30,\s*120\)/.test(publicRouteSource) && /DEFAULT_IMAGE_HYDRATION_LIMIT\s*=\s*30/.test(imageSyncSource), "expected default 30 and max 120 for image hydration");
+
 const totalAfterFirstSync = store.list({
   radarId: PUBLIC_AI_EVENTS_RADAR_ID,
   page: 1,

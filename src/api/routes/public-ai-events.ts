@@ -55,7 +55,7 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
 
   app.post("/ai-events/hydrate-images", async (c) => {
     const start = Date.now();
-    const limit = parsePositiveInt(c.req.query("limit"), 12, 50);
+    const limit = parsePositiveInt(c.req.query("limit"), 30, 120);
     const result = await hydratePublicAiEventImages(ctx.store, { limit });
     return c.json({
       success: true,

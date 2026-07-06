@@ -16,7 +16,7 @@ export const PUBLIC_AI_EVENTS_RADAR_ID = "public_ai_events";
 export const PUBLIC_AI_EVENTS_RADAR_NAME = "AI Events 公共赛事库";
 
 const AI_EVENTS_SYNC_PAGE_SIZE = 60;
-const DEFAULT_IMAGE_HYDRATION_LIMIT = 12;
+const DEFAULT_IMAGE_HYDRATION_LIMIT = 30;
 const DEFAULT_IMAGE_HYDRATION_TIMEOUT_MS = 8000;
 
 export interface SyncPublicAiEventsOptions extends Pick<BuildPublicAiEventFeedOptions, "now"> {
@@ -247,7 +247,7 @@ export async function hydratePublicAiEventImages(
   store: OpportunityStore,
   options: HydratePublicAiEventImagesOptions = {},
 ): Promise<HydratePublicAiEventImagesResult> {
-  const limit = Math.max(1, Math.min(options.limit ?? DEFAULT_IMAGE_HYDRATION_LIMIT, 50));
+  const limit = Math.max(1, Math.min(options.limit ?? DEFAULT_IMAGE_HYDRATION_LIMIT, 120));
   const fetchHtml = options.fetchHtml ?? ((url: string) => defaultFetchHtml(url, options.timeoutMs));
   const entries = store.list({
     radarId: PUBLIC_AI_EVENTS_RADAR_ID,

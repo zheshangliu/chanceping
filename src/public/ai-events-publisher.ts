@@ -628,7 +628,7 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
     sourceName: card.organizer || sourceDomain || "官方来源",
     sourceDomain,
     sourceType,
-    statusLabel: lifecycleStatus === "current" ? "当前有效" : "历史机会",
+    statusLabel: lifecycleStatus === "current" ? "当前有效" : "历史赛事",
     tags,
     deadline: deadlineDisplay,
     reward,
@@ -740,7 +740,7 @@ function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate
   });
   return {
     ...candidate,
-    statusLabel: lifecycleStatus === "current" ? "当前有效" : "历史机会",
+    statusLabel: lifecycleStatus === "current" ? "当前有效" : "历史赛事",
     deadline: deadlineDisplay,
     reward,
     coverImageUrl,

@@ -44,6 +44,8 @@ check("source network includes second-batch international platforms", /DrivenDat
 check("source network includes second-batch challenge hosts", /EvalAI|eval\.ai/i.test(sourceText) && /Grand Challenge|grand-challenge\.org/i.test(sourceText), sourceText);
 check("source network includes second-batch domestic platforms", /AI Studio|aistudio\.baidu\.com/i.test(sourceText) && /讯飞|xfyun|科大讯飞/i.test(sourceText) && /华为云|huaweicloud/i.test(sourceText), sourceText);
 check("source network includes aggregation and benchmark sources", /CompeteHub|competehub\.dev/i.test(sourceText) && /ML Contests|mlcontests/i.test(sourceText) && /Papers with Code|paperswithcode/i.test(sourceText), sourceText);
+check("source network includes second-batch creator contest sources", /Reply AI Film Festival|reply\.com/i.test(sourceText) && /Project Odyssey|projectodyssey/i.test(sourceText) && /FilmFreeway|filmfreeway\.com/i.test(sourceText), sourceText);
+check("source network includes second-batch domestic and GitHub leads", /和鲸|heywhale|kesci/i.test(sourceText) && /GitHub AI contest lists|awesome-ai/i.test(sourceText) && /Arenix|arenix\.cc/i.test(sourceText), sourceText);
 check("source network includes Qwen Cloud", /Qwen|qwencloud|qwen/i.test(sourceText + candidateSourceText));
 check("source network includes TRAE", /TRAE|trae/i.test(sourceText + candidateSourceText));
 check("source network includes cloud provider or developer program sources", /Google Cloud|Microsoft|AWS|阿里云|天池|developer/i.test(sourceText));
