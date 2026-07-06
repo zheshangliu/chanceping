@@ -2,7 +2,11 @@ import { Hono } from "hono";
 import type { AppContext } from "../context";
 import type { ApiResponse } from "../types";
 import { buildPublicAiEventFeed, type PublicAiEventLifecycle } from "../../public/ai-events-publisher";
-import { hydratePublicAiEventImages, syncPublicAiEventsToStore } from "../../public/ai-events-store-sync";
+import {
+  hydratePublicAiEventImages,
+  syncAndHydratePublicAiEventsToStore,
+  syncPublicAiEventsToStore,
+} from "../../public/ai-events-store-sync";
 
 function parseLifecycle(value: string | undefined): PublicAiEventLifecycle | "all" {
   if (value === "historical" || value === "history") return "historical";
@@ -14,6 +18,10 @@ function parsePositiveInt(value: string | undefined, fallback: number, max: numb
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return fallback;
   return Math.max(1, Math.min(max, Math.floor(parsed)));
+}
+
+function parseBoolean(value: string | undefined): boolean {
+  return /^(1|true|yes|on)$/i.test(String(value ?? "").trim());
 }
 
 export function publicAiEventsRoutes(ctx: AppContext): Hono {
@@ -42,9 +50,15 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
     } satisfies ApiResponse);
   });
 
-  app.post("/ai-events/sync", (c) => {
+  app.post("/ai-events/sync", async (c) => {
     const start = Date.now();
-    const result = syncPublicAiEventsToStore(ctx.store);
+    const hydrateImages = parseBoolean(c.req.query("hydrate_images"));
+    const result = hydrateImages
+      ? await syncAndHydratePublicAiEventsToStore(ctx.store, undefined, {
+        hydrateImages: true,
+        imageHydrationLimit: parsePositiveInt(c.req.query("image_limit"), 30, 120),
+      })
+      : syncPublicAiEventsToStore(ctx.store);
     return c.json({
       success: true,
       data: result,

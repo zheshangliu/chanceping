@@ -31,6 +31,7 @@ export interface SyncPublicAiEventsResult {
   currentCount: number;
   historicalCount: number;
   imageCoverageCount: number;
+  imageHydration?: HydratePublicAiEventImagesResult;
 }
 
 export interface HydratePublicAiEventImagesOptions {
@@ -44,6 +45,13 @@ export interface HydratePublicAiEventImagesResult {
   checkedCount: number;
   hydratedCount: number;
   failedCount: number;
+}
+
+export interface SyncAndHydratePublicAiEventsOptions extends SyncPublicAiEventsOptions {
+  hydrateImages?: boolean;
+  imageHydrationLimit?: number;
+  imageHydrationTimeoutMs?: number;
+  fetchHtml?: HydratePublicAiEventImagesOptions["fetchHtml"];
 }
 
 function listAllStoreEntries(store: OpportunityStore): StoreEntry[] {
@@ -240,6 +248,33 @@ export function syncPublicAiEventsToStore(
     currentCount: publicFeed.currentCount,
     historicalCount: publicFeed.historicalCount,
     imageCoverageCount: publicFeed.imageCoverageCount,
+  };
+}
+
+export async function syncAndHydratePublicAiEventsToStore(
+  store: OpportunityStore,
+  seedData: PublicAiEventSampleRoomData = getPublicAiEventSampleRoomData(),
+  options: SyncAndHydratePublicAiEventsOptions = {},
+): Promise<SyncPublicAiEventsResult> {
+  const syncResult = syncPublicAiEventsToStore(store, seedData, options);
+  if (!options.hydrateImages) return syncResult;
+
+  const imageHydration = await hydratePublicAiEventImages(store, {
+    limit: options.imageHydrationLimit,
+    timeoutMs: options.imageHydrationTimeoutMs,
+    fetchHtml: options.fetchHtml,
+  });
+  const refreshedEntries = listAllStoreEntries(store);
+  const refreshedFeed = collectAllPublicCards(refreshedEntries, seedData, options);
+  return {
+    ...syncResult,
+    totalForPublicRadar: store.list({
+      radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+      page: 1,
+      page_size: 100000,
+    }).total,
+    imageCoverageCount: refreshedFeed.imageCoverageCount,
+    imageHydration,
   };
 }
 

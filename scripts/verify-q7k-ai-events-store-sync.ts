@@ -5,6 +5,7 @@ import { buildPublicAiEventFeed } from "../src/public/ai-events-publisher";
 import {
   hydratePublicAiEventImages,
   PUBLIC_AI_EVENTS_RADAR_ID,
+  syncAndHydratePublicAiEventsToStore,
   syncPublicAiEventsToStore,
 } from "../src/public/ai-events-store-sync";
 
@@ -67,6 +68,7 @@ check("sync reports real image coverage separately", typeof result.imageCoverage
 const publicRouteSource = fs.readFileSync(path.resolve(process.cwd(), "src/api/routes/public-ai-events.ts"), "utf8");
 const imageSyncSource = fs.readFileSync(path.resolve(process.cwd(), "src/public/ai-events-store-sync.ts"), "utf8");
 check("image hydration default can process the second batch", /parsePositiveInt\(c\.req\.query\("limit"\),\s*30,\s*120\)/.test(publicRouteSource) && /DEFAULT_IMAGE_HYDRATION_LIMIT\s*=\s*30/.test(imageSyncSource), "expected default 30 and max 120 for image hydration");
+check("sync API exposes opt-in image hydration", /hydrate_images/.test(publicRouteSource) && /image_limit/.test(publicRouteSource) && /syncAndHydratePublicAiEventsToStore/.test(publicRouteSource), "expected sync route to support hydrate_images and image_limit");
 
 const totalAfterFirstSync = store.list({
   radarId: PUBLIC_AI_EVENTS_RADAR_ID,
@@ -101,6 +103,35 @@ async function runImageHydrationCheck(): Promise<void> {
     page_size: 1000,
   }).entries;
   check("image hydrator writes source image metadata", hydrated.hydratedCount === 1 && hydratedEntries.some((entry) => cardExtras(entry.card).imageStatus === "source_image" && cardExtras(entry.card).coverImageUrl === "https://official-ai-event.example.org/cover.png"), JSON.stringify(hydrated));
+
+  const combinedStorePath = path.join(tmpDir, "q7k-ai-events-combined-sync.json");
+  if (fs.existsSync(combinedStorePath)) {
+    fs.rmSync(combinedStorePath);
+  }
+  const combinedStore = new LocalFileStore({ file_path: combinedStorePath, auto_flush: false });
+  const combined = await syncAndHydratePublicAiEventsToStore(combinedStore, undefined, {
+    now: referenceNow,
+    hydrateImages: true,
+    imageHydrationLimit: 1,
+    fetchHtml: async () => `
+      <html>
+        <head>
+          <meta property="og:title" content="Combined Hydrated AI Event" />
+          <meta property="og:image" content="https://combined-official-ai-event.example.org/cover.png" />
+        </head>
+        <body><a href="/apply">Apply now</a></body>
+      </html>
+    `,
+  });
+  const combinedEntries = combinedStore.list({
+    radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+    page: 1,
+    page_size: 1000,
+  }).entries;
+  check("combined sync can hydrate images in the same backend pass", combined.imageHydration?.hydratedCount === 1 && combinedEntries.some((entry) => cardExtras(entry.card).coverImageUrl === "https://combined-official-ai-event.example.org/cover.png"), JSON.stringify(combined));
+  if (fs.existsSync(combinedStorePath)) {
+    fs.rmSync(combinedStorePath);
+  }
 }
 
 async function runProductApiPathCheck(): Promise<void> {
