@@ -1,4 +1,4 @@
-export type AiEventSourceTrustTier = "official_first" | "platform_index" | "watch_signal";
+export type AiEventSourceTrustTier = "official_first" | "platform_index" | "aggregation_lead" | "watch_signal";
 export type AiEventSourceType =
   | "hackathon_platform"
   | "competition_platform"
@@ -6,6 +6,59 @@ export type AiEventSourceType =
   | "developer_community"
   | "academic_conference"
   | "creator_platform";
+
+export type AiEventMode = "online" | "offline" | "hybrid" | "unknown";
+export type AiEventParticipantType =
+  | "individual"
+  | "team"
+  | "startup"
+  | "student"
+  | "researcher"
+  | "creator"
+  | "company"
+  | "unknown";
+export type AiEventRewardType =
+  | "cash_prize"
+  | "cloud_credits"
+  | "showcase"
+  | "incubation"
+  | "certificate"
+  | "publication"
+  | "community"
+  | "other";
+export type AiEventOrganizerType =
+  | "hackathon_platform"
+  | "competition_platform"
+  | "cloud_provider"
+  | "academic_conference"
+  | "creator_platform"
+  | "developer_community"
+  | "university"
+  | "government"
+  | "company"
+  | "unknown";
+export type AiEventImageStatus = "source_image" | "platform_placeholder" | "default_placeholder";
+
+export type AiEventCategoryId =
+  | "ai_agent"
+  | "vibe_coding"
+  | "ai_app"
+  | "aigc_creator"
+  | "ai_game"
+  | "data_science"
+  | "robotics_edge"
+  | "cloud_startup"
+  | "ai_hackathon";
+
+export interface AiEventCategory {
+  id: AiEventCategoryId;
+  label: string;
+  labelEn: string;
+}
+
+export interface AiEventCategoryFacet extends AiEventCategory {
+  count: number;
+}
 
 export interface PublicAiEventSource {
   id: string;
@@ -30,6 +83,10 @@ export interface PublicAiEventCandidate {
   deadline: string;
   reward: string;
   coverImageUrl?: string;
+  imageSourceUrl?: string;
+  imageAlt?: string;
+  imageStatus?: AiEventImageStatus;
+  imageAttribution?: string;
   prize?: string;
   benefits?: string[];
   organizer?: string;
@@ -38,6 +95,17 @@ export interface PublicAiEventCandidate {
   language?: string;
   eventType?: string;
   audience?: string;
+  eventMode?: AiEventMode;
+  eventModeLabel?: string;
+  participantTypes?: AiEventParticipantType[];
+  participantTypeLabel?: string;
+  rewardTypes?: AiEventRewardType[];
+  rewardTypeLabel?: string;
+  organizerType?: AiEventOrganizerType;
+  organizerTypeLabel?: string;
+  knownFields?: string[];
+  missingFields?: string[];
+  fieldCompleteness?: number;
   reason: string;
   officialUrl: string;
   evidenceStatus:
@@ -64,7 +132,12 @@ export interface PublicAiEventCandidate {
   displayable: boolean;
   lastCheckedAt: string;
   priority: number;
+  lifecycleStatus?: "current" | "historical";
+  deadlineSortKey?: string;
+  deadlineDisplay?: string;
   publicSource?: "database" | "sample_room_seed";
+  primaryCategory?: AiEventCategory;
+  categoryTags?: AiEventCategory[];
 }
 
 export interface PublicAiEventSampleRoomData {
@@ -78,11 +151,23 @@ export interface PublicAiEventSampleRoomData {
     needsReviewCount: number;
     databaseCount?: number;
     seedCount?: number;
+    totalCount?: number;
+    currentCount?: number;
+    historicalCount?: number;
+    filteredCount?: number;
+    page?: number;
+    pageSize?: number;
+    totalPages?: number;
+    categoryFacets?: AiEventCategoryFacet[];
+    imageCoverageCount?: number;
+    officialSourceCount?: number;
+    aggregatorSourceCount?: number;
     lastCheckedAt: string;
   };
 }
 
 const LAST_CHECKED_AT = "2026-07-05";
+const DEFAULT_AI_EVENT_COVER_IMAGE_URL = "/assets/ai-event-placeholder.svg";
 
 export const AI_EVENT_SOURCE_NETWORK: PublicAiEventSource[] = [
   {
@@ -275,6 +360,116 @@ export const AI_EVENT_SOURCE_NETWORK: PublicAiEventSource[] = [
     role: "数据科学、机器学习和 AI 挑战赛入口。",
     reviewNote: "需要打开具体 contest 页确认截止时间、奖项和参赛资格。",
   },
+  {
+    id: "drivendata",
+    name: "DrivenData Competitions",
+    domain: "drivendata.org",
+    url: "https://www.drivendata.org/competitions/",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "公益、数据科学和 AI 竞赛入口，适合补齐国际数据智能挑战。",
+    reviewNote: "需进入具体赛题页确认是否仍开放、是否 AI 相关、奖金和参赛资格。",
+  },
+  {
+    id: "zindi",
+    name: "Zindi Competitions",
+    domain: "zindi.africa",
+    url: "https://zindi.africa/competitions",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "国际数据科学和 AI 竞赛平台，适合补充非欧美地区挑战赛。",
+    reviewNote: "需确认地域限制、报名状态、奖金和团队要求。",
+  },
+  {
+    id: "codabench",
+    name: "Codabench / CodaLab Competitions",
+    domain: "codabench.org",
+    url: "https://www.codabench.org/competitions/",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "学术 benchmark、算法挑战和会议竞赛托管入口。",
+    reviewNote: "需区分当前开放竞赛、历史 benchmark 和仅评测榜单。",
+  },
+  {
+    id: "evalai",
+    name: "EvalAI Challenges",
+    domain: "eval.ai",
+    url: "https://eval.ai/web/challenges/challenge-page",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "AI benchmark、研究挑战和模型评测赛事入口。",
+    reviewNote: "需确认 challenge 是否仍接受提交以及是否适合个人开发者。",
+  },
+  {
+    id: "grand-challenge",
+    name: "Grand Challenge",
+    domain: "grand-challenge.org",
+    url: "https://grand-challenge.org/challenges/",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "医学影像、AI 诊断和科研挑战入口。",
+    reviewNote: "通常偏科研/医学场景，需明确资格、数据使用和提交要求。",
+  },
+  {
+    id: "baidu-aistudio",
+    name: "百度飞桨 AI Studio",
+    domain: "aistudio.baidu.com",
+    url: "https://aistudio.baidu.com/competition",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "中文 AI、飞桨和产业算法竞赛入口。",
+    reviewNote: "需排除课程/练习项目，打开具体竞赛页确认报名和奖励。",
+  },
+  {
+    id: "huaweicloud-competition",
+    name: "华为云开发者赛事",
+    domain: "developer.huaweicloud.com",
+    url: "https://developer.huaweicloud.com/competition",
+    sourceType: "cloud_provider",
+    trustTier: "platform_index",
+    role: "云厂商开发者挑战、AI 应用赛和产业赛事入口。",
+    reviewNote: "需追溯具体活动页确认报名入口、云资源和截止时间。",
+  },
+  {
+    id: "iflytek-ai-competition",
+    name: "科大讯飞 A.I.开发者大赛",
+    domain: "xfyun.cn",
+    url: "https://challenge.xfyun.cn/",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "中文 AI 开发者大赛和产业赛题入口。",
+    reviewNote: "需进入具体赛题页确认赛程、奖金和提交材料。",
+  },
+  {
+    id: "competehub",
+    name: "CompeteHub / AI赛事通",
+    domain: "competehub.dev",
+    url: "https://www.competehub.dev/zh",
+    sourceType: "competition_platform",
+    trustTier: "aggregation_lead",
+    role: "聚合/线索源，用于扩大召回、发现漏网 AI 竞赛和对标覆盖率。",
+    reviewNote: "不能作为事实来源，必须 canonicalize 到官方报名页或主办方页面。",
+  },
+  {
+    id: "ml-contests",
+    name: "ML Contests",
+    domain: "mlcontests.com",
+    url: "https://mlcontests.com/",
+    sourceType: "competition_platform",
+    trustTier: "aggregation_lead",
+    role: "机器学习竞赛聚合源，用于查漏补缺和历史线索对照。",
+    reviewNote: "聚合字段只作为线索，每条赛事需回官方页核验。",
+  },
+  {
+    id: "papers-with-code",
+    name: "Papers with Code Competitions",
+    domain: "paperswithcode.com",
+    url: "https://paperswithcode.com/",
+    sourceType: "developer_community",
+    trustTier: "aggregation_lead",
+    role: "研究任务、benchmark 和 competition 线索源。",
+    reviewNote: "通常不等于报名页，需要回到会议、主办方或 challenge 平台。",
+  },
 ];
 
 export const AI_EVENT_SAMPLE_ROOM_CANDIDATES: PublicAiEventCandidate[] = [
@@ -333,6 +528,7 @@ function candidate(
   candidateType: PublicAiEventCandidate["candidateType"],
   priority: number,
 ): PublicAiEventCandidate {
+  const hasConcreteSource = /^https?:\/\//i.test(officialUrl);
   return {
     id,
     title,
@@ -344,6 +540,11 @@ function candidate(
     tags,
     deadline,
     reward,
+    coverImageUrl: DEFAULT_AI_EVENT_COVER_IMAGE_URL,
+    imageSourceUrl: hasConcreteSource ? officialUrl : DEFAULT_AI_EVENT_COVER_IMAGE_URL,
+    imageAlt: `${title} 赛事封面`,
+    imageStatus: hasConcreteSource ? "platform_placeholder" : "default_placeholder",
+    imageAttribution: hasConcreteSource ? sourceName : "ChancePing",
     reason,
     officialUrl,
     evidenceStatus,
@@ -360,6 +561,9 @@ export function getPublicAiEventSampleRoomData(): PublicAiEventSampleRoomData {
     .sort((a, b) => b.priority - a.priority)
     .map((candidate) => ({ ...candidate }));
   const displayableCount = items.filter((item) => item.displayable !== false).length;
+  const imageCoverageCount = items.filter((item) => item.coverImageUrl && item.coverImageUrl !== DEFAULT_AI_EVENT_COVER_IMAGE_URL).length;
+  const officialSourceCount = AI_EVENT_SOURCE_NETWORK.filter((source) => source.trustTier === "official_first").length;
+  const aggregatorSourceCount = AI_EVENT_SOURCE_NETWORK.filter((source) => source.trustTier === "aggregation_lead").length;
   return {
     items,
     sourceNetwork: AI_EVENT_SOURCE_NETWORK.map((source) => ({ ...source })),
@@ -369,6 +573,9 @@ export function getPublicAiEventSampleRoomData(): PublicAiEventSampleRoomData {
       sourceCount: AI_EVENT_SOURCE_NETWORK.length,
       officialEntryCount: items.filter((item) => item.evidenceStatus === "official_entry_to_review").length,
       needsReviewCount: items.filter((item) => item.evidenceStatus !== "official_entry_to_review").length,
+      imageCoverageCount,
+      officialSourceCount,
+      aggregatorSourceCount,
       lastCheckedAt: LAST_CHECKED_AT,
     },
   };

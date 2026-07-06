@@ -17,7 +17,7 @@
     </a>
     <nav class="ai-events-nav" aria-label="AI events navigation">
       <a href="/">主控台</a>
-      <a href="/ai-events" aria-current="page">盯比赛</a>
+      <a href="/aievents" aria-current="page">盯比赛</a>
       <a href="/radars">我的雷达</a>
     </nav>
     <div class="ai-events-language" aria-label="Language">
@@ -62,7 +62,7 @@
       <article>
         <span>03</span>
         <h2 data-i18n="aboutThreeTitle">诚实标注</h2>
-        <p data-i18n="aboutThreeBody">搜索发现不等于已核验事实；截止时间、资格、费用和联系人都按证据状态展示。</p>
+        <p data-i18n="aboutThreeBody">系统优先读取官方入口并整理截止时间、奖金、资格和报名路径；公开页只展示可浏览的机会流。</p>
       </article>
     </section>
 
@@ -89,15 +89,25 @@
       <div class="ai-events-panel-header">
         <div>
           <p class="ai-events-kicker" data-i18n="listKicker">Opportunity Cards</p>
-          <h2 data-i18n="listTitle">当前可复核 AI 赛事机会</h2>
+          <h2 data-i18n="listTitle">当前有效 AI 赛事机会</h2>
+        </div>
+        <div class="ai-events-filter" role="tablist" aria-label="机会状态">
+          <button id="ai-events-filter-current" class="is-active" type="button" data-ai-events-status="current" data-i18n="currentTab">当前有效</button>
+          <button id="ai-events-filter-historical" type="button" data-ai-events-status="historical" data-i18n="historicalTab">历史机会</button>
         </div>
         <span id="ai-events-count">加载中</span>
       </div>
+      <div id="ai-events-category-filter" class="ai-events-category-filter" aria-label="赛事分类"></div>
       <div id="ai-events-grid" class="ai-events-grid">
         <article class="ai-event-card ai-event-card-loading">正在加载 AI 赛事机会...</article>
       </div>
+      <div class="ai-events-pagination" aria-label="分页">
+        <button id="ai-events-prev" type="button" data-i18n="prevPage">上一页</button>
+        <span id="ai-events-page-info" data-page-info>第 1 页</span>
+        <button id="ai-events-next" type="button" data-i18n="nextPage">下一页</button>
+      </div>
     </section>
   </main>
-  <script src="/ai-events.js"></script>
+  <script src="/ai-events.js?v=q7k2"></script>
 </body>
 </html>

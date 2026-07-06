@@ -40,12 +40,18 @@ check("source network includes DoraHacks", /DoraHacks|dorahacks\.io/i.test(sourc
 check("source network includes Lablab", /Lablab|lablab\.ai/i.test(sourceText));
 check("source network includes Kaggle", /Kaggle|kaggle\.com/i.test(sourceText));
 check("source network includes AIcrowd", /AIcrowd|aicrowd\.com/i.test(sourceText));
+check("source network includes second-batch international platforms", /DrivenData|drivendata\.org/i.test(sourceText) && /Zindi|zindi\.africa/i.test(sourceText) && /Codabench|codabench|codalab/i.test(sourceText), sourceText);
+check("source network includes second-batch challenge hosts", /EvalAI|eval\.ai/i.test(sourceText) && /Grand Challenge|grand-challenge\.org/i.test(sourceText), sourceText);
+check("source network includes second-batch domestic platforms", /AI Studio|aistudio\.baidu\.com/i.test(sourceText) && /讯飞|xfyun|科大讯飞/i.test(sourceText) && /华为云|huaweicloud/i.test(sourceText), sourceText);
+check("source network includes aggregation and benchmark sources", /CompeteHub|competehub\.dev/i.test(sourceText) && /ML Contests|mlcontests/i.test(sourceText) && /Papers with Code|paperswithcode/i.test(sourceText), sourceText);
 check("source network includes Qwen Cloud", /Qwen|qwencloud|qwen/i.test(sourceText + candidateSourceText));
 check("source network includes TRAE", /TRAE|trae/i.test(sourceText + candidateSourceText));
 check("source network includes cloud provider or developer program sources", /Google Cloud|Microsoft|AWS|阿里云|天池|developer/i.test(sourceText));
 check("public cards include official or reviewable source URLs", officialUrls.length >= 15, `officialUrls=${officialUrls.length}`);
 check("public data exposes source network metadata", Array.isArray(publicData.sourceNetwork) && publicData.sourceNetwork.length >= 8);
 check("public data exposes source statistics", typeof publicData.stats?.candidateCount === "number" && publicData.stats.candidateCount >= 30);
+check("public data exposes image extraction slots", /coverImageUrl|imageSourceUrl|imageAlt|imageStatus/i.test(serialized), serialized.slice(0, 240));
+check("public source stats include second-batch coverage fields", /officialSourceCount|aggregatorSourceCount|imageCoverageCount/i.test(serialized), serialized.slice(0, 240));
 check("public data marks search discovery separately from verified facts", allCards.some((item) => /待复核|搜索发现|需复核|needs_review|search_discovered/i.test(`${item.statusLabel} ${item.evidenceStatus} ${item.reason}`)));
 check("public data keeps last checked timestamp", allCards.every((item) => typeof item.lastCheckedAt === "string" && item.lastCheckedAt.length >= 10));
 check("public data has no api keys", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(serialized));

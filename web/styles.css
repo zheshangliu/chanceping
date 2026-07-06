@@ -5221,6 +5221,99 @@ body.hero-chat-active .hero-chat-main {
   font-weight: 800;
 }
 
+.ai-events-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid rgba(37, 99, 235, 0.13);
+  border-radius: 999px;
+  background: #f8fbff;
+}
+
+.ai-events-filter button,
+.ai-events-pagination button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #475569;
+  font-weight: 800;
+  min-height: 34px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.ai-events-filter button.is-active,
+.ai-events-pagination button:not(:disabled):hover {
+  border-color: rgba(37, 99, 235, 0.24);
+  background: var(--ai-blue-soft);
+  color: var(--ai-blue-dark);
+}
+
+.ai-events-category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  overflow-x: visible;
+  padding: 2px 0 12px;
+  margin-top: -4px;
+  margin-bottom: 14px;
+}
+
+.ai-events-category-filter > span {
+  flex: 0 0 auto;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ai-events-category-filter button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.ai-events-category-filter button small {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.ai-events-category-filter button.is-active {
+  border-color: rgba(37, 99, 235, 0.32);
+  background: linear-gradient(135deg, #dbeafe, #ecfeff);
+  color: var(--ai-blue-dark);
+}
+
+.ai-events-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.ai-events-pagination button {
+  border-color: rgba(37, 99, 235, 0.16);
+  background: #fff;
+}
+
+.ai-events-pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .ai-events-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -5236,6 +5329,32 @@ body.hero-chat-active .hero-chat-main {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.ai-event-cover {
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(6, 182, 212, 0.22), transparent 28%),
+    linear-gradient(135deg, #eff6ff 0%, #f8fbff 48%, #ecfeff 100%);
+}
+
+.ai-event-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ai-event-cover.is-placeholder img,
+.ai-event-card[data-image-status="default_placeholder"] .ai-event-cover img,
+.ai-event-card[data-image-status="platform_placeholder"] .ai-event-cover img {
+  object-fit: contain;
+  padding: 22px;
 }
 
 .ai-event-card-loading {
@@ -5277,16 +5396,19 @@ body.hero-chat-active .hero-chat-main {
   margin: 0;
 }
 
-.ai-event-card dl {
+.ai-event-card dl,
+.ai-event-card-meta {
   display: grid;
   gap: 8px;
   margin: 0;
 }
 
-.ai-event-card dl div {
+.ai-event-card dl div,
+.ai-event-card-meta div {
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr);
+  grid-template-columns: 62px minmax(0, 1fr);
   gap: 8px;
+  align-items: start;
 }
 
 .ai-event-card dt {
@@ -5295,21 +5417,31 @@ body.hero-chat-active .hero-chat-main {
 
 .ai-event-card dd {
   margin: 0;
+  word-break: break-word;
 }
 
-.ai-event-tags {
+.ai-event-tags,
+.ai-event-category-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.ai-event-tags span {
+.ai-event-tags span,
+.ai-event-category-tags span {
   border: 1px solid rgba(37, 99, 235, 0.13);
   border-radius: 999px;
   padding: 3px 8px;
   color: #475569;
   background: #f8fbff;
   font-size: 12px;
+}
+
+.ai-event-category-tags span {
+  border-color: rgba(6, 182, 212, 0.2);
+  background: #ecfeff;
+  color: #0e7490;
+  font-weight: 800;
 }
 
 .ai-event-link {
@@ -5387,5 +5519,23 @@ body.hero-chat-active .hero-chat-main {
   .ai-events-panel-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .ai-events-filter,
+  .ai-events-pagination,
+  .ai-events-category-filter {
+    width: 100%;
+  }
+
+  .ai-events-filter button {
+    flex: 1;
+  }
+
+  .ai-events-category-filter {
+    align-items: flex-start;
+  }
+
+  .ai-events-pagination {
+    justify-content: space-between;
   }
 }
