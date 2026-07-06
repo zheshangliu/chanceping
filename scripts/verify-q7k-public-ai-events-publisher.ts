@@ -1,6 +1,7 @@
 import type { OpportunityCard } from "../src/schema/opportunity-card";
 import type { StoreEntry } from "../src/agents/opportunity-store";
 import { buildPublicAiEventFeed } from "../src/public/ai-events-publisher";
+import type { PublicAiEventSampleRoomData } from "../src/demo/ai-events-sample-room";
 
 let passCount = 0;
 let failCount = 0;
@@ -61,6 +62,16 @@ function makeEntry(card: OpportunityCard, overrides: Partial<StoreEntry> = {}): 
 console.log("\n[Q7K Public AI Events Publisher] Database-first public feed checks\n");
 
 const databaseEntry = makeEntry(makeCard());
+const sourceImageCard = makeCard({
+  title: "AI Event With Source Cover：带官网图片的赛事",
+  official_source_url: "https://source-cover-ai-event.example.org/register",
+  application_url: "https://source-cover-ai-event.example.org/register",
+  deadline: "2026-09-01",
+});
+(sourceImageCard as OpportunityCard & Record<string, unknown>).coverImageUrl = "https://source-cover-ai-event.example.org/cover.jpg";
+(sourceImageCard as OpportunityCard & Record<string, unknown>).imageSourceUrl = "https://source-cover-ai-event.example.org/cover.jpg";
+(sourceImageCard as OpportunityCard & Record<string, unknown>).imageStatus = "source_image";
+const sourceImageEntry = makeEntry(sourceImageCard, { dedup_key: "source-image-entry" });
 const lowQualityEntry = makeEntry(
   makeCard({
     title: "AI 行业趋势文章：没有报名入口",
@@ -72,7 +83,25 @@ const lowQualityEntry = makeEntry(
   { dedup_key: "hidden-entry", radar_type: "custom" },
 );
 
-const feed = buildPublicAiEventFeed([databaseEntry, lowQualityEntry], undefined, {
+const feed = buildPublicAiEventFeed([databaseEntry, sourceImageEntry, lowQualityEntry], undefined, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+const emptySeedData: PublicAiEventSampleRoomData = {
+  items: [],
+  sourceNetwork: [],
+  stats: {
+    candidateCount: 0,
+    displayableCount: 0,
+    sourceCount: 0,
+    officialEntryCount: 0,
+    needsReviewCount: 0,
+    lastCheckedAt: "2026-07-06",
+  },
+};
+const controlledImageFeed = buildPublicAiEventFeed([databaseEntry, sourceImageEntry], emptySeedData, {
   lifecycle: "current",
   page: 1,
   pageSize: 12,
@@ -101,7 +130,8 @@ check("public card includes a primary AI event category", firstItem?.primaryCate
 check("public card includes multi-dimensional category tags", Array.isArray(firstItem?.categoryTags) && firstItem.categoryTags.some((tag) => tag.id === "ai_hackathon") && firstItem.categoryTags.some((tag) => tag.id === "cloud_startup"), JSON.stringify(firstItem));
 check("public feed paginates items", feed.items.length <= 12 && feed.stats.page === 1 && feed.stats.pageSize === 12, JSON.stringify(feed.stats));
 check("public feed exposes category facets", Array.isArray(feed.stats.categoryFacets) && feed.stats.categoryFacets.some((facet) => facet.id === "ai_agent" && facet.count > 0), JSON.stringify(feed.stats.categoryFacets));
-check("public feed exposes image coverage stats", typeof feed.stats.imageCoverageCount === "number" && feed.stats.imageCoverageCount >= 1, JSON.stringify(feed.stats));
+check("public feed counts only real source images as image coverage", feed.stats.imageCoverageCount >= 1 && feed.items.some((item) => item.imageStatus === "source_image"), JSON.stringify(feed.stats));
+check("placeholder covers are excluded from image coverage stats", controlledImageFeed.stats.imageCoverageCount === 1, JSON.stringify(controlledImageFeed.stats));
 check("public feed exposes official and aggregation source stats", typeof feed.stats.officialSourceCount === "number" && typeof feed.stats.aggregatorSourceCount === "number" && feed.stats.aggregatorSourceCount >= 1, JSON.stringify(feed.stats));
 check("public feed still tracks total fallback volume", feed.stats.totalCount >= 30, `total=${feed.stats.totalCount}`);
 check("public feed exposes database count", feed.stats.databaseCount >= 1, JSON.stringify(feed.stats));

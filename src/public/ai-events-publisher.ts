@@ -837,7 +837,11 @@ export function buildPublicAiEventFeed(
   const totalPages = Math.max(1, Math.ceil(sortedItems.length / pageSize));
   const normalizedPage = Math.min(page, totalPages);
   const items = sortedItems.slice((normalizedPage - 1) * pageSize, normalizedPage * pageSize);
-  const imageCoverageCount = allItems.filter((item) => item.imageStatus !== "default_placeholder" && Boolean(item.imageSourceUrl)).length;
+  const imageCoverageCount = allItems.filter((item) =>
+    item.imageStatus === "source_image" &&
+    Boolean(item.coverImageUrl) &&
+    item.coverImageUrl !== DEFAULT_COVER_IMAGE_URL
+  ).length;
   const officialSourceCount = sourceNetwork.filter((source) => source.trustTier === "official_first").length;
   const aggregatorSourceCount = sourceNetwork.filter((source) => source.trustTier === "aggregation_lead").length;
   return {
