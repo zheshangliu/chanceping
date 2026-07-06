@@ -81,6 +81,22 @@ function firstDefined<T>(values: Array<T | undefined | null | "">): T | undefine
   return values.find((value): value is T => value !== undefined && value !== null && value !== "");
 }
 
+function pickLargestSrcsetImage(value: string | undefined): string | undefined {
+  const raw = String(value ?? "").trim();
+  if (!raw) return undefined;
+  const candidates = raw
+    .split(",")
+    .map((item) => {
+      const [url = "", descriptor = ""] = item.trim().split(/\s+/, 2);
+      const width = Number(descriptor.match(/^(\d+)w$/i)?.[1] ?? 0);
+      const density = Number(descriptor.match(/^(\d+(?:\.\d+)?)x$/i)?.[1] ?? 0);
+      return { url: url.trim(), score: width || density * 1000 || 1 };
+    })
+    .filter((item) => item.url.length > 0)
+    .sort((a, b) => b.score - a.score);
+  return candidates[0]?.url;
+}
+
 function getMetaContent(html: string, names: string[]): string | undefined {
   const wanted = new Set(names.map((name) => name.toLowerCase()));
   for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
@@ -138,9 +154,19 @@ function extractRewardFromText(text: string): string | undefined {
     .split(/[。.!?]\s*/)
     .map((item) => item.trim())
     .filter(Boolean);
-  const rewardSentence = sentences.find((sentence) => /prize|award|cash|cloud\s*credits?|credits?|奖金|奖池|云资源|算力|展示|showcase/i.test(sentence));
+  const hasConcreteReward = (sentence: string): boolean => {
+    const concrete = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
+    const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
+    const genericNews = /本报讯|报道称|报道|举行|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会/i;
+    if (/没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i.test(sentence)) return false;
+    if (sentence.length > 80 && !moneyOrPrizePool.test(sentence)) return false;
+    if (concrete.test(sentence)) return true;
+    if (genericNews.test(sentence)) return false;
+    return sentence.length <= 70 && /奖金|奖励|展示机会|曝光机会|扶持|孵化|导师|证书|award|prize|showcase|grant/i.test(sentence);
+  };
+  const rewardSentence = sentences.find((sentence) => /prize|award|cash|cloud\s*credits?|credits?|奖金|奖池|云资源|算力|展示|showcase|grant|扶持|孵化/i.test(sentence) && hasConcreteReward(sentence));
   if (!rewardSentence) return undefined;
-  return rewardSentence.slice(0, 140);
+  return rewardSentence.slice(0, 90);
 }
 
 function getJsonLdObjects(html: string): unknown[] {
@@ -237,7 +263,16 @@ function extractActionLink(html: string, baseUrl: string): string | undefined {
 function extractFirstImage(html: string, baseUrl: string): string | undefined {
   for (const match of html.matchAll(/<img\b[^>]*>/gi)) {
     const attrs = readAttributes(match[0]);
-    const resolved = resolveUrl(attrs.src ?? attrs["data-src"], baseUrl);
+    const candidate = firstDefined([
+      pickLargestSrcsetImage(attrs.srcset),
+      pickLargestSrcsetImage(attrs["data-srcset"]),
+      pickLargestSrcsetImage(attrs["data-lazy-srcset"]),
+      attrs.src,
+      attrs["data-src"],
+      attrs["data-lazy-src"],
+      attrs["data-original"],
+    ]);
+    const resolved = resolveUrl(candidate, baseUrl);
     if (resolved) return resolved;
   }
   return undefined;
@@ -253,7 +288,7 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
     extractTitle(html),
   ]);
   const rawImage = firstDefined([
-    getMetaContent(html, ["og:image", "twitter:image", "image"]),
+    getMetaContent(html, ["og:image", "og:image:url", "twitter:image", "twitter:image:src", "image", "thumbnail", "thumbnailUrl"]),
     pickJsonLdImage(jsonLd?.image),
     extractFirstImage(html, pageUrl),
   ]);

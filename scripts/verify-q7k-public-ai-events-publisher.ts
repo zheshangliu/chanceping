@@ -205,6 +205,75 @@ const creatorFeed = buildPublicAiEventFeed([
 check("category filter returns matching creator opportunities", creatorFeed.items.some((item) => item.primaryCategory.id === "aigc_creator" || item.categoryTags.some((tag) => tag.id === "aigc_creator")), JSON.stringify(creatorFeed.items.slice(0, 5)));
 check("category filter excludes unrelated game-only opportunities", !creatorFeed.items.some((item) => item.title.includes("AI Game Jam")), JSON.stringify(creatorFeed.items.slice(0, 5)));
 
+const longRewardFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "AI 创作活动新闻：不应把整段报道当作奖金",
+    official_source_url: "https://gov.example/news/ai-creator-report",
+    reward_or_value: "本报讯，某地举行人工智能创作交流活动，现场提到奖金、展示、扶持等关键词，但报道主要介绍嘉宾发言、产业趋势、城市政策、观众互动和活动背景，并没有给出明确奖池、云资源或提交规则。",
+  }), { dedup_key: "long-reward-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("long news reward text is replaced with official-site fallback", longRewardFeed.items[0]?.prize === "见官网" && !longRewardFeed.items[0]?.reward.includes("本报讯"), JSON.stringify(longRewardFeed.items[0]));
+
+const longLaunchNewsRewardFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "超级智能体大赛新闻：不能把发布会正文当作奖励",
+    official_source_url: "https://www.gd.gov.cn/news/ai-agent-contest",
+    reward_or_value: "随着屏幕被点亮，首届超级智能体大赛正式启幕，全球报名通道同步上线；同一现场，人工智能产业代表介绍了城市政策、创业扶持、项目展示和赛事安排，但页面未直接列出明确奖金、奖池或云资源额度。",
+  }), { dedup_key: "long-launch-news-reward-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("long launch-news reward text is not shown as prize", longLaunchNewsRewardFeed.items[0]?.prize === "见官网" && longLaunchNewsRewardFeed.items[0]?.benefits.length === 0, JSON.stringify(longLaunchNewsRewardFeed.items[0]));
+
+const longPartnerEventRewardFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "AWS AI 开发者挑战观察源：不应把活动目录正文当作奖励",
+    official_source_url: "https://aws.amazon.com/events/ai/",
+    reward_or_value: "View upcoming AWS Partner Events AWS Partner Network programs and global developer activities. Browse cloud credits sessions, startup programs and event pages before checking whether any specific challenge lists rewards.",
+  }), { dedup_key: "long-partner-event-reward-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("long partner-event body text is not shown as prize", longPartnerEventRewardFeed.items[0]?.prize === "见官网" && longPartnerEventRewardFeed.items[0]?.benefits.length === 0, JSON.stringify(longPartnerEventRewardFeed.items[0]));
+
+const officialPriorityFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "GitHub AI competition awesome 聚合线索",
+    type: "AI competition list",
+    official_source_url: "https://github.com/topics/ai-competition",
+    organizer: "GitHub",
+    deadline: "见官网",
+    backend_score: 99,
+    opportunity_kind: "watch_signal",
+  }), { dedup_key: "aggregation-lead-entry" }),
+  makeEntry(makeCard({
+    title: "DoraHacks AI Agent Hackathon 官方入口",
+    type: "AI Hackathon",
+    official_source_url: "https://dorahacks.io/hackathon/ai-agent",
+    organizer: "DoraHacks",
+    deadline: "见官网",
+    backend_score: 70,
+    opportunity_kind: "direct_opportunity",
+  }), { dedup_key: "official-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("official concrete entry outranks aggregation lead when deadlines are unknown", officialPriorityFeed.items[0]?.title.includes("DoraHacks"), JSON.stringify(officialPriorityFeed.items.map((item) => ({ title: item.title, priority: item.priority, sourceType: item.sourceType }))));
+
 async function runProductApiPathCheck(): Promise<void> {
   process.env.DATA_MODE = "mock";
   process.env.LLM_MODE = "mock";

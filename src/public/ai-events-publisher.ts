@@ -156,6 +156,19 @@ function normalizePublicText(value: string | undefined | null, fallback: string)
     .replace(/review required/gi, fallback);
 }
 
+function normalizePublicReward(value: string | undefined | null, fallback = "见官网"): string {
+  const normalized = normalizePublicText(value, fallback);
+  if (!normalized || normalized === fallback) return fallback;
+  const genericNews = /本报讯|报道称|报道|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会|活动现场/i;
+  const concreteReward = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
+  const negatedReward = /没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i;
+  if (negatedReward.test(normalized)) return fallback;
+  if (genericNews.test(normalized) && !concreteReward.test(normalized)) return fallback;
+  if (genericNews.test(normalized) && normalized.length > 80) return fallback;
+  if (normalized.length > 80) return fallback;
+  return normalized;
+}
+
 function normalizeReferenceDate(value: string | Date | undefined): Date {
   const input = value instanceof Date ? value : value ? new Date(value) : new Date();
   if (Number.isNaN(input.getTime())) {
@@ -490,6 +503,7 @@ function compactPublicTags(values: Array<string | undefined | null>): string[] {
 }
 
 function splitBenefits(value: string): string[] {
+  if (/^(见官网|待确认|未知)$/i.test(value.trim())) return [];
   const normalized = value.replace(/[；;、，,]/g, "\n");
   return normalized
     .split("\n")
@@ -541,6 +555,19 @@ function databasePriority(card: OpportunityCard): number {
   return (levelBoost[card.visible_level] ?? 70) + Math.min(10, Math.max(0, Math.round(card.backend_score / 10)));
 }
 
+function sourceTrustPriority(card: PublicAiEventCard): number {
+  const text = `${card.title} ${card.sourceDomain} ${card.sourceName} ${card.candidateType} ${card.evidenceStatus} ${card.sourceType}`.toLowerCase();
+  let score = 0;
+  if (card.candidateType === "direct_opportunity") score += 30;
+  if (card.evidenceStatus === "official_entry_to_review" || card.evidenceStatus === "partially_verified" || card.evidenceStatus === "verified") score += 18;
+  if (["hackathon_platform", "competition_platform", "cloud_provider", "creator_platform", "academic_conference"].includes(card.sourceType)) score += 10;
+  if (/devpost|dorahacks|lablab|kaggle|aicrowd|reply\.com|projectodyssey|heywhale|datafountain|tianchi|xfyun|aistudio|huaweicloud/.test(text)) score += 8;
+  if (card.candidateType === "source_entry") score -= 6;
+  if (card.candidateType === "watch_signal" || card.candidateType === "reference_case") score -= 22;
+  if (/github|awesome|competehub|mlcontests|paperswithcode|arenix|reddit|youtube|facebook|instagram/.test(text)) score -= 28;
+  return score;
+}
+
 export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, options: { now?: Date } = {}): PublicAiEventCard | null {
   if (!isPublishableStoreEntry(entry)) return null;
 
@@ -562,7 +589,7 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
   const rawDeadline = pageMetadata.deadline || card.deadline;
   const deadlineDate = parseDeadlineDate(rawDeadline);
   const deadlineDisplay = normalizePublicText(rawDeadline, "见官网");
-  const reward = normalizePublicText(pageMetadata.reward || card.reward_or_value, "见官网");
+  const reward = normalizePublicReward(pageMetadata.reward || card.reward_or_value, "见官网");
   const reason = normalizePublicText(card.fitReason || card.match_reason || card.next_action, "这是 AI 赛事雷达发现的公开机会，建议打开官方入口查看报名、截止时间和参赛资格。");
   const coverImageUrl = String((card as unknown as Record<string, unknown>).coverImageUrl ?? (card as unknown as Record<string, unknown>).cover_image_url ?? pageMetadata.coverImageUrl ?? DEFAULT_COVER_IMAGE_URL);
   const imageSourceUrl = String((card as unknown as Record<string, unknown>).imageSourceUrl ?? (card as unknown as Record<string, unknown>).image_source_url ?? pageMetadata.imageSourceUrl ?? (coverImageUrl !== DEFAULT_COVER_IMAGE_URL ? coverImageUrl : officialUrl));
@@ -680,7 +707,7 @@ function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate
   }, referenceDate);
   const deadlineDate = parseDeadlineDate(candidate.deadline);
   const deadlineDisplay = normalizePublicText(candidate.deadline, "见官网");
-  const reward = normalizePublicText(candidate.reward, "见官网");
+  const reward = normalizePublicReward(candidate.reward, "见官网");
   const candidateTags = compactPublicTags(candidate.tags).slice(0, 8);
   const contextualText = [
     candidate.title,
@@ -748,7 +775,7 @@ function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate
     imageAlt,
     imageStatus,
     imageAttribution,
-    prize: normalizePublicText(candidate.prize ?? reward, "见官网"),
+    prize: normalizePublicReward(candidate.prize ?? reward, "见官网"),
     tags: candidateTags,
     benefits: candidate.benefits?.map((item) => normalizePublicText(item, "见官网")) ?? splitBenefits(reward),
     organizer,
@@ -802,6 +829,8 @@ function sortPublicCards(cards: PublicAiEventCard[], lifecycle: PublicAiEventLif
     }
     if (aDate && !bDate) return -1;
     if (!aDate && bDate) return 1;
+    const sourceTrustDelta = sourceTrustPriority(b) - sourceTrustPriority(a);
+    if (sourceTrustDelta !== 0) return sourceTrustDelta;
     return b.priority - a.priority;
   });
 }

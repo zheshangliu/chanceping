@@ -124,6 +124,34 @@ const jsonLdOnly = extractAiEventPageMetadata(jsonLdOnlyHtml, "https://creator.e
 check("falls back to JSON-LD image when og:image missing", jsonLdOnly.coverImageUrl === "https://creator.example/covers/creator.png", JSON.stringify(jsonLdOnly));
 check("extracts apply link when structured offer URL is absent", jsonLdOnly.registrationUrl === "https://creator.example/apply", JSON.stringify(jsonLdOnly));
 
+const lazyImageHtml = `
+<html>
+  <body>
+    <main>
+      <h1>AI Film Challenge</h1>
+      <img alt="AI Film Challenge cover" data-srcset="/covers/small.jpg 480w, /covers/large.jpg 1200w">
+      <a href="/submit">Submit your film</a>
+    </main>
+  </body>
+</html>
+`;
+const lazyImage = extractAiEventPageMetadata(lazyImageHtml, "https://creator.example/events/ai-film");
+check("extracts lazy srcset image when meta image is missing", lazyImage.coverImageUrl === "https://creator.example/covers/large.jpg", JSON.stringify(lazyImage));
+
+const noisyNewsHtml = `
+<html>
+  <head>
+    <title>AI 创作活动新闻</title>
+    <meta name="description" content="本报讯，某地举行人工智能创作交流活动，现场提到奖金、展示、扶持等关键词，但报道主要介绍嘉宾发言、产业趋势、城市政策、观众互动和活动背景，并没有给出明确奖池、云资源或提交规则。">
+  </head>
+  <body>
+    <p>本报讯，某地举行人工智能创作交流活动，现场提到奖金、展示、扶持等关键词，但报道主要介绍嘉宾发言、产业趋势、城市政策、观众互动和活动背景，并没有给出明确奖池、云资源或提交规则。</p>
+  </body>
+</html>
+`;
+const noisyNews = extractAiEventPageMetadata(noisyNewsHtml, "https://gov.example/news/ai-creator-report");
+check("does not turn a long generic news paragraph into reward fact", !noisyNews.reward, JSON.stringify(noisyNews));
+
 const cardWithHtml = makeCard({
   official_source_url: "https://qwencloud-hackathon.devpost.com/",
   application_url: "",
