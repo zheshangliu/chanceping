@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="Lablab AI events cover">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eef2ff"/>
+      <stop offset="0.55" stop-color="#dbeafe"/>
+      <stop offset="1" stop-color="#cffafe"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="420" rx="32" fill="url(#bg)"/>
+  <circle cx="650" cy="116" r="54" fill="#818cf8" opacity=".32"/>
+  <circle cx="150" cy="306" r="84" fill="#38bdf8" opacity=".26"/>
+  <rect x="164" y="116" width="472" height="188" rx="24" fill="#ffffff" opacity=".76"/>
+  <text x="400" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#3730a3">Lablab.ai</text>
+  <text x="400" y="232" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#2563eb">AI App Challenge</text>
+  <path d="M278 266h244" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+</svg>

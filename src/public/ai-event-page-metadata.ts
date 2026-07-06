@@ -107,6 +107,29 @@ function getMetaContent(html: string, names: string[]): string | undefined {
   return undefined;
 }
 
+function getMetaContents(html: string, names: string[]): string[] {
+  const wanted = new Set(names.map((name) => name.toLowerCase()));
+  const contents: string[] = [];
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const attrs = readAttributes(match[0]);
+    const key = (attrs.property ?? attrs.name ?? attrs.itemprop ?? "").toLowerCase();
+    if (wanted.has(key) && attrs.content) contents.push(attrs.content.trim());
+  }
+  return contents;
+}
+
+function getLinkImages(html: string): string[] {
+  const images: string[] = [];
+  for (const match of html.matchAll(/<link\b[^>]*>/gi)) {
+    const attrs = readAttributes(match[0]);
+    const rel = String(attrs.rel ?? "").toLowerCase();
+    const as = String(attrs.as ?? "").toLowerCase();
+    if (!/(^|\s)image_src(\s|$)/i.test(rel) && !(rel.includes("preload") && as === "image")) continue;
+    if (attrs.href) images.push(attrs.href.trim());
+  }
+  return images;
+}
+
 function extractTitle(html: string): string | undefined {
   const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   return cleanText(titleMatch?.[1]);
@@ -116,7 +139,7 @@ function normalizeDate(value: string | undefined): string | undefined {
   const text = cleanText(value);
   if (!text) return undefined;
 
-  const iso = text.match(/\b(20\d{2})-(\d{1,2})-(\d{1,2})\b/);
+  const iso = text.match(/\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})(?:[T\s]\d{1,2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?)?\b/);
   if (iso) {
     return `${iso[1]}-${iso[2].padStart(2, "0")}-${iso[3].padStart(2, "0")}`;
   }
@@ -133,6 +156,34 @@ function normalizeDate(value: string | undefined): string | undefined {
   }
 
   return undefined;
+}
+
+function collectEventAttributeText(html: string): string {
+  const values: string[] = [];
+  for (const match of html.matchAll(/<(?:input|time|meta|button|a|span|div|section)\b[^>]*>/gi)) {
+    const attrs = readAttributes(match[0]);
+    const text = [
+      attrs.name,
+      attrs.id,
+      attrs.class,
+      attrs.value,
+      attrs.content,
+      attrs.datetime,
+      attrs.title,
+      attrs.alt,
+      attrs["aria-label"],
+      attrs.placeholder,
+      attrs.href,
+      attrs["data-deadline"],
+      attrs["data-date"],
+      attrs["data-prize"],
+      attrs["data-reward"],
+    ].join(" ");
+    if (/(deadline|close|closing|submit|submission|apply|application|register|prize|award|reward|credit|截止|报名|提交|申请|奖励|奖金|奖池|云资源)/i.test(text)) {
+      values.push(text);
+    }
+  }
+  return values.join(" ");
 }
 
 function extractDeadlineFromText(text: string): string | undefined {
@@ -154,6 +205,16 @@ function extractRewardFromText(text: string): string | undefined {
     .split(/[。.!?]\s*/)
     .map((item) => item.trim())
     .filter(Boolean);
+  const concisePatterns = [
+    /(?:total\s+prizes?|prize\s+pool|cash\s+prize|awards?|rewards?)\s+(?:include|includes|including|up\s+to|worth|of|:)?\s*[^。.!?\n]{0,90}/i,
+    /(?:奖金池|总奖金|现金奖励|奖品|奖励|奖项|云资源|算力|扶持资源)[^。.!?\n]{0,90}/i,
+  ];
+  for (const pattern of concisePatterns) {
+    const match = text.match(pattern)?.[0]?.trim();
+    if (match && !/没有(?:直接)?给出明确|未(?:直接)?给出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i.test(match)) {
+      return match.slice(0, 90);
+    }
+  }
   const hasConcreteReward = (sentence: string): boolean => {
     const concrete = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
     const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
@@ -231,9 +292,31 @@ function pickJsonLdImage(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+function collectJsonLdImages(value: unknown): string[] {
+  if (Array.isArray(value)) return value.flatMap(collectJsonLdImages);
+  const record = asRecord(value);
+  if (record) {
+    return [record.url, record.contentUrl]
+      .map((item) => String(item ?? "").trim())
+      .filter(Boolean);
+  }
+  return typeof value === "string" && value.trim() ? [value.trim()] : [];
+}
+
 function pickJsonLdName(value: unknown): string | undefined {
   const record = asRecord(value);
   if (record) return String(record.name ?? "");
+  return typeof value === "string" ? value : undefined;
+}
+
+function pickJsonLdReward(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    return value.map(pickJsonLdReward).find(Boolean);
+  }
+  const record = asRecord(value);
+  if (record) {
+    return String(record.name ?? record.description ?? record.price ?? "");
+  }
   return typeof value === "string" ? value : undefined;
 }
 
@@ -261,7 +344,100 @@ function extractActionLink(html: string, baseUrl: string): string | undefined {
   return undefined;
 }
 
+interface ImageCandidate {
+  rawUrl: string | undefined;
+  context: string;
+  priority: number;
+}
+
+function extractCssBackgroundUrls(value: string): string[] {
+  const urls: string[] = [];
+  for (const match of value.matchAll(/background(?:-image)?\s*:\s*url\((["']?)([^"')]+)\1\)/gi)) {
+    urls.push(match[2]);
+  }
+  return urls;
+}
+
+function normalizeScriptImageUrl(value: string): string {
+  return value
+    .replace(/\\u002[fF]/g, "/")
+    .replace(/\\\//g, "/")
+    .replace(/\\u003[aA]/g, ":")
+    .replace(/&amp;/g, "&");
+}
+
+function extractScriptImageCandidates(html: string): ImageCandidate[] {
+  const candidates: ImageCandidate[] = [];
+  for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) {
+    const scriptText = normalizeScriptImageUrl(decodeHtml(match[1] ?? ""));
+    for (const imageMatch of scriptText.matchAll(/https?:\/\/[^"'`\s<>\\]+?\.(?:jpg|jpeg|png|webp|avif)(?:\?[^"'`\s<>\\]*)?/gi)) {
+      const rawUrl = imageMatch[0];
+      const start = Math.max(0, imageMatch.index - 90);
+      const end = Math.min(scriptText.length, imageMatch.index + rawUrl.length + 90);
+      const context = scriptText.slice(start, end);
+      candidates.push({
+        rawUrl,
+        context: `app payload event image ${context}`,
+        priority: /banner|hero|cover|poster/i.test(context) ? 86 : 78,
+      });
+    }
+  }
+  return candidates;
+}
+
+function imageCandidatePenalty(url: string, context: string): number {
+  let pathname = url;
+  try {
+    pathname = new URL(url).pathname;
+  } catch {
+    pathname = url;
+  }
+  const text = `${pathname} ${context}`.toLowerCase();
+  let penalty = 0;
+  if (/\.(?:ico|svg)(?:[?#].*)?$/i.test(url)) penalty += 120;
+  if (/(^|[\/_.-])(?:favicon|logo|icon|icons|avatar|sprite|pixel|spacer|blank|transparent|qrcode|qr|ewm|navbar-logo|frontlogo|footer_logo)(?:[\/_.-]|$)/i.test(text)) penalty += 120;
+  if (/tracking|analytics|loader|placeholder|1x1|wechat-qr|weixin-qr/i.test(text)) penalty += 60;
+  if (/(?:cover|banner|hero|poster|share|event|hackathon|challenge|competition|contest)/i.test(text)) penalty -= 22;
+  if (/\.(?:jpg|jpeg|png|webp|avif)(?:[?#].*)?$/i.test(url)) penalty -= 8;
+  return penalty;
+}
+
+export function isUsableAiEventImageUrl(url: string, context = ""): boolean {
+  if (!/^https?:\/\//i.test(url)) return false;
+  return imageCandidatePenalty(url, context) < 70;
+}
+
+function pickBestImageCandidate(candidates: ImageCandidate[], baseUrl: string): string | undefined {
+  const scored = candidates
+    .map((candidate, index) => {
+      const resolved = resolveUrl(candidate.rawUrl, baseUrl);
+      if (!resolved || !isUsableAiEventImageUrl(resolved, candidate.context)) return undefined;
+      return {
+        url: resolved,
+        score: candidate.priority - imageCandidatePenalty(resolved, candidate.context) - index * 0.01,
+      };
+    })
+    .filter((item): item is { url: string; score: number } => Boolean(item))
+    .sort((a, b) => b.score - a.score);
+  return scored[0]?.url;
+}
+
 function extractFirstImage(html: string, baseUrl: string): string | undefined {
+  const candidates: ImageCandidate[] = [];
+  for (const match of html.matchAll(/<source\b[^>]*>/gi)) {
+    const attrs = readAttributes(match[0]);
+    const candidate = firstDefined([
+      pickLargestSrcsetImage(attrs.srcset),
+      pickLargestSrcsetImage(attrs["data-srcset"]),
+      attrs.src,
+      attrs["data-src"],
+    ]);
+    candidates.push({
+      rawUrl: candidate,
+      context: `${attrs.alt ?? ""} ${attrs.class ?? ""} ${attrs.id ?? ""} ${attrs.type ?? ""}`,
+      priority: 70,
+    });
+  }
   for (const match of html.matchAll(/<img\b[^>]*>/gi)) {
     const attrs = readAttributes(match[0]);
     const candidate = firstDefined([
@@ -273,31 +449,49 @@ function extractFirstImage(html: string, baseUrl: string): string | undefined {
       attrs["data-lazy-src"],
       attrs["data-original"],
     ]);
-    const resolved = resolveUrl(candidate, baseUrl);
-    if (resolved) return resolved;
+    candidates.push({
+      rawUrl: candidate,
+      context: `${attrs.alt ?? ""} ${attrs.class ?? ""} ${attrs.id ?? ""} ${attrs.width ?? ""} ${attrs.height ?? ""}`,
+      priority: 60,
+    });
   }
-  return undefined;
+  for (const match of html.matchAll(/<[^>]+\bstyle\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
+    const style = decodeHtml(match[2] ?? match[3] ?? "");
+    for (const url of extractCssBackgroundUrls(style)) {
+      candidates.push({
+        rawUrl: url,
+        context: `${match[0]} hero banner cover event`,
+        priority: 82,
+      });
+    }
+  }
+  return pickBestImageCandidate(candidates, baseUrl);
 }
 
 export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEventPageMetadata {
   const jsonLd = findEventJsonLd(getJsonLdObjects(html));
   const pageText = cleanText(html);
+  const attributeText = collectEventAttributeText(html);
   const description = getMetaContent(html, ["description", "og:description", "twitter:description"]);
   const title = firstDefined([
     getMetaContent(html, ["og:title", "twitter:title"]),
     pickJsonLdName(jsonLd?.name),
     extractTitle(html),
   ]);
-  const rawImage = firstDefined([
-    getMetaContent(html, ["og:image", "og:image:url", "twitter:image", "twitter:image:src", "image", "thumbnail", "thumbnailUrl"]),
-    pickJsonLdImage(jsonLd?.image),
-    extractFirstImage(html, pageUrl),
-  ]);
-  const coverImageUrl = resolveUrl(rawImage, pageUrl);
+  const coverImageUrl = pickBestImageCandidate([
+    ...getMetaContents(html, ["og:image", "og:image:url", "og:image:secure_url", "twitter:image", "twitter:image:src", "image", "thumbnail", "thumbnailUrl", "thumbnailurl"])
+      .map((rawUrl) => ({ rawUrl, context: "social meta image", priority: 100 })),
+    ...getLinkImages(html).map((rawUrl) => ({ rawUrl, context: "link image_src preload image", priority: 96 })),
+    ...collectJsonLdImages(jsonLd?.image).map((rawUrl) => ({ rawUrl, context: "json-ld event image", priority: 92 })),
+    { rawUrl: pickJsonLdImage(jsonLd?.thumbnailUrl), context: "json-ld thumbnail image", priority: 88 },
+    ...extractScriptImageCandidates(html),
+    { rawUrl: extractFirstImage(html, pageUrl), context: "html event image", priority: 74 },
+  ], pageUrl);
   const deadline = firstDefined([
+    normalizeDate(getMetaContent(html, ["deadline", "event:deadline", "applicationdeadline", "application_deadline", "validthrough"])),
     normalizeDate(String(jsonLd?.endDate ?? "")),
     normalizeDate(String(jsonLd?.startDate ?? "")),
-    extractDeadlineFromText(`${description ?? ""} ${pageText}`),
+    extractDeadlineFromText(`${description ?? ""} ${attributeText} ${pageText}`),
   ]);
   const registrationUrl = firstDefined([
     resolveUrl(pickOfferUrl(jsonLd?.offers), pageUrl),
@@ -307,7 +501,15 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
     pickJsonLdName(jsonLd?.organizer),
     getMetaContent(html, ["author", "publisher"]),
   ]);
-  const reward = extractRewardFromText(`${description ?? ""}. ${pageText}`);
+  const reward = firstDefined([
+    getMetaContent(html, ["prize", "award", "awards", "reward", "rewards", "event:prize", "event:reward"]),
+    pickJsonLdReward(jsonLd?.award),
+    pickJsonLdReward(jsonLd?.awards),
+    pickJsonLdReward(jsonLd?.offers),
+    pickJsonLdReward((jsonLd as Record<string, unknown> | undefined)?.prize),
+    pickJsonLdReward((jsonLd as Record<string, unknown> | undefined)?.prizes),
+    extractRewardFromText(`${description ?? ""}. ${attributeText}. ${pageText}`),
+  ]);
   const locationRecord = asRecord(jsonLd?.location);
   const locationName = pickJsonLdName(jsonLd?.location);
   const region = /VirtualLocation/i.test(getJsonLdType(locationRecord ?? {})) ? "全球线上" : locationName;

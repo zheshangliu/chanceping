@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="TRAE AI coding contest cover">
+  <rect width="640" height="360" rx="28" fill="#eef2ff"/>
+  <rect x="86" y="84" width="468" height="192" rx="22" fill="#ffffff" opacity=".72"/>
+  <text x="122" y="150" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#1d4ed8">TRAE</text>
+  <text x="122" y="198" font-family="Arial, sans-serif" font-size="22" fill="#334155">AI Coding & Vibe Challenge</text>
+  <path d="M122 232h80l30-30 30 30h150" fill="none" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

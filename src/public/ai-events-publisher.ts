@@ -16,7 +16,11 @@ import {
   type PublicAiEventCandidate,
   type PublicAiEventSampleRoomData,
 } from "../demo/ai-events-sample-room";
-import { extractAiEventPageMetadata, type AiEventPageMetadata } from "./ai-event-page-metadata";
+import {
+  extractAiEventPageMetadata,
+  isUsableAiEventImageUrl,
+  type AiEventPageMetadata,
+} from "./ai-event-page-metadata";
 
 const DEFAULT_COVER_IMAGE_URL = "/assets/ai-event-placeholder.svg";
 const NON_PUBLIC_STATUSES = new Set(["archived", "dismissed"]);
@@ -30,6 +34,22 @@ const MAX_PAGE_SIZE = 60;
 
 export type PublicAiEventSource = "database" | "sample_room_seed";
 export type PublicAiEventLifecycle = "current" | "historical";
+export type PublicAiEventRegionGroup =
+  | "global_online"
+  | "china_gba"
+  | "china"
+  | "north_america"
+  | "europe"
+  | "asia_pacific"
+  | "other";
+export type PublicAiEventDeadlineWindow = "7d" | "30d" | "60d" | "90d" | "later" | "unknown";
+
+export interface PublicAiEventFacet {
+  id: string;
+  label: string;
+  labelEn: string;
+  count: number;
+}
 
 export const AI_EVENT_CATEGORIES: AiEventCategory[] = [
   { id: "ai_agent", label: "AI Agent / 智能体", labelEn: "AI Agent" },
@@ -56,9 +76,34 @@ const CATEGORY_PRIORITY: AiEventCategoryId[] = [
   "ai_hackathon",
 ];
 
+const AI_EVENT_REGION_GROUPS: Array<{ id: PublicAiEventRegionGroup; label: string; labelEn: string }> = [
+  { id: "global_online", label: "全球线上", labelEn: "Global / Online" },
+  { id: "china_gba", label: "大湾区 / 港澳", labelEn: "GBA / Hong Kong / Macau" },
+  { id: "china", label: "中国内地", labelEn: "Mainland China" },
+  { id: "north_america", label: "北美", labelEn: "North America" },
+  { id: "europe", label: "欧洲", labelEn: "Europe" },
+  { id: "asia_pacific", label: "亚太", labelEn: "Asia Pacific" },
+  { id: "other", label: "其他地区", labelEn: "Other" },
+];
+
+const AI_EVENT_DEADLINE_WINDOWS: Array<{ id: PublicAiEventDeadlineWindow; label: string; labelEn: string }> = [
+  { id: "7d", label: "7 天内截止", labelEn: "Due in 7 days" },
+  { id: "30d", label: "30 天内截止", labelEn: "Due in 30 days" },
+  { id: "60d", label: "60 天内截止", labelEn: "Due in 60 days" },
+  { id: "90d", label: "90 天内截止", labelEn: "Due in 90 days" },
+  { id: "later", label: "90 天后", labelEn: "Later" },
+  { id: "unknown", label: "截止待查", labelEn: "Deadline unknown" },
+];
+
+const REGION_GROUP_LABELS = Object.fromEntries(AI_EVENT_REGION_GROUPS.map((item) => [item.id, item.label])) as Record<PublicAiEventRegionGroup, string>;
+const DEADLINE_WINDOW_LABELS = Object.fromEntries(AI_EVENT_DEADLINE_WINDOWS.map((item) => [item.id, item.label])) as Record<PublicAiEventDeadlineWindow, string>;
+
 export interface BuildPublicAiEventFeedOptions {
   lifecycle?: PublicAiEventLifecycle | "all";
   category?: AiEventCategoryId | "all" | string;
+  region?: PublicAiEventRegionGroup | "all" | string;
+  reward?: AiEventRewardType | "all" | string;
+  deadlineWindow?: PublicAiEventDeadlineWindow | "all" | string;
   page?: number;
   pageSize?: number;
   now?: string | Date;
@@ -86,6 +131,10 @@ export interface PublicAiEventCard extends PublicAiEventCandidate {
   rewardTypeLabel: string;
   organizerType: AiEventOrganizerType;
   organizerTypeLabel: string;
+  regionGroup: PublicAiEventRegionGroup;
+  regionGroupLabel: string;
+  deadlineWindow: PublicAiEventDeadlineWindow;
+  deadlineWindowLabel: string;
   knownFields: string[];
   missingFields: string[];
   fieldCompleteness: number;
@@ -110,6 +159,9 @@ export interface PublicAiEventFeed extends Omit<PublicAiEventSampleRoomData, "it
     pageSize: number;
     totalPages: number;
     categoryFacets: AiEventCategoryFacet[];
+    regionFacets: PublicAiEventFacet[];
+    rewardFacets: PublicAiEventFacet[];
+    deadlineWindowFacets: PublicAiEventFacet[];
     imageCoverageCount: number;
     officialSourceCount: number;
     aggregatorSourceCount: number;
@@ -142,6 +194,46 @@ function getDomain(urlOrDomain: string): string {
   }
 }
 
+function getPlatformCoverImageUrl(input: {
+  officialUrl?: string;
+  sourceDomain?: string;
+  sourceName?: string;
+  title?: string;
+  sourceType?: string;
+}): string {
+  const domain = getDomain(input.officialUrl || input.sourceDomain || "").toLowerCase();
+  const text = `${domain} ${input.officialUrl ?? ""} ${input.sourceName ?? ""} ${input.title ?? ""} ${input.sourceType ?? ""}`.toLowerCase();
+  if (/devpost\.com/.test(text)) return "/assets/ai-event-cover-devpost.svg";
+  if (/dorahacks\.io/.test(text)) return "/assets/ai-event-cover-dorahacks.svg";
+  if (/lablab\.ai/.test(text)) return "/assets/ai-event-cover-lablab.svg";
+  if (/kaggle\.com/.test(text)) return "/assets/ai-event-cover-kaggle.svg";
+  if (/trae\.ai|trae|vibe\s*coding/.test(text)) return "/assets/ai-event-cover-trae.svg";
+  if (/mlh\.io|mlh\.com|major\s+league\s+hacking/.test(text)) return "/assets/ai-event-cover-mlh.svg";
+  if (/tapnow\.com|tapnow\.ai|pika\.art|kling\.ai|klingai\.com|vidu\.com|pixverse\.ai|ai\s+video|aigc\s+video/.test(text)) return "/assets/ai-event-cover-aigc-video.svg";
+  if (/dreamina|jianying|jimeng|即梦|剪映/.test(text)) return "/assets/ai-event-cover-dreamina.svg";
+  if (/volcengine|火山引擎|coze|豆包/.test(text)) return "/assets/ai-event-cover-volcengine.svg";
+  if (/cloud\.tencent\.com|tencent\s+cloud|腾讯云/.test(text)) return "/assets/ai-event-cover-tencent-cloud.svg";
+  if (/kdd\.org|kdd\s*cup/.test(text)) return "/assets/ai-event-cover-competition.svg";
+  if (/aicrowd\.com|aicrowd/.test(text)) return "/assets/ai-event-cover-aicrowd.svg";
+  if (/codabench\.org|codalab\.org|codabench|codalab/.test(text)) return "/assets/ai-event-cover-codabench.svg";
+  if (/eval\.ai|evalai/.test(text)) return "/assets/ai-event-cover-evalai.svg";
+  if (/grand-challenge\.org|grand\s+challenge/.test(text)) return "/assets/ai-event-cover-grandchallenge.svg";
+  if (/mlcontests\.com|ml\s*contests/.test(text)) return "/assets/ai-event-cover-mlcontests.svg";
+  if (/xfyun\.cn|iflytek|科大讯飞|讯飞/.test(text)) return "/assets/ai-event-cover-xfyun.svg";
+  if (/projectodyssey\.ai|project\s*odyssey/.test(text)) return "/assets/ai-event-cover-project-odyssey.svg";
+  if (/reply\.com|reply\s+ai\s+film/.test(text)) return "/assets/ai-event-cover-reply.svg";
+  if (/filmfreeway\.com|filmfreeway/.test(text)) return "/assets/ai-event-cover-filmfreeway.svg";
+  if (/modelscope\.cn|modelscope|魔搭/.test(text)) return "/assets/ai-event-cover-modelscope.svg";
+  if (/opendatalab\.com|open\s*data\s*lab|opendatalab/.test(text)) return "/assets/ai-event-cover-opendatalab.svg";
+  if (/datawhale|coggle/.test(text)) return "/assets/ai-event-cover-community.svg";
+  if (/runwayml\.com|runway/.test(text)) return "/assets/ai-event-cover-runway.svg";
+  if (/openhackathons\.org|open\s*hackathons/.test(text)) return "/assets/ai-event-cover-openhackathons.svg";
+  if (/cloud|qwen|aliyun|tencent|huaweicloud|aws|azure|google\s*cloud|microsoft|ibm/.test(text)) return "/assets/ai-event-cover-cloud.svg";
+  if (/hackathon|黑客松|马拉松/.test(text)) return "/assets/ai-event-cover-hackathon.svg";
+  if (/competition|challenge|contest|比赛|竞赛|挑战/.test(text)) return "/assets/ai-event-cover-competition.svg";
+  return "";
+}
+
 function normalizePublicText(value: string | undefined | null, fallback: string): string {
   const raw = String(value ?? "").trim();
   if (!raw || /^(9999-12-31|0000-00-00|待复核|needs review|review|unknown|tbd|n\/a|null|undefined)$/i.test(raw)) return fallback;
@@ -160,21 +252,38 @@ function normalizePublicReward(value: string | undefined | null, fallback = "见
   const normalized = normalizePublicText(value, fallback);
   if (!normalized || normalized === fallback) return fallback;
   const genericNews = /本报讯|报道称|报道|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会|活动现场/i;
-  const concreteReward = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
-  const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
+  const concreteReward = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|(?:\d+\s*)?(?:百万|千万|亿元)|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
+  const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|(?:\d+\s*)?(?:百万|千万|亿元)|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
   const negatedReward = /没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i;
   const platformIntro = /平台|社区|汇聚|举办|培养|开发者|赛事生态|competition\s+platform|developer\s+community/i;
+  const summarizeReward = (text: string): string => {
+    const moneyPhrase = text.match(/(?:\$|￥)?\s*(?:\d+(?:\.\d+)?\s*(?:万|万元|元|k|K|m|M|million|billion)?|百万|千万)\s*(?:奖金池|奖池|奖金|cash\s*prize|prize\s*pool|USD|RMB|USDT)?/i)?.[0]?.trim();
+    const moneyLabel = moneyPhrase
+      ? (/奖|prize|cash/i.test(moneyPhrase) ? moneyPhrase.replace(/\s+/g, " ") : "奖金")
+      : "";
+    const labels = [
+      moneyLabel,
+      /(cloud\s*credits?|API\s*credits?|credits?|云资源|算力|GPU|云代金券)/i.test(text) ? "云资源" : "",
+      /(showcase|展示|曝光|展映|上架|Demo\s*Day)/i.test(text) ? "展示机会" : "",
+      /(grant|扶持|孵化|导师|accelerat|incubat)/i.test(text) ? "创业扶持" : "",
+      /(社区|community|membership)/i.test(text) ? "社区资源" : "",
+      /(证书|certificate|badge)/i.test(text) ? "证书" : "",
+    ].filter(Boolean);
+    return Array.from(new Set(labels)).slice(0, 3).join(" / ");
+  };
   if (negatedReward.test(normalized)) return fallback;
+  if (normalized.length > 80 && /upcoming|browse|events?|sessions?|programs?|event\s+pages|目录|列表|页面|活动页|议程/i.test(normalized) && !moneyOrPrizePool.test(normalized)) {
+    return fallback;
+  }
+  if (normalized.length > 40 && concreteReward.test(normalized)) {
+    const summarized = summarizeReward(normalized);
+    if (summarized) return summarized;
+  }
   if (genericNews.test(normalized) && !concreteReward.test(normalized)) return fallback;
   if (genericNews.test(normalized) && normalized.length > 80) return fallback;
   if (platformIntro.test(normalized) && normalized.length > 70) {
-    const labels = [
-      /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池|奖金)/i.test(normalized) ? "奖金" : "",
-      /(cloud\s*credits?|API\s*credits?|credits?|云资源|算力)/i.test(normalized) ? "云资源" : "",
-      /(showcase|展示|曝光|展映)/i.test(normalized) ? "展示机会" : "",
-      /(社区|community)/i.test(normalized) ? "社区资源" : "",
-    ].filter(Boolean);
-    return labels.length > 0 ? Array.from(new Set(labels)).join(" / ") : fallback;
+    const summarized = summarizeReward(normalized);
+    return summarized || fallback;
   }
   if (normalized.length > 60 && !moneyOrPrizePool.test(normalized)) return fallback;
   if (normalized.length > 80) return fallback;
@@ -190,17 +299,75 @@ function normalizeReferenceDate(value: string | Date | undefined): Date {
   return new Date(input.getFullYear(), input.getMonth(), input.getDate());
 }
 
-function parseDeadlineDate(value: string | undefined | null): Date | null {
-  const text = String(value ?? "").trim();
-  if (!text || /待复核|持续|按年度|见官网|TBD|unknown/i.test(text)) return null;
-  const match = text.match(/(20\d{2})[.\-/年](\d{1,2})[.\-/月](\d{1,2})/);
-  if (!match) return null;
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
+const MONTH_NAME_TO_NUMBER: Record<string, number> = {
+  jan: 1,
+  january: 1,
+  feb: 2,
+  february: 2,
+  mar: 3,
+  march: 3,
+  apr: 4,
+  april: 4,
+  may: 5,
+  jun: 6,
+  june: 6,
+  jul: 7,
+  july: 7,
+  aug: 8,
+  august: 8,
+  sep: 9,
+  sept: 9,
+  september: 9,
+  oct: 10,
+  october: 10,
+  nov: 11,
+  november: 11,
+  dec: 12,
+  december: 12,
+};
+
+const DEADLINE_CUE_RE = /截止|报名|提交|申请|赛程|参赛|大赛|比赛|黑客松|马拉松|deadline|due|close|closes|closing|ends|ending|submit|submission|apply|application|before|until|by|hackathon|challenge|contest|competition/i;
+
+function makeLocalDate(year: number, month: number, day: number): Date | null {
   if (!year || month < 1 || month > 12 || day < 1 || day > 31) return null;
   const date = new Date(year, month - 1, day);
-  return Number.isNaN(date.getTime()) ? null : date;
+  if (Number.isNaN(date.getTime())) return null;
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+  return date;
+}
+
+function parseDeadlineDate(value: string | undefined | null, referenceDate = normalizeReferenceDate(undefined)): Date | null {
+  const text = String(value ?? "").trim();
+  if (!text || /待复核|持续|按年度|见官网|TBD|unknown/i.test(text)) return null;
+  const fullNumeric = text.match(/(20\d{2})[.\-/年](\d{1,2})[.\-/月](\d{1,2})/);
+  if (fullNumeric) {
+    const date = makeLocalDate(Number(fullNumeric[1]), Number(fullNumeric[2]), Number(fullNumeric[3]));
+    if (date) return date;
+  }
+
+  const monthFirst = text.match(/\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,\s*)?(20\d{2})?\b/i);
+  if (monthFirst) {
+    const month = MONTH_NAME_TO_NUMBER[monthFirst[1].toLowerCase().replace(/\.$/, "")];
+    const year = Number(monthFirst[3] ?? referenceDate.getFullYear());
+    const date = makeLocalDate(year, month, Number(monthFirst[2]));
+    if (date) return date;
+  }
+
+  const dayFirst = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?(?:,\s*)?(20\d{2})?\b/i);
+  if (dayFirst) {
+    const month = MONTH_NAME_TO_NUMBER[dayFirst[2].toLowerCase().replace(/\.$/, "")];
+    const year = Number(dayFirst[3] ?? referenceDate.getFullYear());
+    const date = makeLocalDate(year, month, Number(dayFirst[1]));
+    if (date) return date;
+  }
+
+  if (!DEADLINE_CUE_RE.test(text)) return null;
+  const monthDayMatches = Array.from(text.matchAll(/(?:^|[^\d])(\d{1,2})(?:[.\/]|月)(\d{1,2})(?:日)?(?!\d)/g));
+  for (const match of monthDayMatches.reverse()) {
+    const date = makeLocalDate(referenceDate.getFullYear(), Number(match[1]), Number(match[2]));
+    if (date) return date;
+  }
+  return null;
 }
 
 function formatDateKey(date: Date | null, lifecycle: PublicAiEventLifecycle): string {
@@ -221,9 +388,35 @@ function inferLifecycle(input: {
   if (/已截止|已结束|报名结束|closed|ended|past event|archive/i.test(String(input.title ?? ""))) return "historical";
   if (HISTORICAL_STATUSES.has(String(input.status ?? ""))) return "historical";
   if (input.evidenceStatus === "historical_reference" || input.candidateType === "reference_case") return "historical";
-  const deadlineDate = parseDeadlineDate(input.deadline);
+  const deadlineDate = parseDeadlineDate(input.deadline, referenceDate);
   if (deadlineDate && deadlineDate.getTime() < referenceDate.getTime()) return "historical";
   return "current";
+}
+
+function resolvePublicDeadline(input: {
+  rawDeadline?: string | null;
+  context: Array<string | undefined | null>;
+  referenceDate: Date;
+}): { deadlineDate: Date | null; deadlineDisplay: string } {
+  const explicitDate = parseDeadlineDate(input.rawDeadline, input.referenceDate);
+  if (explicitDate) {
+    return {
+      deadlineDate: explicitDate,
+      deadlineDisplay: formatDateKey(explicitDate, "current"),
+    };
+  }
+  const contextText = compactStrings(input.context).join(" ");
+  const inferredDate = parseDeadlineDate(contextText, input.referenceDate);
+  if (inferredDate) {
+    return {
+      deadlineDate: inferredDate,
+      deadlineDisplay: formatDateKey(inferredDate, "current"),
+    };
+  }
+  return {
+    deadlineDate: null,
+    deadlineDisplay: normalizePublicText(input.rawDeadline, "见官网"),
+  };
 }
 
 function inferSourceType(domain: string, typeText: string): AiEventSourceType {
@@ -243,6 +436,21 @@ function resolveCategory(id: AiEventCategoryId): AiEventCategory {
 function normalizeCategoryId(value: string | undefined): AiEventCategoryId | "all" {
   if (!value || value === "all") return "all";
   return AI_EVENT_CATEGORY_BY_ID.has(value as AiEventCategoryId) ? value as AiEventCategoryId : "all";
+}
+
+function normalizeRegionFilter(value: string | undefined): PublicAiEventRegionGroup | "all" {
+  if (!value || value === "all") return "all";
+  return AI_EVENT_REGION_GROUPS.some((group) => group.id === value) ? value as PublicAiEventRegionGroup : "all";
+}
+
+function normalizeRewardFilter(value: string | undefined): AiEventRewardType | "all" {
+  if (!value || value === "all") return "all";
+  return Object.prototype.hasOwnProperty.call(REWARD_TYPE_LABELS, value) ? value as AiEventRewardType : "all";
+}
+
+function normalizeDeadlineWindowFilter(value: string | undefined): PublicAiEventDeadlineWindow | "all" {
+  if (!value || value === "all") return "all";
+  return AI_EVENT_DEADLINE_WINDOWS.some((window) => window.id === value) ? value as PublicAiEventDeadlineWindow : "all";
 }
 
 function compactCategoryTags(ids: AiEventCategoryId[]): AiEventCategory[] {
@@ -312,6 +520,57 @@ function buildCategoryFacets(items: PublicAiEventCard[]): AiEventCategoryFacet[]
       count: items.filter((item) => hasCategory(item, category.id)).length,
     }))
     .filter((facet) => facet.count > 0);
+}
+
+function buildRegionFacets(items: PublicAiEventCard[]): PublicAiEventFacet[] {
+  return AI_EVENT_REGION_GROUPS
+    .map((group) => ({
+      ...group,
+      count: items.filter((item) => item.regionGroup === group.id).length,
+    }))
+    .filter((facet) => facet.count > 0);
+}
+
+function buildRewardFacets(items: PublicAiEventCard[]): PublicAiEventFacet[] {
+  return (Object.keys(REWARD_TYPE_LABELS) as AiEventRewardType[])
+    .map((id) => ({
+      id,
+      label: REWARD_TYPE_LABELS[id],
+      labelEn: id.replace(/_/g, " "),
+      count: items.filter((item) => item.rewardTypes.includes(id)).length,
+    }))
+    .filter((facet) => facet.count > 0);
+}
+
+function buildDeadlineWindowFacets(items: PublicAiEventCard[]): PublicAiEventFacet[] {
+  return AI_EVENT_DEADLINE_WINDOWS
+    .map((window) => ({
+      ...window,
+      count: items.filter((item) => item.deadlineWindow === window.id).length,
+    }))
+    .filter((facet) => facet.count > 0);
+}
+
+function hasRegionGroup(card: PublicAiEventCard, region: PublicAiEventRegionGroup | "all"): boolean {
+  return region === "all" || card.regionGroup === region;
+}
+
+function hasRewardType(card: PublicAiEventCard, reward: AiEventRewardType | "all"): boolean {
+  return reward === "all" || card.rewardTypes.includes(reward);
+}
+
+function hasDeadlineWindow(card: PublicAiEventCard, deadlineWindow: PublicAiEventDeadlineWindow | "all"): boolean {
+  if (deadlineWindow === "all") return true;
+  if (deadlineWindow === "unknown" || deadlineWindow === "later") return card.deadlineWindow === deadlineWindow;
+  const rank: Record<PublicAiEventDeadlineWindow, number> = {
+    "7d": 7,
+    "30d": 30,
+    "60d": 60,
+    "90d": 90,
+    later: 9999,
+    unknown: 10000,
+  };
+  return rank[card.deadlineWindow] <= rank[deadlineWindow];
 }
 
 function inferLanguage(domain: string, text: string): string {
@@ -430,6 +689,34 @@ function inferOrganizerType(sourceType: AiEventSourceType, domain: string, text:
   if (sourceType === "developer_community" || /github|huggingface|developer|community|社区/i.test(`${domain} ${text}`)) return "developer_community";
   if (/\.com\b|公司|企业|inc\.|ltd/i.test(`${domain} ${text}`)) return "company";
   return "unknown";
+}
+
+function inferRegionGroup(input: {
+  region?: string;
+  sourceDomain?: string;
+  language?: string;
+  eventMode?: AiEventMode;
+  text?: string;
+}): PublicAiEventRegionGroup {
+  const text = `${input.region ?? ""} ${input.sourceDomain ?? ""} ${input.language ?? ""} ${input.text ?? ""}`;
+  if (/大湾区|粤港澳|广州|深圳|香港|澳门|Hong\s*Kong|Macau|Macao|Guangzhou|Shenzhen|GBA/i.test(text)) return "china_gba";
+  if (/中国|中文|内地|北京|上海|杭州|南京|成都|武汉|天池|阿里云|腾讯云|华为云|飞桨|百度|讯飞|\.cn\b|China|Mainland/i.test(text)) return "china";
+  if (/North\s*America|United\s*States|\bUSA\b|\bUS\b|Canada|Silicon\s*Valley|San\s*Francisco|New\s*York|北美|美国|加拿大/i.test(text)) return "north_america";
+  if (/Europe|\bEU\b|United\s*Kingdom|\bUK\b|Germany|France|Netherlands|London|Berlin|Paris|欧洲|英国|德国|法国/i.test(text)) return "europe";
+  if (/Asia\s*Pacific|\bAPAC\b|Japan|Korea|Singapore|India|Indonesia|Vietnam|Thailand|Malaysia|Australia|New\s*Zealand|亚太|日本|韩国|新加坡|印度|东南亚|澳大利亚/i.test(text)) return "asia_pacific";
+  if (input.eventMode === "online" || /全球|线上|在线|online|virtual|remote|worldwide|global/i.test(text)) return "global_online";
+  return "other";
+}
+
+function inferDeadlineWindow(deadlineDate: Date | null, lifecycle: PublicAiEventLifecycle, referenceDate: Date): PublicAiEventDeadlineWindow {
+  if (!deadlineDate) return "unknown";
+  if (lifecycle === "historical") return "unknown";
+  const days = Math.ceil((deadlineDate.getTime() - referenceDate.getTime()) / (24 * 60 * 60 * 1000));
+  if (days <= 7) return "7d";
+  if (days <= 30) return "30d";
+  if (days <= 60) return "60d";
+  if (days <= 90) return "90d";
+  return "later";
 }
 
 function buildFieldQuality(input: {
@@ -600,22 +887,56 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
   const sourceDomain = getDomain(officialUrl);
   const typeText = `${card.type} ${card.opportunity_kind ?? ""}`;
   const sourceType = inferSourceType(sourceDomain, typeText);
+  const rawDeadline = pageMetadata.deadline || card.deadline;
+  const rawDeadlineContext = [
+    card.title,
+    card.type,
+    card.organizer,
+    card.region,
+    card.eligibility,
+    card.match_reason,
+    card.fitReason,
+    card.next_action,
+    card.risk_note,
+    sourceDomain,
+  ];
+  const resolvedDeadline = resolvePublicDeadline({
+    rawDeadline,
+    context: rawDeadlineContext,
+    referenceDate,
+  });
   const lifecycleStatus = inferLifecycle({
     title: card.title,
     status: card.status,
-    deadline: card.deadline,
+    deadline: resolvedDeadline.deadlineDisplay,
     evidenceStatus: card.evidence_status,
     candidateType: card.opportunity_kind,
   }, referenceDate);
-  const rawDeadline = pageMetadata.deadline || card.deadline;
-  const deadlineDate = parseDeadlineDate(rawDeadline);
-  const deadlineDisplay = normalizePublicText(rawDeadline, "见官网");
+  const { deadlineDate, deadlineDisplay } = resolvedDeadline;
   const reward = normalizePublicReward(pageMetadata.reward || card.reward_or_value, "见官网");
   const reason = normalizePublicText(card.fitReason || card.match_reason || card.next_action, "这是 AI 赛事雷达发现的公开机会，建议打开官方入口查看报名、截止时间和参赛资格。");
-  const coverImageUrl = String((card as unknown as Record<string, unknown>).coverImageUrl ?? (card as unknown as Record<string, unknown>).cover_image_url ?? pageMetadata.coverImageUrl ?? DEFAULT_COVER_IMAGE_URL);
-  const imageSourceUrl = String((card as unknown as Record<string, unknown>).imageSourceUrl ?? (card as unknown as Record<string, unknown>).image_source_url ?? pageMetadata.imageSourceUrl ?? (coverImageUrl !== DEFAULT_COVER_IMAGE_URL ? coverImageUrl : officialUrl));
+  const storedCoverImageUrl = String((card as unknown as Record<string, unknown>).coverImageUrl ?? (card as unknown as Record<string, unknown>).cover_image_url ?? "");
+  const usableStoredCoverImageUrl = isUsableAiEventImageUrl(storedCoverImageUrl, `${card.title} ${card.type} stored cover`)
+    ? storedCoverImageUrl
+    : "";
+  const realCoverImageUrl = usableStoredCoverImageUrl || pageMetadata.coverImageUrl || "";
+  const platformCoverImageUrl = getPlatformCoverImageUrl({
+    officialUrl,
+    sourceDomain,
+    sourceName: card.organizer,
+    title: card.title,
+    sourceType,
+  });
+  const coverImageUrl = realCoverImageUrl || platformCoverImageUrl || DEFAULT_COVER_IMAGE_URL;
+  const imageSourceUrl = String(
+    (usableStoredCoverImageUrl
+      ? ((card as unknown as Record<string, unknown>).imageSourceUrl ?? (card as unknown as Record<string, unknown>).image_source_url)
+      : undefined)
+    ?? pageMetadata.imageSourceUrl
+    ?? (realCoverImageUrl ? coverImageUrl : officialUrl),
+  );
   const imageAlt = String((card as unknown as Record<string, unknown>).imageAlt ?? (card as unknown as Record<string, unknown>).image_alt ?? pageMetadata.imageAlt ?? `${card.title} 赛事封面`);
-  const imageStatus = (pageMetadata.imageStatus ?? (coverImageUrl !== DEFAULT_COVER_IMAGE_URL ? "source_image" : "platform_placeholder")) as AiEventImageStatus;
+  const imageStatus = (realCoverImageUrl ? "source_image" : platformCoverImageUrl ? "platform_placeholder" : "default_placeholder") as AiEventImageStatus;
   const imageAttribution = String((card as unknown as Record<string, unknown>).imageAttribution ?? (card as unknown as Record<string, unknown>).image_attribution ?? pageMetadata.organizer ?? card.organizer ?? sourceDomain ?? "ChancePing");
   const tags = compactPublicTags([
     card.type,
@@ -655,6 +976,14 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
   const organizer = normalizePublicText(pageMetadata.organizer || card.organizer, sourceDomain || "官方来源");
   const region = normalizePublicText(pageMetadata.region || card.region, "见官网");
   const audience = normalizePublicText(card.eligibility, "见官网");
+  const regionGroup = inferRegionGroup({
+    region,
+    sourceDomain,
+    language,
+    eventMode,
+    text: contextualText,
+  });
+  const deadlineWindow = inferDeadlineWindow(deadlineDate, lifecycleStatus, referenceDate);
   const fieldQuality = buildFieldQuality({
     deadline: deadlineDisplay,
     reward,
@@ -701,6 +1030,10 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
     rewardTypeLabel: labelEnumValues(rewardTypes, REWARD_TYPE_LABELS),
     organizerType,
     organizerTypeLabel: ORGANIZER_TYPE_LABELS[organizerType],
+    regionGroup,
+    regionGroupLabel: REGION_GROUP_LABELS[regionGroup],
+    deadlineWindow,
+    deadlineWindowLabel: DEADLINE_WINDOW_LABELS[deadlineWindow],
     ...fieldQuality,
     reason,
     officialUrl,
@@ -720,14 +1053,29 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
 
 function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate: Date): PublicAiEventCard {
   const domain = candidate.sourceDomain === "multiple" ? getDomain(candidate.officialUrl) : candidate.sourceDomain;
+  const resolvedDeadline = resolvePublicDeadline({
+    rawDeadline: candidate.deadline,
+    context: [
+      candidate.title,
+      candidate.eventType,
+      candidate.organizer,
+      candidate.sourceName,
+      candidate.region,
+      candidate.audience,
+      candidate.reward,
+      candidate.reason,
+      domain,
+      candidate.tags.join(" "),
+    ],
+    referenceDate,
+  });
   const lifecycleStatus = inferLifecycle({
     title: candidate.title,
-    deadline: candidate.deadline,
+    deadline: resolvedDeadline.deadlineDisplay,
     evidenceStatus: candidate.evidenceStatus,
     candidateType: candidate.candidateType,
   }, referenceDate);
-  const deadlineDate = parseDeadlineDate(candidate.deadline);
-  const deadlineDisplay = normalizePublicText(candidate.deadline, "见官网");
+  const { deadlineDate, deadlineDisplay } = resolvedDeadline;
   const reward = normalizePublicReward(candidate.reward, "见官网");
   const candidateTags = compactPublicTags(candidate.tags).slice(0, 8);
   const contextualText = [
@@ -764,15 +1112,34 @@ function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate
       tags: candidateTags,
     });
   const primaryCategory = candidate.primaryCategory ?? categoryTags[0] ?? resolveCategory("ai_app");
-  const coverImageUrl = candidate.coverImageUrl ?? DEFAULT_COVER_IMAGE_URL;
-  const imageSourceUrl = candidate.imageSourceUrl ?? (coverImageUrl !== DEFAULT_COVER_IMAGE_URL ? coverImageUrl : candidate.officialUrl);
+  const seedCoverImageUrl = candidate.coverImageUrl ?? "";
+  const realSeedCoverImageUrl = isUsableAiEventImageUrl(seedCoverImageUrl, `${candidate.title} ${candidate.sourceName} seed cover`)
+    ? seedCoverImageUrl
+    : "";
+  const platformCoverImageUrl = getPlatformCoverImageUrl({
+    officialUrl: candidate.officialUrl,
+    sourceDomain: domain,
+    sourceName: candidate.sourceName,
+    title: candidate.title,
+    sourceType: candidate.sourceType,
+  });
+  const coverImageUrl = realSeedCoverImageUrl || platformCoverImageUrl || DEFAULT_COVER_IMAGE_URL;
+  const imageSourceUrl = candidate.imageSourceUrl ?? (realSeedCoverImageUrl ? coverImageUrl : candidate.officialUrl);
   const imageAlt = candidate.imageAlt ?? `${candidate.title} 赛事封面`;
-  const imageStatus = candidate.imageStatus ?? (coverImageUrl !== DEFAULT_COVER_IMAGE_URL ? "source_image" : "platform_placeholder");
+  const imageStatus = candidate.imageStatus ?? (realSeedCoverImageUrl ? "source_image" : platformCoverImageUrl ? "platform_placeholder" : "default_placeholder");
   const imageAttribution = candidate.imageAttribution ?? candidate.sourceName ?? "ChancePing";
   const organizer = normalizePublicText(candidate.organizer ?? candidate.sourceName, "官方来源");
   const region = candidate.region ?? (/国内|中文|阿里云|天池|飞桨|华为/.test(candidate.reason + candidate.tags.join(" ")) ? "中国 / 中文来源" : "全球 / 海外");
   const audience = normalizePublicText(candidate.audience, "个人开发者、小团队或 AI 创作者请以官方页面确认资格");
   const registrationUrl = candidate.registrationUrl ?? candidate.officialUrl;
+  const regionGroup = inferRegionGroup({
+    region,
+    sourceDomain: domain,
+    language: candidate.language,
+    eventMode,
+    text: contextualText,
+  });
+  const deadlineWindow = inferDeadlineWindow(deadlineDate, lifecycleStatus, referenceDate);
   const fieldQuality = buildFieldQuality({
     deadline: deadlineDisplay,
     reward,
@@ -813,6 +1180,10 @@ function normalizeSeedCandidate(candidate: PublicAiEventCandidate, referenceDate
     rewardTypeLabel: candidate.rewardTypeLabel ?? labelEnumValues(rewardTypes, REWARD_TYPE_LABELS),
     organizerType,
     organizerTypeLabel: candidate.organizerTypeLabel ?? ORGANIZER_TYPE_LABELS[organizerType],
+    regionGroup,
+    regionGroupLabel: REGION_GROUP_LABELS[regionGroup],
+    deadlineWindow,
+    deadlineWindowLabel: DEADLINE_WINDOW_LABELS[deadlineWindow],
     ...fieldQuality,
     reason: normalizePublicText(candidate.reason, "这是 AI 赛事雷达发现的公开机会，建议打开官方入口查看详情。"),
     lifecycleStatus,
@@ -871,6 +1242,9 @@ export function buildPublicAiEventFeed(
   const referenceDate = normalizeReferenceDate(options.now);
   const lifecycle = options.lifecycle ?? "current";
   const category = normalizeCategoryId(options.category);
+  const region = normalizeRegionFilter(options.region);
+  const reward = normalizeRewardFilter(options.reward);
+  const deadlineWindow = normalizeDeadlineWindowFilter(options.deadlineWindow);
   const page = clampPositiveInteger(options.page, 1);
   const pageSize = clampPositiveInteger(options.pageSize, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
   const databaseCards = entries
@@ -889,7 +1263,14 @@ export function buildPublicAiEventFeed(
   const categoryFilteredItems = category === "all"
     ? filteredItems
     : filteredItems.filter((item) => hasCategory(item, category));
-  const sortedItems = sortPublicCards(categoryFilteredItems, lifecycle);
+  const regionFacets = buildRegionFacets(categoryFilteredItems);
+  const rewardFacets = buildRewardFacets(categoryFilteredItems);
+  const deadlineWindowFacets = buildDeadlineWindowFacets(categoryFilteredItems);
+  const dimensionFilteredItems = categoryFilteredItems
+    .filter((item) => hasRegionGroup(item, region))
+    .filter((item) => hasRewardType(item, reward))
+    .filter((item) => hasDeadlineWindow(item, deadlineWindow));
+  const sortedItems = sortPublicCards(dimensionFilteredItems, lifecycle);
   const totalPages = Math.max(1, Math.ceil(sortedItems.length / pageSize));
   const normalizedPage = Math.min(page, totalPages);
   const items = sortedItems.slice((normalizedPage - 1) * pageSize, normalizedPage * pageSize);
@@ -914,11 +1295,14 @@ export function buildPublicAiEventFeed(
       totalCount: mergedItems.length,
       currentCount,
       historicalCount,
-      filteredCount: categoryFilteredItems.length,
+      filteredCount: dimensionFilteredItems.length,
       page: normalizedPage,
       pageSize,
       totalPages,
       categoryFacets,
+      regionFacets,
+      rewardFacets,
+      deadlineWindowFacets,
       imageCoverageCount,
       officialSourceCount,
       aggregatorSourceCount,

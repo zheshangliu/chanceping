@@ -204,6 +204,9 @@ async function runPublicAiEventsTests(): Promise<void> {
   logPublicCheck("public API exposes participant type field", /participantTypeLabel/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API exposes reward type field", /rewardTypeLabel/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API exposes organizer type field", /organizerTypeLabel/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API exposes region group field", /regionGroupLabel/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API exposes deadline window field", /deadlineWindowLabel/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API exposes region/reward/deadline facets", /regionFacets|rewardFacets|deadlineWindowFacets/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API exposes known fields summary", /knownFields|fieldCompleteness/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API includes Qwen Cloud source", /Qwen Cloud|qwencloud-hackathon\.devpost\.com/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API includes TRAE source", /TRAE|trae\.ai/i.test(serialized), serialized.slice(0, 160));
@@ -218,6 +221,10 @@ async function runPublicAiEventsTests(): Promise<void> {
   logPublicCheck("public API category filter returns 200", categoryApi.status === 200, `status=${categoryApi.status}`);
   logPublicCheck("public API category filter succeeds", categoryBody.success === true, categorySerialized.slice(0, 160));
   logPublicCheck("public API category filter returns matching cards", (categoryBody.data?.items ?? []).every((item) => item.primaryCategory?.id === "ai_agent" || (item.categoryTags ?? []).some((tag) => tag.id === "ai_agent")), categorySerialized.slice(0, 180));
+  const dimensionApi = await apiGet("/api/public/ai-events?status=current&region=global_online&reward=cloud_credits&deadline_window=90d&page=1&page_size=12");
+  const dimensionSerialized = JSON.stringify(dimensionApi.data ?? {});
+  logPublicCheck("public API dimension filters return 200", dimensionApi.status === 200, `status=${dimensionApi.status}`);
+  logPublicCheck("public API dimension filters succeed", (dimensionApi.data as { success?: boolean })?.success === true, dimensionSerialized.slice(0, 160));
   logPublicCheck("public API hides internal radarId", !serialized.includes("radarId"));
   logPublicCheck("public API hides internal run_id", !serialized.includes("run_id"));
   logPublicCheck("public API hides API keys", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(serialized));

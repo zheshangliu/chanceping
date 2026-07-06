@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="AI contest community lead cover">
+  <rect width="640" height="360" rx="28" fill="#eff6ff"/>
+  <rect x="86" y="84" width="468" height="192" rx="22" fill="#ffffff" opacity=".72"/>
+  <text x="122" y="150" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#1d4ed8">Community Leads</text>
+  <text x="122" y="198" font-family="Arial, sans-serif" font-size="22" fill="#475569">AI Contest Discovery Sources</text>
+  <circle cx="472" cy="136" r="26" fill="#bfdbfe"/>
+  <circle cx="516" cy="184" r="34" fill="#67e8f9" opacity=".55"/>
+</svg>

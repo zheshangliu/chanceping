@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="OpenDataLab AI competition cover">
+  <rect width="640" height="360" rx="28" fill="#ecfeff"/>
+  <rect x="88" y="84" width="464" height="192" rx="22" fill="#ffffff" opacity=".7"/>
+  <text x="124" y="150" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#0e7490">OpenDataLab</text>
+  <text x="124" y="198" font-family="Arial, sans-serif" font-size="22" fill="#334155">Data & Model Challenges</text>
+  <path d="M124 232h260" stroke="#0891b2" stroke-width="8" stroke-linecap="round"/>
+</svg>

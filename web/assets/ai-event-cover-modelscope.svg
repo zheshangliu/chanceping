@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="ModelScope AI events cover">
+  <rect width="640" height="360" rx="28" fill="#eef2ff"/>
+  <rect x="88" y="82" width="464" height="196" rx="22" fill="#ffffff" opacity=".72"/>
+  <text x="124" y="150" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#1d4ed8">ModelScope</text>
+  <text x="124" y="198" font-family="Arial, sans-serif" font-size="22" fill="#334155">模型生态活动与挑战</text>
+  <path d="M124 232h250" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+</svg>

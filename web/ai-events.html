@@ -3,23 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>盯比赛 · 全球 AI 赛事导航｜ChancePing</title>
+  <title>盯比赛｜全球 AI 赛事导航｜ChancePing</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="ai-events-page">
   <header class="ai-events-topbar">
-    <a class="ai-events-brand" href="/">
-      <span class="ai-events-brand-mark">盯</span>
+    <a class="ai-events-brand" href="/aievents" aria-label="盯比赛｜全球 AI 赛事导航">
+      <img class="ai-events-brand-logo" src="/assets/chanceping-logo.png" alt="盯比赛">
       <span>
-        <strong>ChancePing 盯机会</strong>
-        <small>AI Opportunity Radar</small>
+        <strong>盯比赛</strong>
+        <small>全球 AI 赛事导航</small>
       </span>
     </a>
-    <nav class="ai-events-nav" aria-label="AI events navigation">
-      <a href="/">主控台</a>
-      <a href="/aievents" aria-current="page">盯比赛</a>
-      <a href="/radars">我的雷达</a>
-    </nav>
     <div class="ai-events-language" aria-label="Language">
       <button type="button" class="is-active" data-language="zh">中文</button>
       <button type="button" data-language="en">EN</button>
@@ -29,7 +24,7 @@
   <main class="ai-events-shell">
     <section class="ai-events-hero">
       <div class="ai-events-hero-copy">
-        <p class="ai-events-kicker" data-i18n="kicker">盯比赛 · AI 赛事样板间</p>
+        <p class="ai-events-kicker" data-i18n="kicker">盯比赛｜全球 AI 赛事导航</p>
         <h1 data-i18n="title">全球 AI 赛事导航</h1>
         <p data-i18n="subtitle">
           基于 ChancePing AI 机会雷达持续收集、校验和整理全球 AI 比赛、AI Hackathon、AIGC 创作赛、算法挑战和开发者竞赛。
@@ -40,12 +35,61 @@
         </div>
       </div>
       <aside class="ai-events-proof" aria-label="ChancePing proof">
-        <span data-i18n="proofLabel">样板间证明什么</span>
-        <strong data-i18n="proofTitle">从自然语言雷达到公开机会导航</strong>
+        <span data-i18n="proofLabel">本网页基于什么</span>
+        <strong data-i18n="proofTitle">基于 盯机会 ChancePing 系统开发</strong>
         <p data-i18n="proofBody">
-          这里不是普通搜索列表，而是展示 ChancePing 如何把多源搜索、官方入口复核、去重分类、评分和机会卡交付成一个可持续更新的情报页。
+          本网页基于 盯机会 ChancePing 系统持续收集、整理和更新 AI 赛事公开机会导航，帮助创作者和开发者更快发现可参加的比赛。
         </p>
       </aside>
+    </section>
+
+    <section class="ai-events-panel" id="ai-events-list">
+      <div class="ai-events-panel-header">
+        <div>
+          <p class="ai-events-kicker" data-i18n="listKicker">Opportunity Cards</p>
+          <h2 data-i18n="listTitle">当前有效 AI 赛事机会</h2>
+        </div>
+        <div class="ai-events-filter" role="tablist" aria-label="机会状态">
+          <button id="ai-events-filter-current" class="is-active" type="button" data-ai-events-status="current" data-i18n="currentTab">当前有效</button>
+          <button id="ai-events-filter-historical" type="button" data-ai-events-status="historical" data-i18n="historicalTab">历史赛事</button>
+        </div>
+        <span id="ai-events-count">加载中</span>
+      </div>
+      <div id="ai-events-category-filter" class="ai-events-category-filter" aria-label="赛事分类"></div>
+      <div class="ai-events-filter-groups" aria-label="赛事筛选">
+        <div id="ai-events-region-filter" class="ai-events-category-filter" aria-label="地区筛选"></div>
+        <div id="ai-events-reward-filter" class="ai-events-category-filter" aria-label="奖励筛选"></div>
+        <div id="ai-events-deadline-filter" class="ai-events-category-filter" aria-label="截止时间筛选"></div>
+      </div>
+      <div id="ai-events-grid" class="ai-events-grid">
+        <article class="ai-event-card ai-event-card-loading">正在加载 AI 赛事机会...</article>
+      </div>
+      <div class="ai-events-pagination" aria-label="分页">
+        <button id="ai-events-prev" type="button" data-i18n="prevPage">上一页</button>
+        <span id="ai-events-page-info" data-page-info>第 1 页</span>
+        <button id="ai-events-next" type="button" data-i18n="nextPage">下一页</button>
+      </div>
+    </section>
+
+    <section class="ai-events-source-map">
+      <div>
+        <p class="ai-events-kicker" data-i18n="sourceKicker">Source Network</p>
+        <h2 data-i18n="sourceTitle">信息源网络</h2>
+      </div>
+      <ul id="ai-events-source-list">
+        <li>Devpost</li>
+        <li>Qwen Cloud Hackathon</li>
+        <li>DoraHacks</li>
+        <li>Lablab.ai</li>
+        <li>Kaggle Competitions</li>
+        <li>AIcrowd</li>
+        <li>阿里云天池</li>
+        <li>Major League Hacking</li>
+        <li>TapNow</li>
+        <li>Kling AI</li>
+        <li>火山引擎</li>
+        <li>腾讯云开发者竞赛</li>
+      </ul>
     </section>
 
     <section class="ai-events-about" aria-label="About AI Contest Navigator">
@@ -66,48 +110,35 @@
       </article>
     </section>
 
-    <section class="ai-events-source-map">
-      <div>
-        <p class="ai-events-kicker" data-i18n="sourceKicker">Source Network</p>
-        <h2 data-i18n="sourceTitle">信息源网络</h2>
+    <section class="ai-events-feedback" aria-label="补充赛事来源和建议">
+      <div class="ai-events-feedback-copy">
+        <p class="ai-events-kicker" data-i18n="feedbackKicker">Submit Source</p>
+        <h2 data-i18n="feedbackTitle">补充赛事来源或建议</h2>
+        <p data-i18n="feedbackBody">
+          如果你有想补充的赛事来源，请把网站发给我，我会及时补充并抓取。也欢迎提交其他意见或建议。
+        </p>
       </div>
-      <ul id="ai-events-source-list">
-        <li>Devpost</li>
-        <li>DoraHacks</li>
-        <li>Lablab.ai</li>
-        <li>Kaggle</li>
-        <li>AIcrowd</li>
-        <li>阿里云 / 天池</li>
-        <li>Qwen Cloud</li>
-        <li>Google Cloud</li>
-        <li>Microsoft</li>
-        <li>GitHub</li>
-      </ul>
+      <form id="ai-events-feedback-form" class="ai-events-feedback-form">
+        <label>
+          <span data-i18n="feedbackSourceLabel">赛事网站 / 来源链接</span>
+          <input id="ai-events-source-url" type="url" name="source_url" placeholder="https://example.com/ai-contest" data-i18n-placeholder="feedbackSourcePlaceholder">
+        </label>
+        <label>
+          <span data-i18n="feedbackMessageLabel">补充说明 / 意见建议</span>
+          <textarea id="ai-events-feedback-message" name="message" rows="4" placeholder="可以写赛事名称、主办方、地区、奖金、截止时间，或你希望改进的地方。" data-i18n-placeholder="feedbackMessagePlaceholder"></textarea>
+        </label>
+        <div class="ai-events-feedback-actions">
+          <button type="submit" data-i18n="feedbackSubmit">发送给我</button>
+          <span id="ai-events-feedback-status" aria-live="polite"></span>
+        </div>
+      </form>
     </section>
 
-    <section class="ai-events-panel" id="ai-events-list">
-      <div class="ai-events-panel-header">
-        <div>
-          <p class="ai-events-kicker" data-i18n="listKicker">Opportunity Cards</p>
-          <h2 data-i18n="listTitle">当前有效 AI 赛事机会</h2>
-        </div>
-        <div class="ai-events-filter" role="tablist" aria-label="机会状态">
-          <button id="ai-events-filter-current" class="is-active" type="button" data-ai-events-status="current" data-i18n="currentTab">当前有效</button>
-          <button id="ai-events-filter-historical" type="button" data-ai-events-status="historical" data-i18n="historicalTab">历史赛事</button>
-        </div>
-        <span id="ai-events-count">加载中</span>
-      </div>
-      <div id="ai-events-category-filter" class="ai-events-category-filter" aria-label="赛事分类"></div>
-      <div id="ai-events-grid" class="ai-events-grid">
-        <article class="ai-event-card ai-event-card-loading">正在加载 AI 赛事机会...</article>
-      </div>
-      <div class="ai-events-pagination" aria-label="分页">
-        <button id="ai-events-prev" type="button" data-i18n="prevPage">上一页</button>
-        <span id="ai-events-page-info" data-page-info>第 1 页</span>
-        <button id="ai-events-next" type="button" data-i18n="nextPage">下一页</button>
-      </div>
-    </section>
+    <footer class="ai-events-footer">
+      <strong data-i18n="footerTitle">联系与合作</strong>
+      <a href="mailto:sunny251610056@gmail.com">sunny251610056@gmail.com</a>
+    </footer>
   </main>
-  <script src="/ai-events.js?v=q7k2"></script>
+  <script src="/ai-events.js?v=q7s1"></script>
 </body>
 </html>

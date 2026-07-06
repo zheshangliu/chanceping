@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="Grand Challenge medical AI cover">
+  <rect width="640" height="360" rx="28" fill="#f0f9ff"/>
+  <rect x="82" y="80" width="476" height="204" rx="22" fill="#ffffff" opacity=".7"/>
+  <text x="120" y="146" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#1d4ed8">Grand Challenge</text>
+  <text x="120" y="194" font-family="Arial, sans-serif" font-size="22" fill="#475569">Medical AI Challenges</text>
+  <path d="M120 230h70m26 0h70m26 0h120" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round"/>
+  <path d="M502 122v62m-31-31h62" stroke="#60a5fa" stroke-width="16" stroke-linecap="round"/>
+</svg>

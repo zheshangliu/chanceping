@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="Codabench competition cover">
+  <rect width="640" height="360" rx="28" fill="#eef2ff"/>
+  <rect x="88" y="82" width="464" height="196" rx="22" fill="#ffffff" opacity=".72"/>
+  <text x="124" y="150" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#1e40af">Codabench</text>
+  <text x="124" y="198" font-family="Arial, sans-serif" font-size="22" fill="#475569">Benchmark Competitions</text>
+  <path d="M126 232h110m34 0h110m34 0h54" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="504" cy="116" r="34" fill="#93c5fd"/>
+</svg>

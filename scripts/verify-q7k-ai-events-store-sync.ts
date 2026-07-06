@@ -65,10 +65,12 @@ check("synced cards keep event metadata", publicRadarEntries.every((entry) => ty
 check("synced cards do not push review burden wording into public-facing fields", !/待复核|needs_review|needs review|review required/i.test(serialized), serialized.slice(0, 240));
 check("sync reports real image coverage separately", typeof result.imageCoverageCount === "number" && result.imageCoverageCount >= 0, JSON.stringify(result));
 
-const publicRouteSource = fs.readFileSync(path.resolve(process.cwd(), "src/api/routes/public-ai-events.ts"), "utf8");
-const imageSyncSource = fs.readFileSync(path.resolve(process.cwd(), "src/public/ai-events-store-sync.ts"), "utf8");
-check("image hydration default can process the second batch", /parsePositiveInt\(c\.req\.query\("limit"\),\s*30,\s*120\)/.test(publicRouteSource) && /DEFAULT_IMAGE_HYDRATION_LIMIT\s*=\s*30/.test(imageSyncSource), "expected default 30 and max 120 for image hydration");
-check("sync API exposes opt-in image hydration", /hydrate_images/.test(publicRouteSource) && /image_limit/.test(publicRouteSource) && /syncAndHydratePublicAiEventsToStore/.test(publicRouteSource), "expected sync route to support hydrate_images and image_limit");
+  const publicRouteSource = fs.readFileSync(path.resolve(process.cwd(), "src/api/routes/public-ai-events.ts"), "utf8");
+  const imageSyncSource = fs.readFileSync(path.resolve(process.cwd(), "src/public/ai-events-store-sync.ts"), "utf8");
+  check("public AI events route reads from public radar store", publicRouteSource.includes("PUBLIC_AI_EVENTS_RADAR_ID") && publicRouteSource.includes("listPublicAiEventEntries") && publicRouteSource.includes("syncPublicAiEventsToStore"));
+  check("public AI events route keeps source network but not duplicate seed cards", publicRouteSource.includes("items: []") && publicRouteSource.includes("getPublicAiEventSampleRoomData"));
+  check("image hydration default can process the second batch", /parsePositiveInt\(c\.req\.query\("limit"\),\s*30,\s*120\)/.test(publicRouteSource) && /DEFAULT_IMAGE_HYDRATION_LIMIT\s*=\s*30/.test(imageSyncSource), "expected default 30 and max 120 for image hydration");
+check("sync API exposes opt-in image hydration through update pipeline", /hydrate_images/.test(publicRouteSource) && /image_limit/.test(publicRouteSource) && /runPublicAiEventsUpdatePipeline/.test(publicRouteSource), "expected sync route to support hydrate_images and image_limit through update pipeline");
 
 const totalAfterFirstSync = store.list({
   radarId: PUBLIC_AI_EVENTS_RADAR_ID,
@@ -144,6 +146,16 @@ async function runProductApiPathCheck(): Promise<void> {
   const { createAppContext } = await import("../src/api/context");
   const ctx = createAppContext();
   const app = createApp(ctx);
+  const initialPublicFeedResponse = await app.request("/api/public/ai-events?status=current&page=1&page_size=12");
+  const initialPublicFeedJson = await initialPublicFeedResponse.json() as {
+    success?: boolean;
+    data?: { stats?: { databaseCount?: number; seedCount?: number; currentCount?: number }; items?: Array<Record<string, unknown>> };
+  };
+  const initialOpportunitiesResponse = await app.request(`/api/opportunities?radar_id=${PUBLIC_AI_EVENTS_RADAR_ID}&page_size=1000`);
+  const initialOpportunitiesJson = await initialOpportunitiesResponse.json() as {
+    success?: boolean;
+    data?: { total?: number; entries?: Array<Record<string, unknown>> };
+  };
   const syncResponse = await app.request("/api/public/ai-events/sync", { method: "POST" });
   const syncJson = await syncResponse.json() as {
     success?: boolean;
@@ -156,6 +168,8 @@ async function runProductApiPathCheck(): Promise<void> {
   };
   const apiSerialized = JSON.stringify({ syncJson, opportunitiesJson });
 
+  check("public feed lazily initializes public radar store", initialPublicFeedResponse.status === 200 && initialPublicFeedJson.success === true && Number(initialOpportunitiesJson.data?.total ?? 0) >= Number(initialPublicFeedJson.data?.stats?.currentCount ?? 0), JSON.stringify({ initialPublicFeedJson, initialOpportunitiesJson }).slice(0, 240));
+  check("public feed is backed by database cards after lazy init", Number(initialPublicFeedJson.data?.stats?.databaseCount ?? 0) > 0 && Number(initialPublicFeedJson.data?.stats?.seedCount ?? 1) === 0, JSON.stringify(initialPublicFeedJson.data?.stats));
   check("product sync API returns 200", syncResponse.status === 200, `status=${syncResponse.status}`);
   check("product sync API succeeds", syncJson.success === true, apiSerialized.slice(0, 240));
   check("product sync API returns public radar id", syncJson.data?.radarId === PUBLIC_AI_EVENTS_RADAR_ID, apiSerialized.slice(0, 240));

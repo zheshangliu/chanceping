@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="Devpost AI events cover">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#dbeafe"/>
+      <stop offset="0.55" stop-color="#bfdbfe"/>
+      <stop offset="1" stop-color="#e0f2fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="420" rx="32" fill="url(#bg)"/>
+  <circle cx="650" cy="100" r="56" fill="#93c5fd" opacity=".55"/>
+  <circle cx="150" cy="320" r="82" fill="#22d3ee" opacity=".28"/>
+  <rect x="170" y="118" width="460" height="184" rx="22" fill="#eff6ff" opacity=".82"/>
+  <text x="400" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#1d4ed8">Devpost</text>
+  <text x="400" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#2563eb">AI Hackathon Source</text>
+  <path d="M274 264h252" stroke="#60a5fa" stroke-width="10" stroke-linecap="round"/>
+</svg>

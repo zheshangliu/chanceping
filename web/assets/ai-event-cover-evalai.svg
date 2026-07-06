@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="EvalAI challenge cover">
+  <rect width="640" height="360" rx="28" fill="#ecfeff"/>
+  <circle cx="128" cy="234" r="58" fill="#67e8f9" opacity=".45"/>
+  <rect x="176" y="84" width="340" height="190" rx="20" fill="#ffffff" opacity=".7"/>
+  <text x="212" y="154" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#0e7490">EvalAI</text>
+  <text x="212" y="202" font-family="Arial, sans-serif" font-size="22" fill="#334155">AI Evaluation Challenges</text>
+  <path d="M212 232h212" stroke="#0891b2" stroke-width="8" stroke-linecap="round"/>
+</svg>

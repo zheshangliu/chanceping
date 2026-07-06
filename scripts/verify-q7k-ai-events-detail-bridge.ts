@@ -35,16 +35,29 @@ async function runProductDataCheck(): Promise<void> {
     success?: boolean;
     data?: { radarId?: string; totalForPublicRadar?: number; syncedCount?: number };
   };
+  const publicFeedResponse = await app.request("/api/public/ai-events?status=current&page=1&page_size=60");
+  const publicFeedJson = await publicFeedResponse.json() as {
+    success?: boolean;
+    data?: { stats?: { currentCount?: number }; items?: Array<Record<string, unknown>> };
+  };
   const opportunitiesResponse = await app.request(`/api/opportunities?radar_id=${PUBLIC_AI_EVENTS_RADAR_ID}&page_size=1000`);
   const opportunitiesJson = await opportunitiesResponse.json() as {
     success?: boolean;
-    data?: { total?: number; entries?: unknown[] };
+    data?: { total?: number; entries?: Array<{ card?: Record<string, unknown> }> };
   };
+  const currentPublicEntries = (opportunitiesJson.data?.entries ?? []).filter((entry) => {
+    const card = entry.card ?? {};
+    const lifecycle = String(card.lifecycleStatus || card.lifecycle_status || "").toLowerCase();
+    const title = String(card.title || "");
+    return lifecycle !== "historical" && lifecycle !== "expired" && !/已截止|已结束|报名结束|closed|ended|past event|archive/i.test(title);
+  });
 
   check("public AI events sync succeeds", syncResponse.status === 200 && syncJson.success === true);
   check("public AI events radar id is stable", syncJson.data?.radarId === PUBLIC_AI_EVENTS_RADAR_ID, JSON.stringify(syncJson.data));
+  check("public feed current API succeeds", publicFeedResponse.status === 200 && publicFeedJson.success === true);
   check("public AI events opportunity API exposes seed/public cards", Number(opportunitiesJson.data?.total ?? 0) >= 20, `total=${opportunitiesJson.data?.total}`);
   check("public AI events entries are available to product pages", Array.isArray(opportunitiesJson.data?.entries) && opportunitiesJson.data.entries.length >= 20, `entries=${opportunitiesJson.data?.entries?.length}`);
+  check("backend public radar current entries keep up with public feed", currentPublicEntries.length >= Number(publicFeedJson.data?.stats?.currentCount ?? 0), `backendCurrent=${currentPublicEntries.length}, publicCurrent=${publicFeedJson.data?.stats?.currentCount}`);
 }
 
 function runFrontendBridgeCheck(): void {
@@ -60,10 +73,12 @@ function runFrontendBridgeCheck(): void {
   check("view opportunity result can use public AI events bridge", /getOpportunityRadarIdForView/.test(radarsJs) && radarsJs.includes("public_ai_events"));
   check("view result keeps private radar id for edit and rerun", radarsJs.includes("sourceRadarId") && radarsJs.includes("opportunityRadarId"));
   check("view result fetches enough public events", /getOpportunityPageSizeForView/.test(radarsJs) && /1000/.test(radarsJs));
+  check("view result syncs public AI events before reading product opportunities", radarsJs.includes("/api/public/ai-events/sync") && radarsJs.indexOf("/api/public/ai-events/sync") < radarsJs.indexOf("/api/opportunities?radar_id="));
   check("view result filters public events to current cards", /filterPublicAiEventCardsForView/.test(radarsJs) && /isCurrentPublicAiEventCard/.test(radarsJs));
   check("view result explains public AI events library", /公共赛事库|公开赛事库/.test(radarsJs));
   check("radar detail JS knows public AI events radar id", detailJs.includes(PUBLIC_AI_EVENTS_RADAR_ID));
   check("radar detail stored opportunities can use public bridge", /getOpportunityRadarIdForView/.test(detailJs) && /page_size=\$\{pageSize\}/.test(detailJs));
+  check("radar detail syncs public AI events before rendering stored opportunities", detailJs.includes("/api/public/ai-events/sync") && detailJs.indexOf("/api/public/ai-events/sync") < detailJs.indexOf("/api/opportunities?radar_id="));
   check("radar detail filters public events to current cards", /filterPublicAiEventCardsForView/.test(detailJs) && /isCurrentPublicAiEventCard/.test(detailJs));
   check("radar detail explains public library source", /AI Events 公共赛事库/.test(detailJs) && /\/aievents/.test(detailJs));
   check("detail and result pages hide placeholder deadline dates", /displayDeadline/.test(detailJs) && /9999-12-31/.test(detailJs) && /displayDeadline/.test(watchResultJs) && /9999-12-31/.test(watchResultJs));

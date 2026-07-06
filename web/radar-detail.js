@@ -84,6 +84,10 @@
     return json;
   }
 
+  async function ensurePublicAiEventsSynced() {
+    await postJson("/api/public/ai-events/sync", {});
+  }
+
   function getSearchModeRequest() {
     const mode = typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined;
     return mode === "live" ? { search_mode: "live" } : {};
@@ -657,6 +661,10 @@
     try {
       const opportunityRadarId = getOpportunityRadarIdForView(currentRadar) || radarId;
       const pageSize = opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID ? 1000 : 20;
+      if (opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID) {
+        list.innerHTML = '<p class="placeholder">正在同步 AI Events 公共赛事库...</p>';
+        await ensurePublicAiEventsSynced();
+      }
       const res = await fetch(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${pageSize}&sort_by=deadline&sort_order=asc`);
       const json = await res.json();
       if (json.success && json.data && Array.isArray(json.data.entries)) {

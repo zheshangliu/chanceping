@@ -4929,7 +4929,7 @@ body.hero-chat-active .hero-chat-main {
   top: 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: minmax(210px, 1fr) auto minmax(160px, 1fr);
+  grid-template-columns: minmax(210px, 1fr) minmax(120px, auto);
   align-items: center;
   gap: 18px;
   padding: 14px 28px;
@@ -4946,17 +4946,12 @@ body.hero-chat-active .hero-chat-main {
   text-decoration: none;
 }
 
-.ai-events-brand-mark {
-  display: inline-flex;
-  width: 38px;
-  height: 38px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  color: #fff;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
-  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.22);
+.ai-events-brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 10px 20px rgba(37, 99, 235, 0.16));
 }
 
 .ai-events-brand strong,
@@ -5197,9 +5192,132 @@ body.hero-chat-active .hero-chat-main {
   font-weight: 700;
 }
 
+.ai-events-feedback {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 18px;
+  padding: 24px 26px;
+  border: 1px solid var(--ai-line);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(6, 182, 212, 0.18), transparent 34%),
+    rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 48px rgba(37, 99, 235, 0.08);
+}
+
+.ai-events-feedback-copy h2 {
+  margin: 8px 0 10px;
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.ai-events-feedback-copy p:last-child {
+  margin: 0;
+  color: #334155;
+  line-height: 1.75;
+}
+
+.ai-events-feedback-form {
+  display: grid;
+  gap: 14px;
+}
+
+.ai-events-feedback-form label {
+  display: grid;
+  gap: 8px;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.ai-events-feedback-form input,
+.ai-events-feedback-form textarea {
+  width: 100%;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #0f172a;
+  font: inherit;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.ai-events-feedback-form input {
+  min-height: 44px;
+  padding: 0 13px;
+}
+
+.ai-events-feedback-form textarea {
+  min-height: 108px;
+  padding: 12px 13px;
+  resize: vertical;
+}
+
+.ai-events-feedback-form input:focus,
+.ai-events-feedback-form textarea:focus {
+  border-color: var(--ai-blue);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.ai-events-feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.ai-events-feedback-actions button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--ai-blue), var(--ai-cyan));
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+}
+
+.ai-events-feedback-actions button:hover {
+  background: linear-gradient(135deg, var(--ai-blue-dark), #0891b2);
+}
+
+#ai-events-feedback-status {
+  color: var(--ai-blue-dark);
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .ai-events-panel {
   margin-top: 18px;
   padding: 22px;
+}
+
+.ai-events-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 18px 22px;
+  border: 1px solid var(--ai-line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  color: #475569;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.04);
+}
+
+.ai-events-footer strong {
+  color: #0f172a;
+}
+
+.ai-events-footer a {
+  color: var(--ai-blue-dark);
+  font-weight: 800;
+  text-decoration: none;
 }
 
 .ai-events-panel-header {
@@ -5292,6 +5410,21 @@ body.hero-chat-active .hero-chat-main {
   border-color: rgba(37, 99, 235, 0.32);
   background: linear-gradient(135deg, #dbeafe, #ecfeff);
   color: var(--ai-blue-dark);
+}
+
+.ai-events-filter-groups {
+  display: grid;
+  gap: 2px;
+  margin: -2px 0 18px;
+  padding: 10px 12px 2px;
+  border: 1px solid rgba(37, 99, 235, 0.1);
+  border-radius: 18px;
+  background: rgba(248, 251, 255, 0.72);
+}
+
+.ai-events-filter-groups .ai-events-category-filter {
+  margin: 0;
+  padding-bottom: 8px;
 }
 
 .ai-events-pagination {
@@ -5494,11 +5627,14 @@ body.hero-chat-active .hero-chat-main {
   }
 
   .ai-events-shell {
+    display: flex;
+    flex-direction: column;
     width: min(100% - 24px, 1180px);
     padding: 22px 0 48px;
   }
 
   .ai-events-hero {
+    order: 1;
     grid-template-columns: 1fr;
     padding: 20px;
   }
@@ -5507,8 +5643,29 @@ body.hero-chat-active .hero-chat-main {
     min-height: auto;
   }
 
-  .ai-events-about,
+  .ai-events-panel {
+    order: 2;
+  }
+
   .ai-events-source-map {
+    order: 3;
+  }
+
+  .ai-events-about {
+    order: 4;
+  }
+
+  .ai-events-feedback {
+    order: 5;
+  }
+
+  .ai-events-footer {
+    order: 6;
+  }
+
+  .ai-events-about,
+  .ai-events-source-map,
+  .ai-events-feedback {
     grid-template-columns: 1fr;
   }
 
@@ -5523,7 +5680,8 @@ body.hero-chat-active .hero-chat-main {
 
   .ai-events-filter,
   .ai-events-pagination,
-  .ai-events-category-filter {
+  .ai-events-category-filter,
+  .ai-events-filter-groups {
     width: 100%;
   }
 
@@ -5533,6 +5691,42 @@ body.hero-chat-active .hero-chat-main {
 
   .ai-events-category-filter {
     align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    overflow-x: auto;
+    padding: 0 0 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ai-events-category-filter::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-events-category-filter > span {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    align-self: stretch;
+    display: inline-flex;
+    align-items: center;
+    padding-right: 8px;
+    background: linear-gradient(90deg, #fff 72%, rgba(255, 255, 255, 0));
+  }
+
+  .ai-events-category-filter button {
+    min-height: 32px;
+    padding: 0 10px;
+  }
+
+  .ai-events-filter-groups {
+    display: block;
+    padding: 9px 10px 1px;
+  }
+
+  .ai-events-filter-groups .ai-events-category-filter {
+    margin-bottom: 6px;
   }
 
   .ai-events-pagination {
