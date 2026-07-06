@@ -24,7 +24,8 @@ const feed = buildPublicAiEventFeed([], seedData, {
   now: "2026-07-06T00:00:00.000Z",
 });
 
-check("sample room feed has at least 45 source-backed AI event seeds", feed.stats.totalCount >= 45, `total=${feed.stats.totalCount}`);
+check("sample room feed has at least 62 source-backed AI event seeds", feed.stats.totalCount >= 62, `total=${feed.stats.totalCount}`);
+check("source network has at least 57 curated sources", seedData.sourceNetwork.length >= 57, `sourceCount=${seedData.sourceNetwork.length}`);
 
 const requiredSources = [
   { id: "codabench", label: "Codabench", domain: "codabench.org", cover: "/assets/ai-event-cover-codabench.svg" },
@@ -43,6 +44,14 @@ const thirdBatchSources = [
   { id: "dreamina", label: "Dreamina", domain: "dreamina.jianying.com", cover: "/assets/ai-event-cover-dreamina.svg" },
   { id: "volcengine", label: "火山引擎", domain: "volcengine.com", cover: "/assets/ai-event-cover-volcengine.svg" },
   { id: "tencent-cloud", label: "腾讯云开发者", domain: "cloud.tencent.com", cover: "/assets/ai-event-cover-tencent-cloud.svg" },
+];
+
+const fourthBatchSources = [
+  { id: "taikai", label: "TAIKAI", domain: "taikai.network", cover: "/assets/ai-event-cover-hackathon.svg" },
+  { id: "devfolio", label: "Devfolio", domain: "devfolio.co", cover: "/assets/ai-event-cover-hackathon.svg" },
+  { id: "challenge-gov", label: "Challenge.gov", domain: "challenge.gov", cover: "/assets/ai-event-cover-competition.svg" },
+  { id: "google-impact-ai", label: "Google.org Impact Challenge", domain: "withgoogle.com", cover: "/assets/ai-event-cover-cloud.svg" },
+  { id: "ai-for-good-innovation-factory", label: "AI for Good Innovation Factory", domain: "aiforgood.itu.int", cover: "/assets/ai-event-cover-competition.svg" },
 ];
 
 for (const source of requiredSources) {
@@ -87,6 +96,34 @@ for (const source of thirdBatchSources) {
     })).slice(0, 3)),
   );
 }
+
+for (const source of fourthBatchSources) {
+  const sourceNetworkMatch = seedData.sourceNetwork.find((item) =>
+    item.id === source.id ||
+    item.domain === source.domain ||
+    item.name.toLowerCase().includes(source.label.toLowerCase()),
+  );
+  check(`${source.label} is registered as fourth-batch source`, Boolean(sourceNetworkMatch), JSON.stringify(sourceNetworkMatch));
+  const items = feed.items.filter((item) =>
+    item.sourceDomain.includes(source.domain) ||
+    item.officialUrl.includes(source.domain) ||
+    item.sourceName.toLowerCase().includes(source.label.toLowerCase()) ||
+    item.title.toLowerCase().includes(source.label.toLowerCase()),
+  );
+  check(`${source.label} appears in public feed`, items.length > 0, source.domain);
+  check(
+    `${source.label} uses a non-default platform cover`,
+    items.some((item) => item.coverImageUrl === source.cover && item.imageStatus === "platform_placeholder"),
+    JSON.stringify(items.map((item) => ({
+      title: item.title,
+      coverImageUrl: item.coverImageUrl,
+      imageStatus: item.imageStatus,
+    })).slice(0, 3)),
+  );
+}
+
+const regionFacetIds = new Set(feed.stats.regionFacets.map((facet) => facet.id));
+check("fourth-batch data broadens region facets", ["global_online", "north_america", "europe", "asia_pacific"].every((id) => regionFacetIds.has(id)), JSON.stringify(feed.stats.regionFacets));
 
 const defaultPlaceholderCount = feed.items.filter((item) => item.imageStatus === "default_placeholder").length;
 check("current public feed avoids default image placeholders", defaultPlaceholderCount === 0, `defaultPlaceholderCount=${defaultPlaceholderCount}`);

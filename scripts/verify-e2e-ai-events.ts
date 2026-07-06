@@ -162,10 +162,10 @@ async function runPublicAiEventsTests(): Promise<void> {
   console.log("\n[公共页] 盯比赛 · 全球 AI 赛事导航");
   const canonicalPage = await textGet("/aievents");
   logPublicCheck("GET /aievents returns 200", canonicalPage.status === 200, `status=${canonicalPage.status}`);
-  logPublicCheck("canonical /aievents page has public title", canonicalPage.text.includes("盯比赛 · 全球 AI 赛事导航"));
+  logPublicCheck("canonical /aievents page has public title", canonicalPage.text.includes("盯比赛｜全球 AI 赛事导航"));
   const page = await textGet("/ai-events");
   logPublicCheck("GET /ai-events returns 200", page.status === 200, `status=${page.status}`);
-  logPublicCheck("page has public title", page.text.includes("盯比赛 · 全球 AI 赛事导航"));
+  logPublicCheck("page has public title", page.text.includes("盯比赛｜全球 AI 赛事导航"));
   logPublicCheck("page has English name", page.text.includes("AI Contest Navigator"));
   logPublicCheck("page loads public page script", page.text.includes("/ai-events.js"));
 

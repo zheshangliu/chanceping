@@ -690,6 +690,56 @@ export const AI_EVENT_SOURCE_NETWORK: PublicAiEventSource[] = [
     role: "AI 赛事导航参考源，用于对标公开导航体验和查漏补缺。",
     reviewNote: "作为参考与 benchmark，不直接作为最终事实来源。",
   },
+  {
+    id: "taikai",
+    name: "TAIKAI Hackathons",
+    domain: "taikai.network",
+    url: "https://taikai.network/hackathons",
+    sourceType: "hackathon_platform",
+    trustTier: "platform_index",
+    role: "欧洲和全球线上 Hackathon 平台，用于补充 AI builder、创业项目和开源挑战。",
+    reviewNote: "平台页只作为入口，需进入具体 hackathon 页确认开放状态、奖金和提交要求。",
+  },
+  {
+    id: "devfolio",
+    name: "Devfolio Hackathons",
+    domain: "devfolio.co",
+    url: "https://devfolio.co/hackathons",
+    sourceType: "hackathon_platform",
+    trustTier: "platform_index",
+    role: "亚太和印度开发者 Hackathon 平台，用于补充 AI 应用、小团队作品提交和 sponsor challenge。",
+    reviewNote: "平台入口需追溯到单项赛事页，不能把历史或社区页当作当前机会。",
+  },
+  {
+    id: "challenge-gov",
+    name: "Challenge.gov",
+    domain: "challenge.gov",
+    url: "https://www.challenge.gov/",
+    sourceType: "competition_platform",
+    trustTier: "official_first",
+    role: "美国政府挑战赛官方入口，用于发现 AI、数据和公共服务创新赛。",
+    reviewNote: "政府挑战需逐项确认 eligibility、deadline、prize 和是否适合非美国主体。",
+  },
+  {
+    id: "google-impact-ai",
+    name: "Google.org AI Impact Challenge",
+    domain: "withgoogle.com",
+    url: "https://impactchallenge.withgoogle.com/ai",
+    sourceType: "cloud_provider",
+    trustTier: "official_first",
+    role: "AI for social good、grant、云资源和产品展示类官方线索。",
+    reviewNote: "需确认当前申请窗口，不能把历史项目介绍当作仍可报名机会。",
+  },
+  {
+    id: "ai-for-good-innovation-factory",
+    name: "AI for Good Innovation Factory",
+    domain: "aiforgood.itu.int",
+    url: "https://aiforgood.itu.int/innovation-factory/",
+    sourceType: "competition_platform",
+    trustTier: "official_first",
+    role: "AI startup pitch、展示和联合国体系创新活动入口。",
+    reviewNote: "需确认地区赛程、报名窗口和 startup 资格。",
+  },
 ];
 
 export const AI_EVENT_SAMPLE_ROOM_CANDIDATES: PublicAiEventCandidate[] = [
@@ -755,6 +805,11 @@ export const AI_EVENT_SAMPLE_ROOM_CANDIDATES: PublicAiEventCandidate[] = [
   candidate("ai-agent-hackathon-search", "AI Agent Hackathon 查询种子", "Search Discovery", "Devpost / Lablab", "multiple", "hackathon_platform", "搜索发现 - 待复核", ["AI Agent", "Hackathon", "作品提交"], "待复核", "待复核", "用于发现 AI Agent 专项 Hackathon；需要后续读取具体官方赛事页。", "https://lablab.ai/event?query=AI%20Agent", "search_discovered", "source_entry", 47),
   candidate("cloud-credits-challenge-search", "AI 云资源挑战赛查询种子", "Search Discovery", "Cloud Providers", "multiple", "cloud_provider", "搜索发现 - 待复核", ["云资源", "credits", "developer challenge"], "待复核", "云资源待复核", "用于发现云厂商 challenge、credits 和创业资源，不能直接等同于比赛。", "https://devpost.com/hackathons?search=cloud%20AI", "search_discovered", "watch_signal", 45),
   candidate("aigc-creator-contest-search", "AIGC 创作赛查询种子", "Search Discovery", "Runway / creator platforms", "multiple", "creator_platform", "搜索发现 - 待复核", ["AIGC", "创作赛", "作品展示"], "待复核", "待复核", "用于发现 AI 视频、图像和内容创作赛，需与开发者 Hackathon 分层。", "https://runwayml.com/ai-film-festival", "search_discovered", "watch_signal", 44),
+  candidate("taikai-ai-hackathons", "TAIKAI AI / Startup Hackathon 入口", "TAIKAI", "TAIKAI Hackathons", "taikai.network", "hackathon_platform", "平台入口 - 待确认", ["AI Hackathon", "Startup", "全球线上", "欧洲", "开发者"], "持续更新", "奖金、导师、赞助资源和提交要求以具体 hackathon 页为准", "TAIKAI 可补充欧洲和全球线上开发者 Hackathon 线索，适合查找 AI builder、创业项目和开源挑战。", "https://taikai.network/hackathons", "search_discovered", "source_entry", 52),
+  candidate("devfolio-ai-hackathons", "Devfolio AI / APAC Hackathon 入口", "Devfolio", "Devfolio Hackathons", "devfolio.co", "hackathon_platform", "平台入口 - 待确认", ["AI Hackathon", "亚太", "印度", "开发者"], "持续更新", "奖金、赞助资源和证书以具体赛事页为准", "Devfolio 可补充亚太和印度开发者赛事，适合发现 AI 应用、工具和小团队作品提交机会。", "https://devfolio.co/hackathons", "search_discovered", "source_entry", 51),
+  candidate("challenge-gov-ai-prizes", "Challenge.gov AI / Data Prize Competitions 官方入口", "Challenge.gov", "Challenge.gov", "challenge.gov", "competition_platform", "政府挑战入口 - 待确认", ["北美", "政府挑战", "AI", "数据赛"], "持续更新", "奖金、合同机会或公共服务资源以具体 challenge 页为准", "Challenge.gov 是美国政府挑战赛官方入口，可发现 AI、数据和公共服务创新赛，但需要逐项确认资格和开放状态。", "https://www.challenge.gov/", "official_entry_to_review", "source_entry", 50),
+  candidate("google-org-ai-impact-challenge", "Google.org AI Impact Challenge 官方来源", "Google.org", "Google.org AI Impact Challenge", "withgoogle.com", "cloud_provider", "官方来源 - 待确认", ["北美", "全球", "AI for Good", "创业扶持"], "见官网", "grant、云资源或项目扶持以官方页为准", "Google.org AI Impact Challenge 类来源适合发现 AI for social good、资源扶持和项目展示机会，需确认当前申请窗口。", "https://impactchallenge.withgoogle.com/ai", "official_entry_to_review", "direct_opportunity", 50),
+  candidate("ai-for-good-innovation-factory", "AI for Good Innovation Factory Startup Pitch", "AI for Good", "AI for Good Innovation Factory", "aiforgood.itu.int", "competition_platform", "官方来源 - 待确认", ["欧洲", "全球", "AI Startup", "Pitch"], "持续更新", "路演、导师、展示或创业资源以官方页为准", "AI for Good Innovation Factory 适合 AI startup 和 OPC 创业者关注，偏路演与展示，需要确认地区、时间和报名窗口。", "https://aiforgood.itu.int/innovation-factory/", "official_entry_to_review", "direct_opportunity", 50),
 ];
 
 function candidate(
