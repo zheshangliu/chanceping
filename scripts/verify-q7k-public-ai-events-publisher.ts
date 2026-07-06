@@ -247,6 +247,34 @@ const longPartnerEventRewardFeed = buildPublicAiEventFeed([
 });
 check("long partner-event body text is not shown as prize", longPartnerEventRewardFeed.items[0]?.prize === "见官网" && longPartnerEventRewardFeed.items[0]?.benefits.length === 0, JSON.stringify(longPartnerEventRewardFeed.items[0]));
 
+const mediumLengthGenericValueFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "Microsoft Agentic AI Hackathon：不能把议程介绍当作奖励",
+    official_source_url: "https://event.ithome.com.tw/ai-agent-hackathon",
+    reward_or_value: "接著 Marco 和 Mads 將帶領您深入了解全新的 Agent Service，透過實際案例與最佳實務，展示如何在不同商業情境中導入 AI Agent",
+  }), { dedup_key: "medium-generic-value-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("medium generic agenda text is not shown as prize", mediumLengthGenericValueFeed.items[0]?.prize === "见官网" && mediumLengthGenericValueFeed.items[0]?.benefits.length === 0, JSON.stringify(mediumLengthGenericValueFeed.items[0]));
+
+const platformIntroRewardFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "AI Studio Competition Hub：不能把平台简介整段当作奖励",
+    official_source_url: "https://aistudio.baidu.com/competition",
+    reward_or_value: "飞桨星河社区比赛平台，是国内领先的AI及大数据竞赛平台，已举办数百场国际AI大赛，提供千万级总奖池，汇聚50万来自全球多国的精英开发者，培养上万名顶尖选手 · 奖金 / 社区资源",
+  }), { dedup_key: "platform-intro-reward-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("platform intro reward text is shortened", platformIntroRewardFeed.items[0]?.prize === "奖金 / 社区资源" && !platformIntroRewardFeed.items[0]?.reward.includes("飞桨星河社区比赛平台"), JSON.stringify(platformIntroRewardFeed.items[0]));
+
 const officialPriorityFeed = buildPublicAiEventFeed([
   makeEntry(makeCard({
     title: "GitHub AI competition awesome 聚合线索",
@@ -273,6 +301,60 @@ const officialPriorityFeed = buildPublicAiEventFeed([
   now: "2026-07-06T00:00:00.000Z",
 });
 check("official concrete entry outranks aggregation lead when deadlines are unknown", officialPriorityFeed.items[0]?.title.includes("DoraHacks"), JSON.stringify(officialPriorityFeed.items.map((item) => ({ title: item.title, priority: item.priority, sourceType: item.sourceType }))));
+
+const observationSourcePriorityFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "GitHub 开发者活动和 Hackathon 观察源",
+    type: "AI Hackathon source directory",
+    official_source_url: "https://github.com/topics/hackathon",
+    organizer: "GitHub",
+    deadline: "2026-07-16",
+    backend_score: 99,
+    opportunity_kind: "watch_signal",
+  }), { dedup_key: "dated-observation-source-entry" }),
+  makeEntry(makeCard({
+    title: "Qwen Cloud AI Hackathon 官方报名入口",
+    type: "AI Hackathon",
+    official_source_url: "https://qwencloud-hackathon.devpost.com/",
+    organizer: "Qwen Cloud / Devpost",
+    deadline: "见官网",
+    backend_score: 70,
+    opportunity_kind: "direct_opportunity",
+  }), { dedup_key: "concrete-event-entry" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("concrete event entry outranks dated observation source", observationSourcePriorityFeed.items[0]?.title.includes("Qwen Cloud"), JSON.stringify(observationSourcePriorityFeed.items.map((item) => ({ title: item.title, deadline: item.deadlineDisplay, candidateType: item.candidateType, sourceType: item.sourceType }))));
+
+const entryListPriorityFeed = buildPublicAiEventFeed([
+  makeEntry(makeCard({
+    title: "AWS AI 开发者挑战观察源",
+    type: "AI Hackathon source",
+    official_source_url: "https://aws.amazon.com/events/ai/",
+    organizer: "AWS",
+    deadline: "2026-12-04",
+    backend_score: 99,
+    opportunity_kind: "watch_signal",
+  }), { dedup_key: "cloud-observation-source-entry" }),
+  makeEntry(makeCard({
+    title: "Devpost AI / Machine Learning Hackathon 入口",
+    type: "AI Hackathon source entry",
+    official_source_url: "https://devpost.com/hackathons?themes[]=Machine%20Learning%2FAI",
+    organizer: "Devpost",
+    deadline: "见官网",
+    backend_score: 50,
+    opportunity_kind: "watch_signal",
+  }), { dedup_key: "hackathon-entry-list" }),
+], emptySeedData, {
+  lifecycle: "current",
+  page: 1,
+  pageSize: 12,
+  now: "2026-07-06T00:00:00.000Z",
+});
+check("entry list outranks observation source in public feed", entryListPriorityFeed.items[0]?.title.includes("Devpost AI"), JSON.stringify(entryListPriorityFeed.items.map((item) => ({ title: item.title, deadline: item.deadlineDisplay, candidateType: item.candidateType }))));
 
 async function runProductApiPathCheck(): Promise<void> {
   process.env.DATA_MODE = "mock";

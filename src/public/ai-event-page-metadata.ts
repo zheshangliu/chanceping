@@ -159,6 +159,7 @@ function extractRewardFromText(text: string): string | undefined {
     const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
     const genericNews = /本报讯|报道称|报道|举行|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会/i;
     if (/没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i.test(sentence)) return false;
+    if (sentence.length > 60 && !moneyOrPrizePool.test(sentence)) return false;
     if (sentence.length > 80 && !moneyOrPrizePool.test(sentence)) return false;
     if (concrete.test(sentence)) return true;
     if (genericNews.test(sentence)) return false;

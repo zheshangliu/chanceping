@@ -161,10 +161,22 @@ function normalizePublicReward(value: string | undefined | null, fallback = "见
   if (!normalized || normalized === fallback) return fallback;
   const genericNews = /本报讯|报道称|报道|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会|活动现场/i;
   const concreteReward = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
+  const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
   const negatedReward = /没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i;
+  const platformIntro = /平台|社区|汇聚|举办|培养|开发者|赛事生态|competition\s+platform|developer\s+community/i;
   if (negatedReward.test(normalized)) return fallback;
   if (genericNews.test(normalized) && !concreteReward.test(normalized)) return fallback;
   if (genericNews.test(normalized) && normalized.length > 80) return fallback;
+  if (platformIntro.test(normalized) && normalized.length > 70) {
+    const labels = [
+      /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池|奖金)/i.test(normalized) ? "奖金" : "",
+      /(cloud\s*credits?|API\s*credits?|credits?|云资源|算力)/i.test(normalized) ? "云资源" : "",
+      /(showcase|展示|曝光|展映)/i.test(normalized) ? "展示机会" : "",
+      /(社区|community)/i.test(normalized) ? "社区资源" : "",
+    ].filter(Boolean);
+    return labels.length > 0 ? Array.from(new Set(labels)).join(" / ") : fallback;
+  }
+  if (normalized.length > 60 && !moneyOrPrizePool.test(normalized)) return fallback;
   if (normalized.length > 80) return fallback;
   return normalized;
 }
@@ -568,6 +580,15 @@ function sourceTrustPriority(card: PublicAiEventCard): number {
   return score;
 }
 
+function publicDisplayTier(card: PublicAiEventCard): number {
+  const text = `${card.title} ${card.sourceDomain} ${card.sourceName} ${card.candidateType}`.toLowerCase();
+  if (/观察源|聚合线索|resources?\b|participants?\b|awesome|directory|github|competehub|mlcontests|paperswithcode|arenix/.test(text)) return 3;
+  if (card.candidateType === "watch_signal" || card.candidateType === "reference_case") return 2;
+  if (card.candidateType === "source_entry") return 1;
+  if (/资源集合|活动列表|赛事入口|竞赛入口|hackathon\s+入口|competition\s+hub|competition\s+platform/.test(text)) return 1;
+  return 0;
+}
+
 export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, options: { now?: Date } = {}): PublicAiEventCard | null {
   if (!isPublishableStoreEntry(entry)) return null;
 
@@ -820,6 +841,8 @@ function sortPublicCards(cards: PublicAiEventCard[], lifecycle: PublicAiEventLif
     if (lifecycle === "all" && a.lifecycleStatus !== b.lifecycleStatus) {
       return a.lifecycleStatus === "current" ? -1 : 1;
     }
+    const tierDelta = publicDisplayTier(a) - publicDisplayTier(b);
+    if (tierDelta !== 0) return tierDelta;
     const aDate = parseDeadlineDate(a.deadlineDisplay || a.deadline);
     const bDate = parseDeadlineDate(b.deadlineDisplay || b.deadline);
     if (aDate && bDate && aDate.getTime() !== bDate.getTime()) {
