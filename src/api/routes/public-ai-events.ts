@@ -1,14 +1,20 @@
 import { Hono } from "hono";
 import type { AppContext } from "../context";
 import type { ApiResponse } from "../types";
-import { getPublicAiEventSampleRoomData } from "../../demo/ai-events-sample-room";
+import { buildPublicAiEventFeed } from "../../public/ai-events-publisher";
 
-export function publicAiEventsRoutes(_ctx: AppContext): Hono {
+export function publicAiEventsRoutes(ctx: AppContext): Hono {
   const app = new Hono();
 
   app.get("/ai-events", (c) => {
     const start = Date.now();
-    const data = getPublicAiEventSampleRoomData();
+    const storedEntries = ctx.store.list({
+      page: 1,
+      page_size: 500,
+      sort_by: "added_at",
+      sort_order: "desc",
+    }).entries;
+    const data = buildPublicAiEventFeed(storedEntries);
 
     return c.json({
       success: true,

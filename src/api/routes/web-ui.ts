@@ -105,6 +105,7 @@ export function webUiRoutes(): Hono {
 
   // 根路径 → index.html
   app.get("/", serveFile("index.html", "text/html; charset=utf-8"));
+  app.get("/aievents", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
 
   // 静态资源

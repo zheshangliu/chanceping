@@ -29,13 +29,42 @@ export interface PublicAiEventCandidate {
   tags: string[];
   deadline: string;
   reward: string;
+  coverImageUrl?: string;
+  prize?: string;
+  benefits?: string[];
+  organizer?: string;
+  registrationUrl?: string;
+  region?: string;
+  language?: string;
+  eventType?: string;
+  audience?: string;
   reason: string;
   officialUrl: string;
-  evidenceStatus: "needs_review" | "search_discovered" | "official_entry_to_review" | "watch_signal" | "historical_reference";
-  candidateType: "direct_opportunity" | "source_entry" | "watch_signal" | "reference_case";
+  evidenceStatus:
+    | "verified"
+    | "partially_verified"
+    | "needs_review"
+    | "search_discovered"
+    | "official_entry_to_review"
+    | "watch_signal"
+    | "historical_reference"
+    | "unverified"
+    | "not_found"
+    | "failed";
+  candidateType:
+    | "direct_opportunity"
+    | "business_lead"
+    | "channel_partner_lead"
+    | "customer_lead"
+    | "association_directory"
+    | "source_entry"
+    | "watch_signal"
+    | "reference_case"
+    | "rejected";
   displayable: boolean;
   lastCheckedAt: string;
   priority: number;
+  publicSource?: "database" | "sample_room_seed";
 }
 
 export interface PublicAiEventSampleRoomData {
@@ -47,6 +76,8 @@ export interface PublicAiEventSampleRoomData {
     sourceCount: number;
     officialEntryCount: number;
     needsReviewCount: number;
+    databaseCount?: number;
+    seedCount?: number;
     lastCheckedAt: string;
   };
 }
@@ -214,6 +245,36 @@ export const AI_EVENT_SOURCE_NETWORK: PublicAiEventSource[] = [
     role: "AIGC 视频创作赛和 AI 创作者展示机会入口。",
     reviewNote: "偏创作赛，需与算法赛、开发者赛分层展示。",
   },
+  {
+    id: "hackerearth",
+    name: "HackerEarth Hackathons",
+    domain: "hackerearth.com",
+    url: "https://www.hackerearth.com/challenges/hackathon/",
+    sourceType: "hackathon_platform",
+    trustTier: "platform_index",
+    role: "企业、开发者社区和高校黑客松入口，可作为 AI Hackathon 补充发现源。",
+    reviewNote: "平台列表页只作为线索，需进入具体 challenge 页确认主题、报名状态和奖项。",
+  },
+  {
+    id: "topcoder",
+    name: "Topcoder Challenges",
+    domain: "topcoder.com",
+    url: "https://www.topcoder.com/challenges",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "算法、开发者和企业挑战赛入口，可补充国际 AI / 数据竞赛线索。",
+    reviewNote: "需区分历史挑战、普通开发任务和当前开放报名的比赛。",
+  },
+  {
+    id: "analytics-vidhya-datahack",
+    name: "Analytics Vidhya DataHack",
+    domain: "analyticsvidhya.com",
+    url: "https://datahack.analyticsvidhya.com/contest/all/",
+    sourceType: "competition_platform",
+    trustTier: "platform_index",
+    role: "数据科学、机器学习和 AI 挑战赛入口。",
+    reviewNote: "需要打开具体 contest 页确认截止时间、奖项和参赛资格。",
+  },
 ];
 
 export const AI_EVENT_SAMPLE_ROOM_CANDIDATES: PublicAiEventCandidate[] = [
@@ -246,6 +307,9 @@ export const AI_EVENT_SAMPLE_ROOM_CANDIDATES: PublicAiEventCandidate[] = [
   candidate("drivendata-competitions", "DrivenData AI / Data Science Competitions 入口", "DrivenData", "DrivenData", "drivendata.org", "competition_platform", "平台入口 - 待复核", ["数据科学", "公益赛", "算法赛"], "持续更新", "奖金和资格以赛题页为准", "适合数据科学竞赛线索，需确认是否 AI 相关及是否仍开放。", "https://www.drivendata.org/competitions/", "search_discovered", "source_entry", 55),
   candidate("codalab-competitions", "CodaLab Competitions 入口", "CodaLab", "CodaLab", "codalab.org", "competition_platform", "平台入口 - 待复核", ["算法赛", "Benchmark", "学术"], "持续更新", "待复核", "CodaLab 承载大量学术挑战，需区分当前赛事和历史 benchmark。", "https://codalab.lisn.upsaclay.fr/competitions/", "search_discovered", "source_entry", 54),
   candidate("zindi-competitions", "Zindi AI / Data Science Competitions 入口", "Zindi", "Zindi", "zindi.africa", "competition_platform", "平台入口 - 待复核", ["数据科学", "AI", "全球"], "持续更新", "奖金和资格以赛题页为准", "Zindi 适合国际数据科学竞赛补充来源，需复核地域和参赛资格。", "https://zindi.africa/competitions", "search_discovered", "source_entry", 53),
+  candidate("hackerearth-hackathons", "HackerEarth Hackathons AI 赛事发现入口", "HackerEarth", "HackerEarth", "hackerearth.com", "hackathon_platform", "平台入口 - 待复核", ["Hackathon", "开发者", "AI"], "持续更新", "奖金和提交要求按赛事页复核", "HackerEarth 适合作为国际黑客松补充来源，需进入具体 challenge 页确认是否 AI 相关和是否仍开放。", "https://www.hackerearth.com/challenges/hackathon/", "search_discovered", "source_entry", 52),
+  candidate("topcoder-ai-challenges", "Topcoder Challenges AI / Data Challenge 入口", "Topcoder", "Topcoder", "topcoder.com", "competition_platform", "平台入口 - 待复核", ["算法挑战", "开发者挑战", "全球"], "持续更新", "奖励按 challenge 页复核", "Topcoder 可发现开发者和算法挑战赛，但需排除普通任务和历史 challenge。", "https://www.topcoder.com/challenges", "search_discovered", "source_entry", 51),
+  candidate("analytics-vidhya-datahack", "Analytics Vidhya DataHack AI 竞赛入口", "Analytics Vidhya", "Analytics Vidhya DataHack", "analyticsvidhya.com", "competition_platform", "平台入口 - 待复核", ["数据科学", "机器学习", "AI"], "持续更新", "奖金和资格以 contest 页为准", "DataHack 适合补充英文数据科学和机器学习竞赛，需打开具体 contest 页复核。", "https://datahack.analyticsvidhya.com/contest/all/", "search_discovered", "source_entry", 50),
   candidate("global-ai-hackathon-search", "Global AI Hackathon Series 搜索线索", "Search Discovery", "Devpost / DoraHacks / Lablab", "multiple", "hackathon_platform", "搜索发现 - 待复核", ["AI Hackathon", "全球", "报名入口"], "待复核", "待复核", "这是跨平台查询种子，用于触发 Devpost、DoraHacks、Lablab 等具体赛事页，不直接当作已确认机会。", "https://devpost.com/hackathons?search=AI%20hackathon", "search_discovered", "source_entry", 48),
   candidate("ai-agent-hackathon-search", "AI Agent Hackathon 查询种子", "Search Discovery", "Devpost / Lablab", "multiple", "hackathon_platform", "搜索发现 - 待复核", ["AI Agent", "Hackathon", "作品提交"], "待复核", "待复核", "用于发现 AI Agent 专项 Hackathon；需要后续读取具体官方赛事页。", "https://lablab.ai/event?query=AI%20Agent", "search_discovered", "source_entry", 47),
   candidate("cloud-credits-challenge-search", "AI 云资源挑战赛查询种子", "Search Discovery", "Cloud Providers", "multiple", "cloud_provider", "搜索发现 - 待复核", ["云资源", "credits", "developer challenge"], "待复核", "云资源待复核", "用于发现云厂商 challenge、credits 和创业资源，不能直接等同于比赛。", "https://devpost.com/hackathons?search=cloud%20AI", "search_discovered", "watch_signal", 45),

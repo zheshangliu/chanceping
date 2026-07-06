@@ -160,6 +160,9 @@ function cleanupTmpFiles(): void {
 
 async function runPublicAiEventsTests(): Promise<void> {
   console.log("\n[公共页] 盯比赛 · 全球 AI 赛事导航");
+  const canonicalPage = await textGet("/aievents");
+  logPublicCheck("GET /aievents returns 200", canonicalPage.status === 200, `status=${canonicalPage.status}`);
+  logPublicCheck("canonical /aievents page has public title", canonicalPage.text.includes("盯比赛 · 全球 AI 赛事导航"));
   const page = await textGet("/ai-events");
   logPublicCheck("GET /ai-events returns 200", page.status === 200, `status=${page.status}`);
   logPublicCheck("page has public title", page.text.includes("盯比赛 · 全球 AI 赛事导航"));
@@ -182,6 +185,9 @@ async function runPublicAiEventsTests(): Promise<void> {
   logPublicCheck("public API returns 30+ candidate cards", (apiBody.data?.stats?.candidateCount ?? 0) >= 30, serialized.slice(0, 160));
   logPublicCheck("public API returns 15+ displayable cards", (apiBody.data?.stats?.displayableCount ?? 0) >= 15, serialized.slice(0, 160));
   logPublicCheck("public API returns 8+ source network entries", (apiBody.data?.sourceNetwork?.length ?? 0) >= 8, serialized.slice(0, 160));
+  logPublicCheck("public API exposes cover image field", /coverImageUrl/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API exposes prize field", /"prize"/i.test(serialized), serialized.slice(0, 160));
+  logPublicCheck("public API exposes registration URL field", /registrationUrl/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API includes Qwen Cloud source", /Qwen Cloud|qwencloud-hackathon\.devpost\.com/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API includes TRAE source", /TRAE|trae\.ai/i.test(serialized), serialized.slice(0, 160));
   logPublicCheck("public API keeps needs-review evidence language", /待复核|搜索发现|needs_review|search_discovered/i.test(serialized), serialized.slice(0, 160));

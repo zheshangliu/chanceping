@@ -21,10 +21,12 @@ function check(name: string, condition: boolean, detail = ""): void {
 const html = read("web/ai-events.html");
 const js = read("web/ai-events.js");
 const css = read("web/styles.css");
+const webRoutes = read("src/api/routes/web-ui.ts");
 
 console.log("\n[Q7 AI Events Page] Static contract checks\n");
 
 check("page title uses new sample-room name", html.includes("盯比赛 · 全球 AI 赛事导航｜ChancePing"));
+check("canonical /aievents route is registered", webRoutes.includes('app.get("/aievents"') && webRoutes.includes('serveFile("ai-events.html"'));
 check("page exposes Chinese sample-room title", html.includes("全球 AI 赛事导航"));
 check("page exposes English product name", js.includes("AI Contest Navigator"));
 check("page explains ChancePing AI Opportunity Radar", js.includes("ChancePing AI Opportunity Radar"));
