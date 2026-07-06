@@ -228,6 +228,8 @@ function getPlatformCoverImageUrl(input: {
   if (/datawhale|coggle/.test(text)) return "/assets/ai-event-cover-community.svg";
   if (/runwayml\.com|runway/.test(text)) return "/assets/ai-event-cover-runway.svg";
   if (/openhackathons\.org|open\s*hackathons/.test(text)) return "/assets/ai-event-cover-openhackathons.svg";
+  if (/challenge\.gov|\.gov\b|政府|科技局|工信|公共机构/.test(text)) return "/assets/ai-event-cover-competition.svg";
+  if (/\.edu\b|\.edu\.cn\b|university|college|school|academy|institute|高校|大学|学院|研究院/.test(text)) return "/assets/ai-event-cover-competition.svg";
   if (/cloud|qwen|aliyun|tencent|huaweicloud|aws|azure|google\s*cloud|microsoft|ibm/.test(text)) return "/assets/ai-event-cover-cloud.svg";
   if (/hackathon|黑客松|马拉松/.test(text)) return "/assets/ai-event-cover-hackathon.svg";
   if (/competition|challenge|contest|比赛|竞赛|挑战/.test(text)) return "/assets/ai-event-cover-competition.svg";
@@ -248,7 +250,7 @@ function normalizePublicText(value: string | undefined | null, fallback: string)
     .replace(/review required/gi, fallback);
 }
 
-function normalizePublicReward(value: string | undefined | null, fallback = "见官网"): string {
+export function normalizePublicReward(value: string | undefined | null, fallback = "见官网"): string {
   const normalized = normalizePublicText(value, fallback);
   if (!normalized || normalized === fallback) return fallback;
   const genericNews = /本报讯|报道称|报道|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会|活动现场/i;

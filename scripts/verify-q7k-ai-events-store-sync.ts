@@ -94,6 +94,7 @@ async function runImageHydrationCheck(): Promise<void> {
         <head>
           <meta property="og:title" content="Hydrated AI Event" />
           <meta property="og:image" content="https://official-ai-event.example.org/cover.png" />
+          <meta name="prize" content="Total prizes include RMB 100,000, cloud credits, and demo showcase for selected builders." />
         </head>
         <body><a href="/register">Register now</a></body>
       </html>
@@ -105,6 +106,21 @@ async function runImageHydrationCheck(): Promise<void> {
     page_size: 1000,
   }).entries;
   check("image hydrator writes source image metadata", hydrated.hydratedCount === 1 && hydratedEntries.some((entry) => cardExtras(entry.card).imageStatus === "source_image" && cardExtras(entry.card).coverImageUrl === "https://official-ai-event.example.org/cover.png"), JSON.stringify(hydrated));
+  check(
+    "image hydrator compresses long reward metadata before backend write",
+    hydratedEntries.some((entry) => {
+      const extras = cardExtras(entry.card);
+      return typeof entry.card.reward_or_value === "string"
+        && entry.card.reward_or_value.length <= 30
+        && /云资源|展示机会|奖金/.test(entry.card.reward_or_value)
+        && extras.prize === entry.card.reward_or_value;
+    }),
+    JSON.stringify(hydratedEntries.map((entry) => ({
+      title: entry.card.title,
+      reward: entry.card.reward_or_value,
+      prize: cardExtras(entry.card).prize,
+    })).slice(0, 5)),
+  );
 
   const combinedStorePath = path.join(tmpDir, "q7k-ai-events-combined-sync.json");
   if (fs.existsSync(combinedStorePath)) {

@@ -3,6 +3,7 @@ import type { OpportunityCard } from "../schema/opportunity-card";
 import type { EvidenceStatus, OpportunityKind } from "../schema/radar-mvp-contracts";
 import {
   buildPublicAiEventFeed,
+  normalizePublicReward,
   type BuildPublicAiEventFeedOptions,
   type PublicAiEventCard,
 } from "./ai-events-publisher";
@@ -322,8 +323,9 @@ export async function hydratePublicAiEventImages(
           updatedCard.deadlineDisplay = metadata.deadline;
         }
         if (metadata.reward) {
-          updatedCard.reward_or_value = metadata.reward;
-          updatedCard.prize = metadata.reward;
+          const normalizedReward = normalizePublicReward(metadata.reward, "见官网");
+          updatedCard.reward_or_value = normalizedReward;
+          updatedCard.prize = normalizedReward;
         }
         if (metadata.organizer) {
           updatedCard.organizer = metadata.organizer;

@@ -317,6 +317,33 @@ check(
   JSON.stringify(blockedPlatformFeed.items[0]),
 );
 
+const universityEventFeed = buildPublicAiEventFeed([makeEntry(makeCard({
+  title: "关于举办2025首届全国人工智能应用创新大赛校赛的通知",
+  organizer: "深圳技术大学",
+  official_source_url: "https://design.sztu.edu.cn/info/1027/1044.htm",
+  application_url: "https://design.sztu.edu.cn/info/1027/1044.htm",
+  region: "中国 / 高校",
+}))], { items: [], sourceNetwork: [], stats: {
+  candidateCount: 0,
+  displayableCount: 0,
+  sourceCount: 0,
+  officialEntryCount: 0,
+  needsReviewCount: 0,
+  lastCheckedAt: "2026-07-06",
+} }, {
+  lifecycle: "all",
+  page: 1,
+  pageSize: 5,
+  now: "2026-07-06T00:00:00.000Z",
+});
+
+check(
+  "university or government AI contest pages get competition platform cover fallback",
+  universityEventFeed.items[0]?.coverImageUrl === "/assets/ai-event-cover-competition.svg"
+    && universityEventFeed.items[0]?.imageStatus === "platform_placeholder",
+  JSON.stringify(universityEventFeed.items[0]),
+);
+
 console.log(`\nQ7P AI Events image enrichment checks: ${passCount} PASS / ${failCount} FAIL`);
 if (failCount > 0) {
   process.exit(1);
