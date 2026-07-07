@@ -48,6 +48,16 @@ check("backend i18n only toggles language buttons", backendI18n.includes('queryS
 check("backend i18n does not special-case nested brand text", !backendI18n.includes("classList?.contains(\"brand\")") && !backendI18n.includes("insertBefore(document.createTextNode"));
 check("backend i18n includes AI events navigator English copy", backendI18n.includes("Global AI Events Navigator"));
 check("backend visible loading uses Qwen wording", webVisibleFiles.some(({ content }) => content.includes("Qwen 正在理解")) && webVisibleFiles.some(({ content }) => content.includes("Serper 正在搜索机会")));
+const backendQwenWording = webVisibleFiles.map(({ content }) => content).join("\n");
+[
+  "Qwen 正在理解并生成雷达",
+  "Qwen 正在画雷达",
+  "Serper 正在搜索机会，Qwen 随后整理证据",
+  "Qwen 正在生成机会报告",
+  "Qwen 正在生成报告",
+].forEach((phrase) => {
+  check(`backend visible wording includes ${phrase}`, backendQwenWording.includes(phrase));
+});
 
 const deepSeekVisibleHits = webVisibleFiles
   .filter(({ content }) => /DeepSeek/i.test(content))
