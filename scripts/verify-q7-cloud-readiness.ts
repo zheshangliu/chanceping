@@ -39,6 +39,7 @@ check("chat window verifier is registered", scripts["verify:q7:chat-window"] ===
 check("cloud readiness verifier is registered", scripts["verify:q7:cloud-readiness"] === "tsx scripts/verify-q7-cloud-readiness.ts");
 check("Aliyun runbook verifier is registered", scripts["verify:q7:aliyun-runbook"] === "tsx scripts/verify-q7-aliyun-runbook.ts");
 check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] === "tsx scripts/verify-q7-aliyun-smoke.ts");
+check("Aliyun remote smoke verifier is registered", scripts["verify:q7:aliyun-remote-smoke"] === "tsx scripts/verify-q7-aliyun-remote-smoke.ts");
 
 [
   "verify:live",
@@ -58,6 +59,13 @@ check("api.env is not tracked", gitLsFiles("api.env").trim() === "");
 const aliyunRunbook = read("docs/deployment/aliyun-mvp-runbook.md");
 check("Aliyun runbook documents Qwen contest profile", aliyunRunbook.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunRunbook.includes("CONTEST_LLM_PROVIDER=qwen"));
 check("Aliyun runbook documents built-in AI events navigator", aliyunRunbook.includes("全球 AI 赛事导航") && aliyunRunbook.includes("/aievents"));
+check("Aliyun runbook documents remote smoke", aliyunRunbook.includes("CHANCEPING_DEPLOY_BASE_URL") && aliyunRunbook.includes("verify:q7:aliyun-remote-smoke"));
+check(
+  "Aliyun runbook documents backend Qwen wording gate",
+  aliyunRunbook.includes("4.5 后端页面 Qwen 文案复核")
+    && aliyunRunbook.includes("verify:q7:backend-i18n")
+    && aliyunRunbook.includes("Serper 正在搜索机会，Qwen 随后整理证据"),
+);
 
 const backendVisibleFiles = [
   "web/index.html",

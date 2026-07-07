@@ -27,6 +27,13 @@ const text = existsSync(path) ? readFileSync(path, "utf8") : "";
   "SERPER_API_KEY",
   "verify:q7:api-env-contest",
   "verify:q7:aliyun-smoke",
+  "verify:q7:aliyun-remote-smoke",
+  "CHANCEPING_DEPLOY_BASE_URL",
+  "verify:q7:backend-i18n",
+  "Qwen 正在理解并生成雷达",
+  "Qwen 正在画雷达",
+  "Serper 正在搜索机会，Qwen 随后整理证据",
+  "Qwen 正在生成机会报告",
   "verify:all",
   "全球 AI 赛事导航",
   "/aievents",
@@ -37,6 +44,7 @@ const text = existsSync(path) ? readFileSync(path, "utf8") : "";
 check("runbook says api.env is not committed", /不提交 `api\.env`/.test(text));
 check("runbook keeps verify:all mock-safe", /verify:all.*mock-safe/.test(text));
 check("runbook explains built-in radar quota bypass", /内置雷达不占用 3 个自定义额度/.test(text));
+check("runbook has backend Qwen wording step", /4\.5 后端页面 Qwen 文案复核/.test(text) && /不出现 DeepSeek 字样/.test(text));
 check("runbook does not include obvious API key value", !/sk-[A-Za-z0-9_-]+|API_KEY=\S{8,}/.test(text));
 
 console.log(`Q7 Aliyun runbook: ${pass} PASS / ${fail} FAIL`);

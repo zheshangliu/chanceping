@@ -59,6 +59,46 @@ node --run verify:all
 - 内置雷达不占用 3 个自定义额度；
 - 公开 `/aievents` 页面和 feed 能返回可展示赛事卡。
 
+## 4.5 后端页面 Qwen 文案复核
+
+在进入阿里云准备前，必须单独检查普通客户能看到的「盯机会」后端页面文案：
+
+- 不出现 DeepSeek 字样；
+- 需求理解 / 画像生成使用 `Qwen 正在理解并生成雷达`；
+- 雷达规格生成使用 `Qwen 正在画雷达`；
+- 搜索阶段使用 `Serper 正在搜索机会，Qwen 随后整理证据`，不把网页搜索说成由 Qwen 执行；
+- 报告生成使用 `Qwen 正在生成机会报告` 或 `Qwen 正在生成报告`。
+
+对应自动闸门：
+
+```bash
+node --run verify:q7:backend-i18n
+node --run verify:q7:cloud-readiness
+```
+
+## 部署后远程 smoke
+
+部署完成并拿到测试站 URL 后运行：
+
+```bash
+CHANCEPING_DEPLOY_BASE_URL=https://your-aliyun-test-site.example.com node --run verify:q7:aliyun-remote-smoke
+```
+
+如果需要在 CI 中强制要求远程 URL：
+
+```bash
+CHANCEPING_DEPLOY_BASE_URL_REQUIRED=true node --run verify:q7:aliyun-remote-smoke
+```
+
+远程 smoke 会检查：
+
+- `/health` 可用；
+- 首页、后端脚本、`/aievents` 均可访问；
+- 客户可见页面不出现 DeepSeek 字样，并展示 Qwen 工作文案；
+- `/api/public/ai-events?page_size=8` 返回赛事卡且不泄露内部 key / run id；
+- 一个新用户可以打开内置「全球 AI 赛事导航」，并创建 3 个自定义雷达窗口；
+- 第 4 个自定义雷达窗口被阻断，删除一个窗口后释放额度。
+
 ## 上线后手动验收
 
 1. 打开 `/`，确认顶部 banner、左侧雷达入口和蓝色科技风正常。
@@ -72,6 +112,6 @@ node --run verify:all
 
 ## 已知后续项
 
-- 真正阿里云 URL smoke 尚未接入，需要部署后补一个远程 URL 版本检查脚本。
+- 远程 smoke 需要真实阿里云测试站 URL 才能执行完整检查。
 - 多雷达多窗口的长期上下文摘要还未完全实现。
 - Qwen 与 DeepSeek 的质量对比另做独立实验，不放进当前阿里云前置闸门。
