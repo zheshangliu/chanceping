@@ -114,6 +114,7 @@
     "verify:q7:docker-readiness": "tsx scripts/verify-q7-docker-readiness.ts",
     "verify:q7:llm-comparison": "tsx scripts/verify-q7-llm-comparison.ts",
     "compare:live-llm-profiles": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_LLM_COMPARISON=true tsx scripts/compare-live-llm-profiles.ts",
+    "build:aliyun-image-tar": "tsx scripts/build-aliyun-image-tar.ts",
     "verify:q7:llm-reviser": "tsx scripts/verify-q7-llm-reviser.ts",
     "verify:q7:chat-reload": "tsx scripts/verify-q7-chat-reload.ts",
     "verify:q7:random-ai": "tsx scripts/verify-q7-ai-entrepreneur-random.ts",

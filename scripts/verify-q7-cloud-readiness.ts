@@ -43,6 +43,7 @@ check("Aliyun remote smoke verifier is registered", scripts["verify:q7:aliyun-re
 check("Aliyun container smoke verifier is registered", scripts["verify:q7:aliyun-container-smoke"] === "tsx scripts/verify-q7-aliyun-container-smoke.ts");
 check("Aliyun preflight verifier is registered", scripts["verify:q7:aliyun-preflight"] === "tsx scripts/verify-q7-aliyun-preflight.ts");
 check("Aliyun deploy prereq verifier is registered", scripts["verify:q7:aliyun-deploy-prereqs"] === "tsx scripts/verify-q7-aliyun-deploy-prereqs.ts");
+check("Aliyun image tar export command is registered", scripts["build:aliyun-image-tar"] === "tsx scripts/build-aliyun-image-tar.ts");
 check("Docker readiness verifier is registered", scripts["verify:q7:docker-readiness"] === "tsx scripts/verify-q7-docker-readiness.ts");
 check("LLM comparison verifier is registered", scripts["verify:q7:llm-comparison"] === "tsx scripts/verify-q7-llm-comparison.ts");
 check(
@@ -65,6 +66,7 @@ check(
 const gitignore = read(".gitignore").split(/\r?\n/).map((line) => line.trim());
 check("api.env is gitignored", gitignore.includes("api.env") || gitignore.includes("/api.env"));
 check("api.env is not tracked", gitLsFiles("api.env").trim() === "");
+check("Aliyun image export artifacts are gitignored", gitignore.includes("artifacts/aliyun/"));
 
 const aliyunRunbook = read("docs/deployment/aliyun-mvp-runbook.md");
 const aliyunEnvExample = read("docs/deployment/aliyun.env.example");
@@ -94,6 +96,11 @@ check(
   "Aliyun runbook documents real deploy prerequisite gate",
   aliyunRunbook.includes("verify:q7:aliyun-deploy-prereqs")
     && aliyunRunbook.includes("CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true"),
+);
+check(
+  "Aliyun runbook documents image tar export fallback",
+  aliyunRunbook.includes("build:aliyun-image-tar")
+    && aliyunRunbook.includes("artifacts/aliyun"),
 );
 check("Aliyun runbook documents post-deploy LLM comparison", aliyunRunbook.includes("compare:live-llm-profiles") && aliyunRunbook.includes("不放进当前阿里云前置闸门"));
 check("Aliyun env example uses Qwen contest profile", aliyunEnvExample.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunEnvExample.includes("CONTEST_LLM_PROVIDER=qwen"));

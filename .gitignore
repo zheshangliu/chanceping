@@ -37,6 +37,9 @@ Thumbs.db
 coverage/
 .nyc_output/
 
+# Deployment artifacts
+artifacts/aliyun/
+
 # Environment（含真实 API Key，禁止提交）
 .env
 .env.local

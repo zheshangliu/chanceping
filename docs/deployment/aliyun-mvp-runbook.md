@@ -180,6 +180,23 @@ CHANCEPING_DOCKER_NODE_IMAGE=registry.cn-hangzhou.aliyuncs.com/your-namespace/no
 
 构建成功后仍需运行部署后的远程 smoke。
 
+如果当前机器没有阿里云 CLI / ACR 凭据，仍可以先导出一个可交付给阿里云控制台或 CI 的镜像 tar：
+
+```bash
+node --run build:aliyun-image-tar
+```
+
+默认产物：
+
+- `artifacts/aliyun/chanceping-aliyun-image.tar`
+- `artifacts/aliyun/chanceping-aliyun-image.tar.json`
+
+该 tar 来自 Dockerfile 和 `.dockerignore`，不应包含 `api.env`。真实 Qwen / Serper Key 仍只在阿里云环境变量中配置。上传或导入镜像后，继续设置测试站 URL 并运行远程 smoke：
+
+```bash
+CHANCEPING_DEPLOY_BASE_URL=https://your-aliyun-test-site.example.com node --run verify:q7:aliyun-remote-smoke
+```
+
 ## 部署后远程 smoke
 
 部署完成并拿到测试站 URL 后运行：
