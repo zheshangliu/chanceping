@@ -17,6 +17,10 @@ const path = "docs/deployment/aliyun-mvp-runbook.md";
 check("Aliyun runbook exists", existsSync(path), path);
 
 const text = existsSync(path) ? readFileSync(path, "utf8") : "";
+const envExamplePath = "docs/deployment/aliyun.env.example";
+check("Aliyun env example exists", existsSync(envExamplePath), envExamplePath);
+
+const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "utf8") : "";
 
 [
   "CHANCEPING_LLM_PROFILE=contest",
@@ -50,6 +54,28 @@ check("runbook has backend Qwen wording step", /4\.5 后端页面 Qwen 文案复
 check("runbook says api.env stays out of image", /`api\.env` 不进入镜像/.test(text));
 check("runbook documents post-deploy LLM comparison", /compare:live-llm-profiles/.test(text) && /不放进当前阿里云前置闸门/.test(text));
 check("runbook does not include obvious API key value", !/sk-[A-Za-z0-9_-]+|API_KEY=\S{8,}/.test(text));
+check("runbook references Aliyun env example", text.includes("docs/deployment/aliyun.env.example"));
+
+[
+  "NODE_ENV=production",
+  "DATA_MODE=mock",
+  "LLM_MODE=mock",
+  "CHANCEPING_LLM_PROFILE=contest",
+  "CONTEST_LLM_PROVIDER=qwen",
+  "CONTEST_LLM_MODEL=",
+  "CONTEST_LLM_BASE_URL=",
+  "CONTEST_LLM_API_KEY=",
+  "SERPER_API_KEY=",
+  "CHANCEPING_LOAD_API_ENV=false",
+  "CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false",
+  "CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false",
+  "CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json",
+].forEach((required) => {
+  check(`Aliyun env example includes ${required}`, envExample.includes(required));
+});
+
+check("Aliyun env example keeps API keys blank", !/API_KEY=[^\s#]+/.test(envExample));
+check("Aliyun env example does not mention DeepSeek commercial profile", !/deepseek|COMMERCIAL_LLM|CHANCEPING_LLM_PROFILE=commercial/i.test(envExample));
 
 console.log(`Q7 Aliyun runbook: ${pass} PASS / ${fail} FAIL`);
 process.exit(fail > 0 ? 1 : 0);

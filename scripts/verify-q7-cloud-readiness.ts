@@ -64,6 +64,8 @@ check("api.env is gitignored", gitignore.includes("api.env") || gitignore.includ
 check("api.env is not tracked", gitLsFiles("api.env").trim() === "");
 
 const aliyunRunbook = read("docs/deployment/aliyun-mvp-runbook.md");
+const aliyunEnvExample = read("docs/deployment/aliyun.env.example");
+const competitionEnvExample = read(".env.example.competition");
 check("Aliyun runbook documents Qwen contest profile", aliyunRunbook.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunRunbook.includes("CONTEST_LLM_PROVIDER=qwen"));
 check("Aliyun runbook documents built-in AI events navigator", aliyunRunbook.includes("全球 AI 赛事导航") && aliyunRunbook.includes("/aievents"));
 check("Aliyun runbook documents remote smoke", aliyunRunbook.includes("CHANCEPING_DEPLOY_BASE_URL") && aliyunRunbook.includes("verify:q7:aliyun-remote-smoke"));
@@ -75,6 +77,10 @@ check(
 );
 check("Aliyun runbook documents Docker readiness", aliyunRunbook.includes("verify:q7:docker-readiness") && /`api\.env` 不进入镜像/.test(aliyunRunbook));
 check("Aliyun runbook documents post-deploy LLM comparison", aliyunRunbook.includes("compare:live-llm-profiles") && aliyunRunbook.includes("不放进当前阿里云前置闸门"));
+check("Aliyun env example uses Qwen contest profile", aliyunEnvExample.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunEnvExample.includes("CONTEST_LLM_PROVIDER=qwen"));
+check("Aliyun env example keeps live flags off by default", aliyunEnvExample.includes("CHANCEPING_LOAD_API_ENV=false") && aliyunEnvExample.includes("CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false") && aliyunEnvExample.includes("CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false"));
+check("Aliyun env example keeps API keys blank", !/API_KEY=[^\s#]+/.test(aliyunEnvExample));
+check("competition env example documents current contest profile", competitionEnvExample.includes("CHANCEPING_LLM_PROFILE=contest") && competitionEnvExample.includes("CONTEST_LLM_API_KEY="));
 
 const dockerignore = read(".dockerignore");
 const dockerfile = read("Dockerfile");

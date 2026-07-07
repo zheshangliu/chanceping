@@ -25,6 +25,14 @@
 - `CONTEST_LLM_API_KEY`
 - `SERPER_API_KEY`
 
+可直接参考仓库内无密钥样例：
+
+```bash
+docs/deployment/aliyun.env.example
+```
+
+该文件只保存变量名和安全默认值，不保存真实 Key；复制到阿里云控制台后再手动填写 `CONTEST_LLM_API_KEY`、`SERPER_API_KEY` 等敏感值。
+
 本地调试专用变量：
 
 - `CHANCEPING_LOAD_API_ENV=true`
@@ -91,6 +99,12 @@ node --run verify:q7:docker-readiness
 - 参赛 profile 明确为 `CHANCEPING_LLM_PROFILE=contest` 和 `CONTEST_LLM_PROVIDER=qwen`；
 - 真实 Qwen / Serper Key 只通过阿里云环境变量注入；
 - `data/`、`reports/`、`exports/` 需要挂载持久化卷，确保雷达窗口、机会卡和报告刷新后仍在。
+
+如果本地或 CI 构建镜像时拉取 `node:22-slim` 超时，优先处理 Docker Registry 网络问题，而不是改应用代码：
+
+- 配置 Docker Hub 镜像加速或公司/阿里云容器镜像服务 ACR mirror；
+- 或直接在阿里云 ACR / 云构建环境执行构建；
+- 构建成功后仍需运行 `verify:q7:aliyun-smoke` 和部署后的远程 smoke。
 
 ## 部署后远程 smoke
 
