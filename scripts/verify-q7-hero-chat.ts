@@ -68,6 +68,7 @@ async function run() {
   check("homepage has product preview tray", html.includes("home-preview-tray") && html.includes("雷达画像") && html.includes("运行进度") && html.includes("先看这 3 个") && html.includes("Markdown 报告"));
   check("homepage AI event radar opens existing chat window", html.includes('data-action="open-ai-event-radar"') && homeJs.includes("openHeroRadarWindow"));
   check("homepage start button creates a new radar window", homeJs.includes("createNewHeroRadarWindow") && !homeJs.includes("text = input.value.trim() || window.CHANCEPING_AI_EVENT_DEMO_PROMPT"));
+  check("empty homepage start refocuses the input after warning", homeJs.includes('showToast("请输入你想盯的机会", "warning");\n      input.focus();'));
   check("homepage new radar button creates an empty radar window", html.includes('data-action="create-new-radar"') && homeJs.includes("createNewHeroRadarWindow(\"\")"));
   check("home demo prompt chips remain hidden compatibility hooks", html.includes("hero-demo-prompts") && homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));
   check("home does not expose old multi-industry template buttons", !html.includes('data-template-id="ai_events"') && !html.includes('data-template-id="policy"') && !html.includes('data-template-id="heritage"'));

@@ -185,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const text = input.value.trim();
     if (!text) {
       showToast("请输入你想盯的机会", "warning");
+      input.focus();
       return;
     }
 
