@@ -34,8 +34,10 @@ check("local dev uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/.te
 check("live LLM verifier uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/.test(scripts["verify:live-llm"] ?? ""));
 check("Q7 live demo uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/.test(scripts["verify:q7:live-demo"] ?? ""));
 check("backend Qwen wording verifier is registered", scripts["verify:q7:backend-i18n"] === "tsx scripts/verify-q7-backend-i18n.ts");
+check("api.env Qwen contest verifier is registered", scripts["verify:q7:api-env-contest"] === "tsx scripts/verify-q7-api-env-contest.ts");
 check("chat window verifier is registered", scripts["verify:q7:chat-window"] === "tsx scripts/verify-q7-chat-window.ts");
 check("cloud readiness verifier is registered", scripts["verify:q7:cloud-readiness"] === "tsx scripts/verify-q7-cloud-readiness.ts");
+check("Aliyun runbook verifier is registered", scripts["verify:q7:aliyun-runbook"] === "tsx scripts/verify-q7-aliyun-runbook.ts");
 check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] === "tsx scripts/verify-q7-aliyun-smoke.ts");
 
 [
@@ -52,6 +54,10 @@ check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] =
 const gitignore = read(".gitignore").split(/\r?\n/).map((line) => line.trim());
 check("api.env is gitignored", gitignore.includes("api.env") || gitignore.includes("/api.env"));
 check("api.env is not tracked", gitLsFiles("api.env").trim() === "");
+
+const aliyunRunbook = read("docs/deployment/aliyun-mvp-runbook.md");
+check("Aliyun runbook documents Qwen contest profile", aliyunRunbook.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunRunbook.includes("CONTEST_LLM_PROVIDER=qwen"));
+check("Aliyun runbook documents built-in AI events navigator", aliyunRunbook.includes("全球 AI 赛事导航") && aliyunRunbook.includes("/aievents"));
 
 const backendVisibleFiles = [
   "web/index.html",
