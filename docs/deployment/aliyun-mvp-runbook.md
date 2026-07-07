@@ -197,6 +197,27 @@ node --run build:aliyun-image-tar
 CHANCEPING_DEPLOY_BASE_URL=https://your-aliyun-test-site.example.com node --run verify:q7:aliyun-remote-smoke
 ```
 
+如果已经有阿里云 ACR 目标，可以直接从本机或 CI 构建并推送镜像：
+
+```bash
+CHANCEPING_ALIYUN_ACR_REGISTRY=registry.cn-hangzhou.aliyuncs.com \
+CHANCEPING_ALIYUN_IMAGE=your-namespace/chanceping:ai-events-demo \
+node --run deploy:aliyun-acr
+```
+
+可选变量：
+
+- `CHANCEPING_ALIYUN_ACR_USERNAME` / `CHANCEPING_ALIYUN_ACR_PASSWORD`：需要脚本登录 ACR 时使用。脚本通过 `--password-stdin` 登录，不打印密码。
+- `CHANCEPING_ALIYUN_IMAGE_TAG`：本地构建标签，默认 `chanceping:aliyun`。
+- `CHANCEPING_DOCKER_NODE_IMAGE`：构建基础镜像，默认 `public.ecr.aws/docker/library/node:22-slim`。
+- `CHANCEPING_ALIYUN_PUSH_MANIFEST`：推送记录 manifest，默认 `artifacts/aliyun/aliyun-acr-push-manifest.json`。
+
+脚本会执行 build / tag / push，并写入本地 manifest。manifest 只记录镜像目标、image id、基础镜像和时间，不保存 ACR 密码或任何 API Key。推送完成后，在阿里云服务里使用该镜像并配置上面的 Qwen / Serper 环境变量，然后运行远程 smoke：
+
+```bash
+CHANCEPING_DEPLOY_BASE_URL=https://your-aliyun-test-site.example.com node --run verify:q7:aliyun-remote-smoke
+```
+
 ## 部署后远程 smoke
 
 部署完成并拿到测试站 URL 后运行：

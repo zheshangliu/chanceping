@@ -44,6 +44,7 @@ check("Aliyun container smoke verifier is registered", scripts["verify:q7:aliyun
 check("Aliyun preflight verifier is registered", scripts["verify:q7:aliyun-preflight"] === "tsx scripts/verify-q7-aliyun-preflight.ts");
 check("Aliyun deploy prereq verifier is registered", scripts["verify:q7:aliyun-deploy-prereqs"] === "tsx scripts/verify-q7-aliyun-deploy-prereqs.ts");
 check("Aliyun image tar export command is registered", scripts["build:aliyun-image-tar"] === "tsx scripts/build-aliyun-image-tar.ts");
+check("Aliyun ACR deploy command is registered", scripts["deploy:aliyun-acr"] === "tsx scripts/deploy-aliyun-acr.ts");
 check("Docker readiness verifier is registered", scripts["verify:q7:docker-readiness"] === "tsx scripts/verify-q7-docker-readiness.ts");
 check("LLM comparison verifier is registered", scripts["verify:q7:llm-comparison"] === "tsx scripts/verify-q7-llm-comparison.ts");
 check(
@@ -101,6 +102,12 @@ check(
   "Aliyun runbook documents image tar export fallback",
   aliyunRunbook.includes("build:aliyun-image-tar")
     && aliyunRunbook.includes("artifacts/aliyun"),
+);
+check(
+  "Aliyun runbook documents ACR deploy command",
+  aliyunRunbook.includes("deploy:aliyun-acr")
+    && aliyunRunbook.includes("CHANCEPING_ALIYUN_ACR_REGISTRY")
+    && aliyunRunbook.includes("CHANCEPING_ALIYUN_IMAGE"),
 );
 check("Aliyun runbook documents post-deploy LLM comparison", aliyunRunbook.includes("compare:live-llm-profiles") && aliyunRunbook.includes("不放进当前阿里云前置闸门"));
 check("Aliyun env example uses Qwen contest profile", aliyunEnvExample.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunEnvExample.includes("CONTEST_LLM_PROVIDER=qwen"));
@@ -192,6 +199,12 @@ check("public AI events page reads public feed", aiEventsPage.includes("fetch(`/
 check("public AI events page does not call search API", !/\/api\/search/.test(aiEventsPage));
 check("public AI events page does not run radars directly", !/\/api\/radars\/[^"`']+\/run/.test(aiEventsPage));
 check("public AI events page does not depend on live_search flag", !/live_search/i.test(aiEventsPage));
+
+const aliyunDeployScript = read("scripts/deploy-aliyun-acr.ts");
+check("Aliyun deploy script builds Docker image", aliyunDeployScript.includes("docker") && aliyunDeployScript.includes("build"));
+check("Aliyun deploy script tags and pushes ACR image", aliyunDeployScript.includes("tag") && aliyunDeployScript.includes("push"));
+check("Aliyun deploy script uses password stdin for optional registry login", aliyunDeployScript.includes("--password-stdin"));
+check("Aliyun deploy script writes deployment manifest", aliyunDeployScript.includes("artifacts/aliyun/aliyun-acr-push-manifest.json"));
 
 console.log(`Q7 cloud readiness: ${pass} PASS / ${fail} FAIL`);
 process.exit(fail > 0 ? 1 : 0);

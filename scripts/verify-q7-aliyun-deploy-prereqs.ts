@@ -29,6 +29,9 @@ function hasAnyEnv(names: string[]): boolean {
 }
 
 const strict = isEnabled(process.env.CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY);
+const hasAcrLogin =
+  hasAnyEnv(["CHANCEPING_ALIYUN_ACR_USERNAME", "ALIYUN_ACR_USERNAME", "ACR_USERNAME"])
+  && hasAnyEnv(["CHANCEPING_ALIYUN_ACR_PASSWORD", "ALIYUN_ACR_PASSWORD", "ACR_PASSWORD"]);
 
 const checks: Check[] = [
   {
@@ -45,8 +48,8 @@ const checks: Check[] = [
   },
   {
     name: "Aliyun credential variable names are present for automated deploy",
-    ok: hasAnyEnv(["ALIYUN_CLI_PROFILE", "ALIBABA_CLOUD_ACCESS_KEY_ID", "ALIYUN_ACCESS_KEY_ID"]),
-    hint: "Set ALIYUN_CLI_PROFILE, or ALIBABA_CLOUD_ACCESS_KEY_ID / ALIBABA_CLOUD_ACCESS_KEY_SECRET in the deployment environment. Values are never printed.",
+    ok: hasAnyEnv(["ALIYUN_CLI_PROFILE", "ALIBABA_CLOUD_ACCESS_KEY_ID", "ALIYUN_ACCESS_KEY_ID"]) || hasAcrLogin,
+    hint: "Set ALIYUN_CLI_PROFILE, ALIBABA_CLOUD_ACCESS_KEY_ID / ALIBABA_CLOUD_ACCESS_KEY_SECRET, or CHANCEPING_ALIYUN_ACR_USERNAME / CHANCEPING_ALIYUN_ACR_PASSWORD. Values are never printed.",
     requiredForStrict: true,
   },
   {
