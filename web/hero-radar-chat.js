@@ -30,6 +30,7 @@
     boundRadarId: AI_EVENT_SAMPLE_ROOM.id,
     pendingFirstMessage: "",
     sidebarCollapsed: false,
+    homeEntryMode: false,
     modal: null,
     isBusy: false,
   };
@@ -328,8 +329,21 @@
     if (/AI|赛事|比赛|Hackathon|黑客松|开发者|OPC/i.test(raw)) return "AI 赛事雷达";
     if (/补贴|申报|政策|专精特新|高新/i.test(raw)) return "政策申报雷达";
     if (/客户|线索|BD|销售|渠道|代理/i.test(raw)) return "客户线索雷达";
-    const compact = raw.replace(/\s+/g, " ").slice(0, 16);
+    const intentMatch = raw.match(/(?:想找|寻找|希望找|帮我找|盯一下|盯|需要)([^。；;，,]{2,32})/);
+    const intentPhrase = cleanRadarTitlePhrase(intentMatch?.[1] || "");
+    if (intentPhrase) return `${intentPhrase}雷达`;
+    const compact = cleanRadarTitlePhrase(raw.replace(/\s+/g, " ").slice(0, 24));
     return compact ? `${compact}雷达` : "新机会雷达";
+  }
+
+  function cleanRadarTitlePhrase(value) {
+    return String(value || "")
+      .replace(/^(一些|更多|近期|未来\s*\d+\s*天内|可以|可报名|的)+/i, "")
+      .replace(/[。；;，,]/g, "")
+      .replace(/\s+/g, " ")
+      .replace(/雷达$/, "")
+      .trim()
+      .slice(0, 24);
   }
 
   function getSampleSidebarWindow() {
@@ -509,6 +523,8 @@
     heroRadarChatState.pendingFirstMessage = typeof windowData.pendingMessage === "string" ? windowData.pendingMessage : "";
     heroRadarChatState.modal = null;
     heroRadarChatState.isBusy = false;
+    heroRadarChatState.homeEntryMode = false;
+    delete document.body.dataset.heroHomeEntry;
     heroRadarChatState.chatWindowId = windowData.id;
     heroRadarChatState.activeChatWindowId = windowData.id;
     heroRadarChatState.boundRadarId = windowData.radarId || null;
@@ -1252,9 +1268,24 @@
     });
   }
 
+  function showHeroHomeEntry() {
+    heroRadarChatState.homeEntryMode = true;
+    document.body.dataset.heroHomeEntry = "true";
+    const root = document.getElementById("hero-radar-chat-root");
+    if (root) root.innerHTML = "";
+    syncHeroEntryVisibility({ forceHomeEntry: true });
+    saveState();
+    document.getElementById("home-input")?.focus();
+  }
+
   function renderHeroRadarChat() {
     const root = document.getElementById("hero-radar-chat-root");
     if (!root) return;
+    if (heroRadarChatState.homeEntryMode || document.body.dataset.heroHomeEntry === "true") {
+      root.innerHTML = "";
+      syncHeroEntryVisibility({ forceHomeEntry: true });
+      return;
+    }
     const chatStarted = heroRadarChatState.messages.length > 0;
     syncHeroEntryVisibility();
     if (!chatStarted) {
@@ -1398,6 +1429,8 @@
 
   async function openHeroRadarWindow() {
     if (window.switchTab) window.switchTab("home");
+    heroRadarChatState.homeEntryMode = false;
+    delete document.body.dataset.heroHomeEntry;
     const wasCustomWindow = heroRadarChatState.boundRadarId !== AI_EVENT_SAMPLE_ROOM.id || (heroRadarChatState.chatWindowId && !isSampleRoomWindowId(heroRadarChatState.activeChatWindowId));
     if (wasCustomWindow) {
       clearHeroRadarConversation();
@@ -1420,6 +1453,8 @@
 
   async function openSampleRoomWithDraftPrompt(initialMessage) {
     if (window.switchTab) window.switchTab("home");
+    heroRadarChatState.homeEntryMode = false;
+    delete document.body.dataset.heroHomeEntry;
     clearHeroRadarConversation();
     heroRadarChatState.boundRadarId = AI_EVENT_SAMPLE_ROOM.id;
     heroRadarChatState.activeChatWindowId = AI_EVENT_SAMPLE_ROOM.id;
@@ -1437,6 +1472,8 @@
 
   async function createNewHeroRadarWindow(initialMessage = "") {
     if (window.switchTab) window.switchTab("home");
+    heroRadarChatState.homeEntryMode = false;
+    delete document.body.dataset.heroHomeEntry;
     const text = String(initialMessage || "").trim();
     if (isChatWindowQuotaFull()) {
       if (text) {
@@ -1461,6 +1498,8 @@
 
   function resetHeroRadarChat() {
     clearHeroRadarConversation();
+    heroRadarChatState.homeEntryMode = true;
+    document.body.dataset.heroHomeEntry = "true";
     sessionStorage.removeItem(STORAGE_KEY);
     const root = document.getElementById("hero-radar-chat-root");
     if (root) root.innerHTML = "";
@@ -1481,6 +1520,8 @@
 
   async function switchHeroRadarWindow(chatWindowId) {
     if (!chatWindowId || heroRadarChatState.isBusy) return false;
+    heroRadarChatState.homeEntryMode = false;
+    delete document.body.dataset.heroHomeEntry;
     if (isSampleRoomWindowId(chatWindowId)) {
       await openHeroRadarWindow();
       return true;
@@ -1932,6 +1973,7 @@
   window.renderRadarArtifact = renderRadarArtifact;
   window.renderReportArtifact = renderReportArtifact;
   window.renderHeroRadarChat = renderHeroRadarChat;
+  window.showHeroHomeEntry = showHeroHomeEntry;
   window.restoreStateFromBackend = restoreStateFromBackend;
   window.syncHeroEntryVisibility = syncHeroEntryVisibility;
   window.resetHeroRadarChat = resetHeroRadarChat;

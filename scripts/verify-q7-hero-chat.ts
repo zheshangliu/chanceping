@@ -37,6 +37,7 @@ async function run() {
   const homeJs = read("web/home.js");
   const radarsJs = read("web/radars.js");
   const watchResultJs = read("web/watch-result.js");
+  const watchRulesEditorJs = read("web/watch-rules-editor.js");
   const radarDetailJs = read("web/radar-detail.js");
   const styles = read("web/styles.css");
   const webUiRoute = read("src/api/routes/web-ui.ts");
@@ -53,6 +54,7 @@ async function run() {
   check("homepage old chat confirmation input is not part of customer primary path", html.includes('class="tab-btn advanced-tab" data-tab="chat" hidden>需求确认</button>'));
   check("home watch button says AI radar action", html.includes("开始画雷达") || html.includes("开始盯机会"));
   check("homepage includes total-console style radar sidebar", html.includes("home-radar-sidebar") && html.includes("新雷达") && html.includes("全球 AI 赛事导航"));
+  check("homepage built-in AI events radar uses customer-facing label", html.includes("V1.0 · 内置导航") && !html.includes("V1.0 · Hero Demo"));
   check("homepage keeps global banner and customer tabs", html.includes('class="top-bar"') && html.includes('data-tab="home"') && html.includes('data-tab="radars"'));
   check("global banner uses full Chinese logo asset", html.includes("ChancePing_cn_logo_transparent.png") && styles.includes("width: 92px"));
   check("Q7G uses blue tech primary token", styles.includes("--accent: #2563eb") && styles.includes("--accent-hover: #1d4ed8") && styles.includes("--signal-cyan: #06b6d4"));
@@ -92,8 +94,13 @@ async function run() {
   check("hero chat restores cards from report artifact after reload", heroChatJs.includes("restoreCurrentResultFromReportArtifact") && heroChatJs.includes("chat_report_artifact"));
   check("hero chat can recover demo cards from public AI events when snapshot is missing", heroChatJs.includes("restoreCurrentResultFromPublicEvents") && heroChatJs.includes("demo_replay_restored"));
   check("hero chat script renders GPT-like sidebar", heroChatJs.includes("hero-radar-sidebar") && heroChatJs.includes("全球 AI 赛事导航"));
+  check("home tab restores entry shell instead of stale chat workspace", homeJs.includes("showHeroHomeEntry") && !homeJs.includes("forceChatActive: true"));
+  check("legacy tab manager delegates to shared switchTab", watchRulesEditorJs.includes('typeof window.switchTab === "function"') && watchRulesEditorJs.includes("window.switchTab(tabName);"));
+  check("hero chat exposes home entry restore without clearing chat state", heroChatJs.includes("function showHeroHomeEntry") && heroChatJs.includes("window.showHeroHomeEntry = showHeroHomeEntry"));
+  check("hero chat guards home entry from async rerenders", heroChatJs.includes("homeEntryMode") && heroChatJs.includes("heroRadarChatState.homeEntryMode = true") && heroChatJs.includes('document.body.dataset.heroHomeEntry = "true"') && heroChatJs.includes('document.body.dataset.heroHomeEntry === "true"'));
   check("hero chat loads radar chat windows for sidebar", heroChatJs.includes("loadRadarChatWindows") && heroChatJs.includes("/api/radar-chats"));
   check("hero chat supports isolated QA user id without changing default demo user", heroChatJs.includes("getHeroChatUserId") && heroChatJs.includes("hero_chat_user_id") && heroChatJs.includes('DEFAULT_USER_ID = "demo_user"'));
+  check("custom radar title infers readable intent phrase", heroChatJs.includes("cleanRadarTitlePhrase") && heroChatJs.includes("想找|寻找|希望找|帮我找|盯一下|盯|需要"));
   check("hero chat can switch active chat window", heroChatJs.includes("switchHeroRadarWindow") && heroChatJs.includes("/api/radar-chats/${chatWindowId}"));
   check("sample room remains a protected built-in window", heroChatJs.includes("AI_EVENT_SAMPLE_ROOM") && heroChatJs.includes("isSampleRoom"));
   check("sidebar keeps distinct unbound chat windows", heroChatJs.includes("radar:${item.radarId}") && heroChatJs.includes("chat:${item.id}"));

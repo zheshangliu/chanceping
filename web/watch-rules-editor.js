@@ -425,6 +425,10 @@
     },
 
     switchTo(tabName) {
+      if (typeof window.switchTab === "function") {
+        window.switchTab(tabName);
+        return;
+      }
       document.querySelectorAll(".tab-btn").forEach((btn) => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
       });
