@@ -71,6 +71,7 @@ async function run() {
   check("homepage hides demo prompt chips from primary path", html.includes("hero-demo-prompts") && /class="hero-demo-prompts"[^>]*hidden/.test(html) && html.includes("AI 赛事雷达 Demo") && html.includes("OPC 创业者") && html.includes("只要报名入口"));
   check("homepage has product preview tray", html.includes("home-preview-tray") && html.includes("雷达画像") && html.includes("运行进度") && html.includes("先看这 3 个") && html.includes("Markdown 报告"));
   check("homepage AI event radar opens existing chat window", html.includes('data-action="open-ai-event-radar"') && homeJs.includes("openHeroRadarWindow"));
+  check("homepage AI event radar click has delegated fallback binding", homeJs.includes('document.addEventListener("click"') && homeJs.includes("[data-action='open-ai-event-radar']") && homeJs.includes("[data-action='create-new-radar']"));
   check("homepage start button creates a new radar window", homeJs.includes("createNewHeroRadarWindow") && !homeJs.includes("text = input.value.trim() || window.CHANCEPING_AI_EVENT_DEMO_PROMPT"));
   check("empty homepage start refocuses the input after warning", homeJs.includes('showToast("请输入你想盯的机会", "warning");\n      input.focus();'));
   check("homepage new radar button creates an empty radar window", html.includes('data-action="create-new-radar"') && homeJs.includes("createNewHeroRadarWindow(\"\")"));
@@ -198,7 +199,7 @@ async function run() {
   check("result opportunity cards use demo-friendly action copy", watchResultJs.includes("为什么值得看") && watchResultJs.includes("本周先做") && watchResultJs.includes("来源入口"));
   check("result opportunity cards avoid raw chip labels", watchResultJs.includes("建议：") && watchResultJs.includes("性质：") && watchResultJs.includes("证据："));
   check("result report summary points users to source evidence cards", watchResultJs.includes("完整来源、字段证据和排除原因") && watchResultJs.includes("查看机会卡"));
-  check("result page hero demo title is AI event radar", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("AI 赛事雷达"));
+  check("result page hero demo title uses global AI events navigator name", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("全球 AI 赛事导航") && !watchResultJs.includes('return "AI 赛事雷达"'));
   check("result page puts report summary after opportunity cards", watchResultJs.indexOf("watch-opportunity-grid") > -1 && watchResultJs.indexOf("report-summary") > watchResultJs.indexOf("watch-opportunity-grid"));
   check("my radar view enters the shared result surface", radarsJs.includes("查看机会和报告") && radarsJs.includes("window.showWatchResult"));
   check("my radars edit opens linked radar chat window", radarsJs.includes("openHeroRadarForRadar") || radarsJs.includes("openRadarChatForRadar"));
@@ -206,8 +207,8 @@ async function run() {
   check("my radar view uses intelligence command center copy", html.includes("情报流指挥台") && radarsJs.includes("radar-command-card") && styles.includes(".radar-command-metrics"));
   check("my radar view displays public AI events hero name", radarsJs.includes("PUBLIC_AI_EVENTS_DISPLAY_NAME") && radarsJs.includes("全球 AI 赛事导航"));
   check("my radar view normalizes duplicate legacy hero demo names", radarsJs.includes("PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE") && radarsJs.includes("个人开发者的个人开发者比赛机会雷达"));
-  check("my radar metric boxes avoid cramped four-column wrapping", styles.includes(".radar-command-metrics") && styles.includes("grid-template-columns: 1fr") && styles.includes("white-space: nowrap"));
-  check("my radar metric boxes use readable row layout", styles.includes(".radar-command-metrics div") && styles.includes("grid-template-columns: minmax(64px, auto) 1fr"));
+  check("my radar metric boxes avoid cramped vertical wrapping", styles.includes(".radar-command-metrics") && styles.includes("grid-template-columns: repeat(2, minmax(0, 1fr))") && styles.includes("white-space: nowrap"));
+  check("my radar metric boxes use readable stacked labels", styles.includes(".radar-command-metrics div") && styles.includes("display: flex") && styles.includes("min-width: 112px"));
   check("my radar cards show version status last run and new count", radarsJs.includes("版本") && radarsJs.includes("状态") && radarsJs.includes("上次运行") && radarsJs.includes("本次新增"));
   check("result page has one radar revision action", watchResultJs.includes("调整雷达画像") && !watchResultJs.includes("这些结果不对，修改雷达"));
   check("result page card grid CSS is responsive", styles.includes(".watch-opportunity-grid") && styles.includes("repeat(auto-fit, minmax(260px, 1fr))"));

@@ -142,7 +142,7 @@
     const radarVersionName = result?.radarVersion?.oneSentencePositioning || result?.radarVersion?.name || "";
     const suggested = result?.suggestedName || radarVersionName || "";
     if (/AI|赛事|Hackathon|马拉松|开发者挑战|云资源|OPC/i.test(`${suggested} ${result?.description || ""}`)) {
-      return "AI 赛事雷达";
+      return "全球 AI 赛事导航";
     }
     return suggested || "本次盯机会结果";
   }

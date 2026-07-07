@@ -169,20 +169,27 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("文件会作为画像补充材料使用，不会直接当作机会结果。", "warning");
   });
 
-  document.querySelectorAll("[data-action='open-ai-event-radar']").forEach((button) => button.addEventListener("click", () => {
-    if (window.openHeroRadarWindow) {
-      window.openHeroRadarWindow();
+  document.addEventListener("click", (event) => {
+    const openAiEventRadarButton = event.target?.closest?.("[data-action='open-ai-event-radar']");
+    if (openAiEventRadarButton) {
+      event.preventDefault();
+      if (window.openHeroRadarWindow) {
+        window.openHeroRadarWindow();
+        return;
+      }
+      showToast("全球 AI 赛事导航窗口还没准备好", "warning");
       return;
     }
-    showToast("AI 赛事雷达窗口还没准备好", "warning");
-  }));
 
-  document.querySelector("[data-action='create-new-radar']")?.addEventListener("click", () => {
-    if (window.createNewHeroRadarWindow) {
-      window.createNewHeroRadarWindow("");
-      return;
+    const createNewRadarButton = event.target?.closest?.("[data-action='create-new-radar']");
+    if (createNewRadarButton) {
+      event.preventDefault();
+      if (window.createNewHeroRadarWindow) {
+        window.createNewHeroRadarWindow("");
+        return;
+      }
+      showToast("新雷达窗口还没准备好", "warning");
     }
-    showToast("新雷达窗口还没准备好", "warning");
   });
 
   watchBtn.addEventListener("click", () => {

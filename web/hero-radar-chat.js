@@ -1163,7 +1163,7 @@
             <span class="hero-version-pill">删除</span>
           </div>
           <h3>删除「${escapeHtml(title)}」？</h3>
-          <p class="hero-modal-helper">删除后将从列表移除，这个雷达窗口的聊天记录不再保留。AI 赛事雷达内置窗口不会被删除。</p>
+          <p class="hero-modal-helper">删除后将从列表移除，这个雷达窗口的聊天记录不再保留。全球 AI 赛事导航内置窗口不会被删除。</p>
           <div class="hero-window-modal-actions">
             <button type="button" class="secondary-btn" data-action="close-hero-modal">先不删除</button>
             <button type="button" class="danger-btn" data-action="confirm-window-delete" data-chat-window-id="${escapeHtml(modal?.chatWindowId || "")}">确认删除</button>

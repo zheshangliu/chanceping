@@ -39,7 +39,7 @@ interface BuiltinRadarConfig {
 const BUILTIN_RADARS: BuiltinRadarConfig[] = [
   {
     id: "builtin_ai_competition",
-    name: "AI 赛事雷达",
+    name: "全球 AI 赛事导航",
     kind: "ai_competition",
     providerRouting: { primary: ["serper", "exa"], fallback: [] },
   },
