@@ -100,6 +100,7 @@ async function run() {
   check("hero chat guards home entry from async rerenders", heroChatJs.includes("homeEntryMode") && heroChatJs.includes("heroRadarChatState.homeEntryMode = true") && heroChatJs.includes('document.body.dataset.heroHomeEntry = "true"') && heroChatJs.includes('document.body.dataset.heroHomeEntry === "true"'));
   check("hero chat loads radar chat windows for sidebar", heroChatJs.includes("loadRadarChatWindows") && heroChatJs.includes("/api/radar-chats"));
   check("hero chat supports isolated QA user id without changing default demo user", heroChatJs.includes("getHeroChatUserId") && heroChatJs.includes("hero_chat_user_id") && heroChatJs.includes('DEFAULT_USER_ID = "demo_user"'));
+  check("hero chat local session keys are isolated by QA user id", heroChatJs.includes("chanceping_hero_radar_chat_state:${HERO_CHAT_USER_ID}") && heroChatJs.includes("chanceping_hero_radar_chat_window_id:${HERO_CHAT_USER_ID}"));
   check("custom radar title infers readable intent phrase", heroChatJs.includes("cleanRadarTitlePhrase") && heroChatJs.includes("想找|寻找|希望找|帮我找|盯一下|盯|需要"));
   check("hero chat can switch active chat window", heroChatJs.includes("switchHeroRadarWindow") && heroChatJs.includes("/api/radar-chats/${chatWindowId}"));
   check("sample room remains a protected built-in window", heroChatJs.includes("AI_EVENT_SAMPLE_ROOM") && heroChatJs.includes("isSampleRoom"));

@@ -1,11 +1,11 @@
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "chanceping_hero_radar_chat_state";
-  const LAST_CHAT_WINDOW_KEY = "chanceping_hero_radar_chat_window_id";
   const SIDEBAR_COLLAPSED_KEY = "chanceping-sidebar-collapsed";
   const DEFAULT_USER_ID = "demo_user";
   const HERO_CHAT_USER_ID = getHeroChatUserId();
+  const STORAGE_KEY = `chanceping_hero_radar_chat_state:${HERO_CHAT_USER_ID}`;
+  const LAST_CHAT_WINDOW_KEY = `chanceping_hero_radar_chat_window_id:${HERO_CHAT_USER_ID}`;
   const CHAT_WINDOW_LIMIT = 3;
   const QUOTA_ERROR_CODE = "RADAR_CHAT_QUOTA_EXCEEDED";
   const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
