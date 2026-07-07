@@ -34,6 +34,7 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "ut
   "verify:q7:aliyun-remote-smoke",
   "verify:q7:aliyun-container-smoke",
   "verify:q7:aliyun-preflight",
+  "verify:q7:aliyun-deploy-prereqs",
   "CHANCEPING_DEPLOY_BASE_URL",
   "verify:q7:docker-readiness",
   "CHANCEPING_DOCKER_NODE_IMAGE",
@@ -54,6 +55,7 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "ut
 check("runbook says api.env is not committed", /不提交 `api\.env`/.test(text));
 check("runbook keeps verify:all mock-safe", /verify:all.*mock-safe/.test(text));
 check("runbook documents one-command Aliyun preflight", /node --run verify:q7:aliyun-preflight/.test(text) && /CHANCEPING_SKIP_ALIYUN_CONTAINER_SMOKE=true/.test(text));
+check("runbook documents strict Aliyun deploy prerequisite gate", /CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true node --run verify:q7:aliyun-deploy-prereqs/.test(text));
 check("runbook explains built-in radar quota bypass", /内置雷达不占用 3 个自定义额度/.test(text));
 check("runbook has backend Qwen wording step", /4\.5 后端页面 Qwen 文案复核/.test(text) && /不出现 DeepSeek 字样/.test(text));
 check("runbook says api.env stays out of image", /`api\.env` 不进入镜像/.test(text));

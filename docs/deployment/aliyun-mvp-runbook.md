@@ -78,6 +78,22 @@ node --run verify:q7:aliyun-container-smoke
 node --run verify:all
 ```
 
+真实上云前，再跑一次部署前置条件检查：
+
+```bash
+node --run verify:q7:aliyun-deploy-prereqs
+```
+
+默认是 report-only 模式：它只检查本机/CI 是否已经具备 Docker、阿里云 CLI 或远程 URL、阿里云凭据变量名、ACR 镜像目标和远程 smoke URL，不会打印任何密钥值。
+
+当你准备真正部署时，用严格模式阻断缺项：
+
+```bash
+CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true node --run verify:q7:aliyun-deploy-prereqs
+```
+
+当前机器如果缺少 `aliyun` CLI、ACR 目标、阿里云凭据或 `CHANCEPING_DEPLOY_BASE_URL`，严格模式会失败；这表示还不能声称已经可真实上云。
+
 `verify:q7:aliyun-smoke` 会模拟两个不同用户：
 
 - 每个用户都能打开内置「全球 AI 赛事导航」雷达；

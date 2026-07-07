@@ -42,6 +42,7 @@ check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] =
 check("Aliyun remote smoke verifier is registered", scripts["verify:q7:aliyun-remote-smoke"] === "tsx scripts/verify-q7-aliyun-remote-smoke.ts");
 check("Aliyun container smoke verifier is registered", scripts["verify:q7:aliyun-container-smoke"] === "tsx scripts/verify-q7-aliyun-container-smoke.ts");
 check("Aliyun preflight verifier is registered", scripts["verify:q7:aliyun-preflight"] === "tsx scripts/verify-q7-aliyun-preflight.ts");
+check("Aliyun deploy prereq verifier is registered", scripts["verify:q7:aliyun-deploy-prereqs"] === "tsx scripts/verify-q7-aliyun-deploy-prereqs.ts");
 check("Docker readiness verifier is registered", scripts["verify:q7:docker-readiness"] === "tsx scripts/verify-q7-docker-readiness.ts");
 check("LLM comparison verifier is registered", scripts["verify:q7:llm-comparison"] === "tsx scripts/verify-q7-llm-comparison.ts");
 check(
@@ -88,6 +89,11 @@ check(
   "Aliyun runbook documents one-command preflight",
   aliyunRunbook.includes("verify:q7:aliyun-preflight")
     && aliyunRunbook.includes("CHANCEPING_SKIP_ALIYUN_CONTAINER_SMOKE"),
+);
+check(
+  "Aliyun runbook documents real deploy prerequisite gate",
+  aliyunRunbook.includes("verify:q7:aliyun-deploy-prereqs")
+    && aliyunRunbook.includes("CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true"),
 );
 check("Aliyun runbook documents post-deploy LLM comparison", aliyunRunbook.includes("compare:live-llm-profiles") && aliyunRunbook.includes("不放进当前阿里云前置闸门"));
 check("Aliyun env example uses Qwen contest profile", aliyunEnvExample.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunEnvExample.includes("CONTEST_LLM_PROVIDER=qwen"));
