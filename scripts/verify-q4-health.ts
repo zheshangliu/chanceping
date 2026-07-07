@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { loadLocalApiEnv } from "../src/config/local-env";
 import { isLocalLiveSearchEnabled } from "../src/config/local-live-search";
 import { resolveLiveLlmProfile, toLiveLlmPublicProfile } from "../src/config/live-llm-profile";
-import { DeepSeekAdapter } from "../src/agents/deepseek-adapter";
+import { QwenAdapter } from "../src/agents/qwen-adapter";
 
 let passed = 0;
 let failed = 0;
@@ -41,7 +41,7 @@ async function main(): Promise<void> {
 
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH = "true";
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM = "true";
-  process.env.CHANCEPING_LLM_PROFILE = "commercial";
+  process.env.CHANCEPING_LLM_PROFILE = "contest";
   process.env.LLM_MODE = "live";
   process.env.DATA_MODE = "mock";
 
@@ -56,9 +56,9 @@ async function main(): Promise<void> {
     const profile = resolveLiveLlmProfile();
     const publicInfo = toLiveLlmPublicProfile(profile);
     publicProfile = `${publicInfo.profile}/${publicInfo.provider}/${publicInfo.model}`;
-    check("commercial live LLM profile resolves", publicInfo.profile === "commercial" && publicInfo.provider === "deepseek", publicProfile);
+    check("contest live LLM profile resolves", publicInfo.profile === "contest" && publicInfo.provider === "qwen", publicProfile);
 
-    const adapter = new DeepSeekAdapter({
+    const adapter = new QwenAdapter({
       apiKey: profile.apiKey,
       model: profile.model,
       baseUrl: profile.baseUrl,
@@ -73,9 +73,9 @@ async function main(): Promise<void> {
       response_format: "text",
       temperature: 0,
     });
-    check("DeepSeek minimal live call succeeds", llmResponse.content.trim().length > 0 && !/sk-|API_KEY|Bearer/i.test(llmResponse.content), llmResponse.content.slice(0, 80));
+    check("Qwen minimal live call succeeds", llmResponse.content.trim().length > 0 && !/sk-|API_KEY|Bearer/i.test(llmResponse.content), llmResponse.content.slice(0, 80));
   } catch (err) {
-    check("DeepSeek minimal live call succeeds", false, sanitize(err));
+    check("Qwen minimal live call succeeds", false, sanitize(err));
   }
 
   const { providerRegistry } = await import("../src/search/provider-registry");

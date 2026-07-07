@@ -224,7 +224,7 @@ async function run() {
       period_start: "2026-06-27",
       period_end: "2026-07-04",
     },
-    { profile: "commercial", provider: "deepseek", model: "deepseek-chat" },
+    { profile: "contest", provider: "qwen", model: "qwen-plus" },
   );
   const safeExplanationText = JSON.stringify(safeExplanation);
   check("live LLM explanation sanitizes forbidden overclaims", !/已确认报名资格|已核验报名资格|已确认费用|已核验费用|已确认截止日期|已核验截止日期|已确认联系人|已核验联系人|已确认报名状态|已核验报名状态|已确认版权义务|已核验版权义务/.test(safeExplanationText), safeExplanationText);

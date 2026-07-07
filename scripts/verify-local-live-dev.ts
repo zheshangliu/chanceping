@@ -23,7 +23,7 @@ const verifyAll = scripts["verify:all"] ?? "";
 
 check("dev explicitly loads local api.env", dev.includes("CHANCEPING_LOAD_API_ENV=true"));
 check("dev enables local live LLM", dev.includes("CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true"));
-check("dev selects commercial profile", dev.includes("CHANCEPING_LLM_PROFILE=commercial"));
+check("dev selects contest profile", dev.includes("CHANCEPING_LLM_PROFILE=contest"));
 check("dev selects live LLM mode", dev.includes("LLM_MODE=live"));
 check("dev explicitly enables local live search", dev.includes("CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true"));
 check("start does not implicitly enable local live LLM", !start.includes("CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true"));

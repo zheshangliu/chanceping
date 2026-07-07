@@ -194,7 +194,7 @@ async function main(): Promise<void> {
     await page.waitForFunction(() => {
       const doc = (globalThis as any).document;
       const text = doc.querySelector(".hero-progress-artifact")?.textContent || "";
-      return Boolean(doc.querySelector(".hero-report-artifact")) || text.includes("Serper") || text.includes("搜索计划") || text.includes("网页读取") || text.includes("DeepSeek");
+      return Boolean(doc.querySelector(".hero-report-artifact")) || text.includes("Serper") || text.includes("搜索计划") || text.includes("网页读取") || text.includes("Qwen");
     }, { timeout: 15_000 });
     currentStage = "wait report artifact";
     await page.waitForSelector(".hero-report-artifact", { timeout: 20_000 });

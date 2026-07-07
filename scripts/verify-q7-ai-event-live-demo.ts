@@ -63,7 +63,7 @@ async function main(): Promise<void> {
 
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH = "true";
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM = "true";
-  process.env.CHANCEPING_LLM_PROFILE = process.env.CHANCEPING_LLM_PROFILE || "commercial";
+  process.env.CHANCEPING_LLM_PROFILE = process.env.CHANCEPING_LLM_PROFILE || "contest";
   process.env.LLM_MODE = "live";
   process.env.DATA_MODE = "live";
   process.env.NODE_ENV = process.env.NODE_ENV === "production" ? "development" : process.env.NODE_ENV;

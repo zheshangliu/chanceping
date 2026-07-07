@@ -75,17 +75,17 @@ async function main(): Promise<void> {
   process.env.LLM_MODE = process.env.LLM_MODE ?? "live";
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH = process.env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH ?? "true";
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM = process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM ?? "true";
-  process.env.CHANCEPING_LLM_PROFILE = process.env.CHANCEPING_LLM_PROFILE ?? "commercial";
+  process.env.CHANCEPING_LLM_PROFILE = process.env.CHANCEPING_LLM_PROFILE ?? "contest";
 
   if (!process.env.SERPER_API_KEY) {
     throw new Error("Q4 live server requires SERPER_API_KEY after api.env load; key value is not printed.");
   }
   if (
-    process.env.CHANCEPING_LLM_PROFILE === "commercial"
-    && !process.env.COMMERCIAL_LLM_API_KEY
-    && !process.env.DEEPSEEK_API_KEY
+    process.env.CHANCEPING_LLM_PROFILE === "contest"
+    && !process.env.CONTEST_LLM_API_KEY
+    && !process.env.DASHSCOPE_API_KEY
   ) {
-    throw new Error("Q4 live server requires commercial LLM API key after api.env load; key value is not printed.");
+    throw new Error("Q4 live server requires contest Qwen LLM API key after api.env load; key value is not printed.");
   }
 
   const [{ createApp }, { providerRegistry }] = await Promise.all([

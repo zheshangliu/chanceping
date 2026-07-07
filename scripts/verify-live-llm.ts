@@ -154,31 +154,31 @@ async function main(): Promise<void> {
   const scriptSource = readFileSync("scripts/verify-live-llm.ts", "utf-8");
 
   check("verify:live-llm is opt-in and not part of verify:all", !String(packageJson.scripts?.["verify:all"] ?? "").includes("verify:live-llm"));
-  check("verify:live-llm script uses commercial profile", String(packageJson.scripts?.["verify:live-llm"] ?? "").includes("CHANCEPING_LLM_PROFILE=commercial"));
+  check("verify:live-llm script uses contest profile", String(packageJson.scripts?.["verify:live-llm"] ?? "").includes("CHANCEPING_LLM_PROFILE=contest"));
   check("live LLM script does not print API key values or prefixes", !/API_KEY\s*=|substring\(|slice\(0,\s*8/.test(scriptSource));
   const ignored = spawnSync("git", ["check-ignore", "-q", "api.env"], { cwd: process.cwd(), stdio: "ignore" });
   check("api.env is git-ignored", ignored.status === 0);
 
   const missingConfigEnv = {
     CHANCEPING_ENABLE_LOCAL_LIVE_LLM: "true",
-    CHANCEPING_LLM_PROFILE: "commercial",
+    CHANCEPING_LLM_PROFILE: "contest",
   };
   try {
     resolveLiveLlmProfile({ env: missingConfigEnv, nodeEnv: "development" });
-    check("commercial profile missing config fails clearly", false, "resolver succeeded unexpectedly");
+    check("contest profile missing config fails clearly", false, "resolver succeeded unexpectedly");
   } catch (err) {
-    check("commercial profile missing config fails clearly", err instanceof LiveLlmProfileError && err.code === "LIVE_LLM_CONFIG_MISSING", sanitize(err));
+    check("contest profile missing config fails clearly", err instanceof LiveLlmProfileError && err.code === "LIVE_LLM_CONFIG_MISSING", sanitize(err));
   }
   try {
     resolveLiveLlmProfile({
       env: {
         ...process.env,
         CHANCEPING_ENABLE_LOCAL_LIVE_LLM: "true",
-        CHANCEPING_LLM_PROFILE: "commercial",
-        COMMERCIAL_LLM_PROVIDER: "deepseek",
-        COMMERCIAL_LLM_MODEL: "deepseek-chat",
-        COMMERCIAL_LLM_BASE_URL: "https://api.deepseek.com/v1",
-        COMMERCIAL_LLM_API_KEY: "redacted-test-key",
+        CHANCEPING_LLM_PROFILE: "contest",
+        CONTEST_LLM_PROVIDER: "qwen",
+        CONTEST_LLM_MODEL: "qwen-plus",
+        CONTEST_LLM_BASE_URL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        CONTEST_LLM_API_KEY: "redacted-test-key",
       },
       nodeEnv: "production",
     });
@@ -193,21 +193,21 @@ async function main(): Promise<void> {
   process.env.DATA_MODE = "mock";
   process.env.LLM_MODE = "live";
   process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM = "true";
-  process.env.CHANCEPING_LLM_PROFILE = "commercial";
+  process.env.CHANCEPING_LLM_PROFILE = "contest";
 
   let publicProfile = "";
   try {
     const profile = resolveLiveLlmProfile();
     const publicInfo = toLiveLlmPublicProfile(profile);
     publicProfile = `${publicInfo.profile}/${publicInfo.provider}/${publicInfo.model}`;
-    check("commercial profile resolves as DeepSeek", publicInfo.profile === "commercial" && publicInfo.provider === "deepseek", publicProfile);
-    check("commercial profile has model without exposing key", Boolean(publicInfo.model) && !publicProfile.includes(profile.apiKey), publicProfile);
+    check("contest profile resolves as Qwen", publicInfo.profile === "contest" && publicInfo.provider === "qwen", publicProfile);
+    check("contest profile has model without exposing key", Boolean(publicInfo.model) && !publicProfile.includes(profile.apiKey), publicProfile);
     console.log(`Live LLM profile: ${publicProfile}`);
   } catch (err) {
-    check("commercial profile resolves", false, sanitize(err));
+    check("contest profile resolves", false, sanitize(err));
   }
 
-  if (!process.env.COMMERCIAL_LLM_API_KEY && !process.env.DEEPSEEK_API_KEY) {
+  if (!process.env.CONTEST_LLM_API_KEY && !process.env.DASHSCOPE_API_KEY) {
     console.log(`live LLM verification: ${passed} PASS / ${failed} FAIL`);
     process.exit(1);
   }
@@ -336,7 +336,7 @@ async function main(): Promise<void> {
     };
     const markdown = reportJson.data?.markdown ?? "";
     check("live LLM report explanation succeeds", reportResponse.status === 200 && reportJson.success === true, reportJson.error?.message ?? `status=${reportResponse.status}`);
-    check("report records live LLM profile only", markdown.includes("Live LLM profile：commercial / deepseek /") && !/sk-|COMMERCIAL_LLM_API_KEY|DEEPSEEK_API_KEY/.test(markdown));
+    check("report records live LLM profile only", markdown.includes("Live LLM profile：contest / qwen /") && !/sk-|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|DEEPSEEK_API_KEY|DASHSCOPE_API_KEY|SERPER_API_KEY/.test(markdown));
     check("report keeps explanation inside model judgment", markdown.includes("以下内容属于基于 evidence status 的模型判断，不是字段级已核验事实。"));
     check("report keeps review-needed language", markdown.includes("待复核"));
     check("report avoids forbidden verified claims", !includesAny(markdown, FORBIDDEN_REPORT_CLAIMS.map((claim) => new RegExp(claim, "g"))));
