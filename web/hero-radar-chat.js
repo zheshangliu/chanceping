@@ -1397,7 +1397,7 @@
       heroRadarChatState.pendingFirstMessage = HERO_DEMO_PROMPT;
     }
     if (heroRadarChatState.messages.length === 0) {
-      addMessage("assistant", "继续编辑 AI 赛事雷达。我已把默认需求放到底部输入框，你可以直接发送，也可以先改成自己的需求。");
+      addMessage("assistant", "继续编辑全球 AI 赛事导航。我已把默认需求放到底部输入框，你可以直接发送，也可以先改成自己的需求。");
     } else {
       saveState();
       renderHeroRadarChat();

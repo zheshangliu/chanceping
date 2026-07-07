@@ -136,7 +136,7 @@ async function run() {
   check("hero chat shows a three-step beginner guide", heroChatJs.includes("1. 说需求") && heroChatJs.includes("2. 看雷达") && heroChatJs.includes("3. 确认后搜索"));
   check("hero chat can reset the current demo", heroChatJs.includes("hero-chat-reset") && heroChatJs.includes("resetHeroRadarChat"));
   check("hero chat reset returns to home input instead of blank workspace", heroChatJs.includes("forceHomeEntry") && heroChatJs.includes("syncHeroEntryVisibility({ forceHomeEntry: true })"));
-  check("hero chat exposes open existing radar window flow", heroChatJs.includes("openHeroRadarWindow") && heroChatJs.includes("继续编辑 AI 赛事雷达"));
+  check("hero chat exposes open existing radar window flow", heroChatJs.includes("openHeroRadarWindow") && heroChatJs.includes("继续编辑全球 AI 赛事导航"));
   check("opening AI event radar preloads demo prompt without auto-send", heroChatJs.includes("pendingFirstMessage = HERO_DEMO_PROMPT") && heroChatJs.includes("我已把默认需求放到底部输入框"));
   check("custom radar window restores pending input after switching", heroChatJs.includes("windowData.pendingMessage") && heroChatJs.includes("pendingMessage: String(initialMessage || \"\")"));
   check("chat input draft persists before manual send", heroChatJs.includes("syncPendingInputMessage") && heroChatJs.includes("addEventListener(\"input\""));
