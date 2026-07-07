@@ -100,7 +100,7 @@ export const AI_COMPETITION_QUESTIONS: QuestionToConfirm[] = [
     priority: "medium",
   },
   {
-    question: "你是否希望比赛必须支持使用 Qwen、DeepSeek、GPT、Trae、Codex 等工具？",
+    question: "你是否希望比赛必须支持使用 Qwen、Trae、Codex、GPT 等工具？",
     why_it_matters: "must_have_conditions 细化 opportunity_scope，提升匹配精度。",
     related_field: "opportunity_scope.must_have_conditions",
     priority: "medium",

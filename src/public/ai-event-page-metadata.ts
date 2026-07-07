@@ -207,13 +207,24 @@ function extractRewardFromText(text: string): string | undefined {
     .split(/[。.!?]\s*/)
     .map((item) => item.trim())
     .filter(Boolean);
+  const negativeRewardContext = /没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i;
+  const sentenceForIndex = (index: number): string => {
+    const before = text.slice(0, index);
+    const after = text.slice(index);
+    const left = Math.max(before.lastIndexOf("。"), before.lastIndexOf("."), before.lastIndexOf("!"), before.lastIndexOf("?"));
+    const endMatches = [after.search(/[。.!?]/)].filter((item) => item >= 0);
+    const rightOffset = endMatches.length > 0 ? Math.min(...endMatches) : after.length;
+    return text.slice(left + 1, index + rightOffset).trim();
+  };
   const concisePatterns = [
     /(?:total\s+prizes?|prize\s+pool|cash\s+prize|awards?|rewards?)\s+(?:include|includes|including|up\s+to|worth|of|:)?\s*[^。.!?\n]{0,90}/i,
     /(?:奖金池|总奖金|现金奖励|奖品|奖励|奖项|云资源|算力|扶持资源)[^。.!?\n]{0,90}/i,
   ];
   for (const pattern of concisePatterns) {
-    const match = text.match(pattern)?.[0]?.trim();
-    if (match && !/没有(?:直接)?给出明确|未(?:直接)?给出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i.test(match)) {
+    const matched = pattern.exec(text);
+    const match = matched?.[0]?.trim();
+    const contextSentence = typeof matched?.index === "number" ? sentenceForIndex(matched.index) : match ?? "";
+    if (match && !negativeRewardContext.test(contextSentence)) {
       return match.slice(0, 90);
     }
   }
@@ -221,7 +232,7 @@ function extractRewardFromText(text: string): string | undefined {
     const concrete = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|cloud\s*credits?|API\s*credits?|credits?|云资源|算力|奖池|奖金池|展映|showcase\s+opportunit)/i;
     const moneyOrPrizePool = /(\$|￥|\bUSD\b|\bRMB\b|\bUSDT\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)|prize\s*pool|cash\s*prize|cash|奖池|奖金池)/i;
     const genericNews = /本报讯|报道称|报道|举行|嘉宾|产业|政策|背景|交流活动|现场|观众|发言|启幕|发布会/i;
-    if (/没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i.test(sentence)) return false;
+    if (negativeRewardContext.test(sentence)) return false;
     if (sentence.length > 60 && !moneyOrPrizePool.test(sentence)) return false;
     if (sentence.length > 80 && !moneyOrPrizePool.test(sentence)) return false;
     if (concrete.test(sentence)) return true;
@@ -317,7 +328,12 @@ function pickJsonLdReward(value: unknown): string | undefined {
   }
   const record = asRecord(value);
   if (record) {
-    return String(record.name ?? record.description ?? record.price ?? "");
+    const named = String(record.name ?? record.description ?? "").trim();
+    if (named) return named;
+    const price = String(record.price ?? "").trim();
+    if (!price || /^(?:0|0\.0+|free)$/i.test(price)) return undefined;
+    if (!/[$￥€£]|\b(?:USD|RMB|EUR|GBP|USDT)\b|\d+\s*(?:万|万元|元|k|K|m|M|million|billion)/i.test(price)) return undefined;
+    return price;
   }
   return typeof value === "string" ? value : undefined;
 }
