@@ -1675,8 +1675,8 @@
     }
     updateRadarChatWindow({ pendingMessage: "" });
     addMessage("assistant", heroRadarChatState.currentDraft
-      ? "收到，我会先让 DeepSeek 理解这句话，生成新版雷达草案；你确认后我才会搜索。"
-      : "我先让 DeepSeek 理解你的需求，把复杂人话整理成 AI 赛事雷达 V1.0。");
+      ? "收到，我会先让 Qwen 理解这句话，生成新版雷达草案；你确认后我才会搜索。"
+      : "我先让 Qwen 理解你的需求，把复杂人话整理成 AI 赛事雷达 V1.0。");
     try {
       if (!heroRadarChatState.currentDraft) {
         const data = await postJson("/api/radars/generate", { description: text, chatWindowId });
@@ -1823,7 +1823,7 @@
         "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
         "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
         "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
-        "DeepSeek：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+        "Qwen：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
         "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤；不用刷新页面，我会持续更新这里。",
       ];
     const timerId = window.setInterval(() => {

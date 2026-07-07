@@ -842,7 +842,7 @@ textarea {
 
 .home-input-area {
   width: min(820px, 100%);
-  min-height: 88px;
+  min-height: 108px;
   margin: 0 auto 8px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -857,7 +857,7 @@ textarea {
 
 .home-input-area textarea {
   width: 100%;
-  min-height: 64px;
+  min-height: 88px;
   max-height: 180px;
   padding: 12px 4px;
   background-color: transparent;
@@ -882,7 +882,7 @@ textarea {
 .home-input-area #home-start-btn,
 .home-input-area #home-watch-btn {
   align-self: center;
-  min-height: 54px;
+  min-height: 60px;
   padding: 12px 24px;
   background-color: var(--accent);
   color: #fff;
@@ -1400,6 +1400,12 @@ textarea {
     min-height: auto;
     border-right: 0;
     border-bottom: 1px solid var(--border);
+  }
+
+  .home-main-stage {
+    min-height: auto;
+    justify-content: flex-start;
+    padding: 28px 14px 32px;
   }
 
   .home-logo {
@@ -2626,21 +2632,25 @@ textarea {
 
 .radar-command-metrics {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: 1fr;
+  gap: 6px;
 }
 
 .radar-command-metrics div {
   min-width: 0;
-  padding: 10px;
+  padding: 8px 10px;
   border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
   border-radius: 8px;
   background: color-mix(in srgb, var(--accent) 4%, var(--bg-primary));
+  display: grid;
+  grid-template-columns: minmax(64px, auto) 1fr;
+  align-items: center;
+  gap: 10px;
 }
 
 .radar-command-metrics span {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 0;
   color: var(--text-secondary);
   font-size: 11px;
   white-space: nowrap;
@@ -5059,7 +5069,7 @@ body.hero-chat-active .hero-chat-main {
   }
 
   .radar-command-metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .source-hint-check {

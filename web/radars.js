@@ -38,6 +38,7 @@
 
   const PUBLIC_AI_EVENTS_RADAR_ID = "public_ai_events";
   const PUBLIC_AI_EVENTS_DISPLAY_NAME = "全球 AI 赛事导航";
+  const PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE = /个人开发者的个人开发者比赛机会雷达|个人开发者比赛机会雷达/i;
 
   // ============================================================
   // 工具函数
@@ -112,6 +113,7 @@
 
   function isAiEventsHeroRadar(radar) {
     const text = radarSearchText(radar);
+    if (radar?.id === PUBLIC_AI_EVENTS_RADAR_ID || PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE.test(text)) return true;
     const hasContestIntent = /AI\s*赛事|AI\s*比赛|比赛|赛事|Hackathon|黑客松|马拉松|开发者挑战|报名|参赛|提交作品/i.test(text);
     const hasAiOrHeroContext = /AI|OPC|个人开发者|云资源|开发者|Qwen|Devpost|DoraHacks|Lablab|Kaggle/i.test(text);
     return hasContestIntent && hasAiOrHeroContext;
@@ -273,7 +275,7 @@
       const createBtn = document.getElementById("btn-create-radar");
       if (createBtn) {
         createBtn.disabled = !allowed;
-        createBtn.title = allowed ? "" : `已达到 ${quota} 个上限，请归档旧雷达或升级套餐`;
+        createBtn.title = allowed ? "" : `已达到 ${quota} 个上限，请删除旧雷达或升级套餐`;
       }
     } catch {
       // 配额加载失败不阻断列表渲染
@@ -410,7 +412,7 @@
   }
 
   async function deleteRadarFromCard(radarId, radarName, btn) {
-    if (!radarId || !confirm(`确认删除“${radarName || "这个雷达"}”？删除后会从列表移除，但历史运行和报告仍会归档保留。`)) return;
+    if (!radarId || !confirm(`确认删除“${radarName || "这个雷达"}”？删除后会从列表移除并释放免费名额，历史运行和报告仍会保留。`)) return;
     const previousText = btn.textContent;
     btn.disabled = true;
     btn.textContent = "正在删除...";
@@ -755,7 +757,7 @@
           const msg = json.error?.message || "创建失败";
           // V1.5-07：配额超限特殊提示
           if (code === "RADAR_QUOTA_EXCEEDED") {
-            showToast("已达到免费用户上限，请归档旧雷达或升级套餐", "warning");
+            showToast("已达到免费用户上限，请删除旧雷达或升级套餐", "warning");
           } else {
             showToast(`创建失败：${msg}`, "error");
           }
