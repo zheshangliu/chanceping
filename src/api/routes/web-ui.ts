@@ -163,6 +163,10 @@ export function webUiRoutes(): Hono {
     "/watch-rules-editor.js",
     serveFile("watch-rules-editor.js", "application/javascript; charset=utf-8"),
   );
+  app.get(
+    "/backend-user.js",
+    serveFile("backend-user.js", "application/javascript; charset=utf-8"),
+  );
   // V1.6a 自检修复:注册雷达前端 JS 静态路由(之前 404)
   app.get(
     "/radars.js",

@@ -19,6 +19,7 @@
  */
 
 import { Hono } from "hono";
+import type { Context } from "hono";
 import type { AppContext } from "../context";
 import type {
   ApiResponse,
@@ -36,7 +37,7 @@ import { getDataMode } from "../../demo/data-mode";
 import { resolveSearchDataMode, validateLiveSearchResult } from "../../config/local-live-search";
 import { withSearchRunOutcome } from "../search-outcome";
 import type { RadarType } from "../../agents/opportunity-store";
-import type { RadarKind, RadarStatus, RadarSchedule } from "../../schema/radar";
+import type { Radar, RadarKind, RadarStatus, RadarSchedule } from "../../schema/radar";
 import { RadarGenerator } from "../../agents/radar-generator";
 import { getCurrentUser } from "../../agents/user-context";
 import { RadarQuotaChecker } from "../../agents/radar-quota";
@@ -55,6 +56,26 @@ function kindToRadarType(kind: RadarKind): RadarType {
 /** 构造错误响应 */
 function errorResponse(code: string, message: string, durationMs: number, status: number) {
   return { success: false, data: null, error: { code, message }, duration_ms: durationMs } satisfies ApiResponse;
+}
+
+function canAccessRadar(radar: Radar, userId: string): boolean {
+  return radar.isBuiltin === true || radar.ownerId === userId;
+}
+
+function requireOwnedRadar(c: Context, radar: Radar | null, userId: string, start: number): { ok: true; radar: Radar } | { ok: false; response: Response } {
+  if (!radar) {
+    return {
+      ok: false,
+      response: c.json(errorResponse("RADAR_NOT_FOUND", "雷达不存在", Date.now() - start, 404), 404),
+    };
+  }
+  if (!canAccessRadar(radar, userId)) {
+    return {
+      ok: false,
+      response: c.json(errorResponse("RADAR_NOT_FOUND", "雷达不存在", Date.now() - start, 404), 404),
+    };
+  }
+  return { ok: true, radar };
 }
 
 type RadarChatContextRequest = {
@@ -236,7 +257,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       return c.json(errorResponse("BAD_REQUEST", "name 和 kind 必填", Date.now() - start, 400), 400);
     }
     // V1.5-07 新增：配额检查
-    const user = getCurrentUser();
+    const user = getCurrentUser(c);
     const quotaChecker = new RadarQuotaChecker(ctx.radarStore);
     const quotaCheck = quotaChecker.check(user);
     if (!quotaCheck.allowed) {
@@ -256,6 +277,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       spec: body.spec,
       providerRouting: body.providerRouting,
       preferredSearchMode: body.preferredSearchMode,
+      ownerId: user.userId,
     });
     // V1.6a 自检修复:创建后立即 save,避免重启丢失
     ctx.radarStore.save();
@@ -361,7 +383,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
     const includeArchived = c.req.query("includeArchived") === "true";
     const scope = c.req.query("scope");
 
-    const user = getCurrentUser();
+    const user = getCurrentUser(c);
     const radars = ctx.radarRegistry.listRadars({
       ...(status ? { status } : {}),
       ...(kind ? { kind } : {}),
@@ -376,7 +398,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
   // ============================================================
   app.get("/quota", (c) => {
     const start = Date.now();
-    const user = getCurrentUser();
+    const user = getCurrentUser(c);
     const quotaChecker = new RadarQuotaChecker(ctx.radarStore);
     const result = quotaChecker.check(user);
     return c.json({
@@ -398,10 +420,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.get("/:id/runs", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     const limitRaw = c.req.query("limit");
     const limit = limitRaw ? Math.max(1, Math.min(parseInt(limitRaw, 10) || 50, 100)) : 50;
     const runs = ctx.radarRunStore.listByRadarId(id, limit);
@@ -414,10 +439,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.get("/:id", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     return c.json({ success: true, data: radar, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
   });
 
@@ -427,10 +455,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.put("/:id", async (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     if (radar.isBuiltin) {
       return c.json(errorResponse("RADAR_NOT_EDITABLE", "内置雷达不可编辑", Date.now() - start, 403), 403);
     }
@@ -461,10 +492,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.delete("/:id", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     if (radar.isBuiltin) {
       return c.json(errorResponse("RADAR_NOT_DELETABLE", "内置雷达不可删除", Date.now() - start, 403), 403);
     }
@@ -484,10 +518,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.post("/:id/activate", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     if (radar.isBuiltin) {
       return c.json(errorResponse("RADAR_NOT_EDITABLE", "内置雷达不可修改状态", Date.now() - start, 403), 403);
     }
@@ -507,10 +544,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.post("/:id/pause", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     if (radar.isBuiltin) {
       return c.json(errorResponse("RADAR_NOT_EDITABLE", "内置雷达不可修改状态", Date.now() - start, 403), 403);
     }
@@ -530,10 +570,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.post("/:id/resume", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     if (radar.isBuiltin) {
       return c.json(errorResponse("RADAR_NOT_EDITABLE", "内置雷达不可修改状态", Date.now() - start, 403), 403);
     }
@@ -553,10 +596,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.put("/:id/schedule", async (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     let body: {
       time?: string;
       frequency?: "daily" | "weekly";
@@ -609,10 +655,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.delete("/:id/schedule", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     const updated = ctx.radarStore.update(id, { schedule: undefined });
     if (updated) ctx.radarStore.save();
     return c.json({ success: true, data: updated, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
@@ -624,10 +673,13 @@ export function radarsRoutes(ctx: AppContext): Hono {
   app.post("/:id/run", async (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const radar = ctx.radarRegistry.getRadarById(id);
-    if (!radar) {
-      return c.json(errorResponse("RADAR_NOT_FOUND", `雷达 ${id} 不存在`, Date.now() - start, 404), 404);
+    const user = getCurrentUser(c);
+    const loadedRadar = ctx.radarRegistry.getRadarById(id);
+    const owned = requireOwnedRadar(c, loadedRadar, user.userId, start);
+    if (!owned.ok) {
+      return owned.response;
     }
+    const radar = owned.radar;
     if (radar.status !== "active") {
       return c.json(errorResponse("RADAR_NOT_ACTIVE", `雷达未激活，当前状态: ${radar.status}`, Date.now() - start, 400), 400);
     }

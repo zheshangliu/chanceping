@@ -452,7 +452,7 @@ async function main(): Promise<void> {
 
   // 17. web/radars.js 调用 POST /api/radars/generate
   {
-    const callsGenerate = /fetch\(["'`]\/api\/radars\/generate["'`],\s*\{\s*method:\s*["'`]POST/.test(radarsJs);
+    const callsGenerate = /(fetch|backendFetch)\(["'`]\/api\/radars\/generate["'`],\s*\{\s*method:\s*["'`]POST/.test(radarsJs);
     check(
       "17. radars.js 调用 POST /api/radars/generate",
       callsGenerate,

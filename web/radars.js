@@ -55,6 +55,13 @@
       .replace(/'/g, "&#39;");
   }
 
+  function backendFetch(input, init) {
+    if (window.ChancePingBackendUser && typeof window.ChancePingBackendUser.fetch === "function") {
+      return window.ChancePingBackendUser.fetch(input, init);
+    }
+    return window.fetch(input, init);
+  }
+
   /** 格式化 ISO 时间为 MM-DD HH:mm */
   function formatTime(iso) {
     if (!iso) return "从未运行";
@@ -145,7 +152,7 @@
   }
 
   async function postJson(url, body) {
-    const res = await fetch(url, {
+    const res = await backendFetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body || {}),
@@ -160,7 +167,7 @@
   }
 
   async function getJson(url) {
-    const res = await fetch(url);
+    const res = await backendFetch(url);
     const json = await res.json();
     if (!json.success) throw new Error(json.error?.message || "请求失败");
     return json;
@@ -241,7 +248,7 @@
     if (!grid) return;
     grid.innerHTML = '<p class="placeholder">加载中...</p>';
     try {
-      const res = await fetch("/api/radars?scope=mine");
+      const res = await backendFetch("/api/radars?scope=mine");
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
         renderRadarCards(json.data.filter((radar) => radar.isBuiltin !== true));
@@ -262,7 +269,7 @@
    */
   async function loadQuotaInfo() {
     try {
-      const res = await fetch("/api/radars/quota");
+      const res = await backendFetch("/api/radars/quota");
       const json = await res.json();
       if (!json.success || !json.data) return;
       const { current, quota, plan, allowed } = json.data;
@@ -417,7 +424,7 @@
     btn.disabled = true;
     btn.textContent = "正在删除...";
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}`, { method: "DELETE" });
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}`, { method: "DELETE" });
       const json = await res.json();
       if (!json.success) throw new Error(json.error?.message || "删除失败");
       if (window.showToast) showToast("雷达已删除，免费名额已释放", "success");
@@ -741,7 +748,7 @@
     }
 
     try {
-      const res = await fetch("/api/radars", {
+      const res = await backendFetch("/api/radars", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, kind, spec }),
@@ -896,7 +903,7 @@
     }
 
     try {
-      const res = await fetch("/api/radars/generate", {
+      const res = await backendFetch("/api/radars/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description, uploaded_text: uploadedText }),
@@ -1017,7 +1024,7 @@
         confirmBtn.textContent = "创建中...";
 
         try {
-          const res = await fetch("/api/radars", {
+          const res = await backendFetch("/api/radars", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, kind: "custom", spec }),

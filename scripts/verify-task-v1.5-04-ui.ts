@@ -172,8 +172,14 @@ async function main(): Promise<void> {
   check("7. radars.js 含 loadRadarList 函数", /function\s+loadRadarList\b|loadRadarList\s*=\s*async function|window\.loadRadarList\s*=/.test(radarsJs) && radarsJs.includes("loadRadarList"));
   check("8. radars.js 含 renderRadarCards 函数", radarsJs.includes("renderRadarCards") && /function\s+renderRadarCards|renderRadarCards\s*=/.test(radarsJs));
   check("9. radars.js 含 openCreateModal 或 submitCreate 函数", radarsJs.includes("openCreateModal") || radarsJs.includes("submitCreate"));
-  check("10. radars.js 调用 GET /api/radars?scope=mine", radarsJs.includes("fetch(\"/api/radars?scope=mine\")") || radarsJs.includes("fetch('/api/radars?scope=mine')"));
-  check("11. radars.js 调用 POST /api/radars", /fetch\(["'`]\/api\/radars["'`],\s*\{\s*method:\s*["'`]POST/.test(radarsJs));
+  check(
+    "10. radars.js 调用 GET /api/radars?scope=mine",
+    /(fetch|backendFetch)\(["'`]\/api\/radars\?scope=mine["'`]\)/.test(radarsJs),
+  );
+  check(
+    "11. radars.js 调用 POST /api/radars",
+    /(fetch|backendFetch)\(["'`]\/api\/radars["'`],\s*\{\s*method:\s*["'`]POST/.test(radarsJs),
+  );
 
   check("12. radar-detail.js 含 loadRadarDetail 函数", radarDetailJs.includes("loadRadarDetail") && /function\s+loadRadarDetail|loadRadarDetail\s*=/.test(radarDetailJs));
   check("13. radar-detail.js 含 runRadar 函数", radarDetailJs.includes("runRadar") && /function\s+runRadar|runRadar\s*=/.test(radarDetailJs));

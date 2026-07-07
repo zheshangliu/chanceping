@@ -126,6 +126,9 @@ check(
 check("chat verifier checks hard delete behavior", chatWindowVerifier.includes("hard deletes a window"));
 
 const heroChat = read("web/hero-radar-chat.js");
+const backendUser = read("web/backend-user.js");
+const radarsJs = read("web/radars.js");
+const radarDetailJs = read("web/radar-detail.js");
 check("hero chat supports per-user query isolation", heroChat.includes("hero_chat_user_id") && heroChat.includes("test_user_id"));
 check(
   "hero chat defaults public visitors to persistent anonymous ids",
@@ -138,6 +141,18 @@ check("hero chat keeps custom window quota at 3", heroChat.includes("CHAT_WINDOW
 check(
   "hero chat uses global AI events navigator sample room",
   heroChat.includes('id: "ai-event-sample-room"') && heroChat.includes('name: "全球 AI 赛事导航"'),
+);
+check(
+  "legacy backend user helper reuses hero visitor id",
+  backendUser.includes("chanceping_hero_visitor_user_id") && backendUser.includes("hero_chat_user_id") && backendUser.includes("test_user_id"),
+);
+check(
+  "legacy backend user helper sends request user header",
+  backendUser.includes("X-ChancePing-User-Id") && backendUser.includes("withUserHeaders") && backendUser.includes("fetchWithUser"),
+);
+check(
+  "my radars list/detail use visitor-scoped backend fetch",
+  radarsJs.includes("backendFetch") && radarDetailJs.includes("backendFetch") && radarsJs.includes("ChancePingBackendUser") && radarDetailJs.includes("ChancePingBackendUser"),
 );
 
 const aiEventsPage = read("web/ai-events.js");

@@ -1,6 +1,8 @@
 import { rmSync } from "node:fs";
 import { createApp } from "../src/api/app";
 import { createAppContext } from "../src/api/context";
+import { JsonRadarStore } from "../src/agents/radar-store";
+import { RadarRegistry } from "../src/agents/radar-registry";
 
 let pass = 0;
 let fail = 0;
@@ -35,6 +37,36 @@ async function listChatWindows(app: ReturnType<typeof createApp>, userId: string
   return { response, payload };
 }
 
+async function createLegacyRadar(app: ReturnType<typeof createApp>, userId: string, name: string) {
+  const response = await app.request("/api/radars", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-ChancePing-User-Id": userId,
+    },
+    body: JSON.stringify({
+      name,
+      kind: "custom",
+      spec: {
+        keyword_strategy: {
+          core_keywords_zh: [name],
+          core_keywords_en: [],
+        },
+      },
+    }),
+  });
+  const payload = await json<{ success: boolean; data?: any; error?: any }>(response);
+  return { response, payload };
+}
+
+async function listLegacyRadars(app: ReturnType<typeof createApp>, userId: string) {
+  const response = await app.request("/api/radars?scope=mine", {
+    headers: { "X-ChancePing-User-Id": userId },
+  });
+  const payload = await json<{ success: boolean; data?: any[]; error?: any }>(response);
+  return { response, payload };
+}
+
 async function text(app: ReturnType<typeof createApp>, path: string): Promise<{ response: Response; body: string }> {
   const response = await app.request(path);
   const body = await response.text();
@@ -50,6 +82,7 @@ async function verifyBackendQwenWording(app: ReturnType<typeof createApp>) {
     "/watch-result.js",
     "/search.js",
     "/hero-radar-chat.js",
+    "/backend-user.js",
   ];
   const pages: Array<{ path: string; body: string }> = [];
 
@@ -139,6 +172,24 @@ async function verifyUserWindowModel(app: ReturnType<typeof createApp>, userId: 
   };
 }
 
+async function verifyLegacyRadarUserIsolation(app: ReturnType<typeof createApp>) {
+  const alpha = "legacy_alpha";
+  const beta = "legacy_beta";
+  const alphaRadar = await createLegacyRadar(app, alpha, "Alpha 私有雷达");
+  const betaRadar = await createLegacyRadar(app, beta, "Beta 私有雷达");
+
+  check("legacy /api/radars creates alpha radar with request user", alphaRadar.response.status === 200 && alphaRadar.payload.data?.ownerId === alpha, JSON.stringify(alphaRadar.payload));
+  check("legacy /api/radars creates beta radar with request user", betaRadar.response.status === 200 && betaRadar.payload.data?.ownerId === beta, JSON.stringify(betaRadar.payload));
+
+  const alphaList = await listLegacyRadars(app, alpha);
+  const betaList = await listLegacyRadars(app, beta);
+  const alphaNames = (alphaList.payload.data ?? []).map((radar) => radar.name);
+  const betaNames = (betaList.payload.data ?? []).map((radar) => radar.name);
+
+  check("legacy /api/radars alpha list only sees alpha radar", alphaNames.includes("Alpha 私有雷达") && !alphaNames.includes("Beta 私有雷达"), JSON.stringify(alphaNames));
+  check("legacy /api/radars beta list only sees beta radar", betaNames.includes("Beta 私有雷达") && !betaNames.includes("Alpha 私有雷达"), JSON.stringify(betaNames));
+}
+
 async function run() {
   rmSync("data/q7-aliyun-smoke", { recursive: true, force: true });
   process.env.CHANCEPING_RADAR_CHAT_STORE_PATH = "data/q7-aliyun-smoke/radar-chat-windows.json";
@@ -146,6 +197,9 @@ async function run() {
   process.env.LLM_MODE = "mock";
 
   const ctx = createAppContext();
+  ctx.radarStore = new JsonRadarStore({ file_path: "data/q7-aliyun-smoke/radars.json" });
+  ctx.radarRegistry = new RadarRegistry(ctx.radarStore);
+  ctx.radarRegistry.initialize();
   const app = createApp(ctx);
 
   const health = await app.request("/health");
@@ -163,6 +217,8 @@ async function run() {
   const publicFeedJson = await json<{ success: boolean; data?: any; error?: any }>(publicFeed);
   check("public AI events feed returns data", publicFeed.status === 200 && publicFeedJson.success === true, JSON.stringify(publicFeedJson.error ?? {}));
   check("public AI events feed has displayable cards", Array.isArray(publicFeedJson.data?.items) && publicFeedJson.data.items.length > 0, JSON.stringify(publicFeedJson.data?.stats ?? {}));
+
+  await verifyLegacyRadarUserIsolation(app);
 
   const alpha = await verifyUserWindowModel(app, "aliyun_alpha");
   const beta = await verifyUserWindowModel(app, "aliyun_beta");

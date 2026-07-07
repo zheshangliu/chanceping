@@ -57,6 +57,13 @@
       .replace(/'/g, "&#39;");
   }
 
+  function backendFetch(input, init) {
+    if (window.ChancePingBackendUser && typeof window.ChancePingBackendUser.fetch === "function") {
+      return window.ChancePingBackendUser.fetch(input, init);
+    }
+    return window.fetch(input, init);
+  }
+
   function formatTime(iso) {
     if (!iso) return "—";
     try {
@@ -74,7 +81,7 @@
   }
 
   async function postJson(url, body) {
-    const res = await fetch(url, {
+    const res = await backendFetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body || {}),
@@ -256,7 +263,7 @@
     container.innerHTML = '<p class="placeholder">加载中...</p>';
 
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}`);
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}`);
       const json = await res.json();
       if (seq !== loadDetailSeq) return; // 不是最新请求,丢弃
       if (json.success && json.data) {
@@ -516,7 +523,7 @@
     }
 
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/schedule`, {
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}/schedule`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ time, frequency, weekdays, timezone, enabled: true }),
@@ -542,7 +549,7 @@
     if (!radarId) return;
     if (!confirm("确认清除定时配置？")) return;
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/schedule`, {
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}/schedule`, {
         method: "DELETE",
       });
       const json = await res.json();
@@ -570,7 +577,7 @@
     if (!radarId) return;
     if (!confirm("确认激活此雷达？激活后可手动运行。")) return;
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/activate`, {
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}/activate`, {
         method: "POST",
       });
       const json = await res.json();
@@ -613,7 +620,7 @@
     if (!container) return;
     container.innerHTML = '<p class="placeholder">加载中...</p>';
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}/runs`);
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}/runs`);
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
         currentRadarRuns = json.data;
@@ -665,7 +672,7 @@
         list.innerHTML = '<p class="placeholder">正在同步 AI Events 公共赛事库...</p>';
         await ensurePublicAiEventsSynced();
       }
-      const res = await fetch(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${pageSize}&sort_by=deadline&sort_order=asc`);
+      const res = await backendFetch(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${pageSize}&sort_by=deadline&sort_order=asc`);
       const json = await res.json();
       if (json.success && json.data && Array.isArray(json.data.entries)) {
         const filteredEntries = filterPublicAiEventCardsForView(json.data.entries, opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID);
@@ -861,7 +868,7 @@
     if (!radarId) return;
     if (!confirm("确认删除这个雷达？删除后它会从“我的雷达”列表移除，历史机会和报告仍会保留。")) return;
     try {
-      const res = await fetch(`/api/radars/${encodeURIComponent(radarId)}`, {
+      const res = await backendFetch(`/api/radars/${encodeURIComponent(radarId)}`, {
         method: "DELETE",
       });
       const json = await res.json();
@@ -900,7 +907,7 @@
     }
 
     try {
-      const res = await fetch("/api/reports/generate", {
+      const res = await backendFetch("/api/reports/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -939,7 +946,7 @@
     if (!container) return;
     container.innerHTML = '<p class="placeholder">加载中...</p>';
     try {
-      const res = await fetch(`/api/reports?radar_id=${encodeURIComponent(radarId)}`);
+      const res = await backendFetch(`/api/reports?radar_id=${encodeURIComponent(radarId)}`);
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
         renderReportList(json.data);
