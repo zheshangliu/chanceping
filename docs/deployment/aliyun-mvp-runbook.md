@@ -130,4 +130,10 @@ CHANCEPING_DEPLOY_BASE_URL_REQUIRED=true node --run verify:q7:aliyun-remote-smok
 
 - 远程 smoke 需要真实阿里云测试站 URL 才能执行完整检查。
 - 多雷达多窗口的长期上下文摘要还未完全实现。
-- Qwen 与 DeepSeek 的质量对比另做独立实验，不放进当前阿里云前置闸门。
+- Qwen 与 DeepSeek 的质量对比另做独立实验，不放进当前阿里云前置闸门。后续可在本地显式运行：
+
+```bash
+node --run compare:live-llm-profiles
+```
+
+该脚本会用固定的需求理解、结果反馈、报告解释提示词对比 `commercial / DeepSeek` 与 `contest / Qwen`，只记录 profile / provider / model、延迟、输出长度、JSON 字段形状和脱敏预览，不记录任何 API Key。

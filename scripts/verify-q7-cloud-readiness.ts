@@ -41,11 +41,17 @@ check("Aliyun runbook verifier is registered", scripts["verify:q7:aliyun-runbook
 check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] === "tsx scripts/verify-q7-aliyun-smoke.ts");
 check("Aliyun remote smoke verifier is registered", scripts["verify:q7:aliyun-remote-smoke"] === "tsx scripts/verify-q7-aliyun-remote-smoke.ts");
 check("Docker readiness verifier is registered", scripts["verify:q7:docker-readiness"] === "tsx scripts/verify-q7-docker-readiness.ts");
+check("LLM comparison verifier is registered", scripts["verify:q7:llm-comparison"] === "tsx scripts/verify-q7-llm-comparison.ts");
+check(
+  "LLM comparison command is explicit opt-in",
+  scripts["compare:live-llm-profiles"] === "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_LLM_COMPARISON=true tsx scripts/compare-live-llm-profiles.ts",
+);
 
 [
   "verify:live",
   "q4:live-server",
   "verify:q7:live-demo",
+  "compare:live-llm-profiles",
   "CHANCEPING_LOAD_API_ENV=true",
   "CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true",
   "CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true",
@@ -68,6 +74,7 @@ check(
     && aliyunRunbook.includes("Serper 正在搜索机会，Qwen 随后整理证据"),
 );
 check("Aliyun runbook documents Docker readiness", aliyunRunbook.includes("verify:q7:docker-readiness") && /`api\.env` 不进入镜像/.test(aliyunRunbook));
+check("Aliyun runbook documents post-deploy LLM comparison", aliyunRunbook.includes("compare:live-llm-profiles") && aliyunRunbook.includes("不放进当前阿里云前置闸门"));
 
 const dockerignore = read(".dockerignore");
 const dockerfile = read("Dockerfile");

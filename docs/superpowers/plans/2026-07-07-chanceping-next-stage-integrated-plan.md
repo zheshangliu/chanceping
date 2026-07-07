@@ -136,11 +136,13 @@ Use existing `DASHSCOPE_API_KEY`; do not duplicate the key into committed files.
 - No key is printed in logs.
 - `verify:all` remains mock-safe and does not call live LLM.
 - A comparison harness can run the same 3-5 fixed prompts against commercial/DeepSeek and contest/Qwen later, recording profile/provider/model, output shape, latency, and qualitative differences without logging keys.
+- The comparison entry is `node --run compare:live-llm-profiles`; it is explicit opt-in, not part of `verify:all`, and is guarded by `CHANCEPING_RUN_LLM_COMPARISON=true`.
 
 **Commands:**
 ```bash
 node --run verify:api-env
 node --run verify:live-llm
+node --run verify:q7:llm-comparison
 node --run verify:all
 ```
 
