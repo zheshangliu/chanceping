@@ -43,12 +43,11 @@ ENV NOTIFY_MOCK_MODE=true
 ENV PDF_EXPORT_ENABLED=false
 ENV CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json
 
-# 复制 package 文件并安装生产依赖
+# 复制 package 文件并安装依赖
 COPY package*.json ./
-RUN npm ci --omit=dev && \
-    # puppeteer 为可选依赖，运行时按需安装
-    # 仅安装 tsx 用于执行 TypeScript
-    npm install tsx@^4.19.2 --no-save
+# MVP 测试站直接运行 TypeScript 入口，需要 tsx；NODE_ENV=production 下
+# npm 会默认省略 devDependencies，因此这里显式 include dev。
+RUN npm ci --include=dev
 
 # 从 builder 阶段复制源代码与资源
 COPY --from=builder /app/src ./src

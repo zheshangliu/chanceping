@@ -38,6 +38,7 @@ check("Dockerfile disables local live flags by default", /ENV CHANCEPING_ENABLE_
 check("Dockerfile keeps radar chat store on mounted data dir", /ENV CHANCEPING_RADAR_CHAT_STORE_PATH=data\/radar-chat-windows\.json/.test(dockerfile));
 check("Dockerfile healthchecks /health", dockerfile.includes("http://localhost:3000/health"));
 check("Dockerfile starts API server through npm start", /CMD \["npm", "run", "start"\]/.test(dockerfile));
+check("Dockerfile runtime keeps tsx available for TypeScript start", /# MVP 测试站直接运行 TypeScript 入口，需要 tsx/.test(dockerfile) && /RUN npm ci --include=dev/.test(dockerfile));
 
 check("compose sets production environment", compose.includes("NODE_ENV=production"));
 check("compose exposes NODE_IMAGE build arg", compose.includes("NODE_IMAGE: ${CHANCEPING_DOCKER_NODE_IMAGE:-node:22-slim}"));
