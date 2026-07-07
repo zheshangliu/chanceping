@@ -717,11 +717,11 @@
     const resultSection = document.getElementById("radar-run-result-section");
     const resultList = document.getElementById("radar-run-result-list");
     if (resultSection) resultSection.style.display = "block";
-    if (resultList) resultList.innerHTML = '<p class="placeholder">正在搜索机会，请稍候...</p>';
+    if (resultList) resultList.innerHTML = '<p class="placeholder">Serper 正在搜索机会，Qwen 随后整理证据，请稍候...</p>';
 
     try {
       const status = document.getElementById("radar-detail-rerun-status");
-      if (status) status.innerHTML = '<span class="rerun-status-running">正在重新盯机会</span>';
+      if (status) status.innerHTML = '<span class="rerun-status-running">Serper / Qwen 正在重新盯机会</span>';
       const json = await postJson(`/api/radars/${encodeURIComponent(radarId)}/run`, getSearchModeRequest());
       const runData = json.data || {};
       const outcome = runData.runOutcome;
@@ -743,9 +743,9 @@
       const opportunities = runData.opportunityCards || runData.opportunities || [];
       renderRunResult(opportunities);
       if (resultList) {
-        resultList.insertAdjacentHTML("afterbegin", '<p class="placeholder">正在生成报告...</p>');
+        resultList.insertAdjacentHTML("afterbegin", '<p class="placeholder">Qwen 正在生成报告...</p>');
       }
-      if (status) status.innerHTML = '<span class="rerun-status-running">正在生成报告</span>';
+      if (status) status.innerHTML = '<span class="rerun-status-running">Qwen 正在生成报告</span>';
 
       try {
         const report = await postJson("/api/reports/generate", {

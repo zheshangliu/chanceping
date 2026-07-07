@@ -157,7 +157,7 @@
     const radarBadge = document.getElementById("search-radar-badge");
     if (radarBadge) radarBadge.textContent = radarLabel(currentRadarType);
     if (bar) {
-      bar.innerHTML = `<span class="radar-badge">${radarLabel(currentRadarType)}</span><span class="search-loading">⏳ 正在搜索${radarLabel(currentRadarType)}机会...</span>`;
+      bar.innerHTML = `<span class="radar-badge">${radarLabel(currentRadarType)}</span><span class="search-loading">⏳ Serper 正在搜索${radarLabel(currentRadarType)}机会，Qwen 随后整理证据...</span>`;
     }
     if (results) {
       results.innerHTML = `<div class="search-spinner"></div>`;

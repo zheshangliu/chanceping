@@ -16,9 +16,10 @@
 2. **Q7S AI Events UI:** execute the existing `1 + 7 hybrid` plan for `/aievents`.
 3. **Qwen Contest Profile:** make local live LLM default to contest/Qwen and add a DeepSeek-vs-Qwen comparison harness.
 4. **Backend Bilingual UI:** add Chinese/English toggle to the ChancePing backend console.
+4.5. **Backend Qwen Wording Sweep:** ensure visible backend console copy says Qwen for requirement understanding, radar drafting, and evidence/report explanation.
 5. **Alibaba Cloud Readiness:** prepare multi-user defaults, built-in AI Events radar visibility, environment checklist, and deploy scripts.
 
-Do not start Alibaba Cloud deployment until stages 1-4 pass local verification.
+Do not start Alibaba Cloud deployment until stages 1-4.5 pass local verification.
 
 ## Current Evidence Snapshot
 
@@ -177,6 +178,40 @@ node --run verify:all
 ```
 
 **Commit suggestion:** `Q7I18N: add bilingual backend console shell`
+
+## Stage 4.5: Backend Qwen Wording Sweep
+
+**Purpose:** before cloud readiness, align all customer-visible backend console wording with the contest/Qwen profile. The backend may still keep internal commercial/DeepSeek adapters, historical docs, and comparison scripts, but users should not see "DeepSeek" in the normal 盯机会 console flow.
+
+**Files to inspect or modify:**
+- `web/index.html`
+- `web/home.js`
+- `web/hero-radar-chat.js`
+- `web/radar-profile.js`
+- `web/watch-result.js`
+- `web/radar-detail.js`
+- `web/search.js`
+- `web/radars.js`
+- `scripts/verify-q7-hero-chat.ts`
+- `scripts/verify-mvp-ux.ts`
+
+**Acceptance:**
+- Visible backend pages use phrases such as `Qwen 正在理解并生成雷达`, `Qwen 正在画雷达`, `Serper 正在搜索机会`, and `Qwen 正在生成机会报告`.
+- The UI does not imply Qwen performs web search when Serper is the actual search provider; use combined copy like `Serper 正在搜索机会，Qwen 随后整理证据`.
+- No customer-visible web file contains `DeepSeek` wording.
+- Internal adapter code, old Task 020 docs, and future comparison harness may still mention DeepSeek for compatibility/history.
+
+**Commands:**
+```bash
+node --run typecheck
+node --run verify:mvp-ux
+node --run verify:q7:hero-chat
+node --run verify:mvp-browser
+node --run verify:all
+git diff --check
+```
+
+**Commit suggestion:** `Q7I18N: align backend visible copy with Qwen`
 
 ## Stage 5: Alibaba Cloud Readiness
 

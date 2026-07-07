@@ -538,7 +538,7 @@
   async function runWatchNow({ radarId, description, spec, profile, suggestedName, presetId, radarVersion }) {
     if (!spec) throw new Error("缺少已确认的雷达规格");
     switchToResult();
-    renderLoading(description, "正在搜索机会");
+    renderLoading(description, "Serper 正在搜索机会，Qwen 随后整理证据");
     try {
       const search = radarId
         ? await postJson(`/api/radars/${radarId}/run`, getSearchModeRequest())
@@ -550,7 +550,7 @@
       const executionLog = search.data?.executionLog;
       const runOutcome = search.data?.runOutcome;
       const runId = search.data?.run?.id;
-      renderLoading(description, "正在生成机会报告");
+      renderLoading(description, "Qwen 正在生成机会报告");
       const report = await safeGenerateReport({
         spec,
         radar_type: "custom",

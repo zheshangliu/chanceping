@@ -37,6 +37,8 @@ async function run() {
   const homeJs = read("web/home.js");
   const radarsJs = read("web/radars.js");
   const watchResultJs = read("web/watch-result.js");
+  const radarProfileJs = read("web/radar-profile.js");
+  const searchJs = read("web/search.js");
   const watchRulesEditorJs = read("web/watch-rules-editor.js");
   const radarDetailJs = read("web/radar-detail.js");
   const styles = read("web/styles.css");
@@ -167,6 +169,18 @@ async function run() {
   check("search progress uses one-line current work status", heroChatJs.includes("currentProgressLine") && heroChatJs.includes("hero-progress-current") && !heroChatJs.includes("appendProgressLog"));
   check("progress line shows Qwen as the visible LLM provider", heroChatJs.includes("Serper") && heroChatJs.includes("Qwen") && !heroChatJs.includes("DeepSeek："));
   check("homepage preview copy uses Qwen instead of DeepSeek", html.includes("Qwen") && !html.includes("DeepSeek 按证据解释"));
+  const customerVisibleWeb = [
+    html,
+    heroChatJs,
+    homeJs,
+    radarsJs,
+    watchResultJs,
+    radarProfileJs,
+    radarDetailJs,
+    searchJs,
+  ].join("\n");
+  check("customer-visible backend web files do not mention DeepSeek", !/DeepSeek|deepseek|DEEPSEEK/.test(customerVisibleWeb));
+  check("legacy backend loading states use Qwen/Serper wording", radarProfileJs.includes("Qwen 正在理解并生成雷达") && watchResultJs.includes("Serper 正在搜索机会，Qwen 随后整理证据") && searchJs.includes("Serper 正在搜索") && radarDetailJs.includes("Qwen 正在生成报告"));
   check("progress line reassures novice users that work is continuing", heroChatJs.includes("不用刷新页面") && heroChatJs.includes("持续更新"));
   check("homepage keeps prompt chips hidden before and after chat starts", heroChatJs.includes("promptChips.hidden = true") && homeJs.includes('".hero-demo-prompts"'));
   check("hero chat becomes the only visible workspace after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-hero") && heroChatJs.includes(".home-input-area") && heroChatJs.includes("hero-chat-active"));

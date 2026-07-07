@@ -1762,7 +1762,7 @@
     const progressSteps = [
       shouldUseHeroDemoReplay()
         ? "正在读取 AI 赛事雷达最近一次入库结果……"
-        : "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+        : "Serper 正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
       shouldUseHeroDemoReplay()
         ? "正在整理已保存机会卡：报名入口、截止时间、奖金和云资源字段……"
         : "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
@@ -1777,7 +1777,7 @@
         : "正在核对来源可信度，避免把资讯当成机会……",
       shouldUseHeroDemoReplay()
         ? "正在生成本次演示报告和机会卡入口……"
-        : "正在生成报告摘要、机会卡和 Markdown 报告……",
+        : "Qwen 正在生成报告摘要、机会卡和 Markdown 报告……",
     ];
     const progressMessage = addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
       type: "progress",
