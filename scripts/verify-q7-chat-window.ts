@@ -211,6 +211,35 @@ async function run() {
   check("free quota blocks fourth custom chat window", quotaBlockedResponse.status === 403 && quotaBlockedJson.success === false, JSON.stringify(quotaBlockedJson));
   check("quota block returns clear error code", quotaBlockedJson.error?.code === "RADAR_CHAT_QUOTA_EXCEEDED", JSON.stringify(quotaBlockedJson.error ?? {}));
 
+  const lateSampleUser = "late_sample_user";
+  for (let i = 1; i <= 3; i += 1) {
+    await app.request("/api/radar-chats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: `普通用户雷达 ${i}`,
+        userId: lateSampleUser,
+        draftRadarVersion: "V1.0",
+      }),
+    });
+  }
+  const lateSampleRoomResponse = await app.request("/api/radar-chats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      radarId: "ai-event-sample-room",
+      title: "全球 AI 赛事导航",
+      userId: lateSampleUser,
+      draftRadarVersion: "V1.0",
+    }),
+  });
+  const lateSampleRoomJson = await json<{ success: boolean; data?: any; error?: any }>(lateSampleRoomResponse);
+  check(
+    "built-in AI event sample room is available even after custom quota is full",
+    lateSampleRoomResponse.status === 200 && lateSampleRoomJson.success === true && lateSampleRoomJson.data?.radarId === "ai-event-sample-room",
+    JSON.stringify(lateSampleRoomJson.error ?? lateSampleRoomJson.data ?? {}),
+  );
+
   const quotaArchiveResponse = await app.request(`/api/radar-chats/${quotaWindows[0]?.id}`, { method: "DELETE" });
   const quotaArchiveJson = await json<{ success: boolean; data?: any; error?: any }>(quotaArchiveResponse);
   check("deleting a chat window releases the quota slot", quotaArchiveResponse.status === 200 && quotaArchiveJson.data?.deleted === true, JSON.stringify(quotaArchiveJson.error ?? {}));

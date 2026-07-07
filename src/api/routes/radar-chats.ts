@@ -51,6 +51,10 @@ function countActiveUserWindows(windows: RadarChatWindow[], ignoredWindowId?: st
   )).length;
 }
 
+function isBuiltinSampleRoomRadarId(radarId?: string): boolean {
+  return radarId === BUILTIN_SAMPLE_ROOM_ID;
+}
+
 function getWindowQuota() {
   const user = getCurrentUser();
   return RADAR_QUOTA[user.plan] ?? RADAR_QUOTA.free;
@@ -115,7 +119,7 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       }
     }
     const activeWindowCount = countActiveUserWindows(store.list({ userId }));
-    if (activeWindowCount >= getWindowQuota()) {
+    if (!isBuiltinSampleRoomRadarId(radarId) && activeWindowCount >= getWindowQuota()) {
       return c.json(quotaExceededResponse(Date.now() - start), 403);
     }
 
