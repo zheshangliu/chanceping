@@ -80,6 +80,7 @@ async function run() {
   check("hero chat calls search endpoint after confirmation", heroChatJs.includes("async function runHeroLiveSearch") && heroChatJs.includes("/api/search") && heroChatJs.indexOf("/api/search") > heroChatJs.indexOf("async function runHeroLiveSearch"));
   check("hero chat calls report generation after search", heroChatJs.includes("/api/reports/generate") && heroChatJs.indexOf("/api/reports/generate") > heroChatJs.indexOf("/api/search"));
   check("hero demo replay has a dedicated built-in radar gate", heroChatJs.includes("shouldUseHeroDemoReplay") && heroChatJs.includes("AI_EVENT_SAMPLE_ROOM.id"));
+  check("hero demo keeps the built-in sample room at V1.0 for first-time users", heroChatJs.includes("normalizeHeroDemoRadarVersion") && heroChatJs.includes('version: "V1.0"'));
   check("hero demo replay reads stored public AI events instead of live search", heroChatJs.includes("/api/public/ai-events?") && heroChatJs.includes("runHeroDemoReplay"));
   check("hero demo replay maps stored events into opportunity cards", heroChatJs.includes("mapPublicAiEventToOpportunityCard") && heroChatJs.includes("demo_replay"));
   check("hero demo replay progress is honest about reading stored results", heroChatJs.includes("最近一次入库结果") && heroChatJs.includes("已保存机会卡"));

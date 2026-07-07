@@ -511,6 +511,27 @@
     return heroRadarChatState.boundRadarId === AI_EVENT_SAMPLE_ROOM.id && AI_EVENT_SAMPLE_ROOM.isSampleRoom === true;
   }
 
+  function normalizeHeroDemoRadarVersion(draft) {
+    if (!shouldUseHeroDemoReplay() || !draft) return draft;
+    const radarVersion = {
+      ...(draft.radarVersion || {}),
+      version: "V1.0",
+    };
+    const spec = {
+      ...(draft.spec || {}),
+      radar_version: {
+        ...(draft.spec?.radar_version || {}),
+        version: "V1.0",
+      },
+    };
+    return {
+      ...draft,
+      spec,
+      radarVersion,
+      radarDiff: null,
+    };
+  }
+
   function getHeroDemoReplayDelayMs() {
     const params = new URLSearchParams(window.location.search);
     return params.get("q7v_fast") === "1" ? 1200 : 10000;
@@ -1133,6 +1154,7 @@
           description: `${heroRadarChatState.currentDraft.description || ""}\n${text}`.trim(),
         };
       }
+      heroRadarChatState.currentDraft = normalizeHeroDemoRadarVersion(heroRadarChatState.currentDraft);
       updateRadarChatWindow({
         title: heroRadarChatState.currentDraft.suggestedName || "AI 赛事雷达",
         draftRadarVersion: heroRadarChatState.currentDraft.radarVersion?.version || "V1.0",
