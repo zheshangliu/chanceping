@@ -99,6 +99,53 @@ async function main(): Promise<void> {
   check("pipeline can hydrate source images in same backend pass", (hydratedRun.imageHydration?.hydratedCount ?? 0) === 2, JSON.stringify(hydratedRun.imageHydration));
   check("hydrated pipeline updates image coverage summary", hydratedRun.images.sourceImageCount >= 2, JSON.stringify(hydratedRun.images));
 
+  const logoFallbackStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-logo-fallback.json");
+  removeIfExists(logoFallbackStorePath);
+  const logoFallbackStore = new LocalFileStore({ file_path: logoFallbackStorePath, auto_flush: false });
+  const logoFallbackRun = await runPublicAiEventsUpdatePipeline(logoFallbackStore, undefined, {
+    now: referenceNow,
+    hydrateImages: true,
+    imageHydrationLimit: 1,
+    fetchHtml: async () => `
+      <!doctype html>
+      <html>
+        <head>
+          <meta property="og:title" content="Logo Only AI Hackathon">
+          <meta property="og:image" content="/static/logo.png">
+        </head>
+        <body>
+          <header><img class="brand-logo" src="/assets/source-brand-logo.svg" alt="Logo Only Hackathon"></header>
+          <main><h1>Logo Only AI Hackathon</h1><a href="/apply">Apply now</a></main>
+        </body>
+      </html>
+    `,
+  });
+  const logoFallbackEntries = logoFallbackStore.list({
+    radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+    page: 1,
+    page_size: 100000,
+  }).entries;
+  check(
+    "hydrator uses source logo as cover fallback when event artwork is absent",
+    logoFallbackEntries.some((entry) => {
+      const extras = entry.card as unknown as Record<string, unknown>;
+      return extras.imageStatus === "source_logo"
+        && typeof extras.coverImageUrl === "string"
+        && extras.coverImageUrl.endsWith("/assets/source-brand-logo.svg");
+    }),
+    JSON.stringify(logoFallbackEntries.slice(0, 2).map((entry) => ({
+      title: entry.card.title,
+      coverImageUrl: (entry.card as unknown as Record<string, unknown>).coverImageUrl,
+      imageStatus: (entry.card as unknown as Record<string, unknown>).imageStatus,
+    }))),
+  );
+  check(
+    "pipeline reports source logo fallback images separately from source event images",
+    (logoFallbackRun.imageHydration as { sourceLogoCount?: number } | undefined)?.sourceLogoCount === 1
+      && (logoFallbackRun.images as { sourceLogoCount?: number }).sourceLogoCount === 1,
+    JSON.stringify({ imageHydration: logoFallbackRun.imageHydration, images: logoFallbackRun.images }),
+  );
+
   const failedHydrationStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-failed-hydration.json");
   removeIfExists(failedHydrationStorePath);
   const failedHydrationStore = new LocalFileStore({ file_path: failedHydrationStorePath, auto_flush: false });
@@ -132,6 +179,7 @@ async function main(): Promise<void> {
 
   removeIfExists(storePath);
   removeIfExists(hydratedStorePath);
+  removeIfExists(logoFallbackStorePath);
   removeIfExists(failedHydrationStorePath);
 
   console.log(`\nQ7Q AI events update pipeline checks: ${passCount} PASS / ${failCount} FAIL`);

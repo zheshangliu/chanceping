@@ -296,6 +296,12 @@ check(
   JSON.stringify(logoOnlyMetadata),
 );
 
+check(
+  "keeps logo-only page artwork as a separate brand logo fallback",
+  (logoOnlyMetadata as { brandLogoUrl?: string }).brandLogoUrl === "https://hackathon.example.com/static/logo.png",
+  JSON.stringify(logoOnlyMetadata),
+);
+
 const iconDirectoryMetadata = extractAiEventPageMetadata(`
 <!doctype html>
 <html>

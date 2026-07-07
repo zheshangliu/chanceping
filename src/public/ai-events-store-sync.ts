@@ -45,6 +45,7 @@ export interface HydratePublicAiEventImagesResult {
   radarId: string;
   checkedCount: number;
   hydratedCount: number;
+  sourceLogoCount: number;
   failedCount: number;
   failedDomains: Array<{ domain: string; count: number }>;
   failedUrls: Array<{ url: string; domain: string; reason: string }>;
@@ -324,6 +325,7 @@ export async function hydratePublicAiEventImages(
     .slice(0, limit);
   let checkedCount = 0;
   let hydratedCount = 0;
+  let sourceLogoCount = 0;
   let failedCount = 0;
   const failedUrls: HydratePublicAiEventImagesResult["failedUrls"] = [];
   const previousAutoFlush = store.autoFlush;
@@ -334,13 +336,17 @@ export async function hydratePublicAiEventImages(
       try {
         const html = await fetchHtml(entry.card.official_source_url);
         const metadata = extractAiEventPageMetadata(html, entry.card.official_source_url);
-        if (!metadata.coverImageUrl) continue;
+        const imageUrl = metadata.coverImageUrl ?? metadata.brandLogoUrl;
+        if (!imageUrl) continue;
+        const isSourceLogo = !metadata.coverImageUrl && Boolean(metadata.brandLogoUrl);
         const updatedCard: OpportunityCard & Record<string, unknown> = { ...entry.card };
-        updatedCard.coverImageUrl = metadata.coverImageUrl;
-        updatedCard.imageSourceUrl = metadata.imageSourceUrl ?? metadata.coverImageUrl;
-        updatedCard.imageAlt = metadata.imageAlt ?? `${entry.card.title} 赛事封面`;
-        updatedCard.imageStatus = "source_image";
-        updatedCard.imageAttribution = "source_page";
+        updatedCard.coverImageUrl = imageUrl;
+        updatedCard.imageSourceUrl = metadata.imageSourceUrl ?? imageUrl;
+        updatedCard.imageAlt = isSourceLogo
+          ? metadata.brandLogoAlt ?? `${entry.card.title} 来源品牌标识`
+          : metadata.imageAlt ?? `${entry.card.title} 赛事封面`;
+        updatedCard.imageStatus = isSourceLogo ? "source_logo" : "source_image";
+        updatedCard.imageAttribution = isSourceLogo ? "source_logo" : "source_page";
         if (metadata.registrationUrl) {
           updatedCard.application_url = metadata.registrationUrl;
           updatedCard.registrationUrl = metadata.registrationUrl;
@@ -362,6 +368,7 @@ export async function hydratePublicAiEventImages(
         }
         store.update(entry.dedup_key, updatedCard);
         hydratedCount += 1;
+        if (isSourceLogo) sourceLogoCount += 1;
       } catch (error) {
         failedCount += 1;
         const url = entry.card.official_source_url;
@@ -380,6 +387,7 @@ export async function hydratePublicAiEventImages(
     radarId: PUBLIC_AI_EVENTS_RADAR_ID,
     checkedCount,
     hydratedCount,
+    sourceLogoCount,
     failedCount,
     failedDomains: summarizeFailedDomains(failedUrls),
     failedUrls,

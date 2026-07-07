@@ -37,7 +37,7 @@ export type AiEventOrganizerType =
   | "government"
   | "company"
   | "unknown";
-export type AiEventImageStatus = "source_image" | "platform_placeholder" | "default_placeholder";
+export type AiEventImageStatus = "source_image" | "source_logo" | "platform_placeholder" | "default_placeholder";
 
 export type AiEventCategoryId =
   | "ai_agent"

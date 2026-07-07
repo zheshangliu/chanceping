@@ -5485,7 +5485,8 @@ body.hero-chat-active .hero-chat-main {
 
 .ai-event-cover.is-placeholder img,
 .ai-event-card[data-image-status="default_placeholder"] .ai-event-cover img,
-.ai-event-card[data-image-status="platform_placeholder"] .ai-event-cover img {
+.ai-event-card[data-image-status="platform_placeholder"] .ai-event-cover img,
+.ai-event-card[data-image-status="source_logo"] .ai-event-cover img {
   object-fit: contain;
   padding: 22px;
 }

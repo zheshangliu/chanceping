@@ -42,11 +42,12 @@ export interface PublicAiEventsUpdatePipelineSummary {
     seedCount: number;
   };
   images: {
-    withCoverCount: number;
-    sourceImageCount: number;
-    platformPlaceholderCount: number;
-    defaultPlaceholderCount: number;
-  };
+  withCoverCount: number;
+  sourceImageCount: number;
+  sourceLogoCount: number;
+  platformPlaceholderCount: number;
+  defaultPlaceholderCount: number;
+};
   sourceNetwork: {
     sourceCount: number;
     officialSourceCount: number;
@@ -67,6 +68,7 @@ function listPublicRadarEntries(store: OpportunityStore): StoreEntry[] {
 function countImages(entries: StoreEntry[]): PublicAiEventsUpdatePipelineSummary["images"] {
   let withCoverCount = 0;
   let sourceImageCount = 0;
+  let sourceLogoCount = 0;
   let platformPlaceholderCount = 0;
   let defaultPlaceholderCount = 0;
 
@@ -76,6 +78,7 @@ function countImages(entries: StoreEntry[]): PublicAiEventsUpdatePipelineSummary
     const imageStatus = typeof extra.imageStatus === "string" ? extra.imageStatus : "";
     if (coverImageUrl.length > 0) withCoverCount += 1;
     if (imageStatus === "source_image") sourceImageCount += 1;
+    if (imageStatus === "source_logo") sourceLogoCount += 1;
     if (imageStatus === "platform_placeholder") platformPlaceholderCount += 1;
     if (imageStatus === "default_placeholder") defaultPlaceholderCount += 1;
   }
@@ -83,6 +86,7 @@ function countImages(entries: StoreEntry[]): PublicAiEventsUpdatePipelineSummary
   return {
     withCoverCount,
     sourceImageCount,
+    sourceLogoCount,
     platformPlaceholderCount,
     defaultPlaceholderCount,
   };

@@ -837,6 +837,14 @@ function getCachedOfficialPageMetadata(card: OpportunityCard): AiEventPageMetada
   return extractAiEventPageMetadata(html, card.official_source_url);
 }
 
+function getStoredSourceLogoImage(card: OpportunityCard): string {
+  const record = card as unknown as Record<string, unknown>;
+  const imageStatus = String(record.imageStatus ?? record.image_status ?? "");
+  const coverImageUrl = String(record.coverImageUrl ?? record.cover_image_url ?? "");
+  if (imageStatus !== "source_logo" || !/^https?:\/\//i.test(coverImageUrl)) return "";
+  return coverImageUrl;
+}
+
 function mapEvidenceStatus(card: OpportunityCard): PublicAiEventCard["evidenceStatus"] {
   if (card.evidence_status === "confirmed") return "verified";
   if (card.evidence_status === "partially_verified") return "partially_verified";
@@ -922,6 +930,9 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
     ? storedCoverImageUrl
     : "";
   const realCoverImageUrl = usableStoredCoverImageUrl || pageMetadata.coverImageUrl || "";
+  const sourceLogoImageUrl = realCoverImageUrl
+    ? ""
+    : getStoredSourceLogoImage(card) || pageMetadata.brandLogoUrl || "";
   const platformCoverImageUrl = getPlatformCoverImageUrl({
     officialUrl,
     sourceDomain,
@@ -929,16 +940,16 @@ export function projectOpportunityEntryToPublicAiEvent(entry: StoreEntry, option
     title: card.title,
     sourceType,
   });
-  const coverImageUrl = realCoverImageUrl || platformCoverImageUrl || DEFAULT_COVER_IMAGE_URL;
+  const coverImageUrl = realCoverImageUrl || sourceLogoImageUrl || platformCoverImageUrl || DEFAULT_COVER_IMAGE_URL;
   const imageSourceUrl = String(
     (usableStoredCoverImageUrl
       ? ((card as unknown as Record<string, unknown>).imageSourceUrl ?? (card as unknown as Record<string, unknown>).image_source_url)
       : undefined)
     ?? pageMetadata.imageSourceUrl
-    ?? (realCoverImageUrl ? coverImageUrl : officialUrl),
+    ?? (sourceLogoImageUrl ? sourceLogoImageUrl : realCoverImageUrl ? coverImageUrl : officialUrl),
   );
-  const imageAlt = String((card as unknown as Record<string, unknown>).imageAlt ?? (card as unknown as Record<string, unknown>).image_alt ?? pageMetadata.imageAlt ?? `${card.title} 赛事封面`);
-  const imageStatus = (realCoverImageUrl ? "source_image" : platformCoverImageUrl ? "platform_placeholder" : "default_placeholder") as AiEventImageStatus;
+  const imageAlt = String((card as unknown as Record<string, unknown>).imageAlt ?? (card as unknown as Record<string, unknown>).image_alt ?? pageMetadata.imageAlt ?? pageMetadata.brandLogoAlt ?? `${card.title} 赛事封面`);
+  const imageStatus = (realCoverImageUrl ? "source_image" : sourceLogoImageUrl ? "source_logo" : platformCoverImageUrl ? "platform_placeholder" : "default_placeholder") as AiEventImageStatus;
   const imageAttribution = String((card as unknown as Record<string, unknown>).imageAttribution ?? (card as unknown as Record<string, unknown>).image_attribution ?? pageMetadata.organizer ?? card.organizer ?? sourceDomain ?? "ChancePing");
   const tags = compactPublicTags([
     card.type,

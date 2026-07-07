@@ -6,6 +6,8 @@ export interface AiEventPageMetadata {
   imageSourceUrl?: string;
   imageAlt?: string;
   imageStatus?: AiEventImageStatus;
+  brandLogoUrl?: string;
+  brandLogoAlt?: string;
   deadline?: string;
   reward?: string;
   organizer?: string;
@@ -515,6 +517,68 @@ function pickBestImageCandidate(candidates: ImageCandidate[], baseUrl: string): 
   return scored[0]?.url;
 }
 
+function isUsableBrandLogoUrl(url: string, context = ""): boolean {
+  if (!/^https?:\/\//i.test(url)) return false;
+  const text = `${url} ${context}`.toLowerCase();
+  if (/pixel|spacer|blank|transparent|avatar|qrcode|qr|sprite|tracking|analytics/i.test(text)) return false;
+  return /\.(?:svg|ico|png|jpg|jpeg|webp|avif)(?:[?#].*)?$/i.test(url);
+}
+
+function pickBestBrandLogoCandidate(candidates: ImageCandidate[], baseUrl: string): string | undefined {
+  const scored = candidates
+    .map((candidate, index) => {
+      const resolved = resolveUrl(candidate.rawUrl, baseUrl);
+      if (!resolved || !isUsableBrandLogoUrl(resolved, candidate.context)) return undefined;
+      return {
+        url: resolved,
+        score: candidate.priority - index * 0.01,
+      };
+    })
+    .filter((item): item is { url: string; score: number } => Boolean(item))
+    .sort((a, b) => b.score - a.score);
+  return scored[0]?.url;
+}
+
+function extractBrandLogoImage(html: string, baseUrl: string): string | undefined {
+  const candidates: ImageCandidate[] = [];
+  for (const match of html.matchAll(/<img\b[^>]*>/gi)) {
+    const attrs = readAttributes(match[0]);
+    const context = `${attrs.alt ?? ""} ${attrs.class ?? ""} ${attrs.id ?? ""} ${attrs.title ?? ""}`;
+    if (!/logo|brand|site-logo|navbar-logo|header-logo|平台|品牌|官方/i.test(context)) continue;
+    candidates.push({
+      rawUrl: firstDefined([
+        pickLargestSrcsetImage(attrs.srcset),
+        pickLargestSrcsetImage(attrs["data-srcset"]),
+        attrs.src,
+        attrs["data-src"],
+        attrs["data-original"],
+      ]),
+      context,
+      priority: 96,
+    });
+  }
+  for (const match of html.matchAll(/<link\b[^>]*>/gi)) {
+    const attrs = readAttributes(match[0]);
+    const rel = String(attrs.rel ?? "").toLowerCase();
+    if (!/(^|\s)(apple-touch-icon|icon|shortcut icon|mask-icon)(\s|$)/i.test(rel)) continue;
+    candidates.push({
+      rawUrl: attrs.href,
+      context: `brand logo link ${rel}`,
+      priority: rel.includes("apple-touch-icon") ? 62 : 48,
+    });
+  }
+  candidates.push(
+    ...getMetaContents(html, ["og:logo", "twitter:logo", "logo", "application-name"])
+      .map((rawUrl) => ({ rawUrl, context: "brand logo meta", priority: 78 })),
+  );
+  for (const rawUrl of getMetaContents(html, ["og:image", "og:image:url", "og:image:secure_url", "twitter:image", "twitter:image:src"])) {
+    if (/logo|brand|site-logo/i.test(rawUrl)) {
+      candidates.push({ rawUrl, context: "social image logo fallback", priority: 70 });
+    }
+  }
+  return pickBestBrandLogoCandidate(candidates, baseUrl);
+}
+
 function extractFirstImage(html: string, baseUrl: string): string | undefined {
   const candidates: ImageCandidate[] = [];
   for (const match of html.matchAll(/<source\b[^>]*>/gi)) {
@@ -581,6 +645,7 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
     ...extractScriptImageCandidates(html),
     { rawUrl: extractFirstImage(html, pageUrl), context: "html event image", priority: 74 },
   ], pageUrl);
+  const brandLogoUrl = coverImageUrl ? undefined : extractBrandLogoImage(html, pageUrl);
   const deadline = firstDefined([
     normalizeDate(getMetaContent(html, ["deadline", "event:deadline", "applicationdeadline", "application_deadline", "validthrough"])),
     normalizeDate(String(jsonLd?.endDate ?? "")),
@@ -617,6 +682,8 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
     imageSourceUrl: coverImageUrl,
     imageAlt: title ? `${title} 赛事封面` : undefined,
     imageStatus: coverImageUrl ? "source_image" : undefined,
+    brandLogoUrl,
+    brandLogoAlt: title ? `${title} 来源品牌标识` : undefined,
     deadline,
     reward,
     organizer,
