@@ -36,6 +36,7 @@ check("Q7 live demo uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/
 check("backend Qwen wording verifier is registered", scripts["verify:q7:backend-i18n"] === "tsx scripts/verify-q7-backend-i18n.ts");
 check("chat window verifier is registered", scripts["verify:q7:chat-window"] === "tsx scripts/verify-q7-chat-window.ts");
 check("cloud readiness verifier is registered", scripts["verify:q7:cloud-readiness"] === "tsx scripts/verify-q7-cloud-readiness.ts");
+check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] === "tsx scripts/verify-q7-aliyun-smoke.ts");
 
 [
   "verify:live",
