@@ -1762,7 +1762,7 @@
     const progressSteps = [
       shouldUseHeroDemoReplay()
         ? "正在读取 AI 赛事雷达最近一次入库结果……"
-        : "Serper 正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+        : "Serper 正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台，Qwen 随后整理证据……",
       shouldUseHeroDemoReplay()
         ? "正在整理已保存机会卡：报名入口、截止时间、奖金和云资源字段……"
         : "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",

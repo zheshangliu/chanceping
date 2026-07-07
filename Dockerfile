@@ -1,6 +1,6 @@
-# ChancePing Dockerfile - 多阶段构建（可选附件）
-# 参赛版无需 Docker，使用 npm run quick-start 即可。
-# 本文件为开源版/商业版提供容器化部署能力。
+# ChancePing Dockerfile - 阿里云 MVP 测试站容器
+# 默认 mock-safe，可由阿里云环境变量显式开启 Qwen / Serper。
+# 注意：api.env 必须只留在本地，不能进入 Docker build context。
 
 # ===========================================
 # Stage 1: Builder（构建阶段）
@@ -29,11 +29,18 @@ WORKDIR /app
 # 设置生产环境
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV LLM_STRATEGY=competition
+ENV DATA_MODE=mock
+ENV LLM_MODE=mock
+ENV CHANCEPING_LLM_PROFILE=contest
+ENV CONTEST_LLM_PROVIDER=qwen
+ENV CHANCEPING_LOAD_API_ENV=false
+ENV CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false
+ENV CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false
 ENV STORE_TYPE=local
 ENV SCHEDULER_ENABLED=false
 ENV NOTIFY_MOCK_MODE=true
 ENV PDF_EXPORT_ENABLED=false
+ENV CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json
 
 # 复制 package 文件并安装生产依赖
 COPY package*.json ./
@@ -60,4 +67,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD node -e "fetch('http://localhost:3000/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))"
 
 # 启动命令
-CMD ["npx", "tsx", "src/api/server.ts"]
+CMD ["npm", "run", "start"]

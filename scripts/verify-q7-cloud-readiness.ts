@@ -40,6 +40,7 @@ check("cloud readiness verifier is registered", scripts["verify:q7:cloud-readine
 check("Aliyun runbook verifier is registered", scripts["verify:q7:aliyun-runbook"] === "tsx scripts/verify-q7-aliyun-runbook.ts");
 check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] === "tsx scripts/verify-q7-aliyun-smoke.ts");
 check("Aliyun remote smoke verifier is registered", scripts["verify:q7:aliyun-remote-smoke"] === "tsx scripts/verify-q7-aliyun-remote-smoke.ts");
+check("Docker readiness verifier is registered", scripts["verify:q7:docker-readiness"] === "tsx scripts/verify-q7-docker-readiness.ts");
 
 [
   "verify:live",
@@ -66,6 +67,14 @@ check(
     && aliyunRunbook.includes("verify:q7:backend-i18n")
     && aliyunRunbook.includes("Serper 正在搜索机会，Qwen 随后整理证据"),
 );
+check("Aliyun runbook documents Docker readiness", aliyunRunbook.includes("verify:q7:docker-readiness") && /`api\.env` 不进入镜像/.test(aliyunRunbook));
+
+const dockerignore = read(".dockerignore");
+const dockerfile = read("Dockerfile");
+const compose = read("docker-compose.yml");
+check("Docker context excludes api.env", /^api\.env$/m.test(dockerignore));
+check("Dockerfile defaults to Qwen contest and mock-safe", dockerfile.includes("CHANCEPING_LLM_PROFILE=contest") && dockerfile.includes("CONTEST_LLM_PROVIDER=qwen") && dockerfile.includes("LLM_MODE=mock"));
+check("docker-compose does not mount api.env", !/api\.env\s*:\s*\/app/.test(compose));
 
 const backendVisibleFiles = [
   "web/index.html",

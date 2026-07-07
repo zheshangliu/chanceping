@@ -12,6 +12,7 @@ build/
 .env
 .env.local
 .env.*.local
+api.env
 # 保留 .env.example 作为模板
 
 # 运行时数据（由 volume 挂载）
@@ -19,6 +20,9 @@ data/
 reports/
 exports/
 meili-data/
+artifacts/
+.superpowers/
+ui-audit-*/
 
 # Git
 .git/

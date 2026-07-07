@@ -76,6 +76,22 @@ node --run verify:q7:backend-i18n
 node --run verify:q7:cloud-readiness
 ```
 
+## 容器 / 阿里云运行时准备
+
+如果阿里云测试站使用容器部署，先本地检查 Docker 工件：
+
+```bash
+node --run verify:q7:docker-readiness
+```
+
+容器部署约束：
+
+- `api.env` 不进入镜像，也不挂载到生产容器；
+- 默认 `NODE_ENV=production`，且 `LLM_MODE=mock` / `DATA_MODE=mock`，避免未配置密钥时误触发 live API；
+- 参赛 profile 明确为 `CHANCEPING_LLM_PROFILE=contest` 和 `CONTEST_LLM_PROVIDER=qwen`；
+- 真实 Qwen / Serper Key 只通过阿里云环境变量注入；
+- `data/`、`reports/`、`exports/` 需要挂载持久化卷，确保雷达窗口、机会卡和报告刷新后仍在。
+
 ## 部署后远程 smoke
 
 部署完成并拿到测试站 URL 后运行：

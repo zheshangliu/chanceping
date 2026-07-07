@@ -108,6 +108,7 @@
     "verify:q7:aliyun-runbook": "tsx scripts/verify-q7-aliyun-runbook.ts",
     "verify:q7:aliyun-smoke": "tsx scripts/verify-q7-aliyun-smoke.ts",
     "verify:q7:aliyun-remote-smoke": "tsx scripts/verify-q7-aliyun-remote-smoke.ts",
+    "verify:q7:docker-readiness": "tsx scripts/verify-q7-docker-readiness.ts",
     "verify:q7:llm-reviser": "tsx scripts/verify-q7-llm-reviser.ts",
     "verify:q7:chat-reload": "tsx scripts/verify-q7-chat-reload.ts",
     "verify:q7:random-ai": "tsx scripts/verify-q7-ai-entrepreneur-random.ts",

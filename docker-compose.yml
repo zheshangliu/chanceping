@@ -1,5 +1,5 @@
-# ChancePing Docker Compose - 容器编排（可选附件）
-# 参赛版无需 Docker，使用 npm run quick-start 即可。
+# ChancePing Docker Compose - 本地模拟阿里云 MVP 容器
+# 默认 mock-safe；需要真实 Qwen / Serper 时通过环境变量注入，不挂载 api.env。
 #
 # 用法：
 #   docker-compose up -d          # 后台启动
@@ -18,22 +18,30 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - NODE_ENV=production
       - PORT=3000
-      - LLM_STRATEGY=competition
+      - DATA_MODE=mock
+      - LLM_MODE=mock
+      - CHANCEPING_LLM_PROFILE=contest
+      - CONTEST_LLM_PROVIDER=qwen
+      - CHANCEPING_LOAD_API_ENV=false
+      - CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false
+      - CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false
       - STORE_TYPE=local
       - SCHEDULER_ENABLED=false
       - NOTIFY_MOCK_MODE=true
       - PDF_EXPORT_ENABLED=false
-      # 如需使用真实 API Key，取消注释并填入：
-      # - DASHSCOPE_API_KEY=sk-xxx
-      # - SERPER_API_KEY=xxx
-      # - JINA_READER_API_KEY=xxx
+      - CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json
+      # 如需使用真实 Qwen / Serper，请在部署平台注入，不要写入 compose 文件：
+      # - LLM_MODE=live
+      # - CONTEST_LLM_MODEL=${CONTEST_LLM_MODEL}
+      # - CONTEST_LLM_BASE_URL=${CONTEST_LLM_BASE_URL}
+      # - CONTEST_LLM_API_KEY=${CONTEST_LLM_API_KEY}
+      # - SERPER_API_KEY=${SERPER_API_KEY}
     volumes:
       - ./data:/app/data
       - ./reports:/app/reports
       - ./exports:/app/exports
-      # 如需覆盖 .env，挂载自定义配置：
-      # - ./.env:/app/.env:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))"]
