@@ -127,12 +127,21 @@ async function put(app: ReturnType<typeof createApp>, pathName: string, body: un
   });
 }
 
+async function get(app: ReturnType<typeof createApp>, pathName: string) {
+  const response = await app.request(pathName);
+  return {
+    status: response.status,
+    json: await response.json() as { success?: boolean; data?: any; error?: unknown },
+  };
+}
+
 async function runSourceChecks() {
   const route = read("src/api/routes/radars.ts");
   const types = read("src/api/types.ts");
   check("generate request supports chatWindowId", /interface RadarGenerateRequest[\s\S]*chatWindowId/.test(types));
   check("generate route hydrates radar chat context", /hydrateRadarGenerateChatContext|hydrateRadarChatContext/.test(route) && /radarChatStore/.test(route));
   check("generate route appends chat context before generator", /appendRadarGenerateChatContext/.test(route));
+  check("generate route writes draft snapshot back to chat window", /draftSnapshot:\s*data/.test(route) && /buildGenerateMemorySummary/.test(route));
 }
 
 async function runApiCheck() {
@@ -180,6 +189,12 @@ async function runApiCheck() {
   check("generate prompt includes recent chat messages", /AI Agent Hackathon/.test(prompt) && /不要学生专属/.test(prompt), prompt.slice(0, 800));
   check("generate response exposes safe context diagnostics", generated.json.data?.chatContextUsed === true && Number(generated.json.data?.chatContext?.messageCount ?? 0) >= 2, json(generated.json.data?.chatContext));
   check("generated radar keeps contextual identity", /OPC|大湾区/.test(json(generated.json.data?.radarVersion)) && /AI/.test(json(generated.json.data?.radarVersion)), json(generated.json.data?.radarVersion));
+
+  const detail = await get(app, `/api/radar-chats/${chatWindowId}`);
+  const windowData = detail.json.data?.window;
+  check("generate writes draft snapshot into chat window", /大湾区|OPC|AI/.test(json(windowData?.draftSnapshot)), json(windowData?.draftSnapshot));
+  check("generate updates draft radar version in chat window", windowData?.draftRadarVersion === generated.json.data?.radarVersion?.version, json(windowData));
+  check("generate refreshes chat memory summary", /OPC|AI/.test(json(windowData?.memorySummary)) && Array.isArray(windowData?.memorySummary?.watchingFor), json(windowData?.memorySummary));
 }
 
 runSourceChecks()

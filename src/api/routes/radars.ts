@@ -142,6 +142,35 @@ function appendRadarGenerateChatContext(description: string, context?: RadarRevi
   return lines.join("\n");
 }
 
+function compactGenerateSummaryItems(values: unknown, limit: number): string[] {
+  const items = Array.isArray(values) ? values : typeof values === "string" && values.trim() ? [values.trim()] : [];
+  return [...new Set(items.filter((item): item is string => typeof item === "string" && item.trim().length > 0))]
+    .map((item) => item.trim())
+    .slice(0, limit);
+}
+
+function buildGenerateMemorySummary(data: RadarGenerateResponseData, description: string) {
+  const radarVersion = data.radarVersion;
+  const profile = data.profileSummary;
+  const targetUser = radarVersion?.targetUser || profile?.identity || data.spec?.client_profile?.client_type || undefined;
+  return {
+    summary: radarVersion?.oneSentencePositioning || profile?.target || description.slice(0, 160),
+    ...(targetUser ? { targetUser } : {}),
+    watchingFor: compactGenerateSummaryItems([
+      ...(radarVersion?.opportunityIntents ?? []),
+      ...(radarVersion?.highValueCriteria ?? []),
+      ...(data.spec?.opportunity_scope?.primary_opportunity_types ?? []),
+    ], 12),
+    exclusions: compactGenerateSummaryItems([
+      ...(radarVersion?.exclusionRules ?? []),
+      ...(data.spec?.filter_rules?.must_exclude ?? []),
+    ], 12),
+    confirmedRules: compactGenerateSummaryItems(radarVersion?.highValueCriteria ?? [], 8),
+    rejectedPatterns: compactGenerateSummaryItems(radarVersion?.exclusionRules ?? [], 8),
+    lastFeedback: description.slice(0, 240),
+  };
+}
+
 // ============================================================
 // V1.6-02 HH:MM 校验与 nextRunAt 计算（替代 V1.5-06 的 cron 实现）
 // ============================================================
@@ -265,6 +294,17 @@ export function radarsRoutes(ctx: AppContext): Hono {
         chatContextUsed: Boolean(generateInput.chatContext),
         ...(chatContext ? { chatContext } : {}),
       };
+      if (generateInput.chatWindowId && ctx.radarChatStore) {
+        const updatedWindow = ctx.radarChatStore.update(generateInput.chatWindowId, {
+          title: result.suggestedName || undefined,
+          draftRadarVersion: result.radarVersion?.version,
+          draftSnapshot: data,
+          memorySummary: buildGenerateMemorySummary(data, body.description),
+        });
+        if (updatedWindow) {
+          ctx.radarChatStore.save();
+        }
+      }
       return c.json({ success: true, data, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
     } catch (err) {
       return c.json(
