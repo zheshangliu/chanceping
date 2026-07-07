@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import packageJson from "../package.json";
 import { LocalFileStore } from "../src/agents/opportunity-store";
 import { buildPublicAiEventFeed } from "../src/public/ai-events-publisher";
 import { PUBLIC_AI_EVENTS_RADAR_ID } from "../src/public/ai-events-store-sync";
@@ -97,6 +98,17 @@ async function main(): Promise<void> {
 
   check("pipeline can hydrate source images in same backend pass", (hydratedRun.imageHydration?.hydratedCount ?? 0) === 2, JSON.stringify(hydratedRun.imageHydration));
   check("hydrated pipeline updates image coverage summary", hydratedRun.images.sourceImageCount >= 2, JSON.stringify(hydratedRun.images));
+
+  const schedulerPath = path.resolve(process.cwd(), "scripts", "run-ai-events-update-scheduler.ts");
+  const schedulerSource = fs.existsSync(schedulerPath) ? fs.readFileSync(schedulerPath, "utf8") : "";
+  check(
+    "package exposes local AI events scheduled update script",
+    (packageJson as { scripts?: Record<string, string> }).scripts?.["ai-events:update:scheduled"] === "tsx scripts/run-ai-events-update-scheduler.ts",
+    JSON.stringify((packageJson as { scripts?: Record<string, string> }).scripts?.["ai-events:update:scheduled"] ?? null),
+  );
+  check("scheduled update script exists", fs.existsSync(schedulerPath), schedulerPath);
+  check("scheduled update script supports one-shot dry run", /--once/.test(schedulerSource) && /runPublicAiEventsUpdatePipeline/.test(schedulerSource), schedulerSource.slice(0, 240));
+  check("scheduled update script defaults to 72 hour cadence", /72/.test(schedulerSource) && /interval-hours/.test(schedulerSource), schedulerSource.slice(0, 240));
 
   removeIfExists(storePath);
   removeIfExists(hydratedStorePath);

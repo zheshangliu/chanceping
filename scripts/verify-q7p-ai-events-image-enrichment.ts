@@ -153,6 +153,64 @@ check(
   JSON.stringify(embeddedScriptMetadata),
 );
 
+const platformPayloadMetadata = extractAiEventPageMetadata(`
+<!doctype html>
+<html>
+  <head><title>Qwen Cloud Global AI Hackathon</title></head>
+  <body>
+    <script id="__NEXT_DATA__" type="application/json">
+      {
+        "props": {
+          "pageProps": {
+            "hackathon": {
+              "title": "Qwen Cloud Global AI Hackathon",
+              "submission_deadline": "2026-08-08T23:59:00Z",
+              "prize_amount": "$10,000 prize pool plus Qwen Cloud credits",
+              "cover_image": "https://assets.devpost.com/qwen-cloud-hackathon/cover.png",
+              "registration_url": "/submissions/new"
+            },
+            "event": {
+              "deadline": "2026-08-08",
+              "reward": "$10,000 prize pool"
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
+`, "https://qwencloud-hackathon.devpost.com/");
+
+check(
+  "extracts deadline, reward and registration from Devpost-style app payload",
+  platformPayloadMetadata.coverImageUrl === "https://assets.devpost.com/qwen-cloud-hackathon/cover.png"
+    && platformPayloadMetadata.deadline === "2026-08-08"
+    && platformPayloadMetadata.reward === "$10,000 prize pool plus Qwen Cloud credits"
+    && platformPayloadMetadata.registrationUrl === "https://qwencloud-hackathon.devpost.com/submissions/new",
+  JSON.stringify(platformPayloadMetadata),
+);
+
+const lablabPayloadMetadata = extractAiEventPageMetadata(`
+<!doctype html>
+<html>
+  <head><title>Agent Builders Hackathon</title></head>
+  <body>
+    <script>
+      self.__next_f.push([1, "deadline\\\":\\\"2026-09-12\\\",\\\"prize\\\":\\\"$5,000 + GPU credits\\\",\\\"coverImage\\\":\\\"https://cdn.lablab.ai/events/agent-builders/banner.webp\\\",\\\"applyUrl\\\":\\\"/event/agent-builders/register\\\""]);
+    </script>
+  </body>
+</html>
+`, "https://lablab.ai/event/agent-builders");
+
+check(
+  "extracts deadline, reward and registration from Lablab/Next payload fragments",
+  lablabPayloadMetadata.coverImageUrl === "https://cdn.lablab.ai/events/agent-builders/banner.webp"
+    && lablabPayloadMetadata.deadline === "2026-09-12"
+    && lablabPayloadMetadata.reward === "$5,000 + GPU credits"
+    && lablabPayloadMetadata.registrationUrl === "https://lablab.ai/event/agent-builders/register",
+  JSON.stringify(lablabPayloadMetadata),
+);
+
 const jsonLdOfferMetadata = extractAiEventPageMetadata(`
 <!doctype html>
 <html>

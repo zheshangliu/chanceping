@@ -363,7 +363,100 @@ function normalizeScriptImageUrl(value: string): string {
     .replace(/\\u002[fF]/g, "/")
     .replace(/\\\//g, "/")
     .replace(/\\u003[aA]/g, ":")
+    .replace(/\\"/g, "\"")
+    .replace(/\\'/g, "'")
     .replace(/&amp;/g, "&");
+}
+
+function collectScriptPayloadText(html: string): string {
+  const chunks: string[] = [];
+  for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) {
+    const scriptText = normalizeScriptImageUrl(decodeHtml(match[1] ?? ""));
+    if (/(deadline|submission|registration|register|apply|prize|reward|award|cover|hackathon|challenge|比赛|报名|截止|奖金|奖励)/i.test(scriptText)) {
+      chunks.push(scriptText);
+    }
+  }
+  return chunks.join(" ");
+}
+
+function extractPayloadValues(payloadText: string, keys: string[]): string[] {
+  const escapedKeys = keys.map((key) => key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const keyPattern = escapedKeys.join("|");
+  const values: string[] = [];
+  const patterns = [
+    new RegExp(`["']?(?:${keyPattern})["']?\\s*[:=]\\s*["']([^"'<>]{1,240})["']`, "gi"),
+    new RegExp(`(?:${keyPattern})\\s+([^"'<>]{1,160})`, "gi"),
+  ];
+  for (const pattern of patterns) {
+    for (const match of payloadText.matchAll(pattern)) {
+      const value = cleanText(match[1]);
+      if (value) values.push(value);
+    }
+  }
+  return values;
+}
+
+function extractPayloadDeadline(payloadText: string): string | undefined {
+  const values = extractPayloadValues(payloadText, [
+    "submission_deadline",
+    "submissionDeadline",
+    "application_deadline",
+    "applicationDeadline",
+    "registration_deadline",
+    "registrationDeadline",
+    "deadline",
+    "endDate",
+    "end_date",
+    "endsAt",
+    "ends_at",
+  ]);
+  for (const value of values) {
+    const normalized = normalizeDate(value);
+    if (normalized) return normalized;
+  }
+  return extractDeadlineFromText(payloadText);
+}
+
+function extractPayloadReward(payloadText: string): string | undefined {
+  const values = extractPayloadValues(payloadText, [
+    "prize_amount",
+    "prizeAmount",
+    "prize_pool",
+    "prizePool",
+    "total_prize",
+    "totalPrize",
+    "reward",
+    "rewards",
+    "award",
+    "awards",
+    "prize",
+    "prizes",
+  ]);
+  const rewardValue = values.find((value) => /(\$|￥|\bUSD\b|\bRMB\b|\d|cloud|credits?|GPU|prize|award|reward|奖金|奖池|云资源|算力|展示)/i.test(value));
+  if (rewardValue) return rewardValue.slice(0, 90);
+  return extractRewardFromText(payloadText);
+}
+
+function extractPayloadRegistrationUrl(payloadText: string, baseUrl: string): string | undefined {
+  const values = extractPayloadValues(payloadText, [
+    "registration_url",
+    "registrationUrl",
+    "register_url",
+    "registerUrl",
+    "apply_url",
+    "applyUrl",
+    "application_url",
+    "applicationUrl",
+    "submission_url",
+    "submissionUrl",
+    "submit_url",
+    "submitUrl",
+  ]);
+  for (const value of values) {
+    const resolved = resolveUrl(value, baseUrl);
+    if (resolved) return resolved;
+  }
+  return undefined;
 }
 
 function extractScriptImageCandidates(html: string): ImageCandidate[] {
@@ -472,6 +565,7 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
   const jsonLd = findEventJsonLd(getJsonLdObjects(html));
   const pageText = cleanText(html);
   const attributeText = collectEventAttributeText(html);
+  const payloadText = collectScriptPayloadText(html);
   const description = getMetaContent(html, ["description", "og:description", "twitter:description"]);
   const title = firstDefined([
     getMetaContent(html, ["og:title", "twitter:title"]),
@@ -491,10 +585,12 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
     normalizeDate(getMetaContent(html, ["deadline", "event:deadline", "applicationdeadline", "application_deadline", "validthrough"])),
     normalizeDate(String(jsonLd?.endDate ?? "")),
     normalizeDate(String(jsonLd?.startDate ?? "")),
-    extractDeadlineFromText(`${description ?? ""} ${attributeText} ${pageText}`),
+    extractPayloadDeadline(payloadText),
+    extractDeadlineFromText(`${description ?? ""} ${attributeText} ${payloadText} ${pageText}`),
   ]);
   const registrationUrl = firstDefined([
     resolveUrl(pickOfferUrl(jsonLd?.offers), pageUrl),
+    extractPayloadRegistrationUrl(payloadText, pageUrl),
     extractActionLink(html, pageUrl),
   ]);
   const organizer = firstDefined([
@@ -508,7 +604,8 @@ export function extractAiEventPageMetadata(html: string, pageUrl: string): AiEve
     pickJsonLdReward(jsonLd?.offers),
     pickJsonLdReward((jsonLd as Record<string, unknown> | undefined)?.prize),
     pickJsonLdReward((jsonLd as Record<string, unknown> | undefined)?.prizes),
-    extractRewardFromText(`${description ?? ""}. ${attributeText}. ${pageText}`),
+    extractPayloadReward(payloadText),
+    extractRewardFromText(`${description ?? ""}. ${attributeText}. ${payloadText}. ${pageText}`),
   ]);
   const locationRecord = asRecord(jsonLd?.location);
   const locationName = pickJsonLdName(jsonLd?.location);
