@@ -93,6 +93,7 @@ async function run() {
   check("hero chat can recover demo cards from public AI events when snapshot is missing", heroChatJs.includes("restoreCurrentResultFromPublicEvents") && heroChatJs.includes("demo_replay_restored"));
   check("hero chat script renders GPT-like sidebar", heroChatJs.includes("hero-radar-sidebar") && heroChatJs.includes("全球 AI 赛事导航"));
   check("hero chat loads radar chat windows for sidebar", heroChatJs.includes("loadRadarChatWindows") && heroChatJs.includes("/api/radar-chats"));
+  check("hero chat supports isolated QA user id without changing default demo user", heroChatJs.includes("getHeroChatUserId") && heroChatJs.includes("hero_chat_user_id") && heroChatJs.includes('DEFAULT_USER_ID = "demo_user"'));
   check("hero chat can switch active chat window", heroChatJs.includes("switchHeroRadarWindow") && heroChatJs.includes("/api/radar-chats/${chatWindowId}"));
   check("sample room remains a protected built-in window", heroChatJs.includes("AI_EVENT_SAMPLE_ROOM") && heroChatJs.includes("isSampleRoom"));
   check("sidebar keeps distinct unbound chat windows", heroChatJs.includes("radar:${item.radarId}") && heroChatJs.includes("chat:${item.id}"));
@@ -110,7 +111,7 @@ async function run() {
   check("hero chat sidebar does not expose archived window section", !heroChatJs.includes("hero-sidebar-archive-section") && !heroChatJs.includes("已归档"));
   check("hero chat does not expose fixed prompt action in sidebar", !heroChatJs.includes("发送固定提示词") && !heroChatJs.includes("startHeroSamplePrompt"));
   check("hero chat does not expose copy-to-my-radar action in sidebar", !heroChatJs.includes("复制为我的雷达") && !heroChatJs.includes("copyHeroSampleToMyRadar"));
-  check("sample room sidebar remains a single public AI events navigator window", heroChatJs.includes("全球 AI 赛事导航") && !heroChatJs.includes("只读演示"));
+  check("sample room sidebar remains a single public AI events navigator window", heroChatJs.includes("全球 AI 赛事导航") && heroChatJs.includes("内置导航") && !heroChatJs.includes("只读演示") && !heroChatJs.includes("Hero Demo"));
   check("sample room no longer exposes copy mutation path", heroChatJs.includes("isSampleRoom: true") && !heroChatJs.includes("copiedFromSampleRoom"));
   check("hero chat uses separate user and assistant bubbles", heroChatJs.includes("hero-chat-message user") && heroChatJs.includes("hero-chat-message assistant"));
   check("radar artifact uses centered modal trigger", heroChatJs.includes("data-action=\"open-radar-modal\"") && heroChatJs.includes("hero-artifact-modal"));
@@ -146,7 +147,7 @@ async function run() {
   check("sidebar supports renaming custom radar windows", heroChatJs.includes("renameHeroRadarWindow") && heroChatJs.includes("data-action=\"submit-window-rename\""));
   check("sidebar supports deleting custom radar windows", heroChatJs.includes("deleteHeroRadarWindow") && heroChatJs.includes("data-action=\"confirm-window-delete\""));
   check("sidebar window actions use in-app modal instead of browser prompts", heroChatJs.includes("openRenameWindowModal") && heroChatJs.includes("openDeleteWindowModal") && !heroChatJs.includes("window.prompt?.") && !heroChatJs.includes("window.confirm?."));
-  check("sample room is protected from sidebar delete action", heroChatJs.includes("sample room cannot be deleted") || heroChatJs.includes("样板间不能删除"));
+  check("sample room is protected from sidebar delete action", heroChatJs.includes("sample room cannot be deleted") || heroChatJs.includes("内置窗口，不能删除"));
   check("hero demo prompt names concrete AI contest sources", heroChatJs.includes("Qwen Cloud Hackathon") && heroChatJs.includes("Devpost") && heroChatJs.includes("DoraHacks") && heroChatJs.includes("Lablab.ai"));
   check("hero demo prompt asks for registration-first outputs", heroChatJs.includes("官方报名页") && heroChatJs.includes("可提交项目") && heroChatJs.includes("本周先做哪三件事"));
   check("hero chat exposes create new radar window flow", heroChatJs.includes("createNewHeroRadarWindow") && heroChatJs.includes("这会成为一个新的雷达窗口"));

@@ -4,7 +4,8 @@
   const STORAGE_KEY = "chanceping_hero_radar_chat_state";
   const LAST_CHAT_WINDOW_KEY = "chanceping_hero_radar_chat_window_id";
   const SIDEBAR_COLLAPSED_KEY = "chanceping-sidebar-collapsed";
-  const DEMO_USER_ID = "demo_user";
+  const DEFAULT_USER_ID = "demo_user";
+  const HERO_CHAT_USER_ID = getHeroChatUserId();
   const CHAT_WINDOW_LIMIT = 3;
   const QUOTA_ERROR_CODE = "RADAR_CHAT_QUOTA_EXCEEDED";
   const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
@@ -35,6 +36,17 @@
 
   let pendingChatWindowRequest = null;
   let pendingInputSaveTimer = null;
+
+  function getHeroChatUserId() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const raw = params.get("hero_chat_user_id") || params.get("test_user_id") || "";
+      const value = raw.trim();
+      return /^[a-zA-Z0-9_.-]{1,80}$/.test(value) ? value : DEFAULT_USER_ID;
+    } catch {
+      return DEFAULT_USER_ID;
+    }
+  }
 
   const CUSTOMER_LABELS = {
     direct_opportunity: "可直接行动的比赛机会",
@@ -170,7 +182,7 @@
     pendingChatWindowRequest = postJson("/api/radar-chats", {
       radarId: heroRadarChatState.boundRadarId || heroRadarChatState.copiedRadarId || undefined,
       title: draft?.suggestedName || "AI 赛事雷达",
-      userId: DEMO_USER_ID,
+      userId: HERO_CHAT_USER_ID,
       reuseByRadarId: heroRadarChatState.boundRadarId ? true : false,
       draftRadarVersion: draft?.radarVersion?.version || "V1.0",
     })
@@ -374,7 +386,7 @@
 
   async function loadRadarChatWindows() {
     try {
-      const windows = await getJson(`/api/radar-chats?user_id=${encodeURIComponent(DEMO_USER_ID)}&include_archived=true`);
+      const windows = await getJson(`/api/radar-chats?user_id=${encodeURIComponent(HERO_CHAT_USER_ID)}&include_archived=true`);
       const normalized = (Array.isArray(windows) ? windows : [])
         .filter((item) => !isSampleRoomWindow(item))
         .map(normalizeSidebarWindow);
@@ -1156,7 +1168,7 @@
       const isActive = windowData.id === activeChatWindowId;
       const version = windowData.draftRadarVersion || windowData.currentConfirmedRadarVersion || "V1.0";
       const archived = options.archived === true || windowData.status === "archived";
-      const subline = windowData.isSampleRoom ? `${version} · Hero Demo` : `${version} · 雷达窗口`;
+      const subline = windowData.isSampleRoom ? `${version} · 内置导航` : `${version} · 雷达窗口`;
       const actionButtons = windowData.isSampleRoom ? `
         <span class="hero-sidebar-window-note">内置</span>
       ` : `
@@ -1416,7 +1428,7 @@
     await loadRadarChatWindows();
     addMessage(
       "assistant",
-        `自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}。我先在 AI 赛事雷达样板间里承接这条需求；如果你想保存为新的长期雷达，请先在左侧删除一个旧窗口。`
+        `自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}。我先在全球 AI 赛事导航里承接这条需求；如果你想保存为新的长期雷达，请先在左侧删除一个旧窗口。`
     );
     saveState();
     window.setTimeout(() => document.getElementById("hero-radar-chat-input")?.focus(), 0);
@@ -1428,7 +1440,7 @@
     const text = String(initialMessage || "").trim();
     if (isChatWindowQuotaFull()) {
       if (text) {
-        window.showToast?.(`自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}，先用 AI 赛事样板间承接这条需求。`, "warning");
+        window.showToast?.(`自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}，先用全球 AI 赛事导航承接这条需求。`, "warning");
         return openSampleRoomWithDraftPrompt(text);
       }
       await loadRadarChatWindows();
@@ -1483,7 +1495,7 @@
   function openRenameWindowModal(chatWindowId) {
     if (!chatWindowId) return false;
     if (isSampleRoomWindowId(chatWindowId)) {
-      window.showToast?.("AI 赛事样板间不能改名；你可以新建一个自己的雷达窗口。", "warning");
+      window.showToast?.("全球 AI 赛事导航是内置窗口，不能改名；你可以新建一个自己的雷达窗口。", "warning");
       return false;
     }
     openHeroModal({ type: "rename-window", chatWindowId });
@@ -1498,7 +1510,7 @@
   function openDeleteWindowModal(chatWindowId) {
     if (!chatWindowId) return false;
     if (isSampleRoomWindowId(chatWindowId)) {
-      window.showToast?.("AI 赛事样板间不能删除；它是内置演示窗口。", "warning");
+      window.showToast?.("全球 AI 赛事导航是内置窗口，不能删除。", "warning");
       return false;
     }
     openHeroModal({ type: "delete-window", chatWindowId });
@@ -1508,7 +1520,7 @@
   async function renameHeroRadarWindow(chatWindowId, nextTitle) {
     if (!chatWindowId) return false;
     if (isSampleRoomWindowId(chatWindowId)) {
-      window.showToast?.("AI 赛事样板间不能改名；你可以新建一个自己的雷达窗口。", "warning");
+      window.showToast?.("全球 AI 赛事导航是内置窗口，不能改名；你可以新建一个自己的雷达窗口。", "warning");
       return false;
     }
     const title = String(nextTitle || "").trim();
@@ -1533,7 +1545,7 @@
     if (!chatWindowId) return false;
     if (isSampleRoomWindowId(chatWindowId)) {
       // sample room cannot be deleted
-      window.showToast?.("AI 赛事样板间不能删除；它是内置演示窗口。", "warning");
+      window.showToast?.("全球 AI 赛事导航是内置窗口，不能删除。", "warning");
       return false;
     }
     await deleteJson(`/api/radar-chats/${chatWindowId}`);
@@ -1552,7 +1564,7 @@
     const title = inferRadarTitle(initialMessage);
     const windowData = await postJson("/api/radar-chats", {
       title,
-      userId: DEMO_USER_ID,
+      userId: HERO_CHAT_USER_ID,
       reuseByRadarId: false,
       draftRadarVersion: "V1.0",
       pendingMessage: String(initialMessage || ""),
@@ -1573,12 +1585,12 @@
       window.showToast?.("这个雷达还没有可编辑的窗口", "warning");
       return false;
     }
-    const existingWindows = await getJson(`/api/radar-chats?radar_id=${encodeURIComponent(radarId)}&user_id=${encodeURIComponent(DEMO_USER_ID)}`);
+    const existingWindows = await getJson(`/api/radar-chats?radar_id=${encodeURIComponent(radarId)}&user_id=${encodeURIComponent(HERO_CHAT_USER_ID)}`);
     const existing = Array.isArray(existingWindows) ? existingWindows.find((item) => item.status !== "archived") : null;
     const windowData = existing || await postJson("/api/radar-chats", {
       radarId,
       title: radar?.name || radar?.title || "机会雷达",
-      userId: DEMO_USER_ID,
+      userId: HERO_CHAT_USER_ID,
       draftRadarVersion: radar?.spec?.radar_version?.version || radar?.spec?.version || "V1.0",
     });
     await loadRadarChatWindows();
