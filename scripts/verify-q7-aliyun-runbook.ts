@@ -32,6 +32,7 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "ut
   "verify:q7:api-env-contest",
   "verify:q7:aliyun-smoke",
   "verify:q7:aliyun-remote-smoke",
+  "verify:q7:aliyun-container-smoke",
   "CHANCEPING_DEPLOY_BASE_URL",
   "verify:q7:docker-readiness",
   "CHANCEPING_DOCKER_NODE_IMAGE",

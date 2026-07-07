@@ -108,6 +108,7 @@
     "verify:q7:aliyun-runbook": "tsx scripts/verify-q7-aliyun-runbook.ts",
     "verify:q7:aliyun-smoke": "tsx scripts/verify-q7-aliyun-smoke.ts",
     "verify:q7:aliyun-remote-smoke": "tsx scripts/verify-q7-aliyun-remote-smoke.ts",
+    "verify:q7:aliyun-container-smoke": "tsx scripts/verify-q7-aliyun-container-smoke.ts",
     "verify:q7:docker-readiness": "tsx scripts/verify-q7-docker-readiness.ts",
     "verify:q7:llm-comparison": "tsx scripts/verify-q7-llm-comparison.ts",
     "compare:live-llm-profiles": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_LLM_COMPARISON=true tsx scripts/compare-live-llm-profiles.ts",

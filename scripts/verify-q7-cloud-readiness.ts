@@ -40,6 +40,7 @@ check("cloud readiness verifier is registered", scripts["verify:q7:cloud-readine
 check("Aliyun runbook verifier is registered", scripts["verify:q7:aliyun-runbook"] === "tsx scripts/verify-q7-aliyun-runbook.ts");
 check("Aliyun smoke verifier is registered", scripts["verify:q7:aliyun-smoke"] === "tsx scripts/verify-q7-aliyun-smoke.ts");
 check("Aliyun remote smoke verifier is registered", scripts["verify:q7:aliyun-remote-smoke"] === "tsx scripts/verify-q7-aliyun-remote-smoke.ts");
+check("Aliyun container smoke verifier is registered", scripts["verify:q7:aliyun-container-smoke"] === "tsx scripts/verify-q7-aliyun-container-smoke.ts");
 check("Docker readiness verifier is registered", scripts["verify:q7:docker-readiness"] === "tsx scripts/verify-q7-docker-readiness.ts");
 check("LLM comparison verifier is registered", scripts["verify:q7:llm-comparison"] === "tsx scripts/verify-q7-llm-comparison.ts");
 check(
@@ -76,6 +77,12 @@ check(
     && aliyunRunbook.includes("Serper 正在搜索机会，Qwen 随后整理证据"),
 );
 check("Aliyun runbook documents Docker readiness", aliyunRunbook.includes("verify:q7:docker-readiness") && /`api\.env` 不进入镜像/.test(aliyunRunbook));
+check(
+  "Aliyun runbook documents container smoke",
+  aliyunRunbook.includes("verify:q7:aliyun-container-smoke")
+    && aliyunRunbook.includes("CHANCEPING_DOCKER_NODE_IMAGE")
+    && aliyunRunbook.includes("verify:q7:aliyun-remote-smoke"),
+);
 check("Aliyun runbook documents post-deploy LLM comparison", aliyunRunbook.includes("compare:live-llm-profiles") && aliyunRunbook.includes("不放进当前阿里云前置闸门"));
 check("Aliyun env example uses Qwen contest profile", aliyunEnvExample.includes("CHANCEPING_LLM_PROFILE=contest") && aliyunEnvExample.includes("CONTEST_LLM_PROVIDER=qwen"));
 check("Aliyun env example keeps live flags off by default", aliyunEnvExample.includes("CHANCEPING_LOAD_API_ENV=false") && aliyunEnvExample.includes("CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false") && aliyunEnvExample.includes("CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false"));

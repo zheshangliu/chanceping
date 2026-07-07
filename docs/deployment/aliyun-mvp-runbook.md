@@ -55,6 +55,7 @@ node --run verify:q7:backend-i18n
 node --run verify:q7:chat-window
 node --run verify:q7:cloud-readiness
 node --run verify:q7:aliyun-smoke
+node --run verify:q7:aliyun-container-smoke
 node --run verify:all
 ```
 
@@ -121,7 +122,28 @@ CHANCEPING_DOCKER_NODE_IMAGE=node:22-slim docker compose build
 
 如果你配置了阿里云 ACR 中转镜像，把 `node:22-slim` 替换成对应 ACR 镜像地址即可。
 
-- 构建成功后仍需运行 `verify:q7:aliyun-smoke` 和部署后的远程 smoke。
+如果要把“构建镜像 → 启动临时容器 → 用远程 smoke 验证容器”合并成一条本地闸门，可运行：
+
+```bash
+node --run verify:q7:aliyun-container-smoke
+```
+
+该脚本会：
+
+- 使用 `docker compose build` 构建 `chanceping:latest`；
+- 如果本机没有显式设置 `CHANCEPING_DOCKER_NODE_IMAGE`，但已有可用的 `public.ecr.aws/docker/library/node:22-slim` 本地镜像，会优先复用它，避免 Docker Hub 网络问题；
+- 启动临时容器并等待 `/health`；
+- 自动设置 `CHANCEPING_DEPLOY_BASE_URL=http://127.0.0.1:<临时端口>`，复用 `verify:q7:aliyun-remote-smoke` 验证容器；
+- 结束后自动停止临时容器。
+
+如果阿里云或 CI 使用 ACR 中转镜像，可显式指定：
+
+```bash
+CHANCEPING_DOCKER_NODE_IMAGE=registry.cn-hangzhou.aliyuncs.com/your-namespace/node:22-slim \
+  node --run verify:q7:aliyun-container-smoke
+```
+
+构建成功后仍需运行部署后的远程 smoke。
 
 ## 部署后远程 smoke
 
