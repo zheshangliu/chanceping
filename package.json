@@ -102,6 +102,7 @@
     "verify:q7:chat-window": "tsx scripts/verify-q7-chat-window.ts",
     "verify:q7:chat-context": "tsx scripts/verify-q7-chat-context.ts",
     "verify:q7:generate-context": "tsx scripts/verify-q7-generate-context.ts",
+    "verify:q7:backend-i18n": "tsx scripts/verify-q7-backend-i18n.ts",
     "verify:q7:llm-reviser": "tsx scripts/verify-q7-llm-reviser.ts",
     "verify:q7:chat-reload": "tsx scripts/verify-q7-chat-reload.ts",
     "verify:q7:random-ai": "tsx scripts/verify-q7-ai-entrepreneur-random.ts",

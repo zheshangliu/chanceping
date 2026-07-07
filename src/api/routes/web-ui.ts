@@ -116,6 +116,10 @@ export function webUiRoutes(): Hono {
     serveFile("home.js", "application/javascript; charset=utf-8"),
   );
   app.get(
+    "/backend-i18n.js",
+    serveFile("backend-i18n.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
     "/mvp-templates.js",
     serveFile("mvp-templates.js", "application/javascript; charset=utf-8"),
   );
