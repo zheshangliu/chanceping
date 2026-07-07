@@ -21,6 +21,26 @@
       sourceTitle: "信息源网络",
       listKicker: "Opportunity Cards",
       listTitle: "当前有效 AI 赛事机会",
+      decisionTitle: "快速决策列表",
+      decisionHint: "点击一条赛事查看来源链",
+      decisionSummary: "优先看报名入口、截止时间和来源可信度",
+      selectedEvent: "当前选中",
+      officialVerified: "官方已核验",
+      aggregateLead: "聚合线索",
+      fieldsPending: "字段待确认",
+      sourceChainTitle: "来源链",
+      officialEntry: "官方入口",
+      registrationEntry: "报名入口",
+      sourceDomain: "来源域名",
+      coverSource: "封面来源",
+      deadlineUnknown: "截止待查",
+      deadlineToday: "今日截止",
+      deadlineExpired: "已截止",
+      deadlineInDays: (days) => `${days} 天后截止`,
+      metricTotal: "当前筛选结果",
+      metricDeadline: "有明确截止",
+      metricOfficial: "有官方入口",
+      metricImage: "有封面图",
       currentListTitle: "当前有效 AI 赛事机会",
       historicalListTitle: "历史 AI 赛事",
       currentTab: "当前有效",
@@ -89,6 +109,26 @@
       sourceTitle: "Source network",
       listKicker: "Opportunity Cards",
       listTitle: "Current AI contest opportunities",
+      decisionTitle: "Fast decision list",
+      decisionHint: "Select an event to inspect the source chain",
+      decisionSummary: "Prioritize official entry, deadline, and source trust",
+      selectedEvent: "Selected event",
+      officialVerified: "Official source",
+      aggregateLead: "Aggregate lead",
+      fieldsPending: "Fields pending",
+      sourceChainTitle: "Source chain",
+      officialEntry: "Official entry",
+      registrationEntry: "Registration entry",
+      sourceDomain: "Source domain",
+      coverSource: "Cover source",
+      deadlineUnknown: "Deadline unknown",
+      deadlineToday: "Due today",
+      deadlineExpired: "Expired",
+      deadlineInDays: (days) => `${days} days left`,
+      metricTotal: "Filtered results",
+      metricDeadline: "Known deadlines",
+      metricOfficial: "Official entries",
+      metricImage: "With cover images",
       currentListTitle: "Current AI contest opportunities",
       historicalListTitle: "Historical AI contest opportunities",
       currentTab: "Current",
@@ -166,6 +206,7 @@
   let latestItems = [];
   let latestSources = [];
   let latestStats = null;
+  let selectedEventKey = "";
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -288,6 +329,171 @@
       .replace(REVIEW_REQUIRED_EN_GLOBAL, t("fallbackValue"));
   }
 
+  function eventKey(item, index = 0) {
+    return String(item?.id || item?.officialUrl || item?.registrationUrl || item?.title || `event-${index}`);
+  }
+
+  function sourceDomainFromUrl(url) {
+    try {
+      return new URL(url).hostname.replace(/^www\./, "");
+    } catch {
+      return "";
+    }
+  }
+
+  function deadlineCountdownMeta(item) {
+    const raw = item?.deadline || item?.deadlineIso || item?.deadlineDate || "";
+    const display = item?.deadlineDisplay || raw || t("deadlineUnknown");
+    if (!raw || /待查|见官网|unknown|tbd/i.test(String(raw))) {
+      return { label: t("deadlineUnknown"), tone: "pending", display };
+    }
+    const parsed = new Date(raw);
+    if (Number.isNaN(parsed.getTime())) {
+      return { label: display || t("deadlineUnknown"), tone: "pending", display };
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    parsed.setHours(0, 0, 0, 0);
+    const days = Math.round((parsed.getTime() - today.getTime()) / 86400000);
+    if (days < 0) return { label: t("deadlineExpired"), tone: "expired", display };
+    if (days === 0) return { label: t("deadlineToday"), tone: "urgent", display };
+    return { label: translate("deadlineInDays", days), tone: days <= 14 ? "urgent" : "current", display };
+  }
+
+  function verificationMeta(item) {
+    const domain = item?.sourceDomain || item?.domain || sourceDomainFromUrl(item?.officialUrl || item?.registrationUrl || "");
+    const text = [
+      item?.sourceLabel,
+      item?.sourceType,
+      item?.reason,
+      item?.matchReason,
+      domain,
+    ].filter(Boolean).join(" ");
+    const isAggregate = /competehub|mlcontests|aggregat|聚合|导航|directory|榜单/i.test(text);
+    const hasOfficial = Boolean(item?.officialUrl || item?.registrationUrl) && !isAggregate;
+    const hasReadEvidence = /已读取|官方页面|official|主办方|赛事页/i.test(text);
+    if (isAggregate) {
+      return { label: t("aggregateLead"), tone: "aggregate", domain };
+    }
+    if (hasOfficial || hasReadEvidence) {
+      return { label: t("officialVerified"), tone: "official", domain };
+    }
+    return { label: t("fieldsPending"), tone: "pending", domain };
+  }
+
+  function sourceChain(item) {
+    const officialUrl = item?.officialUrl || "";
+    const registrationUrl = item?.registrationUrl || "";
+    const domain = item?.sourceDomain || item?.domain || sourceDomainFromUrl(officialUrl || registrationUrl);
+    const cover = item?.imageStatus === "event_cover"
+      ? currentLanguage === "en" ? "Event image" : "赛事图片"
+      : item?.imageStatus === "source_logo"
+        ? currentLanguage === "en" ? "Source logo" : "来源 Logo"
+        : currentLanguage === "en" ? "Fallback cover" : "占位封面";
+    return [
+      [t("officialEntry"), officialUrl || t("sourcePending")],
+      [t("registrationEntry"), registrationUrl || officialUrl || t("sourcePending")],
+      [t("sourceDomain"), domain || t("platformFallback")],
+      [t("coverSource"), cover],
+    ];
+  }
+
+  function renderRadarMetrics(items, stats = latestStats) {
+    const container = document.getElementById("ai-events-radar-metrics");
+    if (!container) return;
+    const total = Number(stats?.filteredCount ?? items.length);
+    const knownDeadline = items.filter((item) => {
+      const deadline = String(item?.deadline || item?.deadlineDisplay || "");
+      return deadline && !/待查|见官网|unknown|tbd/i.test(deadline);
+    }).length;
+    const official = items.filter((item) => item?.officialUrl || item?.registrationUrl).length;
+    const image = items.filter((item) => item?.coverImageUrl && item?.imageStatus !== "default_placeholder").length;
+    container.innerHTML = [
+      [total, t("metricTotal")],
+      [knownDeadline, t("metricDeadline")],
+      [official, t("metricOfficial")],
+      [image, t("metricImage")],
+    ].map(([value, label]) => `
+      <div class="ai-events-metric">
+        <strong>${escapeHtml(String(value))}</strong>
+        <span>${escapeHtml(label)}</span>
+      </div>
+    `).join("");
+  }
+
+  function renderDecisionRow(item, index) {
+    const key = eventKey(item, index);
+    const deadline = deadlineCountdownMeta(item);
+    const verify = verificationMeta(item);
+    const categoryText = displayCategoryForItem(item);
+    const activeClass = key === selectedEventKey ? " is-active" : "";
+    return `
+      <button type="button" class="ai-events-decision-row${activeClass}" data-ai-events-select="${escapeHtml(key)}">
+        <span class="ai-events-decision-rank">${escapeHtml(String(index + 1))}</span>
+        <span class="ai-events-decision-main">
+          <strong>${escapeHtml(item?.title || t("unnamed"))}</strong>
+          <span>${escapeHtml([categoryText, item?.platform, item?.regionGroupLabel || item?.region].filter(Boolean).join(" · ") || t("platformFallback"))}</span>
+        </span>
+        <span class="ai-events-decision-meta">
+          <span>${escapeHtml(deadline.label)}</span>
+          <span>${escapeHtml(verify.label)}</span>
+        </span>
+      </button>
+    `;
+  }
+
+  function renderDecisionList(items) {
+    const list = document.getElementById("ai-events-decision-list");
+    const summary = document.getElementById("ai-events-decision-summary");
+    if (!list) return;
+    const decisionItems = Array.isArray(items) ? items.slice(0, 8) : [];
+    if (summary) summary.textContent = t("decisionSummary");
+    if (decisionItems.length === 0) {
+      selectedEventKey = "";
+      list.innerHTML = `<div class="ai-event-card-loading">${escapeHtml(emptyMessage())}</div>`;
+      renderVerificationPanel(null);
+      return;
+    }
+    if (!decisionItems.some((item, index) => eventKey(item, index) === selectedEventKey)) {
+      selectedEventKey = eventKey(decisionItems[0], 0);
+    }
+    list.innerHTML = decisionItems.map(renderDecisionRow).join("");
+    const selected = decisionItems.find((item, index) => eventKey(item, index) === selectedEventKey) || decisionItems[0];
+    renderVerificationPanel(selected);
+  }
+
+  function renderVerificationPanel(item) {
+    const panel = document.getElementById("ai-events-verification-panel");
+    if (!panel) return;
+    if (!item) {
+      panel.innerHTML = `<p>${escapeHtml(emptyMessage())}</p>`;
+      return;
+    }
+    const deadline = deadlineCountdownMeta(item);
+    const verify = verificationMeta(item);
+    const chain = sourceChain(item);
+    const officialUrl = item?.officialUrl || "";
+    const registrationUrl = item?.registrationUrl || officialUrl;
+    panel.innerHTML = `
+      <span class="ai-events-kicker">${escapeHtml(t("selectedEvent"))}</span>
+      <h3>${escapeHtml(item?.title || t("unnamed"))}</h3>
+      <p>${escapeHtml(toCustomerReason(item?.reason))}</p>
+      <div class="ai-events-verification-badges">
+        <span class="${verify.tone === "official" ? "is-official" : verify.tone === "aggregate" ? "is-aggregate" : ""}">${escapeHtml(verify.label)}</span>
+        <span>${escapeHtml(deadline.label)}</span>
+        <span>${escapeHtml(item?.rewardTypeLabel || item?.prize || item?.reward || t("fallbackValue"))}</span>
+      </div>
+      <strong>${escapeHtml(t("sourceChainTitle"))}</strong>
+      <div class="ai-events-source-chain">
+        ${chain.map(([label, value]) => `<span><b>${escapeHtml(label)}：</b>${escapeHtml(value)}</span>`).join("")}
+      </div>
+      <div class="ai-events-verification-actions">
+        ${registrationUrl ? `<a href="${escapeHtml(registrationUrl)}" target="_blank" rel="noopener">${escapeHtml(t("openOfficial"))}</a>` : ""}
+        ${officialUrl && officialUrl !== registrationUrl ? `<a class="secondary" href="${escapeHtml(officialUrl)}" target="_blank" rel="noopener">${escapeHtml(t("officialEntry"))}</a>` : ""}
+      </div>
+    `;
+  }
+
   function renderItem(item) {
     const tags = Array.isArray(item.tags) ? item.tags.filter(Boolean).slice(0, 4) : [];
     const categoryText = displayCategoryForItem(item);
@@ -369,6 +575,8 @@
     renderPagination(stats);
     renderCategoryControls(stats);
     renderDimensionControls(stats);
+    renderRadarMetrics(items, stats);
+    renderDecisionList(items);
     updateStatusControls();
   }
 
@@ -535,6 +743,14 @@
         currentPage = 1;
         loadAiEvents();
       });
+    });
+    document.addEventListener("click", (event) => {
+      const selectTarget = event.target instanceof Element ? event.target.closest("[data-ai-events-select]") : null;
+      if (selectTarget) {
+        selectedEventKey = selectTarget.getAttribute("data-ai-events-select") || "";
+        renderDecisionList(latestItems);
+        return;
+      }
     });
     document.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target.closest("[data-ai-events-category]") : null;

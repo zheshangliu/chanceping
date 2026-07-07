@@ -110,6 +110,7 @@ export function webUiRoutes(): Hono {
 
   // 静态资源
   app.get("/styles.css", serveFile("styles.css", "text/css; charset=utf-8"));
+  app.get("/ai-events-hybrid.css", serveFile("ai-events-hybrid.css", "text/css; charset=utf-8"));
   app.get(
     "/home.js",
     serveFile("home.js", "application/javascript; charset=utf-8"),

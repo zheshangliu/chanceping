@@ -21,6 +21,8 @@ function check(name: string, condition: boolean, detail = ""): void {
 const html = read("web/ai-events.html");
 const js = read("web/ai-events.js");
 const css = read("web/styles.css");
+const hybridCssPath = path.resolve(process.cwd(), "web/ai-events-hybrid.css");
+const hybridCss = fs.existsSync(hybridCssPath) ? read("web/ai-events-hybrid.css") : "";
 const webRoutes = read("src/api/routes/web-ui.ts");
 
 console.log("\n[Q7 AI Events Page] Static contract checks\n");
@@ -71,6 +73,20 @@ check("old public title removed from HTML", !html.includes("AI 赛事情报雷�
 check("main blue UI does not use old accent button on /ai-events", !css.includes(".ai-events-start {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 42px;\n  padding: 0 18px;\n  border-radius: 999px;\n  background: var(--accent);"));
 check("does not expose env keys", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY/i.test(html + js));
 check("does not mention mock as successful source", !/mock\s+success|demo\s+source/i.test(html + js));
+check("hybrid CSS file is linked only from AI events page", html.includes('href="/ai-events-hybrid.css"'));
+check("hybrid CSS static route is registered", webRoutes.includes('"/ai-events-hybrid.css"') && webRoutes.includes('serveFile("ai-events-hybrid.css"'));
+check("hybrid page has operator metrics mount", html.includes("ai-events-radar-metrics"));
+check("hybrid page has list controls mount", html.includes("ai-events-list-controls"));
+check("hybrid page has verification panel mount", html.includes("ai-events-verification-panel"));
+check("hybrid JS keeps public feed endpoint", js.includes("/api/public/ai-events?") && !js.includes("/api/radar-chats"));
+check("hybrid JS does not run public sync from UI", !js.includes("/api/public/ai-events/sync") && !js.includes("/api/public/ai-events/hydrate-images"));
+check("hybrid JS exposes decision-list renderer", js.includes("renderDecisionList") && js.includes("renderDecisionRow"));
+check("hybrid JS exposes source verification panel", js.includes("renderVerificationPanel") && js.includes("sourceChain"));
+check("hybrid JS exposes source trust labels", js.includes("verificationMeta") && js.includes("聚合线索") && js.includes("官方已核验"));
+check("hybrid JS exposes deadline countdown labels", js.includes("deadlineCountdownMeta") && js.includes("截止待查"));
+check("hybrid CSS is scoped to ai events page", hybridCss.includes(".ai-events-page") && !hybridCss.includes(".hero-radar-chat-root"));
+check("hybrid CSS supports mobile compact list", hybridCss.includes("@media (max-width: 760px)") && hybridCss.includes("grid-template-columns: 1fr"));
+check("hybrid page remains isolated from total console scripts", !html.includes("hero-radar-chat.js") && !html.includes("radars.js") && !html.includes("radar-detail.js"));
 
 console.log(`\nQ7 AI events page checks: ${passCount} PASS / ${failCount} FAIL`);
 

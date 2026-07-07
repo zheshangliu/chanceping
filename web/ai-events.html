@@ -6,8 +6,9 @@
   <title>盯比赛｜全球 AI 赛事导航｜ChancePing</title>
   <link rel="icon" href="/assets/logo.png?v=20260705" type="image/png">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/ai-events-hybrid.css">
 </head>
-<body class="ai-events-page">
+<body class="ai-events-page ai-events-hybrid">
   <header class="ai-events-topbar">
     <a class="ai-events-brand" href="/aievents" aria-label="盯比赛｜全球 AI 赛事导航">
       <img class="ai-events-brand-logo" src="/assets/chanceping-logo.png" alt="盯比赛">
@@ -56,11 +57,23 @@
         </div>
         <span id="ai-events-count">加载中</span>
       </div>
+      <div id="ai-events-radar-metrics" class="ai-events-radar-metrics" aria-label="AI 赛事雷达指标"></div>
       <div id="ai-events-category-filter" class="ai-events-category-filter" aria-label="赛事分类"></div>
       <div class="ai-events-filter-groups" aria-label="赛事筛选">
         <div id="ai-events-region-filter" class="ai-events-category-filter" aria-label="地区筛选"></div>
         <div id="ai-events-reward-filter" class="ai-events-category-filter" aria-label="奖励筛选"></div>
         <div id="ai-events-deadline-filter" class="ai-events-category-filter" aria-label="截止时间筛选"></div>
+      </div>
+      <div id="ai-events-list-controls" class="ai-events-list-controls" aria-label="快速决策视图">
+        <div>
+          <strong data-i18n="decisionTitle">快速决策列表</strong>
+          <span id="ai-events-decision-summary">优先看报名入口、截止时间和来源可信度</span>
+        </div>
+        <small data-i18n="decisionHint">点击一条赛事查看来源链</small>
+      </div>
+      <div class="ai-events-decision-layout">
+        <div id="ai-events-decision-list" class="ai-events-decision-list" aria-label="赛事快速决策列表"></div>
+        <aside id="ai-events-verification-panel" class="ai-events-verification-panel" aria-label="来源验证详情"></aside>
       </div>
       <div id="ai-events-grid" class="ai-events-grid">
         <article class="ai-event-card ai-event-card-loading">正在加载 AI 赛事机会...</article>
