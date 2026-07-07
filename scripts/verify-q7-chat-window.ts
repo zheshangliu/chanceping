@@ -147,6 +147,26 @@ async function run() {
   check("list returns multiple active windows", Array.isArray(allWindowsJson.data) && allWindowsJson.data.length >= 2);
   check("list contains both radar ids", JSON.stringify(allWindowsJson.data).includes("radar_ai_event_demo") && JSON.stringify(allWindowsJson.data).includes("radar_policy_demo"));
 
+  const renameResponse = await app.request(`/api/radar-chats/${secondJson.data?.id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: "广州政策补贴雷达" }),
+  });
+  const renameJson = await json<{ success: boolean; data?: any; error?: any }>(renameResponse);
+  check("PATCH /api/radar-chats/:id renames a window", renameResponse.status === 200 && renameJson.data?.title === "广州政策补贴雷达", JSON.stringify(renameJson.error ?? renameJson.data ?? {}));
+
+  const archiveResponse = await app.request(`/api/radar-chats/${secondJson.data?.id}`, { method: "DELETE" });
+  const archiveJson = await json<{ success: boolean; data?: any; error?: any }>(archiveResponse);
+  check("DELETE /api/radar-chats/:id archives a window", archiveResponse.status === 200 && archiveJson.data?.status === "archived", JSON.stringify(archiveJson.error ?? archiveJson.data ?? {}));
+
+  const activeAfterArchiveResponse = await app.request("/api/radar-chats?user_id=demo_user");
+  const activeAfterArchiveJson = await json<{ success: boolean; data?: any[]; error?: any }>(activeAfterArchiveResponse);
+  check("archived window disappears from active list", Array.isArray(activeAfterArchiveJson.data) && !activeAfterArchiveJson.data.some((item) => item.id === secondJson.data?.id), JSON.stringify(activeAfterArchiveJson.data ?? []));
+
+  const archivedListResponse = await app.request("/api/radar-chats?user_id=demo_user&include_archived=true");
+  const archivedListJson = await json<{ success: boolean; data?: any[]; error?: any }>(archivedListResponse);
+  check("archived window remains available when requested", Array.isArray(archivedListJson.data) && archivedListJson.data.some((item) => item.id === secondJson.data?.id && item.status === "archived"), JSON.stringify(archivedListJson.data ?? []));
+
   ctx.radarChatStore.save();
   const freshCtx = createAppContext();
   if (!freshCtx.radarChatStore) {
