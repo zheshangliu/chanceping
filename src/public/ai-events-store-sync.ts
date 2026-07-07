@@ -46,6 +46,8 @@ export interface HydratePublicAiEventImagesResult {
   checkedCount: number;
   hydratedCount: number;
   failedCount: number;
+  failedDomains: Array<{ domain: string; count: number }>;
+  failedUrls: Array<{ url: string; domain: string; reason: string }>;
 }
 
 export interface SyncAndHydratePublicAiEventsOptions extends SyncPublicAiEventsOptions {
@@ -161,6 +163,30 @@ function normalizeDeadline(card: PublicAiEventCard): string {
 
 function normalizeStableIdentity(value: string): string {
   return value.trim().replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/$/, "").toLowerCase();
+}
+
+function extractDomain(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./i, "").toLowerCase();
+  } catch {
+    return "unknown";
+  }
+}
+
+function stringifyErrorReason(error: unknown): string {
+  if (error instanceof Error && error.message.trim().length > 0) return error.message;
+  if (typeof error === "string" && error.trim().length > 0) return error;
+  return "unknown_error";
+}
+
+function summarizeFailedDomains(failedUrls: Array<{ domain: string }>): Array<{ domain: string; count: number }> {
+  const counts = new Map<string, number>();
+  for (const failure of failedUrls) {
+    counts.set(failure.domain, (counts.get(failure.domain) ?? 0) + 1);
+  }
+  return Array.from(counts.entries())
+    .map(([domain, count]) => ({ domain, count }))
+    .sort((a, b) => b.count - a.count || a.domain.localeCompare(b.domain));
 }
 
 export function publicAiEventCardToOpportunityCard(card: PublicAiEventCard): OpportunityCard {
@@ -299,6 +325,7 @@ export async function hydratePublicAiEventImages(
   let checkedCount = 0;
   let hydratedCount = 0;
   let failedCount = 0;
+  const failedUrls: HydratePublicAiEventImagesResult["failedUrls"] = [];
   const previousAutoFlush = store.autoFlush;
   store.autoFlush = false;
   try {
@@ -335,8 +362,14 @@ export async function hydratePublicAiEventImages(
         }
         store.update(entry.dedup_key, updatedCard);
         hydratedCount += 1;
-      } catch {
+      } catch (error) {
         failedCount += 1;
+        const url = entry.card.official_source_url;
+        failedUrls.push({
+          url,
+          domain: extractDomain(url),
+          reason: stringifyErrorReason(error),
+        });
       }
     }
     store.flush();
@@ -348,5 +381,7 @@ export async function hydratePublicAiEventImages(
     checkedCount,
     hydratedCount,
     failedCount,
+    failedDomains: summarizeFailedDomains(failedUrls),
+    failedUrls,
   };
 }

@@ -49,6 +49,9 @@ check("source network includes second-batch domestic and GitHub leads", /和鲸|
 check("source network includes Qwen Cloud", /Qwen|qwencloud|qwen/i.test(sourceText + candidateSourceText));
 check("source network includes TRAE", /TRAE|trae/i.test(sourceText + candidateSourceText));
 check("source network includes cloud provider or developer program sources", /Google Cloud|Microsoft|AWS|阿里云|天池|developer/i.test(sourceText));
+check("source network includes AWS as an explicit cloud-provider watch source", /aws-builder-center.*aws\.amazon\.com|AWS Builder Center.*aws\.amazon\.com/i.test(sourceText), sourceText);
+check("source network includes Azure AI as an explicit cloud-provider watch source", /azure-ai-foundry.*azure\.microsoft\.com|Azure AI Foundry.*azure\.microsoft\.com/i.test(sourceText), sourceText);
+check("source network includes PaddlePaddle as an explicit domestic developer source", /paddlepaddle.*paddlepaddle\.org\.cn|飞桨.*paddlepaddle\.org\.cn/i.test(sourceText), sourceText);
 check("public cards include official or reviewable source URLs", officialUrls.length >= 15, `officialUrls=${officialUrls.length}`);
 check("public data exposes source network metadata", Array.isArray(publicData.sourceNetwork) && publicData.sourceNetwork.length >= 8);
 check("public data exposes source statistics", typeof publicData.stats?.candidateCount === "number" && publicData.stats.candidateCount >= 30);

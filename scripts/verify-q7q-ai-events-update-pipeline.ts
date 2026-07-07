@@ -99,6 +99,26 @@ async function main(): Promise<void> {
   check("pipeline can hydrate source images in same backend pass", (hydratedRun.imageHydration?.hydratedCount ?? 0) === 2, JSON.stringify(hydratedRun.imageHydration));
   check("hydrated pipeline updates image coverage summary", hydratedRun.images.sourceImageCount >= 2, JSON.stringify(hydratedRun.images));
 
+  const failedHydrationStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-failed-hydration.json");
+  removeIfExists(failedHydrationStorePath);
+  const failedHydrationStore = new LocalFileStore({ file_path: failedHydrationStorePath, auto_flush: false });
+  const failedHydrationRun = await runPublicAiEventsUpdatePipeline(failedHydrationStore, undefined, {
+    now: referenceNow,
+    hydrateImages: true,
+    imageHydrationLimit: 2,
+    fetchHtml: async (url) => {
+      throw new Error(`synthetic image fetch failure for ${url}`);
+    },
+  });
+  const failedDiagnostics = failedHydrationRun.imageHydration as
+    | (NonNullable<typeof failedHydrationRun.imageHydration> & {
+        failedDomains?: Array<{ domain: string; count: number }>;
+        failedUrls?: Array<{ url: string; domain: string; reason: string }>;
+      })
+    | undefined;
+  check("failed image hydration reports failed domains", (failedDiagnostics?.failedDomains?.length ?? 0) > 0, JSON.stringify(failedHydrationRun.imageHydration));
+  check("failed image hydration reports failed urls and reasons", (failedDiagnostics?.failedUrls?.[0]?.reason ?? "").includes("synthetic image fetch failure"), JSON.stringify(failedHydrationRun.imageHydration));
+
   const schedulerPath = path.resolve(process.cwd(), "scripts", "run-ai-events-update-scheduler.ts");
   const schedulerSource = fs.existsSync(schedulerPath) ? fs.readFileSync(schedulerPath, "utf8") : "";
   check(
@@ -112,6 +132,7 @@ async function main(): Promise<void> {
 
   removeIfExists(storePath);
   removeIfExists(hydratedStorePath);
+  removeIfExists(failedHydrationStorePath);
 
   console.log(`\nQ7Q AI events update pipeline checks: ${passCount} PASS / ${failCount} FAIL`);
   if (failCount > 0) {
