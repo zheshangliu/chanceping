@@ -43,6 +43,7 @@ async function run() {
   check("store can list by radarId", storeSource.includes("listByRadarId"));
   check("route supports message append", routeSource.includes("/:id/messages"));
   check("route supports memory summary update", routeSource.includes("/:id/memory-summary"));
+  check("route supports pending input message", routeSource.includes("pendingMessage"));
   check("hero chat persists to radar chat API", heroChatSource.includes("/api/radar-chats"));
   check("hero chat tracks chatWindowId", heroChatSource.includes("chatWindowId"));
 
@@ -59,6 +60,7 @@ async function run() {
       radarId: "radar_ai_event_demo",
       title: "AI 赛事雷达",
       userId: "demo_user",
+      pendingMessage: "我是 OPC 创业者，只要可报名 AI 比赛。",
     }),
   });
   const createJson = await json<{ success: boolean; data?: any; error?: any }>(createResponse);
@@ -67,6 +69,7 @@ async function run() {
   const chatWindow = createJson.data;
   check("chat window id uses radar_chat_ prefix", typeof chatWindow?.id === "string" && chatWindow.id.startsWith("radar_chat_"), chatWindow?.id ?? "");
   check("chat window binds radarId", chatWindow?.radarId === "radar_ai_event_demo", chatWindow?.radarId ?? "");
+  check("chat window keeps pending input", chatWindow?.pendingMessage === "我是 OPC 创业者，只要可报名 AI 比赛。", chatWindow?.pendingMessage ?? "");
   check("chat window has memory summary", typeof chatWindow?.memorySummary?.summary === "string");
 
   const messageResponse = await app.request(`/api/radar-chats/${chatWindow?.id}/messages`, {
@@ -102,12 +105,47 @@ async function run() {
   const detailJson = await json<{ success: boolean; data?: any; error?: any }>(detailResponse);
   check("GET /api/radar-chats/:id returns 200", detailResponse.status === 200, String(detailResponse.status));
   check("detail includes appended messages", Array.isArray(detailJson.data?.messages) && detailJson.data.messages.length === 1, JSON.stringify(detailJson.data?.messages ?? []));
+  check("detail includes pending input", detailJson.data?.window?.pendingMessage === "我是 OPC 创业者，只要可报名 AI 比赛。");
   check("detail includes updated memory summary", detailJson.data?.window?.memorySummary?.targetUser === "OPC 创业者");
 
   const listResponse = await app.request("/api/radar-chats?radar_id=radar_ai_event_demo");
   const listJson = await json<{ success: boolean; data?: any; error?: any }>(listResponse);
   check("GET /api/radar-chats?radar_id returns 200", listResponse.status === 200, String(listResponse.status));
   check("list by radarId contains window", Array.isArray(listJson.data) && listJson.data.some((item: any) => item.id === chatWindow?.id));
+
+  const secondResponse = await app.request("/api/radar-chats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      radarId: "radar_policy_demo",
+      title: "政策补贴雷达",
+      userId: "demo_user",
+    }),
+  });
+  const secondJson = await json<{ success: boolean; data?: any; error?: any }>(secondResponse);
+  check("second chat window can be created", secondResponse.status === 200 && secondJson.success === true, JSON.stringify(secondJson.error ?? {}));
+  check("second chat window has different id", Boolean(secondJson.data?.id) && secondJson.data.id !== chatWindow?.id, `${secondJson.data?.id} vs ${chatWindow?.id}`);
+
+  await app.request(`/api/radar-chats/${secondJson.data?.id}/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      role: "user",
+      content: "我想找广东科技政策申报机会。",
+      linkedRadarVersion: "V1.0",
+    }),
+  });
+
+  const firstMessages = ctx.radarChatStore.listMessages(chatWindow.id);
+  const secondMessages = ctx.radarChatStore.listMessages(secondJson.data.id);
+  check("first window keeps its own messages", firstMessages.some((item) => item.content.includes("OPC 创业者")));
+  check("second window keeps its own messages", secondMessages.some((item) => item.content.includes("广东科技政策")));
+  check("second window does not leak first messages", secondMessages.every((item) => !item.content.includes("OPC 创业者")));
+
+  const allWindowsResponse = await app.request("/api/radar-chats?user_id=demo_user");
+  const allWindowsJson = await json<{ success: boolean; data?: any[]; error?: any }>(allWindowsResponse);
+  check("list returns multiple active windows", Array.isArray(allWindowsJson.data) && allWindowsJson.data.length >= 2);
+  check("list contains both radar ids", JSON.stringify(allWindowsJson.data).includes("radar_ai_event_demo") && JSON.stringify(allWindowsJson.data).includes("radar_policy_demo"));
 
   ctx.radarChatStore.save();
   const freshCtx = createAppContext();

@@ -4,6 +4,7 @@
   const STORAGE_KEY = "chanceping_hero_radar_chat_state";
   const LAST_CHAT_WINDOW_KEY = "chanceping_hero_radar_chat_window_id";
   const SIDEBAR_COLLAPSED_KEY = "chanceping-sidebar-collapsed";
+  const DEMO_USER_ID = "demo_user";
   const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
   const AI_EVENT_SAMPLE_ROOM = {
     id: "ai-event-sample-room",
@@ -19,6 +20,8 @@
     confirmedVersion: null,
     copiedRadarId: null,
     chatWindowId: null,
+    activeChatWindowId: AI_EVENT_SAMPLE_ROOM.id,
+    chatWindows: [],
     boundRadarId: AI_EVENT_SAMPLE_ROOM.id,
     pendingFirstMessage: "",
     sidebarCollapsed: false,
@@ -135,12 +138,16 @@
     pendingChatWindowRequest = postJson("/api/radar-chats", {
       radarId: heroRadarChatState.boundRadarId || heroRadarChatState.copiedRadarId || undefined,
       title: draft?.suggestedName || "AI 赛事雷达",
+      userId: DEMO_USER_ID,
+      reuseByRadarId: heroRadarChatState.boundRadarId ? true : false,
       draftRadarVersion: draft?.radarVersion?.version || "V1.0",
     })
       .then((windowData) => {
         heroRadarChatState.chatWindowId = windowData.id;
+        heroRadarChatState.activeChatWindowId = isSampleRoomWindow(windowData) ? AI_EVENT_SAMPLE_ROOM.id : windowData.id;
         if (windowData.radarId) heroRadarChatState.boundRadarId = windowData.radarId;
         rememberLastChatWindow(windowData.id);
+        loadRadarChatWindows().then(() => renderHeroRadarChat()).catch(() => {});
         saveState();
         return windowData.id;
       })
@@ -247,6 +254,86 @@
     }
   }
 
+  function isSampleRoomWindowId(chatWindowId) {
+    return chatWindowId === AI_EVENT_SAMPLE_ROOM.id;
+  }
+
+  function isSampleRoomWindow(windowData) {
+    return windowData?.id === AI_EVENT_SAMPLE_ROOM.id || windowData?.radarId === AI_EVENT_SAMPLE_ROOM.id;
+  }
+
+  function inferRadarTitle(text) {
+    const raw = String(text || "").trim();
+    if (!raw) return "新机会雷达";
+    if (/AI|赛事|比赛|Hackathon|黑客松|开发者|OPC/i.test(raw)) return "AI 赛事雷达";
+    if (/补贴|申报|政策|专精特新|高新/i.test(raw)) return "政策申报雷达";
+    if (/客户|线索|BD|销售|渠道|代理/i.test(raw)) return "客户线索雷达";
+    const compact = raw.replace(/\s+/g, " ").slice(0, 16);
+    return compact ? `${compact}雷达` : "新机会雷达";
+  }
+
+  function getSampleSidebarWindow() {
+    return {
+      id: AI_EVENT_SAMPLE_ROOM.id,
+      radarId: AI_EVENT_SAMPLE_ROOM.id,
+      title: AI_EVENT_SAMPLE_ROOM.name,
+      draftRadarVersion: AI_EVENT_SAMPLE_ROOM.version,
+      currentConfirmedRadarVersion: AI_EVENT_SAMPLE_ROOM.version,
+      status: "active",
+      updatedAt: new Date(0).toISOString(),
+      isSampleRoom: true,
+    };
+  }
+
+  function normalizeSidebarWindow(windowData) {
+    return {
+      id: windowData.id,
+      radarId: windowData.radarId || "",
+      title: windowData.title || "机会雷达",
+      draftRadarVersion: windowData.draftRadarVersion || windowData.currentConfirmedRadarVersion || "V1.0",
+      currentConfirmedRadarVersion: windowData.currentConfirmedRadarVersion || "",
+      status: windowData.status || "active",
+      updatedAt: windowData.updatedAt || "",
+      isSampleRoom: false,
+    };
+  }
+
+  function sidebarWindowTime(windowData) {
+    const timestamp = Date.parse(windowData?.updatedAt || "");
+    return Number.isFinite(timestamp) ? timestamp : 0;
+  }
+
+  function compactSidebarWindows(windows) {
+    const seen = new Set();
+    return [...windows]
+      .sort((a, b) => sidebarWindowTime(b) - sidebarWindowTime(a))
+      .filter((item) => {
+        const key = item.radarId || `${item.title || "机会雷达"}::${item.draftRadarVersion || "V1.0"}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 8);
+  }
+
+  async function loadRadarChatWindows() {
+    try {
+      const windows = await getJson(`/api/radar-chats?user_id=${encodeURIComponent(DEMO_USER_ID)}`);
+      const userWindows = (Array.isArray(windows) ? windows : [])
+        .filter((item) => item?.status !== "archived")
+        .filter((item) => !isSampleRoomWindow(item))
+        .map(normalizeSidebarWindow);
+      const compactWindows = compactSidebarWindows(userWindows);
+      heroRadarChatState.chatWindows = [getSampleSidebarWindow(), ...compactWindows];
+      saveState();
+      return heroRadarChatState.chatWindows;
+    } catch {
+      heroRadarChatState.chatWindows = [getSampleSidebarWindow()];
+      saveState();
+      return heroRadarChatState.chatWindows;
+    }
+  }
+
   function restoreState() {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
@@ -262,6 +349,11 @@
       heroRadarChatState.confirmedVersion = parsed.confirmedVersion || null;
       heroRadarChatState.copiedRadarId = parsed.copiedRadarId || null;
       heroRadarChatState.chatWindowId = parsed.chatWindowId || null;
+      heroRadarChatState.activeChatWindowId = parsed.activeChatWindowId || parsed.chatWindowId || AI_EVENT_SAMPLE_ROOM.id;
+      heroRadarChatState.chatWindows = Array.isArray(parsed.chatWindows) ? parsed.chatWindows : [];
+      if (parsed.boundRadarId === AI_EVENT_SAMPLE_ROOM.id) {
+        heroRadarChatState.activeChatWindowId = AI_EVENT_SAMPLE_ROOM.id;
+      }
       if (heroRadarChatState.chatWindowId) {
         rememberLastChatWindow(heroRadarChatState.chatWindowId);
       }
@@ -295,15 +387,28 @@
     };
   }
 
-  async function restoreStateFromBackend() {
-    if (heroRadarChatState.messages.length > 0) return false;
-    const chatWindowId = getLastChatWindowId();
+  async function restoreStateFromBackend(chatWindowIdOverride) {
+    if (!chatWindowIdOverride && heroRadarChatState.messages.length > 0) return false;
+    const chatWindowId = chatWindowIdOverride || getLastChatWindowId();
     if (!chatWindowId) return false;
-    const detail = await getJson(`/api/radar-chats/${encodeURIComponent(chatWindowId)}`);
+    if (isSampleRoomWindowId(chatWindowId)) {
+      openHeroRadarWindow();
+      return true;
+    }
+    const detail = await getJson(`/api/radar-chats/${chatWindowId}`);
     const windowData = detail.window;
     const messages = Array.isArray(detail.messages) ? detail.messages : [];
-    if (!windowData || messages.length === 0) return false;
+    if (!windowData) return false;
+    heroRadarChatState.messages = [];
+    heroRadarChatState.currentDraft = null;
+    heroRadarChatState.currentResult = null;
+    heroRadarChatState.confirmedVersion = null;
+    heroRadarChatState.copiedRadarId = null;
+    heroRadarChatState.pendingFirstMessage = typeof windowData.pendingMessage === "string" ? windowData.pendingMessage : "";
+    heroRadarChatState.modal = null;
+    heroRadarChatState.isBusy = false;
     heroRadarChatState.chatWindowId = windowData.id;
+    heroRadarChatState.activeChatWindowId = windowData.id;
     heroRadarChatState.boundRadarId = windowData.radarId || heroRadarChatState.boundRadarId;
     heroRadarChatState.currentDraft = windowData.draftSnapshot || null;
     heroRadarChatState.currentResult = windowData.currentResultSnapshot || null;
@@ -312,10 +417,16 @@
     }
     heroRadarChatState.confirmedVersion = windowData.currentConfirmedRadarVersion || null;
     heroRadarChatState.messages = messages.map(restoreMessageFromBackend);
-    heroRadarChatState.pendingFirstMessage = "";
-    heroRadarChatState.modal = null;
-    heroRadarChatState.isBusy = false;
+    if (heroRadarChatState.messages.length === 0) {
+      heroRadarChatState.messages = [{
+        id: uid("assistant"),
+        role: "assistant",
+        content: `已打开「${windowData.title || "机会雷达"}」的雷达窗口。你可以在下方继续补充需求，我会先更新雷达给你确认。`,
+        createdAt: new Date().toISOString(),
+      }];
+    }
     rememberLastChatWindow(windowData.id);
+    await loadRadarChatWindows();
     saveState();
     renderHeroRadarChat();
     return true;
@@ -897,9 +1008,23 @@
   }
 
   function renderHeroSidebar() {
-    const version = heroRadarChatState.currentDraft?.radarVersion?.version || "V1.0";
-    const activeName = heroRadarChatState.currentDraft?.suggestedName || "AI 赛事雷达";
-    const hasDraft = Boolean(heroRadarChatState.currentDraft);
+    const activeChatWindowId = heroRadarChatState.boundRadarId === AI_EVENT_SAMPLE_ROOM.id
+      ? AI_EVENT_SAMPLE_ROOM.id
+      : (heroRadarChatState.chatWindowId || heroRadarChatState.activeChatWindowId || AI_EVENT_SAMPLE_ROOM.id);
+    const sidebarWindows = (Array.isArray(heroRadarChatState.chatWindows) && heroRadarChatState.chatWindows.length > 0)
+      ? heroRadarChatState.chatWindows
+      : [getSampleSidebarWindow()];
+    const rows = sidebarWindows.map((windowData) => {
+      const isActive = windowData.id === activeChatWindowId;
+      const version = windowData.draftRadarVersion || windowData.currentConfirmedRadarVersion || "V1.0";
+      const subline = windowData.isSampleRoom ? `${version} · Hero Demo` : `${version} · 雷达窗口`;
+      return `
+        <button class="hero-sidebar-radar ${isActive ? "active" : ""}" type="button" data-action="switch-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">
+          <span>${escapeHtml(windowData.title || "机会雷达")}</span>
+          <small>${escapeHtml(subline)}</small>
+        </button>
+      `;
+    }).join("");
     return `
       <aside class="hero-radar-sidebar" aria-label="雷达列表">
         <div class="hero-sidebar-brand">
@@ -912,10 +1037,7 @@
         </div>
         <div class="hero-sidebar-section hero-sidebar-current-radar">
           <span class="hero-sidebar-label">当前雷达</span>
-          <button class="hero-sidebar-radar active" type="button" data-action="focus-hero-radar">
-            <span>${escapeHtml(activeName)}</span>
-            <small>${hasDraft ? `${escapeHtml(version)} · 正在成长` : `${escapeHtml(version)} · Hero Demo`}</small>
-          </button>
+          ${rows}
         </div>
       </aside>
     `;
@@ -992,8 +1114,10 @@
     `;
     root.querySelector("#hero-chat-reset")?.addEventListener("click", resetHeroRadarChat);
     root.querySelector("[data-action='toggle-sidebar']")?.addEventListener("click", toggleHeroSidebar);
-    root.querySelector("[data-action='focus-hero-radar']")?.addEventListener("click", () => {
-      root.querySelector("#hero-radar-chat-input")?.focus();
+    root.querySelectorAll("[data-action='switch-hero-radar-window']").forEach((button) => {
+      button.addEventListener("click", () => {
+        switchHeroRadarWindow(button.dataset.chatWindowId || "").catch((err) => window.showToast?.(err.message || "打开雷达窗口失败", "error"));
+      });
     });
     root.querySelector("#hero-radar-chat-send")?.addEventListener("click", () => {
       const input = root.querySelector("#hero-radar-chat-input");
@@ -1046,6 +1170,7 @@
     heroRadarChatState.confirmedVersion = null;
     heroRadarChatState.copiedRadarId = null;
     heroRadarChatState.chatWindowId = null;
+    heroRadarChatState.activeChatWindowId = AI_EVENT_SAMPLE_ROOM.id;
     heroRadarChatState.boundRadarId = AI_EVENT_SAMPLE_ROOM.id;
     heroRadarChatState.pendingFirstMessage = "";
     heroRadarChatState.modal = null;
@@ -1055,17 +1180,23 @@
 
   async function openHeroRadarWindow() {
     if (window.switchTab) window.switchTab("home");
+    const wasCustomWindow = heroRadarChatState.boundRadarId !== AI_EVENT_SAMPLE_ROOM.id || (heroRadarChatState.chatWindowId && !isSampleRoomWindowId(heroRadarChatState.activeChatWindowId));
+    if (wasCustomWindow) {
+      clearHeroRadarConversation();
+    }
     heroRadarChatState.boundRadarId = AI_EVENT_SAMPLE_ROOM.id;
-    if (heroRadarChatState.messages.length === 0) {
+    heroRadarChatState.activeChatWindowId = AI_EVENT_SAMPLE_ROOM.id;
+    await loadRadarChatWindows();
+    if (!heroRadarChatState.isBusy && !heroRadarChatState.pendingFirstMessage) {
       heroRadarChatState.pendingFirstMessage = HERO_DEMO_PROMPT;
+    }
+    if (heroRadarChatState.messages.length === 0) {
       addMessage("assistant", "继续编辑 AI 赛事雷达。我已把默认需求放到底部输入框，你可以直接发送，也可以先改成自己的需求。");
     } else {
-      if (!heroRadarChatState.currentDraft && !heroRadarChatState.pendingFirstMessage) {
-        heroRadarChatState.pendingFirstMessage = HERO_DEMO_PROMPT;
-      }
       saveState();
       renderHeroRadarChat();
     }
+    saveState();
     window.setTimeout(() => document.getElementById("hero-radar-chat-input")?.focus(), 0);
   }
 
@@ -1075,6 +1206,7 @@
     heroRadarChatState.boundRadarId = null;
     const text = String(initialMessage || "").trim();
     heroRadarChatState.pendingFirstMessage = text;
+    await createRadarChatWindowForDraft(text);
     addMessage("assistant", text
       ? "这会成为一个新的雷达窗口。我已经把你的需求放到下方输入框里，等你点击发送后，我再开始画雷达。"
       : "这会成为一个新的雷达窗口。请在下方输入你想找什么机会，我会先画雷达，再让你确认。");
@@ -1099,6 +1231,54 @@
     renderHeroRadarChat();
   }
 
+  async function switchHeroRadarWindow(chatWindowId) {
+    if (!chatWindowId || heroRadarChatState.isBusy) return false;
+    if (isSampleRoomWindowId(chatWindowId)) {
+      await openHeroRadarWindow();
+      return true;
+    }
+    return restoreStateFromBackend(chatWindowId);
+  }
+
+  async function createRadarChatWindowForDraft(initialMessage) {
+    const title = inferRadarTitle(initialMessage);
+    const windowData = await postJson("/api/radar-chats", {
+      title,
+      userId: DEMO_USER_ID,
+      reuseByRadarId: false,
+      draftRadarVersion: "V1.0",
+      pendingMessage: String(initialMessage || ""),
+    });
+    heroRadarChatState.chatWindowId = windowData.id;
+    heroRadarChatState.activeChatWindowId = windowData.id;
+    heroRadarChatState.boundRadarId = null;
+    rememberLastChatWindow(windowData.id);
+    await loadRadarChatWindows();
+    saveState();
+    return windowData;
+  }
+
+  async function openHeroRadarForRadar(radar) {
+    if (window.switchTab) window.switchTab("home");
+    const radarId = radar?.id || radar?.radarId;
+    if (!radarId) {
+      window.showToast?.("这个雷达还没有可编辑的窗口", "warning");
+      return false;
+    }
+    const existingWindows = await getJson(`/api/radar-chats?radar_id=${encodeURIComponent(radarId)}&user_id=${encodeURIComponent(DEMO_USER_ID)}`);
+    const existing = Array.isArray(existingWindows) ? existingWindows.find((item) => item.status !== "archived") : null;
+    const windowData = existing || await postJson("/api/radar-chats", {
+      radarId,
+      title: radar?.name || radar?.title || "机会雷达",
+      userId: DEMO_USER_ID,
+      draftRadarVersion: radar?.spec?.radar_version?.version || radar?.spec?.version || "V1.0",
+    });
+    await loadRadarChatWindows();
+    await switchHeroRadarWindow(windowData.id);
+    window.setTimeout(() => document.getElementById("hero-radar-chat-input")?.focus(), 0);
+    return true;
+  }
+
   function normalizeGenerateResult(data, description) {
     return {
       spec: data.spec,
@@ -1114,6 +1294,7 @@
     if (!text || heroRadarChatState.isBusy) return;
     if (options.autoSend === false && !heroRadarChatState.currentDraft) {
       heroRadarChatState.pendingFirstMessage = text;
+      updateRadarChatWindow({ pendingMessage: text });
       if (heroRadarChatState.messages.length === 0) {
         addMessage("assistant", "我已经把你的需求放到下方输入框里。等待你点击发送后，我再开始理解需求并生成 AI 赛事雷达。");
       } else {
@@ -1128,6 +1309,10 @@
     heroRadarChatState.pendingFirstMessage = "";
     addMessage("user", text);
     const chatWindowId = await ensureRadarChatWindow();
+    if (heroRadarChatState.boundRadarId !== AI_EVENT_SAMPLE_ROOM.id && chatWindowId) {
+      heroRadarChatState.activeChatWindowId = chatWindowId;
+    }
+    updateRadarChatWindow({ pendingMessage: "" });
     addMessage("assistant", heroRadarChatState.currentDraft
       ? "收到，我会先让 DeepSeek 理解这句话，生成新版雷达草案；你确认后我才会搜索。"
       : "我先让 DeepSeek 理解你的需求，把复杂人话整理成 AI 赛事雷达 V1.0。");
@@ -1410,19 +1595,12 @@
   }
 
   function openHeroRadarEditor(radar) {
-    if (window.switchTab) window.switchTab("home");
-    if (radar?.id) {
-      heroRadarChatState.chatWindowId = null;
-      heroRadarChatState.boundRadarId = radar.id;
-    }
-    const name = radar?.name || "AI 赛事雷达";
-    addMessage("assistant", `已打开「${name}」的雷达窗口。你可以直接告诉我哪里要改，我会先生成新版雷达给你确认。`);
-    const input = document.getElementById("hero-radar-chat-input") || document.getElementById("home-input");
-    input?.focus();
+    return openHeroRadarForRadar(radar);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     restoreState();
+    loadRadarChatWindows().then(() => renderHeroRadarChat()).catch(() => {});
     renderHeroRadarChat();
     restoreStateFromBackend().catch(() => {
       // Session storage remains the primary fast path; backend recovery is best-effort.
@@ -1438,6 +1616,9 @@
   window.syncHeroEntryVisibility = syncHeroEntryVisibility;
   window.resetHeroRadarChat = resetHeroRadarChat;
   window.toggleHeroSidebar = toggleHeroSidebar;
+  window.loadRadarChatWindows = loadRadarChatWindows;
+  window.switchHeroRadarWindow = switchHeroRadarWindow;
+  window.openHeroRadarForRadar = openHeroRadarForRadar;
   window.openHeroRadarWindow = openHeroRadarWindow;
   window.createNewHeroRadarWindow = createNewHeroRadarWindow;
   window.startHeroRadarChat = startHeroRadarChat;

@@ -17,6 +17,10 @@ function asOptionalString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
+function asStringOrEmpty(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
 function asJsonPayload(value: unknown): unknown | undefined {
   if (value === null) return null;
   if (Array.isArray(value)) return value;
@@ -87,6 +91,7 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       title,
       currentConfirmedRadarVersion: asOptionalString(body.currentConfirmedRadarVersion),
       draftRadarVersion: asOptionalString(body.draftRadarVersion),
+      pendingMessage: asStringOrEmpty(body.pendingMessage),
     });
     store.save();
     return c.json({ success: true, data: window, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
@@ -117,6 +122,7 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       ...("draftRadarVersion" in body ? { draftRadarVersion: asOptionalString(body.draftRadarVersion) } : {}),
       ...("latestRunId" in body ? { latestRunId: asOptionalString(body.latestRunId) } : {}),
       ...("latestReportId" in body ? { latestReportId: asOptionalString(body.latestReportId) } : {}),
+      ...("pendingMessage" in body ? { pendingMessage: asStringOrEmpty(body.pendingMessage) } : {}),
       ...("draftSnapshot" in body ? { draftSnapshot: asJsonPayload(body.draftSnapshot) } : {}),
       ...("currentResultSnapshot" in body ? { currentResultSnapshot: asJsonPayload(body.currentResultSnapshot) } : {}),
     };

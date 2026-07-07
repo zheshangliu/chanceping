@@ -35,6 +35,7 @@ export interface RadarChatWindow {
   draftRadarVersion?: string;
   latestRunId?: string;
   latestReportId?: string;
+  pendingMessage?: string;
   draftSnapshot?: unknown;
   currentResultSnapshot?: unknown;
   memorySummary: RadarMemorySummary;
@@ -62,6 +63,7 @@ export interface RadarChatWindowCreateInput {
   title: string;
   currentConfirmedRadarVersion?: string;
   draftRadarVersion?: string;
+  pendingMessage?: string;
 }
 
 export interface RadarChatWindowUpdateInput {
@@ -72,6 +74,7 @@ export interface RadarChatWindowUpdateInput {
   draftRadarVersion?: string;
   latestRunId?: string;
   latestReportId?: string;
+  pendingMessage?: string;
   draftSnapshot?: unknown;
   currentResultSnapshot?: unknown;
   memorySummary?: Partial<Omit<RadarMemorySummary, "updatedAt">>;
@@ -183,6 +186,7 @@ export class JsonRadarChatStore implements RadarChatStore {
       status: "active",
       ...(input.currentConfirmedRadarVersion ? { currentConfirmedRadarVersion: input.currentConfirmedRadarVersion } : {}),
       ...(input.draftRadarVersion ? { draftRadarVersion: input.draftRadarVersion } : {}),
+      ...(input.pendingMessage ? { pendingMessage: input.pendingMessage } : {}),
       memorySummary: createEmptyMemorySummary(now),
       createdAt: now,
       updatedAt: now,
@@ -230,6 +234,7 @@ export class JsonRadarChatStore implements RadarChatStore {
       ...("draftRadarVersion" in patch ? { draftRadarVersion: patch.draftRadarVersion } : {}),
       ...("latestRunId" in patch ? { latestRunId: patch.latestRunId } : {}),
       ...("latestReportId" in patch ? { latestReportId: patch.latestReportId } : {}),
+      ...("pendingMessage" in patch ? { pendingMessage: patch.pendingMessage } : {}),
       ...("draftSnapshot" in patch ? { draftSnapshot: patch.draftSnapshot } : {}),
       ...("currentResultSnapshot" in patch ? { currentResultSnapshot: patch.currentResultSnapshot } : {}),
       memorySummary: mergeMemorySummary(existing.memorySummary, patch.memorySummary, updatedAt),

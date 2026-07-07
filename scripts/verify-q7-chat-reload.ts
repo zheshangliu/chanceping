@@ -65,8 +65,10 @@ async function runSourceChecks() {
 
   check("chat store persists draft snapshot", /draftSnapshot/.test(store));
   check("chat store persists message artifact payload", /artifactPayload/.test(store));
+  check("chat store persists pending input message", /pendingMessage/.test(store));
   check("radar chat API accepts draft snapshot", /draftSnapshot/.test(route));
   check("radar chat API accepts artifact payload", /artifactPayload/.test(route));
+  check("radar chat API accepts pending input message", /pendingMessage/.test(route));
   check("hero chat remembers last chat window outside sessionStorage", /LAST_CHAT_WINDOW_KEY/.test(hero));
   check("hero chat can GET radar chat detail", /getJson\(`?\/api\/radar-chats\/\$\{/.test(hero) || /getJson\(.*\/api\/radar-chats/.test(hero));
   check("hero chat restores state from backend", /restoreStateFromBackend/.test(hero) && /artifactPayload/.test(hero));
@@ -120,6 +122,24 @@ async function runApiRoundTrip() {
   check("GET detail returns draft snapshot", /大湾区 OPC/.test(json(windowData?.draftSnapshot)), json(windowData));
   check("GET detail returns current result snapshot", /reload report/.test(json(windowData?.currentResultSnapshot)), json(windowData));
   check("GET detail returns artifact payload", /artifactPayload/.test(json(messages)) && /V1.0/.test(json(messages)), json(messages));
+
+  const second = await post(app, "/api/radar-chats", {
+    title: "政策申报雷达",
+    radarId: "radar_policy_demo",
+    draftRadarVersion: "V1.0",
+    pendingMessage: "我想找广州政策补贴申报机会。",
+  });
+  const secondId = String(second.json.data?.id ?? "");
+  check("POST stores pending input message", second.json.data?.pendingMessage === "我想找广州政策补贴申报机会。", json(second.json.data));
+  await post(app, `/api/radar-chats/${secondId}/messages`, {
+    role: "user",
+    content: "我想找广州政策补贴申报机会。",
+    linkedRadarVersion: "V1.0",
+  });
+  const secondDetail = await get(app, `/api/radar-chats/${secondId}`);
+  check("GET detail returns pending input message", secondDetail.json.data?.window?.pendingMessage === "我想找广州政策补贴申报机会。", json(secondDetail.json.data?.window));
+  check("second reload detail has its own message", /广州政策补贴/.test(json(secondDetail.json.data?.messages)));
+  check("second reload detail does not include first report", !/reload report/.test(json(secondDetail.json.data?.messages)));
 }
 
 runSourceChecks()

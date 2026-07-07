@@ -92,6 +92,9 @@ async function run() {
   check("hero chat restores cards from report artifact after reload", heroChatJs.includes("restoreCurrentResultFromReportArtifact") && heroChatJs.includes("chat_report_artifact"));
   check("hero chat can recover demo cards from public AI events when snapshot is missing", heroChatJs.includes("restoreCurrentResultFromPublicEvents") && heroChatJs.includes("demo_replay_restored"));
   check("hero chat script renders GPT-like sidebar", heroChatJs.includes("hero-radar-sidebar") && heroChatJs.includes("AI 赛事雷达"));
+  check("hero chat loads radar chat windows for sidebar", heroChatJs.includes("loadRadarChatWindows") && heroChatJs.includes("/api/radar-chats"));
+  check("hero chat can switch active chat window", heroChatJs.includes("switchHeroRadarWindow") && heroChatJs.includes("/api/radar-chats/${chatWindowId}"));
+  check("sample room remains a protected built-in window", heroChatJs.includes("AI_EVENT_SAMPLE_ROOM") && heroChatJs.includes("isSampleRoom"));
   check("hero sidebar has a collapse button", heroChatJs.includes("hero-sidebar-collapse") && heroChatJs.includes("折叠或展开雷达侧边栏"));
   check("hero sidebar persists collapsed state", heroChatJs.includes("chanceping-sidebar-collapsed") && heroChatJs.includes("localStorage"));
   check("hero sidebar has collapsed rendering state", heroChatJs.includes("sidebarCollapsed") && heroChatJs.includes("hero-sidebar-collapsed"));
@@ -124,6 +127,9 @@ async function run() {
   check("hero chat can reset the current demo", heroChatJs.includes("hero-chat-reset") && heroChatJs.includes("resetHeroRadarChat"));
   check("hero chat exposes open existing radar window flow", heroChatJs.includes("openHeroRadarWindow") && heroChatJs.includes("继续编辑 AI 赛事雷达"));
   check("opening AI event radar preloads demo prompt without auto-send", heroChatJs.includes("pendingFirstMessage = HERO_DEMO_PROMPT") && heroChatJs.includes("我已把默认需求放到底部输入框"));
+  check("custom radar window restores pending input after switching", heroChatJs.includes("windowData.pendingMessage") && heroChatJs.includes("pendingMessage: String(initialMessage || \"\")"));
+  check("homepage typed prompt creates user-owned window", homeJs.includes("createNewHeroRadarWindow(text)") && heroChatJs.includes("reuseByRadarId: false"));
+  check("new custom window is not treated as sample replay", heroChatJs.includes("boundRadarId = null") && heroChatJs.includes("shouldUseHeroDemoReplay"));
   check("hero demo prompt names concrete AI contest sources", heroChatJs.includes("Qwen Cloud Hackathon") && heroChatJs.includes("Devpost") && heroChatJs.includes("DoraHacks") && heroChatJs.includes("Lablab.ai"));
   check("hero demo prompt asks for registration-first outputs", heroChatJs.includes("官方报名页") && heroChatJs.includes("可提交项目") && heroChatJs.includes("本周先做哪三件事"));
   check("hero chat exposes create new radar window flow", heroChatJs.includes("createNewHeroRadarWindow") && heroChatJs.includes("这会成为一个新的雷达窗口"));
@@ -163,6 +169,8 @@ async function run() {
   check("result page hero demo title is AI event radar", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("AI 赛事雷达"));
   check("result page puts report summary after opportunity cards", watchResultJs.indexOf("watch-opportunity-grid") > -1 && watchResultJs.indexOf("report-summary") > watchResultJs.indexOf("watch-opportunity-grid"));
   check("my radar view enters the shared result surface", radarsJs.includes("查看机会和报告") && radarsJs.includes("window.showWatchResult"));
+  check("my radars edit opens linked radar chat window", radarsJs.includes("openHeroRadarForRadar") || radarsJs.includes("openRadarChatForRadar"));
+  check("hero chat can open or create window by radar id", heroChatJs.includes("openHeroRadarForRadar") && heroChatJs.includes("radarId"));
   check("my radar view uses intelligence command center copy", html.includes("情报流指挥台") && radarsJs.includes("radar-command-card") && styles.includes(".radar-command-metrics"));
   check("my radar cards show version status last run and new count", radarsJs.includes("版本") && radarsJs.includes("状态") && radarsJs.includes("上次运行") && radarsJs.includes("本次新增"));
   check("result page has one radar revision action", watchResultJs.includes("调整雷达画像") && !watchResultJs.includes("这些结果不对，修改雷达"));

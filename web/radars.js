@@ -391,6 +391,10 @@
   }
 
   function editRadarFromCard(radar) {
+    if (window.openHeroRadarForRadar) {
+      window.openHeroRadarForRadar(radar);
+      return;
+    }
     if (window.openHeroRadarEditor) {
       window.openHeroRadarEditor(radar);
       return;
