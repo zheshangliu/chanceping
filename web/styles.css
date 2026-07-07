@@ -694,6 +694,31 @@ textarea {
   gap: 8px;
 }
 
+.home-custom-radar-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.home-sidebar-subtitle {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.home-radar-window.custom {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.home-sidebar-empty {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  border: 1px dashed rgba(148, 163, 184, 0.38);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .home-main-stage {
   min-height: calc(100vh - 100px);
   display: flex;
@@ -2601,11 +2626,12 @@ textarea {
 
 .radar-command-metrics {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
 
 .radar-command-metrics div {
+  min-width: 0;
   padding: 10px;
   border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--border));
   border-radius: 8px;
@@ -2617,12 +2643,17 @@ textarea {
   margin-bottom: 4px;
   color: var(--text-secondary);
   font-size: 11px;
+  white-space: nowrap;
 }
 
 .radar-command-metrics strong {
+  display: block;
   color: var(--text-primary);
   font-size: 13px;
   line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .radar-card-header {
@@ -4877,7 +4908,7 @@ body.hero-chat-active .hero-chat-main {
   border-radius: 22px;
   background: transparent;
   color: var(--text-primary);
-  z-index: 1000;
+  z-index: 1200;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.42);
 }
 

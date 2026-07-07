@@ -104,6 +104,7 @@ export interface RadarChatStore {
   listByRadarId(radarId: string): RadarChatWindow[];
   update(id: string, patch: RadarChatWindowUpdateInput): RadarChatWindow | null;
   archive(id: string): RadarChatWindow | null;
+  delete(id: string): boolean;
   appendMessage(chatWindowId: string, input: RadarChatMessageCreateInput): RadarChatMessage | null;
   listMessages(chatWindowId: string): RadarChatMessage[];
   save(): void;
@@ -257,6 +258,12 @@ export class JsonRadarChatStore implements RadarChatStore {
     };
     this.windows.set(id, archived);
     return archived;
+  }
+
+  delete(id: string): boolean {
+    const existed = this.windows.delete(id);
+    this.messages.delete(id);
+    return existed;
   }
 
   appendMessage(chatWindowId: string, input: RadarChatMessageCreateInput): RadarChatMessage | null {

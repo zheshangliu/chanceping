@@ -37,6 +37,7 @@
   };
 
   const PUBLIC_AI_EVENTS_RADAR_ID = "public_ai_events";
+  const PUBLIC_AI_EVENTS_DISPLAY_NAME = "全球 AI 赛事导航";
 
   // ============================================================
   // 工具函数
@@ -114,6 +115,10 @@
     const hasContestIntent = /AI\s*赛事|AI\s*比赛|比赛|赛事|Hackathon|黑客松|马拉松|开发者挑战|报名|参赛|提交作品/i.test(text);
     const hasAiOrHeroContext = /AI|OPC|个人开发者|云资源|开发者|Qwen|Devpost|DoraHacks|Lablab|Kaggle/i.test(text);
     return hasContestIntent && hasAiOrHeroContext;
+  }
+
+  function getRadarDisplayName(radar) {
+    return isAiEventsHeroRadar(radar) ? PUBLIC_AI_EVENTS_DISPLAY_NAME : (radar?.name || "未命名雷达");
   }
 
   function getOpportunityRadarIdForView(radar) {
@@ -195,7 +200,7 @@
   function getCustomerRadarStatusLabel(radar) {
     if (radar?.status === "archived") return "已删除";
     if (radar?.status === "paused") return "已暂停";
-    if (radar?.lastRunAt) return "上次已完成";
+    if (radar?.lastRunAt) return "已完成";
     if (radar?.status === "draft") return "待确认";
     return "已保存";
   }
@@ -313,6 +318,7 @@
 
     const kindLabel = RADAR_KIND_LABELS[radar.kind] || "自定义";
     const statusLabel = RADAR_STATUS_LABELS[radar.status] || radar.status;
+    const displayName = getRadarDisplayName(radar);
     const customerStatusLabel = getCustomerRadarStatusLabel(radar);
     const builtinTag = radar.isBuiltin
       ? '<span class="builtin-tag">内置</span>'
@@ -328,7 +334,7 @@
       <div class="radar-command-header">
         <div>
           <span class="radar-kind-badge kind-${escapeHtml(radar.kind || "custom")}">${escapeHtml(kindLabel)}</span>
-          <h4 class="radar-name">${escapeHtml(radar.name || "未命名雷达")}</h4>
+          <h4 class="radar-name">${escapeHtml(displayName)}</h4>
         </div>
         <span class="radar-command-state">
           <span class="radar-status-dot status-${escapeHtml(radar.status || "draft")}" title="${escapeHtml(statusLabel)}"></span>
@@ -435,6 +441,7 @@
     try {
       const opportunityRadarId = getOpportunityRadarIdForView(radar);
       const publicAiEventsBridge = opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID && opportunityRadarId !== radar.id;
+      const displayName = getRadarDisplayName(radar);
       const opportunityPageSize = getOpportunityPageSizeForView(radar);
       if (publicAiEventsBridge) {
         await ensurePublicAiEventsSynced();
@@ -458,7 +465,7 @@
         publicAiEventsBridge,
         runId: latestRun?.id,
         reportId: latestReport?.id || latestRun?.reportId,
-        suggestedName: publicAiEventsBridge ? "AI 赛事雷达" : (radar.name || "我的机会雷达"),
+        suggestedName: publicAiEventsBridge ? PUBLIC_AI_EVENTS_DISPLAY_NAME : displayName,
         description: publicAiEventsBridge
           ? buildPublicAiEventsResultDescription(radar, cards)
           : (buildProfileSummaryText(radar) || "这是你保存的长期雷达，本页展示已入库机会和最新报告状态。"),
@@ -480,13 +487,13 @@
       const lifecycle = String(card.lifecycleStatus || card.lifecycle_status || "").toLowerCase();
       return lifecycle !== "historical" && lifecycle !== "expired";
     }).length;
-    return `这是 ${radar.name || "AI 赛事雷达"} 绑定的 AI Events 公共赛事库。本页展示后台已入库的当前有效 AI 赛事机会 ${currentCount || cards.length} 条；公共页 /aievents 也读取同一批数据。`;
+    return `这是 ${getRadarDisplayName(radar)} 绑定的 AI Events 公共赛事库。本页展示后台已入库的当前有效 AI 赛事机会 ${currentCount || cards.length} 条；公共页 /aievents 也读取同一批数据。`;
   }
 
   function buildRadarResultMarkdown(radar, cards, latestReport, latestRun, options = {}) {
     const publicAiEventsBridge = options.publicAiEventsBridge === true;
     const lines = [
-      `# ${publicAiEventsBridge ? "AI 赛事雷达" : (radar.name || "我的机会雷达")}｜机会和报告`,
+      `# ${publicAiEventsBridge ? PUBLIC_AI_EVENTS_DISPLAY_NAME : getRadarDisplayName(radar)}｜机会和报告`,
       "",
       `- 雷达版本：${getRadarVersionLabel(radar)}`,
       publicAiEventsBridge ? `- 机会来源：AI Events 公共赛事库（${options.opportunityRadarId || PUBLIC_AI_EVENTS_RADAR_ID}）` : "",

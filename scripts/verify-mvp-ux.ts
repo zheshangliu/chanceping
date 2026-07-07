@@ -109,7 +109,7 @@ check("保存成功后不自动跳转我的雷达", !watchResultJs.includes("已
 check("空结果页含可行动建议", ["放宽地区", "减少排除条件", "增加指定信号源", "保存为长期雷达继续监控"].every((text) => watchResultJs.includes(text)));
 check(
   "我的雷达卡片使用客户语言入口",
-  ["情报流摘要", "上次已完成", "还没跑过", "编辑雷达", "再次盯机会", "查看机会和报告", "删除雷达"].every((text) => radarsJs.includes(text))
+  ["情报流摘要", "已完成", "还没跑过", "编辑雷达", "再次盯机会", "查看机会和报告", "删除雷达"].every((text) => radarsJs.includes(text))
     && !radarsJs.includes("上次运行状态")
 );
 check("我的雷达卡片不展示 Provider 调试字段", !radarsJs.includes("radar-providers"));

@@ -10,7 +10,7 @@
   const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
   const AI_EVENT_SAMPLE_ROOM = {
     id: "ai-event-sample-room",
-    name: "AI 赛事雷达",
+    name: "全球 AI 赛事导航",
     version: "V1.0",
     isSampleRoom: true,
   };
@@ -380,16 +380,46 @@
         .map(normalizeSidebarWindow);
       const activeWindows = normalized.filter((item) => item.status !== "archived");
       const archivedWindows = normalized.filter((item) => item.status === "archived");
-      heroRadarChatState.chatWindows = [getSampleSidebarWindow(), ...compactSidebarWindows(activeWindows, CHAT_WINDOW_LIMIT)];
+      heroRadarChatState.chatWindows = [getSampleSidebarWindow(), ...compactSidebarWindows(activeWindows, Number.POSITIVE_INFINITY)];
       heroRadarChatState.archivedChatWindows = compactSidebarWindows(archivedWindows);
+      renderHomeRadarSidebar();
       saveState();
       return heroRadarChatState.chatWindows;
     } catch {
       heroRadarChatState.chatWindows = [getSampleSidebarWindow()];
       heroRadarChatState.archivedChatWindows = [];
+      renderHomeRadarSidebar();
       saveState();
       return heroRadarChatState.chatWindows;
     }
+  }
+
+  function renderHomeRadarSidebar() {
+    const section = document.querySelector(".home-sidebar-section");
+    if (!section) return;
+    section.querySelector(".home-custom-radar-list")?.remove();
+    const customWindows = (heroRadarChatState.chatWindows || []).filter((item) => !isSampleRoomWindow(item) && item.status !== "archived");
+    const wrap = document.createElement("div");
+    wrap.className = "home-custom-radar-list";
+    if (customWindows.length > 0) {
+      wrap.innerHTML = `
+        <span class="home-sidebar-subtitle">自定义雷达窗口</span>
+        ${customWindows.map((windowData) => `
+          <button class="home-radar-window custom" type="button" data-action="switch-home-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">
+            <strong>${escapeHtml(windowData.title || "机会雷达")}</strong>
+            <small>${escapeHtml(windowData.draftRadarVersion || windowData.currentConfirmedRadarVersion || "V1.0")} · 雷达窗口</small>
+          </button>
+        `).join("")}
+      `;
+    } else {
+      wrap.innerHTML = `<p class="home-sidebar-empty">还没有自定义雷达窗口。</p>`;
+    }
+    section.appendChild(wrap);
+    wrap.querySelectorAll("[data-action='switch-home-radar-window']").forEach((button) => {
+      button.addEventListener("click", () => {
+        switchHeroRadarWindow(button.dataset.chatWindowId || "").catch((err) => window.showToast?.(err.message || "打开雷达窗口失败", "error"));
+      });
+    });
   }
 
   function restoreState() {
@@ -1093,22 +1123,22 @@
     `;
   }
 
-  function renderArchiveWindowModal(modal) {
+  function renderDeleteWindowModal(modal) {
     const current = findSidebarWindow(modal?.chatWindowId || "");
     const title = current?.title || "这个雷达窗口";
     return `
-      <dialog class="hero-artifact-modal hero-window-action-modal" open aria-label="归档雷达窗口">
+      <dialog class="hero-artifact-modal hero-window-action-modal" open aria-label="删除雷达窗口">
         <div class="hero-modal-card">
           <button class="hero-modal-close" type="button" data-action="close-hero-modal">关闭</button>
           <div class="hero-artifact-topline">
             <span class="hero-artifact-kicker">雷达窗口</span>
-            <span class="hero-version-pill">归档</span>
+            <span class="hero-version-pill">删除</span>
           </div>
-          <h3>归档「${escapeHtml(title)}」？</h3>
-          <p class="hero-modal-helper">归档后它不会再出现在当前雷达列表里，聊天历史会保留。AI 赛事雷达样板间不会被删除。</p>
+          <h3>删除「${escapeHtml(title)}」？</h3>
+          <p class="hero-modal-helper">删除后将从列表移除，这个雷达窗口的聊天记录不再保留。AI 赛事雷达内置窗口不会被删除。</p>
           <div class="hero-window-modal-actions">
-            <button type="button" class="secondary-btn" data-action="close-hero-modal">先不归档</button>
-            <button type="button" class="danger-btn" data-action="confirm-window-archive" data-chat-window-id="${escapeHtml(modal?.chatWindowId || "")}">确认归档</button>
+            <button type="button" class="secondary-btn" data-action="close-hero-modal">先不删除</button>
+            <button type="button" class="danger-btn" data-action="confirm-window-delete" data-chat-window-id="${escapeHtml(modal?.chatWindowId || "")}">确认删除</button>
           </div>
         </div>
       </dialog>
@@ -1126,22 +1156,18 @@
       const isActive = windowData.id === activeChatWindowId;
       const version = windowData.draftRadarVersion || windowData.currentConfirmedRadarVersion || "V1.0";
       const archived = options.archived === true || windowData.status === "archived";
-      const subline = windowData.isSampleRoom ? `${version} · Hero Demo` : archived ? `${version} · 已归档` : `${version} · 雷达窗口`;
+      const subline = windowData.isSampleRoom ? `${version} · Hero Demo` : `${version} · 雷达窗口`;
       const actionButtons = windowData.isSampleRoom ? `
         <span class="hero-sidebar-window-note">内置</span>
-      ` : archived ? `
-        <span class="hero-sidebar-window-actions" aria-label="已归档雷达窗口操作">
-          <button class="hero-sidebar-mini-btn" type="button" data-action="restore-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">恢复</button>
-        </span>
       ` : `
         <span class="hero-sidebar-window-actions" aria-label="雷达窗口操作">
           <button class="hero-sidebar-mini-btn" type="button" data-action="rename-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">改名</button>
-          <button class="hero-sidebar-mini-btn danger" type="button" data-action="archive-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">归档</button>
+          <button class="hero-sidebar-mini-btn danger" type="button" data-action="delete-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">删除</button>
         </span>
       `;
       return `
         <div class="hero-sidebar-radar-row ${isActive ? "active" : ""} ${archived ? "archived" : ""}">
-          <button class="hero-sidebar-radar ${isActive ? "active" : ""}" type="button" data-action="${archived ? "restore-hero-radar-window" : "switch-hero-radar-window"}" data-chat-window-id="${escapeHtml(windowData.id)}">
+          <button class="hero-sidebar-radar ${isActive ? "active" : ""}" type="button" data-action="switch-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">
             <span>${escapeHtml(windowData.title || "机会雷达")}</span>
             <small>${escapeHtml(subline)}</small>
           </button>
@@ -1150,11 +1176,8 @@
       `;
     };
     const rows = sidebarWindows.map((windowData) => renderWindowRow(windowData)).join("");
-    const archivedRows = (heroRadarChatState.archivedChatWindows || []).map((windowData) => renderWindowRow(windowData, { archived: true })).join("");
     const activeCustomCount = getActiveCustomWindowCount();
-    const visibleCustomCount = Math.min(activeCustomCount, CHAT_WINDOW_LIMIT);
     const quotaFull = isChatWindowQuotaFull();
-    const archivedCount = (heroRadarChatState.archivedChatWindows || []).length;
     return `
       <aside class="hero-radar-sidebar" aria-label="雷达列表">
         <div class="hero-sidebar-brand">
@@ -1167,22 +1190,15 @@
         </div>
         <button class="hero-new-radar-btn ${quotaFull ? "disabled" : ""}" type="button" data-action="new-hero-radar-window" ${quotaFull ? 'data-quota-full="true"' : ""}>
           <span>＋ 新雷达</span>
-          <small>${quotaFull ? "已满，先归档一个雷达窗口" : "一个窗口只放一个雷达"}</small>
+          <small>${quotaFull ? "已满，先删除旧雷达窗口" : "一个窗口只放一个雷达"}</small>
         </button>
         <div class="hero-sidebar-quota ${quotaFull ? "full" : ""}" aria-label="自定义雷达窗口配额">
           <span>自定义雷达窗口</span>
-          <strong>${visibleCustomCount}/${CHAT_WINDOW_LIMIT}</strong>
+          <strong>${activeCustomCount}/${CHAT_WINDOW_LIMIT}</strong>
         </div>
         <div class="hero-sidebar-section hero-sidebar-current-radar">
           <span class="hero-sidebar-label">当前雷达</span>
           ${rows}
-        </div>
-        <div class="hero-sidebar-section hero-sidebar-archive-section">
-          <button class="hero-sidebar-archive-toggle" type="button" data-action="toggle-archived-windows">
-            <span>已归档</span>
-            <small>${archivedCount} 个</small>
-          </button>
-          ${heroRadarChatState.showArchivedWindows ? `<div class="hero-sidebar-archived-list">${archivedRows || `<p class="hero-sidebar-empty">暂无已归档雷达窗口</p>`}</div>` : ""}
         </div>
       </aside>
     `;
@@ -1207,8 +1223,10 @@
     `;
   }
 
-  function syncHeroEntryVisibility() {
-    const chatStarted = heroRadarChatState.messages.length > 0;
+  function syncHeroEntryVisibility(options = {}) {
+    const existingWorkspace = document.querySelector("#hero-radar-chat-root .hero-chat-workspace");
+    const forceHomeEntry = options.forceHomeEntry === true;
+    const chatStarted = !forceHomeEntry && (heroRadarChatState.messages.length > 0 || Boolean(existingWorkspace) || options.forceChatActive === true);
     const homeIsActive = document.getElementById("panel-home")?.classList.contains("active") !== false;
     document.body.classList.toggle("hero-chat-active", chatStarted && homeIsActive);
     document.body.classList.toggle("hero-home-shell", !chatStarted && homeIsActive);
@@ -1240,7 +1258,7 @@
         <div class="hero-chat-main">
           <div class="hero-chat-header" aria-label="1. 说需求 2. 看雷达 3. 确认后搜索">
             <div>
-              <span>AI 赛事雷达</span>
+              <span>${escapeHtml(AI_EVENT_SAMPLE_ROOM.name)}</span>
               <strong>一个聊天窗口，一个正在成长的雷达</strong>
             </div>
             <button id="hero-chat-reset" class="hero-chat-reset" type="button">重新开始</button>
@@ -1248,7 +1266,7 @@
           <div class="hero-chat-messages">
             ${messages.map(renderMessage).join("")}
           </div>
-          ${chatStarted ? `<div class="hero-chat-input-row">
+          ${chatStarted && !heroRadarChatState.modal ? `<div class="hero-chat-input-row">
             <textarea id="hero-radar-chat-input" rows="2" placeholder="继续告诉我：你是谁、不要什么、什么结果才算有用">${escapeHtml(heroRadarChatState.pendingFirstMessage || "")}</textarea>
             <button id="hero-radar-chat-send" class="primary-btn" ${heroRadarChatState.isBusy ? "disabled" : ""}>发送</button>
           </div>` : ""}
@@ -1256,32 +1274,22 @@
         ${heroRadarChatState.modal?.type === "radar" ? renderRadarModal(heroRadarChatState.modal.version) : ""}
         ${heroRadarChatState.modal?.type === "report" ? renderReportModal(heroRadarChatState.modal.messageId) : ""}
         ${heroRadarChatState.modal?.type === "rename-window" ? renderRenameWindowModal(heroRadarChatState.modal) : ""}
-        ${heroRadarChatState.modal?.type === "archive-window" ? renderArchiveWindowModal(heroRadarChatState.modal) : ""}
+        ${heroRadarChatState.modal?.type === "delete-window" ? renderDeleteWindowModal(heroRadarChatState.modal) : ""}
       </section>
     `;
     root.querySelector("#hero-chat-reset")?.addEventListener("click", resetHeroRadarChat);
     root.querySelector("[data-action='toggle-sidebar']")?.addEventListener("click", toggleHeroSidebar);
     root.querySelector("[data-action='new-hero-radar-window']")?.addEventListener("click", () => {
       if (isChatWindowQuotaFull()) {
-        window.showToast?.(`自定义雷达窗口已满 ${CHAT_WINDOW_LIMIT}/${CHAT_WINDOW_LIMIT}，请先归档一个雷达窗口。`, "warning");
+        loadRadarChatWindows().finally(() => renderHeroRadarChat());
+        window.showToast?.(`自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}，请先删除一个旧雷达窗口。`, "warning");
         return;
       }
       createNewHeroRadarWindow("").catch((err) => window.showToast?.(err.message || "新建雷达窗口失败", "error"));
     });
-    root.querySelector("[data-action='toggle-archived-windows']")?.addEventListener("click", () => {
-      heroRadarChatState.showArchivedWindows = !heroRadarChatState.showArchivedWindows;
-      saveState();
-      renderHeroRadarChat();
-    });
     root.querySelectorAll("[data-action='switch-hero-radar-window']").forEach((button) => {
       button.addEventListener("click", () => {
         switchHeroRadarWindow(button.dataset.chatWindowId || "").catch((err) => window.showToast?.(err.message || "打开雷达窗口失败", "error"));
-      });
-    });
-    root.querySelectorAll("[data-action='restore-hero-radar-window']").forEach((button) => {
-      button.addEventListener("click", (event) => {
-        event.stopPropagation();
-        restoreHeroRadarWindow(button.dataset.chatWindowId || "").catch((err) => window.showToast?.(err.message || "恢复雷达窗口失败", "error"));
       });
     });
     root.querySelectorAll("[data-action='rename-hero-radar-window']").forEach((button) => {
@@ -1290,10 +1298,10 @@
         openRenameWindowModal(button.dataset.chatWindowId || "");
       });
     });
-    root.querySelectorAll("[data-action='archive-hero-radar-window']").forEach((button) => {
+    root.querySelectorAll("[data-action='delete-hero-radar-window']").forEach((button) => {
       button.addEventListener("click", (event) => {
         event.stopPropagation();
-        openArchiveWindowModal(button.dataset.chatWindowId || "");
+        openDeleteWindowModal(button.dataset.chatWindowId || "");
       });
     });
     root.querySelector("#hero-radar-chat-send")?.addEventListener("click", () => {
@@ -1334,8 +1342,8 @@
       const title = String(new FormData(form).get("title") || "").trim();
       renameHeroRadarWindow(form.dataset.chatWindowId || "", title).catch((err) => window.showToast?.(err.message || "重命名失败", "error"));
     });
-    root.querySelector("[data-action='confirm-window-archive']")?.addEventListener("click", (event) => {
-      archiveHeroRadarWindow(event.currentTarget.dataset.chatWindowId || "").catch((err) => window.showToast?.(err.message || "归档失败", "error"));
+    root.querySelector("[data-action='confirm-window-delete']")?.addEventListener("click", (event) => {
+      deleteHeroRadarWindow(event.currentTarget.dataset.chatWindowId || "").catch((err) => window.showToast?.(err.message || "删除失败", "error"));
     });
     root.querySelector(".hero-artifact-modal")?.addEventListener("cancel", (event) => {
       event.preventDefault();
@@ -1346,6 +1354,10 @@
 
   function scrollHeroChatToLatest() {
     window.requestAnimationFrame(() => {
+      const messages = document.querySelector(".hero-chat-messages");
+      if (messages) {
+        messages.scrollTop = messages.scrollHeight;
+      }
       const inputRow = document.querySelector(".hero-chat-input-row");
       if (inputRow && window.matchMedia("(max-width: 860px)").matches) {
         inputRow.scrollIntoView({ block: "end", behavior: "smooth" });
@@ -1404,7 +1416,7 @@
     await loadRadarChatWindows();
     addMessage(
       "assistant",
-      `自定义雷达窗口已满 ${CHAT_WINDOW_LIMIT}/${CHAT_WINDOW_LIMIT}。我先在 AI 赛事雷达样板间里承接这条需求；如果你想保存为新的长期雷达，请先在左侧归档一个旧窗口。`
+        `自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}。我先在 AI 赛事雷达样板间里承接这条需求；如果你想保存为新的长期雷达，请先在左侧删除一个旧窗口。`
     );
     saveState();
     window.setTimeout(() => document.getElementById("hero-radar-chat-input")?.focus(), 0);
@@ -1416,10 +1428,12 @@
     const text = String(initialMessage || "").trim();
     if (isChatWindowQuotaFull()) {
       if (text) {
-        window.showToast?.(`自定义雷达窗口已满 ${CHAT_WINDOW_LIMIT}/${CHAT_WINDOW_LIMIT}，先用 AI 赛事样板间承接这条需求。`, "warning");
+        window.showToast?.(`自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}，先用 AI 赛事样板间承接这条需求。`, "warning");
         return openSampleRoomWithDraftPrompt(text);
       }
-      window.showToast?.(`自定义雷达窗口已满 ${CHAT_WINDOW_LIMIT}/${CHAT_WINDOW_LIMIT}，请先归档一个雷达窗口。`, "warning");
+      await loadRadarChatWindows();
+      renderHeroRadarChat();
+      window.showToast?.(`自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}，请先删除一个旧雷达窗口。`, "warning");
       return false;
     }
     clearHeroRadarConversation();
@@ -1436,7 +1450,9 @@
   function resetHeroRadarChat() {
     clearHeroRadarConversation();
     sessionStorage.removeItem(STORAGE_KEY);
-    renderHeroRadarChat();
+    const root = document.getElementById("hero-radar-chat-root");
+    if (root) root.innerHTML = "";
+    syncHeroEntryVisibility({ forceHomeEntry: true });
     document.getElementById("home-input")?.focus();
     window.showToast?.("已清空当前演示，可以重新描述需求", "success");
   }
@@ -1479,13 +1495,13 @@
     return true;
   }
 
-  function openArchiveWindowModal(chatWindowId) {
+  function openDeleteWindowModal(chatWindowId) {
     if (!chatWindowId) return false;
     if (isSampleRoomWindowId(chatWindowId)) {
       window.showToast?.("AI 赛事样板间不能删除；它是内置演示窗口。", "warning");
       return false;
     }
-    openHeroModal({ type: "archive-window", chatWindowId });
+    openHeroModal({ type: "delete-window", chatWindowId });
     return true;
   }
 
@@ -1513,40 +1529,22 @@
     return true;
   }
 
-  async function archiveHeroRadarWindow(chatWindowId) {
+  async function deleteHeroRadarWindow(chatWindowId) {
     if (!chatWindowId) return false;
     if (isSampleRoomWindowId(chatWindowId)) {
-      // sample room cannot be archived
+      // sample room cannot be deleted
       window.showToast?.("AI 赛事样板间不能删除；它是内置演示窗口。", "warning");
       return false;
     }
     await deleteJson(`/api/radar-chats/${chatWindowId}`);
     heroRadarChatState.modal = null;
     await loadRadarChatWindows();
-    window.showToast?.("雷达窗口已归档", "success");
+    window.showToast?.("雷达窗口已删除，名额已释放", "success");
     if (heroRadarChatState.chatWindowId === chatWindowId || heroRadarChatState.activeChatWindowId === chatWindowId) {
       await openHeroRadarWindow();
     } else {
       renderHeroRadarChat();
     }
-    return true;
-  }
-
-  async function restoreHeroRadarWindow(chatWindowId) {
-    if (!chatWindowId) return false;
-    if (isChatWindowQuotaFull()) {
-      window.showToast?.(`自定义雷达窗口已满 ${CHAT_WINDOW_LIMIT}/${CHAT_WINDOW_LIMIT}，请先归档一个雷达窗口。`, "warning");
-      return false;
-    }
-    const updated = await patchJson(`/api/radar-chats/${chatWindowId}`, { status: "active" });
-    await loadRadarChatWindows();
-    heroRadarChatState.showArchivedWindows = true;
-    if (updated?.id) {
-      await switchHeroRadarWindow(updated.id);
-    } else {
-      renderHeroRadarChat();
-    }
-    window.showToast?.("雷达窗口已恢复", "success");
     return true;
   }
 
@@ -1929,7 +1927,7 @@
   window.loadRadarChatWindows = loadRadarChatWindows;
   window.switchHeroRadarWindow = switchHeroRadarWindow;
   window.renameHeroRadarWindow = renameHeroRadarWindow;
-  window.archiveHeroRadarWindow = archiveHeroRadarWindow;
+  window.deleteHeroRadarWindow = deleteHeroRadarWindow;
   window.syncPendingInputMessage = syncPendingInputMessage;
   window.openHeroRadarForRadar = openHeroRadarForRadar;
   window.openHeroRadarWindow = openHeroRadarWindow;

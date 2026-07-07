@@ -157,15 +157,17 @@ async function run() {
 
   const archiveResponse = await app.request(`/api/radar-chats/${secondJson.data?.id}`, { method: "DELETE" });
   const archiveJson = await json<{ success: boolean; data?: any; error?: any }>(archiveResponse);
-  check("DELETE /api/radar-chats/:id archives a window", archiveResponse.status === 200 && archiveJson.data?.status === "archived", JSON.stringify(archiveJson.error ?? archiveJson.data ?? {}));
+  check("DELETE /api/radar-chats/:id hard deletes a window", archiveResponse.status === 200 && archiveJson.data?.deleted === true, JSON.stringify(archiveJson.error ?? archiveJson.data ?? {}));
+  check("deleted chat window cannot be fetched", ctx.radarChatStore.get(secondJson.data?.id) === null);
+  check("deleted chat messages are removed", ctx.radarChatStore.listMessages(secondJson.data?.id).length === 0);
 
   const activeAfterArchiveResponse = await app.request("/api/radar-chats?user_id=demo_user");
   const activeAfterArchiveJson = await json<{ success: boolean; data?: any[]; error?: any }>(activeAfterArchiveResponse);
-  check("archived window disappears from active list", Array.isArray(activeAfterArchiveJson.data) && !activeAfterArchiveJson.data.some((item) => item.id === secondJson.data?.id), JSON.stringify(activeAfterArchiveJson.data ?? []));
+  check("deleted window disappears from active list", Array.isArray(activeAfterArchiveJson.data) && !activeAfterArchiveJson.data.some((item) => item.id === secondJson.data?.id), JSON.stringify(activeAfterArchiveJson.data ?? []));
 
   const archivedListResponse = await app.request("/api/radar-chats?user_id=demo_user&include_archived=true");
   const archivedListJson = await json<{ success: boolean; data?: any[]; error?: any }>(archivedListResponse);
-  check("archived window remains available when requested", Array.isArray(archivedListJson.data) && archivedListJson.data.some((item) => item.id === secondJson.data?.id && item.status === "archived"), JSON.stringify(archivedListJson.data ?? []));
+  check("deleted window does not remain when include_archived is requested", Array.isArray(archivedListJson.data) && !archivedListJson.data.some((item) => item.id === secondJson.data?.id), JSON.stringify(archivedListJson.data ?? []));
 
   const quotaUser = "quota_user";
   const quotaWindows: any[] = [];
@@ -211,19 +213,12 @@ async function run() {
 
   const quotaArchiveResponse = await app.request(`/api/radar-chats/${quotaWindows[0]?.id}`, { method: "DELETE" });
   const quotaArchiveJson = await json<{ success: boolean; data?: any; error?: any }>(quotaArchiveResponse);
-  check("archiving a chat window releases the quota slot", quotaArchiveResponse.status === 200 && quotaArchiveJson.data?.status === "archived", JSON.stringify(quotaArchiveJson.error ?? {}));
-
-  const quotaRestoreResponse = await app.request(`/api/radar-chats/${quotaWindows[0]?.id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status: "active" }),
-  });
-  const quotaRestoreJson = await json<{ success: boolean; data?: any; error?: any }>(quotaRestoreResponse);
-  check("archived chat window can be restored when quota has room", quotaRestoreResponse.status === 200 && quotaRestoreJson.data?.status === "active", JSON.stringify(quotaRestoreJson.error ?? {}));
+  check("deleting a chat window releases the quota slot", quotaArchiveResponse.status === 200 && quotaArchiveJson.data?.deleted === true, JSON.stringify(quotaArchiveJson.error ?? {}));
+  check("deleted quota window is not restorable", ctx.radarChatStore.get(quotaWindows[0]?.id) === null);
 
   const quotaArchiveSecondResponse = await app.request(`/api/radar-chats/${quotaWindows[1]?.id}`, { method: "DELETE" });
   const quotaArchiveSecondJson = await json<{ success: boolean; data?: any; error?: any }>(quotaArchiveSecondResponse);
-  check("archiving another window opens room for a new one", quotaArchiveSecondResponse.status === 200 && quotaArchiveSecondJson.data?.status === "archived", JSON.stringify(quotaArchiveSecondJson.error ?? {}));
+  check("deleting another window opens room for a new one", quotaArchiveSecondResponse.status === 200 && quotaArchiveSecondJson.data?.deleted === true, JSON.stringify(quotaArchiveSecondJson.error ?? {}));
 
   const quotaAfterArchiveResponse = await app.request("/api/radar-chats", {
     method: "POST",
@@ -235,7 +230,7 @@ async function run() {
     }),
   });
   const quotaAfterArchiveJson = await json<{ success: boolean; data?: any; error?: any }>(quotaAfterArchiveResponse);
-  check("new chat window can be created after archive releases quota", quotaAfterArchiveResponse.status === 200 && quotaAfterArchiveJson.success === true, JSON.stringify(quotaAfterArchiveJson.error ?? {}));
+  check("new chat window can be created after delete releases quota", quotaAfterArchiveResponse.status === 200 && quotaAfterArchiveJson.success === true, JSON.stringify(quotaAfterArchiveJson.error ?? {}));
 
   ctx.radarChatStore.save();
   const freshCtx = createAppContext();

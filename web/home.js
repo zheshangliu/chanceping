@@ -78,7 +78,7 @@ function switchTab(tabName) {
     window.setTimeout(detachAdvancedPanelsForCustomerPath, 0);
   }
   if (tabName === "home") {
-    window.syncHeroEntryVisibility?.();
+    window.syncHeroEntryVisibility?.({ forceChatActive: true });
   } else {
     document.body.classList.remove("hero-chat-active");
     document.body.classList.remove("hero-home-shell");

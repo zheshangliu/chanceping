@@ -59,7 +59,7 @@ function getWindowQuota() {
 function quotaExceededResponse(durationMs: number) {
   return errorResponse(
     "RADAR_CHAT_QUOTA_EXCEEDED",
-    `免费版最多保留 ${getWindowQuota()} 个雷达聊天窗口；请先归档一个雷达窗口再新建。`,
+    `免费版最多保留 ${getWindowQuota()} 个雷达聊天窗口；请先删除一个旧雷达窗口再新建。`,
     durationMs,
     403,
   );
@@ -238,12 +238,12 @@ export function radarChatRoutes(ctx: AppContext): Hono {
   app.delete("/:id", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
-    const archived = store.archive(id);
-    if (!archived) {
+    const deleted = store.delete(id);
+    if (!deleted) {
       return c.json(errorResponse("RADAR_CHAT_NOT_FOUND", "雷达聊天窗口不存在", Date.now() - start, 404), 404);
     }
     store.save();
-    return c.json({ success: true, data: archived, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
+    return c.json({ success: true, data: { id, deleted: true }, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
   });
 
   return app;
