@@ -49,11 +49,30 @@ docs/deployment/aliyun.env.example
 
 ## 上线前本地闸门
 
+推荐先跑一键 preflight：
+
 ```bash
+node --run verify:q7:aliyun-preflight
+```
+
+它会依次执行类型检查、Qwen contest 环境检查、后端 Qwen 文案、聊天窗口数据层、Docker/readiness、阿里云本地 smoke、容器 smoke 和 `verify:all`。
+
+如果当前机器没有 Docker，或 Docker Hub / 镜像源暂时不可用，可以显式跳过容器 smoke，先跑其余闸门：
+
+```bash
+CHANCEPING_SKIP_ALIYUN_CONTAINER_SMOKE=true node --run verify:q7:aliyun-preflight
+```
+
+分项排错命令：
+
+```bash
+node --run typecheck
 node --run verify:q7:api-env-contest
 node --run verify:q7:backend-i18n
 node --run verify:q7:chat-window
+node --run verify:q7:docker-readiness
 node --run verify:q7:cloud-readiness
+node --run verify:q7:aliyun-runbook
 node --run verify:q7:aliyun-smoke
 node --run verify:q7:aliyun-container-smoke
 node --run verify:all
