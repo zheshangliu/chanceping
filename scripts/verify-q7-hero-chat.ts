@@ -102,6 +102,10 @@ async function run() {
   check("hero sidebar has collapsed rendering state", heroChatJs.includes("sidebarCollapsed") && heroChatJs.includes("hero-sidebar-collapsed"));
   check("hero sidebar collapsed CSS keeps icon rail usable", styles.includes(".hero-chat-workspace.sidebar-collapsed") && styles.includes("64px"));
   check("hero chat sidebar renders current radar windows", heroChatJs.includes("hero-sidebar-current-radar") && heroChatJs.includes("当前雷达") && heroChatJs.includes("AI 赛事雷达") && !heroChatJs.includes("我的雷达"));
+  check("hero chat sidebar shows free chat window quota", heroChatJs.includes("CHAT_WINDOW_LIMIT") && heroChatJs.includes("自定义雷达窗口") && heroChatJs.includes("getActiveCustomWindowCount"));
+  check("hero chat sidebar blocks new window when quota is full", heroChatJs.includes("isChatWindowQuotaFull") && heroChatJs.includes("先归档一个雷达窗口") && heroChatJs.includes("RADAR_CHAT_QUOTA_EXCEEDED"));
+  check("hero chat sidebar can show archived radar windows", heroChatJs.includes("showArchivedWindows") && heroChatJs.includes("toggle-archived-windows") && heroChatJs.includes("已归档"));
+  check("hero chat sidebar can restore archived radar windows", heroChatJs.includes("restoreHeroRadarWindow") && heroChatJs.includes("restore-hero-radar-window") && heroChatJs.includes('status: "active"'));
   check("hero chat does not expose fixed prompt action in sidebar", !heroChatJs.includes("发送固定提示词") && !heroChatJs.includes("startHeroSamplePrompt"));
   check("hero chat does not expose copy-to-my-radar action in sidebar", !heroChatJs.includes("复制为我的雷达") && !heroChatJs.includes("copyHeroSampleToMyRadar"));
   check("sample room sidebar remains a single AI event radar window", heroChatJs.includes("AI 赛事雷达") && !heroChatJs.includes("只读演示"));

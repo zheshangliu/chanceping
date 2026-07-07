@@ -230,6 +230,7 @@ export class JsonRadarChatStore implements RadarChatStore {
       ...("radarId" in patch ? { radarId: patch.radarId } : {}),
       ...(patch.title !== undefined ? { title: patch.title } : {}),
       ...(patch.status !== undefined ? { status: patch.status } : {}),
+      ...(patch.status !== undefined ? { archivedAt: patch.status === "archived" ? updatedAt : undefined } : {}),
       ...("currentConfirmedRadarVersion" in patch ? { currentConfirmedRadarVersion: patch.currentConfirmedRadarVersion } : {}),
       ...("draftRadarVersion" in patch ? { draftRadarVersion: patch.draftRadarVersion } : {}),
       ...("latestRunId" in patch ? { latestRunId: patch.latestRunId } : {}),

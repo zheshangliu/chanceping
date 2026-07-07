@@ -167,6 +167,76 @@ async function run() {
   const archivedListJson = await json<{ success: boolean; data?: any[]; error?: any }>(archivedListResponse);
   check("archived window remains available when requested", Array.isArray(archivedListJson.data) && archivedListJson.data.some((item) => item.id === secondJson.data?.id && item.status === "archived"), JSON.stringify(archivedListJson.data ?? []));
 
+  const quotaUser = "quota_user";
+  const quotaWindows: any[] = [];
+  const sampleRoomResponse = await app.request("/api/radar-chats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      radarId: "ai-event-sample-room",
+      title: "AI 赛事雷达",
+      userId: quotaUser,
+      draftRadarVersion: "V1.0",
+    }),
+  });
+  const sampleRoomJson = await json<{ success: boolean; data?: any; error?: any }>(sampleRoomResponse);
+  check("built-in AI event sample room does not fail quota precheck", sampleRoomResponse.status === 200 && sampleRoomJson.success === true, JSON.stringify(sampleRoomJson.error ?? {}));
+  for (let i = 1; i <= 3; i += 1) {
+    const response = await app.request("/api/radar-chats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: `测试雷达窗口 ${i}`,
+        userId: quotaUser,
+        draftRadarVersion: "V1.0",
+      }),
+    });
+    const payload = await json<{ success: boolean; data?: any; error?: any }>(response);
+    check(`free quota allows custom chat window ${i}`, response.status === 200 && payload.success === true, JSON.stringify(payload.error ?? {}));
+    quotaWindows.push(payload.data);
+  }
+
+  const quotaBlockedResponse = await app.request("/api/radar-chats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: "第 4 个雷达窗口",
+      userId: quotaUser,
+      draftRadarVersion: "V1.0",
+    }),
+  });
+  const quotaBlockedJson = await json<{ success: boolean; data?: any; error?: any }>(quotaBlockedResponse);
+  check("free quota blocks fourth custom chat window", quotaBlockedResponse.status === 403 && quotaBlockedJson.success === false, JSON.stringify(quotaBlockedJson));
+  check("quota block returns clear error code", quotaBlockedJson.error?.code === "RADAR_CHAT_QUOTA_EXCEEDED", JSON.stringify(quotaBlockedJson.error ?? {}));
+
+  const quotaArchiveResponse = await app.request(`/api/radar-chats/${quotaWindows[0]?.id}`, { method: "DELETE" });
+  const quotaArchiveJson = await json<{ success: boolean; data?: any; error?: any }>(quotaArchiveResponse);
+  check("archiving a chat window releases the quota slot", quotaArchiveResponse.status === 200 && quotaArchiveJson.data?.status === "archived", JSON.stringify(quotaArchiveJson.error ?? {}));
+
+  const quotaRestoreResponse = await app.request(`/api/radar-chats/${quotaWindows[0]?.id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "active" }),
+  });
+  const quotaRestoreJson = await json<{ success: boolean; data?: any; error?: any }>(quotaRestoreResponse);
+  check("archived chat window can be restored when quota has room", quotaRestoreResponse.status === 200 && quotaRestoreJson.data?.status === "active", JSON.stringify(quotaRestoreJson.error ?? {}));
+
+  const quotaArchiveSecondResponse = await app.request(`/api/radar-chats/${quotaWindows[1]?.id}`, { method: "DELETE" });
+  const quotaArchiveSecondJson = await json<{ success: boolean; data?: any; error?: any }>(quotaArchiveSecondResponse);
+  check("archiving another window opens room for a new one", quotaArchiveSecondResponse.status === 200 && quotaArchiveSecondJson.data?.status === "archived", JSON.stringify(quotaArchiveSecondJson.error ?? {}));
+
+  const quotaAfterArchiveResponse = await app.request("/api/radar-chats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: "释放配额后的新雷达窗口",
+      userId: quotaUser,
+      draftRadarVersion: "V1.0",
+    }),
+  });
+  const quotaAfterArchiveJson = await json<{ success: boolean; data?: any; error?: any }>(quotaAfterArchiveResponse);
+  check("new chat window can be created after archive releases quota", quotaAfterArchiveResponse.status === 200 && quotaAfterArchiveJson.success === true, JSON.stringify(quotaAfterArchiveJson.error ?? {}));
+
   ctx.radarChatStore.save();
   const freshCtx = createAppContext();
   if (!freshCtx.radarChatStore) {

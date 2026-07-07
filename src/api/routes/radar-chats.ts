@@ -1,13 +1,16 @@
 import { Hono } from "hono";
 import type { AppContext } from "../context";
 import type { ApiResponse } from "../types";
-import { getCurrentUser } from "../../agents/user-context";
+import { getCurrentUser, RADAR_QUOTA } from "../../agents/user-context";
 import { JsonRadarChatStore } from "../../agents/radar-chat-store";
 import type {
   RadarChatArtifactType,
   RadarChatMessageRole,
+  RadarChatWindow,
   RadarChatWindowUpdateInput,
 } from "../../agents/radar-chat-store";
+
+const BUILTIN_SAMPLE_ROOM_ID = "ai-event-sample-room";
 
 function errorResponse(code: string, message: string, durationMs: number, status: number) {
   return { success: false, data: null, error: { code, message }, duration_ms: durationMs } satisfies ApiResponse;
@@ -33,6 +36,33 @@ function isMessageRole(value: unknown): value is RadarChatMessageRole {
 
 function isArtifactType(value: unknown): value is RadarChatArtifactType {
   return value === "radar" || value === "report" || value === "progress";
+}
+
+function isWindowStatus(value: unknown): value is RadarChatWindow["status"] {
+  return value === "active" || value === "archived";
+}
+
+function countActiveUserWindows(windows: RadarChatWindow[], ignoredWindowId?: string): number {
+  return windows.filter((item) => (
+    item.status === "active"
+    && item.id !== ignoredWindowId
+    && item.id !== BUILTIN_SAMPLE_ROOM_ID
+    && item.radarId !== BUILTIN_SAMPLE_ROOM_ID
+  )).length;
+}
+
+function getWindowQuota() {
+  const user = getCurrentUser();
+  return RADAR_QUOTA[user.plan] ?? RADAR_QUOTA.free;
+}
+
+function quotaExceededResponse(durationMs: number) {
+  return errorResponse(
+    "RADAR_CHAT_QUOTA_EXCEEDED",
+    `免费版最多保留 ${getWindowQuota()} 个雷达聊天窗口；请先归档一个雷达窗口再新建。`,
+    durationMs,
+    403,
+  );
 }
 
 async function readJson(c: { req: { json: () => Promise<unknown> } }): Promise<Record<string, unknown> | null> {
@@ -84,6 +114,10 @@ export function radarChatRoutes(ctx: AppContext): Hono {
         return c.json({ success: true, data: existing, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
       }
     }
+    const activeWindowCount = countActiveUserWindows(store.list({ userId }));
+    if (activeWindowCount >= getWindowQuota()) {
+      return c.json(quotaExceededResponse(Date.now() - start), 403);
+    }
 
     const window = store.create({
       radarId,
@@ -125,7 +159,15 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       ...("pendingMessage" in body ? { pendingMessage: asStringOrEmpty(body.pendingMessage) } : {}),
       ...("draftSnapshot" in body ? { draftSnapshot: asJsonPayload(body.draftSnapshot) } : {}),
       ...("currentResultSnapshot" in body ? { currentResultSnapshot: asJsonPayload(body.currentResultSnapshot) } : {}),
+      ...("status" in body && isWindowStatus(body.status) ? { status: body.status } : {}),
     };
+    const existing = store.get(id);
+    if (patch.status === "active" && existing?.status === "archived") {
+      const activeWindowCount = countActiveUserWindows(store.list({ userId: existing.userId }), id);
+      if (activeWindowCount >= getWindowQuota()) {
+        return c.json(quotaExceededResponse(Date.now() - start), 403);
+      }
+    }
     const updated = store.update(id, patch);
     if (!updated) {
       return c.json(errorResponse("RADAR_CHAT_NOT_FOUND", "雷达聊天窗口不存在", Date.now() - start, 404), 404);

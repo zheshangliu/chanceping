@@ -4559,6 +4559,76 @@ body.hero-chat-active .hero-chat-main {
   margin-top: 2px;
 }
 
+.hero-new-radar-btn.disabled,
+.hero-new-radar-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.hero-sidebar-quota,
+.hero-sidebar-archive-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 34px;
+  padding: 8px 10px;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  border-radius: 12px;
+  background: rgba(219, 234, 254, 0.45);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.hero-sidebar-quota strong,
+.hero-sidebar-archive-toggle small {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.hero-sidebar-quota.full {
+  border-color: rgba(220, 38, 38, 0.26);
+  background: rgba(254, 226, 226, 0.62);
+}
+
+.hero-sidebar-quota.full strong {
+  color: var(--error);
+}
+
+.hero-sidebar-archive-toggle {
+  cursor: pointer;
+}
+
+.hero-sidebar-archive-toggle:hover {
+  border-color: rgba(37, 99, 235, 0.35);
+  background: rgba(219, 234, 254, 0.76);
+}
+
+.hero-sidebar-archived-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-sidebar-radar-row.archived {
+  opacity: 0.82;
+}
+
+.hero-sidebar-radar-row.archived .hero-sidebar-radar {
+  border-style: dashed;
+  background: rgba(248, 250, 252, 0.76);
+}
+
+.hero-sidebar-empty {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px dashed rgba(148, 163, 184, 0.36);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .hero-sidebar-radar-row {
   display: grid;
   grid-template-columns: 1fr;
@@ -4653,6 +4723,8 @@ body.hero-chat-active .hero-chat-main {
 
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-brand-text,
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-label,
+.hero-chat-workspace.sidebar-collapsed .hero-sidebar-quota,
+.hero-chat-workspace.sidebar-collapsed .hero-sidebar-archive-section,
 .hero-chat-workspace.sidebar-collapsed .hero-new-radar-btn,
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-window-actions,
 .hero-chat-workspace.sidebar-collapsed .hero-sidebar-window-note,

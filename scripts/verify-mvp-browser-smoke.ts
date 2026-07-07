@@ -41,6 +41,17 @@ async function clearCustomRadars(): Promise<void> {
   }
 }
 
+async function clearCustomRadarChats(): Promise<void> {
+  const res = await fetch(`${baseUrl}/api/radar-chats?user_id=demo_user&include_archived=true`);
+  const json = await res.json() as { success?: boolean; data?: Array<{ id: string; radarId?: string; status?: string }> };
+  if (!json.success || !Array.isArray(json.data)) return;
+  for (const chatWindow of json.data) {
+    if (!chatWindow.id || chatWindow.status === "archived") continue;
+    if (chatWindow.id === "ai-event-sample-room" || chatWindow.radarId === "ai-event-sample-room") continue;
+    await fetch(`${baseUrl}/api/radar-chats/${chatWindow.id}`, { method: "DELETE" });
+  }
+}
+
 async function clickButtonByText(page: any, text: string): Promise<boolean> {
   return await page.evaluate((label: string) => {
     const doc = (globalThis as any).document;
@@ -70,6 +81,8 @@ async function main(): Promise<void> {
   await waitForServer();
   currentStage = "clear custom radars";
   await clearCustomRadars();
+  currentStage = "clear custom radar chats";
+  await clearCustomRadarChats();
 
   const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
   const browser = await puppeteer.launch({
