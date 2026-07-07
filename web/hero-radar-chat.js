@@ -2,7 +2,7 @@
   "use strict";
 
   const SIDEBAR_COLLAPSED_KEY = "chanceping-sidebar-collapsed";
-  const DEFAULT_USER_ID = "demo_user";
+  const ANONYMOUS_USER_ID_KEY = "chanceping_hero_visitor_user_id";
   const HERO_CHAT_USER_ID = getHeroChatUserId();
   const STORAGE_KEY = `chanceping_hero_radar_chat_state:${HERO_CHAT_USER_ID}`;
   const LAST_CHAT_WINDOW_KEY = `chanceping_hero_radar_chat_window_id:${HERO_CHAT_USER_ID}`;
@@ -43,10 +43,24 @@
       const params = new URLSearchParams(window.location.search);
       const raw = params.get("hero_chat_user_id") || params.get("test_user_id") || "";
       const value = raw.trim();
-      return /^[a-zA-Z0-9_.-]{1,80}$/.test(value) ? value : DEFAULT_USER_ID;
+      if (/^[a-zA-Z0-9_.-]{1,80}$/.test(value)) return value;
+
+      const stored = localStorage.getItem(ANONYMOUS_USER_ID_KEY) || "";
+      if (/^visitor_[a-zA-Z0-9_.-]{8,80}$/.test(stored)) return stored;
+
+      const anonymousId = createAnonymousHeroUserId();
+      localStorage.setItem(ANONYMOUS_USER_ID_KEY, anonymousId);
+      return anonymousId;
     } catch {
-      return DEFAULT_USER_ID;
+      return createAnonymousHeroUserId();
     }
+  }
+
+  function createAnonymousHeroUserId() {
+    const random = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID().replace(/-/g, "").slice(0, 24)
+      : `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 14)}`;
+    return `visitor_${random}`;
   }
 
   const CUSTOMER_LABELS = {
@@ -1675,8 +1689,8 @@
     }
     updateRadarChatWindow({ pendingMessage: "" });
     addMessage("assistant", heroRadarChatState.currentDraft
-      ? "收到，我会先让 Qwen 理解这句话，生成新版雷达草案；你确认后我才会搜索。"
-      : "我先让 Qwen 理解你的需求，把复杂人话整理成 AI 赛事雷达 V1.0。");
+      ? "收到，Qwen 正在理解这次修改，并重新画一版雷达草案；你确认后我才会搜索。"
+      : "Qwen 正在理解并生成雷达，我会先把复杂人话整理成 AI 赛事雷达 V1.0。");
     try {
       if (!heroRadarChatState.currentDraft) {
         const data = await postJson("/api/radars/generate", { description: text, chatWindowId });
@@ -1706,7 +1720,7 @@
         draftRadarVersion: heroRadarChatState.currentDraft.radarVersion?.version || "V1.0",
       });
       persistMemorySummary({ lastFeedback: text });
-      addMessage("assistant", `我把雷达更新为 ${heroRadarChatState.currentDraft.radarVersion?.version || "V1.0"}，你先确认这版是否准确。`, {
+      addMessage("assistant", `Qwen 正在画雷达：我把雷达更新为 ${heroRadarChatState.currentDraft.radarVersion?.version || "V1.0"}，你先确认这版是否准确。`, {
         type: "radar",
         version: heroRadarChatState.currentDraft.radarVersion?.version,
         status: "draft",

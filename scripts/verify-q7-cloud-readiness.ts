@@ -127,6 +127,13 @@ check("chat verifier checks hard delete behavior", chatWindowVerifier.includes("
 
 const heroChat = read("web/hero-radar-chat.js");
 check("hero chat supports per-user query isolation", heroChat.includes("hero_chat_user_id") && heroChat.includes("test_user_id"));
+check(
+  "hero chat defaults public visitors to persistent anonymous ids",
+  heroChat.includes("chanceping_hero_visitor_user_id")
+    && heroChat.includes("createAnonymousHeroUserId")
+    && heroChat.includes("localStorage.setItem(ANONYMOUS_USER_ID_KEY")
+    && !heroChat.includes('DEFAULT_USER_ID = "demo_user"'),
+);
 check("hero chat keeps custom window quota at 3", heroChat.includes("CHAT_WINDOW_LIMIT = 3"));
 check(
   "hero chat uses global AI events navigator sample room",

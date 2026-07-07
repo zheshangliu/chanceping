@@ -104,7 +104,9 @@ async function run() {
   check("hero chat exposes home entry restore without clearing chat state", heroChatJs.includes("function showHeroHomeEntry") && heroChatJs.includes("window.showHeroHomeEntry = showHeroHomeEntry"));
   check("hero chat guards home entry from async rerenders", heroChatJs.includes("homeEntryMode") && heroChatJs.includes("heroRadarChatState.homeEntryMode = true") && heroChatJs.includes('document.body.dataset.heroHomeEntry = "true"') && heroChatJs.includes('document.body.dataset.heroHomeEntry === "true"'));
   check("hero chat loads radar chat windows for sidebar", heroChatJs.includes("loadRadarChatWindows") && heroChatJs.includes("/api/radar-chats"));
-  check("hero chat supports isolated QA user id without changing default demo user", heroChatJs.includes("getHeroChatUserId") && heroChatJs.includes("hero_chat_user_id") && heroChatJs.includes('DEFAULT_USER_ID = "demo_user"'));
+  check("hero chat supports isolated QA user id", heroChatJs.includes("getHeroChatUserId") && heroChatJs.includes("hero_chat_user_id") && heroChatJs.includes("test_user_id"));
+  check("hero chat creates a persistent anonymous visitor id by default", heroChatJs.includes("chanceping_hero_visitor_user_id") && heroChatJs.includes("createAnonymousHeroUserId") && heroChatJs.includes("localStorage.setItem(ANONYMOUS_USER_ID_KEY"));
+  check("hero chat no longer defaults public visitors to shared demo_user", !heroChatJs.includes('DEFAULT_USER_ID = "demo_user"'));
   check("hero chat local session keys are isolated by QA user id", heroChatJs.includes("chanceping_hero_radar_chat_state:${HERO_CHAT_USER_ID}") && heroChatJs.includes("chanceping_hero_radar_chat_window_id:${HERO_CHAT_USER_ID}"));
   check("custom radar title infers readable intent phrase", heroChatJs.includes("cleanRadarTitlePhrase") && heroChatJs.includes("想找|寻找|希望找|帮我找|盯一下|盯|需要"));
   check("hero chat can switch active chat window", heroChatJs.includes("switchHeroRadarWindow") && heroChatJs.includes("/api/radar-chats/${chatWindowId}"));
@@ -196,6 +198,7 @@ async function run() {
   check("home routes primary input to chat draft without auto-send", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("autoSend: false"));
   check("hero chat waits for manual send before generating V1.0", heroChatJs.includes("pendingFirstMessage") && heroChatJs.includes("等待你点击发送"));
   check("hero chat tells the user Qwen is interpreting revisions", heroChatJs.includes("Qwen") && heroChatJs.includes("理解") && !heroChatJs.includes("让 DeepSeek 理解"));
+  check("hero chat tells the user Qwen is drawing the radar", heroChatJs.includes("Qwen 正在画雷达"));
   check("hero chat surfaces LLM generation or revision failures", heroChatJs.includes("catch (err)") && heroChatJs.includes("雷达理解或修订失败"));
   check("hero chat keeps LLM revision in auto mode for local live profile", heroChatJs.includes('revisionMode: options.revisionMode || "auto"'));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
