@@ -64,7 +64,17 @@ async function verifyVisiblePages(): Promise<void> {
   const health = await json<{ success: boolean; data?: any; error?: any }>("/health");
   check("remote /health returns OK", health.response.status === 200 && health.payload.success === true && health.payload.data?.status === "ok", String(health.response.status));
 
-  const visiblePaths = ["/", "/hero-radar-chat.js", "/radars.js", "/radar-detail.js", "/watch-result.js", "/search.js", "/aievents"];
+  const visiblePaths = [
+    "/",
+    "/home.js",
+    "/hero-radar-chat.js",
+    "/radars.js",
+    "/radar-detail.js",
+    "/radar-profile.js",
+    "/watch-result.js",
+    "/search.js",
+    "/aievents",
+  ];
   const pages: Array<{ path: string; body: string }> = [];
   for (const path of visiblePaths) {
     const page = await text(path);

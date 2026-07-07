@@ -76,6 +76,7 @@ async function text(app: ReturnType<typeof createApp>, path: string): Promise<{ 
 async function verifyBackendQwenWording(app: ReturnType<typeof createApp>) {
   const visibleBackendPaths = [
     "/",
+    "/home.js",
     "/radars.js",
     "/radar-detail.js",
     "/radar-profile.js",
