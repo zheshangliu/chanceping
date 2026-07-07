@@ -507,6 +507,210 @@
     ];
   }
 
+  function shouldUseHeroDemoReplay() {
+    return heroRadarChatState.boundRadarId === AI_EVENT_SAMPLE_ROOM.id && AI_EVENT_SAMPLE_ROOM.isSampleRoom === true;
+  }
+
+  function getHeroDemoReplayDelayMs() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("q7v_fast") === "1" ? 1200 : 10000;
+  }
+
+  function getPublicEventSourceUrl(item) {
+    return item?.registrationUrl || item?.officialUrl || item?.official_source_url || item?.url || item?.source_url || "#";
+  }
+
+  function mapPublicAiEventToOpportunityCard(item, index) {
+    const level = index < 2 ? "A" : index < 8 ? "B" : "C";
+    const sourceUrl = getPublicEventSourceUrl(item);
+    const categories = Array.isArray(item?.categoryTags) ? item.categoryTags.map((category) => category.label).filter(Boolean) : [];
+    const reward = item?.prize && item.prize !== "见官网" ? item.prize : item?.rewardTypeLabel || "见官网";
+    const deadline = item?.deadlineDisplay || item?.deadline || "见官网";
+    const reason = item?.reason || item?.summary || item?.description || "这是 AI 赛事雷达最近一次入库的机会，适合先打开官方来源确认报名路径。";
+    return {
+      id: item?.id || `public_ai_event_${index + 1}`,
+      title: item?.title || "未命名 AI 赛事机会",
+      url: sourceUrl,
+      official_source_url: sourceUrl,
+      visible_level: item?.visible_level || item?.level || level,
+      level: item?.visible_level || item?.level || level,
+      opportunity_kind: item?.candidateType || "direct_opportunity",
+      evidence_status: item?.evidenceStatus || "partially_verified",
+      action_status: "prepare",
+      data_mode: "demo_replay",
+      source_disclaimer: "这是 AI 赛事雷达最近一次入库结果；报名资格、费用、截止时间和奖项义务仍以官方页面为准。",
+      match_reason: reason,
+      next_action: "打开官方来源，确认报名入口、截止时间、参赛资格和材料要求。",
+      deadline,
+      reward,
+      organizer: item?.organizer || item?.sourceName || "见官网",
+      categories,
+      recommendedActions: [
+        "打开官方来源确认报名入口和截止时间。",
+        "整理项目介绍、Demo 链接、团队资料和作品说明。",
+        "如果这类机会不符合你的目标，回到聊天框告诉我，我会先升级雷达。",
+      ],
+      ai_analysis: reason,
+    };
+  }
+
+  function buildHeroDemoReplayMarkdown(feed, cards, version) {
+    const stats = feed?.stats || {};
+    const topCards = cards.slice(0, 5);
+    const lines = [
+      `# AI 赛事雷达 ${version}｜最近一次机会报告`,
+      "",
+      "本报告来自 AI 赛事雷达最近一次已入库结果回放，用于演示 ChancePing 的长期雷达工作流；不是本次点击后重新实时搜索全网。",
+      "",
+      "## 本轮概览",
+      `- 当前有效机会：${stats.currentCount ?? cards.length} 条`,
+      `- 历史赛事：${stats.historicalCount ?? 0} 条`,
+      `- 已入库机会：${stats.databaseCount ?? cards.length} 条`,
+      "- 更新策略：公有 AI 赛事雷达按后台任务定期运行，发现新增后写入数据库与公开导航页。",
+      "",
+      "## 建议先看",
+      ...topCards.map((card, index) => `${index + 1}. ${card.title}｜${card.visible_level || "C"} 级｜截止：${card.deadline || "见官网"}｜奖金/资源：${card.reward || "见官网"}`),
+      "",
+      "## 本周行动建议",
+      "- 先打开 A/B 级机会的官方来源，确认报名入口、截止时间和参赛资格。",
+      "- 准备项目一句话介绍、Demo 链接、作品截图、团队介绍和参赛材料。",
+      "- 如果你只想要某类比赛，例如 AI Agent、Vibe Coding 或云资源赛，在聊天框继续告诉我，我会先升级雷达。",
+      "",
+      "## 可信度说明",
+      "搜索发现和已入库不等于最终报名事实；参赛资格、费用、截止时间、奖项义务和作品提交规则仍以官方页面为准。",
+    ];
+    return lines.join("\n");
+  }
+
+  async function fetchPublicAiEventsForReplay() {
+    const params = new URLSearchParams({
+      status: "current",
+      page: "1",
+      page_size: "60",
+    });
+    return getJson(`/api/public/ai-events?${params.toString()}`);
+  }
+
+  async function runHeroDemoReplay(draft, confirmedSpec, version, progressMessage) {
+    updateMessageArtifact(progressMessage.id, (artifact) => ({
+      ...artifact,
+      currentProgressLine: "正在读取 AI 赛事雷达最近一次入库结果……",
+    }));
+    const feed = await fetchPublicAiEventsForReplay();
+    const items = Array.isArray(feed?.items) ? feed.items : [];
+    const cards = items.map(mapPublicAiEventToOpportunityCard);
+    await new Promise((resolve) => window.setTimeout(resolve, getHeroDemoReplayDelayMs()));
+    updateMessageArtifact(progressMessage.id, (artifact) => ({
+      ...artifact,
+      activeStepCount: Math.max(artifact.activeStepCount || 1, artifact.steps?.length || 1),
+      currentProgressLine: "已完成：我已把最近一次入库的已保存机会卡整理成报告摘要。",
+    }));
+    const runId = `demo_replay_${Date.now().toString(36)}`;
+    const reportId = `public_ai_events_report_${Date.now().toString(36)}`;
+    const markdown = buildHeroDemoReplayMarkdown(feed, cards, version);
+    heroRadarChatState.currentResult = {
+      runId,
+      reportId,
+      description: draft.description,
+      spec: confirmedSpec,
+      profile: confirmedSpec.profile_summary || confirmedSpec.profile,
+      radarVersion: draft.radarVersion,
+      suggestedName: draft.suggestedName || "AI 赛事雷达",
+      opportunityCards: cards,
+      sourceHintChecks: [],
+      candidateAccounting: {
+        rawCount: feed?.stats?.totalCount ?? cards.length,
+        deduplicatedCount: feed?.stats?.databaseCount ?? cards.length,
+        assessedCount: cards.length,
+        acceptedCount: cards.length,
+        rejectedCount: 0,
+      },
+      rawCandidates: items,
+      executionLog: {
+        mode: "demo_replay",
+        source: "public_ai_events_database",
+        message: "读取 AI 赛事雷达最近一次入库结果，没有触发本次 live search。",
+      },
+      runOutcome: {
+        status: "succeeded",
+        mode: "demo_replay",
+        message: "已加载最近一次 AI 赛事雷达入库结果。",
+      },
+      searchMode: "demo_replay",
+      markdown,
+    };
+    window.persistWatchResult?.(heroRadarChatState.currentResult);
+    updateRadarChatWindow({
+      latestRunId: runId,
+      latestReportId: reportId,
+      currentConfirmedRadarVersion: version,
+      currentResultSnapshot: heroRadarChatState.currentResult,
+    });
+    addMessage("assistant", "我已按 AI 赛事雷达最近一次入库结果整理好本次报告。你可以先看摘要，也可以打开机会卡查看完整列表。", {
+      type: "report",
+      markdown,
+      runId,
+      reportId,
+      cards,
+    });
+  }
+
+  async function runHeroLiveSearch(draft, confirmedSpec, version, progressMessage) {
+    const search = await postJson("/api/search", {
+      spec: confirmedSpec,
+      query: draft.description || draft.radarVersion?.oneSentencePositioning || "AI entrepreneur competition hackathon developer challenge cloud credits application",
+      ...(window.getChancePingSearchMode?.() ? { search_mode: window.getChancePingSearchMode() } : {}),
+    });
+    const cards = search.opportunityCards || [];
+    const sourceHintChecks = search.sourceCoverage || search.sourceHintChecks || [];
+    const report = await postJson("/api/reports/generate", {
+      spec: confirmedSpec,
+      radar_type: "custom",
+      opportunities: cards,
+      sourceHintChecks,
+      candidateAccounting: search.candidateAccounting,
+      executionLog: search.executionLog,
+      rawCandidates: search.rawCandidates || [],
+      run_id: search.run?.id,
+      profile: confirmedSpec.profile_summary || confirmedSpec.profile,
+    });
+    heroRadarChatState.currentResult = {
+      runId: search.run?.id,
+      reportId: report.reportId,
+      description: draft.description,
+      spec: confirmedSpec,
+      profile: confirmedSpec.profile_summary || confirmedSpec.profile,
+      radarVersion: draft.radarVersion,
+      suggestedName: draft.suggestedName || "AI 赛事雷达",
+      opportunityCards: cards,
+      sourceHintChecks,
+      candidateAccounting: search.candidateAccounting,
+      rawCandidates: search.rawCandidates || [],
+      executionLog: search.executionLog,
+      runOutcome: search.runOutcome,
+      searchMode: window.getChancePingSearchMode?.(),
+      markdown: report.markdown,
+    };
+    window.persistWatchResult?.(heroRadarChatState.currentResult);
+    updateRadarChatWindow({
+      latestRunId: search.run?.id,
+      latestReportId: report.reportId,
+      currentConfirmedRadarVersion: version,
+    });
+    updateMessageArtifact(progressMessage.id, (artifact) => ({
+      ...artifact,
+      activeStepCount: artifact.steps?.length || 1,
+      currentProgressLine: "已完成：机会卡和 Markdown 报告已生成，可以先看摘要或打开完整结果。",
+    }));
+    addMessage("assistant", "本次机会雷达报告已生成。我先把 Markdown 发在这里，你也可以打开机会卡查看完整结果。", {
+      type: "report",
+      markdown: report.markdown,
+      runId: search.run?.id,
+      reportId: report.reportId,
+      cards,
+    });
+  }
+
   function renderRadarArtifact(message) {
     const artifact = message.artifact || {};
     const payload = artifact.payload || {};
@@ -988,12 +1192,24 @@
     });
     persistMemorySummary();
     const progressSteps = [
-      "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
-      "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
-      "正在筛选可报名、可提交作品、可申请资源的机会……",
-      "正在排除展会资讯、培训广告和学生专属结果……",
-      "正在核对来源可信度，避免把资讯当成机会……",
-      "正在生成报告摘要、机会卡和 Markdown 报告……",
+      shouldUseHeroDemoReplay()
+        ? "正在读取 AI 赛事雷达最近一次入库结果……"
+        : "正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+      shouldUseHeroDemoReplay()
+        ? "正在整理已保存机会卡：报名入口、截止时间、奖金和云资源字段……"
+        : "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
+      shouldUseHeroDemoReplay()
+        ? "正在按当前雷达画像挑出最值得先看的机会……"
+        : "正在筛选可报名、可提交作品、可申请资源的机会……",
+      shouldUseHeroDemoReplay()
+        ? "正在排除历史赛事和不适合 OPC 的弱线索……"
+        : "正在排除展会资讯、培训广告和学生专属结果……",
+      shouldUseHeroDemoReplay()
+        ? "正在把最近一次报告整理成聊天摘要……"
+        : "正在核对来源可信度，避免把资讯当成机会……",
+      shouldUseHeroDemoReplay()
+        ? "正在生成本次演示报告和机会卡入口……"
+        : "正在生成报告摘要、机会卡和 Markdown 报告……",
     ];
     const progressMessage = addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
       type: "progress",
@@ -1003,59 +1219,11 @@
     });
     const progressTimer = startProgressTicker(progressMessage.id, progressSteps.length);
     try {
-      const search = await postJson("/api/search", {
-        spec: confirmedSpec,
-        query: draft.description || draft.radarVersion?.oneSentencePositioning || "AI entrepreneur competition hackathon developer challenge cloud credits application",
-        ...(window.getChancePingSearchMode?.() ? { search_mode: window.getChancePingSearchMode() } : {}),
-      });
-      const cards = search.opportunityCards || [];
-      const sourceHintChecks = search.sourceCoverage || search.sourceHintChecks || [];
-      const report = await postJson("/api/reports/generate", {
-        spec: confirmedSpec,
-        radar_type: "custom",
-        opportunities: cards,
-        sourceHintChecks,
-        candidateAccounting: search.candidateAccounting,
-        executionLog: search.executionLog,
-        rawCandidates: search.rawCandidates || [],
-        run_id: search.run?.id,
-        profile: confirmedSpec.profile_summary || confirmedSpec.profile,
-      });
-      heroRadarChatState.currentResult = {
-        runId: search.run?.id,
-        reportId: report.reportId,
-        description: draft.description,
-        spec: confirmedSpec,
-        profile: confirmedSpec.profile_summary || confirmedSpec.profile,
-        radarVersion: draft.radarVersion,
-        suggestedName: draft.suggestedName || "AI 赛事雷达",
-        opportunityCards: cards,
-        sourceHintChecks,
-        candidateAccounting: search.candidateAccounting,
-        rawCandidates: search.rawCandidates || [],
-        executionLog: search.executionLog,
-        runOutcome: search.runOutcome,
-        searchMode: window.getChancePingSearchMode?.(),
-        markdown: report.markdown,
-      };
-      window.persistWatchResult?.(heroRadarChatState.currentResult);
-      updateRadarChatWindow({
-        latestRunId: search.run?.id,
-        latestReportId: report.reportId,
-        currentConfirmedRadarVersion: version,
-      });
-      updateMessageArtifact(progressMessage.id, (artifact) => ({
-        ...artifact,
-        activeStepCount: progressSteps.length,
-        currentProgressLine: "已完成：机会卡和 Markdown 报告已生成，可以先看摘要或打开完整结果。",
-      }));
-      addMessage("assistant", "本次机会雷达报告已生成。我先把 Markdown 发在这里，你也可以打开机会卡查看完整结果。", {
-        type: "report",
-        markdown: report.markdown,
-        runId: search.run?.id,
-        reportId: report.reportId,
-        cards,
-      });
+      if (shouldUseHeroDemoReplay()) {
+        await runHeroDemoReplay(draft, confirmedSpec, version, progressMessage);
+      } else {
+        await runHeroLiveSearch(draft, confirmedSpec, version, progressMessage);
+      }
     } catch (err) {
       updateMessageArtifact(progressMessage.id, (artifact) => ({
         ...artifact,
@@ -1074,15 +1242,22 @@
   function startProgressTicker(messageId, maxSteps) {
     let activeStepCount = 1;
     let logIndex = 0;
-    const progressLogMessages = [
-      "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
-      "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
-      "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
-      "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
-      "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
-      "DeepSeek：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
-      "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤；不用刷新页面，我会持续更新这里。",
-    ];
+    const progressLogMessages = shouldUseHeroDemoReplay()
+      ? [
+        "回放模式：正在读取 AI 赛事雷达最近一次入库结果；不用刷新页面，我会持续更新这里。",
+        "数据整理：正在把已保存机会卡按截止时间、报名入口和奖励信息重新排序；不用刷新页面，我会持续更新这里。",
+        "机会筛选：正在挑出适合 OPC / AI 创业者先看的比赛和 Hackathon；不用刷新页面，我会持续更新这里。",
+        "报告整理：正在把最近一次报告压缩成聊天摘要、机会卡入口和本周行动建议；不用刷新页面，我会持续更新这里。",
+      ]
+      : [
+        "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
+        "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
+        "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
+        "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
+        "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
+        "DeepSeek：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+        "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤；不用刷新页面，我会持续更新这里。",
+      ];
     const timerId = window.setInterval(() => {
       activeStepCount = Math.min(activeStepCount + 1, maxSteps);
       const nextLine = `${new Date().toLocaleTimeString()} ${progressLogMessages[logIndex % progressLogMessages.length]}`;
@@ -1100,9 +1275,113 @@
     if (timerId) window.clearInterval(timerId);
   }
 
-  function viewHeroCards() {
-    if (heroRadarChatState.currentResult && typeof window.showWatchResult === "function") {
-      window.showWatchResult(heroRadarChatState.currentResult);
+  function findLatestReportArtifact() {
+    for (let index = heroRadarChatState.messages.length - 1; index >= 0; index -= 1) {
+      const artifact = heroRadarChatState.messages[index]?.artifact;
+      if (artifact?.type === "report") return artifact;
+    }
+    return null;
+  }
+
+  function restoreCurrentResultFromReportArtifact() {
+    const artifact = findLatestReportArtifact();
+    const cards = Array.isArray(artifact?.cards) ? artifact.cards : [];
+    if (!artifact || cards.length === 0) return null;
+    const restored = {
+      runId: artifact.runId || `restored_report_${Date.now().toString(36)}`,
+      reportId: artifact.reportId || `restored_report_${Date.now().toString(36)}`,
+      description: heroRadarChatState.currentDraft?.description || HERO_DEMO_PROMPT,
+      spec: heroRadarChatState.currentDraft?.spec || {},
+      profile: heroRadarChatState.currentDraft?.spec?.profile_summary || heroRadarChatState.currentDraft?.spec?.profile,
+      radarVersion: heroRadarChatState.currentDraft?.radarVersion,
+      suggestedName: heroRadarChatState.currentDraft?.suggestedName || "AI 赛事雷达",
+      opportunityCards: cards,
+      sourceHintChecks: [],
+      candidateAccounting: {
+        rawCount: cards.length,
+        deduplicatedCount: cards.length,
+        assessedCount: cards.length,
+        acceptedCount: cards.length,
+        rejectedCount: 0,
+      },
+      rawCandidates: [],
+      executionLog: {
+        mode: "demo_replay_restored",
+        source: "chat_report_artifact",
+        message: "从聊天报告 artifact 恢复机会卡，没有触发本次 live search。",
+      },
+      runOutcome: {
+        status: "succeeded",
+        mode: "demo_replay_restored",
+        message: "已从聊天报告恢复 AI 赛事雷达机会卡。",
+      },
+      searchMode: "demo_replay_restored",
+      markdown: artifact.markdown || "",
+    };
+    heroRadarChatState.currentResult = restored;
+    window.persistWatchResult?.(restored);
+    saveState();
+    updateRadarChatWindow({ currentResultSnapshot: restored });
+    return restored;
+  }
+
+  async function restoreCurrentResultFromPublicEvents() {
+    if (!shouldUseHeroDemoReplay()) return null;
+    const feed = await fetchPublicAiEventsForReplay();
+    const items = Array.isArray(feed?.items) ? feed.items : [];
+    if (items.length === 0) return null;
+    const version = heroRadarChatState.currentDraft?.radarVersion?.version || heroRadarChatState.confirmedVersion || "V1.0";
+    const cards = items.map(mapPublicAiEventToOpportunityCard);
+    const restored = {
+      runId: `demo_replay_restored_${Date.now().toString(36)}`,
+      reportId: `public_ai_events_report_restored_${Date.now().toString(36)}`,
+      description: heroRadarChatState.currentDraft?.description || HERO_DEMO_PROMPT,
+      spec: heroRadarChatState.currentDraft?.spec || {},
+      profile: heroRadarChatState.currentDraft?.spec?.profile_summary || heroRadarChatState.currentDraft?.spec?.profile,
+      radarVersion: heroRadarChatState.currentDraft?.radarVersion,
+      suggestedName: heroRadarChatState.currentDraft?.suggestedName || "AI 赛事雷达",
+      opportunityCards: cards,
+      sourceHintChecks: [],
+      candidateAccounting: {
+        rawCount: feed?.stats?.totalCount ?? cards.length,
+        deduplicatedCount: feed?.stats?.databaseCount ?? cards.length,
+        assessedCount: cards.length,
+        acceptedCount: cards.length,
+        rejectedCount: 0,
+      },
+      rawCandidates: items,
+      executionLog: {
+        mode: "demo_replay_restored",
+        source: "public_ai_events_database",
+        message: "从 AI Events 公共赛事库恢复机会卡，没有触发本次 live search。",
+      },
+      runOutcome: {
+        status: "succeeded",
+        mode: "demo_replay_restored",
+        message: "已从 AI Events 公共赛事库恢复机会卡。",
+      },
+      searchMode: "demo_replay_restored",
+      markdown: buildHeroDemoReplayMarkdown(feed, cards, version),
+    };
+    heroRadarChatState.currentResult = restored;
+    window.persistWatchResult?.(restored);
+    saveState();
+    updateRadarChatWindow({ currentResultSnapshot: restored });
+    return restored;
+  }
+
+  async function viewHeroCards() {
+    let result = heroRadarChatState.currentResult;
+    if (!result) result = restoreCurrentResultFromReportArtifact();
+    if (!result) {
+      try {
+        result = await restoreCurrentResultFromPublicEvents();
+      } catch {
+        result = null;
+      }
+    }
+    if (result && typeof window.showWatchResult === "function") {
+      window.showWatchResult(result);
       return;
     }
     if (window.switchTab) window.switchTab("watch-result");

@@ -533,6 +533,7 @@ textarea {
   transition: opacity 0.3s, transform 0.3s;
   z-index: 1000;
   max-width: 300px;
+  pointer-events: none;
 }
 
 .toast.show {
@@ -4807,13 +4808,15 @@ body.hero-chat-active .hero-chat-main {
   }
 
   .hero-chat-main {
-    min-height: 560px;
+    min-height: 0;
+    height: calc(100dvh - 128px);
     min-width: 0;
     width: 100%;
     max-width: calc(100vw - 56px);
   }
 
   .hero-chat-main .hero-chat-messages {
+    min-height: 0;
     padding: 16px;
   }
 
@@ -4884,7 +4887,11 @@ body.hero-chat-active .hero-chat-main {
   }
 
   .hero-chat-input-row {
+    position: sticky;
+    z-index: 20;
+    bottom: 0;
     padding: 14px 12px 16px;
+    box-shadow: 0 -12px 26px rgba(15, 23, 42, 0.08);
   }
 
   .hero-chat-input-row textarea {

@@ -59,6 +59,7 @@ async function run() {
   check("Q7G no longer uses pink as brand primary", !styles.includes("--accent: #e94560") && !styles.includes("rgba(233, 69, 96"));
   check("homepage composer is large enough for natural language", styles.includes("min-height: 88px") && styles.includes("width: min(820px, 100%)"));
   check("chat composer is large enough on desktop and mobile", styles.includes("min-height: 88px") && styles.includes("min-height: 108px") && styles.includes("border-radius: 18px"));
+  check("toast does not block mobile composer clicks", styles.includes(".toast") && styles.includes("pointer-events: none"));
   check("homepage composer keeps file upload hidden for Q7G", html.includes('id="home-attach-btn"') && /id="home-attach-btn"[^>]*hidden/.test(html));
   check("homepage does not render middle hero radar card board", !html.includes("home-radar-board") && !html.includes("继续你的雷达"));
   const homeRadarCardCount = (html.match(/class="home-radar-card/g) || []).length;
@@ -76,11 +77,18 @@ async function run() {
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
   check("hero chat calls generate endpoint", heroChatJs.includes("/api/radars/generate"));
   check("hero chat calls revise endpoint", heroChatJs.includes("/api/radars/revise"));
-  check("hero chat calls search endpoint after confirmation", heroChatJs.includes("/api/search") && heroChatJs.indexOf("/api/search") > heroChatJs.indexOf("async function confirmHeroRadar"));
+  check("hero chat calls search endpoint after confirmation", heroChatJs.includes("async function runHeroLiveSearch") && heroChatJs.includes("/api/search") && heroChatJs.indexOf("/api/search") > heroChatJs.indexOf("async function runHeroLiveSearch"));
   check("hero chat calls report generation after search", heroChatJs.includes("/api/reports/generate") && heroChatJs.indexOf("/api/reports/generate") > heroChatJs.indexOf("/api/search"));
+  check("hero demo replay has a dedicated built-in radar gate", heroChatJs.includes("shouldUseHeroDemoReplay") && heroChatJs.includes("AI_EVENT_SAMPLE_ROOM.id"));
+  check("hero demo replay reads stored public AI events instead of live search", heroChatJs.includes("/api/public/ai-events?") && heroChatJs.includes("runHeroDemoReplay"));
+  check("hero demo replay maps stored events into opportunity cards", heroChatJs.includes("mapPublicAiEventToOpportunityCard") && heroChatJs.includes("demo_replay"));
+  check("hero demo replay progress is honest about reading stored results", heroChatJs.includes("最近一次入库结果") && heroChatJs.includes("已保存机会卡"));
+  check("hero demo replay keeps real search path for non-demo radars", heroChatJs.includes("runHeroLiveSearch") && heroChatJs.includes("/api/search") && heroChatJs.includes("/api/reports/generate"));
   check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
   check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
+  check("hero chat restores cards from report artifact after reload", heroChatJs.includes("restoreCurrentResultFromReportArtifact") && heroChatJs.includes("chat_report_artifact"));
+  check("hero chat can recover demo cards from public AI events when snapshot is missing", heroChatJs.includes("restoreCurrentResultFromPublicEvents") && heroChatJs.includes("demo_replay_restored"));
   check("hero chat script renders GPT-like sidebar", heroChatJs.includes("hero-radar-sidebar") && heroChatJs.includes("AI 赛事雷达"));
   check("hero sidebar has a collapse button", heroChatJs.includes("hero-sidebar-collapse") && heroChatJs.includes("折叠或展开雷达侧边栏"));
   check("hero sidebar persists collapsed state", heroChatJs.includes("chanceping-sidebar-collapsed") && heroChatJs.includes("localStorage"));
@@ -129,6 +137,7 @@ async function run() {
   check("home AI event shell keeps top banner and tab nav", !styles.includes("body.hero-home-shell .top-bar") && !styles.includes("body.hero-home-shell .tab-nav"));
   check("chat composer is hidden until the radar conversation starts", heroChatJs.includes("chatStarted ? `") && heroChatJs.includes("hero-chat-input-row"));
   check("chat send button has visible accent active state", styles.includes("#hero-radar-chat-send:not(:disabled)") && styles.includes("var(--accent)"));
+  check("mobile chat composer remains visible at viewport bottom", styles.includes("height: calc(100dvh - 128px)") && styles.includes(".hero-chat-input-row") && styles.includes("position: sticky") && styles.includes("bottom: 0"));
   check("home routes primary input to chat draft without auto-send", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("autoSend: false"));
   check("hero chat waits for manual send before generating V1.0", heroChatJs.includes("pendingFirstMessage") && heroChatJs.includes("等待你点击发送"));
   check("hero chat tells the user LLM is interpreting revisions", heroChatJs.includes("DeepSeek") && heroChatJs.includes("理解"));
