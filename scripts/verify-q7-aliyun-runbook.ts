@@ -34,6 +34,8 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "ut
   "verify:q7:aliyun-remote-smoke",
   "CHANCEPING_DEPLOY_BASE_URL",
   "verify:q7:docker-readiness",
+  "CHANCEPING_DOCKER_NODE_IMAGE",
+  "--build-arg NODE_IMAGE",
   "compare:live-llm-profiles",
   "verify:q7:backend-i18n",
   "Qwen 正在理解并生成雷达",

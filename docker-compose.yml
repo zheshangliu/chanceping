@@ -12,7 +12,10 @@ version: "3.8"
 
 services:
   chanceping:
-    build: .
+    build:
+      context: .
+      args:
+        NODE_IMAGE: ${CHANCEPING_DOCKER_NODE_IMAGE:-node:22-slim}
     image: chanceping:latest
     container_name: chanceping
     ports:

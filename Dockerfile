@@ -1,11 +1,12 @@
 # ChancePing Dockerfile - 阿里云 MVP 测试站容器
 # 默认 mock-safe，可由阿里云环境变量显式开启 Qwen / Serper。
 # 注意：api.env 必须只留在本地，不能进入 Docker build context。
+ARG NODE_IMAGE=node:22-slim
 
 # ===========================================
 # Stage 1: Builder（构建阶段）
 # ===========================================
-FROM node:22-slim AS builder
+FROM ${NODE_IMAGE} AS builder
 
 WORKDIR /app
 
@@ -22,7 +23,7 @@ RUN npx tsc --noEmit
 # ===========================================
 # Stage 2: Runtime（运行阶段）
 # ===========================================
-FROM node:22-slim AS runtime
+FROM ${NODE_IMAGE} AS runtime
 
 WORKDIR /app
 

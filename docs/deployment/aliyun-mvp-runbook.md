@@ -104,6 +104,23 @@ node --run verify:q7:docker-readiness
 
 - 配置 Docker Hub 镜像加速或公司/阿里云容器镜像服务 ACR mirror；
 - 或直接在阿里云 ACR / 云构建环境执行构建；
+- 如果需要替换基础镜像，使用 build arg，不要改 Dockerfile：
+
+```bash
+CHANCEPING_DOCKER_NODE_IMAGE=node:22-slim
+docker build \
+  --build-arg NODE_IMAGE="$CHANCEPING_DOCKER_NODE_IMAGE" \
+  -t chanceping:aliyun .
+```
+
+使用 Docker Compose 时可设置：
+
+```bash
+CHANCEPING_DOCKER_NODE_IMAGE=node:22-slim docker compose build
+```
+
+如果你配置了阿里云 ACR 中转镜像，把 `node:22-slim` 替换成对应 ACR 镜像地址即可。
+
 - 构建成功后仍需运行 `verify:q7:aliyun-smoke` 和部署后的远程 smoke。
 
 ## 部署后远程 smoke

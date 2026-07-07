@@ -30,6 +30,7 @@ check("Docker build context excludes runtime data", ["data/", "reports/", "expor
 check("Docker build context excludes local work artifacts", dockerignore.includes(".superpowers/") && dockerignore.includes("ui-audit-*/"));
 check("Dockerfile does not mention api.env", !/api\.env/.test(dockerfile.replace(/注意：api\.env 必须只留在本地，不能进入 Docker build context。/, "")));
 check("Dockerfile sets production environment", /ENV NODE_ENV=production/.test(dockerfile));
+check("Dockerfile base image can be overridden for Aliyun/ACR builds", /ARG NODE_IMAGE=node:22-slim/.test(dockerfile) && /FROM \$\{NODE_IMAGE\} AS builder/.test(dockerfile) && /FROM \$\{NODE_IMAGE\} AS runtime/.test(dockerfile));
 check("Dockerfile defaults to mock-safe mode", /ENV DATA_MODE=mock/.test(dockerfile) && /ENV LLM_MODE=mock/.test(dockerfile));
 check("Dockerfile selects Qwen contest profile", /ENV CHANCEPING_LLM_PROFILE=contest/.test(dockerfile) && /ENV CONTEST_LLM_PROVIDER=qwen/.test(dockerfile));
 check("Dockerfile disables local api.env loading", /ENV CHANCEPING_LOAD_API_ENV=false/.test(dockerfile));
@@ -39,6 +40,7 @@ check("Dockerfile healthchecks /health", dockerfile.includes("http://localhost:3
 check("Dockerfile starts API server through npm start", /CMD \["npm", "run", "start"\]/.test(dockerfile));
 
 check("compose sets production environment", compose.includes("NODE_ENV=production"));
+check("compose exposes NODE_IMAGE build arg", compose.includes("NODE_IMAGE: ${CHANCEPING_DOCKER_NODE_IMAGE:-node:22-slim}"));
 check("compose defaults to mock-safe mode", compose.includes("DATA_MODE=mock") && compose.includes("LLM_MODE=mock"));
 check("compose selects Qwen contest profile", compose.includes("CHANCEPING_LLM_PROFILE=contest") && compose.includes("CONTEST_LLM_PROVIDER=qwen"));
 check("compose does not mount api.env", !/api\.env\s*:\s*\/app/.test(compose));
