@@ -61,7 +61,7 @@ import { applyCandidatePageTypeGate } from "./candidate-page-type";
 import { applyCandidateJudgeGate } from "./candidate-llm-judge";
 import { applyCandidateOwnershipGate } from "./candidate-ownership";
 import { rankCandidateResults } from "./candidate-ranking";
-import { buildPrimarySourceRecoveryQueries } from "./primary-source-recovery";
+import { assessCandidateSourceIntegrity, buildPrimarySourceRecoveryQueries } from "./primary-source-recovery";
 import { prioritizeEvidenceReadCandidates } from "./evidence-read-priority";
 
 /** 搜索编排器配置 */
@@ -529,6 +529,71 @@ function isKeyCandidate(result: SearchResult): boolean {
     semanticType === "business_lead" ||
     semanticType === "channel_partner_lead" ||
     semanticType === "customer_lead";
+}
+
+const RECOVERABLE_KEY_TYPES = new Set<OpportunityKind>([
+  "direct_opportunity",
+  "business_lead",
+  "channel_partner_lead",
+  "customer_lead",
+]);
+
+function isRecoverableKeyKind(kind: OpportunityKind | undefined): kind is OpportunityKind {
+  return Boolean(kind && RECOVERABLE_KEY_TYPES.has(kind));
+}
+
+function recoverNoCardKeyCandidates(results: SearchResult[], spec: RadarRequirementSpec, maxCandidates = 3): SearchResult[] {
+  if (!spec.radar_version) return [];
+  return results
+    .filter((result) => {
+      const finalKind = semanticTypeForResult(result);
+      const originalKind = result.original_semantic_type ?? result.semantic_type ?? finalKind;
+      const sourceIntegrity = assessCandidateSourceIntegrity(result);
+      const ranking = result.candidate_ranking_assessment;
+      if (finalKind === "rejected") return false;
+      if (!isRecoverableKeyKind(originalKind) && !isRecoverableKeyKind(result.intent_type as OpportunityKind | undefined)) return false;
+      if (sourceIntegrity.kind === "weak_aggregator" || sourceIntegrity.kind === "weak_social" || sourceIntegrity.kind === "weak_reference") return false;
+      if (ranking?.capStatus === "excluded_by_cap" && ranking.reasonCodes.some((code) =>
+        code === "weak_authority_downgraded_by_primary_candidate" ||
+        code === "stale_candidate_excluded_from_key_card" ||
+        code === "near_duplicate_key_candidate"
+      )) return false;
+      if (result.relevance_assessment?.decision === "reject") return false;
+      if (result.page_type_assessment?.keyCardEligibility === "reject") return false;
+      if (result.candidate_judge_assessment?.decision === "reject") return false;
+      if (result.ownership_assessment?.ownershipDecision === "reject") return false;
+      if (candidateQuality(result).status === "low_action") return false;
+      return true;
+    })
+    .sort((a, b) =>
+      (b.candidate_ranking_assessment?.totalScore ?? 0) -
+        (a.candidate_ranking_assessment?.totalScore ?? 0),
+    )
+    .slice(0, maxCandidates)
+    .map((result) => {
+      const restoredKind = isRecoverableKeyKind(result.original_semantic_type)
+        ? result.original_semantic_type
+        : isRecoverableKeyKind(result.semantic_type)
+          ? result.semantic_type
+          : isRecoverableKeyKind(result.intent_type as OpportunityKind | undefined)
+            ? result.intent_type as OpportunityKind
+            : "business_lead";
+      return {
+        ...result,
+        original_semantic_type: result.original_semantic_type ?? result.semantic_type ?? restoredKind,
+        semantic_type: restoredKind,
+        candidate_ranking_assessment: result.candidate_ranking_assessment
+          ? {
+            ...result.candidate_ranking_assessment,
+            capStatus: "included" as const,
+            reasonCodes: [
+              ...result.candidate_ranking_assessment.reasonCodes,
+              "no_card_recovery_key_lead",
+            ],
+          }
+          : result.candidate_ranking_assessment,
+      };
+    });
 }
 
 function sourcePriorityScore(result: SearchResult, spec: RadarRequirementSpec): number {
@@ -1310,6 +1375,13 @@ export class SearchOrchestrator {
       });
       rawResults = ranking.assessedResults;
       candidateResults = ranking.keyCandidates.filter(isKeyCandidate);
+      if (candidateResults.length === 0) {
+        const recoveredCandidates = recoverNoCardKeyCandidates(ranking.assessedResults, spec);
+        if (recoveredCandidates.length > 0) {
+          errors.push(`no-card recovery: restored ${recoveredCandidates.length} 待确认线索候选`);
+          candidateResults = recoveredCandidates;
+        }
+      }
     } else {
       candidateResults = this.dataMode === "live" && providerRouting
         ? rawResults.filter(isKeyCandidate)

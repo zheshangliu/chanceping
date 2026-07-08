@@ -118,6 +118,7 @@
     "verify:q7:llm-comparison": "tsx scripts/verify-q7-llm-comparison.ts",
     "compare:live-llm-profiles": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_LLM_COMPARISON=true tsx scripts/compare-live-llm-profiles.ts",
     "q7v:custom-radar-10": "tsx scripts/run-q7v-custom-radar-10-smoke.ts",
+    "q7w:live-custom-radar-10": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=live tsx scripts/run-q7w-live-custom-radar-10-diagnostic.ts",
     "build:aliyun-image-tar": "tsx scripts/build-aliyun-image-tar.ts",
     "build:aliyun-workbench-bundle": "tsx scripts/build-aliyun-workbench-bundle.ts",
     "deploy:aliyun-acr": "tsx scripts/deploy-aliyun-acr.ts",

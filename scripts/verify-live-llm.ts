@@ -336,8 +336,8 @@ async function main(): Promise<void> {
     };
     const markdown = reportJson.data?.markdown ?? "";
     check("live LLM report explanation succeeds", reportResponse.status === 200 && reportJson.success === true, reportJson.error?.message ?? `status=${reportResponse.status}`);
-    check("report records live LLM profile only", markdown.includes("Live LLM profile：contest / qwen /") && !/sk-|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|DEEPSEEK_API_KEY|DASHSCOPE_API_KEY|SERPER_API_KEY/.test(markdown));
-    check("report keeps explanation inside model judgment", markdown.includes("以下内容属于基于 evidence status 的模型判断，不是字段级已核验事实。"));
+    check("report hides provider profile from customers", markdown.includes("盯机会已完成本轮证据解释。") && !/Live\s+LLM\s+profile|LLM\s+profile|source_provider|sourceProvider|provider\s*[:：]|sk-|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|DEEPSEEK_API_KEY|DASHSCOPE_API_KEY|SERPER_API_KEY/.test(markdown));
+    check("report keeps explanation inside source-state model judgment", markdown.includes("以下内容属于基于来源状态的模型判断，不是字段级已核验事实。"));
     check("report keeps review-needed language", markdown.includes("待复核"));
     check("report avoids forbidden verified claims", !includesAny(markdown, FORBIDDEN_REPORT_CLAIMS.map((claim) => new RegExp(claim, "g"))));
   }

@@ -1388,8 +1388,8 @@ function buildMvpSourceIndex(input: RadarReportInput, sources: SourceCandidate[]
   lines.push("", "### 模型判断", "");
   if (input.liveLlmEvidenceExplanation) {
     const explanation = input.liveLlmEvidenceExplanation;
-    lines.push(`- Live LLM profile：${explanation.profile.profile} / ${explanation.profile.provider} / ${explanation.profile.model}`);
-    lines.push("- 以下内容属于基于 evidence status 的模型判断，不是字段级已核验事实。");
+    lines.push("- 盯机会已完成本轮证据解释。");
+    lines.push("- 以下内容属于基于来源状态的模型判断，不是字段级已核验事实。");
     explanation.globalNotes.forEach((note) => lines.push(`- ${note}`));
     explanation.items.forEach((item) => {
       lines.push(`- ${item.title}`);

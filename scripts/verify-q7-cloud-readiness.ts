@@ -53,12 +53,17 @@ check(
   "LLM comparison command is explicit opt-in",
   scripts["compare:live-llm-profiles"] === "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_LLM_COMPARISON=true tsx scripts/compare-live-llm-profiles.ts",
 );
+check(
+  "Q7W live custom radar diagnostic command is registered",
+  scripts["q7w:live-custom-radar-10"] === "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=live tsx scripts/run-q7w-live-custom-radar-10-diagnostic.ts",
+);
 
 [
   "verify:live",
   "q4:live-server",
   "verify:q7:live-demo",
   "compare:live-llm-profiles",
+  "q7w:live-custom-radar-10",
   "CHANCEPING_LOAD_API_ENV=true",
   "CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true",
   "CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true",
@@ -222,6 +227,20 @@ check("public AI events page reads public feed", aiEventsPage.includes("fetch(`/
 check("public AI events page does not call search API", !/\/api\/search/.test(aiEventsPage));
 check("public AI events page does not run radars directly", !/\/api\/radars\/[^"`']+\/run/.test(aiEventsPage));
 check("public AI events page does not depend on live_search flag", !/live_search/i.test(aiEventsPage));
+
+const q7wLiveDiagnostic = read("scripts/run-q7w-live-custom-radar-10-diagnostic.ts");
+check("Q7W live diagnostic exists", q7wLiveDiagnostic.length > 0);
+check("Q7W live diagnostic loads api.env before live imports", q7wLiveDiagnostic.includes("loadLocalApiEnv({ enabled: true })"));
+check(
+  "Q7W live diagnostic uses dynamic imports after env setup",
+  q7wLiveDiagnostic.includes("async function importAfterEnv")
+    && q7wLiveDiagnostic.includes('import("../src/api/app")')
+    && q7wLiveDiagnostic.includes('import("../src/search/provider-registry")')
+    && q7wLiveDiagnostic.indexOf("prepareLiveEnv();") < q7wLiveDiagnostic.indexOf("await importAfterEnv()"),
+);
+check("Q7W live diagnostic writes report", q7wLiveDiagnostic.includes("Q7W_Live_Custom_Radar_10_Diagnostic.md"));
+check("Q7W live diagnostic stops after 3 consecutive failures", q7wLiveDiagnostic.includes("consecutiveFailures >= 3"));
+check("Q7W live diagnostic targets 9 of 10 pass-like scenarios", q7wLiveDiagnostic.includes("passLike >= 9"));
 
 const aliyunDeployScript = read("scripts/deploy-aliyun-acr.ts");
 check("Aliyun deploy script builds Docker image", aliyunDeployScript.includes("docker") && aliyunDeployScript.includes("build"));
