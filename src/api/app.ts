@@ -17,6 +17,7 @@ import { webUiRoutes } from "./routes/web-ui";
 import { uploadRoutes } from "./routes/upload";
 import { radarsRoutes } from "./routes/radars";
 import { radarChatRoutes } from "./routes/radar-chats";
+import { radarJobRoutes } from "./routes/radar-jobs";
 import { publicAiEventsRoutes } from "./routes/public-ai-events";
 import type { ApiResponse } from "./types";
 
@@ -60,6 +61,7 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/upload", uploadRoutes(ctx));
   app.route("/api/radars", radarsRoutes(ctx));
   app.route("/api/radar-chats", radarChatRoutes(ctx));
+  app.route("/api/radar-jobs", radarJobRoutes(ctx));
   app.route("/api/public", publicAiEventsRoutes(ctx));
 
   // Web UI 静态文件服务（根路径）

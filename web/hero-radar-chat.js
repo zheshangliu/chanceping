@@ -1017,24 +1017,24 @@
   }
 
   async function runHeroLiveSearch(draft, confirmedSpec, version, progressMessage) {
-    const search = await postJson("/api/search", {
+    const startedJob = await postJson("/api/radar-jobs/run", {
       spec: confirmedSpec,
+      radar_type: "custom",
       query: draft.description || draft.radarVersion?.oneSentencePositioning || draft.suggestedName || "机会 合作 采购 招募 申请",
       ...(window.getChancePingSearchMode?.() ? { search_mode: window.getChancePingSearchMode() } : {}),
     });
+    const jobId = startedJob.jobId || startedJob.id;
+    if (!jobId) throw new Error("盯机会任务启动失败：没有返回任务编号。");
+    updateMessageArtifact(progressMessage.id, (artifact) => ({
+      ...artifact,
+      currentProgressLine: startedJob.progressLine || "盯机会已启动任务，正在持续整理搜索进度。",
+    }));
+    const finishedJob = await waitForRadarRunJob(jobId, progressMessage);
+    const search = finishedJob.result?.search || {};
     const cards = search.opportunityCards || [];
     const sourceHintChecks = search.sourceCoverage || search.sourceHintChecks || [];
-    const report = await postJson("/api/reports/generate", {
-      spec: confirmedSpec,
-      radar_type: "custom",
-      opportunities: cards,
-      sourceHintChecks,
-      candidateAccounting: search.candidateAccounting,
-      executionLog: search.executionLog,
-      rawCandidates: search.rawCandidates || [],
-      run_id: search.run?.id,
-      profile: confirmedSpec.profile_summary || confirmedSpec.profile,
-    });
+    const report = finishedJob.result?.report || {};
+    if (report.success === false) throw new Error(report.error || "报告生成失败");
     heroRadarChatState.currentResult = {
       runId: search.run?.id,
       reportId: report.reportId,
@@ -1070,6 +1070,31 @@
       reportId: report.reportId,
       cards,
     });
+  }
+
+  async function waitForRadarRunJob(jobId, progressMessage) {
+    const deadline = Date.now() + LONG_OPERATION_TIMEOUT_MS;
+    let lastJob = null;
+    while (Date.now() < deadline) {
+      lastJob = await getJson(`/api/radar-jobs/${encodeURIComponent(jobId)}`, {
+        timeoutMs: LONG_OPERATION_TIMEOUT_MS,
+      });
+      updateMessageArtifact(progressMessage.id, (artifact) => ({
+        ...artifact,
+        activeStepCount: Math.min((artifact.activeStepCount || 1) + 1, artifact.steps?.length || 1),
+        currentProgressLine: lastJob.progressLine || artifact.currentProgressLine,
+      }));
+      if (lastJob.status === "succeeded") return lastJob;
+      if (lastJob.status === "failed") {
+        throw new Error(lastJob.error?.message || "这次搜索或报告生成失败，雷达已保留，可以调整后重试。");
+      }
+      await sleep(1600);
+    }
+    throw new Error("这次盯机会等待超过 10 分钟。雷达已保留，你可以稍后重试；如果线上仍反复超时，需要把线上网关等待时间延长到 10 分钟。");
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
   function renderRadarArtifact(message) {

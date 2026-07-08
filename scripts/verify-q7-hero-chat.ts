@@ -43,6 +43,8 @@ async function run() {
   const radarDetailJs = read("web/radar-detail.js");
   const styles = read("web/styles.css");
   const webUiRoute = read("src/api/routes/web-ui.ts");
+  const apiApp = read("src/api/app.ts");
+  const radarJobsRoute = read("src/api/routes/radar-jobs.ts");
 
   check("hero chat script exists", existsSync("web/hero-radar-chat.js"));
   check("index loads hero chat script", html.includes("/hero-radar-chat.js"));
@@ -85,14 +87,15 @@ async function run() {
   check("hero chat renders radar artifact", heroChatJs.includes("renderRadarArtifact"));
   check("hero chat calls generate endpoint", heroChatJs.includes("/api/radars/generate"));
   check("hero chat calls revise endpoint", heroChatJs.includes("/api/radars/revise"));
-  check("hero chat calls search endpoint after confirmation", heroChatJs.includes("async function runHeroLiveSearch") && heroChatJs.includes("/api/search") && heroChatJs.indexOf("/api/search") > heroChatJs.indexOf("async function runHeroLiveSearch"));
-  check("hero chat calls report generation after search", heroChatJs.includes("/api/reports/generate") && heroChatJs.indexOf("/api/reports/generate") > heroChatJs.indexOf("/api/search"));
+  check("hero chat starts async radar job after confirmation", heroChatJs.includes("async function runHeroLiveSearch") && heroChatJs.includes("/api/radar-jobs/run"));
+  check("hero chat polls async radar job until completion", heroChatJs.includes("waitForRadarRunJob") && heroChatJs.includes("/api/radar-jobs/${encodeURIComponent(jobId)}"));
+  check("backend registers async radar job route", apiApp.includes("radarJobRoutes") && apiApp.includes('app.route("/api/radar-jobs"') && radarJobsRoute.includes("export function radarJobRoutes"));
   check("hero demo replay has a dedicated built-in radar gate", heroChatJs.includes("shouldUseHeroDemoReplay") && heroChatJs.includes("AI_EVENT_SAMPLE_ROOM.id"));
   check("hero demo keeps the built-in sample room at V1.0 for first-time users", heroChatJs.includes("normalizeHeroDemoRadarVersion") && heroChatJs.includes('version: "V1.0"'));
   check("hero demo replay reads stored public AI events instead of live search", heroChatJs.includes("/api/public/ai-events?") && heroChatJs.includes("runHeroDemoReplay"));
   check("hero demo replay maps stored events into opportunity cards", heroChatJs.includes("mapPublicAiEventToOpportunityCard") && heroChatJs.includes("demo_replay"));
   check("hero demo replay progress is honest about reading stored results", heroChatJs.includes("最近一次入库结果") && heroChatJs.includes("已保存机会卡"));
-  check("hero demo replay keeps real search path for non-demo radars", heroChatJs.includes("runHeroLiveSearch") && heroChatJs.includes("/api/search") && heroChatJs.includes("/api/reports/generate"));
+  check("hero demo replay keeps async real run path for non-demo radars", heroChatJs.includes("runHeroLiveSearch") && heroChatJs.includes("/api/radar-jobs/run") && heroChatJs.includes("waitForRadarRunJob"));
   check("hero chat preserves confirmation gate", heroChatJs.includes("confirmHeroRadar"));
   check("hero chat has report artifact renderer", heroChatJs.includes("renderReportArtifact"));
   check("hero chat report artifact links to cards", heroChatJs.includes("查看本次机会卡"));
