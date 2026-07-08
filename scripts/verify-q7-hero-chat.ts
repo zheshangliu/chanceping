@@ -183,8 +183,8 @@ async function run() {
   check("search progress is revealed step by step", heroChatJs.includes("activeStepCount") && heroChatJs.includes("startProgressTicker"));
   check("search progress explains source verification and report summary", heroChatJs.includes("正在核对来源可信度") && heroChatJs.includes("正在生成报告摘要"));
   check("search progress uses one-line current work status", heroChatJs.includes("currentProgressLine") && heroChatJs.includes("hero-progress-current") && !heroChatJs.includes("appendProgressLog"));
-  check("progress line shows Qwen as the visible LLM provider", heroChatJs.includes("Serper") && heroChatJs.includes("Qwen") && !heroChatJs.includes("DeepSeek："));
-  check("homepage preview copy uses Qwen instead of DeepSeek", html.includes("Qwen") && !html.includes("DeepSeek 按证据解释"));
+  check("progress line uses ChancePing wording instead of visible providers", heroChatJs.includes("盯机会正在搜索") && heroChatJs.includes("盯机会正在生成报告") && !/Serper：|Qwen：|Qwen 正在|DeepSeek：/.test(heroChatJs));
+  check("homepage preview copy uses ChancePing wording instead of provider wording", html.includes("盯机会会持续显示搜索、读取、筛选和整理进度") && !html.includes("DeepSeek 按证据解释") && !html.includes("Serper 找来源"));
   const customerVisibleWeb = [
     html,
     heroChatJs,
@@ -196,7 +196,7 @@ async function run() {
     searchJs,
   ].join("\n");
   check("customer-visible backend web files do not mention DeepSeek", !/DeepSeek|deepseek|DEEPSEEK/.test(customerVisibleWeb));
-  check("legacy backend loading states use Qwen/Serper wording", radarProfileJs.includes("Qwen 正在理解并生成雷达") && watchResultJs.includes("Serper 正在搜索机会，Qwen 随后整理证据") && searchJs.includes("Serper 正在搜索") && radarDetailJs.includes("Qwen 正在生成报告"));
+  check("legacy backend loading states use ChancePing wording", radarProfileJs.includes("盯机会正在理解并生成雷达") && watchResultJs.includes("盯机会正在搜索机会并整理证据") && searchJs.includes("盯机会正在搜索") && radarDetailJs.includes("盯机会正在生成报告"));
   check("progress line reassures novice users that work is continuing", heroChatJs.includes("不用刷新页面") && heroChatJs.includes("持续更新"));
   check("homepage keeps prompt chips hidden before and after chat starts", heroChatJs.includes("promptChips.hidden = true") && homeJs.includes('".hero-demo-prompts"'));
   check("hero chat becomes the only visible workspace after starting", heroChatJs.includes("syncHeroEntryVisibility") && heroChatJs.includes(".home-hero") && heroChatJs.includes(".home-input-area") && heroChatJs.includes("hero-chat-active"));
@@ -211,9 +211,9 @@ async function run() {
   check("chat render scrolls message container to latest result", heroChatJs.includes("messages.scrollTop = messages.scrollHeight"));
   check("home routes primary input to chat draft without auto-send", homeJs.includes("window.startHeroRadarChat") && homeJs.includes("autoSend: false"));
   check("hero chat waits for manual send before generating V1.0", heroChatJs.includes("pendingFirstMessage") && heroChatJs.includes("等待你点击发送"));
-  check("hero chat tells the user Qwen is interpreting revisions", heroChatJs.includes("Qwen") && heroChatJs.includes("理解") && !heroChatJs.includes("让 DeepSeek 理解"));
-  check("hero chat tells the user Qwen is drawing the radar", heroChatJs.includes("Qwen 正在画雷达"));
-  check("hero chat surfaces LLM generation or revision failures", heroChatJs.includes("catch (err)") && heroChatJs.includes("雷达理解或修订失败"));
+  check("hero chat tells the user ChancePing is interpreting revisions", heroChatJs.includes("盯机会正在理解") && !heroChatJs.includes("让 DeepSeek 理解"));
+  check("hero chat tells the user ChancePing is drawing the radar", heroChatJs.includes("盯机会正在画雷达"));
+  check("hero chat surfaces radar generation or revision failures", heroChatJs.includes("catch (err)") && heroChatJs.includes("雷达理解或修订失败"));
   check("hero chat keeps LLM revision in auto mode for local live profile", heroChatJs.includes('revisionMode: options.revisionMode || "auto"'));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
   check("hidden demo prompt chips only fill input if reused", homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));

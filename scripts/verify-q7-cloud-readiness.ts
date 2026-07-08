@@ -78,10 +78,10 @@ check("Aliyun runbook documents Qwen contest profile", aliyunRunbook.includes("C
 check("Aliyun runbook documents built-in AI events navigator", aliyunRunbook.includes("全球 AI 赛事导航") && aliyunRunbook.includes("/aievents"));
 check("Aliyun runbook documents remote smoke", aliyunRunbook.includes("CHANCEPING_DEPLOY_BASE_URL") && aliyunRunbook.includes("verify:q7:aliyun-remote-smoke"));
 check(
-  "Aliyun runbook documents backend Qwen wording gate",
-  aliyunRunbook.includes("4.5 后端页面 Qwen 文案复核")
+  "Aliyun runbook documents backend customer wording gate",
+  aliyunRunbook.includes("4.5 后端页面客户可见文案复核")
     && aliyunRunbook.includes("verify:q7:backend-i18n")
-    && aliyunRunbook.includes("Serper 正在搜索机会，Qwen 随后整理证据"),
+    && aliyunRunbook.includes("盯机会正在搜索机会并整理证据"),
 );
 check("Aliyun runbook documents Docker readiness", aliyunRunbook.includes("verify:q7:docker-readiness") && /`api\.env` 不进入镜像/.test(aliyunRunbook));
 check(
@@ -140,12 +140,16 @@ const deepSeekHits = backendVisibleFiles
   .filter(({ content }) => /DeepSeek|deepseek|DEEPSEEK/.test(content))
   .map(({ file }) => file);
 check("customer-visible backend files do not mention DeepSeek", deepSeekHits.length === 0, deepSeekHits.join(", "));
+const providerExecutorHits = backendVisibleFiles
+  .filter(({ content }) => /Serper\s*正在|Serper：|Qwen\s*正在|Qwen：|LLM\s*正在|provider\s*正在/i.test(content))
+  .map(({ file }) => file);
+check("customer-visible backend files do not expose provider executors", providerExecutorHits.length === 0, providerExecutorHits.join(", "));
 [
-  "Qwen 正在理解并生成雷达",
-  "Qwen 正在画雷达",
-  "Serper 正在搜索机会，Qwen 随后整理证据",
-  "Qwen 正在生成机会报告",
-  "Qwen 正在生成报告",
+  "盯机会正在理解并生成雷达",
+  "盯机会正在画雷达",
+  "盯机会正在搜索机会并整理证据",
+  "盯机会正在生成机会报告",
+  "盯机会正在生成报告",
 ].forEach((phrase) => {
   check(`customer-visible backend includes ${phrase}`, visibleJoined.includes(phrase));
 });

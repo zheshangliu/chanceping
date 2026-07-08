@@ -412,8 +412,8 @@
     if (root) {
       root.innerHTML = `
         <div class="watch-loading-card">
-          <strong>Qwen 正在理解并生成雷达</strong>
-          <p>Qwen 正在把你的描述整理成可复用的机会雷达画像。</p>
+          <strong>盯机会正在理解并生成雷达</strong>
+          <p>盯机会正在把你的描述整理成可复用的机会雷达画像。</p>
         </div>
       `;
     }
@@ -517,8 +517,8 @@
     if (root) {
       root.innerHTML = `
         <div class="watch-loading-card">
-          <strong>Qwen 正在重新理解你的补充</strong>
-          <p>Qwen 会把你的原始需求和补充回答合在一起，重新生成雷达画像。</p>
+          <strong>盯机会正在重新理解你的补充</strong>
+          <p>盯机会会把你的原始需求和补充回答合在一起，重新生成雷达画像。</p>
         </div>
       `;
     }

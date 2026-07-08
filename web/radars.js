@@ -663,7 +663,7 @@
     if (!retryBtn) return;
     retryBtn.addEventListener("click", async () => {
       retryBtn.disabled = true;
-      retryBtn.textContent = "Qwen 正在生成报告";
+      retryBtn.textContent = "盯机会正在生成报告";
       try {
         const report = await generateReportForRun(radar, runData);
         const reportId = report.data?.reportId || "";
@@ -702,8 +702,8 @@
         return;
       }
       const count = (runJson.data?.opportunityCards || []).length;
-      btn.textContent = "Qwen 正在生成报告";
-      setRerunStatus(btn, '<span class="rerun-status-running">Qwen 正在生成报告</span>');
+      btn.textContent = "盯机会正在生成报告";
+      setRerunStatus(btn, '<span class="rerun-status-running">盯机会正在生成报告</span>');
 
       try {
         const report = await generateReportForRun(radar, runJson.data);
@@ -993,7 +993,7 @@
     const resultDiv = modal.querySelector("#ai-generate-result");
     if (resultDiv) {
       resultDiv.style.display = "block";
-      resultDiv.innerHTML = '<p class="placeholder">Qwen 正在画雷达规格...</p>';
+      resultDiv.innerHTML = '<p class="placeholder">盯机会正在画雷达规格...</p>';
     }
     const errorDiv = modal.querySelector("#ai-gen-error");
     if (errorDiv) {

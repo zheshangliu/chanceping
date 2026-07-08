@@ -103,15 +103,16 @@ CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true node --run verify:q7:aliyun-deploy-p
 - 内置雷达不占用 3 个自定义额度；
 - 公开 `/aievents` 页面和 feed 能返回可展示赛事卡。
 
-## 4.5 后端页面 Qwen 文案复核
+## 4.5 后端页面客户可见文案复核
 
 在进入阿里云准备前，必须单独检查普通客户能看到的「盯机会」后端页面文案：
 
 - 不出现 DeepSeek 字样；
-- 需求理解 / 画像生成使用 `Qwen 正在理解并生成雷达`；
-- 雷达规格生成使用 `Qwen 正在画雷达`；
-- 搜索阶段使用 `Serper 正在搜索机会，Qwen 随后整理证据`，不把网页搜索说成由 Qwen 执行；
-- 报告生成使用 `Qwen 正在生成机会报告` 或 `Qwen 正在生成报告`。
+- 不把 Qwen / Serper / LLM / provider 作为客户可见执行者；
+- 需求理解 / 画像生成使用 `盯机会正在理解并生成雷达`；
+- 雷达规格生成使用 `盯机会正在画雷达`；
+- 搜索阶段使用 `盯机会正在搜索机会并整理证据`；
+- 报告生成使用 `盯机会正在生成机会报告` 或 `盯机会正在生成报告`。
 
 对应自动闸门：
 
@@ -119,6 +120,33 @@ CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true node --run verify:q7:aliyun-deploy-p
 node --run verify:q7:backend-i18n
 node --run verify:q7:cloud-readiness
 ```
+
+## 4.6 线上长搜索 10 分钟等待
+
+自定义雷达的 live 搜索和报告生成可能需要数分钟。参赛内测阶段宁可让客户等待，也不要在 60 秒左右返回网关 HTML 错误页。SWAS / Nginx 代理应允许最长 10 分钟响应窗口：
+
+```bash
+sudo grep -R "proxy_pass.*3000\|127.0.0.1:3000\|localhost:3000" -n /etc/nginx/sites-enabled /etc/nginx/conf.d /etc/nginx/nginx.conf
+sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak.$(date +%Y%m%d%H%M%S)
+sudo nginx -T | grep -n "proxy_read_timeout\|proxy_send_timeout\|proxy_connect_timeout" || true
+```
+
+在实际代理到 `chanceping.service` 的 `location` 或 `server` 配置中加入：
+
+```nginx
+proxy_connect_timeout 600s;
+proxy_send_timeout 600s;
+proxy_read_timeout 600s;
+send_timeout 600s;
+```
+
+验证并重载：
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+注意：10 分钟同步等待适合当前 demo / 内测阶段。长期产品形态仍应升级为后台任务、进度轮询和报告完成通知，避免浏览器长连接成为唯一成功路径。
 
 ## 容器 / 阿里云运行时准备
 
@@ -406,7 +434,7 @@ CHANCEPING_DEPLOY_BASE_URL_REQUIRED=true node --run verify:q7:aliyun-remote-smok
 
 - `/health` 可用；
 - 首页、后端脚本、`/aievents` 均可访问；
-- 客户可见页面不出现 DeepSeek 字样，并展示 Qwen 工作文案；
+- 客户可见页面不出现 DeepSeek / Qwen / Serper 等外部供应商执行者字样，并统一展示「盯机会」工作文案；
 - `/api/public/ai-events?page_size=8` 返回赛事卡且不泄露内部 key / run id；
 - 一个新用户可以打开内置「全球 AI 赛事导航」，并创建 3 个自定义雷达窗口；
 - 第 4 个自定义雷达窗口被阻断，删除一个窗口后释放额度。

@@ -65,7 +65,7 @@ check("Q7 revision card explains version diff", profileJs.includes("本次版本
 check("Q7 continue modify explains radar upgrade", profileJs.includes("升级雷达") || profileJs.includes("先升级雷达"));
 check("Q7 profile UI can receive result feedback", profileJs.includes("showRadarRevisionFromResultFeedback"));
 check("画像确认不直接展示技术字段", !profileJs.includes("providerRouting") && !profileJs.includes("provider_routing"));
-check("后台画像 loading 使用 Qwen 口径", profileJs.includes("Qwen 正在理解并生成雷达") && profileJs.includes("Qwen 正在重新理解你的补充"));
+check("后台画像 loading 使用盯机会口径", profileJs.includes("盯机会正在理解并生成雷达") && profileJs.includes("盯机会正在重新理解你的补充"));
 check("澄清闸门标题正确", profileJs.includes("我还需要确认几个关键点"));
 check("澄清闸门说明正确", profileJs.includes("这样可以让机会雷达盯得更准"));
 check("澄清闸门主按钮正确", profileJs.includes("回答后生成雷达画像"));
@@ -83,8 +83,8 @@ check("本地 live search 通过 URL/localStorage 显式开启", homeJs.includes
 check("产品主路径可透传 search_mode=live", watchResultJs.includes("getSearchModeRequest") && watchResultJs.includes("search_mode: \"live\"") && radarsJs.includes("getSearchModeRequest") && radarDetailJs.includes("getSearchModeRequest"));
 check("保存长期雷达会记住本地 live 试跑偏好", watchResultJs.includes("preferredSearchMode: \"live\"") && radarsRoute.includes("radar.preferredSearchMode"));
 check("模板路径允许调整雷达画像", watchResultJs.includes("调整雷达画像") && profileJs.includes("showRadarProfileDraftFromResult"));
-check("后台搜索 loading 使用 Serper/Qwen 口径", watchResultJs.includes("Serper 正在搜索机会，Qwen 随后整理证据"));
-check("后台报告 loading 使用 Qwen 口径", watchResultJs.includes("Qwen 正在生成机会报告"));
+check("后台搜索 loading 使用盯机会口径", watchResultJs.includes("盯机会正在搜索机会并整理证据"));
+check("后台报告 loading 使用盯机会口径", watchResultJs.includes("盯机会正在生成机会报告"));
 check("机会卡片按用户关心顺序渲染", [
   "为什么值得看",
   "本周先做",

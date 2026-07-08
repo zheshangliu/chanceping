@@ -1854,8 +1854,8 @@
     }
     updateRadarChatWindow({ pendingMessage: "" });
     addMessage("assistant", heroRadarChatState.currentDraft
-      ? "收到，Qwen 正在理解这次修改，并重新画一版雷达草案；你确认后我才会搜索。"
-      : `Qwen 正在理解并生成雷达，我会先把复杂人话整理成${isAiContestRadarText(text) ? " AI 赛事雷达" : "机会雷达"} V1.0。`);
+      ? "收到，盯机会正在理解这次修改，并重新画一版雷达草案；你确认后我才会搜索。"
+      : `盯机会正在理解并生成雷达，我会先把复杂人话整理成${isAiContestRadarText(text) ? " AI 赛事雷达" : "机会雷达"} V1.0。`);
     try {
       if (!heroRadarChatState.currentDraft) {
         const data = await postJson("/api/radars/generate", { description: text, chatWindowId });
@@ -1887,7 +1887,7 @@
         draftRadarVersion: heroRadarChatState.currentDraft.radarVersion?.version || "V1.0",
       });
       persistMemorySummary({ lastFeedback: text });
-      addMessage("assistant", `Qwen 正在画雷达：我把雷达更新为 ${heroRadarChatState.currentDraft.radarVersion?.version || "V1.0"}，你先确认这版是否准确。`, {
+      addMessage("assistant", `盯机会正在画雷达：我把雷达更新为 ${heroRadarChatState.currentDraft.radarVersion?.version || "V1.0"}，你先确认这版是否准确。`, {
         type: "radar",
         version: heroRadarChatState.currentDraft.radarVersion?.version,
         status: "draft",
@@ -1931,20 +1931,20 @@
     const radarVersion = heroRadarChatState.currentDraft?.radarVersion || {};
     if (isAiContestRadarPayload(radarVersion)) {
       return [
-        "Serper 正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台，Qwen 随后整理证据……",
-        "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
+        "盯机会正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台……",
+        "盯机会正在读取优先来源正文：云厂商赛事页、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
         "正在筛选可报名、可提交作品、可申请资源的机会……",
         "正在排除展会资讯、培训广告和学生专属结果……",
         "正在核对来源可信度，避免把资讯当成机会……",
-        "Qwen 正在生成报告摘要、机会卡和 Markdown 报告……",
+        "盯机会正在生成报告摘要、机会卡和 Markdown 报告……",
       ];
     }
     return [
-      "Serper 正在按这版雷达搜索官方来源、采购/合作入口和行业平台，Qwen 随后整理证据……",
-      "正在读取优先来源正文：官方公告、采购页面、协会目录、平台入口和可信媒体线索……",
-      "正在筛选当前用户能行动的机会，排除纯资讯、广告和无行动入口页面……",
-      "正在核对来源可信度，避免把观察信号包装成已确认机会……",
-      "Qwen 正在生成报告摘要、机会卡和 Markdown 报告……",
+      "盯机会正在按这版雷达搜索官方来源、采购/合作入口和行业平台……",
+      "盯机会正在读取优先来源正文：官方公告、采购页面、协会目录、平台入口和可信媒体线索……",
+      "盯机会正在筛选当前用户能行动的机会，排除纯资讯、广告和无行动入口页面……",
+      "盯机会正在核对来源可信度，避免把观察信号包装成已确认机会……",
+      "盯机会正在生成报告摘要、机会卡和 Markdown 报告……",
     ];
   }
 
@@ -1960,20 +1960,20 @@
     const radarVersion = heroRadarChatState.currentDraft?.radarVersion || {};
     if (isAiContestRadarPayload(radarVersion)) {
       return [
-        "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
-        "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
-        "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
-        "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
-        "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
-        "Qwen：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+        "盯机会正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
+        "盯机会正在优先保留 Devpost、DoraHacks、Lablab、云厂商赛事页、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
+        "盯机会正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
+        "盯机会正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
+        "盯机会正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
+        "盯机会正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
       ];
     }
     return [
-      "Serper：正在按雷达画像执行多组行业查询；不用刷新页面，我会持续更新这里。",
-      "网页读取：正在优先读取官方来源、采购/合作入口和行业平台；不用刷新页面，我会持续更新这里。",
-      "证据整理：正在标记当前用户能行动的入口、待复核字段和来源类型；不用刷新页面，我会持续更新这里。",
-      "质量闸门：正在排除广告、纯资讯、无行动入口和对象错配结果；不用刷新页面，我会持续更新这里。",
-      "Qwen：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+      "盯机会正在按雷达画像执行多组行业查询；不用刷新页面，我会持续更新这里。",
+      "盯机会正在优先读取官方来源、采购/合作入口和行业平台；不用刷新页面，我会持续更新这里。",
+      "盯机会正在标记当前用户能行动的入口、待复核字段和来源类型；不用刷新页面，我会持续更新这里。",
+      "盯机会正在排除广告、纯资讯、无行动入口和对象错配结果；不用刷新页面，我会持续更新这里。",
+      "盯机会正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
     ];
   }
 

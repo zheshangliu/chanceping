@@ -68,31 +68,34 @@ check("hero chat rerenders on backend language change", visibleFile("web/hero-ra
 check("watch result uses backend i18n helper", visibleFile("web/watch-result.js").includes("backendText(") && visibleFile("web/watch-result.js").includes("currentBackendLanguage"));
 check("radar list uses backend i18n helper", visibleFile("web/radars.js").includes("backendText(") && visibleFile("web/radars.js").includes("currentBackendLanguage"));
 check("hero chat uses backend i18n helper", visibleFile("web/hero-radar-chat.js").includes("backendText(") && visibleFile("web/hero-radar-chat.js").includes("currentBackendLanguage"));
-check("backend visible loading uses Qwen wording", webVisibleFiles.some(({ content }) => content.includes("Qwen 正在理解")) && webVisibleFiles.some(({ content }) => content.includes("Serper 正在搜索机会")));
-const backendQwenWording = webVisibleFiles.map(({ content }) => content).join("\n");
+const backendChancePingWording = webVisibleFiles.map(({ content }) => content).join("\n");
+const visibleProviderExecutorHits = webVisibleFiles
+  .filter(({ content }) => /Serper\s*正在|Serper：|Qwen\s*正在|Qwen：|LLM\s*正在|provider\s*正在/i.test(content))
+  .map(({ file }) => file);
+check("backend visible loading uses ChancePing wording", visibleProviderExecutorHits.length === 0, visibleProviderExecutorHits.join(", "));
 [
-  "Qwen 正在理解并生成雷达",
-  "Qwen 正在画雷达",
-  "Serper 正在搜索机会，Qwen 随后整理证据",
-  "Qwen 正在生成机会报告",
-  "Qwen 正在生成报告",
+  "盯机会正在理解并生成雷达",
+  "盯机会正在画雷达",
+  "盯机会正在搜索机会并整理证据",
+  "盯机会正在生成机会报告",
+  "盯机会正在生成报告",
 ].forEach((phrase) => {
-  check(`backend visible wording includes ${phrase}`, backendQwenWording.includes(phrase));
+  check(`backend visible wording includes ${phrase}`, backendChancePingWording.includes(phrase));
 });
 
 const deepSeekVisibleHits = webVisibleFiles
   .filter(({ content }) => /DeepSeek/i.test(content))
   .map(({ file }) => file);
 check("backend visible files do not mention DeepSeek", deepSeekVisibleHits.length === 0, deepSeekVisibleHits.join(", "));
-check("profile page says Qwen is understanding and generating radar", visibleFile("web/radar-profile.js").includes("Qwen 正在理解并生成雷达"));
-check("profile page says Qwen is re-understanding supplements", visibleFile("web/radar-profile.js").includes("Qwen 正在重新理解你的补充"));
-check("radar list page says Qwen is drawing radar", visibleFile("web/radars.js").includes("Qwen 正在画雷达规格"));
-check("watch result page says Serper searches and Qwen organizes evidence", visibleFile("web/watch-result.js").includes("Serper 正在搜索机会，Qwen 随后整理证据"));
-check("watch result page says Qwen generates opportunity report", visibleFile("web/watch-result.js").includes("Qwen 正在生成机会报告"));
-check("radar detail rerun page uses Serper / Qwen wording", visibleFile("web/radar-detail.js").includes("Serper / Qwen 正在重新盯机会"));
-check("radar detail report generation uses Qwen wording", visibleFile("web/radar-detail.js").includes("Qwen 正在生成报告"));
-check("legacy search page uses Serper / Qwen wording", visibleFile("web/search.js").includes("Serper 正在搜索") && visibleFile("web/search.js").includes("Qwen 随后整理证据"));
-check("hero chat says Qwen interprets and draws radar", visibleFile("web/hero-radar-chat.js").includes("Qwen 正在理解并生成雷达") && visibleFile("web/hero-radar-chat.js").includes("Qwen 正在画雷达"));
+check("profile page says ChancePing is understanding and generating radar", visibleFile("web/radar-profile.js").includes("盯机会正在理解并生成雷达"));
+check("profile page says ChancePing is re-understanding supplements", visibleFile("web/radar-profile.js").includes("盯机会正在重新理解你的补充"));
+check("radar list page says ChancePing is drawing radar", visibleFile("web/radars.js").includes("盯机会正在画雷达规格"));
+check("watch result page says ChancePing searches and organizes evidence", visibleFile("web/watch-result.js").includes("盯机会正在搜索机会并整理证据"));
+check("watch result page says ChancePing generates opportunity report", visibleFile("web/watch-result.js").includes("盯机会正在生成机会报告"));
+check("radar detail rerun page uses ChancePing wording", visibleFile("web/radar-detail.js").includes("盯机会正在重新盯机会"));
+check("radar detail report generation uses ChancePing wording", visibleFile("web/radar-detail.js").includes("盯机会正在生成报告"));
+check("legacy search page uses ChancePing wording", visibleFile("web/search.js").includes("盯机会正在搜索"));
+check("hero chat says ChancePing interprets and draws radar", visibleFile("web/hero-radar-chat.js").includes("盯机会正在理解并生成雷达") && visibleFile("web/hero-radar-chat.js").includes("盯机会正在画雷达"));
 
 console.log(`Q7 backend i18n: ${pass} PASS / ${fail} FAIL`);
 process.exit(fail > 0 ? 1 : 0);
