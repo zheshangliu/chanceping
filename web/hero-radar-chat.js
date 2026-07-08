@@ -29,6 +29,7 @@
     showArchivedWindows: false,
     boundRadarId: AI_EVENT_SAMPLE_ROOM.id,
     pendingFirstMessage: "",
+    pendingRevisionTrigger: "",
     sidebarCollapsed: false,
     homeEntryMode: false,
     modal: null,
@@ -121,7 +122,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const json = await res.json();
+    const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
       error.code = json.error?.code || "";
@@ -132,7 +133,7 @@
 
   async function getJson(url) {
     const res = await fetch(url);
-    const json = await res.json();
+    const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
       error.code = json.error?.code || "";
@@ -147,7 +148,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const json = await res.json();
+    const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
       error.code = json.error?.code || "";
@@ -158,7 +159,7 @@
 
   async function deleteJson(url) {
     const res = await fetch(url, { method: "DELETE" });
-    const json = await res.json();
+    const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
       error.code = json.error?.code || "";
@@ -173,13 +174,35 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const json = await res.json();
+    const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
       error.code = json.error?.code || "";
       throw error;
     }
     return json.data;
+  }
+
+  async function parseJsonResponse(res) {
+    const contentType = (res.headers.get("content-type") || "").toLowerCase();
+    const text = await res.text();
+    if (!contentType.includes("application/json")) {
+      const looksLikeHtml = /<html|<!doctype|<body/i.test(text);
+      const error = new Error(looksLikeHtml
+        ? "服务器返回了网页错误页，不是 JSON。请稍后重试，或检查线上服务是否已更新。"
+        : `服务器返回了非 JSON 响应：${text.slice(0, 120) || res.statusText}`);
+      error.code = "NON_JSON_RESPONSE";
+      error.status = res.status;
+      throw error;
+    }
+    try {
+      return JSON.parse(text || "{}");
+    } catch {
+      const error = new Error("服务器返回的 JSON 无法解析，请稍后重试。");
+      error.code = "INVALID_JSON_RESPONSE";
+      error.status = res.status;
+      throw error;
+    }
   }
 
   function artifactTypeForPersistence(artifact) {
@@ -1654,6 +1677,72 @@
     return true;
   }
 
+  function buildResultFeedbackMessage(result) {
+    const titles = (result?.resultFeedback?.rejectedCardTitles || result?.opportunityCards || [])
+      .slice(0, 3)
+      .map((item) => typeof item === "string" ? item : item?.title)
+      .filter(Boolean);
+    const reason = result?.resultFeedback?.freeText
+      || result?.resultFeedback?.rejectedReason
+      || "这些结果不符合我想要的机会类型或行动入口";
+    const titleText = titles.length ? `不满意结果：${titles.join("；")}` : "";
+    return [
+      "这次结果不对，请先修改雷达策略，再让我确认新版雷达。",
+      reason,
+      titleText,
+    ].filter(Boolean).join("\n");
+  }
+
+  async function openHeroRadarFromResultFeedback(result) {
+    if (!result) return false;
+    const radarId = result.radarId || result.radar_id || result.sourceRadarId || result.spec?.radar_id;
+    const suggestedName = result.suggestedName
+      || result.radarVersion?.oneSentencePositioning
+      || result.radarVersion?.name
+      || "机会雷达";
+    if (radarId) {
+      await openHeroRadarForRadar({
+        id: radarId,
+        name: suggestedName,
+        spec: result.spec,
+      });
+    } else {
+      if (window.switchTab) window.switchTab("home");
+      heroRadarChatState.currentDraft = {
+        spec: result.spec || {},
+        radarVersion: result.radarVersion || result.spec?.radar_version || null,
+        radarDiff: null,
+        suggestedName,
+        description: result.description || "",
+      };
+      heroRadarChatState.currentResult = result;
+      await ensureRadarChatWindow();
+    }
+
+    const feedbackMessage = buildResultFeedbackMessage(result);
+    heroRadarChatState.pendingFirstMessage = feedbackMessage;
+    heroRadarChatState.pendingRevisionTrigger = "result_feedback";
+    updateRadarChatWindow({
+      pendingMessage: feedbackMessage,
+      memorySummary: {
+        ...(heroRadarChatState.activeChatWindowId
+          ? (heroRadarChatState.chatWindows.find((item) => item.id === heroRadarChatState.activeChatWindowId)?.memorySummary || {})
+          : {}),
+        lastFeedback: feedbackMessage,
+      },
+    });
+    addMessage("assistant", "我已经把本次不满意的结果带回这个雷达窗口。你可以直接点发送，我会先升级雷达，再让你确认。");
+    renderHeroRadarChat();
+    window.setTimeout(() => {
+      const input = document.getElementById("hero-radar-chat-input");
+      if (input) {
+        input.value = feedbackMessage;
+        input.focus();
+      }
+    }, 0);
+    return true;
+  }
+
   function normalizeGenerateResult(data, description) {
     return {
       spec: data.spec,
@@ -1698,11 +1787,13 @@
       } else {
         heroRadarChatState.confirmedVersion = null;
         heroRadarChatState.currentResult = null;
+        const revisionTrigger = options.trigger || heroRadarChatState.pendingRevisionTrigger || "requirement_correction";
+        heroRadarChatState.pendingRevisionTrigger = "";
         const data = await postJson("/api/radars/revise", {
           previousSpec: heroRadarChatState.currentDraft.spec,
           previousRadarVersion: heroRadarChatState.currentDraft.radarVersion,
           userMessage: text,
-          trigger: options.trigger || "requirement_correction",
+          trigger: revisionTrigger,
           revisionMode: options.revisionMode || "auto",
           chatWindowId,
         });
@@ -1998,6 +2089,7 @@
   window.deleteHeroRadarWindow = deleteHeroRadarWindow;
   window.syncPendingInputMessage = syncPendingInputMessage;
   window.openHeroRadarForRadar = openHeroRadarForRadar;
+  window.openHeroRadarFromResultFeedback = openHeroRadarFromResultFeedback;
   window.openHeroRadarWindow = openHeroRadarWindow;
   window.createNewHeroRadarWindow = createNewHeroRadarWindow;
   window.startHeroRadarChat = startHeroRadarChat;

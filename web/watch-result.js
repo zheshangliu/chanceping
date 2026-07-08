@@ -129,6 +129,10 @@
       btn.addEventListener("click", retryCurrentSearch);
     });
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
+      if (window.openHeroRadarFromResultFeedback) {
+        openRadarChatFromResultFeedback();
+        return;
+      }
       if (window.showRadarRevisionFromResultFeedback) {
         openRadarResultFeedback();
         return;
@@ -169,6 +173,22 @@
         },
       });
     }
+  }
+
+  function openRadarChatFromResultFeedback() {
+    if (!currentResult || !window.openHeroRadarFromResultFeedback) return;
+    const rejectedCardTitles = (currentResult.opportunityCards || [])
+      .slice(0, 3)
+      .map((card) => card.title)
+      .filter(Boolean);
+    window.openHeroRadarFromResultFeedback({
+      ...currentResult,
+      resultFeedback: {
+        rejectedCardTitles,
+        rejectedReason: "这些结果不符合我想要的机会类型或行动入口",
+        freeText: "这些结果不对，请先修改雷达策略，再让我确认新版雷达。",
+      },
+    });
   }
 
   function renderRunOutcomeNotice(result) {

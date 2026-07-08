@@ -228,6 +228,24 @@ async function run() {
   check("my radar metric boxes use readable stacked labels", styles.includes(".radar-command-metrics div") && styles.includes("display: flex") && styles.includes("min-width: 112px"));
   check("my radar cards show version status last run and new count", radarsJs.includes("版本") && radarsJs.includes("状态") && radarsJs.includes("上次运行") && radarsJs.includes("本次新增"));
   check("result page has one radar revision action", watchResultJs.includes("调整雷达画像") && !watchResultJs.includes("这些结果不对，修改雷达"));
+  check(
+    "result page adjustment returns to the radar chat window",
+    watchResultJs.includes("openRadarChatFromResultFeedback")
+      && watchResultJs.includes("window.openHeroRadarFromResultFeedback")
+      && watchResultJs.indexOf("window.openHeroRadarFromResultFeedback") < watchResultJs.indexOf("window.showRadarRevisionFromResultFeedback"),
+  );
+  check(
+    "hero chat exposes result feedback entry for result page",
+    heroChatJs.includes("openHeroRadarFromResultFeedback")
+      && heroChatJs.includes("result_feedback")
+      && heroChatJs.includes("pendingFirstMessage"),
+  );
+  check(
+    "hero chat API helpers reject HTML fallback pages with readable errors",
+    heroChatJs.includes("parseJsonResponse")
+      && heroChatJs.includes("content-type")
+      && heroChatJs.includes("服务器返回了网页错误页"),
+  );
   check("result page card grid CSS is responsive", styles.includes(".watch-opportunity-grid") && styles.includes("repeat(auto-fit, minmax(260px, 1fr))"));
   check("my radar cards hide raw last run status", !radarsJs.includes("上次运行状态"));
   check("my radar cards use customer-friendly saved status", radarsJs.includes("getCustomerRadarStatusLabel") && radarsJs.includes("已完成") && radarsJs.includes("还没跑过"));
