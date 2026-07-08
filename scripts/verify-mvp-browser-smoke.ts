@@ -236,11 +236,14 @@ async function main(): Promise<void> {
     await page.waitForSelector("#panel-radars.active", { timeout: 10_000 });
     await page.waitForSelector("#radars-list-view .radar-command-card", { visible: true, timeout: 10_000 });
     await page.waitForSelector("#radars-list-view .radar-command-card .btn-edit-radar", { visible: true, timeout: 10_000 });
-    await page.waitForSelector("#radars-list-view .radar-command-card .btn-rerun-radar", { visible: true, timeout: 10_000 });
     await page.waitForSelector("#radars-list-view .radar-command-card .btn-view-radar-detail", { visible: true, timeout: 10_000 });
     const radarPanelText = await page.$eval("#radars-list-view", (el: any) => el.innerText || el.textContent || "");
     if (!radarPanelText.includes("编辑雷达") || !radarPanelText.includes("查看机会和报告")) {
       fail("saved hero radar missing customer-facing edit/result actions");
+    }
+    const rerunButtonCount = await page.$$eval("#radars-list-view .radar-command-card .btn-rerun-radar", (items: any[]) => items.length);
+    if (rerunButtonCount < 1 && !radarPanelText.includes("全球 AI 赛事导航")) {
+      fail("my radar page should show either a custom rerunnable radar or the public AI events navigator bridge");
     }
     if (!radarPanelText.includes("情报流指挥台") || !radarPanelText.includes("版本") || !radarPanelText.includes("本次新增")) {
       fail("my radar page should present intelligence command center summary");

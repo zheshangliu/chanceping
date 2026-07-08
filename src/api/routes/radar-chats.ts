@@ -55,6 +55,10 @@ function isBuiltinSampleRoomRadarId(radarId?: string): boolean {
   return radarId === BUILTIN_SAMPLE_ROOM_ID;
 }
 
+function isBuiltinSampleRoomWindow(window?: RadarChatWindow | null): boolean {
+  return window?.id === BUILTIN_SAMPLE_ROOM_ID || window?.radarId === BUILTIN_SAMPLE_ROOM_ID;
+}
+
 function getWindowQuota() {
   const user = getCurrentUser();
   return RADAR_QUOTA[user.plan] ?? RADAR_QUOTA.free;
@@ -64,6 +68,15 @@ function quotaExceededResponse(durationMs: number) {
   return errorResponse(
     "RADAR_CHAT_QUOTA_EXCEEDED",
     `免费版最多保留 ${getWindowQuota()} 个雷达聊天窗口；请先删除一个旧雷达窗口再新建。`,
+    durationMs,
+    403,
+  );
+}
+
+function protectedBuiltinResponse(durationMs: number) {
+  return errorResponse(
+    "BUILTIN_RADAR_CHAT_PROTECTED",
+    "全球 AI 赛事导航是系统内置雷达，不能改名、删除或转为自定义雷达。",
     durationMs,
     403,
   );
@@ -153,6 +166,14 @@ export function radarChatRoutes(ctx: AppContext): Hono {
     if (!body) {
       return c.json(errorResponse("BAD_REQUEST", "请求体不是合法 JSON", Date.now() - start, 400), 400);
     }
+    const existing = store.get(id);
+    if (isBuiltinSampleRoomWindow(existing) && (
+      "title" in body
+      || "status" in body
+      || "radarId" in body
+    )) {
+      return c.json(protectedBuiltinResponse(Date.now() - start), 403);
+    }
     const patch: RadarChatWindowUpdateInput = {
       ...("radarId" in body ? { radarId: asOptionalString(body.radarId) } : {}),
       ...(asOptionalString(body.title) ? { title: asOptionalString(body.title) } : {}),
@@ -165,7 +186,6 @@ export function radarChatRoutes(ctx: AppContext): Hono {
       ...("currentResultSnapshot" in body ? { currentResultSnapshot: asJsonPayload(body.currentResultSnapshot) } : {}),
       ...("status" in body && isWindowStatus(body.status) ? { status: body.status } : {}),
     };
-    const existing = store.get(id);
     if (patch.status === "active" && existing?.status === "archived") {
       const activeWindowCount = countActiveUserWindows(store.list({ userId: existing.userId }), id);
       if (activeWindowCount >= getWindowQuota()) {
@@ -242,6 +262,10 @@ export function radarChatRoutes(ctx: AppContext): Hono {
   app.delete("/:id", (c) => {
     const start = Date.now();
     const id = c.req.param("id");
+    const existing = store.get(id);
+    if (isBuiltinSampleRoomWindow(existing)) {
+      return c.json(protectedBuiltinResponse(Date.now() - start), 403);
+    }
     const deleted = store.delete(id);
     if (!deleted) {
       return c.json(errorResponse("RADAR_CHAT_NOT_FOUND", "雷达聊天窗口不存在", Date.now() - start, 404), 404);

@@ -183,6 +183,24 @@ async function run() {
   });
   const sampleRoomJson = await json<{ success: boolean; data?: any; error?: any }>(sampleRoomResponse);
   check("built-in AI event sample room does not fail quota precheck", sampleRoomResponse.status === 200 && sampleRoomJson.success === true, JSON.stringify(sampleRoomJson.error ?? {}));
+  const sampleRenameBlockedResponse = await app.request(`/api/radar-chats/${sampleRoomJson.data?.id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: "被误改名的内置雷达" }),
+  });
+  const sampleRenameBlockedJson = await json<{ success: boolean; data?: any; error?: any }>(sampleRenameBlockedResponse);
+  check(
+    "built-in AI event sample room cannot be renamed through API",
+    sampleRenameBlockedResponse.status === 403 && sampleRenameBlockedJson.error?.code === "BUILTIN_RADAR_CHAT_PROTECTED",
+    JSON.stringify(sampleRenameBlockedJson.error ?? sampleRenameBlockedJson.data ?? {}),
+  );
+  const sampleDeleteBlockedResponse = await app.request(`/api/radar-chats/${sampleRoomJson.data?.id}`, { method: "DELETE" });
+  const sampleDeleteBlockedJson = await json<{ success: boolean; data?: any; error?: any }>(sampleDeleteBlockedResponse);
+  check(
+    "built-in AI event sample room cannot be deleted through API",
+    sampleDeleteBlockedResponse.status === 403 && sampleDeleteBlockedJson.error?.code === "BUILTIN_RADAR_CHAT_PROTECTED",
+    JSON.stringify(sampleDeleteBlockedJson.error ?? sampleDeleteBlockedJson.data ?? {}),
+  );
   for (let i = 1; i <= 3; i += 1) {
     const response = await app.request("/api/radar-chats", {
       method: "POST",
