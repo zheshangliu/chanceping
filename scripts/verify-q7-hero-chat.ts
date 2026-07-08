@@ -109,6 +109,19 @@ async function run() {
   check("hero chat no longer defaults public visitors to shared demo_user", !heroChatJs.includes('DEFAULT_USER_ID = "demo_user"'));
   check("hero chat local session keys are isolated by QA user id", heroChatJs.includes("chanceping_hero_radar_chat_state:${HERO_CHAT_USER_ID}") && heroChatJs.includes("chanceping_hero_radar_chat_window_id:${HERO_CHAT_USER_ID}"));
   check("custom radar title infers readable intent phrase", heroChatJs.includes("cleanRadarTitlePhrase") && heroChatJs.includes("想找|寻找|希望找|帮我找|盯一下|盯|需要"));
+  check(
+    "custom radar title no longer treats any AI or OPC wording as AI events",
+    heroChatJs.includes("isAiContestRadarText")
+      && heroChatJs.includes("hasContestIntent")
+      && heroChatJs.includes("hasAiContext")
+      && !heroChatJs.includes("/AI|赛事|比赛|Hackathon|黑客松|开发者|OPC/i"),
+  );
+  check(
+    "non AI-event prompt in built-in navigator detaches into custom window",
+    heroChatJs.includes("shouldDetachSampleRoomForMessage")
+      && heroChatJs.includes("createRadarChatWindowForDraft(text)")
+      && heroChatJs.includes("请先删除一个旧雷达窗口，再发送这条新需求"),
+  );
   check("hero chat can switch active chat window", heroChatJs.includes("switchHeroRadarWindow") && heroChatJs.includes("/api/radar-chats/${chatWindowId}"));
   check("sample room remains a protected built-in window", heroChatJs.includes("AI_EVENT_SAMPLE_ROOM") && heroChatJs.includes("isSampleRoom"));
   check("sidebar keeps distinct unbound chat windows", heroChatJs.includes("radar:${item.radarId}") && heroChatJs.includes("chat:${item.id}"));
@@ -154,6 +167,7 @@ async function run() {
   check("hero chat reset returns to home input instead of blank workspace", heroChatJs.includes("forceHomeEntry") && heroChatJs.includes("syncHeroEntryVisibility({ forceHomeEntry: true })"));
   check("hero chat exposes open existing radar window flow", heroChatJs.includes("openHeroRadarWindow") && heroChatJs.includes("继续编辑全球 AI 赛事导航"));
   check("opening AI event radar preloads demo prompt without auto-send", heroChatJs.includes("pendingFirstMessage = HERO_DEMO_PROMPT") && heroChatJs.includes("我已把默认需求放到底部输入框"));
+  check("custom first message can generate generic opportunity radar copy", heroChatJs.includes("生成${isAiContestRadarText(text) ? \" AI 赛事雷达\" : \"机会雷达\"}") && heroChatJs.includes(": \"机会雷达\"} V1.0"));
   check("custom radar window restores pending input after switching", heroChatJs.includes("windowData.pendingMessage") && heroChatJs.includes("pendingMessage: String(initialMessage || \"\")"));
   check("chat input draft persists before manual send", heroChatJs.includes("syncPendingInputMessage") && heroChatJs.includes("addEventListener(\"input\""));
   check("homepage typed prompt creates user-owned window", homeJs.includes("createNewHeroRadarWindow(text)") && heroChatJs.includes("reuseByRadarId: false"));
@@ -245,6 +259,12 @@ async function run() {
     heroChatJs.includes("parseJsonResponse")
       && heroChatJs.includes("content-type")
       && heroChatJs.includes("服务器返回了网页错误页"),
+  );
+  check(
+    "hero chat API helpers explain nginx gateway timeout separately",
+    heroChatJs.includes("GATEWAY_TIMEOUT")
+      && heroChatJs.includes("线上网关等待时间")
+      && heroChatJs.includes("改成长任务或提高网关等待时间"),
   );
   check("result page card grid CSS is responsive", styles.includes(".watch-opportunity-grid") && styles.includes("repeat(auto-fit, minmax(260px, 1fr))"));
   check("my radar cards hide raw last run status", !radarsJs.includes("上次运行状态"));

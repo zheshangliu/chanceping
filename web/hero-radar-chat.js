@@ -196,10 +196,13 @@
     const text = await res.text();
     if (!contentType.includes("application/json")) {
       const looksLikeHtml = /<html|<!doctype|<body/i.test(text);
-      const error = new Error(looksLikeHtml
-        ? "服务器返回了网页错误页，不是 JSON。请稍后重试，或检查线上服务是否已更新。"
-        : `服务器返回了非 JSON 响应：${text.slice(0, 120) || res.statusText}`);
-      error.code = "NON_JSON_RESPONSE";
+      const looksLikeGatewayTimeout = res.status === 504 || /504 Gateway Time-out|gateway time-out|upstream timed out/i.test(text);
+      const error = new Error(looksLikeGatewayTimeout
+        ? "这次搜索超过了线上网关等待时间。雷达已保留，你可以稍后重试；如果频繁出现，需要把线上搜索改成长任务或提高网关等待时间。"
+        : looksLikeHtml
+          ? "服务器返回了网页错误页，不是 JSON。请稍后重试，或检查线上服务是否已更新。"
+          : `服务器返回了非 JSON 响应：${text.slice(0, 120) || res.statusText}`);
+      error.code = looksLikeGatewayTimeout ? "GATEWAY_TIMEOUT" : "NON_JSON_RESPONSE";
       error.status = res.status;
       throw error;
     }
@@ -227,7 +230,7 @@
     const draft = heroRadarChatState.currentDraft;
     pendingChatWindowRequest = postJson("/api/radar-chats", {
       radarId: heroRadarChatState.boundRadarId || heroRadarChatState.copiedRadarId || undefined,
-      title: draft?.suggestedName || "AI 赛事雷达",
+      title: getDraftDisplayName(draft),
       userId: HERO_CHAT_USER_ID,
       reuseByRadarId: heroRadarChatState.boundRadarId ? true : false,
       draftRadarVersion: draft?.radarVersion?.version || "V1.0",
@@ -301,7 +304,7 @@
 
   function buildMemorySummaryFromDraft(extra = {}) {
     const version = heroRadarChatState.currentDraft?.radarVersion || {};
-    const summary = version.oneSentencePositioning || heroRadarChatState.currentDraft?.description || "AI 赛事雷达正在学习你的需求。";
+    const summary = version.oneSentencePositioning || heroRadarChatState.currentDraft?.description || "机会雷达正在学习你的需求。";
     return {
       summary,
       targetUser: formatReadableItem(version.targetUser),
@@ -368,10 +371,51 @@
     return windowData?.id === AI_EVENT_SAMPLE_ROOM.id || windowData?.radarId === AI_EVENT_SAMPLE_ROOM.id;
   }
 
+  function isAiContestRadarText(value) {
+    const raw = String(value || "");
+    if (!raw.trim()) return false;
+    const hasContestIntent = /赛事|比赛|竞赛|Hackathon|黑客松|马拉松|挑战赛|开发者挑战|可报名|提交作品|云资源|奖金赛/i.test(raw);
+    const hasAiContext = /AI|AIGC|Agent|智能|大模型|开发者|OPC|Vibe\s*Coding|云厂商/i.test(raw);
+    return hasContestIntent && hasAiContext;
+  }
+
+  function isAiContestRadarPayload(payload) {
+    const text = [
+      payload?.name,
+      payload?.oneSentencePositioning,
+      payload?.businessContext,
+      payload?.targetUser,
+      ...asArray(payload?.opportunityIntents),
+      ...asArray(payload?.highValueCriteria),
+      ...asArray(payload?.queryFamilies).map(formatReadableItem),
+    ].filter(Boolean).join(" ");
+    return isAiContestRadarText(text);
+  }
+
+  function getRadarKindLabel(payload) {
+    if (shouldUseHeroDemoReplay()) return "AI 赛事雷达";
+    return isAiContestRadarPayload(payload) ? "AI 赛事雷达" : "机会雷达";
+  }
+
+  function getDraftDisplayName(draft, fallbackText = "机会雷达") {
+    const value = draft?.suggestedName
+      || draft?.radarVersion?.oneSentencePositioning
+      || draft?.radarVersion?.name
+      || draft?.spec?.name
+      || inferRadarTitle(draft?.description);
+    return String(value || fallbackText).trim() || fallbackText;
+  }
+
+  function shouldDetachSampleRoomForMessage(text) {
+    return heroRadarChatState.boundRadarId === AI_EVENT_SAMPLE_ROOM.id
+      && !heroRadarChatState.currentDraft
+      && !isAiContestRadarText(text);
+  }
+
   function inferRadarTitle(text) {
     const raw = String(text || "").trim();
     if (!raw) return "新机会雷达";
-    if (/AI|赛事|比赛|Hackathon|黑客松|开发者|OPC/i.test(raw)) return "AI 赛事雷达";
+    if (isAiContestRadarText(raw)) return "AI 赛事雷达";
     if (/补贴|申报|政策|专精特新|高新/i.test(raw)) return "政策申报雷达";
     if (/客户|线索|BD|销售|渠道|代理/i.test(raw)) return "客户线索雷达";
     const intentMatch = raw.match(/(?:想找|寻找|希望找|帮我找|盯一下|盯|需要)([^。；;，,]{2,32})/);
@@ -657,7 +701,8 @@
 
   function buildReadableRadarTitle(payload) {
     const targetUser = formatReadableItem(payload?.targetUser).replace(/\s+/g, " ").trim();
-    const rawTitle = String(payload?.oneSentencePositioning || payload?.name || "AI 赛事雷达")
+    const radarKind = getRadarKindLabel(payload);
+    const rawTitle = String(payload?.oneSentencePositioning || payload?.name || radarKind)
       .replace(/机会机会雷达/g, "机会雷达")
       .replace(/雷达雷达/g, "雷达")
       .replace(/\s+/g, " ")
@@ -669,9 +714,9 @@
         .replace(/大湾区的\s*/g, "大湾区 ")
         .replace(/的$/, "")
         .slice(0, 18);
-      return `${cleanTarget} 的 AI 赛事雷达`.replace(/\s+/g, " ");
+      return `${cleanTarget}的${radarKind}`.replace(/\s+/g, " ");
     }
-    return rawTitle || "AI 赛事雷达";
+    return rawTitle || radarKind;
   }
 
   function renderDiffList(title, items) {
@@ -740,7 +785,7 @@
       .map((card) => ({
         title: card.title,
         level: card.visible_level || card.level || "待复核",
-        reason: card.match_reason || card.next_action || "与本版 AI 赛事雷达相关，建议打开来源复核。",
+        reason: card.match_reason || card.next_action || "与本版机会雷达相关，建议打开来源复核。",
       }));
     return {
       total: list.length,
@@ -910,7 +955,7 @@
       spec: confirmedSpec,
       profile: confirmedSpec.profile_summary || confirmedSpec.profile,
       radarVersion: draft.radarVersion,
-      suggestedName: draft.suggestedName || "AI 赛事雷达",
+      suggestedName: getDraftDisplayName(draft),
       opportunityCards: cards,
       sourceHintChecks: [],
       candidateAccounting: {
@@ -953,7 +998,7 @@
   async function runHeroLiveSearch(draft, confirmedSpec, version, progressMessage) {
     const search = await postJson("/api/search", {
       spec: confirmedSpec,
-      query: draft.description || draft.radarVersion?.oneSentencePositioning || "AI entrepreneur competition hackathon developer challenge cloud credits application",
+      query: draft.description || draft.radarVersion?.oneSentencePositioning || draft.suggestedName || "机会 合作 采购 招募 申请",
       ...(window.getChancePingSearchMode?.() ? { search_mode: window.getChancePingSearchMode() } : {}),
     });
     const cards = search.opportunityCards || [];
@@ -976,7 +1021,7 @@
       spec: confirmedSpec,
       profile: confirmedSpec.profile_summary || confirmedSpec.profile,
       radarVersion: draft.radarVersion,
-      suggestedName: draft.suggestedName || "AI 赛事雷达",
+      suggestedName: getDraftDisplayName(draft),
       opportunityCards: cards,
       sourceHintChecks,
       candidateAccounting: search.candidateAccounting,
@@ -1021,7 +1066,7 @@
         <article class="hero-radar-artifact compact" data-hero-radar-version="${escapeHtml(version)}">
           <div>
             <span class="hero-version-pill">${escapeHtml(version)}</span>
-            <strong>${escapeHtml(payload.oneSentencePositioning || payload.name || "AI 赛事雷达")}</strong>
+            <strong>${escapeHtml(payload.oneSentencePositioning || payload.name || getRadarKindLabel(payload))}</strong>
           </div>
           <span class="hero-artifact-note">已升级到 ${escapeHtml(currentVersion)}，请看下面的最新雷达。</span>
         </article>
@@ -1030,7 +1075,7 @@
     return `
       <article class="hero-radar-artifact" data-hero-radar-version="${escapeHtml(version)}">
         <div class="hero-artifact-topline">
-          <span class="hero-artifact-kicker">AI 赛事雷达</span>
+          <span class="hero-artifact-kicker">${escapeHtml(getRadarKindLabel(payload))}</span>
           <span class="hero-version-pill">${escapeHtml(version)}</span>
           <span class="hero-status-pill ${confirmed ? "confirmed" : "draft"}">${confirmed ? "已确认" : "待确认"}</span>
         </div>
@@ -1115,7 +1160,7 @@
         <div class="hero-modal-card">
           <button class="hero-modal-close" type="button" data-action="close-hero-modal">关闭</button>
           <div class="hero-artifact-topline">
-            <span class="hero-artifact-kicker">AI 赛事雷达</span>
+            <span class="hero-artifact-kicker">${escapeHtml(getRadarKindLabel(payload))}</span>
             <span class="hero-version-pill">${escapeHtml(version)}</span>
           </div>
           <h3>${escapeHtml(buildReadableRadarTitle(payload))}</h3>
@@ -1760,7 +1805,7 @@
       spec: data.spec,
       radarVersion: data.radarVersion || data.spec?.radar_version || {},
       radarDiff: data.radarDiff || null,
-      suggestedName: data.suggestedName || data.spec?.name || "AI 赛事雷达",
+      suggestedName: data.suggestedName || data.spec?.name || inferRadarTitle(description),
       description,
     };
   }
@@ -1772,7 +1817,7 @@
       heroRadarChatState.pendingFirstMessage = text;
       updateRadarChatWindow({ pendingMessage: text });
       if (heroRadarChatState.messages.length === 0) {
-        addMessage("assistant", "我已经把你的需求放到下方输入框里。等待你点击发送后，我再开始理解需求并生成 AI 赛事雷达。");
+        addMessage("assistant", `我已经把你的需求放到下方输入框里。等待你点击发送后，我再开始理解需求并生成${isAiContestRadarText(text) ? " AI 赛事雷达" : "机会雷达"}。`);
       } else {
         saveState();
         renderHeroRadarChat();
@@ -1783,6 +1828,25 @@
     }
     heroRadarChatState.isBusy = true;
     heroRadarChatState.pendingFirstMessage = "";
+    if (shouldDetachSampleRoomForMessage(text)) {
+      await loadRadarChatWindows();
+      if (isChatWindowQuotaFull()) {
+        heroRadarChatState.isBusy = false;
+        addMessage("assistant", `自定义雷达窗口已满 ${getActiveCustomWindowCount()}/${CHAT_WINDOW_LIMIT}，请先删除一个旧雷达窗口，再发送这条新需求。`);
+        renderHeroRadarChat();
+        return;
+      }
+      heroRadarChatState.messages = [];
+      heroRadarChatState.currentDraft = null;
+      heroRadarChatState.currentResult = null;
+      heroRadarChatState.confirmedVersion = null;
+      heroRadarChatState.copiedRadarId = null;
+      heroRadarChatState.chatWindowId = null;
+      heroRadarChatState.activeChatWindowId = null;
+      heroRadarChatState.boundRadarId = null;
+      heroRadarChatState.modal = null;
+      await createRadarChatWindowForDraft(text);
+    }
     addMessage("user", text);
     const chatWindowId = await ensureRadarChatWindow();
     if (heroRadarChatState.boundRadarId !== AI_EVENT_SAMPLE_ROOM.id && chatWindowId) {
@@ -1791,7 +1855,7 @@
     updateRadarChatWindow({ pendingMessage: "" });
     addMessage("assistant", heroRadarChatState.currentDraft
       ? "收到，Qwen 正在理解这次修改，并重新画一版雷达草案；你确认后我才会搜索。"
-      : "Qwen 正在理解并生成雷达，我会先把复杂人话整理成 AI 赛事雷达 V1.0。");
+      : `Qwen 正在理解并生成雷达，我会先把复杂人话整理成${isAiContestRadarText(text) ? " AI 赛事雷达" : "机会雷达"} V1.0。`);
     try {
       if (!heroRadarChatState.currentDraft) {
         const data = await postJson("/api/radars/generate", { description: text, chatWindowId });
@@ -1813,13 +1877,13 @@
           spec: data.spec,
           radarVersion: data.radarVersion,
           radarDiff: data.radarDiff,
-          suggestedName: data.suggestedName || heroRadarChatState.currentDraft.suggestedName || "AI 赛事雷达",
+          suggestedName: data.suggestedName || getDraftDisplayName(heroRadarChatState.currentDraft),
           description: `${heroRadarChatState.currentDraft.description || ""}\n${text}`.trim(),
         };
       }
       heroRadarChatState.currentDraft = normalizeHeroDemoRadarVersion(heroRadarChatState.currentDraft);
       updateRadarChatWindow({
-        title: heroRadarChatState.currentDraft.suggestedName || "AI 赛事雷达",
+        title: getDraftDisplayName(heroRadarChatState.currentDraft),
         draftRadarVersion: heroRadarChatState.currentDraft.radarVersion?.version || "V1.0",
       });
       persistMemorySummary({ lastFeedback: text });
@@ -1853,6 +1917,66 @@
     };
   }
 
+  function buildLiveProgressSteps() {
+    if (shouldUseHeroDemoReplay()) {
+      return [
+        "正在读取 AI 赛事雷达最近一次入库结果……",
+        "正在整理已保存机会卡：报名入口、截止时间、奖金和云资源字段……",
+        "正在按当前雷达画像挑出最值得先看的机会……",
+        "正在排除历史赛事和不适合 OPC 的弱线索……",
+        "正在把最近一次报告整理成聊天摘要……",
+        "正在生成本次演示报告和机会卡入口……",
+      ];
+    }
+    const radarVersion = heroRadarChatState.currentDraft?.radarVersion || {};
+    if (isAiContestRadarPayload(radarVersion)) {
+      return [
+        "Serper 正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台，Qwen 随后整理证据……",
+        "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
+        "正在筛选可报名、可提交作品、可申请资源的机会……",
+        "正在排除展会资讯、培训广告和学生专属结果……",
+        "正在核对来源可信度，避免把资讯当成机会……",
+        "Qwen 正在生成报告摘要、机会卡和 Markdown 报告……",
+      ];
+    }
+    return [
+      "Serper 正在按这版雷达搜索官方来源、采购/合作入口和行业平台，Qwen 随后整理证据……",
+      "正在读取优先来源正文：官方公告、采购页面、协会目录、平台入口和可信媒体线索……",
+      "正在筛选当前用户能行动的机会，排除纯资讯、广告和无行动入口页面……",
+      "正在核对来源可信度，避免把观察信号包装成已确认机会……",
+      "Qwen 正在生成报告摘要、机会卡和 Markdown 报告……",
+    ];
+  }
+
+  function buildLiveProgressLogMessages() {
+    if (shouldUseHeroDemoReplay()) {
+      return [
+        "回放模式：正在读取 AI 赛事雷达最近一次入库结果；不用刷新页面，我会持续更新这里。",
+        "数据整理：正在把已保存机会卡按截止时间、报名入口和奖励信息重新排序；不用刷新页面，我会持续更新这里。",
+        "机会筛选：正在挑出适合 OPC / AI 创业者先看的比赛和 Hackathon；不用刷新页面，我会持续更新这里。",
+        "报告整理：正在把最近一次报告压缩成聊天摘要、机会卡入口和本周行动建议；不用刷新页面，我会持续更新这里。",
+      ];
+    }
+    const radarVersion = heroRadarChatState.currentDraft?.radarVersion || {};
+    if (isAiContestRadarPayload(radarVersion)) {
+      return [
+        "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
+        "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
+        "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
+        "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
+        "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
+        "Qwen：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+      ];
+    }
+    return [
+      "Serper：正在按雷达画像执行多组行业查询；不用刷新页面，我会持续更新这里。",
+      "网页读取：正在优先读取官方来源、采购/合作入口和行业平台；不用刷新页面，我会持续更新这里。",
+      "证据整理：正在标记当前用户能行动的入口、待复核字段和来源类型；不用刷新页面，我会持续更新这里。",
+      "质量闸门：正在排除广告、纯资讯、无行动入口和对象错配结果；不用刷新页面，我会持续更新这里。",
+      "Qwen：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
+    ];
+  }
+
   async function confirmHeroRadar() {
     if (!heroRadarChatState.currentDraft || heroRadarChatState.isBusy) return;
     heroRadarChatState.isBusy = true;
@@ -1871,31 +1995,12 @@
       spec: confirmedSpec,
     };
     updateRadarChatWindow({
-      title: draft.suggestedName || "AI 赛事雷达",
+      title: getDraftDisplayName(draft),
       currentConfirmedRadarVersion: version,
       draftRadarVersion: version,
     });
     persistMemorySummary();
-    const progressSteps = [
-      shouldUseHeroDemoReplay()
-        ? "正在读取 AI 赛事雷达最近一次入库结果……"
-        : "Serper 正在搜索官方赛事页、云厂商开发者活动和 Hackathon 平台，Qwen 随后整理证据……",
-      shouldUseHeroDemoReplay()
-        ? "正在整理已保存机会卡：报名入口、截止时间、奖金和云资源字段……"
-        : "正在读取优先来源正文：Qwen、Devpost、DoraHacks、Lablab、Kaggle 和官方报名页……",
-      shouldUseHeroDemoReplay()
-        ? "正在按当前雷达画像挑出最值得先看的机会……"
-        : "正在筛选可报名、可提交作品、可申请资源的机会……",
-      shouldUseHeroDemoReplay()
-        ? "正在排除历史赛事和不适合 OPC 的弱线索……"
-        : "正在排除展会资讯、培训广告和学生专属结果……",
-      shouldUseHeroDemoReplay()
-        ? "正在把最近一次报告整理成聊天摘要……"
-        : "正在核对来源可信度，避免把资讯当成机会……",
-      shouldUseHeroDemoReplay()
-        ? "正在生成本次演示报告和机会卡入口……"
-        : "Qwen 正在生成报告摘要、机会卡和 Markdown 报告……",
-    ];
+    const progressSteps = buildLiveProgressSteps();
     const progressMessage = addMessage("assistant", `已确认 ${version}，我开始按这版雷达盯一次。`, {
       type: "progress",
       steps: progressSteps,
@@ -1927,22 +2032,7 @@
   function startProgressTicker(messageId, maxSteps) {
     let activeStepCount = 1;
     let logIndex = 0;
-    const progressLogMessages = shouldUseHeroDemoReplay()
-      ? [
-        "回放模式：正在读取 AI 赛事雷达最近一次入库结果；不用刷新页面，我会持续更新这里。",
-        "数据整理：正在把已保存机会卡按截止时间、报名入口和奖励信息重新排序；不用刷新页面，我会持续更新这里。",
-        "机会筛选：正在挑出适合 OPC / AI 创业者先看的比赛和 Hackathon；不用刷新页面，我会持续更新这里。",
-        "报告整理：正在把最近一次报告压缩成聊天摘要、机会卡入口和本周行动建议；不用刷新页面，我会持续更新这里。",
-      ]
-      : [
-        "Serper：正在执行 AI 赛事、Hackathon、云资源扶持等查询组合；不用刷新页面，我会持续更新这里。",
-        "搜索计划：优先保留 Devpost、DoraHacks、Lablab、Qwen Cloud、TRAE 和官方报名页；不用刷新页面，我会持续更新这里。",
-        "网页读取：正在读取优先来源正文，跳过视频、社媒和泛资讯页面；不用刷新页面，我会持续更新这里。",
-        "证据整理：正在标记报名入口、截止时间、参赛资格和待复核字段；不用刷新页面，我会持续更新这里。",
-        "质量闸门：正在排除展会资讯、培训广告、学生专属和已过期结果；不用刷新页面，我会持续更新这里。",
-        "Qwen：正在基于证据生成报告摘要、行动建议和风险提醒；不用刷新页面，我会持续更新这里。",
-        "报告生成：正在汇总 S/A/B/C 评级、材料清单和本周行动步骤；不用刷新页面，我会持续更新这里。",
-      ];
+    const progressLogMessages = buildLiveProgressLogMessages();
     const timerId = window.setInterval(() => {
       activeStepCount = Math.min(activeStepCount + 1, maxSteps);
       const nextLine = `${new Date().toLocaleTimeString()} ${progressLogMessages[logIndex % progressLogMessages.length]}`;
@@ -1979,7 +2069,7 @@
       spec: heroRadarChatState.currentDraft?.spec || {},
       profile: heroRadarChatState.currentDraft?.spec?.profile_summary || heroRadarChatState.currentDraft?.spec?.profile,
       radarVersion: heroRadarChatState.currentDraft?.radarVersion,
-      suggestedName: heroRadarChatState.currentDraft?.suggestedName || "AI 赛事雷达",
+      suggestedName: getDraftDisplayName(heroRadarChatState.currentDraft),
       opportunityCards: cards,
       sourceHintChecks: [],
       candidateAccounting: {
@@ -2024,7 +2114,7 @@
       spec: heroRadarChatState.currentDraft?.spec || {},
       profile: heroRadarChatState.currentDraft?.spec?.profile_summary || heroRadarChatState.currentDraft?.spec?.profile,
       radarVersion: heroRadarChatState.currentDraft?.radarVersion,
-      suggestedName: heroRadarChatState.currentDraft?.suggestedName || "AI 赛事雷达",
+      suggestedName: getDraftDisplayName(heroRadarChatState.currentDraft),
       opportunityCards: cards,
       sourceHintChecks: [],
       candidateAccounting: {
