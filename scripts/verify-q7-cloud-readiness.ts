@@ -57,6 +57,10 @@ check(
   "Q7W live custom radar diagnostic command is registered",
   scripts["q7w:live-custom-radar-10"] === "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=live tsx scripts/run-q7w-live-custom-radar-10-diagnostic.ts",
 );
+check(
+  "Q7X live multiversion custom radar diagnostic command is registered",
+  scripts["q7x:live-custom-radar-multiversion-10"] === "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=live tsx scripts/run-q7x-live-custom-radar-multiversion-10.ts",
+);
 
 [
   "verify:live",
@@ -64,6 +68,7 @@ check(
   "verify:q7:live-demo",
   "compare:live-llm-profiles",
   "q7w:live-custom-radar-10",
+  "q7x:live-custom-radar-multiversion-10",
   "CHANCEPING_LOAD_API_ENV=true",
   "CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true",
   "CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true",
@@ -241,6 +246,22 @@ check(
 check("Q7W live diagnostic writes report", q7wLiveDiagnostic.includes("Q7W_Live_Custom_Radar_10_Diagnostic.md"));
 check("Q7W live diagnostic stops after 3 consecutive failures", q7wLiveDiagnostic.includes("consecutiveFailures >= 3"));
 check("Q7W live diagnostic targets 9 of 10 pass-like scenarios", q7wLiveDiagnostic.includes("passLike >= 9"));
+
+const q7xLiveDiagnostic = read("scripts/run-q7x-live-custom-radar-multiversion-10.ts");
+check("Q7X live multiversion diagnostic exists", q7xLiveDiagnostic.length > 0);
+check("Q7X live multiversion diagnostic loads api.env before live imports", q7xLiveDiagnostic.includes("loadLocalApiEnv({ enabled: true })"));
+check(
+  "Q7X live multiversion diagnostic uses dynamic imports after env setup",
+  q7xLiveDiagnostic.includes("async function importAfterEnv")
+    && q7xLiveDiagnostic.includes('import("../src/api/app")')
+    && q7xLiveDiagnostic.includes('import("../src/search/provider-registry")')
+    && q7xLiveDiagnostic.indexOf("prepareLiveEnv();") < q7xLiveDiagnostic.indexOf("await importAfterEnv()"),
+);
+check("Q7X live multiversion diagnostic writes report", q7xLiveDiagnostic.includes("Q7X_Live_Custom_Radar_Multiversion_10_Report.md"));
+check("Q7X live multiversion diagnostic includes revision plan", q7xLiveDiagnostic.includes("revisionMessages") && q7xLiveDiagnostic.includes("/api/radars/revise"));
+check("Q7X live multiversion diagnostic includes V1.3 or V1.4 scenarios", q7xLiveDiagnostic.includes("expectedFinalVersion: \"V1.3\"") || q7xLiveDiagnostic.includes("expectedFinalVersion: \"V1.4\""));
+check("Q7X live multiversion diagnostic stops after 3 consecutive failures", q7xLiveDiagnostic.includes("consecutiveFailures >= 3"));
+check("Q7X live multiversion diagnostic targets 9 of 10 carded scenarios", q7xLiveDiagnostic.includes("carded >= 9"));
 
 const aliyunDeployScript = read("scripts/deploy-aliyun-acr.ts");
 check("Aliyun deploy script builds Docker image", aliyunDeployScript.includes("docker") && aliyunDeployScript.includes("build"));
