@@ -39,6 +39,7 @@ coverage/
 
 # Deployment artifacts
 artifacts/aliyun/
+artifacts/aliyun-workbench/
 
 # Environment（含真实 API Key，禁止提交）
 .env

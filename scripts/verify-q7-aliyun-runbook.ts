@@ -19,8 +19,11 @@ check("Aliyun runbook exists", existsSync(path), path);
 const text = existsSync(path) ? readFileSync(path, "utf8") : "";
 const envExamplePath = "docs/deployment/aliyun.env.example";
 check("Aliyun env example exists", existsSync(envExamplePath), envExamplePath);
+const ecsBuildDeployPath = "scripts/deploy-ecs-builddeploy.sh";
+check("ECS BuildDeploy script exists", existsSync(ecsBuildDeployPath), ecsBuildDeployPath);
 
 const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "utf8") : "";
+const ecsBuildDeploy = existsSync(ecsBuildDeployPath) ? readFileSync(ecsBuildDeployPath, "utf8") : "";
 
 [
   "CHANCEPING_LLM_PROFILE=contest",
@@ -36,6 +39,7 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "ut
   "verify:q7:aliyun-preflight",
   "verify:q7:aliyun-deploy-prereqs",
   "build:aliyun-image-tar",
+  "build:aliyun-workbench-bundle",
   "deploy:aliyun-acr",
   "CHANCEPING_ALIYUN_ACR_REGISTRY",
   "CHANCEPING_ALIYUN_IMAGE",
@@ -52,6 +56,16 @@ const envExample = existsSync(envExamplePath) ? readFileSync(envExamplePath, "ut
   "verify:all",
   "全球 AI 赛事导航",
   "/aievents",
+  "Workbench 手动上线 fallback",
+  "ECS 构建部署推荐路径",
+  "scripts/deploy-ecs-builddeploy.sh",
+  "bash scripts/deploy-ecs-builddeploy.sh",
+  "artifacts/aliyun-workbench",
+  "workbench-install.sh",
+  "workbench-enable-https.sh",
+  "CHANCEPING_NPM_REGISTRY",
+  "https://registry.npmmirror.com",
+  "aievents.chanceping.com",
 ].forEach((required) => {
   check(`runbook mentions ${required}`, text.includes(required));
 });
@@ -62,6 +76,10 @@ check("runbook documents one-command Aliyun preflight", /node --run verify:q7:al
 check("runbook documents strict Aliyun deploy prerequisite gate", /CHANCEPING_REQUIRE_ALIYUN_DEPLOY_READY=true node --run verify:q7:aliyun-deploy-prereqs/.test(text));
 check("runbook documents image tar export fallback", /node --run build:aliyun-image-tar/.test(text));
 check("runbook documents exported image artifact paths", /artifacts\/aliyun\/chanceping-aliyun-image\.tar/.test(text) && /chanceping-aliyun-image\.tar\.json/.test(text));
+check("runbook documents Workbench bundle fallback", /node --run build:aliyun-workbench-bundle/.test(text) && /bash \/tmp\/workbench-install\.sh/.test(text));
+check("runbook documents Workbench bundle artifact paths", /artifacts\/aliyun-workbench\/chanceping-workbench-YYYYMMDD-HHMMSS\.tar\.gz/.test(text) && /workbench-enable-https\.sh/.test(text));
+check("runbook documents ECS BuildDeploy path", /ECS 构建部署推荐路径/.test(text) && /bash scripts\/deploy-ecs-builddeploy\.sh/.test(text));
+check("runbook says ECS BuildDeploy avoids keys in command", /不要在 Git 仓库、流水线日志或部署命令里填写 API Key/.test(text));
 check("runbook documents ACR deploy command", /node --run deploy:aliyun-acr/.test(text));
 check("runbook documents ACR target variables", /CHANCEPING_ALIYUN_ACR_REGISTRY/.test(text) && /CHANCEPING_ALIYUN_IMAGE/.test(text));
 check("runbook documents safe ACR password stdin", /--password-stdin/.test(text) && /不打印密码/.test(text));
@@ -92,6 +110,22 @@ check("runbook references Aliyun env example", text.includes("docs/deployment/al
 
 check("Aliyun env example keeps API keys blank", !/API_KEY=[^\s#]+/.test(envExample));
 check("Aliyun env example does not mention DeepSeek commercial profile", !/deepseek|COMMERCIAL_LLM|CHANCEPING_LLM_PROFILE=commercial/i.test(envExample));
+
+[
+  "CHANCEPING_NPM_REGISTRY",
+  "https://registry.npmmirror.com",
+  "rsync -a --delete",
+  "--exclude \"api.env\"",
+  "--exclude \".env\"",
+  "systemctl restart chanceping",
+  "server_name chanceping.com www.chanceping.com",
+  "server_name aievents.chanceping.com",
+  "CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json",
+].forEach((required) => {
+  check(`ECS BuildDeploy script includes ${required}`, ecsBuildDeploy.includes(required));
+});
+
+check("ECS BuildDeploy script does not include obvious API key value", !/sk-[A-Za-z0-9_-]+|API_KEY=\S{8,}/.test(ecsBuildDeploy));
 
 console.log(`Q7 Aliyun runbook: ${pass} PASS / ${fail} FAIL`);
 process.exit(fail > 0 ? 1 : 0);

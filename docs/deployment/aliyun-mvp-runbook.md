@@ -218,6 +218,115 @@ node --run deploy:aliyun-acr
 CHANCEPING_DEPLOY_BASE_URL=https://your-aliyun-test-site.example.com node --run verify:q7:aliyun-remote-smoke
 ```
 
+## ECS 构建部署推荐路径
+
+如果已经把代码推到 GitHub / Gitee / Codeup，推荐使用阿里云 ECS 控制台的「构建部署」功能，让阿里云从 Git 仓库拉代码并在 ECS 内执行部署脚本。该路径比本机 SSH 稳定，也比直接上云效 Flow / ACR 更轻，适合作为 Workbench 首次上线后的常用发布方式。
+
+仓库内提供的部署脚本：
+
+```bash
+scripts/deploy-ecs-builddeploy.sh
+```
+
+在 ECS 构建部署任务中使用：
+
+```bash
+bash scripts/deploy-ecs-builddeploy.sh
+```
+
+该脚本默认要求在仓库根目录执行，会：
+
+- 安装 Node.js 22、Nginx、rsync 和基础依赖；
+- 使用 `CHANCEPING_NPM_REGISTRY`，默认 `https://registry.npmmirror.com`；
+- 将当前 Git 工作区复制到 `/opt/chanceping/releases/<timestamp>`；
+- 排除 `api.env`、`.env`、`node_modules`、`.git`、`artifacts`、搜索缓存和 Serper 预算文件；
+- 将 `data/`、`reports/`、`exports/` 持久化到 `/opt/chanceping/shared`；
+- 复用已有 `/etc/chanceping/chanceping.env`，没有时只创建安全默认模板；
+- 重启 `chanceping.service`；
+- 配置 Nginx：
+  - `chanceping.com` / `www.chanceping.com` -> 后端「盯机会」；
+  - `aievents.chanceping.com` -> 公开「全球 AI 赛事导航」。
+
+ECS 构建部署任务建议配置：
+
+- 代码源：GitHub / Gitee / Codeup 中的 ChancePing 仓库；
+- 分支：当前测试分支，例如 `rescue/mvp-codex`，稳定后再切到正式分支；
+- 构建/部署命令：`bash scripts/deploy-ecs-builddeploy.sh`；
+- 执行用户：root，或具备 `apt-get`、`systemctl`、`nginx` 写入权限的用户；
+- 首次执行后，在服务器上编辑 `/etc/chanceping/chanceping.env` 填入真实 Qwen / Serper Key，再重启服务；
+- 不要在 Git 仓库、流水线日志或部署命令里填写 API Key。
+
+如果部署任务拉取 GitHub 慢或不稳定，可以先用 Gitee / Codeup 镜像仓库；应用部署逻辑不需要改变。
+
+## Workbench 手动上线 fallback
+
+如果本地 SSH 因跨境链路或安全策略不可用，可以使用阿里云 Workbench 的浏览器远程连接完成首次部署。该路径不依赖本机直连 SSH，也不需要把 `api.env` 上传到服务器。
+
+本地先生成 Workbench 源码包：
+
+```bash
+node --run build:aliyun-workbench-bundle
+```
+
+默认产物：
+
+- `artifacts/aliyun-workbench/chanceping-workbench-YYYYMMDD-HHMMSS.tar.gz`
+- `artifacts/aliyun-workbench/workbench-install.sh`
+- `artifacts/aliyun-workbench/workbench-enable-https.sh`
+
+该源码包会排除 `api.env`、`.env`、`node_modules`、`.git`、`artifacts`、搜索缓存和 Serper 预算文件，只带必要源码、公开赛事数据、雷达 store 和报告 artifact。真实 Qwen / Serper Key 只在服务器 `/etc/chanceping/chanceping.env` 里填写。
+
+在 Workbench 里上传 `chanceping-workbench-*.tar.gz` 和 `workbench-install.sh` 到 `/tmp`，然后执行：
+
+```bash
+cd /tmp
+chmod +x /tmp/workbench-install.sh
+bash /tmp/workbench-install.sh /tmp/chanceping-workbench-YYYYMMDD-HHMMSS.tar.gz
+```
+
+安装脚本会：
+
+- 安装 Node.js 22、Nginx 和基础依赖；
+- 使用 `CHANCEPING_NPM_REGISTRY`，默认 `https://registry.npmmirror.com`，降低国内服务器依赖安装失败概率；
+- 将版本部署到 `/opt/chanceping/releases/<timestamp>`，并把 `/opt/chanceping/current` 指向当前版本；
+- 将 `data/`、`reports/`、`exports/` 迁移到 `/opt/chanceping/shared` 并用软链接持久化；
+- 如果 `/etc/chanceping/chanceping.env` 不存在，创建安全默认模板；
+- 创建 `chanceping.service` 并配置 Nginx：
+  - `chanceping.com` / `www.chanceping.com` -> 后端「盯机会」；
+  - `aievents.chanceping.com` -> 公开「全球 AI 赛事导航」。
+
+安装后在服务器上检查：
+
+```bash
+systemctl status chanceping --no-pager
+journalctl -u chanceping -n 120 --no-pager
+curl -fsS http://127.0.0.1:3000/health
+curl -I http://127.0.0.1:3000/aievents
+nginx -t
+```
+
+如果要启用真实 Qwen / Serper，只在服务器编辑：
+
+```bash
+nano /etc/chanceping/chanceping.env
+systemctl restart chanceping
+```
+
+不要把密钥写进仓库、聊天记录或上传包。
+
+域名配置建议：
+
+- `chanceping.com` -> ECS 公网 IP；
+- `www.chanceping.com` -> ECS 公网 IP；
+- `aievents.chanceping.com` -> ECS 公网 IP。
+
+DNS 生效且 HTTP 验证通过后，再通过 Workbench 运行 HTTPS helper：
+
+```bash
+chmod +x /tmp/workbench-enable-https.sh
+bash /tmp/workbench-enable-https.sh sunny251610056@gmail.com
+```
+
 ## 部署后远程 smoke
 
 部署完成并拿到测试站 URL 后运行：
