@@ -8,6 +8,7 @@
   const LAST_CHAT_WINDOW_KEY = `chanceping_hero_radar_chat_window_id:${HERO_CHAT_USER_ID}`;
   const CHAT_WINDOW_LIMIT = 3;
   const QUOTA_ERROR_CODE = "RADAR_CHAT_QUOTA_EXCEEDED";
+  const LONG_OPERATION_TIMEOUT_MS = 10 * 60 * 1000;
   const HERO_DEMO_PROMPT = "我是大湾区的 OPC / AI 产品创业者，正在打磨 ChancePing AI 赛事雷达 Demo。我想找未来 30-60 天内仍可报名、可提交项目或作品、适合个人开发者或小团队参加的 AI 比赛、AI Agent Hackathon、AI 创作赛事、AI IDE / Vibe Coding 比赛、云厂商开发者挑战、创业扶持和产品展示机会。请优先搜索 Qwen Cloud Hackathon、TRAE、Devpost、DoraHacks、Lablab.ai、Kaggle、阿里云、腾讯云、AWS、Google Cloud、Microsoft、GitHub、Hugging Face、Product Hunt、AI Grant、粤港澳大湾区和海外线上比赛，以及官方报名页、赛事官网、云厂商活动页和主办方公告。请排除展会资讯、培训广告、学生专属且 OPC 不能参加的比赛、已截止活动、纯新闻转载、社媒转帖和没有报名入口的页面。报告里请按 S/A/B/C 评级，给我报名截止、奖金或云资源、参赛资格、适合 ChancePing 的打法、材料清单、风险提醒，并明确本周先做哪三件事。";
   const AI_EVENT_SAMPLE_ROOM = {
     id: "ai-event-sample-room",
@@ -124,12 +125,32 @@
       .replace(/\s*\|\s*/g, " / ");
   }
 
-  async function postJson(url, body) {
-    const res = await fetch(url, {
+  async function fetchWithTimeout(url, init = {}, timeoutMs = LONG_OPERATION_TIMEOUT_MS) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, {
+        ...init,
+        signal: init.signal || controller.signal,
+      });
+    } catch (err) {
+      if (err?.name === "AbortError") {
+        const error = new Error("这次盯机会等待超过 10 分钟。雷达已保留，你可以稍后重试；如果线上仍反复超时，需要把线上网关等待时间延长到 10 分钟。");
+        error.code = "CLIENT_LONG_OPERATION_TIMEOUT";
+        throw error;
+      }
+      throw err;
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  async function postJson(url, body, options = {}) {
+    const res = await fetchWithTimeout(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+    }, options.timeoutMs || LONG_OPERATION_TIMEOUT_MS);
     const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
@@ -139,8 +160,8 @@
     return json.data;
   }
 
-  async function getJson(url) {
-    const res = await fetch(url);
+  async function getJson(url, options = {}) {
+    const res = await fetchWithTimeout(url, {}, options.timeoutMs || LONG_OPERATION_TIMEOUT_MS);
     const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
@@ -150,12 +171,12 @@
     return json.data;
   }
 
-  async function patchJson(url, body) {
-    const res = await fetch(url, {
+  async function patchJson(url, body, options = {}) {
+    const res = await fetchWithTimeout(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+    }, options.timeoutMs || LONG_OPERATION_TIMEOUT_MS);
     const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
@@ -165,8 +186,8 @@
     return json.data;
   }
 
-  async function deleteJson(url) {
-    const res = await fetch(url, { method: "DELETE" });
+  async function deleteJson(url, options = {}) {
+    const res = await fetchWithTimeout(url, { method: "DELETE" }, options.timeoutMs || LONG_OPERATION_TIMEOUT_MS);
     const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
@@ -176,12 +197,12 @@
     return json.data;
   }
 
-  async function putJson(url, body) {
-    const res = await fetch(url, {
+  async function putJson(url, body, options = {}) {
+    const res = await fetchWithTimeout(url, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+    }, options.timeoutMs || LONG_OPERATION_TIMEOUT_MS);
     const json = await parseJsonResponse(res);
     if (!json.success) {
       const error = new Error(json.error?.message || "请求失败");
@@ -198,9 +219,9 @@
       const looksLikeHtml = /<html|<!doctype|<body/i.test(text);
       const looksLikeGatewayTimeout = res.status === 504 || /504 Gateway Time-out|gateway time-out|upstream timed out/i.test(text);
       const error = new Error(looksLikeGatewayTimeout
-        ? "这次搜索超过了线上网关等待时间。雷达已保留，你可以稍后重试；如果频繁出现，需要把线上搜索改成长任务或提高网关等待时间。"
+        ? "这次搜索超过了线上网关等待时间。雷达已保留，你可以稍后重试；如果频繁出现，需要改成长任务或提高网关等待时间到 10 分钟。"
         : looksLikeHtml
-          ? "服务器返回了网页错误页，不是 JSON。请稍后重试，或检查线上服务是否已更新。"
+          ? "服务器返回了网页错误页，不是 JSON。雷达已保留，你可以稍后重试；如果刚刚更新过线上服务，请检查网关是否允许 10 分钟长请求。"
           : `服务器返回了非 JSON 响应：${text.slice(0, 120) || res.statusText}`);
       error.code = looksLikeGatewayTimeout ? "GATEWAY_TIMEOUT" : "NON_JSON_RESPONSE";
       error.status = res.status;

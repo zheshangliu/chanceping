@@ -246,7 +246,7 @@ async function run() {
     "result page adjustment returns to the radar chat window",
     watchResultJs.includes("openRadarChatFromResultFeedback")
       && watchResultJs.includes("window.openHeroRadarFromResultFeedback")
-      && watchResultJs.indexOf("window.openHeroRadarFromResultFeedback") < watchResultJs.indexOf("window.showRadarRevisionFromResultFeedback"),
+      && !watchResultJs.includes("window.showRadarRevisionFromResultFeedback"),
   );
   check(
     "hero chat exposes result feedback entry for result page",

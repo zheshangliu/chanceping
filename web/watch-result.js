@@ -2,6 +2,7 @@
   "use strict";
 
   const LAST_WATCH_RESULT_KEY = "chanceping:last-watch-result";
+  const LONG_OPERATION_TIMEOUT_MS = 10 * 60 * 1000;
   let currentResult = null;
 
   function escapeHtml(value) {
@@ -137,15 +138,7 @@
       btn.addEventListener("click", retryCurrentSearch);
     });
     document.getElementById("btn-adjust-watch-profile")?.addEventListener("click", () => {
-      if (window.openHeroRadarFromResultFeedback) {
-        openRadarChatFromResultFeedback();
-        return;
-      }
-      if (window.showRadarRevisionFromResultFeedback) {
-        openRadarResultFeedback();
-        return;
-      }
-      if (window.showRadarProfileDraftFromResult) window.showRadarProfileDraftFromResult(currentResult);
+      openRadarChatFromResultFeedback();
     });
     document.getElementById("btn-copy-markdown")?.addEventListener("click", () => copyMarkdown(markdown));
   }
@@ -165,26 +158,17 @@
     return text;
   }
 
-  function openRadarResultFeedback() {
-    if (!currentResult) return;
-    const rejectedCardTitles = (currentResult.opportunityCards || [])
-      .slice(0, 3)
-      .map((card) => card.title)
-      .filter(Boolean);
-    if (window.showRadarRevisionFromResultFeedback) {
-      window.showRadarRevisionFromResultFeedback({
-        ...currentResult,
-        resultFeedback: {
-          rejectedCardTitles,
-          rejectedReason: "这些结果不符合我想要的机会类型或行动入口",
-          freeText: "这些结果不对，请先修改雷达策略，再让我确认新版雷达。",
-        },
-      });
-    }
-  }
-
   function openRadarChatFromResultFeedback() {
-    if (!currentResult || !window.openHeroRadarFromResultFeedback) return;
+    if (!currentResult) return;
+    if (!window.openHeroRadarFromResultFeedback) {
+      if (window.switchTab) window.switchTab("home");
+      if (window.showToast) {
+        showToast(currentBackendLanguage() === "en"
+          ? "Open the radar chat window and continue there."
+          : "请回到雷达聊天窗口继续修改，我会先升级雷达再让你确认。", "warning");
+      }
+      return;
+    }
     const rejectedCardTitles = (currentResult.opportunityCards || [])
       .slice(0, 3)
       .map((card) => card.title)
@@ -660,6 +644,9 @@
             <p>${escapeHtml(isLive
               ? (isEnglish ? "Live search failed: " : "Live 真实搜索失败：")
               : (isEnglish ? "Radar run failed: " : "盯机会失败："))}${escapeHtml(err.message)}</p>
+            <p class="placeholder">${escapeHtml(isEnglish
+              ? "The radar has been kept. You do not need to describe it again; adjust it in the chat window or retry later."
+              : "雷达已保留，不用重新描述。你可以回到聊天窗口调整雷达，或稍后重试。")}</p>
             ${isLive ? `<button id="btn-switch-demo-mode" class="btn-secondary">${escapeHtml(backendText("switchDemoMode", "切回演示数据查看流程"))}</button><p class="placeholder">${escapeHtml(isEnglish ? "Demo data is clearly marked and will not be presented as real search results." : "演示数据会明确标记为演示 / 测试数据，不会伪装成真实搜索结果。")}</p>` : ""}
           </div>
         `;
@@ -857,13 +844,60 @@
     }
   }
 
+  async function fetchWithTimeout(url, init = {}, timeoutMs = LONG_OPERATION_TIMEOUT_MS) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, {
+        ...init,
+        signal: init.signal || controller.signal,
+      });
+    } catch (err) {
+      if (err?.name === "AbortError") {
+        const error = new Error(currentBackendLanguage() === "en"
+          ? "This run waited more than 10 minutes. The radar has been kept; retry later or continue editing it in the chat window."
+          : "这次盯机会等待超过 10 分钟。雷达已保留，不用重新描述；你可以稍后重试，或回聊天窗口继续调整。");
+        error.code = "CLIENT_LONG_OPERATION_TIMEOUT";
+        throw error;
+      }
+      throw err;
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  async function parseJsonResponse(res) {
+    const contentType = (res.headers.get("content-type") || "").toLowerCase();
+    const text = await res.text();
+    if (!contentType.includes("application/json")) {
+      const looksLikeHtml = /<html|<!doctype|<body/i.test(text);
+      const looksLikeGatewayTimeout = res.status === 504 || /504 Gateway Time-out|gateway time-out|upstream timed out/i.test(text);
+      const error = new Error(looksLikeGatewayTimeout
+        ? "这次搜索超过了线上网关等待时间。雷达已保留，不用重新描述；你可以稍后重试，或回聊天窗口继续调整。"
+        : looksLikeHtml
+          ? "服务器返回了网页错误页，不是 JSON。雷达已保留，不用重新描述；请稍后重试或检查线上网关。"
+          : `服务器返回了非 JSON 响应：${text.slice(0, 120) || res.statusText}`);
+      error.code = looksLikeGatewayTimeout ? "GATEWAY_TIMEOUT" : "NON_JSON_RESPONSE";
+      error.status = res.status;
+      throw error;
+    }
+    try {
+      return JSON.parse(text || "{}");
+    } catch {
+      const error = new Error("服务器返回的 JSON 无法解析，请稍后重试。");
+      error.code = "INVALID_JSON_RESPONSE";
+      error.status = res.status;
+      throw error;
+    }
+  }
+
   async function postJson(url, body) {
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const json = await res.json();
+    const json = await parseJsonResponse(res);
     if (!json.success) throw new Error(json.error?.message || "请求失败");
     return json;
   }

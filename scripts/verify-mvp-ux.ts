@@ -97,8 +97,8 @@ check("来源检查状态覆盖新旧口径", ["checked_with_results", "checked_
 check("live 失败或结果不足提示可切回演示数据", watchResultJs.includes("Live 真实搜索失败") && watchResultJs.includes("切回演示数据查看流程"));
 check("失败或无结果仍可保存雷达", watchResultJs.includes("本轮真实搜索结果不足，但雷达已生成") && watchResultJs.includes("runOutcome") && watchResultJs.includes("保存为长期雷达"));
 check("失败或无结果提供调整策略和重试搜索", watchResultJs.includes("调整雷达策略") && watchResultJs.includes("重试搜索"));
-check("Q7 result page has unified radar feedback entry", watchResultJs.includes("调整雷达画像") && watchResultJs.includes("openRadarResultFeedback"));
-check("Q7 result feedback dispatches radar revision", watchResultJs.includes("openRadarResultFeedback"));
+check("Q7 result page has unified radar feedback entry", watchResultJs.includes("调整雷达画像") && watchResultJs.includes("openRadarChatFromResultFeedback"));
+check("Q7 result feedback dispatches radar revision", watchResultJs.includes("openRadarChatFromResultFeedback") && watchResultJs.includes("window.openHeroRadarFromResultFeedback"));
 check("Markdown 报告默认摘要并可展开", watchResultJs.includes("报告摘要") && watchResultJs.includes("查看完整 Markdown 报告"));
 check("Markdown 支持复制", watchResultJs.includes("复制 Markdown"));
 check("保存按钮文案说明持续盯", watchResultJs.includes("保存为长期雷达，之后持续盯"));

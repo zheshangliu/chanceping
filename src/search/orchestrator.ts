@@ -64,6 +64,13 @@ import { rankCandidateResults } from "./candidate-ranking";
 import { assessCandidateSourceIntegrity, buildPrimarySourceRecoveryQueries } from "./primary-source-recovery";
 import { prioritizeEvidenceReadCandidates } from "./evidence-read-priority";
 
+function readPositiveIntegerEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (!raw) return fallback;
+  const value = Number(raw);
+  return Number.isFinite(value) && value > 0 ? Math.floor(value) : fallback;
+}
+
 /** 搜索编排器配置 */
 export interface SearchOrchestratorConfig {
   /** LLM 适配器（Mock 或真实） */
@@ -1400,7 +1407,7 @@ export class SearchOrchestrator {
     if (this.dataMode === "live" && providerRouting && this.enableContentFetch && evidenceReadCandidates.length > 0) {
       liveEvidence = await fetchLiveEvidence(evidenceReadCandidates, {
         maxUrls: evidenceReadCandidates.length,
-        timeoutMs: 8000,
+        timeoutMs: readPositiveIntegerEnv("CHANCEPING_LIVE_EVIDENCE_TIMEOUT_MS", 30000),
       });
       openedUrls.push(...liveEvidence.openedUrls);
     }

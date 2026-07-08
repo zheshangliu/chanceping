@@ -85,10 +85,10 @@ async function verifyVisiblePages(): Promise<void> {
   const joined = pages.map((page) => page.body).join("\n");
   check("remote visible pages do not mention DeepSeek", !/DeepSeek/i.test(joined));
   [
-    "Qwen 正在理解并生成雷达",
-    "Qwen 正在画雷达",
-    "Serper 正在搜索机会，Qwen 随后整理证据",
-    "Qwen 正在生成机会报告",
+    "盯机会正在理解并生成雷达",
+    "盯机会正在画雷达",
+    "盯机会正在搜索机会并整理证据",
+    "盯机会正在生成机会报告",
     "全球 AI 赛事导航",
   ].forEach((phrase) => {
     check(`remote visible pages include ${phrase}`, joined.includes(phrase));

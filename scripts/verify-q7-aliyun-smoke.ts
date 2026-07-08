@@ -98,11 +98,11 @@ async function verifyBackendQwenWording(app: ReturnType<typeof createApp>) {
   check("backend visible pages do not mention DeepSeek", deepSeekPages.length === 0, deepSeekPages.join(", "));
 
   [
-    "Qwen 正在理解并生成雷达",
-    "Qwen 正在画雷达",
-    "Serper 正在搜索机会，Qwen 随后整理证据",
-    "Qwen 正在生成机会报告",
-    "Qwen 正在生成报告",
+    "盯机会正在理解并生成雷达",
+    "盯机会正在画雷达",
+    "盯机会正在搜索机会并整理证据",
+    "盯机会正在生成机会报告",
+    "盯机会正在生成报告",
   ].forEach((phrase) => {
     check(`backend visible pages include ${phrase}`, visibleText.includes(phrase));
   });
