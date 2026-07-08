@@ -63,6 +63,16 @@ async function clickButtonByText(page: any, text: string): Promise<boolean> {
   }, text);
 }
 
+async function clickButtonBySelector(page: any, selector: string): Promise<boolean> {
+  return await page.evaluate((buttonSelector: string) => {
+    const doc = (globalThis as any).document;
+    const button = doc.querySelector(buttonSelector) as any;
+    if (!button) return false;
+    button.click();
+    return true;
+  }, selector);
+}
+
 async function main(): Promise<void> {
   let puppeteer: any;
   try {
@@ -207,7 +217,7 @@ async function main(): Promise<void> {
     if (reportModalButtons < 1) fail("report artifact should expose centered markdown modal button");
 
     currentStage = "click view cards";
-    const clickedCards = await clickButtonByText(page, "查看本次机会卡");
+    const clickedCards = await clickButtonBySelector(page, "[data-action='view-hero-cards']");
     if (!clickedCards) fail("view cards button not clickable");
     currentStage = "wait watch result panel";
     await page.waitForSelector("#panel-watch-result.active", { timeout: 10_000 });
