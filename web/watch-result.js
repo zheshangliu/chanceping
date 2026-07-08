@@ -17,6 +17,14 @@
     if (window.switchTab) window.switchTab("watch-result");
   }
 
+  function currentBackendLanguage() {
+    return window.CHANCEPING_BACKEND_I18N?.getLanguage?.() || "zh";
+  }
+
+  function backendText(key, fallback) {
+    return window.CHANCEPING_BACKEND_I18N?.t?.(key) || fallback || key;
+  }
+
   function persistWatchResult(result) {
     if (!result) return;
     try {
@@ -65,15 +73,15 @@
     const hasRunIssue = runOutcome.status && runOutcome.status !== "succeeded";
     const actionHtml = result.radarId ? `
       <div class="watch-action-row saved-radar-actions">
-        <button id="btn-view-saved-radar-detail" class="btn-primary">查看本次雷达详情</button>
-        <button id="btn-back-to-radar-list" class="btn-secondary">返回我的雷达列表</button>
-        <button id="btn-adjust-watch-profile" class="btn-secondary">调整雷达画像</button>
+        <button id="btn-view-saved-radar-detail" class="btn-primary">${escapeHtml(backendText("viewRadarDetail", "查看本次雷达详情"))}</button>
+        <button id="btn-back-to-radar-list" class="btn-secondary">${escapeHtml(backendText("backToRadarList", "返回我的雷达列表"))}</button>
+        <button id="btn-adjust-watch-profile" class="btn-secondary">${escapeHtml(backendText("adjustRadarProfile", "调整雷达画像"))}</button>
       </div>
     ` : `
       <div class="watch-action-row">
-        <button id="btn-save-watch-radar" class="btn-primary">保存为长期雷达，之后持续盯</button>
-        <button id="btn-adjust-watch-profile" class="btn-secondary">调整雷达画像</button>
-        ${hasRunIssue ? '<button id="btn-retry-watch-search" class="btn-secondary">重试搜索</button>' : ""}
+        <button id="btn-save-watch-radar" class="btn-primary">${escapeHtml(currentBackendLanguage() === "en" ? "Save as long-term radar" : "保存为长期雷达，之后持续盯")}</button>
+        <button id="btn-adjust-watch-profile" class="btn-secondary">${escapeHtml(backendText("adjustRadarProfile", "调整雷达画像"))}</button>
+        ${hasRunIssue ? `<button id="btn-retry-watch-search" class="btn-secondary">${escapeHtml(backendText("retrySearch", "重试搜索"))}</button>` : ""}
       </div>
     `;
     root.innerHTML = `
@@ -85,7 +93,7 @@
       <div class="watch-result-actions">
         <div class="watch-save-copy">
           ${actionHtml}
-          <p>下次不用重新描述，系统会按这个画像继续找机会。</p>
+          <p>${escapeHtml(backendText("saveHint", "下次不用重新描述，系统会按这个画像继续找机会。"))}</p>
           ${result.savedMessage ? `<p class="save-success">${escapeHtml(result.savedMessage)}</p>` : ""}
         </div>
       </div>
@@ -93,31 +101,31 @@
         <section class="watch-opportunity-section">
           <div class="watch-section-heading">
             <div>
-              <h4>机会管道看板</h4>
-              <p>先看能立刻行动的，再复核资格、持续观察，最后保留本轮降权原因。</p>
+              <h4>${escapeHtml(backendText("resultBoard", "机会管道看板"))}</h4>
+              <p>${escapeHtml(backendText("resultBoardDesc", "先看能立刻行动的，再复核资格、持续观察，最后保留本轮降权原因。"))}</p>
             </div>
           </div>
           ${renderTopActionStrip(cards)}
           ${renderOpportunityPipeline(cards, result)}
           <details class="watch-all-cards-details">
-            <summary>查看全部机会卡</summary>
+            <summary>${escapeHtml(backendText("allCards", "查看全部机会卡"))}</summary>
             ${renderOpportunityCardGrid(cards, result)}
           </details>
         </section>
         <section class="watch-report-section">
           <div class="watch-report-title-row">
-            <h4>报告摘要</h4>
-            <button id="btn-copy-markdown" class="btn-secondary">复制 Markdown</button>
+            <h4>${escapeHtml(backendText("reportSummary", "报告摘要"))}</h4>
+            <button id="btn-copy-markdown" class="btn-secondary">${escapeHtml(backendText("copyMarkdown", "复制 Markdown"))}</button>
           </div>
           ${renderReportSummary(markdown, cards)}
           <details class="markdown-details">
-            <summary>查看完整 Markdown 报告</summary>
+            <summary>${escapeHtml(backendText("fullMarkdownReport", "查看完整 Markdown 报告"))}</summary>
             <pre class="watch-report-preview">${escapeHtml(markdown)}</pre>
           </details>
         </section>
         <section>
-          <h4>本轮重点检查来源</h4>
-          ${sourceHintChecks.length === 0 ? '<p class="placeholder">本轮未指定额外信号源。</p>' : sourceHintChecks.map(renderSourceHintCheck).join("")}
+          <h4>${escapeHtml(backendText("sourceChecks", "本轮重点检查来源"))}</h4>
+          ${sourceHintChecks.length === 0 ? `<p class="placeholder">${escapeHtml(backendText("noExtraSources", "本轮未指定额外信号源。"))}</p>` : sourceHintChecks.map(renderSourceHintCheck).join("")}
         </section>
       </div>
     `;
@@ -153,7 +161,7 @@
 
   function displayDeadline(value) {
     const text = String(value || "").trim();
-    if (!text || text === "9999-12-31" || text === "0000-00-00" || /^9999-12-31/.test(text)) return "见官网";
+    if (!text || text === "9999-12-31" || text === "0000-00-00" || /^9999-12-31/.test(text)) return currentBackendLanguage() === "en" ? "See official site" : "见官网";
     return text;
   }
 
@@ -195,37 +203,40 @@
     const outcome = result?.runOutcome || {};
     if (!outcome.status || outcome.status === "succeeded") return "";
     const isLive = result?.searchMode === "live" || outcome.canSwitchToDemo;
+    const isEnglish = currentBackendLanguage() === "en";
     const message = outcome.message || (isLive
-      ? "本轮真实搜索结果不足，但雷达已生成。你可以先保存这个雷达，之后继续盯机会。"
-      : "本轮搜索结果不足，但雷达已生成。你可以先保存这个雷达，之后继续盯机会。");
+      ? (isEnglish ? "This live run did not find enough matching results, but the radar was generated. You can save it and keep monitoring." : "本轮真实搜索结果不足，但雷达已生成。你可以先保存这个雷达，之后继续盯机会。")
+      : (isEnglish ? "This run did not find enough matching results, but the radar was generated. You can save it and keep monitoring." : "本轮搜索结果不足，但雷达已生成。你可以先保存这个雷达，之后继续盯机会。"));
     return `
       <div class="watch-run-outcome ${escapeHtml(outcome.status)}">
-        <strong>${isLive ? "本轮真实搜索结果不足，但雷达已生成" : "本轮搜索结果不足，但雷达已生成"}</strong>
+        <strong>${escapeHtml(isLive
+          ? (isEnglish ? "Live results were limited, but the radar was generated" : "本轮真实搜索结果不足，但雷达已生成")
+          : (isEnglish ? "Results were limited, but the radar was generated" : "本轮搜索结果不足，但雷达已生成"))}</strong>
         <p>${escapeHtml(message)}</p>
-        <p class="placeholder">可以选择保存为长期雷达、调整雷达策略，或重试搜索。</p>
+        <p class="placeholder">${escapeHtml(isEnglish ? "You can save it as a long-term radar, adjust the radar strategy, or retry the search." : "可以选择保存为长期雷达、调整雷达策略，或重试搜索。")}</p>
       </div>
     `;
   }
 
   function renderSourceHintCheck(item) {
     const label = {
-      checked: "搜索发现",
-      no_results: "待复核，暂无结果",
-      failed: "待复核",
-      invalid_url: "待复核，无效网址",
-      name_only: "来源名称，待复核",
-      checked_with_results: "搜索发现，有结果",
-      checked_no_results: "待复核，暂无结果",
-      not_checked: "待复核，未检查",
-    }[item.status] || item.status || "未知";
+      checked: currentBackendLanguage() === "en" ? "Search discovery" : "搜索发现",
+      no_results: currentBackendLanguage() === "en" ? "Needs review, no results" : "待复核，暂无结果",
+      failed: currentBackendLanguage() === "en" ? "Needs review" : "待复核",
+      invalid_url: currentBackendLanguage() === "en" ? "Needs review, invalid URL" : "待复核，无效网址",
+      name_only: currentBackendLanguage() === "en" ? "Source name, needs review" : "来源名称，待复核",
+      checked_with_results: currentBackendLanguage() === "en" ? "Search discovery, has results" : "搜索发现，有结果",
+      checked_no_results: currentBackendLanguage() === "en" ? "Needs review, no results" : "待复核，暂无结果",
+      not_checked: currentBackendLanguage() === "en" ? "Needs review, not checked" : "待复核，未检查",
+    }[item.status] || item.status || (currentBackendLanguage() === "en" ? "Unknown" : "未知");
     const target = item.sourceUrl
       ? `<a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(item.sourceName || item.sourceUrl)}</a>`
-      : `<span>${escapeHtml(item.sourceName || "未命名来源")}</span>`;
+      : `<span>${escapeHtml(item.sourceName || (currentBackendLanguage() === "en" ? "Unnamed source" : "未命名来源"))}</span>`;
     return `
       <div class="source-hint-check">
         ${target}
         <span>${escapeHtml(label)}</span>
-        <small>${escapeHtml(item.resultCount || 0)} 条结果</small>
+        <small>${escapeHtml(item.resultCount || 0)} ${escapeHtml(currentBackendLanguage() === "en" ? "results" : "条结果")}</small>
       </div>
     `;
   }
@@ -244,26 +255,26 @@
     const lanes = [
       {
         key: "immediate",
-        title: "立即行动",
-        desc: "建议本周优先打开官方入口，复核报名、提交作品或申请资源路径。",
+        title: backendText("immediateAction", "立即行动"),
+        desc: backendText("immediateActionDesc", "建议本周优先打开官方入口，复核报名、提交作品或申请资源路径。"),
         items: [],
       },
       {
         key: "review",
-        title: "复核资格",
-        desc: "方向匹配，但还需要确认资格、费用、截止时间或主办方字段。",
+        title: backendText("reviewEligibility", "复核资格"),
+        desc: backendText("reviewEligibilityDesc", "方向匹配，但还需要确认资格、费用、截止时间或主办方字段。"),
         items: [],
       },
       {
         key: "monitor",
-        title: "持续观察",
-        desc: "可作为下一轮监控线索，不直接包装成已确认机会。",
+        title: backendText("monitorSignals", "持续观察"),
+        desc: backendText("monitorSignalsDesc", "可作为下一轮监控线索，不直接包装成已确认机会。"),
         items: [],
       },
       {
         key: "rejected",
-        title: "淘汰原因",
-        desc: "低行动性、弱页面、过期或与当前雷达不匹配的结果。",
+        title: backendText("downgradeReasons", "淘汰原因"),
+        desc: backendText("downgradeReasonsDesc", "低行动性、弱页面、过期或与当前雷达不匹配的结果。"),
         items: [],
       },
     ];
@@ -273,7 +284,7 @@
       laneMap[key]?.items.push(card);
     });
     return `
-      <div class="watch-pipeline-board" aria-label="机会管道看板">
+      <div class="watch-pipeline-board" aria-label="${escapeHtml(backendText("resultBoard", "机会管道看板"))}">
         ${lanes.map((lane) => `
           <article class="watch-pipeline-lane lane-${escapeHtml(lane.key)}">
             <header>
@@ -317,9 +328,9 @@
 
   function renderPipelineCard(card, laneKey) {
     const url = card.official_source_url || card.url || "";
-    const domain = getSourceDomain(url) || "待复核来源";
+    const domain = getSourceDomain(url) || (currentBackendLanguage() === "en" ? "Source to review" : "待复核来源");
     const level = String(card.visible_level || "C").trim().toUpperCase();
-    const title = card.title || "未命名机会";
+    const title = card.title || (currentBackendLanguage() === "en" ? "Unnamed opportunity" : "未命名机会");
     const nextAction = card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || getPipelineDefaultAction(laneKey);
     const reason = toCustomerEvidenceText(card.match_reason || card.fitReason || card.ai_analysis || card.relevance_reason || "");
     return `
@@ -337,48 +348,48 @@
 
   function getPipelineEmptyCopy(laneKey) {
     const copy = {
-      immediate: "本轮暂未形成强行动项。",
-      review: "暂无需要单独复核的候选。",
-      monitor: "暂无观察信号。",
-      rejected: "暂无明确淘汰项。",
+      immediate: currentBackendLanguage() === "en" ? "No strong action item this round." : "本轮暂未形成强行动项。",
+      review: currentBackendLanguage() === "en" ? "No candidates need separate review." : "暂无需要单独复核的候选。",
+      monitor: currentBackendLanguage() === "en" ? "No monitor signals." : "暂无观察信号。",
+      rejected: currentBackendLanguage() === "en" ? "No clear downgrade items." : "暂无明确淘汰项。",
     };
-    return copy[laneKey] || "暂无结果。";
+    return copy[laneKey] || (currentBackendLanguage() === "en" ? "No results." : "暂无结果。");
   }
 
   function getPipelineDefaultAction(laneKey) {
     const copy = {
-      immediate: "打开来源，复核报名入口和截止时间。",
-      review: "先复核资格、费用、截止时间和主办方。",
-      monitor: "加入下一轮监控关键词。",
-      rejected: "本轮不行动，仅保留原因。",
+      immediate: currentBackendLanguage() === "en" ? "Open the source and verify entry path and deadline." : "打开来源，复核报名入口和截止时间。",
+      review: currentBackendLanguage() === "en" ? "Review eligibility, fees, deadline, and organizer first." : "先复核资格、费用、截止时间和主办方。",
+      monitor: currentBackendLanguage() === "en" ? "Add to next-round monitoring keywords." : "加入下一轮监控关键词。",
+      rejected: currentBackendLanguage() === "en" ? "No action this round; keep only the reason." : "本轮不行动，仅保留原因。",
     };
-    return copy[laneKey] || "先复核来源。";
+    return copy[laneKey] || (currentBackendLanguage() === "en" ? "Review the source first." : "先复核来源。");
   }
 
   function getPipelineDefaultReason(laneKey) {
     const copy = {
-      immediate: "与当前雷达画像高度匹配，建议优先复核。",
-      review: "方向匹配，但证据字段仍需确认。",
-      monitor: "可作为趋势或来源线索继续观察。",
-      rejected: "当前证据不足或行动性偏弱。",
+      immediate: currentBackendLanguage() === "en" ? "Strong fit for this radar; review first." : "与当前雷达画像高度匹配，建议优先复核。",
+      review: currentBackendLanguage() === "en" ? "Direction matches, but evidence fields need confirmation." : "方向匹配，但证据字段仍需确认。",
+      monitor: currentBackendLanguage() === "en" ? "Keep watching as a trend or source clue." : "可作为趋势或来源线索继续观察。",
+      rejected: currentBackendLanguage() === "en" ? "Evidence is insufficient or actionability is weak." : "当前证据不足或行动性偏弱。",
     };
-    return copy[laneKey] || "与当前雷达画像相关。";
+    return copy[laneKey] || (currentBackendLanguage() === "en" ? "Relevant to this radar." : "与当前雷达画像相关。");
   }
 
   function renderTopActionStrip(cards) {
     const topCards = (cards || []).slice(0, 3);
     if (topCards.length === 0) return "";
     return `
-      <div class="watch-top-actions" aria-label="先看这 3 个">
+      <div class="watch-top-actions" aria-label="${escapeHtml(backendText("topThree", "先看这 3 个"))}">
         <div>
-          <strong>先看这 3 个</strong>
-          <span>我把本轮最值得先打开复核的机会放在前面。</span>
+          <strong>${escapeHtml(backendText("topThree", "先看这 3 个"))}</strong>
+          <span>${escapeHtml(backendText("topThreeDesc", "我把本轮最值得先打开复核的机会放在前面。"))}</span>
         </div>
         <ol>
           ${topCards.map((card) => `
             <li>
               <span>${escapeHtml(card.visible_level || "C")} 级</span>
-              <p>${escapeHtml(card.title || "未命名机会")}</p>
+              <p>${escapeHtml(card.title || (currentBackendLanguage() === "en" ? "Unnamed opportunity" : "未命名机会"))}</p>
             </li>
           `).join("")}
         </ol>
@@ -392,17 +403,19 @@
     const isLive = card.data_mode === "live" || /搜索发现|待复核/.test(`${card.source_disclaimer || ""}`);
     const sourceDomain = getSourceDomain(url);
     const source = isDemo
-      ? "<span>演示来源，未真实核验</span>"
+      ? `<span>${escapeHtml(currentBackendLanguage() === "en" ? "Demo source, not actually verified" : "演示来源，未真实核验")}</span>`
       : url && url !== "#"
-        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">打开来源${sourceDomain ? `：${escapeHtml(sourceDomain)}` : ""}</a>`
-        : `<span>${isLive ? "搜索来源暂未明确" : "官方来源暂未明确"}</span>`;
+        ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(currentBackendLanguage() === "en" ? "Open source" : "打开来源")}${sourceDomain ? `：${escapeHtml(sourceDomain)}` : ""}</a>`
+        : `<span>${escapeHtml(isLive
+          ? (currentBackendLanguage() === "en" ? "Search source not clear yet" : "搜索来源暂未明确")
+          : (currentBackendLanguage() === "en" ? "Official source not clear yet" : "官方来源暂未明确"))}</span>`;
     const opportunityKind = formatOpportunityKindForCustomer(card.opportunity_kind || card.opportunityKind || card.type || "机会");
     const evidenceStatus = formatEvidenceStatusForCustomer(card.evidence_status || card.evidenceStatus || "model_judgment");
     const actionStatus = formatActionStatusForCustomer(card.action_status || card.actionStatus || "prepare");
     const defaultAction = isDemo
-      ? "先把这条当作演示样例；接入真实搜索后再复核来源和行动要求。"
-      : "先打开来源页面，确认报名入口、截止时间、参赛资格和材料要求。";
-    const reason = toCustomerEvidenceText(card.match_reason || card.fitReason || card.ai_analysis || card.relevance_reason || "与当前雷达画像匹配。");
+      ? (currentBackendLanguage() === "en" ? "Treat this as a demo sample first; verify source and action requirements after live search is connected." : "先把这条当作演示样例；接入真实搜索后再复核来源和行动要求。")
+      : (currentBackendLanguage() === "en" ? "Open the source page first, then verify entry path, deadline, eligibility, and required materials." : "先打开来源页面，确认报名入口、截止时间、参赛资格和材料要求。");
+    const reason = toCustomerEvidenceText(card.match_reason || card.fitReason || card.ai_analysis || card.relevance_reason || (currentBackendLanguage() === "en" ? "Matches the current radar profile." : "与当前雷达画像匹配。"));
     return `
       <article class="watch-opportunity-card">
         <header class="card-header">
@@ -411,26 +424,26 @@
             ? `<span>${escapeHtml(card.title || "未知机会")}</span>`
             : `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(card.title || "未知机会")}</a>`}
         </header>
-        <div class="watch-card-decision-row" aria-label="本轮判断">
-          <span>建议：${escapeHtml(getPriorityCue(card.visible_level))}</span>
-          <span>性质：${escapeHtml(opportunityKind)}</span>
-          <span>证据：${escapeHtml(evidenceStatus)}</span>
+        <div class="watch-card-decision-row" aria-label="${escapeHtml(currentBackendLanguage() === "en" ? "This round decision" : "本轮判断")}">
+          <span>${escapeHtml(currentBackendLanguage() === "en" ? "Priority" : "建议")}：${escapeHtml(getPriorityCue(card.visible_level))}</span>
+          <span>${escapeHtml(currentBackendLanguage() === "en" ? "Type" : "性质")}：${escapeHtml(opportunityKind)}</span>
+          <span>${escapeHtml(currentBackendLanguage() === "en" ? "Evidence" : "证据")}：${escapeHtml(evidenceStatus)}</span>
         </div>
         <dl class="watch-card-fields">
           <div>
-            <dt>为什么值得看</dt>
+            <dt>${escapeHtml(currentBackendLanguage() === "en" ? "Why it matters" : "为什么值得看")}</dt>
             <dd>${escapeHtml(reason)}</dd>
           </div>
           <div>
-            <dt>本周先做</dt>
+            <dt>${escapeHtml(currentBackendLanguage() === "en" ? "This week" : "本周先做")}</dt>
             <dd>${escapeHtml(card.next_action || (Array.isArray(card.recommendedActions) ? card.recommendedActions[0] : "") || defaultAction)}</dd>
           </div>
           <div>
-            <dt>截止时间</dt>
+            <dt>${escapeHtml(currentBackendLanguage() === "en" ? "Deadline" : "截止时间")}</dt>
             <dd>${escapeHtml(displayDeadline(card.deadline))}</dd>
           </div>
           <div>
-            <dt>来源入口</dt>
+            <dt>${escapeHtml(currentBackendLanguage() === "en" ? "Source entry" : "来源入口")}</dt>
             <dd>${source}</dd>
           </div>
         </dl>
@@ -440,10 +453,11 @@
 
   function getPriorityCue(level) {
     const normalized = String(level || "C").trim().toUpperCase();
-    if (normalized === "S") return "强烈优先";
-    if (normalized === "A") return "优先复核";
-    if (normalized === "B") return "可以备选";
-    return "先收藏观察";
+    const isEnglish = currentBackendLanguage() === "en";
+    if (normalized === "S") return isEnglish ? "Strong priority" : "强烈优先";
+    if (normalized === "A") return isEnglish ? "Review first" : "优先复核";
+    if (normalized === "B") return isEnglish ? "Good backup" : "可以备选";
+    return isEnglish ? "Save and monitor" : "先收藏观察";
   }
 
   function getSourceDomain(url) {
@@ -457,7 +471,15 @@
 
   function formatOpportunityKindForCustomer(value) {
     const kind = String(value || "").trim();
-    const labels = {
+    const labels = currentBackendLanguage() === "en" ? {
+      direct_opportunity: "Direct actionable opportunity",
+      business_lead: "Business lead to confirm",
+      channel_partner_lead: "Potential channel or partner lead",
+      customer_lead: "Potential customer lead",
+      watch_signal: "Watch signal",
+      reference_case: "Reference case",
+      rejected: "Downgraded result",
+    } : {
       direct_opportunity: "可报名 / 可行动赛事",
       business_lead: "需要联系确认的合作线索",
       channel_partner_lead: "潜在渠道或伙伴线索",
@@ -471,7 +493,15 @@
 
   function formatEvidenceStatusForCustomer(value) {
     const status = String(value || "").trim();
-    const labels = {
+    const labels = currentBackendLanguage() === "en" ? {
+      verified: "Source read; key fields still need review",
+      partially_verified: "Some fields have source support",
+      needs_review: "Search discovery; open official page to review",
+      model_judgment: "Model judgment; needs review",
+      unverified: "Unverified; needs review",
+      not_found: "No field evidence found",
+      failed: "Source read failed",
+    } : {
       verified: "已读取来源，关键字段仍建议复核",
       partially_verified: "部分字段有来源支持",
       needs_review: "搜索发现，待打开官方页复核",
@@ -485,7 +515,12 @@
 
   function formatActionStatusForCustomer(value) {
     const status = String(value || "").trim();
-    const labels = {
+    const labels = currentBackendLanguage() === "en" ? {
+      act_now: "Open the official entry first",
+      prepare: "Prepare materials and review entry path",
+      monitor: "Save and monitor",
+      drop: "No action this round",
+    } : {
       act_now: "优先打开官方入口",
       prepare: "准备材料并复核报名入口",
       monitor: "先收藏观察",
@@ -496,15 +531,21 @@
 
   function toCustomerEvidenceText(value) {
     const text = String(value || "").trim();
-    if (!text) return "与当前雷达画像匹配。";
+    if (!text) return currentBackendLanguage() === "en" ? "Matches the current radar profile." : "与当前雷达画像匹配。";
     if (/Live Evidence MVP|LLM\s*仍保持\s*mock|mock\s*轻量评估/i.test(text)) {
       if (/未读取正文|仅保留搜索发现|待复核/.test(text)) {
-        return "搜索发现来源，尚未读取完整正文；请先打开官方入口复核报名、截止时间和参赛资格。";
+        return currentBackendLanguage() === "en"
+          ? "Search-discovered source; full page text was not read. Open the official entry first to review registration, deadline, and eligibility."
+          : "搜索发现来源，尚未读取完整正文；请先打开官方入口复核报名、截止时间和参赛资格。";
       }
       if (/已有限读取|已读取网页正文/.test(text)) {
-        return "已读取来源页面的部分正文；关键字段仍以官方页面复核为准。";
+        return currentBackendLanguage() === "en"
+          ? "Part of the source page was read; key fields should still be reviewed on the official page."
+          : "已读取来源页面的部分正文；关键字段仍以官方页面复核为准。";
       }
-      return "搜索发现来源，字段仍需复核；不要直接当作已确认机会。";
+      return currentBackendLanguage() === "en"
+        ? "Search-discovered source; fields still need review and should not be treated as confirmed."
+        : "搜索发现来源，字段仍需复核；不要直接当作已确认机会。";
     }
     return text;
   }
@@ -517,20 +558,23 @@
   function renderEmptyState(result) {
     const isLive = result?.searchMode === "live";
     const outcome = result?.runOutcome || {};
+    const isEnglish = currentBackendLanguage() === "en";
     return `
       <div class="watch-empty-state">
-        <p>${outcome.message ? escapeHtml(outcome.message) : isLive ? "本次真实搜索结果不足，没有找到足够匹配的机会。" : "这次没有找到足够匹配的机会。"}你可以这样调整：</p>
+        <p>${outcome.message ? escapeHtml(outcome.message) : isLive
+          ? escapeHtml(isEnglish ? "This live search did not find enough matching opportunities." : "本次真实搜索结果不足，没有找到足够匹配的机会。")
+          : escapeHtml(isEnglish ? "This run did not find enough matching opportunities." : "这次没有找到足够匹配的机会。")}${escapeHtml(isEnglish ? " You can adjust it this way:" : "你可以这样调整：")}</p>
         <ul>
-          <li>放宽地区</li>
-          <li>减少排除条件</li>
-          <li>增加指定信号源</li>
-          <li>保存为长期雷达继续监控</li>
+          <li>${escapeHtml(isEnglish ? "Widen the region" : "放宽地区")}</li>
+          <li>${escapeHtml(isEnglish ? "Reduce exclusion rules" : "减少排除条件")}</li>
+          <li>${escapeHtml(isEnglish ? "Add specific signal sources" : "增加指定信号源")}</li>
+          <li>${escapeHtml(isEnglish ? "Save as a long-term radar for continued monitoring" : "保存为长期雷达继续监控")}</li>
         </ul>
         <div class="watch-action-row">
-          <button id="btn-retry-watch-search" class="btn-secondary">重试搜索</button>
-          ${isLive ? '<button id="btn-switch-demo-mode" class="btn-secondary">切回演示数据查看流程</button>' : ""}
+          <button id="btn-retry-watch-search" class="btn-secondary">${escapeHtml(backendText("retrySearch", "重试搜索"))}</button>
+          ${isLive ? `<button id="btn-switch-demo-mode" class="btn-secondary">${escapeHtml(backendText("switchDemoMode", "切回演示数据查看流程"))}</button>` : ""}
         </div>
-        ${isLive ? '<p class="placeholder">演示数据会明确标记为演示 / 测试数据，不代表真实机会。</p>' : ""}
+        ${isLive ? `<p class="placeholder">${escapeHtml(isEnglish ? "Demo data is clearly marked and does not represent real opportunities." : "演示数据会明确标记为演示 / 测试数据，不代表真实机会。")}</p>` : ""}
       </div>
     `;
   }
@@ -540,7 +584,10 @@
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith("#") && !line.startsWith("|") && !line.startsWith("-|-"));
-    const summaryLine = lines.find((line) => !line.startsWith("- ")) || "本轮报告已生成，建议先查看机会卡片，再决定是否保存长期雷达。";
+    const summaryLine = lines.find((line) => !line.startsWith("- "))
+      || (currentBackendLanguage() === "en"
+        ? "This report has been generated. Review the opportunity cards first, then decide whether to save the radar."
+        : "本轮报告已生成，建议先查看机会卡片，再决定是否保存长期雷达。");
     const topCards = cards.slice(0, 3).map((card) => card.title).filter(Boolean);
     return `
       <div class="report-summary">
@@ -550,7 +597,9 @@
             ${topCards.map((title) => `<li>${escapeHtml(title)}</li>`).join("")}
           </ul>
         ` : ""}
-        <p>完整来源、字段证据和排除原因请点上方机会卡查看；搜索发现不等于已核验事实。</p>
+        <p>${escapeHtml(currentBackendLanguage() === "en"
+          ? "Open the cards above to review sources, field evidence, and downgrade reasons. Search discoveries are not verified facts."
+          : "完整来源、字段证据和排除原因请点上方机会卡查看；搜索发现不等于已核验事实。")}</p>
       </div>
     `;
   }
@@ -605,10 +654,13 @@
       const root = document.getElementById("watch-result-root");
       if (root) {
         const isLive = getSearchModeRequest().search_mode === "live";
+        const isEnglish = currentBackendLanguage() === "en";
         root.innerHTML = `
           <div class="watch-empty-state">
-            <p>${isLive ? "Live 真实搜索失败：" : "盯机会失败："}${escapeHtml(err.message)}</p>
-            ${isLive ? '<button id="btn-switch-demo-mode" class="btn-secondary">切回演示数据查看流程</button><p class="placeholder">演示数据会明确标记为演示 / 测试数据，不会伪装成真实搜索结果。</p>' : ""}
+            <p>${escapeHtml(isLive
+              ? (isEnglish ? "Live search failed: " : "Live 真实搜索失败：")
+              : (isEnglish ? "Radar run failed: " : "盯机会失败："))}${escapeHtml(err.message)}</p>
+            ${isLive ? `<button id="btn-switch-demo-mode" class="btn-secondary">${escapeHtml(backendText("switchDemoMode", "切回演示数据查看流程"))}</button><p class="placeholder">${escapeHtml(isEnglish ? "Demo data is clearly marked and will not be presented as real search results." : "演示数据会明确标记为演示 / 测试数据，不会伪装成真实搜索结果。")}</p>` : ""}
           </div>
         `;
         document.getElementById("btn-switch-demo-mode")?.addEventListener("click", switchBackToDemoMode);
@@ -623,17 +675,17 @@
       return {
         data: {
           markdown: [
-            "# ChancePing｜本轮机会雷达报告",
+            currentBackendLanguage() === "en" ? "# ChancePing | Opportunity Radar Report" : "# ChancePing｜本轮机会雷达报告",
             "",
-            "## 本轮结论",
+            currentBackendLanguage() === "en" ? "## Conclusion" : "## 本轮结论",
             "",
-            runOutcome?.message || `报告生成失败：${err.message || "未知错误"}`,
+            runOutcome?.message || (currentBackendLanguage() === "en" ? `Report generation failed: ${err.message || "unknown error"}` : `报告生成失败：${err.message || "未知错误"}`),
             "",
-            "## 建议动作",
+            currentBackendLanguage() === "en" ? "## Suggested actions" : "## 建议动作",
             "",
-            "- 保存为长期雷达继续监控。",
-            "- 调整雷达策略后重试搜索。",
-            "- 增加指定信号源或放宽条件。",
+            currentBackendLanguage() === "en" ? "- Save as a long-term radar and keep monitoring." : "- 保存为长期雷达继续监控。",
+            currentBackendLanguage() === "en" ? "- Adjust the radar strategy, then retry search." : "- 调整雷达策略后重试搜索。",
+            currentBackendLanguage() === "en" ? "- Add specific signal sources or loosen conditions." : "- 增加指定信号源或放宽条件。",
             "",
           ].join("\n"),
         },
@@ -651,7 +703,7 @@
       presetId: currentResult.presetId,
       radarVersion: currentResult.radarVersion,
     }).catch((err) => {
-      if (window.showToast) showToast(err.message || "重试搜索失败", "error");
+      if (window.showToast) showToast(err.message || (currentBackendLanguage() === "en" ? "Retry failed" : "重试搜索失败"), "error");
     });
   }
 
@@ -661,7 +713,7 @@
     } catch {
       // ignore storage failures
     }
-    if (window.showToast) showToast("已切回演示数据模式", "success");
+    if (window.showToast) showToast(currentBackendLanguage() === "en" ? "Switched to demo data mode" : "已切回演示数据模式", "success");
     if (window.switchTab) window.switchTab("home");
   }
 
@@ -675,7 +727,7 @@
     const previousText = btn?.textContent || "";
     if (btn) {
       btn.disabled = true;
-      btn.textContent = "正在保存并启动长期雷达...";
+      btn.textContent = currentBackendLanguage() === "en" ? "Saving and starting long-term radar..." : "正在保存并启动长期雷达...";
     }
     try {
       const name = currentResult.suggestedName || "我的机会雷达";
@@ -716,7 +768,9 @@
           data: {
             runOutcome: {
               status: "failed",
-              message: `本轮复跑失败：${runErr.message || "网络错误"}。雷达已保存，可稍后在我的雷达里重试。`,
+              message: currentBackendLanguage() === "en"
+                ? `This rerun failed: ${runErr.message || "network error"}. The radar is saved and can be retried later from My Radars.`
+                : `本轮复跑失败：${runErr.message || "网络错误"}。雷达已保存，可稍后在我的雷达里重试。`,
               canRetry: true,
               canSaveRadar: true,
             },
@@ -744,13 +798,15 @@
         markdown: reportMarkdown,
         reportId: report?.data?.reportId,
         savedMessage: report?.data?.reportId
-          ? "已保存为长期雷达。本次机会和报告已经绑定到我的雷达。"
-          : "已保存为长期雷达。本轮结果不足或报告尚未生成，可在我的雷达里再次盯机会。",
+          ? (currentBackendLanguage() === "en" ? "Saved as a long-term radar. This run's opportunities and report are linked to My Radars." : "已保存为长期雷达。本次机会和报告已经绑定到我的雷达。")
+          : (currentBackendLanguage() === "en" ? "Saved as a long-term radar. This run had limited results or no report yet; you can rerun it from My Radars." : "已保存为长期雷达。本轮结果不足或报告尚未生成，可在我的雷达里再次盯机会。"),
       };
       renderResult(currentResult);
-      if (window.showToast) showToast(currentResult.reportId ? "已保存为长期雷达，并生成了绑定报告" : "已保存为长期雷达，可稍后再次盯机会", "success");
+      if (window.showToast) showToast(currentResult.reportId
+        ? (currentBackendLanguage() === "en" ? "Saved as a long-term radar with a linked report" : "已保存为长期雷达，并生成了绑定报告")
+        : (currentBackendLanguage() === "en" ? "Saved as a long-term radar; you can rerun it later" : "已保存为长期雷达，可稍后再次盯机会"), "success");
     } catch (err) {
-      if (window.showToast) showToast(err.message || "保存失败", "error");
+      if (window.showToast) showToast(err.message || (currentBackendLanguage() === "en" ? "Save failed" : "保存失败"), "error");
       if (btn) {
         btn.disabled = false;
         btn.textContent = previousText;
@@ -795,9 +851,9 @@
         document.execCommand("copy");
         document.body.removeChild(textarea);
       }
-      if (window.showToast) showToast("Markdown 已复制", "success");
+      if (window.showToast) showToast(currentBackendLanguage() === "en" ? "Markdown copied" : "Markdown 已复制", "success");
     } catch (err) {
-      if (window.showToast) showToast(err.message || "复制失败", "error");
+      if (window.showToast) showToast(err.message || (currentBackendLanguage() === "en" ? "Copy failed" : "复制失败"), "error");
     }
   }
 

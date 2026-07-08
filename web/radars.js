@@ -63,19 +63,27 @@
     return window.fetch(input, init);
   }
 
+  function currentBackendLanguage() {
+    return window.CHANCEPING_BACKEND_I18N?.getLanguage?.() || "zh";
+  }
+
+  function backendText(key, fallback) {
+    return window.CHANCEPING_BACKEND_I18N?.t?.(key) || fallback || key;
+  }
+
   /** 格式化 ISO 时间为 MM-DD HH:mm */
   function formatTime(iso) {
-    if (!iso) return "从未运行";
+    if (!iso) return backendText("neverRun", "从未运行");
     try {
       const d = new Date(iso);
-      if (Number.isNaN(d.getTime())) return "从未运行";
+      if (Number.isNaN(d.getTime())) return backendText("neverRun", "从未运行");
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       const dd = String(d.getDate()).padStart(2, "0");
       const hh = String(d.getHours()).padStart(2, "0");
       const mi = String(d.getMinutes()).padStart(2, "0");
       return `${mm}-${dd} ${hh}:${mi}`;
     } catch {
-      return "从未运行";
+      return backendText("neverRun", "从未运行");
     }
   }
 
@@ -160,6 +168,30 @@
     return isAiEventsHeroRadar(radar) ? PUBLIC_AI_EVENTS_DISPLAY_NAME : (radar?.name || "未命名雷达");
   }
 
+  function getRadarKindLabel(kind) {
+    if (currentBackendLanguage() === "en") {
+      return {
+        ai_competition: "AI events",
+        opc_policy: "OPC policy",
+        cultural_heritage: "Cultural IP",
+        custom: "Custom",
+      }[kind] || "Custom";
+    }
+    return RADAR_KIND_LABELS[kind] || "自定义";
+  }
+
+  function getRadarStatusLabel(status) {
+    if (currentBackendLanguage() === "en") {
+      return {
+        draft: "Draft",
+        active: "Active",
+        paused: "Paused",
+        archived: "Deleted",
+      }[status] || status || "Saved";
+    }
+    return RADAR_STATUS_LABELS[status] || status;
+  }
+
   function getOpportunityRadarIdForView(radar) {
     return isAiEventsHeroRadar(radar) ? PUBLIC_AI_EVENTS_RADAR_ID : radar?.id;
   }
@@ -220,11 +252,19 @@
     const priorities = list(summary.priorities || scope.must_have_conditions || goals.priority_order).slice(0, 2);
     const regionsAndTime = firstNonEmpty(summary.regionsAndTime, region.primary_regions, cp.regions, goals.success_definition);
     const parts = [];
-    if (identity) parts.push(`你是 ${identity}`);
-    if (target) parts.push(`想盯 ${target}`);
-    if (priorities.length > 0) parts.push(`优先看 ${priorities.join("、")}`);
+    if (currentBackendLanguage() === "en") {
+      if (identity) parts.push(`You are ${identity}`);
+      if (target) parts.push(`tracking ${target}`);
+      if (priorities.length > 0) parts.push(`prioritizing ${priorities.join(", ")}`);
+    } else {
+      if (identity) parts.push(`你是 ${identity}`);
+      if (target) parts.push(`想盯 ${target}`);
+      if (priorities.length > 0) parts.push(`优先看 ${priorities.join("、")}`);
+    }
     if (regionsAndTime) parts.push(regionsAndTime);
-    return parts.length > 0 ? parts.join("；") : "按已确认画像持续寻找匹配机会。";
+    return parts.length > 0
+      ? parts.join(currentBackendLanguage() === "en" ? "; " : "；")
+      : (currentBackendLanguage() === "en" ? "Continuously tracks matching opportunities from the confirmed radar." : "按已确认画像持续寻找匹配机会。");
   }
 
   function getRadarVersionLabel(radar) {
@@ -237,6 +277,13 @@
   }
 
   function getCustomerRadarStatusLabel(radar) {
+    if (currentBackendLanguage() === "en") {
+      if (radar?.status === "archived") return "Deleted";
+      if (radar?.status === "paused") return "Paused";
+      if (radar?.lastRunAt) return "Completed";
+      if (radar?.status === "draft") return "Needs confirmation";
+      return backendText("saved", "Saved");
+    }
     if (radar?.status === "archived") return "已删除";
     if (radar?.status === "paused") return "已暂停";
     if (radar?.lastRunAt) return "已完成";
@@ -245,7 +292,7 @@
   }
 
   function getRadarNewOpportunityCount(radar) {
-    if (isPublicAiEventsNavigatorRadar(radar)) return "公共库";
+    if (isPublicAiEventsNavigatorRadar(radar)) return backendText("publicLibrary", "公共库");
     const candidates = [
       radar?.lastRunOpportunityCount,
       radar?.latestOpportunityCount,
@@ -254,13 +301,21 @@
       radar?.stats?.opportunityCount,
     ];
     for (const value of candidates) {
-      if (Number.isFinite(Number(value))) return `${Number(value)} 条`;
+      if (Number.isFinite(Number(value))) return currentBackendLanguage() === "en" ? `${Number(value)} items` : `${Number(value)} 条`;
     }
-    return radar?.lastRunAt ? "待复核" : "待首次运行";
+    return radar?.lastRunAt
+      ? (currentBackendLanguage() === "en" ? "Needs review" : "待复核")
+      : (currentBackendLanguage() === "en" ? "Not run yet" : "待首次运行");
   }
 
   function getRadarHealthCopy(radar) {
-    if (isPublicAiEventsNavigatorRadar(radar)) return "内置公共雷达，不占用自定义名额；公开页和这里读取同一批赛事库。";
+    if (isPublicAiEventsNavigatorRadar(radar)) return backendText("globalAiEventsHealth", "内置公共雷达，不占用自定义名额；公开页和这里读取同一批赛事库。");
+    if (currentBackendLanguage() === "en") {
+      if (radar?.status === "archived") return "Deleted and no longer runs automatically.";
+      if (radar?.status === "paused") return "Paused. Resume it before tracking again.";
+      if (!radar?.lastRunAt) return "Not run yet. Run it once to generate the first results.";
+      return "You can rerun it, or return to the chat window to tune this radar.";
+    }
     if (radar?.status === "archived") return "已归档，不再自动运行。";
     if (radar?.status === "paused") return "已暂停，需要恢复后再继续盯。";
     if (!radar?.lastRunAt) return "还没跑过，建议先点“再次盯机会”生成第一轮结果。";
@@ -278,7 +333,7 @@
   async function loadRadarList() {
     const grid = document.getElementById("radar-cards-grid");
     if (!grid) return;
-    grid.innerHTML = '<p class="placeholder">加载中...</p>';
+    grid.innerHTML = `<p class="placeholder">${escapeHtml(currentBackendLanguage() === "en" ? "Loading..." : "加载中...")}</p>`;
     try {
       const res = await backendFetch("/api/radars?scope=mine");
       const json = await res.json();
@@ -286,12 +341,12 @@
         renderRadarCards(json.data.filter((radar) => radar.isBuiltin !== true));
         loadQuotaInfo();
       } else {
-        grid.innerHTML = '<p class="placeholder">加载失败</p>';
-        if (window.showToast) showToast("雷达列表加载失败", "error");
+        grid.innerHTML = `<p class="placeholder">${escapeHtml(currentBackendLanguage() === "en" ? "Load failed" : "加载失败")}</p>`;
+        if (window.showToast) showToast(currentBackendLanguage() === "en" ? "Radar list failed to load" : "雷达列表加载失败", "error");
       }
     } catch (err) {
-      grid.innerHTML = '<p class="placeholder">加载失败：网络错误</p>';
-      if (window.showToast) showToast("雷达列表加载失败：网络错误", "error");
+      grid.innerHTML = `<p class="placeholder">${escapeHtml(currentBackendLanguage() === "en" ? "Load failed: network error" : "加载失败：网络错误")}</p>`;
+      if (window.showToast) showToast(currentBackendLanguage() === "en" ? "Radar list failed to load: network error" : "雷达列表加载失败：网络错误", "error");
     }
   }
 
@@ -307,14 +362,20 @@
       const { current, quota, plan, allowed } = json.data;
       const bar = document.getElementById("radar-quota-bar");
       if (bar) {
-        const planLabel = { free: "免费版", basic: "基础版", pro: "专业版", enterprise: "企业版" }[plan] || plan;
-        bar.textContent = `自定义雷达 ${current}/${quota}（${planLabel}）`;
+        const planLabel = currentBackendLanguage() === "en"
+          ? ({ free: "Free plan", basic: "Basic", pro: "Pro", enterprise: "Enterprise" }[plan] || plan)
+          : ({ free: "免费版", basic: "基础版", pro: "专业版", enterprise: "企业版" }[plan] || plan);
+        bar.textContent = currentBackendLanguage() === "en"
+          ? `Custom radars ${current}/${quota} (${planLabel})`
+          : `自定义雷达 ${current}/${quota}（${planLabel}）`;
         bar.className = "radar-quota-bar" + (allowed ? "" : " quota-full");
       }
       const createBtn = document.getElementById("btn-create-radar");
       if (createBtn) {
         createBtn.disabled = !allowed;
-        createBtn.title = allowed ? "" : `已达到 ${quota} 个上限，请删除旧雷达或升级套餐`;
+        createBtn.title = allowed ? "" : (currentBackendLanguage() === "en"
+          ? `Limit reached (${quota}). Delete an old radar or upgrade.`
+          : `已达到 ${quota} 个上限，请删除旧雷达或升级套餐`);
       }
     } catch {
       // 配额加载失败不阻断列表渲染
@@ -350,12 +411,12 @@
     card.dataset.kind = radar.kind || "custom";
     card.dataset.status = radar.status || "draft";
 
-    const kindLabel = RADAR_KIND_LABELS[radar.kind] || "自定义";
-    const statusLabel = RADAR_STATUS_LABELS[radar.status] || radar.status;
+    const kindLabel = getRadarKindLabel(radar.kind);
+    const statusLabel = getRadarStatusLabel(radar.status);
     const displayName = getRadarDisplayName(radar);
     const customerStatusLabel = getCustomerRadarStatusLabel(radar);
     const builtinTag = radar.isBuiltin
-      ? '<span class="builtin-tag">内置</span>'
+      ? `<span class="builtin-tag">${escapeHtml(backendText("builtIn", "内置"))}</span>`
       : "";
     const lastRun = formatTime(radar.lastRunAt);
     const profileSummary = buildProfileSummaryText(radar);
@@ -365,14 +426,14 @@
     const canRerun = radar.status !== "archived" && !isPublicNavigator;
     const actionHtml = isPublicNavigator
       ? `
-        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
-        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
+        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">${escapeHtml(backendText("editRadar", "编辑雷达"))}</button>
+        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">${escapeHtml(backendText("viewOpportunitiesReport", "查看机会和报告"))}</button>
       `
       : `
-        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
-        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRerun ? "" : "disabled"}>再次盯机会</button>
-        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
-        <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
+        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">${escapeHtml(backendText("editRadar", "编辑雷达"))}</button>
+        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRerun ? "" : "disabled"}>${escapeHtml(backendText("rerunRadar", "再次盯机会"))}</button>
+        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">${escapeHtml(backendText("viewOpportunitiesReport", "查看机会和报告"))}</button>
+        <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">${escapeHtml(backendText("deleteRadar", "删除雷达"))}</button>
       `;
 
     card.innerHTML = `
@@ -387,26 +448,26 @@
           ${escapeHtml(customerStatusLabel)}
         </span>
       </div>
-      <div class="radar-command-metrics" aria-label="雷达状态摘要">
+      <div class="radar-command-metrics" aria-label="${escapeHtml(currentBackendLanguage() === "en" ? "Radar status summary" : "雷达状态摘要")}">
         <div>
-          <span>版本</span>
+          <span>${escapeHtml(backendText("version", "版本"))}</span>
           <strong>${escapeHtml(versionLabel)}</strong>
         </div>
         <div>
-          <span>状态</span>
+          <span>${escapeHtml(backendText("status", "状态"))}</span>
           <strong>${escapeHtml(customerStatusLabel)}</strong>
         </div>
         <div>
-          <span>上次运行</span>
-          <strong>${escapeHtml(radar.lastRunAt ? lastRun : "还没跑过")}</strong>
+          <span>${escapeHtml(backendText("lastRun", "上次运行"))}</span>
+          <strong>${escapeHtml(radar.lastRunAt ? lastRun : backendText("neverRun", "还没跑过"))}</strong>
         </div>
         <div>
-          <span>本次新增</span>
+          <span>${escapeHtml(backendText("newThisRun", "本次新增"))}</span>
           <strong>${escapeHtml(newCount)}</strong>
         </div>
       </div>
       <div class="radar-card-profile">
-        <span class="radar-card-profile-label">情报流摘要</span>
+        <span class="radar-card-profile-label">${escapeHtml(backendText("intelSummary", "情报流摘要"))}</span>
         <p>${escapeHtml(profileSummary)}</p>
       </div>
       <p class="radar-card-next-step">${escapeHtml(getRadarHealthCopy(radar))}</p>
@@ -1105,6 +1166,11 @@
     if (e.detail && e.detail.tab === "radars") {
       loadRadarList();
     }
+  });
+
+  window.addEventListener("chanceping-backend-language-change", () => {
+    const radarsPanelActive = document.getElementById("panel-radars")?.classList.contains("active");
+    if (radarsPanelActive) loadRadarList();
   });
 
   // DOMContentLoaded 后绑定按钮事件

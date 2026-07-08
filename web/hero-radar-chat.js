@@ -16,6 +16,14 @@
     isSampleRoom: true,
   };
 
+  function backendText(key, fallback) {
+    return window.CHANCEPING_BACKEND_I18N?.t?.(key) || fallback || key;
+  }
+
+  function currentBackendLanguage() {
+    return window.CHANCEPING_BACKEND_I18N?.getLanguage?.() || "zh";
+  }
+
   const heroRadarChatState = {
     messages: [],
     currentDraft: null,
@@ -1038,9 +1046,9 @@
         ` : ""}
         ${isLatestDraft ? `<p class="hero-next-step"><strong>现在只需要做一个选择：</strong>确认这版开始搜索，或者在下方继续告诉我哪里不准。</p>` : ""}
         <div class="hero-artifact-actions">
-          <button class="secondary-btn" data-action="open-radar-modal" data-version="${escapeHtml(version)}" title="打开完整雷达画像">打开雷达画像</button>
+          <button class="secondary-btn" data-action="open-radar-modal" data-version="${escapeHtml(version)}" title="${escapeHtml(backendText("openRadarImage", "打开完整雷达画像"))}">${escapeHtml(backendText("openRadarImage", "打开雷达画像"))}</button>
           ${isLatestDraft
-            ? `<button class="btn-primary hero-confirm-radar-btn" data-action="confirm-hero-radar">确认，按 ${escapeHtml(version)} 盯一次</button>`
+            ? `<button class="btn-primary hero-confirm-radar-btn" data-action="confirm-hero-radar">${escapeHtml(currentBackendLanguage() === "en" ? `Confirm ${version} and run` : `确认，按 ${version} 盯一次`)}</button>`
             : `<span class="hero-artifact-note">${confirmed ? `已按 ${escapeHtml(version)} 跑过一次。` : isReplacedDraft ? "这版已被新版替代，请确认最新雷达。" : "等待你确认新版雷达。"}</span>`}
           <span>不准的话，直接在聊天框继续说，我会先升级雷达。</span>
         </div>
@@ -1076,8 +1084,8 @@
           <p>结果不对？直接在下方告诉我，我会先升级雷达，再重新盯一次。</p>
         </div>
         <div class="hero-artifact-actions">
-          <button class="secondary-btn" data-action="open-report-modal" data-message-id="${escapeHtml(message.id)}">查看完整 Markdown 报告</button>
-          <button class="btn-primary" data-action="view-hero-cards">查看本次机会卡</button>
+          <button class="secondary-btn" data-action="open-report-modal" data-message-id="${escapeHtml(message.id)}">${escapeHtml(backendText("openMarkdownReport", "查看完整 Markdown 报告"))}</button>
+          <button class="btn-primary" data-action="view-hero-cards">${escapeHtml(backendText("viewCards", "查看本次机会卡"))}</button>
         </div>
       </article>
     `;
@@ -1221,13 +1229,15 @@
       const isActive = windowData.id === activeChatWindowId;
       const version = windowData.draftRadarVersion || windowData.currentConfirmedRadarVersion || "V1.0";
       const archived = options.archived === true || windowData.status === "archived";
-      const subline = windowData.isSampleRoom ? `${version} · 内置导航` : `${version} · 雷达窗口`;
+      const subline = windowData.isSampleRoom
+        ? `${version} · ${backendText("builtInNavigator", "内置导航").replace(/^V1\.0\s*·\s*/, "")}`
+        : `${version} · ${currentBackendLanguage() === "en" ? "Radar window" : "雷达窗口"}`;
       const actionButtons = windowData.isSampleRoom ? `
-        <span class="hero-sidebar-window-note">内置</span>
+        <span class="hero-sidebar-window-note">${escapeHtml(backendText("builtInWindow", "内置"))}</span>
       ` : `
         <span class="hero-sidebar-window-actions" aria-label="雷达窗口操作">
-          <button class="hero-sidebar-mini-btn" type="button" data-action="rename-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">改名</button>
-          <button class="hero-sidebar-mini-btn danger" type="button" data-action="delete-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">删除</button>
+          <button class="hero-sidebar-mini-btn" type="button" data-action="rename-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">${escapeHtml(backendText("rename", "改名"))}</button>
+          <button class="hero-sidebar-mini-btn danger" type="button" data-action="delete-hero-radar-window" data-chat-window-id="${escapeHtml(windowData.id)}">${escapeHtml(backendText("delete", "删除"))}</button>
         </span>
       `;
       return `
@@ -1244,25 +1254,27 @@
     const activeCustomCount = getActiveCustomWindowCount();
     const quotaFull = isChatWindowQuotaFull();
     return `
-      <aside class="hero-radar-sidebar" aria-label="雷达列表">
+      <aside class="hero-radar-sidebar" aria-label="${escapeHtml(currentBackendLanguage() === "en" ? "Radar list" : "雷达列表")}">
         <div class="hero-sidebar-brand">
           <img src="/assets/logo.png?v=20260705" alt="" class="sidebar-brand-logo" />
           <div class="hero-sidebar-brand-text">
             <strong>ChancePing</strong>
-            <span>盯机会</span>
+            <span>${escapeHtml(backendText("chatProduct", "盯机会"))}</span>
           </div>
-          <button class="hero-sidebar-collapse" type="button" data-action="toggle-sidebar" title="折叠或展开雷达侧边栏" aria-label="折叠或展开雷达侧边栏">☰</button>
+          <button class="hero-sidebar-collapse" type="button" data-action="toggle-sidebar" title="${escapeHtml(currentBackendLanguage() === "en" ? "Collapse or expand radar sidebar" : "折叠或展开雷达侧边栏")}" aria-label="${escapeHtml(currentBackendLanguage() === "en" ? "Collapse or expand radar sidebar" : "折叠或展开雷达侧边栏")}">☰</button>
         </div>
         <button class="hero-new-radar-btn ${quotaFull ? "disabled" : ""}" type="button" data-action="new-hero-radar-window" ${quotaFull ? 'data-quota-full="true"' : ""}>
-          <span>＋ 新雷达</span>
-          <small>${quotaFull ? "已满，先删除旧雷达窗口" : "一个窗口只放一个雷达"}</small>
+          <span>＋ ${escapeHtml(backendText("newRadar", "新雷达"))}</span>
+          <small>${escapeHtml(quotaFull
+            ? (currentBackendLanguage() === "en" ? "Full. Delete an old radar window first." : "已满，先删除旧雷达窗口")
+            : backendText("newRadarHint", "一个窗口只放一个雷达"))}</small>
         </button>
-        <div class="hero-sidebar-quota ${quotaFull ? "full" : ""}" aria-label="自定义雷达窗口配额">
-          <span>自定义雷达窗口</span>
+        <div class="hero-sidebar-quota ${quotaFull ? "full" : ""}" aria-label="${escapeHtml(currentBackendLanguage() === "en" ? "Custom radar window quota" : "自定义雷达窗口配额")}">
+          <span>${escapeHtml(backendText("customRadarWindows", "自定义雷达窗口"))}</span>
           <strong>${activeCustomCount}/${CHAT_WINDOW_LIMIT}</strong>
         </div>
         <div class="hero-sidebar-section hero-sidebar-current-radar">
-          <span class="hero-sidebar-label">当前雷达</span>
+          <span class="hero-sidebar-label">${escapeHtml(backendText("currentRadar", "当前雷达"))}</span>
           ${rows}
         </div>
       </aside>
@@ -1338,17 +1350,17 @@
         <div class="hero-chat-main">
           <div class="hero-chat-header" aria-label="1. 说需求 2. 看雷达 3. 确认后搜索">
             <div>
-              <span>${escapeHtml(AI_EVENT_SAMPLE_ROOM.name)}</span>
-              <strong>一个聊天窗口，一个正在成长的雷达</strong>
+              <span>${escapeHtml(backendText("aiEventsNavigator", AI_EVENT_SAMPLE_ROOM.name))}</span>
+              <strong>${escapeHtml(backendText("oneChatOneRadar", "一个聊天窗口，一个正在成长的雷达"))}</strong>
             </div>
-            <button id="hero-chat-reset" class="hero-chat-reset" type="button">重新开始</button>
+            <button id="hero-chat-reset" class="hero-chat-reset" type="button">${escapeHtml(backendText("restart", "重新开始"))}</button>
           </div>
           <div class="hero-chat-messages">
             ${messages.map(renderMessage).join("")}
           </div>
           ${chatStarted && !heroRadarChatState.modal ? `<div class="hero-chat-input-row">
-            <textarea id="hero-radar-chat-input" rows="2" placeholder="继续告诉我：你是谁、不要什么、什么结果才算有用">${escapeHtml(heroRadarChatState.pendingFirstMessage || "")}</textarea>
-            <button id="hero-radar-chat-send" class="primary-btn" ${heroRadarChatState.isBusy ? "disabled" : ""}>发送</button>
+            <textarea id="hero-radar-chat-input" rows="2" placeholder="${escapeHtml(backendText("chatInputPlaceholder", "继续告诉我：你是谁、不要什么、什么结果才算有用"))}">${escapeHtml(heroRadarChatState.pendingFirstMessage || "")}</textarea>
+            <button id="hero-radar-chat-send" class="primary-btn" ${heroRadarChatState.isBusy ? "disabled" : ""}>${escapeHtml(backendText("send", "发送"))}</button>
           </div>` : ""}
         </div>
         ${heroRadarChatState.modal?.type === "radar" ? renderRadarModal(heroRadarChatState.modal.version) : ""}
@@ -2071,6 +2083,10 @@
     restoreStateFromBackend().catch(() => {
       // Session storage remains the primary fast path; backend recovery is best-effort.
     });
+  });
+
+  window.addEventListener("chanceping-backend-language-change", () => {
+    renderHeroRadarChat();
   });
 
   window.heroRadarChatState = heroRadarChatState;

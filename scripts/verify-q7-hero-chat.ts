@@ -214,7 +214,7 @@ async function run() {
   check("result pipeline has four customer lanes", watchResultJs.includes("立即行动") && watchResultJs.includes("复核资格") && watchResultJs.includes("持续观察") && watchResultJs.includes("淘汰原因"));
   check("result opportunity cards use customer-facing labels", watchResultJs.includes("formatOpportunityKindForCustomer") && watchResultJs.includes("watch-card-decision-row") && watchResultJs.includes("优先复核"));
   check("result opportunity cards use demo-friendly action copy", watchResultJs.includes("为什么值得看") && watchResultJs.includes("本周先做") && watchResultJs.includes("来源入口"));
-  check("result opportunity cards avoid raw chip labels", watchResultJs.includes("建议：") && watchResultJs.includes("性质：") && watchResultJs.includes("证据："));
+  check("result opportunity cards avoid raw chip labels", watchResultJs.includes("Priority") && watchResultJs.includes("Type") && watchResultJs.includes("Evidence") && watchResultJs.includes("建议") && watchResultJs.includes("性质") && watchResultJs.includes("证据"));
   check("result report summary points users to source evidence cards", watchResultJs.includes("完整来源、字段证据和排除原因") && watchResultJs.includes("查看机会卡"));
   check("result page hero demo title uses global AI events navigator name", watchResultJs.includes("getDisplayRadarTitle") && watchResultJs.includes("全球 AI 赛事导航") && !watchResultJs.includes('return "AI 赛事雷达"'));
   check("result page puts report summary after opportunity cards", watchResultJs.indexOf("watch-opportunity-grid") > -1 && watchResultJs.indexOf("report-summary") > watchResultJs.indexOf("watch-opportunity-grid"));

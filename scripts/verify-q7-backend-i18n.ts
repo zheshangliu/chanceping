@@ -51,6 +51,23 @@ check("backend i18n exposes apply function for dynamic screens", backendI18n.inc
 check("backend i18n only toggles language buttons", backendI18n.includes('querySelectorAll("button[data-backend-language]")'));
 check("backend i18n does not special-case nested brand text", !backendI18n.includes("classList?.contains(\"brand\")") && !backendI18n.includes("insertBefore(document.createTextNode"));
 check("backend i18n includes AI events navigator English copy", backendI18n.includes("Global AI Events Navigator"));
+[
+  "myRadarsTitle",
+  "createRadar",
+  "quotaCustomRadars",
+  "oneChatOneRadar",
+  "chatInputPlaceholder",
+  "resultBoard",
+  "adjustRadarProfile",
+  "fullMarkdownReport",
+].forEach((key) => {
+  check(`backend i18n includes dynamic key ${key}`, backendI18n.includes(key));
+});
+check("radar list reloads on backend language change", visibleFile("web/radars.js").includes("chanceping-backend-language-change") && visibleFile("web/radars.js").includes("loadRadarList"));
+check("hero chat rerenders on backend language change", visibleFile("web/hero-radar-chat.js").includes("chanceping-backend-language-change") && visibleFile("web/hero-radar-chat.js").includes("renderHeroRadarChat"));
+check("watch result uses backend i18n helper", visibleFile("web/watch-result.js").includes("backendText(") && visibleFile("web/watch-result.js").includes("currentBackendLanguage"));
+check("radar list uses backend i18n helper", visibleFile("web/radars.js").includes("backendText(") && visibleFile("web/radars.js").includes("currentBackendLanguage"));
+check("hero chat uses backend i18n helper", visibleFile("web/hero-radar-chat.js").includes("backendText(") && visibleFile("web/hero-radar-chat.js").includes("currentBackendLanguage"));
 check("backend visible loading uses Qwen wording", webVisibleFiles.some(({ content }) => content.includes("Qwen 正在理解")) && webVisibleFiles.some(({ content }) => content.includes("Serper 正在搜索机会")));
 const backendQwenWording = webVisibleFiles.map(({ content }) => content).join("\n");
 [
