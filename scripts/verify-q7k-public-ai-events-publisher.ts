@@ -136,6 +136,7 @@ check("public feed exposes official and aggregation source stats", typeof feed.s
 check("public feed still tracks total fallback volume", feed.stats.totalCount >= 30, `total=${feed.stats.totalCount}`);
 check("public feed exposes database count", feed.stats.databaseCount >= 1, JSON.stringify(feed.stats));
 check("public feed exposes seed count", feed.stats.seedCount >= 20, JSON.stringify(feed.stats));
+check("public feed exposes collection freshness schedule", feed.stats.lastCollectedAt === "2026-07-05" && feed.stats.updateCadenceDays === 3 && feed.stats.nextScheduledCollectionAt === "2026-07-08", JSON.stringify(feed.stats));
 check("internal radar IDs are hidden", !/radarId|radarIds|radar-internal-id|dedup_key|internal-dedup-key|contentHash|internal-content-hash/i.test(serialized));
 check("API keys are hidden", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(serialized));
 check("public feed does not push review burden to users", !/待复核|needs_review|review required|needs review/i.test(serialized), serialized.slice(0, 180));

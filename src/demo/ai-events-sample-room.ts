@@ -163,6 +163,9 @@ export interface PublicAiEventSampleRoomData {
     officialSourceCount?: number;
     aggregatorSourceCount?: number;
     lastCheckedAt: string;
+    lastCollectedAt?: string;
+    updateCadenceDays?: number;
+    nextScheduledCollectionAt?: string;
   };
 }
 

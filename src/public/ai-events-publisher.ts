@@ -23,6 +23,7 @@ import {
 } from "./ai-event-page-metadata";
 
 const DEFAULT_COVER_IMAGE_URL = "/assets/ai-event-placeholder.svg";
+const PUBLIC_AI_EVENTS_UPDATE_CADENCE_DAYS = 3;
 const NON_PUBLIC_STATUSES = new Set(["archived", "dismissed"]);
 const HISTORICAL_STATUSES = new Set(["expired", "missed"]);
 const LOW_VALUE_LEVELS = new Set(["hidden", "D"]);
@@ -378,6 +379,14 @@ function formatDateKey(date: Date | null, lifecycle: PublicAiEventLifecycle): st
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function addDaysToDateKey(dateKey: string, days: number): string {
+  const [year, month, day] = String(dateKey || "").slice(0, 10).split("-").map(Number);
+  if (!year || !month || !day) return "";
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + days);
+  return formatDateKey(date, "current");
 }
 
 function inferLifecycle(input: {
@@ -1294,6 +1303,8 @@ export function buildPublicAiEventFeed(
   ).length;
   const officialSourceCount = sourceNetwork.filter((source) => source.trustTier === "official_first").length;
   const aggregatorSourceCount = sourceNetwork.filter((source) => source.trustTier === "aggregation_lead").length;
+  const lastCollectedAt = allItems[0]?.lastCheckedAt ?? seedData.stats.lastCheckedAt;
+  const nextScheduledCollectionAt = addDaysToDateKey(lastCollectedAt, PUBLIC_AI_EVENTS_UPDATE_CADENCE_DAYS);
   return {
     items,
     sourceNetwork,
@@ -1319,7 +1330,10 @@ export function buildPublicAiEventFeed(
       imageCoverageCount,
       officialSourceCount,
       aggregatorSourceCount,
-      lastCheckedAt: allItems[0]?.lastCheckedAt ?? seedData.stats.lastCheckedAt,
+      lastCheckedAt: lastCollectedAt,
+      lastCollectedAt,
+      updateCadenceDays: PUBLIC_AI_EVENTS_UPDATE_CADENCE_DAYS,
+      nextScheduledCollectionAt,
     },
   };
 }

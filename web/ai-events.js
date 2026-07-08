@@ -41,6 +41,12 @@
       metricDeadline: "有明确截止",
       metricOfficial: "有官方入口",
       metricImage: "有封面图",
+      metricLastCollected: "最近收录",
+      metricUpdateCadence: "约每 3 天更新",
+      collectedToday: "今天",
+      collectedYesterday: "昨天",
+      collectedDaysAgo: (days) => `${days} 天前`,
+      collectedUnknown: "持续更新",
       currentListTitle: "当前有效 AI 赛事机会",
       historicalListTitle: "历史 AI 赛事",
       currentTab: "当前有效",
@@ -129,6 +135,12 @@
       metricDeadline: "Known deadlines",
       metricOfficial: "Official entries",
       metricImage: "With cover images",
+      metricLastCollected: "Last collected",
+      metricUpdateCadence: "Updated about every 3 days",
+      collectedToday: "today",
+      collectedYesterday: "yesterday",
+      collectedDaysAgo: (days) => `${days} days ago`,
+      collectedUnknown: "Refreshing",
       currentListTitle: "Current AI contest opportunities",
       historicalListTitle: "Historical AI contest opportunities",
       currentTab: "Current",
@@ -224,6 +236,43 @@
   function translate(key, ...args) {
     const value = I18N[currentLanguage]?.[key] || I18N.zh[key] || key;
     return typeof value === "function" ? value(...args) : value;
+  }
+
+  function parseDateKey(value) {
+    const [year, month, day] = String(value || "").slice(0, 10).split("-").map(Number);
+    if (!year || !month || !day) return null;
+    const date = new Date(year, month - 1, day);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function formatCollectionDate(date) {
+    if (!date) return t("collectedUnknown");
+    return currentLanguage === "en"
+      ? date.toLocaleDateString("en", { month: "short", day: "numeric" })
+      : `${date.getMonth() + 1}月${date.getDate()}日`;
+  }
+
+  function relativeCollectionLabel(date) {
+    if (!date) return "";
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const days = Math.max(0, Math.round((today.getTime() - day.getTime()) / 86400000));
+    if (days === 0) return t("collectedToday");
+    if (days === 1) return t("collectedYesterday");
+    return translate("collectedDaysAgo", days);
+  }
+
+  function collectionFreshnessMeta(stats) {
+    const date = parseDateKey(stats?.lastCollectedAt || stats?.lastCheckedAt);
+    const relative = relativeCollectionLabel(date);
+    const label = [t("metricLastCollected"), relative].filter(Boolean).join(" · ");
+    const cadenceDays = Number(stats?.updateCadenceDays || 3);
+    return {
+      value: formatCollectionDate(date),
+      label: label || t("metricLastCollected"),
+      hint: currentLanguage === "en" ? `Updated about every ${cadenceDays} days` : `约每 ${cadenceDays} 天更新`,
+    };
   }
 
   function categoryLabel(category) {
@@ -408,15 +457,18 @@
     }).length;
     const official = items.filter((item) => item?.officialUrl || item?.registrationUrl).length;
     const image = items.filter((item) => item?.coverImageUrl && item?.imageStatus !== "default_placeholder").length;
+    const freshness = collectionFreshnessMeta(stats);
     container.innerHTML = [
-      [total, t("metricTotal")],
-      [knownDeadline, t("metricDeadline")],
-      [official, t("metricOfficial")],
-      [image, t("metricImage")],
-    ].map(([value, label]) => `
+      { value: total, label: t("metricTotal") },
+      { value: knownDeadline, label: t("metricDeadline") },
+      { value: official, label: t("metricOfficial") },
+      { value: image, label: t("metricImage") },
+      freshness,
+    ].map(({ value, label, hint }) => `
       <div class="ai-events-metric">
         <strong>${escapeHtml(String(value))}</strong>
         <span>${escapeHtml(label)}</span>
+        ${hint ? `<small>${escapeHtml(hint)}</small>` : ""}
       </div>
     `).join("");
   }

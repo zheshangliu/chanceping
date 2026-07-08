@@ -188,14 +188,16 @@ async function main(): Promise<void> {
 
   // 2. GET /api/radars → 200, 返回数组含 3 个内置 + 1 个自定义
   {
+    ctx.radarStore.update("builtin_ai_competition", { name: "AI 赛事雷达" });
     const { res, json } = await getJson(app, "/api/radars");
     check("2. GET /api/radars 返回 200", res.status === 200);
-    const arr = (json.data as Array<{ id?: string; isBuiltin?: boolean }> | null) ?? [];
+    const arr = (json.data as Array<{ id?: string; name?: string; isBuiltin?: boolean }> | null) ?? [];
     const builtinCount = arr.filter((r) => r.isBuiltin).length;
     const customCount = arr.filter((r) => !r.isBuiltin).length;
     check("2.1 含 3 个内置雷达", builtinCount === 3, `builtin=${builtinCount}`);
     check("2.2 含 1 个自定义雷达", customCount === 1, `custom=${customCount}`);
     check("2.3 含刚创建的自定义雷达", arr.some((r) => r.id === customId));
+    check("2.4 内置 AI 赛事导航展示名归一化", arr.find((r) => r.id === "builtin_ai_competition")?.name === "全球 AI 赛事导航", JSON.stringify(arr.find((r) => r.id === "builtin_ai_competition")));
   }
 
   // 3. GET /api/radars/:id → 200, 返回刚才创建的雷达

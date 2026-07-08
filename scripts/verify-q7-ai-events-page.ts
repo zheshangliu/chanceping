@@ -76,6 +76,7 @@ check("does not mention mock as successful source", !/mock\s+success|demo\s+sour
 check("hybrid CSS file is linked only from AI events page", html.includes('href="/ai-events-hybrid.css"'));
 check("hybrid CSS static route is registered", webRoutes.includes('"/ai-events-hybrid.css"') && webRoutes.includes('serveFile("ai-events-hybrid.css"'));
 check("hybrid page has operator metrics mount", html.includes("ai-events-radar-metrics"));
+check("hybrid page exposes latest collection freshness metric", js.includes("metricLastCollected") && js.includes("collectionFreshnessMeta") && js.includes("约每 3 天更新"));
 check("hybrid page has list controls mount", html.includes("ai-events-list-controls"));
 check("hybrid page has verification panel mount", html.includes("ai-events-verification-panel"));
 check("hybrid JS keeps public feed endpoint", js.includes("/api/public/ai-events?") && !js.includes("/api/radar-chats"));

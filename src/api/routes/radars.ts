@@ -45,6 +45,9 @@ import { reviseRadarVersion } from "../../agents/radar-version-reviser";
 import { reviseRadarVersionWithLlm } from "../../agents/radar-version-llm-reviser";
 import type { RadarRevisionChatContext } from "../../schema/radar-version-spec";
 
+const PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID = "builtin_ai_competition";
+const PUBLIC_AI_EVENTS_DISPLAY_NAME = "全球 AI 赛事导航";
+
 /** 从 RadarKind 推断入库类型；custom 必须保持 custom，不能落到 ai_competition。 */
 function kindToRadarType(kind: RadarKind): RadarType {
   if (kind === "ai_competition" || kind === "opc_policy" || kind === "cultural_heritage" || kind === "custom") {
@@ -60,6 +63,14 @@ function errorResponse(code: string, message: string, durationMs: number, status
 
 function canAccessRadar(radar: Radar, userId: string): boolean {
   return radar.isBuiltin === true || radar.ownerId === userId;
+}
+
+function normalizeRadarForResponse(radar: Radar): Radar {
+  if (radar.id !== PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID) return radar;
+  return {
+    ...radar,
+    name: PUBLIC_AI_EVENTS_DISPLAY_NAME,
+  };
 }
 
 function requireOwnedRadar(c: Context, radar: Radar | null, userId: string, start: number): { ok: true; radar: Radar } | { ok: false; response: Response } {
@@ -389,7 +400,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       ...(kind ? { kind } : {}),
       ...(scope === "mine" ? { isBuiltin: false, ownerId: user.userId } : {}),
       includeArchived,
-    });
+    }).map(normalizeRadarForResponse);
     return c.json({ success: true, data: radars, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
   });
 
@@ -446,7 +457,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       return owned.response;
     }
     const radar = owned.radar;
-    return c.json({ success: true, data: radar, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
+    return c.json({ success: true, data: normalizeRadarForResponse(radar), error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
   });
 
   // ============================================================
