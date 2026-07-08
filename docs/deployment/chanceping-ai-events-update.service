@@ -1,0 +1,14 @@
+[Unit]
+Description=ChancePing AI Events public radar refresh
+After=network-online.target chanceping.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/chanceping/current
+EnvironmentFile=/etc/chanceping/chanceping.env
+ExecStart=/usr/bin/npm run ai-events:update -- --hydrate-images --image-limit=60
+TimeoutStartSec=30min
+User=root
+Group=root
+

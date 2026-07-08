@@ -314,6 +314,67 @@ systemctl restart chanceping
 
 不要把密钥写进仓库、聊天记录或上传包。
 
+## AI Events 三天更新任务（SWAS / Workbench）
+
+公开页 `/aievents` 不在访客打开页面时触发 live search 或 live LLM。AI Events 公共赛事库由后台定时刷新，当前默认节奏是每 72 小时跑一次：
+
+- 读取现有 AI Events source network；
+- 同步机会卡到本地机会库；
+- 尝试补齐赛事封面图；
+- 没有真实赛事图时回退到来源站点 logo / 平台占位图；
+- 不打印 Qwen / Serper API Key。
+
+仓库提供两个 systemd 模板：
+
+```bash
+docs/deployment/chanceping-ai-events-update.service
+docs/deployment/chanceping-ai-events-update.timer
+```
+
+在 SWAS Workbench 中执行下面命令启用三天一次的更新任务：
+
+```bash
+cd /opt/chanceping/current
+install -D docs/deployment/chanceping-ai-events-update.service /etc/systemd/system/chanceping-ai-events-update.service
+install -D docs/deployment/chanceping-ai-events-update.timer /etc/systemd/system/chanceping-ai-events-update.timer
+systemctl daemon-reload
+systemctl enable --now chanceping-ai-events-update.timer
+systemctl list-timers --all | grep chanceping-ai-events-update
+```
+
+如果想立即手动跑一次刷新：
+
+```bash
+systemctl start chanceping-ai-events-update.service
+journalctl -u chanceping-ai-events-update.service -n 120 --no-pager
+```
+
+如果要临时停用三天更新：
+
+```bash
+systemctl disable --now chanceping-ai-events-update.timer
+```
+
+该任务实际执行：
+
+```bash
+npm run ai-events:update -- --hydrate-images --image-limit=60
+```
+
+也可以在 Workbench 中直接手动执行同一命令排查问题：
+
+```bash
+cd /opt/chanceping/current
+npm run ai-events:update -- --hydrate-images --image-limit=60
+```
+
+刷新后可用下面命令确认公开页和 API 仍正常：
+
+```bash
+curl -fsS http://127.0.0.1:3000/api/public/ai-events?page_size=3 | head -c 500
+curl -I http://127.0.0.1:3000/aievents
+```
+
 域名配置建议：
 
 - `chanceping.com` -> ECS 公网 IP；

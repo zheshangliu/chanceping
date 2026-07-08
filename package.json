@@ -94,6 +94,7 @@
     "verify:q7:ai-events-image-enrichment": "tsx scripts/verify-q7p-ai-events-image-enrichment.ts",
     "verify:q7:ai-events-update-pipeline": "tsx scripts/verify-q7q-ai-events-update-pipeline.ts",
     "verify:q7:ai-events-source-covers": "tsx scripts/verify-q7r-ai-events-source-covers.ts",
+    "verify:q7:ai-events-swas-scheduler": "tsx scripts/verify-q7s-ai-events-swas-scheduler.ts",
     "ai-events:update": "tsx scripts/run-ai-events-update-pipeline.ts",
     "ai-events:update:scheduled": "tsx scripts/run-ai-events-update-scheduler.ts",
     "verify:q7:demo": "tsx scripts/verify-q7-ai-competition-demo.ts",

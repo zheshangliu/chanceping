@@ -1,0 +1,12 @@
+[Unit]
+Description=Run ChancePing AI Events public radar refresh every 72 hours
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=72h
+Persistent=true
+Unit=chanceping-ai-events-update.service
+
+[Install]
+WantedBy=timers.target
+
