@@ -119,7 +119,23 @@ check("再次盯机会报告失败不丢机会", radarsJs.includes("机会已更
 check("雷达详情页有客户化再次盯入口", ["返回我的雷达", "再次盯机会", "正在生成报告", "/api/reports/generate"].every((text) => radarDetailJs.includes(text)));
 check("我的雷达只请求当前用户长期雷达", radarsJs.includes("/api/radars?scope=mine"));
 check("我的雷达额外过滤内置模板", radarsJs.includes("radar.isBuiltin !== true"));
-check("我的雷达空状态引导回首页", radarsJs.includes("还没有保存长期雷达") && radarsJs.includes("回首页建立雷达"));
+check(
+  "我的雷达固定展示内置全球 AI 赛事导航",
+  [
+    "buildPublicAiEventsNavigatorRadar",
+    'PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID = "builtin_ai_competition"',
+    'PUBLIC_AI_EVENTS_DISPLAY_NAME = "全球 AI 赛事导航"',
+    "isPublicAiEventsNavigatorRadar",
+  ].every((text) => radarsJs.includes(text)),
+);
+check(
+  "我的雷达不再依赖空状态作为主入口",
+  !radarsJs.includes("还没有保存长期雷达") && !radarsJs.includes("回首页建立雷达"),
+);
+check(
+  "我的雷达过滤旧 AI 赛事 demo 重复卡",
+  radarsJs.includes("isLegacyAiEventsDuplicateRadar") && radarsJs.includes("PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE"),
+);
 check("我的雷达旧创建入口改为建立新雷达", html.includes("建立新雷达") && !html.includes("+ 创建雷达") && !html.includes("✨ AI 生成"));
 check("客户路径隔离隐藏旧模块", homeJs.includes("detachAdvancedPanelsForCustomerPath") && ["panel-chat", "panel-search", "panel-opportunities", "panel-reports", "panel-editor"].every((id) => homeJs.includes(id)));
 check("我的雷达卡片支持软删除", radarsJs.includes("删除雷达") && radarsJs.includes('method: "DELETE"') && radarsJs.includes("confirm("));

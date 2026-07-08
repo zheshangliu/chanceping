@@ -34,6 +34,8 @@ check("local dev uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/.te
 check("live LLM verifier uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/.test(scripts["verify:live-llm"] ?? ""));
 check("Q7 live demo uses Qwen contest profile", /CHANCEPING_LLM_PROFILE=contest/.test(scripts["verify:q7:live-demo"] ?? ""));
 check("backend Qwen wording verifier is registered", scripts["verify:q7:backend-i18n"] === "tsx scripts/verify-q7-backend-i18n.ts");
+check("QA cleanup command is registered", scripts["maintenance:q7:cleanup-qa-data"] === "tsx scripts/cleanup-q7-qa-data.ts");
+check("QA cleanup verifier is registered", scripts["verify:q7:qa-cleanup"] === "tsx scripts/verify-q7-qa-cleanup.ts");
 check("api.env Qwen contest verifier is registered", scripts["verify:q7:api-env-contest"] === "tsx scripts/verify-q7-api-env-contest.ts");
 check("chat window verifier is registered", scripts["verify:q7:chat-window"] === "tsx scripts/verify-q7-chat-window.ts");
 check("cloud readiness verifier is registered", scripts["verify:q7:cloud-readiness"] === "tsx scripts/verify-q7-cloud-readiness.ts");
@@ -192,6 +194,23 @@ check(
 check(
   "my radars list/detail use visitor-scoped backend fetch",
   radarsJs.includes("backendFetch") && radarDetailJs.includes("backendFetch") && radarsJs.includes("ChancePingBackendUser") && radarDetailJs.includes("ChancePingBackendUser"),
+);
+check(
+  "my radars page always shows built-in global AI events navigator",
+  radarsJs.includes("buildPublicAiEventsNavigatorRadar")
+    && radarsJs.includes('PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID = "builtin_ai_competition"')
+    && radarsJs.includes('PUBLIC_AI_EVENTS_DISPLAY_NAME = "全球 AI 赛事导航"'),
+);
+check(
+  "my radars page bridges global AI events navigator to public event store",
+  radarsJs.includes("ensurePublicAiEventsSynced")
+    && radarsJs.includes("PUBLIC_AI_EVENTS_RADAR_ID")
+    && radarsJs.includes("filterPublicAiEventCardsForView"),
+);
+check(
+  "my radars page filters legacy duplicate AI events demo radar",
+  radarsJs.includes("isLegacyAiEventsDuplicateRadar")
+    && radarsJs.includes("PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE"),
 );
 
 const aiEventsPage = read("web/ai-events.js");

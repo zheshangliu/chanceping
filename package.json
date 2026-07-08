@@ -103,6 +103,8 @@
     "verify:q7:chat-context": "tsx scripts/verify-q7-chat-context.ts",
     "verify:q7:generate-context": "tsx scripts/verify-q7-generate-context.ts",
     "verify:q7:backend-i18n": "tsx scripts/verify-q7-backend-i18n.ts",
+    "maintenance:q7:cleanup-qa-data": "tsx scripts/cleanup-q7-qa-data.ts",
+    "verify:q7:qa-cleanup": "tsx scripts/verify-q7-qa-cleanup.ts",
     "verify:q7:api-env-contest": "tsx scripts/verify-q7-api-env-contest.ts",
     "verify:q7:cloud-readiness": "tsx scripts/verify-q7-cloud-readiness.ts",
     "verify:q7:aliyun-runbook": "tsx scripts/verify-q7-aliyun-runbook.ts",

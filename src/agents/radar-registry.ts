@@ -4,7 +4,7 @@
  * V1.5-02 新增。管理内置雷达和自定义雷达的注册、查询、provider 路由。
  *
  * 设计原则：
- *   - 内置雷达幂等初始化（先 get 检查，已存在则跳过，不覆盖用户修改）
+ *   - 内置雷达幂等初始化（先 get 检查；已存在则同步官方配置）
  *   - 内置雷达不可编辑/不可删除（updateRadar / archiveRadar 抛错）
  *   - getProvidersForRadar 兼容旧式 radar_type 字符串
  *   - 纯数据操作，不调 LLM
@@ -81,15 +81,28 @@ export class RadarRegistry {
    *
    * 幂等逻辑：
    *   1. 对每个内置雷达 ID，先 store.get(id)
-   *   2. 如果已存在，跳过（不覆盖，防止用户修改丢失）
+   *   2. 如果已存在，同步名称、路由和 active 状态
    *   3. 如果不存在，用 store.create() 创建，传入 isBuiltin=true + ownerId="system"
    *   4. 调用 store.save() 持久化
    */
   initialize(): void {
-    let created = false;
+    let changed = false;
     for (const config of BUILTIN_RADARS) {
       const existing = this.store.get(config.id);
       if (existing) {
+        const shouldUpdate =
+          existing.name !== config.name
+          || existing.status !== "active"
+          || JSON.stringify(existing.providerRouting) !== JSON.stringify(config.providerRouting);
+
+        if (shouldUpdate) {
+          this.store.update(config.id, {
+            name: config.name,
+            status: "active",
+            providerRouting: config.providerRouting,
+          });
+          changed = true;
+        }
         continue;
       }
       const input: RadarCreateInput = {
@@ -101,9 +114,9 @@ export class RadarRegistry {
         providerRouting: config.providerRouting,
       };
       this.store.create(input);
-      created = true;
+      changed = true;
     }
-    if (created) {
+    if (changed) {
       this.store.save();
     }
   }

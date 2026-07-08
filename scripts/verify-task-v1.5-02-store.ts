@@ -272,6 +272,14 @@ function testRadarRegistry(): void {
   check("21. 二次 initialize() 幂等，仍 3 个内置雷达",
     radarsAfterSecondInit.length === 3, `len=${radarsAfterSecondInit.length}`);
 
+  // 21.1 历史内置雷达旧名会被同步为当前官方名称
+  store.update("builtin_ai_competition", { name: "AI 赛事雷达" });
+  store.save();
+  registry.initialize();
+  const syncedBuiltin = registry.getRadarById("builtin_ai_competition");
+  check("21.1 initialize() 同步内置 AI 赛事雷达官方名称",
+    syncedBuiltin?.name === "全球 AI 赛事导航", `name=${syncedBuiltin?.name}`);
+
   // 22. getBuiltinRadars() 返回 3 个
   const builtins = registry.getBuiltinRadars();
   check("22. getBuiltinRadars() 返回 3 个", builtins.length === 3);

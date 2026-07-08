@@ -37,6 +37,7 @@
   };
 
   const PUBLIC_AI_EVENTS_RADAR_ID = "public_ai_events";
+  const PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID = "builtin_ai_competition";
   const PUBLIC_AI_EVENTS_DISPLAY_NAME = "全球 AI 赛事导航";
   const PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE = /个人开发者的个人开发者比赛机会雷达|个人开发者比赛机会雷达/i;
 
@@ -120,10 +121,39 @@
 
   function isAiEventsHeroRadar(radar) {
     const text = radarSearchText(radar);
-    if (radar?.id === PUBLIC_AI_EVENTS_RADAR_ID || PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE.test(text)) return true;
+    if (radar?.id === PUBLIC_AI_EVENTS_RADAR_ID || radar?.id === PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID || PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE.test(text)) return true;
     const hasContestIntent = /AI\s*赛事|AI\s*比赛|比赛|赛事|Hackathon|黑客松|马拉松|开发者挑战|报名|参赛|提交作品/i.test(text);
     const hasAiOrHeroContext = /AI|OPC|个人开发者|云资源|开发者|Qwen|Devpost|DoraHacks|Lablab|Kaggle/i.test(text);
     return hasContestIntent && hasAiOrHeroContext;
+  }
+
+  function isPublicAiEventsNavigatorRadar(radar) {
+    return radar?.id === PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID || radar?.id === PUBLIC_AI_EVENTS_RADAR_ID;
+  }
+
+  function isLegacyAiEventsDuplicateRadar(radar) {
+    return !radar?.isBuiltin && PERSONAL_DEVELOPER_DUPLICATE_RADAR_RE.test(radarSearchText(radar));
+  }
+
+  function buildPublicAiEventsNavigatorRadar() {
+    return {
+      id: PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID,
+      name: PUBLIC_AI_EVENTS_DISPLAY_NAME,
+      kind: "ai_competition",
+      status: "active",
+      isBuiltin: true,
+      ownerId: "system",
+      currentVersion: "V1.0",
+      latestOpportunityCount: "公共库",
+      spec: {
+        radar_version: { version: "V1.0" },
+        profile_summary: {
+          identity: "OPC / AI 产品创业者 / 个人开发者",
+          target: "全球 AI 比赛、Hackathon、云资源扶持和产品展示机会",
+          priorities: ["可报名", "有官方入口", "适合个人或小团队"],
+        },
+      },
+    };
   }
 
   function getRadarDisplayName(radar) {
@@ -215,6 +245,7 @@
   }
 
   function getRadarNewOpportunityCount(radar) {
+    if (isPublicAiEventsNavigatorRadar(radar)) return "公共库";
     const candidates = [
       radar?.lastRunOpportunityCount,
       radar?.latestOpportunityCount,
@@ -229,6 +260,7 @@
   }
 
   function getRadarHealthCopy(radar) {
+    if (isPublicAiEventsNavigatorRadar(radar)) return "内置公共雷达，不占用自定义名额；公开页和这里读取同一批赛事库。";
     if (radar?.status === "archived") return "已归档，不再自动运行。";
     if (radar?.status === "paused") return "已暂停，需要恢复后再继续盯。";
     if (!radar?.lastRunAt) return "还没跑过，建议先点“再次盯机会”生成第一轮结果。";
@@ -296,19 +328,12 @@
   function renderRadarCards(radars) {
     const grid = document.getElementById("radar-cards-grid");
     if (!grid) return;
-    if (!radars || radars.length === 0) {
-      grid.innerHTML = `
-        <div class="radar-empty-state">
-          <h4>还没有保存长期雷达</h4>
-          <p>先告诉 AI 你想盯什么，看到有用的结果后再保存到这里。</p>
-          <button class="btn-primary" id="btn-empty-create-radar">回首页建立雷达</button>
-        </div>
-      `;
-      grid.querySelector("#btn-empty-create-radar")?.addEventListener("click", goToHomeForNewRadar);
-      return;
-    }
+    const customRadars = (Array.isArray(radars) ? radars : [])
+      .filter((radar) => radar?.isBuiltin !== true)
+      .filter((radar) => !isLegacyAiEventsDuplicateRadar(radar));
+    const visibleRadars = [buildPublicAiEventsNavigatorRadar(), ...customRadars];
     grid.innerHTML = "";
-    radars.forEach((radar) => {
+    visibleRadars.forEach((radar) => {
       grid.appendChild(buildRadarCard(radar));
     });
   }
@@ -336,7 +361,19 @@
     const profileSummary = buildProfileSummaryText(radar);
     const versionLabel = getRadarVersionLabel(radar);
     const newCount = getRadarNewOpportunityCount(radar);
-    const canRerun = radar.status !== "archived";
+    const isPublicNavigator = isPublicAiEventsNavigatorRadar(radar);
+    const canRerun = radar.status !== "archived" && !isPublicNavigator;
+    const actionHtml = isPublicNavigator
+      ? `
+        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
+        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
+      `
+      : `
+        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
+        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRerun ? "" : "disabled"}>再次盯机会</button>
+        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
+        <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
+      `;
 
     card.innerHTML = `
       ${builtinTag}
@@ -374,10 +411,7 @@
       </div>
       <p class="radar-card-next-step">${escapeHtml(getRadarHealthCopy(radar))}</p>
       <div class="radar-card-actions">
-        <button class="btn-edit-radar" data-radar-id="${escapeAttr(radar.id)}">编辑雷达</button>
-        <button class="btn-rerun-radar" data-radar-id="${escapeAttr(radar.id)}" ${canRerun ? "" : "disabled"}>再次盯机会</button>
-        <button class="btn-view-radar-detail btn-detail" data-radar-id="${escapeAttr(radar.id)}">查看机会和报告</button>
-        <button class="btn-delete-radar" data-radar-id="${escapeAttr(radar.id)}">删除雷达</button>
+        ${actionHtml}
       </div>
       <div class="radar-rerun-status" aria-live="polite"></div>
     `;
@@ -406,6 +440,10 @@
   }
 
   function editRadarFromCard(radar) {
+    if (isPublicAiEventsNavigatorRadar(radar) && window.openHeroRadarWindow) {
+      window.openHeroRadarWindow();
+      return;
+    }
     if (window.openHeroRadarForRadar) {
       window.openHeroRadarForRadar(radar);
       return;
