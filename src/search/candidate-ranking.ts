@@ -123,6 +123,28 @@ function hasUnreadableTitle(result: SearchResult): boolean {
   return /\uFFFD|ï¿½/.test(title);
 }
 
+function lowActionNoiseReasonCodes(result: SearchResult): string[] {
+  const title = normalize(result.title).replace(/^\[pdf\]\s*/i, "").trim();
+  const domain = domainOf(result.url);
+  const text = textOf(result);
+  const reasons: string[] = [];
+
+  if (/^(untitled|无标题|未命名)(?:\s*(?:document|pdf|文件|文档))?$/i.test(title)) {
+    reasons.push("low_action_untitled_document");
+  }
+  if (/^(deadlines?|截止日期|时间表|schedule|calendar|resources?)$/i.test(title)) {
+    reasons.push("low_action_generic_title_without_subject");
+  }
+  if (
+    /(?:^|\.)apps\.shopify\.com$|(?:^|\.)appsource\.microsoft\.com$|(?:^|\.)chromewebstore\.google\.com$|(?:^|\.)apps\.apple\.com$/i.test(domain) &&
+    !/partner|developer|submit|submission|apply|publish|seller|入驻|开发者|提交|报名|申请|伙伴/i.test(text)
+  ) {
+    reasons.push("low_action_app_store_product_page");
+  }
+
+  return reasons;
+}
+
 function sameTopicTitle(a: string, b: string): boolean {
   if (!a || !b) return false;
   if (a === b) return true;
@@ -309,6 +331,7 @@ function semanticScore(result: SearchResult): Pick<CandidateRankingAssessment, "
 
 function isAcceptedKeyCandidate(result: SearchResult): boolean {
   if (hasUnreadableTitle(result)) return false;
+  if (lowActionNoiseReasonCodes(result).length > 0) return false;
   if (result.candidate_judge_assessment?.decision === "reject") return false;
   if (
     result.candidate_judge_assessment?.decision === "downgrade_to_watch_signal" &&
@@ -329,6 +352,7 @@ function assessRanking(result: SearchResult, spec: RadarRequirementSpec, options
   const freshness = freshnessScore(result, options.now);
   const semantic = semanticScore(result);
   const readabilityReasonCodes = hasUnreadableTitle(result) ? ["unreadable_title_excluded_from_key_card"] : [];
+  const lowActionReasonCodes = lowActionNoiseReasonCodes(result);
   const relevanceScore = result.candidate_judge_assessment?.relevance_score
     ?? (result.relevance_assessment?.decision === "accept" ? 75 : result.relevance_assessment?.decision === "downgrade_to_watch_signal" ? 50 : 25);
   const totalScore = Math.round(
@@ -355,6 +379,7 @@ function assessRanking(result: SearchResult, spec: RadarRequirementSpec, options
         : []),
       ...(result.ownership_assessment?.reasonCodes ?? []),
       ...readabilityReasonCodes,
+      ...lowActionReasonCodes,
     ],
     rankedAt: options.now.toISOString(),
   };

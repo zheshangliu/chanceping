@@ -157,6 +157,17 @@ async function run(): Promise<void> {
   check("async job progress hides external provider names", !/DeepSeek|Qwen 正在|Serper 正在|LLM 正在|serper:/i.test(serialized));
 
   const random10Script = fs.readFileSync("scripts/run-q7z-live-custom-radar-async-10.ts", "utf8");
+  const radarJobsRoute = fs.readFileSync("src/api/routes/radar-jobs.ts", "utf8");
+  check(
+    "async radar jobs have configurable max runtime",
+    radarJobsRoute.includes("CHANCEPING_RADAR_JOB_TIMEOUT_MS") && radarJobsRoute.includes("RADAR_JOB_TIMEOUT_MS"),
+    "jobs should not run forever without a customer-visible terminal state",
+  );
+  check(
+    "async radar jobs emit heartbeat progress while running",
+    radarJobsRoute.includes("RADAR_JOB_HEARTBEAT_MS") && radarJobsRoute.includes("startJobHeartbeat"),
+    "long live runs need ongoing progress updates",
+  );
   check(
     "random 10 version parser supports V2 and later",
     random10Script.includes("match(/V(\\d+)\\.(\\d+)/)"),

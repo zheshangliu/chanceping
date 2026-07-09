@@ -174,6 +174,50 @@ check("unreadable mojibake title is excluded from key cards", !unreadableResult.
 check("unreadable title keeps audit reason", unreadableResult.assessedResults.some((item) => item.url.includes("unreadable-title") && ranking(item)?.reasonCodes.includes("unreadable_title_excluded_from_key_card")), JSON.stringify(unreadableResult.assessedResults.map((item) => ({ title: item.title, cap: ranking(item)?.capStatus, reasons: ranking(item)?.reasonCodes }))));
 check("readable candidate still enters key cards after unreadable exclusion", unreadableResult.keyCandidates.some((item) => item.url.includes("readable-title")), unreadableResult.keyCandidates.map((item) => item.title).join(" | "));
 
+const lowActionNoiseSample = [
+  candidate(
+    "Shopify App Store 中 dogeprint 提供的应用",
+    "https://apps.shopify.com/dogeprint",
+    "marketplace_partner_page",
+    "business_lead",
+    94,
+    "应用商店商品页，展示某个 app，没有采购、供应商征集或客户需求入口。",
+  ),
+  candidate(
+    "Deadlines",
+    "https://example.com/deadlines",
+    "official_event_site",
+    "direct_opportunity",
+    98,
+    "仅为截止日期栏目标题，未说明具体项目、采购方、报名对象或行动入口。",
+  ),
+  candidate(
+    "[PDF] Untitled",
+    "https://www.gd.gov.cn/procurement/untitled.pdf",
+    "procurement_or_supplier_portal",
+    "direct_opportunity",
+    97,
+    "未命名 PDF，搜索摘要没有给出可判断的项目主体或采购主题。",
+  ),
+  candidate(
+    "2026年员工福利礼品供应商征集公告",
+    "https://www.gd.gov.cn/procurement/readable-specific-title",
+    "procurement_or_supplier_portal",
+    "direct_opportunity",
+    76,
+    "2026年度员工福利礼品供应商征集公告，供应商可查看报名入口和材料要求。",
+  ),
+];
+const lowActionNoiseResult = rankCandidateResults(lowActionNoiseSample, spec, {
+  maxKeyCandidates: 5,
+  now: new Date("2026-07-03T00:00:00+08:00"),
+});
+check("app store product pages are not key opportunity cards", !lowActionNoiseResult.keyCandidates.some((item) => item.url.includes("apps.shopify.com")), lowActionNoiseResult.keyCandidates.map((item) => `${item.title}:${ranking(item)?.reasonCodes.join(",")}`).join(" | "));
+check("generic one-word deadline pages are not key opportunity cards", !lowActionNoiseResult.keyCandidates.some((item) => item.title === "Deadlines"), lowActionNoiseResult.keyCandidates.map((item) => item.title).join(" | "));
+check("untitled documents are not key opportunity cards", !lowActionNoiseResult.keyCandidates.some((item) => /untitled/i.test(item.title)), lowActionNoiseResult.keyCandidates.map((item) => item.title).join(" | "));
+check("low-action noise keeps explicit audit reasons", lowActionNoiseResult.assessedResults.filter((item) => !item.url.includes("readable-specific-title")).every((item) => ranking(item)?.reasonCodes.some((code) => code.includes("low_action") || code.includes("weak"))), JSON.stringify(lowActionNoiseResult.assessedResults.map((item) => ({ title: item.title, cap: ranking(item)?.capStatus, reasons: ranking(item)?.reasonCodes }))));
+check("specific official opportunity survives low-action noise exclusion", lowActionNoiseResult.keyCandidates.some((item) => item.url.includes("readable-specific-title")), lowActionNoiseResult.keyCandidates.map((item) => item.title).join(" | "));
+
 const capSample = Array.from({ length: 7 }, (_, index) => candidate(
   `2026年员工福利礼品供应商征集公告 ${index + 1}`,
   `https://www.gd.gov.cn/procurement/welfare-gifts-2026-${index + 1}`,

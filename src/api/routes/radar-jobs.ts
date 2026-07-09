@@ -55,6 +55,22 @@ interface RadarJobRunRequest extends SearchRequest {
   period_end?: string;
 }
 
+function readPositiveIntegerEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (!raw) return fallback;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+const RADAR_JOB_TIMEOUT_MS = readPositiveIntegerEnv("CHANCEPING_RADAR_JOB_TIMEOUT_MS", 10 * 60 * 1000);
+const RADAR_JOB_HEARTBEAT_MS = readPositiveIntegerEnv("CHANCEPING_RADAR_JOB_HEARTBEAT_MS", 15 * 1000);
+const RADAR_JOB_HEARTBEAT_LINES = [
+  "盯机会仍在搜索和去重，请稍等，我会继续更新进度。",
+  "盯机会正在读取候选网页并整理可行动入口。",
+  "盯机会正在筛掉弱页面、纯资讯和不匹配结果。",
+  "盯机会正在归纳证据，准备生成机会卡和报告。",
+];
+
 function createJobId(): string {
   return `job_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -78,7 +94,43 @@ function publicJob(job: RadarJobRecord): RadarJobRecord {
   };
 }
 
+function isTerminalJob(job: RadarJobRecord): boolean {
+  return job.status === "succeeded" || job.status === "failed";
+}
+
+function startJobHeartbeat(job: RadarJobRecord): ReturnType<typeof setInterval> | null {
+  if (RADAR_JOB_HEARTBEAT_MS <= 0) return null;
+  let index = 0;
+  return setInterval(() => {
+    if (isTerminalJob(job)) return;
+    const line = RADAR_JOB_HEARTBEAT_LINES[index % RADAR_JOB_HEARTBEAT_LINES.length];
+    index += 1;
+    addProgress(job, job.phase === "reporting" ? "reporting" : "searching", line);
+  }, RADAR_JOB_HEARTBEAT_MS);
+}
+
+function withJobTimeout<T>(work: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`RADAR_JOB_TIMEOUT_MS:${timeoutMs}`));
+    }, timeoutMs);
+    work.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
+
 function sanitizeErrorMessage(message: string): string {
+  if (/RADAR_JOB_TIMEOUT_MS/.test(message)) {
+    return "这次盯机会已经等待较久但仍未完成。雷达已保留，你可以稍后重试，或先在聊天窗口继续补充条件。";
+  }
   return message
     .replace(/DeepSeek|Qwen|Serper|LLM|API/gi, "盯机会")
     .replace(/serper:/gi, "盯机会：");
@@ -242,7 +294,9 @@ export function radarJobRoutes(ctx: AppContext): Hono {
     if (!job) return;
     job.status = "running";
     addProgress(job, "searching", "盯机会正在按雷达画像执行多组行业查询；不用刷新页面，我会持续更新这里。");
+    const heartbeat = startJobHeartbeat(job);
     try {
+      await withJobTimeout((async () => {
       let spec: RadarRequirementSpec;
       let providerRouting: ProviderRouting | undefined = body.providerRouting;
       if (body.radar_id) {
@@ -278,12 +332,14 @@ export function radarJobRoutes(ctx: AppContext): Hono {
 
       addProgress(job, "searching", "盯机会正在优先读取官方来源、采购/合作入口和行业平台。");
       const searchResult = await orchestrator.search(spec, body.query, liveProviderRouting);
+      if (isTerminalJob(job)) return;
       const liveError = resolvedMode.dataMode === "live" ? validateLiveSearchResult(searchResult) : null;
       const search = withSearchRunOutcome(searchResult, resolvedMode.dataMode, liveError);
       const rawCount = search.total_raw ?? search.rawCandidates?.length ?? 0;
       const cardCount = search.opportunityCards?.length ?? 0;
       addProgress(job, "reporting", `盯机会已筛选到 ${rawCount} 条候选和 ${cardCount} 张机会卡，正在生成报告摘要和行动建议。`);
       const report = await generateReportForJob(ctx, body, spec, search);
+      if (isTerminalJob(job)) return;
       if (!report.success) {
         throw new Error(report.error ?? "报告生成失败");
       }
@@ -291,12 +347,17 @@ export function radarJobRoutes(ctx: AppContext): Hono {
       job.result = { search, report };
       job.finishedAt = nowIso();
       addProgress(job, "completed", "盯机会已生成机会卡和 Markdown 报告。");
+      })(), RADAR_JOB_TIMEOUT_MS);
     } catch (err) {
       job.status = "failed";
       job.finishedAt = nowIso();
       const message = sanitizeErrorMessage(err instanceof Error ? err.message : String(err));
       job.error = { code: "RADAR_JOB_FAILED", message };
-      addProgress(job, "failed", "这次搜索或报告生成失败，雷达已保留，可以调整后重试。");
+      addProgress(job, "failed", message.includes("等待较久")
+        ? "这次盯机会等待较久仍未完成，雷达已保留，可以稍后重试。"
+        : "这次搜索或报告生成失败，雷达已保留，可以调整后重试。");
+    } finally {
+      if (heartbeat) clearInterval(heartbeat);
     }
   }
 
