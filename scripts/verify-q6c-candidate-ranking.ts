@@ -148,6 +148,32 @@ const staleResult = rankCandidateResults(staleSample, spec, {
 });
 check("current-year opportunity outranks stale high-score result", staleResult.keyCandidates[0]?.title.includes("2026"), staleResult.keyCandidates.map((item) => item.title).join(" | "));
 
+const unreadableSample = [
+  candidate(
+    "�ӱ�����ѧԺ��У�����꽡���ٽ���Ŀ�����б깫��",
+    "https://www.gd.gov.cn/procurement/unreadable-title",
+    "procurement_or_supplier_portal",
+    "direct_opportunity",
+    99,
+    "2026年度员工福利礼品供应商征集公告。",
+  ),
+  candidate(
+    "2026年员工福利礼品供应商征集公告",
+    "https://www.gd.gov.cn/procurement/readable-title",
+    "procurement_or_supplier_portal",
+    "direct_opportunity",
+    75,
+    "2026年度员工福利礼品供应商征集公告。",
+  ),
+];
+const unreadableResult = rankCandidateResults(unreadableSample, spec, {
+  maxKeyCandidates: 5,
+  now: new Date("2026-07-03T00:00:00+08:00"),
+});
+check("unreadable mojibake title is excluded from key cards", !unreadableResult.keyCandidates.some((item) => item.url.includes("unreadable-title")), unreadableResult.keyCandidates.map((item) => item.title).join(" | "));
+check("unreadable title keeps audit reason", unreadableResult.assessedResults.some((item) => item.url.includes("unreadable-title") && ranking(item)?.reasonCodes.includes("unreadable_title_excluded_from_key_card")), JSON.stringify(unreadableResult.assessedResults.map((item) => ({ title: item.title, cap: ranking(item)?.capStatus, reasons: ranking(item)?.reasonCodes }))));
+check("readable candidate still enters key cards after unreadable exclusion", unreadableResult.keyCandidates.some((item) => item.url.includes("readable-title")), unreadableResult.keyCandidates.map((item) => item.title).join(" | "));
+
 const capSample = Array.from({ length: 7 }, (_, index) => candidate(
   `2026年员工福利礼品供应商征集公告 ${index + 1}`,
   `https://www.gd.gov.cn/procurement/welfare-gifts-2026-${index + 1}`,

@@ -172,6 +172,16 @@ async function run(): Promise<void> {
     random10Script.includes("diagnosticTextForCards") && !random10Script.includes("const cardText = JSON.stringify(cards.slice(0, 5));"),
     "do not scan entire card JSON for negative patterns",
   );
+  check(
+    "random 10 has a second unseen-industry scenario set",
+    random10Script.includes("SCENARIOS_SECOND") && random10Script.includes('CHANCEPING_Q7Z_SCENARIO_SET === "second"'),
+    "second random 10 set must be selectable",
+  );
+  check(
+    "random 10 second scenario set writes a separate report",
+    random10Script.includes("Q7Z_Async_Custom_Radar_Random_10_Second_Report.md"),
+    "second set must not overwrite the first report",
+  );
 
   console.log(`\nQ7Z async radar jobs verification: ${pass} PASS, ${fail} FAIL`);
   if (fail > 0) process.exit(1);

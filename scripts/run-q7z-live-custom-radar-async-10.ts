@@ -34,9 +34,12 @@ type ScenarioResult = {
 
 type App = { request: (url: string, init?: RequestInit) => Promise<Response> | Response };
 
-const REPORT_FILE = "Q7Z_Async_Custom_Radar_Random_10_Report.md";
+const SCENARIO_SET = process.env.CHANCEPING_Q7Z_SCENARIO_SET === "second" ? "second" : "first";
+const REPORT_FILE = SCENARIO_SET === "second"
+  ? "Q7Z_Async_Custom_Radar_Random_10_Second_Report.md"
+  : "Q7Z_Async_Custom_Radar_Random_10_Report.md";
 
-const SCENARIOS: Scenario[] = [
+const SCENARIOS_FIRST: Scenario[] = [
   {
     id: "dental-clinic-supply",
     label: "口腔诊所设备耗材供应商",
@@ -159,6 +162,130 @@ const SCENARIOS: Scenario[] = [
     negativePatterns: [/家装零售|普通建材广告|AI\s*赛事/i],
   },
 ];
+
+const SCENARIOS_SECOND: Scenario[] = [
+  {
+    id: "specialty-coffee-roaster",
+    label: "精品咖啡烘焙品牌",
+    familiarity: "new_user",
+    input: "我们是精品咖啡烘焙品牌，想找咖啡馆渠道、酒店餐饮采购、商超选品、咖啡展和品牌联名机会。",
+    revisionMessages: [],
+    expectedMinimumVersion: "V1.0",
+    expectedKeywords: ["咖啡", "烘焙", "渠道", "采购", "联名"],
+    negativePatterns: [/AI\s*赛事|招聘|咖啡师培训/i],
+  },
+  {
+    id: "medical-device-compliance",
+    label: "医疗器械合规注册咨询公司",
+    familiarity: "normal_user",
+    input: "我们做医疗器械注册、临床评价和出海合规咨询，想找医疗器械企业、园区孵化器、协会活动和政府服务项目的客户线索。",
+    revisionMessages: [
+      "不是找医生招聘，也不是找器械采购。重点是需要注册证、合规咨询、欧盟 MDR、FDA 或出海认证服务的企业。",
+    ],
+    expectedMinimumVersion: "V1.1",
+    expectedKeywords: ["医疗器械", "注册", "合规", "咨询", "出海"],
+    negativePatterns: [/医生招聘|器械采购|AI\s*赛事/i],
+  },
+  {
+    id: "urban-renewal-landscape-design",
+    label: "城市更新景观设计事务所",
+    familiarity: "power_user",
+    input: "我们做城市更新、街区景观和公共空间设计，想找住建局、城投、商业街区、公园和园区更新类设计招标机会。",
+    revisionMessages: [
+      "排除普通绿化养护和苗木采购。我要城市更新、口袋公园、街区改造、景观设计、公共空间营造和设计咨询招标。",
+      "如果只是政策新闻只能观察，重点机会必须有招标、采购、征集或设计单位报名入口。",
+    ],
+    expectedMinimumVersion: "V1.2",
+    expectedKeywords: ["城市更新", "景观", "设计", "招标", "公共空间"],
+    negativePatterns: [/苗木采购|绿化养护|AI\s*赛事|招聘/i],
+  },
+  {
+    id: "livestream-ecommerce-agency",
+    label: "直播电商代运营公司",
+    familiarity: "new_user",
+    input: "我们做直播电商代运营和短视频带货，想找品牌方招商、平台招商、产业带服务商入驻和商家直播运营合作机会。",
+    revisionMessages: [],
+    expectedMinimumVersion: "V1.0",
+    expectedKeywords: ["直播", "电商", "代运营", "品牌", "招商"],
+    negativePatterns: [/主播招聘|培训广告|AI\s*赛事/i],
+  },
+  {
+    id: "research-instrument-platform",
+    label: "高校科研仪器共享平台服务商",
+    familiarity: "normal_user",
+    input: "我们做高校科研仪器共享平台和实验室设备预约系统，想找高校、科研院所、重点实验室和大型仪器共享平台建设项目。",
+    revisionMessages: [
+      "不是卖单台设备，也不是学生比赛。重点是平台系统建设、实验室管理、预约计费、仪器共享和高校信息化采购。",
+    ],
+    expectedMinimumVersion: "V1.1",
+    expectedKeywords: ["高校", "科研仪器", "共享平台", "实验室", "采购"],
+    negativePatterns: [/单台设备|学生比赛|AI\s*赛事/i],
+  },
+  {
+    id: "smart-eldercare-equipment",
+    label: "智慧养老设备公司",
+    familiarity: "new_user",
+    input: "我们做智慧养老设备、跌倒监测和护理呼叫系统，想找养老院、社区养老、民政项目和康养机构采购机会。",
+    revisionMessages: [
+      "排除养老院招聘和保健品广告。我要智慧养老、适老化改造、护理设备、社区养老服务中心和政府采购项目。",
+      "如果是政策新闻只能观察，重点机会要有采购、招标、试点申报或机构合作入口。",
+    ],
+    expectedMinimumVersion: "V1.2",
+    expectedKeywords: ["智慧养老", "养老院", "民政", "采购", "适老化"],
+    negativePatterns: [/招聘|保健品|AI\s*赛事/i],
+  },
+  {
+    id: "kids-sports-gym-chain",
+    label: "儿童运动馆连锁",
+    familiarity: "power_user",
+    input: "我们做儿童体适能和运动馆连锁，想找商场场地、学校课后服务、体育赛事承办和亲子活动合作机会。",
+    revisionMessages: [
+      "不是找教练招聘，也不是普通招生广告。我要商场招商、学校合作、课后服务采购、赛事承办和品牌联名。",
+      "优先华南，能联系到商场、学校、街道或体育机构的线索也可以保留。",
+      "报告要给出先联系谁、准备什么材料和风险。",
+    ],
+    expectedMinimumVersion: "V1.3",
+    expectedKeywords: ["儿童", "体适能", "商场", "学校", "课后服务"],
+    negativePatterns: [/教练招聘|招生广告|AI\s*赛事/i],
+  },
+  {
+    id: "study-abroad-service",
+    label: "海外留学服务机构",
+    familiarity: "normal_user",
+    input: "我们做海外留学申请和国际教育服务，想找国际学校合作、教育展、高校招生代理、游学项目和家长社群渠道机会。",
+    revisionMessages: [
+      "排除单纯学生广告投放和留学顾问招聘。重点是学校合作、招生代理、国际教育展、游学项目合作和渠道伙伴。",
+    ],
+    expectedMinimumVersion: "V1.1",
+    expectedKeywords: ["留学", "国际学校", "教育展", "招生代理", "游学"],
+    negativePatterns: [/顾问招聘|广告投放|AI\s*赛事/i],
+  },
+  {
+    id: "industrial-park-investment-ops",
+    label: "工业园区招商运营服务商",
+    familiarity: "new_user",
+    input: "我们做工业园区招商运营和产业服务，想找政府园区、开发区、产业园招商外包、运营服务和企业服务项目。",
+    revisionMessages: [],
+    expectedMinimumVersion: "V1.0",
+    expectedKeywords: ["园区", "招商", "运营", "开发区", "企业服务"],
+    negativePatterns: [/房产中介|招聘|AI\s*赛事/i],
+  },
+  {
+    id: "museum-interactive-tech",
+    label: "文博互动技术公司",
+    familiarity: "normal_user",
+    input: "我们做博物馆数字展陈、互动装置和沉浸式文博体验，想找文旅局、博物馆、展陈公司和公共文化项目采购机会。",
+    revisionMessages: [
+      "排除纯展会资讯和艺术家征稿。重点是数字展陈、互动多媒体、沉浸式展厅、博物馆采购和文旅项目招标。",
+      "如果是展陈公司或博物馆项目目录，可以作为客户线索，但要标明需要联系确认。",
+    ],
+    expectedMinimumVersion: "V1.2",
+    expectedKeywords: ["博物馆", "数字展陈", "互动", "文旅", "采购"],
+    negativePatterns: [/艺术家征稿|纯展会资讯|AI\s*赛事/i],
+  },
+];
+
+const SCENARIOS = SCENARIO_SET === "second" ? SCENARIOS_SECOND : SCENARIOS_FIRST;
 
 function prepareLiveEnv(): void {
   process.env.CHANCEPING_LOAD_API_ENV = "true";

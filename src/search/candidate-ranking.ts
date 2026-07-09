@@ -117,6 +117,12 @@ function normalizedTitle(result: SearchResult): string {
     .trim();
 }
 
+function hasUnreadableTitle(result: SearchResult): boolean {
+  const title = String(result.title ?? "");
+  if (!title.trim()) return false;
+  return /\uFFFD|ï¿½/.test(title);
+}
+
 function sameTopicTitle(a: string, b: string): boolean {
   if (!a || !b) return false;
   if (a === b) return true;
@@ -302,6 +308,7 @@ function semanticScore(result: SearchResult): Pick<CandidateRankingAssessment, "
 }
 
 function isAcceptedKeyCandidate(result: SearchResult): boolean {
+  if (hasUnreadableTitle(result)) return false;
   if (result.candidate_judge_assessment?.decision === "reject") return false;
   if (
     result.candidate_judge_assessment?.decision === "downgrade_to_watch_signal" &&
@@ -321,6 +328,7 @@ function assessRanking(result: SearchResult, spec: RadarRequirementSpec, options
   const authority = sourceAuthority(result, spec);
   const freshness = freshnessScore(result, options.now);
   const semantic = semanticScore(result);
+  const readabilityReasonCodes = hasUnreadableTitle(result) ? ["unreadable_title_excluded_from_key_card"] : [];
   const relevanceScore = result.candidate_judge_assessment?.relevance_score
     ?? (result.relevance_assessment?.decision === "accept" ? 75 : result.relevance_assessment?.decision === "downgrade_to_watch_signal" ? 50 : 25);
   const totalScore = Math.round(
@@ -346,6 +354,7 @@ function assessRanking(result: SearchResult, spec: RadarRequirementSpec, options
         ? ["ownership_accepts_after_judge_downgrade"]
         : []),
       ...(result.ownership_assessment?.reasonCodes ?? []),
+      ...readabilityReasonCodes,
     ],
     rankedAt: options.now.toISOString(),
   };
