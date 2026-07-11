@@ -4,6 +4,11 @@
   const BACKEND_I18N = {
     zh: {
       brandTitle: "ChancePing 盯机会",
+      contactButton: "联系我",
+      contactTitle: "联系方式",
+      contactIntro: "有赛事来源、合作或使用问题，可以直接联系我。",
+      copyWechat: "复制",
+      copiedWechat: "已复制",
       topNavHome: "首页",
       topNavResult: "盯机会结果",
       topNavRadars: "我的雷达",
@@ -82,6 +87,11 @@
     },
     en: {
       brandTitle: "ChancePing",
+      contactButton: "Contact",
+      contactTitle: "Contact",
+      contactIntro: "For event sources, partnerships, or product feedback, reach me here.",
+      copyWechat: "Copy",
+      copiedWechat: "Copied",
       topNavHome: "Home",
       topNavResult: "Results",
       topNavRadars: "My Radars",
@@ -199,6 +209,39 @@
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("button[data-backend-language]").forEach((button) => {
       button.addEventListener("click", () => applyLanguage(button.getAttribute("data-backend-language")));
+    });
+    const contactToggle = document.getElementById("backend-contact-toggle");
+    const contactPanel = document.getElementById("backend-contact-panel");
+    const copyWechatButton = document.getElementById("backend-copy-wechat");
+    if (contactToggle && contactPanel) {
+      const closeContactPanel = () => {
+        contactPanel.hidden = true;
+        contactToggle.setAttribute("aria-expanded", "false");
+      };
+      contactToggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const nextOpen = contactPanel.hidden;
+        contactPanel.hidden = !nextOpen;
+        contactToggle.setAttribute("aria-expanded", String(nextOpen));
+      });
+      contactPanel.addEventListener("click", (event) => event.stopPropagation());
+      document.addEventListener("click", closeContactPanel);
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeContactPanel();
+      });
+    }
+    copyWechatButton?.addEventListener("click", async () => {
+      const value = copyWechatButton.getAttribute("data-copy-value") || "liuzheshangwx";
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+        copyWechatButton.textContent = t("copiedWechat");
+        if (typeof window.showToast === "function") window.showToast(t("copiedWechat"), "success");
+        window.setTimeout(() => {
+          copyWechatButton.textContent = t("copyWechat");
+        }, 1600);
+      } catch {
+        if (typeof window.showToast === "function") window.showToast(value, "success");
+      }
     });
     applyLanguage(getLanguage());
   });

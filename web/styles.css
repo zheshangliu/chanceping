@@ -133,6 +133,100 @@ textarea {
   gap: 12px;
 }
 
+.backend-contact {
+  position: relative;
+}
+
+.backend-contact-toggle {
+  min-height: 34px;
+  padding: 6px 14px;
+  border: 1px solid rgba(37, 99, 235, 0.28);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.08);
+}
+
+.backend-contact-toggle:hover,
+.backend-contact-toggle[aria-expanded="true"] {
+  background: var(--accent-soft);
+  border-color: rgba(37, 99, 235, 0.45);
+}
+
+.backend-contact-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 1200;
+  width: min(320px, calc(100vw - 32px));
+  padding: 16px;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.16);
+}
+
+.backend-contact-panel strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.backend-contact-panel p {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.backend-contact-link {
+  display: inline-flex;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.backend-contact-link:hover {
+  text-decoration: underline;
+}
+
+.backend-contact-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.backend-contact-row code {
+  color: var(--text-primary);
+  font-family: inherit;
+  font-weight: 800;
+}
+
+.backend-copy-wechat {
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid rgba(37, 99, 235, 0.24);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.backend-copy-wechat:hover {
+  background: var(--accent-soft);
+}
+
 .backend-language {
   display: inline-flex;
   gap: 4px;
@@ -600,6 +694,22 @@ textarea {
   .logo {
     width: 78px;
     max-height: 36px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .backend-contact-toggle {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .backend-contact-panel {
+    position: fixed;
+    top: 58px;
+    right: 10px;
+    width: calc(100vw - 20px);
   }
 
   .tab-nav {

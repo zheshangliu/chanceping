@@ -41,6 +41,8 @@ check("index loads backend i18n before app scripts", html.includes("/backend-i18
 check("web UI serves backend i18n script", webUiRoute.includes("/backend-i18n.js") && webUiRoute.includes('serveFile("backend-i18n.js"'));
 check("top banner has backend language switcher", html.includes("backend-language") && html.includes('data-backend-language="zh"') && html.includes('data-backend-language="en"'));
 check("backend language switcher styled", styles.includes(".backend-language") && styles.includes(".backend-language button.is-active"));
+check("top banner has backend contact entry", html.includes("backend-contact-toggle") && html.includes("sunny251610056@gmail.com") && html.includes("liuzheshangwx"));
+check("backend contact entry is styled", styles.includes(".backend-contact-toggle") && styles.includes(".backend-contact-panel") && styles.includes(".backend-copy-wechat"));
 check("brand title uses isolated i18n span", html.includes('class="brand-title" data-backend-i18n="brandTitle"') && html.includes('class="demo-badge"'));
 check("top nav has i18n hooks", ["topNavHome", "topNavResult", "topNavRadars"].every((key) => html.includes(`data-backend-i18n="${key}"`)));
 check("home shell has i18n hooks", ["sidebarNewRadar", "sidebarRecent", "homeTitle", "homeSubtitle", "homeInputPlaceholder", "homeStartButton"].every((key) => html.includes(key)));
@@ -51,6 +53,9 @@ check("backend i18n exposes apply function for dynamic screens", backendI18n.inc
 check("backend i18n only toggles language buttons", backendI18n.includes('querySelectorAll("button[data-backend-language]")'));
 check("backend i18n does not special-case nested brand text", !backendI18n.includes("classList?.contains(\"brand\")") && !backendI18n.includes("insertBefore(document.createTextNode"));
 check("backend i18n includes AI events navigator English copy", backendI18n.includes("Global AI Events Navigator"));
+["contactButton", "contactTitle", "contactIntro", "copyWechat", "copiedWechat"].forEach((key) => {
+  check(`backend i18n includes contact key ${key}`, backendI18n.includes(key));
+});
 [
   "myRadarsTitle",
   "createRadar",

@@ -16,6 +16,19 @@
       <span class="demo-badge" id="demo-badge" style="display:none;">Demo 模式</span>
     </h1>
     <div class="header-actions">
+      <div class="backend-contact">
+        <button type="button" id="backend-contact-toggle" class="backend-contact-toggle" data-backend-i18n="contactButton" aria-expanded="false" aria-controls="backend-contact-panel">联系我</button>
+        <div id="backend-contact-panel" class="backend-contact-panel" hidden>
+          <strong data-backend-i18n="contactTitle">联系方式</strong>
+          <p data-backend-i18n="contactIntro">有赛事来源、合作或使用问题，可以直接联系我。</p>
+          <a href="mailto:sunny251610056@gmail.com" class="backend-contact-link">sunny251610056@gmail.com</a>
+          <div class="backend-contact-row">
+            <span>微信</span>
+            <code>liuzheshangwx</code>
+            <button type="button" id="backend-copy-wechat" class="backend-copy-wechat" data-copy-value="liuzheshangwx" data-backend-i18n="copyWechat">复制</button>
+          </div>
+        </div>
+      </div>
       <div class="backend-language" aria-label="Language">
         <button type="button" class="is-active" data-backend-language="zh">中文</button>
         <button type="button" data-backend-language="en">EN</button>
