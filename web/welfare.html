@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="盯机会持续整理企业福利采购、职工慰问、消费帮扶和供应商征集机会。">
+  <title>盯机会｜企业福利商机雷达</title>
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <link rel="stylesheet" href="/welfare.css">
+</head>
+<body class="welfare-page">
+  <header class="welfare-topbar">
+    <a class="welfare-brand" href="/fuli" aria-label="盯机会｜企业福利商机雷达">
+      <img src="/assets/chanceping-logo.png" alt="盯机会">
+      <span><strong>盯机会</strong><small>企业福利商机雷达</small></span>
+    </a>
+    <a class="welfare-back" href="https://www.chanceping.com">创建我的机会雷达</a>
+  </header>
+
+  <main class="welfare-shell">
+    <section class="welfare-hero">
+      <div>
+        <p class="welfare-kicker">WELFARE OPPORTUNITY RADAR</p>
+        <h1>企业福利商机雷达</h1>
+        <p>持续发现企业福利采购、职工慰问、消费帮扶、节日礼赠和供应商征集机会。</p>
+      </div>
+      <aside>
+        <span>关于本雷达</span>
+        <strong>由盯机会 ChancePing 持续整理</strong>
+        <p>优先呈现可回到官方原文的公开机会。预算、截止和资格要求以官方公告及后续更正为准。</p>
+      </aside>
+    </section>
+
+    <section class="welfare-panel" aria-labelledby="welfare-list-title">
+      <div class="welfare-panel-head">
+        <div><p class="welfare-kicker">OPPORTUNITY CARDS</p><h2 id="welfare-list-title">当前有效企业福利商机</h2></div>
+        <div class="welfare-status-tabs" role="tablist" aria-label="商机状态">
+          <button class="is-active" data-status="current" type="button">当前有效</button>
+          <button data-status="historical" type="button">历史商机</button>
+        </div>
+        <span id="welfare-count">加载中</span>
+      </div>
+
+      <div id="welfare-metrics" class="welfare-metrics" aria-label="雷达指标"></div>
+      <div class="welfare-filters">
+        <label>商机类型<select id="welfare-type"><option value="all">全部类型</option></select></label>
+        <label>福利场景<select id="welfare-scene"><option value="all">全部场景</option></select></label>
+        <label>地区<select id="welfare-region"><option value="all">全部地区</option></select></label>
+        <label>截止窗口<select id="welfare-deadline"><option value="all">全部截止</option><option value="7d">7天内</option><option value="30d">30天内</option><option value="later">30天后</option><option value="unknown">待核验</option></select></label>
+      </div>
+
+      <div class="welfare-decision-layout">
+        <div id="welfare-decision-list" class="welfare-decision-list"></div>
+        <aside id="welfare-evidence" class="welfare-evidence"><p>选择一条商机查看字段证据。</p></aside>
+      </div>
+      <div id="welfare-grid" class="welfare-grid"><article class="welfare-card">正在加载企业福利商机…</article></div>
+      <div class="welfare-pagination"><button id="welfare-prev" type="button">上一页</button><span id="welfare-page-info">第 1 页</span><button id="welfare-next" type="button">下一页</button></div>
+    </section>
+
+    <section class="welfare-source-map">
+      <div><p class="welfare-kicker">SOURCE NETWORK</p><h2>已接入信息源</h2></div>
+      <div id="welfare-sources"><p>首个 MVP 来源：光明区政府/群团工作部公告（OFF-SZ-004）。</p></div>
+    </section>
+
+    <section class="welfare-about">
+      <article><span>01</span><h2>官方优先</h2><p>公开卡片必须能够回到官方详情页，不把搜索摘要当成已核验事实。</p></article>
+      <article><span>02</span><h2>字段有据</h2><p>采购单位、预算、截止和状态分别标记证据状态，未公开就诚实显示未公开。</p></article>
+      <article><span>03</span><h2>行动明确</h2><p>当前有效与历史情报分开，避免把已结束项目当作仍可参与的商机。</p></article>
+    </section>
+  </main>
+  <footer class="welfare-footer">公开信息整理不构成采购、投标或商业承诺。请以官方公告和后续更正为准。</footer>
+  <script src="/welfare.js"></script>
+</body>
+</html>

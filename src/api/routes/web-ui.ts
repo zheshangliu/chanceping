@@ -107,10 +107,13 @@ export function webUiRoutes(): Hono {
   app.get("/", serveFile("index.html", "text/html; charset=utf-8"));
   app.get("/aievents", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
+  app.get("/fuli", serveFile("welfare.html", "text/html; charset=utf-8"));
+  app.get("/welfare", serveFile("welfare.html", "text/html; charset=utf-8"));
 
   // 静态资源
   app.get("/styles.css", serveFile("styles.css", "text/css; charset=utf-8"));
   app.get("/ai-events-hybrid.css", serveFile("ai-events-hybrid.css", "text/css; charset=utf-8"));
+  app.get("/welfare.css", serveFile("welfare.css", "text/css; charset=utf-8"));
   app.get(
     "/home.js",
     serveFile("home.js", "application/javascript; charset=utf-8"),
@@ -142,6 +145,10 @@ export function webUiRoutes(): Hono {
   app.get(
     "/ai-events.js",
     serveFile("ai-events.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/welfare.js",
+    serveFile("welfare.js", "application/javascript; charset=utf-8"),
   );
   app.get(
     "/requirement-chat.js",

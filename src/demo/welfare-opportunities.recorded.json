@@ -1,0 +1,33 @@
+[
+  {
+    "id": "welfare_recorded_off_sz_004_001",
+    "title": "深圳市光明区总工会2026年采购消费帮扶慰问物资项目采购变更公告",
+    "sourceCode": "OFF-SZ-004",
+    "sourceName": "光明区政府/群团工作部公告",
+    "officialUrl": "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/content/post_12887428.html",
+    "publishedAt": "2026-07-10T00:00:00+08:00",
+    "retrievedAt": "2026-07-11T00:00:00+08:00",
+    "rawSha256": "1603c857a5760ebb05cff26a6f7fc76ecd967bec2f06424b64d08ef1050fa43e",
+    "dataMode": "recorded",
+    "opportunityType": "OPEN_PROCUREMENT",
+    "lifecycleStatus": "current",
+    "currentStage": "CORRECTED",
+    "verificationState": "STATUS_VERIFIED",
+    "buyer": "深圳市光明区总工会",
+    "region": "深圳光明",
+    "budgetDisplay": "未公开",
+    "deadline": "2026-07-15T18:00:00+08:00",
+    "deadlineDisplay": "投标时间截至2026年7月15日18时00分",
+    "welfareScenes": ["消费帮扶", "职工慰问"],
+    "productScopes": ["食品生鲜/慰问物资"],
+    "reason": "来自光明区政府官方公告栏目，项目涉及消费帮扶慰问物资采购。",
+    "nextAction": "打开官方原文，核对原采购公告、评分变更、资格要求和附件。",
+    "riskNote": "本条为2026-07-11保存的公开页面记录；资格、截止和后续变更以官方原文为准。",
+    "evidenceFields": [
+      { "field": "buyer", "state": "verified", "excerpt": "采购人名称：深圳市光明区总工会" },
+      { "field": "budget", "state": "not_published" },
+      { "field": "deadline", "state": "verified", "excerpt": "投标时间截至7月15日18时00分" },
+      { "field": "status", "state": "verified", "excerpt": "采购变更公告" }
+    ]
+  }
+]
