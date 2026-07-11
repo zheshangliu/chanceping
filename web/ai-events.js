@@ -22,6 +22,7 @@
       aboutThreeBody: "系统优先读取官方入口并整理截止时间、奖金、资格和报名路径；公开页只展示可浏览的机会流。",
       sourceKicker: "Source Network",
       sourceTitle: "信息源网络",
+      sourceExpand: "展开全部",
       listKicker: "Opportunity Cards",
       listTitle: "当前有效 AI 赛事机会",
       decisionTitle: "快速决策列表",
@@ -119,6 +120,7 @@
       aboutThreeBody: "ChancePing prioritizes official entries and organizes deadline, prize, eligibility, and registration routes into a browseable opportunity feed.",
       sourceKicker: "Source Network",
       sourceTitle: "Source network",
+      sourceExpand: "Show all sources",
       listKicker: "Opportunity Cards",
       listTitle: "Current AI contest opportunities",
       decisionTitle: "Fast decision list",
@@ -502,10 +504,8 @@
 
   function renderDecisionList(items) {
     const list = document.getElementById("ai-events-decision-list");
-    const summary = document.getElementById("ai-events-decision-summary");
     if (!list) return;
     const decisionItems = Array.isArray(items) ? items.slice(0, 8) : [];
-    if (summary) summary.textContent = t("decisionSummary");
     if (decisionItems.length === 0) {
       selectedEventKey = "";
       list.innerHTML = `<div class="ai-event-card-loading">${escapeHtml(emptyMessage())}</div>`;
@@ -654,13 +654,19 @@
 
   function renderSources(sources) {
     const list = document.getElementById("ai-events-source-list");
+    const preview = document.getElementById("ai-events-source-preview");
     if (!list || !Array.isArray(sources) || sources.length === 0) return;
-    list.innerHTML = sources
+    const labels = sources
       .map((source) => {
-        const label = source.name || source.domain || source.url || "Source";
-        return `<li>${escapeHtml(label)}</li>`;
+        return source.name || source.domain || source.url || "Source";
       })
-      .join("");
+      .filter(Boolean);
+    if (preview) {
+      const previewItems = labels.slice(0, 5).join(" · ");
+      const remainingCount = Math.max(0, labels.length - 5);
+      preview.textContent = remainingCount > 0 ? `${previewItems} · +${remainingCount}` : previewItems;
+    }
+    list.innerHTML = labels.map((label) => `<li>${escapeHtml(label)}</li>`).join("");
   }
 
   function normalizeFilterParam(value, fallback = "all") {

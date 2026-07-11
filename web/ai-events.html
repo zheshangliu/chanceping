@@ -60,13 +60,6 @@
         <div id="ai-events-reward-filter" class="ai-events-category-filter" aria-label="奖励筛选"></div>
         <div id="ai-events-deadline-filter" class="ai-events-category-filter" aria-label="截止时间筛选"></div>
       </div>
-      <div id="ai-events-list-controls" class="ai-events-list-controls" aria-label="快速决策视图">
-        <div>
-          <strong data-i18n="decisionTitle">快速决策列表</strong>
-          <span id="ai-events-decision-summary">优先看报名入口、截止时间和来源可信度</span>
-        </div>
-        <small data-i18n="decisionHint">点击一条赛事查看来源链</small>
-      </div>
       <div class="ai-events-decision-layout">
         <div id="ai-events-decision-list" class="ai-events-decision-list" aria-label="赛事快速决策列表"></div>
         <aside id="ai-events-verification-panel" class="ai-events-verification-panel" aria-label="来源验证详情"></aside>
@@ -86,20 +79,26 @@
         <p class="ai-events-kicker" data-i18n="sourceKicker">Source Network</p>
         <h2 data-i18n="sourceTitle">信息源网络</h2>
       </div>
-      <ul id="ai-events-source-list">
-        <li>Devpost</li>
-        <li>Qwen Cloud Hackathon</li>
-        <li>DoraHacks</li>
-        <li>Lablab.ai</li>
-        <li>Kaggle Competitions</li>
-        <li>AIcrowd</li>
-        <li>阿里云天池</li>
-        <li>Major League Hacking</li>
-        <li>TapNow</li>
-        <li>Kling AI</li>
-        <li>火山引擎</li>
-        <li>腾讯云开发者竞赛</li>
-      </ul>
+      <details class="ai-events-source-details">
+        <summary>
+          <span id="ai-events-source-preview">Devpost · Qwen Cloud Hackathon · DoraHacks · Lablab.ai · Kaggle Competitions</span>
+          <span class="ai-events-source-toggle" data-i18n="sourceExpand">展开全部</span>
+        </summary>
+        <ul id="ai-events-source-list">
+          <li>Devpost</li>
+          <li>Qwen Cloud Hackathon</li>
+          <li>DoraHacks</li>
+          <li>Lablab.ai</li>
+          <li>Kaggle Competitions</li>
+          <li>AIcrowd</li>
+          <li>阿里云天池</li>
+          <li>Major League Hacking</li>
+          <li>TapNow</li>
+          <li>Kling AI</li>
+          <li>火山引擎</li>
+          <li>腾讯云开发者竞赛</li>
+        </ul>
+      </details>
     </section>
 
     <section class="ai-events-about" aria-label="About AI Contest Navigator">
@@ -159,10 +158,6 @@
       </form>
     </section>
 
-    <footer class="ai-events-footer">
-      <strong data-i18n="footerTitle">联系与合作</strong>
-      <a href="mailto:sunny251610056@gmail.com">sunny251610056@gmail.com</a>
-    </footer>
   </main>
   <script src="/ai-events.js?v=q7s2"></script>
 </body>

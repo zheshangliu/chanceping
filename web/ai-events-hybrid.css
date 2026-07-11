@@ -50,33 +50,6 @@
   line-height: 1.35;
 }
 
-.ai-events-page .ai-events-list-controls {
-  position: sticky;
-  top: 70px;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 12px 0;
-  padding: 13px 14px;
-  border: 1px solid var(--hybrid-line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(14px);
-}
-
-.ai-events-page .ai-events-list-controls strong {
-  display: block;
-  color: var(--hybrid-ink);
-}
-
-.ai-events-page .ai-events-list-controls span,
-.ai-events-page .ai-events-list-controls small {
-  color: var(--hybrid-muted);
-  font-size: 13px;
-}
-
 .ai-events-page .ai-events-decision-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
@@ -240,12 +213,6 @@
   .ai-events-page .ai-events-radar-metrics,
   .ai-events-page .ai-events-decision-layout {
     grid-template-columns: 1fr;
-  }
-
-  .ai-events-page .ai-events-list-controls {
-    position: static;
-    align-items: flex-start;
-    flex-direction: column;
   }
 
   .ai-events-page .ai-events-decision-row {

@@ -40,11 +40,12 @@ check("page proof copy attributes navigator updates to ChancePing", js.includes(
 check("page has public source network section", html.includes("ai-events-source-map") && html.includes("Devpost") && html.includes("DoraHacks"));
 check("source network initial list includes latest source batch", html.includes("Major League Hacking") && html.includes("TapNow") && html.includes("Kling AI") && html.includes("火山引擎") && html.includes("腾讯云开发者"));
 check("source network renders full backend source list", js.includes(".map((source)") && !js.includes(".slice(0, 16)"));
+check("source network is compact by default and expandable", html.includes("ai-events-source-details") && html.includes("ai-events-source-preview") && css.includes(".ai-events-source-details:not([open]) ul"));
 check("hero stays focused without console CTA buttons", !html.includes("ai-events-actions") && !html.includes("创建我的 AI 赛事雷达"));
 check("page loads public API with pagination params", js.includes("/api/public/ai-events?") && js.includes("page_size"));
 check("page still renders opportunity cards", js.includes("renderItem") && html.includes("ai-events-grid"));
 check("supporting source/about modules are below opportunity cards", html.indexOf("ai-events-panel") < html.indexOf("ai-events-source-map") && html.indexOf("ai-events-panel") < html.indexOf("ai-events-about"));
-check("page footer exposes contact email", html.includes("sunny251610056@gmail.com") && html.includes("ai-events-footer"));
+check("page contact lives in custom radar section rather than a duplicate footer", html.includes("sunny251610056@gmail.com") && html.includes("ai-events-custom-radar") && !html.includes("ai-events-footer"));
 check("page offers a custom radar contact section below opportunity cards", html.indexOf("ai-events-panel") < html.indexOf("ai-events-custom-radar") && html.includes("customRadarTitle") && html.includes("liuzheshangwx"));
 check("page has source suggestion form", html.includes("ai-events-feedback") && html.includes("ai-events-feedback-form") && html.includes("ai-events-source-url"));
 check("source suggestion form is customer-facing and email based", js.includes("handleFeedbackSubmit") && js.includes("mailto:sunny251610056@gmail.com") && js.includes("feedbackSuccess"));
@@ -78,7 +79,7 @@ check("hybrid CSS file is linked only from AI events page", html.includes('href=
 check("hybrid CSS static route is registered", webRoutes.includes('"/ai-events-hybrid.css"') && webRoutes.includes('serveFile("ai-events-hybrid.css"'));
 check("hybrid page has operator metrics mount", html.includes("ai-events-radar-metrics"));
 check("hybrid page exposes latest collection freshness metric", js.includes("metricLastCollected") && js.includes("collectionFreshnessMeta") && js.includes("约每 3 天更新"));
-check("hybrid page has list controls mount", html.includes("ai-events-list-controls"));
+check("hybrid page removes sticky quick-decision controls", !html.includes("ai-events-list-controls") && !hybridCss.includes(".ai-events-list-controls"));
 check("hybrid page has verification panel mount", html.includes("ai-events-verification-panel"));
 check("hybrid JS keeps public feed endpoint", js.includes("/api/public/ai-events?") && !js.includes("/api/radar-chats"));
 check("hybrid JS does not run public sync from UI", !js.includes("/api/public/ai-events/sync") && !js.includes("/api/public/ai-events/hydrate-images"));
