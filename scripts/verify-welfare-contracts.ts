@@ -51,6 +51,8 @@ assert.ok(markdown.includes("联系人："));
 
 const adr = fs.readFileSync(path.resolve("docs/architecture/ADR-0001-welfare-radar-mvp-on-chanceping.md"), "utf8");
 assert.ok(adr.includes("重复声明 `country_code`"), "upstream DDL defect must remain documented until migration repair");
+const sourceModule = fs.readFileSync(path.resolve("src/public/welfare-opportunities.ts"), "utf8");
+assert.match(sourceModule, /--tls-max", "1\.2"/, "SWAS TLS 1.3 EC failures must retry with certificate-verified TLS 1.2");
 async function verifyThreeSources(): Promise<void> {
 const tempDir = fs.mkdtempSync(path.resolve("data/verify-welfare-contracts-"));
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(tempDir, "opportunities.json");

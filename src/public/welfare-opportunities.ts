@@ -453,7 +453,9 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
     return response.text();
   } catch (fetchError) {
     try {
-      const { stdout } = await execFileAsync("curl", ["-L", "--fail", "--silent", "--show-error", "--max-time", "20", "-A", "ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)", url], { maxBuffer: 8 * 1024 * 1024 });
+      // Some government sites fail the OpenSSL 3 TLS 1.3 EC negotiation used on
+      // SWAS. Keep HTTPS and certificate verification, but retry with TLS 1.2.
+      const { stdout } = await execFileAsync("curl", ["-L", "--fail", "--silent", "--show-error", "--max-time", "20", "--tls-max", "1.2", "--http1.1", "-A", "ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)", url], { maxBuffer: 8 * 1024 * 1024 });
       return stdout;
     } catch (curlError) {
       const fetchMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
