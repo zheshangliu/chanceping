@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { createApp } from "../src/api/app";
+
+process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(os.tmpdir(), `chanceping-welfare-page-${process.pid}.json`);
 
 const html = fs.readFileSync("web/welfare.html", "utf8");
 const css = fs.readFileSync("web/welfare.css", "utf8");
@@ -9,7 +13,8 @@ assert.ok(html.includes("盯机会｜企业福利商机雷达"));
 assert.ok(html.includes("/welfare.js") && html.includes("/welfare.css"));
 assert.ok(css.includes(".welfare-topbar") && !css.includes(".ai-events-page"));
 assert.ok(js.includes("/api/public/welfare/opportunities?"));
-assert.ok(!html.includes("本来生活能力") && !html.includes("联系电话"));
+assert.ok(!html.includes("本来生活能力"));
+assert.ok(js.includes("contactName") && js.includes("contactPhone") && js.includes("contactAddress"));
 
 async function main() {
   const app = createApp();
@@ -24,7 +29,9 @@ async function main() {
   assert.ok(json.data.items[0].officialUrl.startsWith("https://www.szgm.gov.cn/"));
   assert.equal("radarId" in json.data.items[0], false);
   assert.equal("runId" in json.data.items[0], false);
-  assert.ok(!/0755-\d{7,8}/.test(JSON.stringify(json)));
+  assert.ok(/^0755-\d{7,8}$/.test(json.data.items[0].contactPhone));
+  assert.ok(json.data.items[0].contactName.length > 0);
+  assert.ok(json.data.items[0].contactAddress.length > 0);
   const report = await app.request("/api/public/welfare/report.md");
   assert.equal(report.status, 200);
   assert.ok((await report.text()).includes(json.data.items[0].title));

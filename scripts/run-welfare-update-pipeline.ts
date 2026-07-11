@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import {
-  collectOffSz004,
+  collectAllWelfareSources,
   loadPersistedWelfareOpportunities,
   renderWelfareMarkdown,
 } from "../src/public/welfare-opportunities";
@@ -13,7 +13,7 @@ function argValue(name: string): string | undefined {
 
 async function main(): Promise<void> {
   const limit = Math.max(1, Math.min(Number(argValue("--limit") ?? 12), 30));
-  const summary = await collectOffSz004({ maxDetails: limit });
+  const summary = await collectAllWelfareSources({ maxDetails: limit });
   const reportsDir = path.resolve(process.cwd(), "reports");
   fs.mkdirSync(reportsDir, { recursive: true });
   const reportPath = path.join(reportsDir, "welfare-opportunities-latest.md");

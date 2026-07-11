@@ -183,6 +183,31 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
+
+server {
+    listen 80;
+    server_name fuli.chanceping.com;
+
+    client_max_body_size 20m;
+
+    location = / {
+        proxy_pass http://127.0.0.1:3000/fuli;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
 EOF
 
 ln -sfn "$NGINX_SITE" "$NGINX_ENABLED"
@@ -201,6 +226,7 @@ done
 curl -fsS http://127.0.0.1:3000/health
 echo
 curl -fsSI http://127.0.0.1:3000/aievents | head -n 1
+curl -fsSI http://127.0.0.1:3000/fuli | head -n 1
 
 echo "[chanceping] deployed."
 echo "[chanceping] service logs: journalctl -u chanceping -n 120 --no-pager"

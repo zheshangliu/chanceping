@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh ChancePing public welfare radar at 08:30 and 16:30 China time
+
+[Timer]
+OnCalendar=*-*-* 08:30:00 Asia/Shanghai
+OnCalendar=*-*-* 16:30:00 Asia/Shanghai
+Persistent=true
+Unit=chanceping-welfare-update.service
+
+[Install]
+WantedBy=timers.target

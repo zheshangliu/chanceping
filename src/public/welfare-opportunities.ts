@@ -11,13 +11,35 @@ export const WELFARE_SOURCE_NAME = "光明区政府/群团工作部公告";
 export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/";
 const execFileAsync = promisify(execFile);
 
+export interface WelfareSourceConfig {
+  code: "OFF-SZ-003" | "OFF-SZ-004" | "OFF-SZ-005";
+  name: string;
+  url: string;
+  allowedHost: string;
+  region: string;
+  maxDetails: number;
+  enabled: boolean;
+}
+
+export const WELFARE_SOURCES: WelfareSourceConfig[] = [
+  { code: "OFF-SZ-004", name: "光明区政府/群团工作部公告", url: "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/", allowedHost: "www.szgm.gov.cn", region: "深圳光明", maxDetails: 12, enabled: true },
+  { code: "OFF-SZ-005", name: "龙华区群团工作部/总工会通知公告", url: "https://www.szlhq.gov.cn/bmxxgk/qtgzb/dtxx_124446/tzgg_125586/", allowedHost: "www.szlhq.gov.cn", region: "深圳龙华", maxDetails: 12, enabled: true },
+  { code: "OFF-SZ-003", name: "福田区总工会通知公告", url: "https://www.szft.gov.cn/bmxx_qt/qzgh/tzgg/", allowedHost: "www.szft.gov.cn", region: "深圳福田", maxDetails: 12, enabled: true },
+];
+
+function sourceByCode(code: string): WelfareSourceConfig {
+  const source = WELFARE_SOURCES.find((item) => item.code === code);
+  if (!source) throw new Error(`Unknown welfare source: ${code}`);
+  return source;
+}
+
 export type WelfareLifecycle = "current" | "historical";
 export type WelfareOpportunityType = "OPEN_PROCUREMENT" | "PROCUREMENT_INTENT" | "SUPPLIER_RECRUITMENT" | "FRAMEWORK_AGREEMENT" | "CHANNEL_PARTNERSHIP";
 export type WelfareVerificationState = "CANDIDATE" | "FIELD_VERIFIED" | "STATUS_VERIFIED" | "FULLY_VERIFIED";
 export type WelfareFieldState = "verified" | "not_published" | "parse_failed" | "unknown";
 
 export interface WelfareEvidenceField {
-  field: "buyer" | "budget" | "deadline" | "status";
+  field: "buyer" | "budget" | "deadline" | "status" | "contactName" | "contactPhone" | "contactAddress";
   state: WelfareFieldState;
   excerpt?: string;
 }
@@ -37,6 +59,9 @@ export interface WelfareOpportunityRecord {
   currentStage: "OPEN" | "CORRECTED" | "CLOSED_PENDING_RESULT" | "AWARDED" | "CONTRACTED" | "TERMINATED" | "UNKNOWN";
   verificationState: WelfareVerificationState;
   buyer: string;
+  contactName: string;
+  contactPhone: string;
+  contactAddress: string;
   region: string;
   budgetDisplay: string;
   deadline: string;
@@ -78,7 +103,13 @@ export interface WelfareFeed {
     sceneFacets: Array<{ id: string; label: string; count: number }>;
     regionFacets: Array<{ id: string; label: string; count: number }>;
   };
-  sources: Array<{ code: string; name: string; url: string; status: "active" }>;
+  sources: Array<{ code: string; name: string; url: string; status: "active" | "degraded" | "empty"; lastUpdatedAt: string | null }>;
+}
+
+export interface WelfareRunSummary {
+  ranAt: string;
+  sources: Array<Pick<WelfareSourceCollectionResult, "sourceCode" | "sourceName" | "retrievedAt" | "status" | "discoveredCount" | "publishedCount" | "totalCount">>;
+  totals: { added: number; updated: number; historical: number; filtered: number; total: number };
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -174,7 +205,16 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
       sceneFacets: buildFacets(allRecords, (item) => item.welfareScenes),
       regionFacets: buildFacets(allRecords, (item) => [item.region]),
     },
-    sources: [{ code: WELFARE_SOURCE_CODE, name: WELFARE_SOURCE_NAME, url: WELFARE_SOURCE_URL, status: "active" }],
+    sources: WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
+      const summary = loadWelfareRunSummary()?.sources.find((item) => item.sourceCode === source.code);
+      return {
+        code: source.code,
+        name: source.name,
+        url: source.url,
+        status: summary?.status === "failed" || summary?.status === "partial" ? "degraded" as const : summary?.status === "empty" ? "empty" as const : "active" as const,
+        lastUpdatedAt: summary?.retrievedAt ?? null,
+      };
+    }),
   };
 }
 
@@ -198,26 +238,50 @@ export function savePersistedWelfareOpportunities(records: WelfareOpportunityRec
   fs.renameSync(temporary, absolute);
 }
 
+export function loadWelfareRunSummary(filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): WelfareRunSummary | null {
+  const absolute = path.resolve(process.cwd(), filePath);
+  if (!fs.existsSync(absolute)) return null;
+  try { return JSON.parse(fs.readFileSync(absolute, "utf8")) as WelfareRunSummary; } catch { return null; }
+}
+
+export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): void {
+  const absolute = path.resolve(process.cwd(), filePath);
+  fs.mkdirSync(path.dirname(absolute), { recursive: true });
+  const temporary = `${absolute}.tmp`;
+  fs.writeFileSync(temporary, JSON.stringify(summary, null, 2));
+  fs.renameSync(temporary, absolute);
+}
+
 export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incoming: WelfareOpportunityRecord[]): WelfareOpportunityRecord[] {
   const byId = new Map(existing.map((record) => [record.id, record]));
   for (const record of incoming) byId.set(record.id, { ...byId.get(record.id), ...record });
   return Array.from(byId.values());
 }
 
-export function extractWelfareIndexLinks(html: string): Array<{ title: string; url: string; publishedAt: string }> {
+export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
   const matches: Array<{ title: string; url: string; publishedAt: string }> = [];
-  const pattern = /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi;
-  let match: RegExpExecArray | null;
-  while ((match = pattern.exec(html)) !== null) {
-    const title = cleanText(match[3]);
-    const url = normalizeUrl(match[2], WELFARE_SOURCE_URL);
-    const hasWelfareContext = /(总工会|工会|职工|慰问|员工福利|消费帮扶|送清凉)/.test(title);
+  const patterns = [
+    /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi,
+    /<li>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>[\s\S]*?<i>(\d{4}-\d{2}-\d{2})<\/i>[\s\S]*?<\/a>[\s\S]*?<\/li>/gi,
+    /<li>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>[\s\S]*?<\/a>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<\/li>/gi,
+  ];
+  const discovered = new Map<string, { title: string; url: string; publishedAt: string }>();
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(html)) !== null) {
+      const isDateFirst = /^\d{4}-\d{2}-\d{2}$/.test(match[1]);
+      const publishedAt = isDateFirst ? match[1] : match[3];
+      const href = isDateFirst ? match[2] : match[1];
+      const title = cleanText(isDateFirst ? match[3] : match[2]);
+      const url = normalizeUrl(href, source.url);
+      const hasWelfareContext = /(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title);
     const hasOpportunityAction = /(采购|遴选|供应商|征集|项目)/.test(title);
     if (!url || !hasWelfareContext || !hasOpportunityAction) continue;
     if (/(结果|中标|成交|终止|废标)/.test(title)) continue;
-    matches.push({ title, url, publishedAt: match[1] });
+      discovered.set(url, { title, url, publishedAt });
+    }
   }
-  return matches;
+  return Array.from(discovered.values());
 }
 
 function extractMeta(html: string, name: string): string {
@@ -230,11 +294,22 @@ function excerpt(text: string, pattern: RegExp): string | undefined {
   return match?.[0]?.slice(0, 180);
 }
 
-export function parseWelfareDetail(input: { html: string; url: string; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
+function publishedContactName(value: string | undefined): string | undefined {
+  const name = value?.replace(/^联系人[：:]?\s*/, "").trim();
+  // Do not turn template phrases such as “联系人及联系方式” into a public person.
+  if (!name || /^(及|和|、|信息|联系方式|详见|见附件)/.test(name)) return undefined;
+  return name;
+}
+
+export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
+  const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "");
-  if (!title || !/(总工会|工会|职工|慰问|员工福利|消费帮扶|送清凉)/.test(title) || !/(采购|遴选|供应商|征集|项目)/.test(title)) return null;
+  if (!title || !/(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title) || !/(采购|遴选|供应商|征集|项目)/.test(title)) return null;
   const text = cleanText(input.html);
   const buyerExcerpt = excerpt(text, /采购人名称[：:]?\s*[^。；]*?(?=\s*(?:联系地址|联系人|联系电话|地址)[：:]|[。；]|$)/);
+  const contactNameExcerpt = excerpt(text, /联系人[：:]?\s*[^。；\s]+/);
+  const contactPhoneExcerpt = excerpt(text, /联系电话[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
+  const contactAddressExcerpt = excerpt(text, /联系地址[：:]?\s*[^。；]+?(?=\s*(?:联系人|联系电话)[：:]|[。；]|$)/);
   const deadlineExcerpt = excerpt(text, /(?:投标|报名|响应|递交)[^。；]{0,24}(?:截至|截止)[^。；]{0,40}/);
   const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
   const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?/);
@@ -248,45 +323,70 @@ export function parseWelfareDetail(input: { html: string; url: string; published
     { field: "budget", state: budgetExcerpt ? "verified" : "not_published", excerpt: budgetExcerpt },
     { field: "deadline", state: deadlineExcerpt && deadline ? "verified" : "unknown", excerpt: deadlineExcerpt },
     { field: "status", state: "verified", excerpt: isClosed ? "标题显示项目已结束" : isCorrection ? "标题显示采购更正/变更" : "标题显示公开采购或征集" },
+    { field: "contactName", state: publishedContactName(contactNameExcerpt) ? "verified" : "not_published", excerpt: publishedContactName(contactNameExcerpt) ? contactNameExcerpt : undefined },
+    { field: "contactPhone", state: contactPhoneExcerpt ? "verified" : "not_published", excerpt: contactPhoneExcerpt },
+    { field: "contactAddress", state: contactAddressExcerpt ? "verified" : "not_published", excerpt: contactAddressExcerpt },
   ];
   const rawSha256 = crypto.createHash("sha256").update(input.html).digest("hex");
   return {
     id: stableId(input.url),
     title,
-    sourceCode: WELFARE_SOURCE_CODE,
-    sourceName: WELFARE_SOURCE_NAME,
+    sourceCode: source.code,
+    sourceName: source.name,
     officialUrl: input.url,
     publishedAt: publishedAt ? `${publishedAt.slice(0, 10)}T00:00:00+08:00` : input.retrievedAt ?? new Date().toISOString(),
     retrievedAt: input.retrievedAt ?? new Date().toISOString(),
     rawSha256,
     dataMode: "live",
     opportunityType: "OPEN_PROCUREMENT",
-    lifecycleStatus: isClosed ? "historical" : "current",
+    lifecycleStatus: isClosed || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
     currentStage: isClosed ? "CLOSED_PENDING_RESULT" : isCorrection ? "CORRECTED" : "OPEN",
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
     buyer: buyerExcerpt?.replace(/^采购人名称[：:]?\s*/, "") ?? "待核验",
-    region: "深圳光明",
+    contactName: publishedContactName(contactNameExcerpt) ?? "未公开",
+    contactPhone: contactPhoneExcerpt?.replace(/^联系电话[：:]?\s*/, "") ?? "未公开",
+    contactAddress: contactAddressExcerpt?.replace(/^联系地址[：:]?\s*/, "") ?? "未公开",
+    region: source.region,
     budgetDisplay: budgetExcerpt?.replace(/^(?:预算金额|采购预算|最高限价)[：:]?\s*/, "") ?? "未公开",
     deadline,
     deadlineDisplay: deadlineExcerpt ?? "待核验",
     welfareScenes: [/(消费帮扶)/.test(title) ? "消费帮扶" : /(慰问)/.test(title) ? "职工慰问" : "企业福利采购"],
     productScopes: [/(农副产品|食品|慰问物资)/.test(text) ? "食品生鲜/慰问物资" : "综合福利"],
-    reason: "来自光明区政府官方公告栏目，涉及企业福利、职工慰问或消费帮扶采购。",
+    reason: `来自${source.name}官方公告栏目，涉及企业福利、职工慰问或消费帮扶采购。`,
     nextAction: "打开官方原文，核对采购文件、资格要求、附件和递交方式。",
     riskNote: "公开页面仅整理官方公告；预算、截止和资格要求以官方原文及后续更正为准。",
     evidenceFields,
   };
 }
 
-export async function collectOffSz004(options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}) {
+export interface WelfareSourceCollectionResult {
+  sourceCode: WelfareSourceConfig["code"];
+  sourceName: string;
+  retrievedAt: string;
+  status: "succeeded" | "partial" | "failed" | "empty";
+  discoveredCount: number;
+  publishedCount: number;
+  totalCount: number;
+  errors: Array<{ url: string; error: string }>;
+}
+
+interface WelfareSourceCollectionData { result: WelfareSourceCollectionResult; records: WelfareOpportunityRecord[]; }
+
+async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"], options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}): Promise<WelfareSourceCollectionData> {
+  const source = sourceByCode(sourceCode);
   const fetchHtml = options.fetchHtml ?? defaultWelfareFetchHtml;
   const now = options.now ?? new Date();
   const retrievedAt = now.toISOString();
-  const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? "data/welfare-evidence/OFF-SZ-004");
-  const indexHtml = await fetchHtml(WELFARE_SOURCE_URL);
+  const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? `data/welfare-evidence/${source.code}`);
+  let indexHtml: string;
+  try {
+    indexHtml = await fetchHtml(source.url);
+  } catch (error) {
+    return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: [{ url: source.url, error: error instanceof Error ? error.message : String(error) }] }, records: [] };
+  }
   fs.mkdirSync(evidenceDir, { recursive: true });
   fs.writeFileSync(path.join(evidenceDir, `index-${crypto.createHash("sha256").update(indexHtml).digest("hex").slice(0, 16)}.html`), indexHtml);
-  const links = extractWelfareIndexLinks(indexHtml).slice(0, Math.max(1, Math.min(options.maxDetails ?? 12, 30)));
+  const links = extractWelfareIndexLinks(indexHtml, source).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
   const records: WelfareOpportunityRecord[] = [];
   const errors: Array<{ url: string; error: string }> = [];
   for (const link of links) {
@@ -294,24 +394,56 @@ export async function collectOffSz004(options: { fetchHtml?: (url: string) => Pr
       const html = await fetchHtml(link.url);
       const sha = crypto.createHash("sha256").update(html).digest("hex");
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
-      const record = parseWelfareDetail({ html, url: link.url, publishedAtHint: link.publishedAt, retrievedAt });
+      const record = parseWelfareDetail({ html, url: link.url, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
       if (record) records.push(record);
     } catch (error) {
       errors.push({ url: link.url, error: error instanceof Error ? error.message : String(error) });
     }
   }
-  const existing = loadPersistedWelfareOpportunities().filter((record) =>
-    /(总工会|工会|职工|慰问|员工福利|消费帮扶|送清凉)/.test(record.title)
-    && /(采购|遴选|供应商|征集|项目)/.test(record.title),
-  );
-  const merged = mergeWelfareRecords(existing, records);
+  return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: errors.length > 0 ? "partial" : records.length > 0 ? "succeeded" : "empty", discoveredCount: links.length, publishedCount: records.length, totalCount: records.length, errors }, records };
+}
+
+export async function collectWelfareSource(sourceCode: WelfareSourceConfig["code"], options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date; persist?: boolean } = {}): Promise<WelfareSourceCollectionResult> {
+  const data = await collectWelfareSourceData(sourceCode, options);
+  const merged = mergeWelfareRecords(loadPersistedWelfareOpportunities(), data.records);
+  if (options.persist !== false) savePersistedWelfareOpportunities(merged);
+  return { ...data.result, totalCount: merged.length };
+}
+
+export async function collectOffSz004(options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}) {
+  return collectWelfareSource("OFF-SZ-004", options);
+}
+
+export async function collectAllWelfareSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; maxDetails?: number; evidenceDir?: string } = {}) {
+  const collected: WelfareSourceCollectionData[] = [];
+  for (const source of WELFARE_SOURCES.filter((item) => item.enabled)) {
+    collected.push(await collectWelfareSourceData(source.code, { ...options, evidenceDir: options.evidenceDir ? path.join(options.evidenceDir, source.code) : undefined }));
+  }
+  const previous = loadPersistedWelfareOpportunities();
+  const incoming = collected.flatMap((item) => item.records);
+  const previousById = new Map(previous.map((record) => [record.id, record]));
+  const added = incoming.filter((record) => !previousById.has(record.id)).length;
+  const updated = incoming.filter((record) => {
+    const prior = previousById.get(record.id);
+    return Boolean(prior && prior.rawSha256 !== record.rawSha256);
+  }).length;
+  // Merge only after every configured source has finished. A failed or empty source
+  // therefore leaves its last successful public cards intact.
+  const merged = mergeWelfareRecords(previous, incoming);
   savePersistedWelfareOpportunities(merged);
-  return { sourceCode: WELFARE_SOURCE_CODE, retrievedAt, discoveredCount: links.length, publishedCount: records.length, totalCount: merged.length, errors };
+  const results = collected.map((item) => ({ ...item.result, totalCount: merged.filter((record) => record.sourceCode === item.result.sourceCode).length }));
+  const summary: WelfareRunSummary = {
+    ranAt: (options.now ?? new Date()).toISOString(),
+    sources: results.map(({ errors: _errors, ...publicResult }) => publicResult),
+    totals: { added, updated, historical: merged.filter((record) => record.lifecycleStatus === "historical").length, filtered: collected.reduce((sum, item) => sum + item.result.discoveredCount - item.result.publishedCount, 0), total: merged.length },
+  };
+  saveWelfareRunSummary(summary);
+  return { ranAt: summary.ranAt, sources: results, totalCount: merged.length, summary };
 }
 
 async function defaultWelfareFetchHtml(url: string): Promise<string> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || parsed.hostname !== "www.szgm.gov.cn") throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !WELFARE_SOURCES.some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
@@ -326,16 +458,20 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
     } catch (curlError) {
       const fetchMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
       const curlMessage = curlError instanceof Error ? curlError.message : String(curlError);
-      throw new Error(`OFF-SZ-004 fetch failed: node=${fetchMessage}; curl=${curlMessage}`);
+      throw new Error(`welfare source fetch failed: node=${fetchMessage}; curl=${curlMessage}`);
     }
   }
 }
 
 export function renderWelfareMarkdown(records: WelfareOpportunityRecord[], generatedAt = new Date().toISOString()): string {
   const current = records.filter((item) => item.lifecycleStatus === "current");
-  const lines = ["# 企业福利商机雷达日报", "", `生成时间：${generatedAt}`, "", `当前有效商机：${current.length} 条`, ""];
+  const historical = records.length - current.length;
+  const lines = ["# 企业福利商机雷达日报", "", `生成时间：${generatedAt}`, "", `当前有效商机：${current.length} 条`, `历史商机：${historical} 条`, "", "## 来源统计", ""];
+  for (const source of WELFARE_SOURCES.filter((item) => item.enabled)) lines.push(`- ${source.code}｜${source.name}：${records.filter((item) => item.sourceCode === source.code).length} 条`);
+  lines.push("");
+  if (!current.length) lines.push("本轮无新增合格机会。", "");
   for (const item of current) {
-    lines.push(`## ${item.title}`, "", `- 采购/发布单位：${item.buyer}`, `- 地区：${item.region}`, `- 预算：${item.budgetDisplay}`, `- 截止：${item.deadlineDisplay}`, `- 官方原文：${item.officialUrl}`, `- 下一步：${item.nextAction}`, "");
+    lines.push(`## ${item.title}`, "", `- 采购/发布单位：${item.buyer}`, `- 地区：${item.region}`, `- 联系人：${item.contactName}`, `- 联系电话：${item.contactPhone}`, `- 联系地址：${item.contactAddress}`, `- 预算：${item.budgetDisplay}`, `- 截止：${item.deadlineDisplay}`, `- 官方原文：${item.officialUrl}`, `- 下一步：${item.nextAction}`, "");
   }
   return lines.join("\n");
 }

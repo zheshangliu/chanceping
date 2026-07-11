@@ -14,6 +14,9 @@
     "currentStage": "CORRECTED",
     "verificationState": "STATUS_VERIFIED",
     "buyer": "深圳市光明区总工会",
+    "contactName": "张小姐",
+    "contactPhone": "0755-88212759",
+    "contactAddress": "深圳市光明区玉塘街道田寮社区科联路科润大厦A座",
     "region": "深圳光明",
     "budgetDisplay": "未公开",
     "deadline": "2026-07-15T18:00:00+08:00",
@@ -27,7 +30,10 @@
       { "field": "buyer", "state": "verified", "excerpt": "采购人名称：深圳市光明区总工会" },
       { "field": "budget", "state": "not_published" },
       { "field": "deadline", "state": "verified", "excerpt": "投标时间截至7月15日18时00分" },
-      { "field": "status", "state": "verified", "excerpt": "采购变更公告" }
+      { "field": "status", "state": "verified", "excerpt": "采购变更公告" },
+      { "field": "contactName", "state": "verified", "excerpt": "联系人：张小姐" },
+      { "field": "contactPhone", "state": "verified", "excerpt": "联系电话：0755-88212759" },
+      { "field": "contactAddress", "state": "verified", "excerpt": "联系地址：深圳市光明区玉塘街道田寮社区科联路科润大厦A座" }
     ]
   }
 ]

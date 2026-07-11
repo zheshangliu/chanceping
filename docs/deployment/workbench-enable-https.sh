@@ -5,6 +5,7 @@ set -euo pipefail
 #   chanceping.com
 #   www.chanceping.com
 #   aievents.chanceping.com
+#   fuli.chanceping.com
 
 EMAIL="${1:-sunny251610056@gmail.com}"
 
@@ -20,6 +21,7 @@ certbot --nginx \
   -d chanceping.com \
   -d www.chanceping.com \
   -d aievents.chanceping.com \
+  -d fuli.chanceping.com \
   --email "$EMAIL" \
   --agree-tos \
   --non-interactive \
@@ -28,4 +30,4 @@ certbot --nginx \
 certbot renew --dry-run
 systemctl reload nginx
 
-echo "[chanceping] HTTPS enabled for chanceping.com, www.chanceping.com, aievents.chanceping.com"
+echo "[chanceping] HTTPS enabled for chanceping.com, www.chanceping.com, aievents.chanceping.com, fuli.chanceping.com"

@@ -1,0 +1,16 @@
+[Unit]
+Description=ChancePing public welfare radar refresh
+Wants=network-online.target
+After=network-online.target chanceping.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/chanceping/current
+EnvironmentFile=/etc/chanceping/chanceping.env
+Environment=TZ=Asia/Shanghai
+ExecStart=/usr/bin/npm run welfare:update -- --limit 12
+TimeoutStartSec=30min
+StandardOutput=journal
+StandardError=journal
+User=root
+Group=root

@@ -46,6 +46,34 @@ docs/deployment/aliyun.env.example
 - 雷达聊天窗口 store：`CHANCEPING_RADAR_CHAT_STORE_PATH`
 - AI Events 数据源 store：当前公开页 `/api/public/ai-events` 使用的本地数据文件
 - 自定义雷达、运行记录、机会卡和报告 artifact 的本地 data 目录
+- 福利公开雷达数据：`data/welfare-opportunities.json`、`data/welfare-run-summary.json`；官方原文快照在 Git 忽略的 `data/welfare-evidence/`。
+
+## 企业福利雷达灰度（fuli.chanceping.com）
+
+以下命令由 Workbench 操作人手动执行。它不会写入密钥，也不会替换主站或 AI Events 的 server block。
+
+```bash
+# 1) 在已验证分支推送后，按现有 release 安装流程部署；安装脚本会创建 fuli Nginx block。
+bash /tmp/chanceping-workbench-install.sh /tmp/chanceping-workbench-YYYYMMDD-HHMMSS.tar.gz
+
+# 2) 安装福利定时刷新（每天 08:30、16:30，Asia/Shanghai）
+sudo cp /opt/chanceping/current/docs/deployment/chanceping-welfare-update.service /etc/systemd/system/
+sudo cp /opt/chanceping/current/docs/deployment/chanceping-welfare-update.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now chanceping-welfare-update.timer
+sudo systemctl start chanceping-welfare-update.service
+sudo journalctl -u chanceping-welfare-update.service -n 120 --no-pager
+
+# 3) DNS 的 fuli.chanceping.com 已指向本机后，签发 HTTPS
+sudo bash /opt/chanceping/current/docs/deployment/workbench-enable-https.sh your-email@example.com
+
+# 4) 本机与公网 smoke（公网 URL 仅在 HTTPS 成功后执行）
+curl -fsSI http://127.0.0.1:3000/fuli
+curl -fsS http://127.0.0.1:3000/api/public/welfare/opportunities | head -c 500; echo
+CHANCEPING_WELFARE_BASE_URL=https://fuli.chanceping.com npm run verify:welfare:remote-smoke
+```
+
+失败回退：`sudo systemctl disable --now chanceping-welfare-update.timer`，然后从 `/etc/nginx/sites-available/chanceping.conf` 删除 `fuli.chanceping.com` server block 并 `sudo nginx -t && sudo systemctl reload nginx`；如应用本身回归，按既有 release 软链切回上一版本。不要删除 `data/welfare-opportunities.json`，它是失败降级所需的上一轮有效公开数据。
 
 ## 上线前本地闸门
 
