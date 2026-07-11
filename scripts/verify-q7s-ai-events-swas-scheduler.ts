@@ -37,8 +37,8 @@ check("service is oneshot", /Type=oneshot/.test(service));
 check("service runs from current release symlink", /WorkingDirectory=\/opt\/chanceping\/current/.test(service));
 check("service reads server env file only", /EnvironmentFile=\/etc\/chanceping\/chanceping\.env/.test(service));
 check(
-  "service runs AI Events update with image hydration",
-  /ExecStart=\/usr\/bin\/npm run ai-events:update -- --hydrate-images --image-limit=60/.test(service),
+  "service runs AI Events update with source collection and image hydration",
+  /ExecStart=\/usr\/bin\/npm run ai-events:update -- --collect-sources --source-max-links=12 --hydrate-images --image-limit=60/.test(service),
   service,
 );
 check("service has bounded timeout", /TimeoutStartSec=30min/.test(service));
@@ -59,7 +59,7 @@ check("timer installs under timers target", /WantedBy=timers\.target/.test(timer
   "systemctl start chanceping-ai-events-update.service",
   "journalctl -u chanceping-ai-events-update.service -n 120 --no-pager",
   "systemctl disable --now chanceping-ai-events-update.timer",
-  "npm run ai-events:update -- --hydrate-images --image-limit=60",
+  "npm run ai-events:update -- --collect-sources --source-max-links=12 --hydrate-images --image-limit=60",
   "curl -fsS http://127.0.0.1:3000/api/public/ai-events?page_size=3",
   "curl -I http://127.0.0.1:3000/aievents",
 ].forEach((required) => {
@@ -77,4 +77,3 @@ check("package exposes local scheduler command", scripts["ai-events:update:sched
 
 console.log(`\nQ7S AI Events SWAS scheduler checks: ${pass} PASS / ${fail} FAIL`);
 process.exit(fail > 0 ? 1 : 0);
-

@@ -76,6 +76,8 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
     const result = await runPublicAiEventsUpdatePipeline(ctx.store, undefined, {
       hydrateImages,
       imageHydrationLimit: parsePositiveInt(c.req.query("image_limit"), 30, 120),
+      collectSources: parseBoolean(c.req.query("collect_sources")),
+      sourceMaxLinks: parsePositiveInt(c.req.query("source_max_links"), 12, 30),
     });
     return c.json({
       success: true,

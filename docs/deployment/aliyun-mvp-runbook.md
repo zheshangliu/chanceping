@@ -386,14 +386,14 @@ systemctl disable --now chanceping-ai-events-update.timer
 该任务实际执行：
 
 ```bash
-npm run ai-events:update -- --hydrate-images --image-limit=60
+npm run ai-events:update -- --collect-sources --source-max-links=12 --hydrate-images --image-limit=60
 ```
 
 也可以在 Workbench 中直接手动执行同一命令排查问题：
 
 ```bash
 cd /opt/chanceping/current
-npm run ai-events:update -- --hydrate-images --image-limit=60
+npm run ai-events:update -- --collect-sources --source-max-links=12 --hydrate-images --image-limit=60
 ```
 
 刷新后可用下面命令确认公开页和 API 仍正常：

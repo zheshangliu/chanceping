@@ -54,7 +54,7 @@ async function main(): Promise<void> {
   const firstSerialized = JSON.stringify(firstRun);
 
   check("pipeline returns public AI events radar id", firstRun.radarId === PUBLIC_AI_EVENTS_RADAR_ID, firstSerialized.slice(0, 240));
-  check("pipeline has explicit offline execution mode", firstRun.executionMode === "offline_store_refresh", firstSerialized.slice(0, 240));
+  check("pipeline has explicit offline execution mode when source collection is disabled", firstRun.executionMode === "offline_store_refresh", firstSerialized.slice(0, 240));
   check("pipeline syncs baseline public event volume", firstRun.sync.syncedCount >= baselineFeed.stats.filteredCount, `synced=${firstRun.sync.syncedCount}, baseline=${baselineFeed.stats.filteredCount}`);
   check("pipeline writes entries into opportunity store", totalAfterFirstRun >= firstRun.sync.syncedCount, `store=${totalAfterFirstRun}, synced=${firstRun.sync.syncedCount}`);
   check("pipeline reports current public events", firstRun.publicFeed.currentCount > 0, JSON.stringify(firstRun.publicFeed));
@@ -64,6 +64,68 @@ async function main(): Promise<void> {
   check("pipeline reports image coverage buckets", firstRun.images.platformPlaceholderCount > 0 && firstRun.images.defaultPlaceholderCount >= 0 && firstRun.images.sourceImageCount >= 0, JSON.stringify(firstRun.images));
   check("pipeline reports source network shape", firstRun.sourceNetwork.sourceCount > 0 && firstRun.sourceNetwork.officialSourceCount > 0 && firstRun.sourceNetwork.aggregatorSourceCount > 0, JSON.stringify(firstRun.sourceNetwork));
   check("pipeline summary avoids live API wording", !/serper|deepseek|COMMERCIAL_LLM_API_KEY|SERPER_API_KEY|sk-[A-Za-z0-9]/i.test(firstSerialized), firstSerialized.slice(0, 240));
+
+  const collectedStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-collected.json");
+  removeIfExists(collectedStorePath);
+  const collectedStore = new LocalFileStore({ file_path: collectedStorePath, auto_flush: false });
+  const sourceHtml: Record<string, string> = {
+    "https://devpost.com/hackathons": `
+      <a href="https://future-ai.devpost.com/">Future AI Agent Hackathon</a>
+      <a href="https://future-ai.devpost.com/rules">Rules</a>
+      <a href="https://devpost.com/hackathons">All hackathons</a>
+    `,
+    "https://dorahacks.io/hackathon": `
+      <a href="https://dorahacks.io/hackathon/ai-builders-2026">AI Builders Hackathon</a>
+      <a href="https://dorahacks.io/">DoraHacks home</a>
+    `,
+    "https://lablab.ai/event": `
+      <a href="https://lablab.ai/event/agent-sprint">LLM Agent Sprint Hackathon</a>
+      <a href="https://lablab.ai/event">All events</a>
+    `,
+    "https://www.kaggle.com/competitions": `
+      <a href="https://www.kaggle.com/competitions/ai-model-benchmark">AI Model Benchmark Competition</a>
+      <a href="https://www.kaggle.com/competitions">All competitions</a>
+    `,
+  };
+  const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
+    now: referenceNow,
+    collectSources: true,
+    hydrateImages: false,
+    fetchHtml: async (url) => sourceHtml[url] ?? "",
+  });
+  const collectedEntries = collectedStore.list({
+    radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+    page: 1,
+    page_size: 100000,
+  }).entries;
+  check("source-enabled pipeline declares source index collection mode", collectedRun.executionMode === "source_index_collection", JSON.stringify(collectedRun));
+  check("source collection discovers concrete event pages from first-batch indexes", collectedRun.sourceCollection?.discoveredCardCount === 4, JSON.stringify(collectedRun.sourceCollection));
+  check("source collection records every enabled source health result", collectedRun.sourceCollection?.sources.length === 4 && collectedRun.sourceCollection.sources.every((source) => source.status === "collected"), JSON.stringify(collectedRun.sourceCollection));
+  check("source collection excludes index and rule pages", !collectedEntries.some((entry) => /\/rules$|devpost\.com\/hackathons$/i.test(entry.card.official_source_url)), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
+  check("source collection preserves concrete pages in public radar store", collectedEntries.some((entry) => entry.card.official_source_url === "https://future-ai.devpost.com/"), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
+
+  const repeatedCollectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
+    now: referenceNow,
+    collectSources: true,
+    hydrateImages: false,
+    fetchHtml: async (url) => sourceHtml[url] ?? "",
+  });
+  const repeatedCollectionCount = collectedStore.list({ radarId: PUBLIC_AI_EVENTS_RADAR_ID, page: 1, page_size: 100000 }).total;
+  check("source collection stays deduplicated on repeated refresh", repeatedCollectionCount === collectedEntries.length, `first=${collectedEntries.length}, second=${repeatedCollectionCount}, run=${JSON.stringify(repeatedCollectedRun.sourceCollection)}`);
+
+  const failedCollectionStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-collection-failed.json");
+  removeIfExists(failedCollectionStorePath);
+  const failedCollectionStore = new LocalFileStore({ file_path: failedCollectionStorePath, auto_flush: false });
+  const failedCollectionRun = await runPublicAiEventsUpdatePipeline(failedCollectionStore, undefined, {
+    now: referenceNow,
+    collectSources: true,
+    hydrateImages: false,
+    fetchHtml: async (url) => {
+      if (url.includes("dorahacks")) throw new Error("synthetic DoraHacks timeout");
+      return sourceHtml[url] ?? "";
+    },
+  });
+  check("source collection surfaces a failed source rather than pretending refresh success", failedCollectionRun.sourceCollection?.sources.some((source) => source.sourceId === "dorahacks" && source.status === "failed" && source.error?.includes("synthetic DoraHacks timeout")) === true, JSON.stringify(failedCollectionRun.sourceCollection));
 
   const secondRun = await runPublicAiEventsUpdatePipeline(store, undefined, {
     now: referenceNow,
@@ -148,6 +210,8 @@ async function main(): Promise<void> {
 
   const failedHydrationStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-failed-hydration.json");
   removeIfExists(failedHydrationStorePath);
+  removeIfExists(collectedStorePath);
+  removeIfExists(failedCollectionStorePath);
   const failedHydrationStore = new LocalFileStore({ file_path: failedHydrationStorePath, auto_flush: false });
   const failedHydrationRun = await runPublicAiEventsUpdatePipeline(failedHydrationStore, undefined, {
     now: referenceNow,

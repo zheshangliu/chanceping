@@ -5,12 +5,18 @@ import {
 } from "./ai-events-publisher";
 import type { PublicAiEventSampleRoomData } from "../demo/ai-events-sample-room";
 import {
+  hydratePublicAiEventImages,
   PUBLIC_AI_EVENTS_RADAR_ID,
   PUBLIC_AI_EVENTS_RADAR_NAME,
   type HydratePublicAiEventImagesOptions,
   type HydratePublicAiEventImagesResult,
   syncAndHydratePublicAiEventsToStore,
 } from "./ai-events-store-sync";
+import {
+  collectPublicAiEventsFromSources,
+  type CollectPublicAiEventsOptions,
+  type PublicAiEventSourceCollectionResult,
+} from "./ai-events-source-collector";
 
 const PIPELINE_PAGE_SIZE = 60;
 
@@ -19,12 +25,15 @@ export interface PublicAiEventsUpdatePipelineOptions extends Pick<BuildPublicAiE
   imageHydrationLimit?: number;
   imageHydrationTimeoutMs?: number;
   fetchHtml?: HydratePublicAiEventImagesOptions["fetchHtml"];
+  collectSources?: boolean;
+  sourceIds?: CollectPublicAiEventsOptions["sourceIds"];
+  sourceMaxLinks?: number;
 }
 
 export interface PublicAiEventsUpdatePipelineSummary {
   radarId: string;
   radarName: string;
-  executionMode: "offline_store_refresh";
+  executionMode: "offline_store_refresh" | "source_index_collection";
   ranAt: string;
   sync: {
     syncedCount: number;
@@ -53,6 +62,7 @@ export interface PublicAiEventsUpdatePipelineSummary {
     officialSourceCount: number;
     aggregatorSourceCount: number;
   };
+  sourceCollection?: PublicAiEventSourceCollectionResult;
 }
 
 function listPublicRadarEntries(store: OpportunityStore): StoreEntry[] {
@@ -100,11 +110,27 @@ export async function runPublicAiEventsUpdatePipeline(
   const syncResult = await syncAndHydratePublicAiEventsToStore(store, seedData, {
     now: options.now,
     lifecycle: "all",
-    hydrateImages: options.hydrateImages === true,
+    // Collect before hydration so newly discovered concrete event pages can be
+    // enriched in the same scheduled run rather than three days later.
+    hydrateImages: false,
     imageHydrationLimit: options.imageHydrationLimit,
     imageHydrationTimeoutMs: options.imageHydrationTimeoutMs,
     fetchHtml: options.fetchHtml,
   });
+  const sourceCollection = options.collectSources
+    ? await collectPublicAiEventsFromSources(store, {
+      sourceIds: options.sourceIds,
+      maxLinksPerSource: options.sourceMaxLinks,
+      fetchHtml: options.fetchHtml,
+    })
+    : undefined;
+  const imageHydration = options.hydrateImages
+    ? await hydratePublicAiEventImages(store, {
+      limit: options.imageHydrationLimit,
+      timeoutMs: options.imageHydrationTimeoutMs,
+      fetchHtml: options.fetchHtml,
+    })
+    : undefined;
   const publicEntries = listPublicRadarEntries(store);
   const feed = buildPublicAiEventFeed(publicEntries, seedData, {
     lifecycle: "all",
@@ -116,13 +142,13 @@ export async function runPublicAiEventsUpdatePipeline(
   return {
     radarId: PUBLIC_AI_EVENTS_RADAR_ID,
     radarName: PUBLIC_AI_EVENTS_RADAR_NAME,
-    executionMode: "offline_store_refresh",
+    executionMode: sourceCollection ? "source_index_collection" : "offline_store_refresh",
     ranAt: new Date().toISOString(),
     sync: {
       syncedCount: syncResult.syncedCount,
       totalForPublicRadar: syncResult.totalForPublicRadar,
     },
-    imageHydration: syncResult.imageHydration,
+    imageHydration,
     publicFeed: {
       totalCount: feed.stats.totalCount,
       currentCount: feed.stats.currentCount,
@@ -139,5 +165,6 @@ export async function runPublicAiEventsUpdatePipeline(
       officialSourceCount: feed.stats.officialSourceCount,
       aggregatorSourceCount: feed.stats.aggregatorSourceCount,
     },
+    sourceCollection,
   };
 }
