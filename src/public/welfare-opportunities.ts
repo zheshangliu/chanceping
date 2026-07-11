@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
 
 export const PUBLIC_WELFARE_RADAR_ID = "public_welfare_opportunities";
@@ -458,11 +458,47 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
       const { stdout } = await execFileAsync("curl", ["-L", "--fail", "--silent", "--show-error", "--max-time", "20", "--tls-max", "1.2", "--http1.1", "-A", "ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)", url], { maxBuffer: 8 * 1024 * 1024 });
       return stdout;
     } catch (curlError) {
-      const fetchMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
-      const curlMessage = curlError instanceof Error ? curlError.message : String(curlError);
-      throw new Error(`welfare source fetch failed: node=${fetchMessage}; curl=${curlMessage}`);
+      try {
+        return await gnutlsFetchHtml(url);
+      } catch (gnutlsError) {
+        const fetchMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
+        const curlMessage = curlError instanceof Error ? curlError.message : String(curlError);
+        const gnutlsMessage = gnutlsError instanceof Error ? gnutlsError.message : String(gnutlsError);
+        throw new Error(`welfare source fetch failed: node=${fetchMessage}; curl=${curlMessage}; gnutls=${gnutlsMessage}`);
+      }
     }
   }
+}
+
+async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
+  if (redirects > 4) throw new Error("too many HTTPS redirects");
+  const parsed = new URL(url);
+  if (parsed.protocol !== "https:" || !WELFARE_SOURCES.some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\r\nAccept: text/html,application/xhtml+xml\r\nConnection: close\r\n\r\n`;
+  const output = await new Promise<string>((resolve, reject) => {
+    const child = spawn("gnutls-cli", ["--quiet", "--crlf", "--sni-hostname", parsed.hostname, parsed.hostname, "-p", "443"], { stdio: ["pipe", "pipe", "pipe"] });
+    const chunks: Buffer[] = [];
+    const errors: Buffer[] = [];
+    const timeout = setTimeout(() => { child.kill("SIGTERM"); reject(new Error("timeout after 20 seconds")); }, 20_000);
+    child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
+    child.stderr.on("data", (chunk: Buffer) => errors.push(chunk));
+    child.once("error", (error) => { clearTimeout(timeout); reject(error); });
+    child.once("close", (code) => {
+      clearTimeout(timeout);
+      const value = Buffer.concat(chunks).toString("utf8");
+      if (code !== 0) return reject(new Error(Buffer.concat(errors).toString("utf8").trim() || `exit ${code}`));
+      resolve(value);
+    });
+    child.stdin.end(request);
+  });
+  const splitAt = output.indexOf("\r\n\r\n");
+  if (splitAt < 0) throw new Error("invalid HTTP response");
+  const headers = output.slice(0, splitAt);
+  const status = Number(headers.match(/^HTTP\/\d(?:\.\d)?\s+(\d{3})/i)?.[1]);
+  const location = headers.match(/^location:\s*(.+)$/im)?.[1]?.trim();
+  if ([301, 302, 303, 307, 308].includes(status) && location) return gnutlsFetchHtml(new URL(location, url).toString(), redirects + 1);
+  if (status < 200 || status >= 300) throw new Error(`HTTP ${status || "unknown"}`);
+  return output.slice(splitAt + 4);
 }
 
 export function renderWelfareMarkdown(records: WelfareOpportunityRecord[], generatedAt = new Date().toISOString()): string {

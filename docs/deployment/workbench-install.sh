@@ -37,7 +37,7 @@ echo "[chanceping] package: $PACKAGE_PATH"
 echo "[chanceping] release: $release_dir"
 
 apt-get update
-apt-get install -y ca-certificates curl nginx rsync
+apt-get install -y ca-certificates curl gnutls-bin nginx rsync
 
 node_major="0"
 if command -v node >/dev/null 2>&1; then
