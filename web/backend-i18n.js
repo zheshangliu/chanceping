@@ -4,8 +4,8 @@
   const BACKEND_I18N = {
     zh: {
       brandTitle: "ChancePing 盯机会",
-      contactButton: "联系我",
-      contactTitle: "联系方式",
+      contactButton: "开发者：Jason · 联系我",
+      contactTitle: "联系开发者 Jason",
       contactIntro: "有赛事来源、合作或使用问题，可以直接联系我。",
       copyWechat: "复制",
       copiedWechat: "已复制",
@@ -87,8 +87,8 @@
     },
     en: {
       brandTitle: "ChancePing",
-      contactButton: "Contact",
-      contactTitle: "Contact",
+      contactButton: "Developer: Jason · Contact",
+      contactTitle: "Contact developer Jason",
       contactIntro: "For event sources, partnerships, or product feedback, reach me here.",
       copyWechat: "Copy",
       copiedWechat: "Copied",
