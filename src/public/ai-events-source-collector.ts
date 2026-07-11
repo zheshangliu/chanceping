@@ -1,5 +1,7 @@
 import type { OpportunityStore } from "../agents/opportunity-store";
 import type { OpportunityCard } from "../schema/opportunity-card";
+import type { SearchResult } from "../search/types";
+import { SerperProvider } from "../search/providers/serper";
 import type { PublicAiEventSource } from "../demo/ai-events-sample-room";
 import { AI_EVENT_SOURCE_NETWORK } from "../demo/ai-events-sample-room";
 import { PUBLIC_AI_EVENTS_RADAR_ID } from "./ai-events-store-sync";
@@ -10,6 +12,7 @@ const ACTIVE_SOURCE_IDS = ["devpost", "dorahacks", "lablab", "kaggle"] as const;
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
 
 export type PublicAiEventSourceCollectionStatus = "collected" | "empty" | "failed" | "not_enabled";
+export type PublicAiEventSourceDiscoveryMethod = "index_fetch" | "search_fallback" | "none";
 
 export interface PublicAiEventSourceCollectionItem {
   sourceId: string;
@@ -17,6 +20,7 @@ export interface PublicAiEventSourceCollectionItem {
   status: PublicAiEventSourceCollectionStatus;
   discoveredCount: number;
   acceptedCount: number;
+  discoveryMethod: PublicAiEventSourceDiscoveryMethod;
   error?: string;
 }
 
@@ -33,6 +37,8 @@ export interface CollectPublicAiEventsOptions {
   maxLinksPerSource?: number;
   timeoutMs?: number;
   fetchHtml?: (url: string) => Promise<string>;
+  discoverWithSearch?: boolean;
+  searchSource?: (query: string, source: PublicAiEventSource) => Promise<SearchResult[]>;
 }
 
 interface ExtractedLink {
@@ -117,6 +123,37 @@ async function defaultFetchHtml(url: string, timeoutMs: number): Promise<string>
   }
 }
 
+function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
+  const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
+  return `site:${source.domain} ${focus}`;
+}
+
+async function defaultSearchSource(query: string): Promise<SearchResult[]> {
+  const apiKey = process.env.SERPER_API_KEY?.trim() ?? "";
+  if (!apiKey) throw new Error("SERPER_API_KEY unavailable for source discovery");
+  // Explicitly prevent mock results from becoming public event cards.
+  const provider = new SerperProvider({ apiKey, mockMode: false });
+  return provider.search(query, { max_results: 8, language: "en", region: "us" });
+}
+
+function linksFromSearchResults(results: SearchResult[], source: PublicAiEventSource, maxLinks: number): ExtractedLink[] {
+  const deduped = new Map<string, ExtractedLink>();
+  for (const result of results) {
+    try {
+      const url = new URL(result.url);
+      if (!isConcreteEventUrl(source.id, url)) continue;
+      if (!AI_EVENT_HINT.test(`${result.title} ${result.snippet} ${url.pathname}`)) continue;
+      const title = normalizeWhitespace(result.title);
+      if (title.length < 3) continue;
+      deduped.set(url.toString(), { title: title.slice(0, 220), url: url.toString() });
+      if (deduped.size >= maxLinks) break;
+    } catch {
+      // Search results remain untrusted until their URL is parsed and accepted.
+    }
+  }
+  return Array.from(deduped.values());
+}
+
 function toOpportunityCard(source: PublicAiEventSource, link: ExtractedLink): OpportunityCard {
   const title = link.title;
   return {
@@ -166,6 +203,7 @@ export async function collectPublicAiEventsFromSources(
   const enabledSources = AI_EVENT_SOURCE_NETWORK.filter((source) => requestedIds.has(source.id) && ACTIVE_SOURCE_IDS.includes(source.id as typeof ACTIVE_SOURCE_IDS[number]));
   const maxLinks = Math.max(1, Math.min(options.maxLinksPerSource ?? DEFAULT_MAX_LINKS_PER_SOURCE, 30));
   const fetchHtml = options.fetchHtml ?? ((url: string) => defaultFetchHtml(url, options.timeoutMs ?? DEFAULT_TIMEOUT_MS));
+  const searchSource = options.searchSource ?? defaultSearchSource;
   const sources: PublicAiEventSourceCollectionItem[] = [];
   let discoveredCardCount = 0;
   let acceptedCardCount = 0;
@@ -173,28 +211,65 @@ export async function collectPublicAiEventsFromSources(
   store.autoFlush = false;
   try {
     for (const source of enabledSources) {
+      let directError: string | undefined;
       try {
         const html = await fetchHtml(source.url);
         const links = extractLinks(html, source, maxLinks);
-        const cards = links.map((link) => toOpportunityCard(source, link));
-        const accepted = store.addBatch(cards, "ai_competition", PUBLIC_AI_EVENTS_RADAR_ID);
-        discoveredCardCount += links.length;
-        acceptedCardCount += accepted.length;
-        sources.push({
-          sourceId: source.id,
-          sourceName: source.name,
-          status: links.length > 0 ? "collected" : "empty",
-          discoveredCount: links.length,
-          acceptedCount: accepted.length,
-        });
+        if (links.length > 0) {
+          const cards = links.map((link) => toOpportunityCard(source, link));
+          const accepted = store.addBatch(cards, "ai_competition", PUBLIC_AI_EVENTS_RADAR_ID);
+          discoveredCardCount += links.length;
+          acceptedCardCount += accepted.length;
+          sources.push({
+            sourceId: source.id,
+            sourceName: source.name,
+            status: "collected",
+            discoveredCount: links.length,
+            acceptedCount: accepted.length,
+            discoveryMethod: "index_fetch",
+          });
+          continue;
+        }
       } catch (error) {
+        directError = errorMessage(error);
+      }
+
+      if (options.discoverWithSearch) {
+        try {
+          const links = linksFromSearchResults(await searchSource(buildSourceDiscoveryQuery(source), source), source, maxLinks);
+          const cards = links.map((link) => toOpportunityCard(source, link));
+          const accepted = store.addBatch(cards, "ai_competition", PUBLIC_AI_EVENTS_RADAR_ID);
+          discoveredCardCount += links.length;
+          acceptedCardCount += accepted.length;
+          sources.push({
+            sourceId: source.id,
+            sourceName: source.name,
+            status: links.length > 0 ? "collected" : "empty",
+            discoveredCount: links.length,
+            acceptedCount: accepted.length,
+            discoveryMethod: links.length > 0 ? "search_fallback" : "none",
+            error: directError,
+          });
+        } catch (error) {
+          sources.push({
+            sourceId: source.id,
+            sourceName: source.name,
+            status: directError ? "failed" : "empty",
+            discoveredCount: 0,
+            acceptedCount: 0,
+            discoveryMethod: "none",
+            error: directError ? `${directError}; search fallback: ${errorMessage(error)}` : errorMessage(error),
+          });
+        }
+      } else {
         sources.push({
           sourceId: source.id,
           sourceName: source.name,
-          status: "failed",
+          status: directError ? "failed" : "empty",
           discoveredCount: 0,
           acceptedCount: 0,
-          error: errorMessage(error),
+          discoveryMethod: "none",
+          error: directError,
         });
       }
     }

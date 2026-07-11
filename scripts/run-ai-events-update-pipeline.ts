@@ -28,6 +28,7 @@ async function main(): Promise<void> {
     imageHydrationLimit: parsePositiveInt(getArgValue("--image-limit"), 30, 120),
     collectSources: hasFlag("--collect-sources"),
     sourceMaxLinks: parsePositiveInt(getArgValue("--source-max-links"), 12, 30),
+    discoverWithSearch: hasFlag("--discover-with-search"),
   });
 
   console.log(JSON.stringify(summary, null, 2));

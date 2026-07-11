@@ -78,6 +78,7 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
       imageHydrationLimit: parsePositiveInt(c.req.query("image_limit"), 30, 120),
       collectSources: parseBoolean(c.req.query("collect_sources")),
       sourceMaxLinks: parsePositiveInt(c.req.query("source_max_links"), 12, 30),
+      discoverWithSearch: parseBoolean(c.req.query("discover_with_search")),
     });
     return c.json({
       success: true,

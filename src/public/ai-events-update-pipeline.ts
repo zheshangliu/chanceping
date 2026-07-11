@@ -28,6 +28,8 @@ export interface PublicAiEventsUpdatePipelineOptions extends Pick<BuildPublicAiE
   collectSources?: boolean;
   sourceIds?: CollectPublicAiEventsOptions["sourceIds"];
   sourceMaxLinks?: number;
+  discoverWithSearch?: boolean;
+  sourceSearch?: CollectPublicAiEventsOptions["searchSource"];
 }
 
 export interface PublicAiEventsUpdatePipelineSummary {
@@ -122,6 +124,8 @@ export async function runPublicAiEventsUpdatePipeline(
       sourceIds: options.sourceIds,
       maxLinksPerSource: options.sourceMaxLinks,
       fetchHtml: options.fetchHtml,
+      discoverWithSearch: options.discoverWithSearch,
+      searchSource: options.sourceSearch,
     })
     : undefined;
   const imageHydration = options.hydrateImages

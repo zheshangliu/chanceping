@@ -113,8 +113,30 @@ async function main(): Promise<void> {
   const repeatedCollectionCount = collectedStore.list({ radarId: PUBLIC_AI_EVENTS_RADAR_ID, page: 1, page_size: 100000 }).total;
   check("source collection stays deduplicated on repeated refresh", repeatedCollectionCount === collectedEntries.length, `first=${collectedEntries.length}, second=${repeatedCollectionCount}, run=${JSON.stringify(repeatedCollectedRun.sourceCollection)}`);
 
+  const fallbackStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-search-fallback.json");
+  removeIfExists(fallbackStorePath);
+  const fallbackStore = new LocalFileStore({ file_path: fallbackStorePath, auto_flush: false });
+  const fallbackRun = await runPublicAiEventsUpdatePipeline(fallbackStore, undefined, {
+    now: referenceNow,
+    collectSources: true,
+    discoverWithSearch: true,
+    hydrateImages: false,
+    fetchHtml: async (url) => url.includes("devpost.com/hackathons") ? "<main>rendered by client</main>" : sourceHtml[url] ?? "",
+    sourceSearch: async (_query, source) => source.id === "devpost"
+      ? [{
+        title: "AI Agent Buildathon",
+        url: "https://agent-buildathon.devpost.com/",
+        snippet: "AI hackathon registration and submission details.",
+        source_provider: "test",
+        source_type: "web",
+      }]
+      : [],
+  });
+  check("search fallback recovers a concrete event when a dynamic source index is empty", fallbackRun.sourceCollection?.sources.some((source) => source.sourceId === "devpost" && source.discoveryMethod === "search_fallback" && source.discoveredCount === 1) === true, JSON.stringify(fallbackRun.sourceCollection));
+
   const failedCollectionStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-collection-failed.json");
   removeIfExists(failedCollectionStorePath);
+  removeIfExists(fallbackStorePath);
   const failedCollectionStore = new LocalFileStore({ file_path: failedCollectionStorePath, auto_flush: false });
   const failedCollectionRun = await runPublicAiEventsUpdatePipeline(failedCollectionStore, undefined, {
     now: referenceNow,
