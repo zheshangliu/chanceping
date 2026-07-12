@@ -56,6 +56,7 @@ assert.match(sourceModule, /--tls-max", "1\.2"/, "SWAS TLS 1.3 EC failures must 
 assert.match(sourceModule, /gnutls-cli/, "SWAS OpenSSL EC failures must fall back to GnuTLS with trusted certificate validation");
 assert.ok(!sourceModule.includes('"--quiet"'), "Ubuntu 22.04 gnutls-cli must use portable options");
 assert.ok(!sourceModule.includes('"--crlf"'), "GnuTLS transport must match the verified default Ubuntu client handshake");
+assert.ok(sourceModule.includes("Handshake was completed"), "GnuTLS transport must wait for handshake completion before sending HTTP");
 async function verifyThreeSources(): Promise<void> {
 const tempDir = fs.mkdtempSync(path.resolve("data/verify-welfare-contracts-"));
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(tempDir, "opportunities.json");

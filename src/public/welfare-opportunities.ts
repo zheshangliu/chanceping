@@ -481,9 +481,18 @@ async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
     const child = spawn("gnutls-cli", ["--sni-hostname", parsed.hostname, parsed.hostname, "-p", "443"], { stdio: ["pipe", "pipe", "pipe"] });
     const chunks: Buffer[] = [];
     const errors: Buffer[] = [];
+    let requestSent = false;
     const timeout = setTimeout(() => { child.kill("SIGTERM"); reject(new Error("timeout after 20 seconds")); }, 20_000);
     child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
-    child.stderr.on("data", (chunk: Buffer) => errors.push(chunk));
+    child.stderr.on("data", (chunk: Buffer) => {
+      errors.push(chunk);
+      // gnutls-cli starts TLS asynchronously. Sending HTTP before this marker
+      // makes the affected Shenzhen endpoints reject the TLS session.
+      if (!requestSent && Buffer.concat(errors).toString("utf8").includes("Handshake was completed")) {
+        requestSent = true;
+        child.stdin.end(request);
+      }
+    });
     child.once("error", (error) => { clearTimeout(timeout); reject(error); });
     child.once("close", (code) => {
       clearTimeout(timeout);
@@ -491,7 +500,6 @@ async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
       if (code !== 0) return reject(new Error(Buffer.concat(errors).toString("utf8").trim() || `exit ${code}`));
       resolve(value);
     });
-    child.stdin.end(request);
   });
   const splitAt = output.indexOf("\r\n\r\n");
   if (splitAt < 0) throw new Error("invalid HTTP response");
