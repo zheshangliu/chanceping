@@ -288,10 +288,11 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
   while ((markdownMatch = markdownLink.exec(html)) !== null) {
     const title = cleanText(markdownMatch[1]);
     const url = normalizeUrl(markdownMatch[2], source.url);
+    const publishedAt = html.slice(Math.max(0, markdownMatch.index - 24), markdownMatch.index).match(/(\d{4}-\d{2}-\d{2})\s*$/)?.[1] ?? "";
     const hasWelfareContext = /(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title);
     const hasOpportunityAction = /(采购|遴选|供应商|征集|项目)/.test(title);
     if (!url || !hasWelfareContext || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
-    discovered.set(url, { title, url, publishedAt: "" });
+    discovered.set(url, { title, url, publishedAt });
   }
   return Array.from(discovered.values());
 }
