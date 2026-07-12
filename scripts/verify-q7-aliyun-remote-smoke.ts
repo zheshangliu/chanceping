@@ -97,9 +97,23 @@ async function verifyVisiblePages(): Promise<void> {
 }
 
 async function verifyPublicAiEvents(): Promise<void> {
-  const feed = await json<{ success: boolean; data?: any; error?: any }>("/api/public/ai-events?page_size=8");
+  const feed = await json<{ success: boolean; data?: any; error?: any }>("/api/public/ai-events?status=current&page=1&page_size=8");
   check("remote public AI events feed returns 200", feed.response.status === 200 && feed.payload.success === true, JSON.stringify(feed.payload.error ?? {}));
   check("remote public AI events feed has cards", Array.isArray(feed.payload.data?.items) && feed.payload.data.items.length > 0, JSON.stringify(feed.payload.data?.stats ?? {}));
+  check("remote current event feed has pagination metadata", Number(feed.payload.data?.stats?.page) === 1 && Number(feed.payload.data?.stats?.pageSize) === 8 && Number(feed.payload.data?.stats?.totalPages) >= 1, JSON.stringify(feed.payload.data?.stats ?? {}));
+  check("remote current event feed exposes lifecycle counts", Number(feed.payload.data?.stats?.currentCount) > 0 && Number(feed.payload.data?.stats?.historicalCount) >= 0, JSON.stringify(feed.payload.data?.stats ?? {}));
+  check("remote public feed includes rich event metadata", (feed.payload.data?.items ?? []).some((item: any) => item.coverImageUrl && item.deadline && item.reward && item.organizer && item.region), JSON.stringify(feed.payload.data?.items?.slice(0, 2) ?? {}));
+  check("remote public feed includes TAIKAI source", (feed.payload.data?.sourceNetwork ?? []).some((source: any) => source.id === "taikai"), JSON.stringify(feed.payload.data?.sourceNetwork ?? {}));
+  const operations = feed.payload.data?.operations;
+  check("remote public feed exposes safe update cadence", operations?.updateCadenceDays === 3 && typeof operations?.lastCollectedAt === "string" && typeof operations?.nextScheduledCollectionAt === "string", JSON.stringify(operations ?? {}));
+  check("remote public feed exposes safe source health summary", typeof operations?.sourceHealth?.available === "boolean" && typeof operations?.sourceHealth?.healthyCount === "number" && typeof operations?.sourceHealth?.failedCount === "number", JSON.stringify(operations?.sourceHealth ?? {}));
+
+  const historical = await json<{ success: boolean; data?: any; error?: any }>("/api/public/ai-events?status=historical&page=1&page_size=8");
+  check("remote historical event feed returns 200", historical.response.status === 200 && historical.payload.success === true, JSON.stringify(historical.payload.error ?? {}));
+  check("remote historical event feed exposes historical cards when available", Number(historical.payload.data?.stats?.historicalCount) === 0 || (historical.payload.data?.items ?? []).length > 0, JSON.stringify(historical.payload.data?.stats ?? {}));
+
+  const filtered = await json<{ success: boolean; data?: any; error?: any }>("/api/public/ai-events?status=current&category=ai_hackathon&region=global_online&page=1&page_size=8");
+  check("remote public feed accepts category and region filters", filtered.response.status === 200 && filtered.payload.success === true && Number(filtered.payload.data?.stats?.page) === 1, JSON.stringify(filtered.payload.error ?? {}));
   const serialized = JSON.stringify(feed.payload);
   check("remote public feed does not expose keys", !/API_KEY|SERPER_API_KEY|CONTEST_LLM_API_KEY|COMMERCIAL_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(serialized));
   check("remote public feed hides internal radar/run ids", !/radar_id|run_id|runId|profileRevisionId|openedUrls/i.test(serialized));
