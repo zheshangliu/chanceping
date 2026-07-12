@@ -54,6 +54,7 @@ assert.ok(adr.includes("重复声明 `country_code`"), "upstream DDL defect must
 const sourceModule = fs.readFileSync(path.resolve("src/public/welfare-opportunities.ts"), "utf8");
 assert.match(sourceModule, /--tls-max", "1\.2"/, "SWAS TLS 1.3 EC failures must retry with certificate-verified TLS 1.2");
 assert.match(sourceModule, /gnutls-cli/, "SWAS OpenSSL EC failures must fall back to GnuTLS with trusted certificate validation");
+assert.ok(!sourceModule.includes('"--quiet"'), "Ubuntu 22.04 gnutls-cli must use portable options");
 async function verifyThreeSources(): Promise<void> {
 const tempDir = fs.mkdtempSync(path.resolve("data/verify-welfare-contracts-"));
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(tempDir, "opportunities.json");

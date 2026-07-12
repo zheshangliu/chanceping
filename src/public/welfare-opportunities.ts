@@ -476,7 +476,7 @@ async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
   if (parsed.protocol !== "https:" || !WELFARE_SOURCES.some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\r\nAccept: text/html,application/xhtml+xml\r\nConnection: close\r\n\r\n`;
   const output = await new Promise<string>((resolve, reject) => {
-    const child = spawn("gnutls-cli", ["--quiet", "--crlf", "--sni-hostname", parsed.hostname, parsed.hostname, "-p", "443"], { stdio: ["pipe", "pipe", "pipe"] });
+    const child = spawn("gnutls-cli", ["--crlf", "--sni-hostname", parsed.hostname, parsed.hostname, "-p", "443"], { stdio: ["pipe", "pipe", "pipe"] });
     const chunks: Buffer[] = [];
     const errors: Buffer[] = [];
     const timeout = setTimeout(() => { child.kill("SIGTERM"); reject(new Error("timeout after 20 seconds")); }, 20_000);
