@@ -18,6 +18,7 @@ apt-get update
 apt-get install -y certbot python3-certbot-nginx
 
 certbot --nginx \
+  --expand \
   -d chanceping.com \
   -d www.chanceping.com \
   -d aievents.chanceping.com \
