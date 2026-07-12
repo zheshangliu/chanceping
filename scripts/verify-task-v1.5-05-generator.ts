@@ -287,17 +287,37 @@ async function main(): Promise<void> {
     );
   }
 
-  // 5. 返回的 spec.keywords 从 info.opportunity_type.primary_types 取
+  // 5. 返回的 spec.keywords 保留机会类型，并带上用户行业主体
   {
     const spec = compiler.compile(testInfo, "custom");
     const expectedKeywords: string[] = testInfo.opportunity_type?.primary_types ?? [];
     const actualKeywords = spec.keyword_strategy?.core_keywords_zh ?? [];
     check(
-      "5. spec.keywords 从 info.opportunity_type.primary_types 取",
+      "5. spec.keywords 保留机会类型",
       Array.isArray(actualKeywords) &&
         expectedKeywords.length > 0 &&
         expectedKeywords.every((k) => actualKeywords.includes(k)),
       `expected=${JSON.stringify(expectedKeywords)}, actual=${JSON.stringify(actualKeywords)}`,
+    );
+    const industry = testInfo.client_identity?.industry;
+    check(
+      "5b. custom spec.keywords 保留用户行业主体",
+      !industry || actualKeywords.includes(industry),
+      `industry=${industry}, actual=${JSON.stringify(actualKeywords)}`,
+    );
+    const compoundInfo = {
+      ...testInfo,
+      client_identity: {
+        ...testInfo.client_identity,
+        industry: "城市夜游、文旅灯光秀和景区亮化工程",
+        core_capabilities: ["城市夜游、文旅灯光秀和景区亮化工程"],
+      },
+    };
+    const compoundSpec = compiler.compile(compoundInfo, "custom");
+    check(
+      "5c. custom spec 将复合行业拆成可检索关键词",
+      ["城市夜游", "文旅灯光秀", "景区亮化工程"].every((keyword) => compoundSpec.keyword_strategy.core_keywords_zh.includes(keyword)),
+      `actual=${JSON.stringify(compoundSpec.keyword_strategy.core_keywords_zh)}`,
     );
   }
 

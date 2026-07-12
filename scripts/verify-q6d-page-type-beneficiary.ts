@@ -310,6 +310,12 @@ async function main(): Promise<void> {
     profiles.crossBorderEcommerce,
   );
   pageCase(
+    "policy_plan",
+    false,
+    result("中华人民共和国招标投标法（修订草案公开征求意见稿）", "通用法律法规文件，提及招标投标规则但没有具体项目采购入口。", "direct_opportunity", "government_grant_page", "https://www.gov.cn/law/tender-draft"),
+    profiles.environmentVendor,
+  );
+  pageCase(
     "aggregator_page",
     false,
     result("环保招标采购信息", "招标平台聚合环保招标采购信息列表，需打开原公告确认。", "business_lead", "procurement_or_supplier_portal", "https://www.bidcenter.com.cn/huanbao/list"),

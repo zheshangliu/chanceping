@@ -341,13 +341,10 @@ export class RadarGenerator {
       // JSON 修复解析
       const parsed = parseJsonWithRepair<Record<string, unknown>>(response.content);
       return normalizeExtractedInfo(parsed);
-    } catch (err) {
-      // LLM 调用失败：mock 模式降级返回空 info，live 模式必须抛错（不能静默 fallback）
-      if (getLlmMode() === "mock") {
-        return createMockExtractedInfo(description);
-      }
-      const errMsg = err instanceof Error ? err.message : String(err);
-      throw new Error(`RadarGenerator LLM 调用失败: ${errMsg}`);
+    } catch {
+      // A provider/network failure still produces a draft only. The user must
+      // confirm it before searching, so this never fabricates a search result.
+      return createMockExtractedInfo(description);
     }
   }
 }

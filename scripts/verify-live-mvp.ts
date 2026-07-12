@@ -356,8 +356,8 @@ async function main(): Promise<void> {
     });
     const productionRunJson = await productionRunResponse.json() as { success?: boolean; error?: { message?: string } };
     check(
-      "production blocks persisted live radar rerun",
-      productionRunResponse.status !== 200 && productionRunJson.success !== true && /真实搜索未开启|生产环境默认关闭|LIVE_SEARCH_DISABLED/.test(productionRunJson.error?.message ?? ""),
+      "production blocks persisted live radar rerun without explicit switch",
+      productionRunResponse.status !== 200 && productionRunJson.success !== true && /真实搜索未开启|LIVE_SEARCH_DISABLED/.test(productionRunJson.error?.message ?? ""),
       `status=${productionRunResponse.status}, message=${sanitize(productionRunJson.error?.message)}`,
     );
     if (nodeEnvBeforeRadarRun === undefined) {

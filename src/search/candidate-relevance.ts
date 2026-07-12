@@ -56,7 +56,9 @@ const GENERIC_TERMS = new Set([
   "改造", "范围", "采购范围", "材料", "方式", "参与", "面向", "提供", "仍可", "具体",
   "opportunity", "official", "company", "business", "application", "registration", "apply", "contact", "partner", "supplier", "vendor",
   "hong", "kong", "china", "singapore", "asia", "guangdong", "guangzhou", "2025", "2026", "2027",
+  "供应", "维护", "管理", "改造", "建设", "技术", "工程", "系统", "服务", "设备",
 ]);
+const GENERIC_FRAGMENT_PART_RE = /供应|维护|管理|改造|建设|技术|工程|采购|招标|投标|合作|服务|系统|平台|项目|机会/;
 
 const DOMAIN_EQUIVALENTS: Array<[RegExp, string[]]> = [
   [/围棋/i, ["围棋", "go tournament", "go championship"]],
@@ -71,6 +73,8 @@ const HARD_NOISE_RE = /系统升级|系统维护|重新登录|常见问题|faq|�
 const JOB_RE = /招聘|岗位|职位|投递简历|hiring|career|careers|job|jobs|vacancy/i;
 const LOW_ACTION_MEDIA_RE = /视频|集锦|highlights?|watch the best|直播回放/i;
 const NEGATED_ACTION_RE = /\b(?:no|without)\b.{0,80}\b(?:partner|exhibitor|application|registration|contact|supplier)\b.{0,40}\b(?:route|entry|program)\b|不提供.{0,12}(?:报名|申请|合作|采购|投稿|入口)|没有.{0,12}(?:报名|申请|合作|采购|投稿|入口)/i;
+const INDIVIDUAL_ADMISSIONS_RE = /first[- ]year|undergraduate|graduate admissions?|application dates?|college application|university admissions?|(?:admissions?.{0,80}(?:college|university))|(?:(?:college|university).{0,80}admissions?)|本科申请|研究生申请|高校招生|大学招生|录取日期|申请截止日期/i;
+const ADMISSIONS_INTENT_RE = /留学|招生代理|国际教育|学生申请|本科申请|研究生申请|大学招生|高校招生|admissions?|college application/i;
 const EXCLUSION_FAMILIES: RegExp[] = [
   /培训|训练|课程|course|training/i,
   /视频|集锦|回放|video|highlights?/i,
@@ -113,7 +117,7 @@ function splitTerms(value: string): string[] {
     for (const size of [2, 3, 4]) {
       for (let index = 0; index <= term.length - size; index += 1) {
         const part = term.slice(index, index + size);
-        if (!GENERIC_TERMS.has(part)) expanded.add(part);
+        if (!GENERIC_TERMS.has(part) && !GENERIC_FRAGMENT_PART_RE.test(part)) expanded.add(part);
       }
     }
   }
@@ -274,6 +278,7 @@ export function assessCandidateRelevance(
   ].map(normalize).filter(Boolean);
   const exclusion = matchingExclusion(text, exclusions);
   const officialAiEventActionEntry = isOfficialAiEventActionEntry(result, text);
+  const individualAdmissionsMismatch = INDIVIDUAL_ADMISSIONS_RE.test(text) && !ADMISSIONS_INTENT_RE.test(specText);
 
   const subjectFit = overlaps.length > 0 || officialAiEventActionEntry
     ? fit("match", overlaps.length > 0 ? [`命中雷达主题词：${overlaps.join("、")}`] : ["官方 AI 赛事入口包含报名、参赛或提交动作"])
@@ -304,7 +309,10 @@ export function assessCandidateRelevance(
   const reasonCodes: string[] = [];
   let decision: CandidateRelevanceDecision;
 
-  if (exclusion) {
+  if (individualAdmissionsMismatch) {
+    decision = "reject";
+    reasonCodes.push("individual_admissions_mismatch");
+  } else if (exclusion) {
     decision = "reject";
     reasonCodes.push("explicit_exclusion");
   } else if (freshness.expired) {

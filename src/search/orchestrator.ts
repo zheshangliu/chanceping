@@ -538,6 +538,83 @@ function isKeyCandidate(result: SearchResult): boolean {
     semanticType === "customer_lead";
 }
 
+// Final product guard: a university admissions page is not a business opportunity
+// unless the radar explicitly asks for student admissions or education recruitment.
+const INDIVIDUAL_ADMISSIONS_RE = /first[- ]year|undergraduate|graduate admissions?|application dates?|college application|university admissions?|(?:admissions?.{0,80}(?:college|university))|(?:(?:college|university).{0,80}admissions?)|本科申请|研究生申请|高校招生|大学招生|录取日期|申请截止日期/i;
+const ADMISSIONS_INTENT_RE = /留学|招生代理|国际教育|学生申请|本科申请|研究生申请|大学招生|高校招生|admissions?|college application/i;
+
+function isIndividualAdmissionsCandidate(result: SearchResult, spec: RadarRequirementSpec): boolean {
+  const candidateText = `${result.title} ${result.snippet} ${result.url}`;
+  if (!INDIVIDUAL_ADMISSIONS_RE.test(candidateText)) return false;
+  const radar = spec.radar_version;
+  const radarText = [
+    radar?.targetUser,
+    radar?.businessContext,
+    ...(radar?.opportunityIntents ?? []),
+    ...(radar?.highValueCriteria ?? []),
+    ...(radar?.queryFamilies ?? []).flatMap((family) => [family.familyName, family.whyThisFamily, ...(family.queries ?? [])]),
+    spec.client_profile?.business_type,
+    spec.core_goals?.primary_goal,
+    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
+  ].filter((value): value is string => Boolean(value)).join(" ");
+  return !ADMISSIONS_INTENT_RE.test(radarText);
+}
+
+const GENERIC_TOPIC_RE = /^(?:机会|项目|采购|招标|投标|合作|联系|报名|申请|公告|官方|客户|线索|服务|公司|企业|活动|供应商|入库|供应|维护|管理|改造|建设|技术|工程|系统|平台|设备)$/i;
+const GENERIC_TOPIC_FRAGMENT_RE = /^(?:机会|项目|采购|招标|投标|合作|联系|报名|申请|公告|官方|客户|线索|服务|公司|企业|活动|供应商|入库|供应|维护|管理|改造|建设|技术|工程|行业|地区|城市|中心|系统|平台|方案|需求|内容|设备)$/i;
+const GENERIC_TOPIC_FRAGMENT_PART_RE = /供应|维护|管理|改造|建设|技术|工程|采购|招标|投标|合作|服务|系统|平台|项目|机会/;
+
+function expandStructuredTopicVariants(term: string, allowShortIndustryTerms = false): string[] {
+  const normalized = term.trim();
+  const variants = [normalized];
+  const chineseSegments = normalized.match(/[\u3400-\u9fff]{3,}/g) ?? [];
+  if (!/^[\u3400-\u9fff]+$/.test(normalized)) {
+    // Mixed labels such as "供应链金融 SaaS" often appear on source pages as
+    // only their Chinese industry subject. Preserve that meaningful subject,
+    // rather than requiring the product suffix to be repeated verbatim.
+    for (const segment of chineseSegments) {
+      if (!GENERIC_TOPIC_FRAGMENT_RE.test(segment)) variants.push(segment);
+    }
+  }
+  if (!/^[\u3400-\u9fff]+$/.test(normalized) || normalized.length < 4) return variants;
+
+  // Search results commonly use a meaningful part of a compound industry phrase
+  // (for example, "灯光秀" instead of "文旅灯光秀"). Keep this scoped to the
+  // structured radar keywords and discard generic fragments such as "工程".
+  // Two-character Chinese fragments are too broad in tender titles (for
+  // example, "管理" in an unrelated "项目管理公司"). Three characters still
+  // retain useful industry expressions such as "灯光秀" and "供应链".
+  for (const size of allowShortIndustryTerms ? [2, 3, 4] : [3, 4]) {
+    for (let index = 0; index <= normalized.length - size; index += 1) {
+      const fragment = normalized.slice(index, index + size);
+      if (!GENERIC_TOPIC_FRAGMENT_RE.test(fragment) && !GENERIC_TOPIC_FRAGMENT_PART_RE.test(fragment)) variants.push(fragment);
+    }
+  }
+  return variants;
+}
+
+function hasExplicitStructuredTopic(result: SearchResult, spec: RadarRequirementSpec): boolean {
+  const concreteActionPage = result.page_type_assessment?.pageType === "tender_notice" ||
+    result.page_type_assessment?.pageType === "open_call" ||
+    result.page_type_assessment?.pageType === "registration_page" ||
+    result.page_type_assessment?.pageType === "supplier_onboarding";
+  const topicTerms = Array.from(new Set([
+    ...(spec.keyword_strategy?.core_keywords_zh ?? []),
+    ...(spec.keyword_strategy?.core_keywords_en ?? []),
+    ...(spec.keyword_strategy?.expanded_keywords_zh ?? []),
+  ]
+    .map((value) => String(value ?? "").trim())
+    .filter((value) => value.length >= 2 && value.length <= 32 && !GENERIC_TOPIC_RE.test(value))
+    .flatMap((value) => expandStructuredTopicVariants(value, concreteActionPage))))
+    .slice(0, 48);
+  if (topicTerms.length === 0) return true;
+  // A search provider snippet may echo the original query, which would make a
+  // generic portal appear industry-specific. Final card admission therefore
+  // trusts the page title and URL path, not snippet text.
+  const candidateText = `${result.title} ${result.url}`.toLowerCase();
+  return topicTerms.some((term) => candidateText.includes(term.toLowerCase()));
+}
+
 const RECOVERABLE_KEY_TYPES = new Set<OpportunityKind>([
   "direct_opportunity",
   "business_lead",
@@ -1408,6 +1485,7 @@ export class SearchOrchestrator {
       liveEvidence = await fetchLiveEvidence(evidenceReadCandidates, {
         maxUrls: evidenceReadCandidates.length,
         timeoutMs: readPositiveIntegerEnv("CHANCEPING_LIVE_EVIDENCE_TIMEOUT_MS", 30000),
+        concurrency: readPositiveIntegerEnv("CHANCEPING_LIVE_EVIDENCE_CONCURRENCY", 3),
       });
       openedUrls.push(...liveEvidence.openedUrls);
     }
@@ -1577,6 +1655,25 @@ export class SearchOrchestrator {
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
       errors.push(`机会评分失败: ${errMsg}`);
+    }
+
+    // Do not let an earlier fallback or recovery path materialize individual
+    // admissions pages into business cards for an unrelated radar.
+    const beforeFinalEligibilityGuard = opportunities.length;
+    if (process.env.CHANCEPING_Q7Z_DEBUG === "true") {
+      console.log("[Q7Z final eligibility]", opportunities.map((opportunity) => ({
+        title: opportunity.search_result.title,
+        hasTopic: hasExplicitStructuredTopic(opportunity.search_result, spec),
+        admissions: isIndividualAdmissionsCandidate(opportunity.search_result, spec),
+      })));
+    }
+    opportunities = opportunities.filter((opportunity) =>
+      !isIndividualAdmissionsCandidate(opportunity.search_result, spec) &&
+      hasExplicitStructuredTopic(opportunity.search_result, spec),
+    );
+    const finalEligibilityRejected = beforeFinalEligibilityGuard - opportunities.length;
+    if (finalEligibilityRejected > 0) {
+      errors.push(`最终机会准入过滤：排除 ${finalEligibilityRejected} 条个人招生或缺少行业主体的候选`);
     }
 
     // 步骤 6：V1.3 来源透明（来源分类 + 证据提取 + 卡片映射）

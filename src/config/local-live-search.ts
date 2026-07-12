@@ -27,6 +27,16 @@ export function isLocalLiveSearchEnabled(
   return env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH === "true" && nodeEnv !== "production";
 }
 
+export function isLiveSearchExplicitlyEnabled(
+  env: NodeJS.ProcessEnv | Record<string, string | undefined> = process.env,
+  nodeEnv = env.NODE_ENV ?? process.env.NODE_ENV ?? "",
+): boolean {
+  if (nodeEnv === "production") {
+    return env.CHANCEPING_ENABLE_PRODUCTION_LIVE_SEARCH === "true";
+  }
+  return env.CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH === "true";
+}
+
 export function resolveSearchDataMode(options: ResolveSearchDataModeOptions): ResolveSearchDataModeResult {
   const requestedMode = options.requestedMode === "live" ? "live" : options.requestedMode === "mock" ? "mock" : undefined;
   if (requestedMode === "mock") {
@@ -35,13 +45,13 @@ export function resolveSearchDataMode(options: ResolveSearchDataModeOptions): Re
   if (requestedMode !== "live") {
     return { dataMode: options.fallbackMode, requestedLive: options.fallbackMode === "live" };
   }
-  if (!isLocalLiveSearchEnabled(options.env ?? process.env, options.nodeEnv)) {
+  if (!isLiveSearchExplicitlyEnabled(options.env ?? process.env, options.nodeEnv)) {
     return {
       dataMode: options.fallbackMode,
       requestedLive: true,
       error: {
         code: "LIVE_SEARCH_DISABLED",
-        message: "本地真实搜索未开启。请在本地显式设置 CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true；生产环境默认关闭。",
+        message: "真实搜索未开启。请在对应环境显式开启后重试。",
         status: 403,
       },
     };

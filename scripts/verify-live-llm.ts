@@ -176,7 +176,7 @@ async function main(): Promise<void> {
         CHANCEPING_ENABLE_LOCAL_LIVE_LLM: "true",
         CHANCEPING_LLM_PROFILE: "contest",
         CONTEST_LLM_PROVIDER: "qwen",
-        CONTEST_LLM_MODEL: "qwen-plus",
+        CONTEST_LLM_MODEL: "qwen3.7-plus",
         CONTEST_LLM_BASE_URL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
         CONTEST_LLM_API_KEY: "redacted-test-key",
       },
@@ -185,6 +185,24 @@ async function main(): Promise<void> {
     check("production rejects live LLM", false, "resolver succeeded unexpectedly");
   } catch (err) {
     check("production rejects live LLM", err instanceof LiveLlmProfileError && err.code === "LIVE_LLM_PRODUCTION_DISABLED", sanitize(err));
+  }
+  try {
+    const productionProfile = resolveLiveLlmProfile({
+      env: {
+        ...process.env,
+        NODE_ENV: "production",
+        CHANCEPING_ENABLE_PRODUCTION_LIVE_LLM: "true",
+        CHANCEPING_LLM_PROFILE: "contest",
+        CONTEST_LLM_PROVIDER: "qwen",
+        CONTEST_LLM_MODEL: "qwen3.7-plus",
+        CONTEST_LLM_BASE_URL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        CONTEST_LLM_API_KEY: "redacted-test-key",
+      },
+      nodeEnv: "production",
+    });
+    check("production accepts explicitly enabled Qwen profile", productionProfile.provider === "qwen" && productionProfile.model === "qwen3.7-plus", sanitize(JSON.stringify(toLiveLlmPublicProfile(productionProfile))));
+  } catch (err) {
+    check("production accepts explicitly enabled Qwen profile", false, sanitize(err));
   }
 
   const localEnv = loadLocalApiEnv({ enabled: true });

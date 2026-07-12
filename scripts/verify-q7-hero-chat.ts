@@ -217,6 +217,7 @@ async function run() {
   check("hero chat tells the user ChancePing is interpreting revisions", heroChatJs.includes("盯机会正在理解") && !heroChatJs.includes("让 DeepSeek 理解"));
   check("hero chat tells the user ChancePing is drawing the radar", heroChatJs.includes("盯机会正在画雷达"));
   check("hero chat surfaces radar generation or revision failures", heroChatJs.includes("catch (err)") && heroChatJs.includes("雷达理解或修订失败"));
+  check("live radar generation safely falls back to a confirmation draft", read("src/agents/radar-generator.ts").includes("return createMockExtractedInfo(description)"));
   check("hero chat keeps LLM revision in auto mode for local live profile", heroChatJs.includes('revisionMode: options.revisionMode || "auto"'));
   check("old template buttons are hidden for hero path", homeJs.includes("hideLegacyTemplatesForHero();"));
   check("hidden demo prompt chips only fill input if reused", homeJs.includes("bindHeroDemoPrompts") && homeJs.includes("dataset.heroPrompt"));

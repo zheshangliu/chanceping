@@ -271,17 +271,20 @@ export async function scoreOpportunities(
   spec: RadarRequirementSpec,
   llmAdapter: LLMAdapter,
 ): Promise<ScoredOpportunity[]> {
-  const opportunities: ScoredOpportunity[] = [];
-
   // 边界情况：空数组
   if (!Array.isArray(aiFiltered) || aiFiltered.length === 0) {
-    return opportunities;
+    return [];
   }
 
-  for (const item of aiFiltered) {
+  const concurrency = Math.max(1, Math.min(6, Number(process.env.CHANCEPING_LLM_SCORING_CONCURRENCY || 3)));
+  // A provider outage should not turn every candidate into another full timeout.
+  // The first failed live scoring call opens a per-run circuit breaker; remaining
+  // candidates retain their rule-based fallback score so the report can finish.
+  let llmScoringUnavailable = false;
+  const scoreOne = async (item: AIFilterItem): Promise<ScoredOpportunity | null> => {
     // 边界情况：缺字段
     if (!item || !item.result) {
-      continue;
+      return null;
     }
 
     // Evidence：基于 provider reliability
@@ -295,13 +298,17 @@ export async function scoreOpportunities(
     // Fit / Intent / EffortCost：LLM 评分
     let llmResult: LLMScoringResult;
     try {
+      if (llmScoringUnavailable) {
+        throw new Error("LLM_SCORING_CIRCUIT_OPEN");
+      }
       const llmRequest = buildScoringLLMRequest(item, spec);
       const llmResponse = await llmAdapter.chat(llmRequest);
       const parsed =
         llmResponse.parsed ?? parseJsonWithRepair(llmResponse.content ?? "");
       llmResult = extractScoring(parsed, item.result.title);
     } catch {
-      // LLM 调用失败：使用 Mock 预设
+      llmScoringUnavailable = true;
+      // LLM 调用失败：保留既有规则评分，避免整轮报告被重复超时拖住。
       llmResult = extractScoring(null, item.result.title);
     }
 
@@ -339,7 +346,7 @@ export async function scoreOpportunities(
     const grade = gradeFromScore(total);
     const opportunityKind: OpportunityKind = item.result.semantic_type ?? (grade ? "direct_opportunity" : "rejected");
 
-    opportunities.push({
+    return {
       search_result: item.result,
       cleaned_content: item.content,
       relevance_score: item.relevance,
@@ -352,7 +359,13 @@ export async function scoreOpportunities(
       evidence_status: "needs_review",
       action_status: actionStatusForKind(opportunityKind, grade),
       score_basis: "mixed",
-    });
+    };
+  };
+
+  const opportunities: ScoredOpportunity[] = [];
+  for (let start = 0; start < aiFiltered.length; start += concurrency) {
+    const scored = await Promise.all(aiFiltered.slice(start, start + concurrency).map(scoreOne));
+    opportunities.push(...scored.filter((item): item is ScoredOpportunity => item !== null));
   }
 
   return opportunities;

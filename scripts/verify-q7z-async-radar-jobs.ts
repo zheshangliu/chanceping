@@ -158,6 +158,7 @@ async function run(): Promise<void> {
 
   const random10Script = fs.readFileSync("scripts/run-q7z-live-custom-radar-async-10.ts", "utf8");
   const radarJobsRoute = fs.readFileSync("src/api/routes/radar-jobs.ts", "utf8");
+  const opportunityStrategy = fs.readFileSync("src/search/opportunity-strategy.ts", "utf8");
   check(
     "async radar jobs have configurable max runtime",
     radarJobsRoute.includes("CHANCEPING_RADAR_JOB_TIMEOUT_MS") && radarJobsRoute.includes("RADAR_JOB_TIMEOUT_MS"),
@@ -167,6 +168,11 @@ async function run(): Promise<void> {
     "async radar jobs emit heartbeat progress while running",
     radarJobsRoute.includes("RADAR_JOB_HEARTBEAT_MS") && radarJobsRoute.includes("startJobHeartbeat"),
     "long live runs need ongoing progress updates",
+  );
+  check(
+    "live evidence narration failure does not discard cards or report",
+    radarJobsRoute.includes("Evidence narration is an enhancement") && radarJobsRoute.includes("input.liveLlmEvidenceExplanation = undefined"),
+    "live explanation must remain optional",
   );
   check(
     "random 10 version parser supports V2 and later",
@@ -184,6 +190,16 @@ async function run(): Promise<void> {
     "do not scan entire card JSON for negative patterns",
   );
   check(
+    "random 10 requires at least one card to cover the radar's industry goal",
+    random10Script.includes("机会卡未明显覆盖行业主体词") && random10Script.includes("domainKeywords"),
+    "card count alone is not a valid product-quality pass condition",
+  );
+  check(
+    "random 10 diagnostics reject universal student-admissions card noise",
+    random10Script.includes("UNIVERSAL_CARD_NOISE_PATTERNS"),
+    "quality acceptance must not count individual admissions pages as generic business opportunities",
+  );
+  check(
     "random 10 has a second unseen-industry scenario set",
     random10Script.includes("SCENARIOS_SECOND") && random10Script.includes('CHANCEPING_Q7Z_SCENARIO_SET === "second"'),
     "second random 10 set must be selectable",
@@ -192,6 +208,22 @@ async function run(): Promise<void> {
     "random 10 second scenario set writes a separate report",
     random10Script.includes("Q7Z_Async_Custom_Radar_Random_10_Second_Report.md"),
     "second set must not overwrite the first report",
+  );
+  check(
+    "random 10 diagnostic supports a controlled single-scenario smoke",
+    random10Script.includes("CHANCEPING_Q7Z_SCENARIO_LIMIT") && random10Script.includes("CHANCEPING_Q7Z_SCENARIO_IDS"),
+    "live diagnostics must support fast targeted smoke coverage",
+  );
+  const orchestrator = fs.readFileSync("src/search/orchestrator.ts", "utf8");
+  check(
+    "final card materialization excludes unrelated individual admissions pages",
+    orchestrator.includes("isIndividualAdmissionsCandidate") && orchestrator.includes("hasExplicitStructuredTopic") && orchestrator.includes("最终机会准入过滤"),
+    "a fallback path must not turn individual admissions pages into generic business cards",
+  );
+  check(
+    "non-AI-event radars keep a structured industry query family during revision fallback",
+    opportunityStrategy.includes("buildStructuredCoverageFamily") && opportunityStrategy.includes("当前行业直接机会"),
+    "search plans must retain structured industry terms when a live revision falls back",
   );
 
   console.log(`\nQ7Z async radar jobs verification: ${pass} PASS, ${fail} FAIL`);

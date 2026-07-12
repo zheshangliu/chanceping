@@ -251,12 +251,18 @@ async function generateReportForJob(
     rawCandidates: search.rawCandidates,
   };
   if (getLlmMode() === "live") {
-    const liveProfile = resolveLiveLlmProfile();
-    input.liveLlmEvidenceExplanation = await generateLiveLlmEvidenceExplanation(
-      ctx.llmAdapter,
-      input,
-      toLiveLlmPublicProfile(liveProfile),
-    );
+    try {
+      const liveProfile = resolveLiveLlmProfile();
+      input.liveLlmEvidenceExplanation = await generateLiveLlmEvidenceExplanation(
+        ctx.llmAdapter,
+        input,
+        toLiveLlmPublicProfile(liveProfile),
+      );
+    } catch {
+      // Evidence narration is an enhancement. The report and verified cards
+      // remain useful even when a live model temporarily cannot respond.
+      input.liveLlmEvidenceExplanation = undefined;
+    }
   }
   const report = generateRadarReport(input);
   let filename: string | undefined;

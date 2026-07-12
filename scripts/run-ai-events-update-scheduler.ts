@@ -1,4 +1,5 @@
 import { createStore } from "../src/agents/store-factory";
+import { loadLocalApiEnv } from "../src/config/local-env";
 import { runPublicAiEventsUpdatePipeline } from "../src/public/ai-events-update-pipeline";
 
 function getArgValue(name: string): string | undefined {
@@ -24,6 +25,11 @@ function parsePositiveInt(value: string | undefined, fallback: number, max: numb
   return Math.floor(parsePositiveNumber(value, fallback, max));
 }
 
+function parseCsv(value: string | undefined): string[] | undefined {
+  const values = (value ?? "").split(",").map((item) => item.trim()).filter(Boolean);
+  return values.length > 0 ? values : undefined;
+}
+
 async function runOnce(): Promise<void> {
   const store = createStore();
   store.load();
@@ -33,11 +39,13 @@ async function runOnce(): Promise<void> {
     collectSources: hasFlag("--collect-sources"),
     sourceMaxLinks: parsePositiveInt(getArgValue("--source-max-links"), 12, 30),
     discoverWithSearch: hasFlag("--discover-with-search"),
+    sourceIds: parseCsv(getArgValue("--source-ids")),
   });
   console.log(JSON.stringify(summary, null, 2));
 }
 
 async function main(): Promise<void> {
+  loadLocalApiEnv({ enabled: process.env.CHANCEPING_LOAD_API_ENV === "true" });
   const intervalHours = parsePositiveNumber(getArgValue("--interval-hours"), 72, 24 * 14);
   await runOnce();
 

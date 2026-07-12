@@ -904,7 +904,7 @@ async function run() {
   check("hero report summary names S/A/B/C and top opportunities", heroChatJs.includes("本次建议先看") && heroChatJs.includes("S 级") && heroChatJs.includes("A 级"), "summary should read like a report brief");
   check("hero report summary uses dynamic level recommendation", heroChatJs.includes("buildReportRecommendation") && !heroChatJs.includes("建议先处理 S/A 级机会。</span>"), "summary must not recommend S/A when this run has no S/A cards");
   check("hero report summary includes trustworthy evidence reminder", heroChatJs.includes("搜索发现，不等于已核验事实"), "summary should keep anti-hallucination copy");
-  check("hero progress explains live source reading", heroChatJs.includes("正在读取优先来源正文") && heroChatJs.includes("Qwen、Devpost、DoraHacks"), "progress should explain real work being done");
+  check("hero progress explains live source reading", heroChatJs.includes("正在读取优先来源正文") && heroChatJs.includes("云厂商赛事页、Devpost、DoraHacks"), "progress should explain real work without exposing model providers");
   check("customer-facing AI event output avoids internal MVP/mock wording", !/Live Evidence MVP|LLM 仍保持 mock|mock 轻量评估/i.test(`${heroChatJs}\n${orchestratorTs}`), "customer reports/cards should not expose engineering labels");
 
   const demoReport = generateRadarReport({

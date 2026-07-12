@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 import path from "path";
 import packageJson from "../package.json";
 import { LocalFileStore } from "../src/agents/opportunity-store";
@@ -99,8 +99,26 @@ async function main(): Promise<void> {
     page_size: 100000,
   }).entries;
   check("source-enabled pipeline declares source index collection mode", collectedRun.executionMode === "source_index_collection", JSON.stringify(collectedRun));
+  const sourceCollectorSource = readFileSync("src/public/ai-events-source-collector.ts", "utf8");
+  check(
+    "validated second-batch sources join the default scheduler set",
+    sourceCollectorSource.includes('"mlh"') && sourceCollectorSource.includes('"hackerearth"') && sourceCollectorSource.includes('"devfolio"'),
+    "MLH, HackerEarth and Devfolio should be active after source-by-source validation",
+  );
+  check(
+    "unvalidated TAIKAI stays outside the default scheduler set",
+    /SECOND_BATCH_SOURCE_IDS = \["taikai"\]/.test(sourceCollectorSource),
+    "TAIKAI must remain an explicit probe until a concrete URL is found",
+  );
   check("source collection discovers concrete event pages from first-batch indexes", collectedRun.sourceCollection?.discoveredCardCount === 4, JSON.stringify(collectedRun.sourceCollection));
-  check("source collection records every enabled source health result", collectedRun.sourceCollection?.sources.length === 4 && collectedRun.sourceCollection.sources.every((source) => source.status === "collected"), JSON.stringify(collectedRun.sourceCollection));
+  check(
+    "source collection records every enabled source health result",
+    (collectedRun.sourceCollection?.sources.length ?? 0) >= 7 &&
+      ["devpost", "dorahacks", "lablab", "kaggle"].every((id) =>
+        collectedRun.sourceCollection?.sources.some((source) => source.sourceId === id && source.status === "collected"),
+      ),
+    JSON.stringify(collectedRun.sourceCollection),
+  );
   check("source collection excludes index and rule pages", !collectedEntries.some((entry) => /\/rules$|devpost\.com\/hackathons$/i.test(entry.card.official_source_url)), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
   check("source collection preserves concrete pages in public radar store", collectedEntries.some((entry) => entry.card.official_source_url === "https://future-ai.devpost.com/"), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
 
@@ -133,6 +151,36 @@ async function main(): Promise<void> {
       : [],
   });
   check("search fallback recovers a concrete event when a dynamic source index is empty", fallbackRun.sourceCollection?.sources.some((source) => source.sourceId === "devpost" && source.discoveryMethod === "search_fallback" && source.discoveredCount === 1) === true, JSON.stringify(fallbackRun.sourceCollection));
+
+  const secondBatchStorePath = path.join(tmpDir, "q7q-ai-events-second-batch.json");
+  const secondBatchHealthPath = path.join(tmpDir, "q7q-ai-events-second-batch-health.json");
+  removeIfExists(secondBatchStorePath);
+  removeIfExists(secondBatchHealthPath);
+  const secondBatchStore = new LocalFileStore({ file_path: secondBatchStorePath, auto_flush: false });
+  const secondBatchRun = await runPublicAiEventsUpdatePipeline(secondBatchStore, undefined, {
+    now: referenceNow,
+    collectSources: true,
+    sourceIds: ["mlh", "hackerearth", "taikai", "devfolio"],
+    discoverWithSearch: true,
+    hydrateImages: false,
+    sourceHealthPath: secondBatchHealthPath,
+    fetchHtml: async () => "<main>rendered by client</main>",
+    sourceSearch: async (_query, source) => [{
+      title: `${source.name} AI Hackathon 2026`,
+      url: {
+        mlh: "https://mlh.io/events/ai-builders-2026",
+        hackerearth: "https://www.hackerearth.com/challenges/hackathon/ai-builders-2026/",
+        taikai: "https://taikai.network/hackathons/ai-builders-2026",
+        devfolio: "https://devfolio.co/hackathons/ai-builders-2026",
+      }[source.id] ?? "https://invalid.example.com",
+      snippet: "AI hackathon registration and submission details.",
+      source_provider: "test",
+      source_type: "web",
+    }],
+  });
+  check("second batch can be run explicitly without changing default scheduler sources", secondBatchRun.sourceCollection?.sources.length === 4 && secondBatchRun.sourceCollection.sources.every((source) => source.discoveryMethod === "search_fallback" && source.status === "collected"), JSON.stringify(secondBatchRun.sourceCollection));
+  const healthSnapshot = JSON.parse(readFileSync(secondBatchHealthPath, "utf-8")) as { runs?: number; sources?: Record<string, { lastAcceptedCount?: number }> };
+  check("source collection persists health telemetry", healthSnapshot.runs === 1 && healthSnapshot.sources?.mlh?.lastAcceptedCount === 1 && healthSnapshot.sources?.devfolio?.lastAcceptedCount === 1, JSON.stringify(healthSnapshot));
 
   const failedCollectionStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-collection-failed.json");
   removeIfExists(failedCollectionStorePath);
@@ -232,6 +280,8 @@ async function main(): Promise<void> {
 
   const failedHydrationStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-failed-hydration.json");
   removeIfExists(failedHydrationStorePath);
+  removeIfExists(secondBatchStorePath);
+  removeIfExists(secondBatchHealthPath);
   removeIfExists(collectedStorePath);
   removeIfExists(failedCollectionStorePath);
   const failedHydrationStore = new LocalFileStore({ file_path: failedHydrationStorePath, auto_flush: false });
@@ -260,6 +310,13 @@ async function main(): Promise<void> {
     JSON.stringify((packageJson as { scripts?: Record<string, string> }).scripts?.["ai-events:update:scheduled"] ?? null),
   );
   check("scheduled update script exists", fs.existsSync(schedulerPath), schedulerPath);
+  const manualPipelinePath = path.resolve(process.cwd(), "scripts", "run-ai-events-update-pipeline.ts");
+  const manualPipelineSource = fs.existsSync(manualPipelinePath) ? fs.readFileSync(manualPipelinePath, "utf8") : "";
+  check(
+    "manual update script can explicitly load local api.env",
+    /loadLocalApiEnv/.test(manualPipelineSource) && /CHANCEPING_LOAD_API_ENV/.test(manualPipelineSource),
+    manualPipelineSource.slice(0, 240),
+  );
   check("scheduled update script supports one-shot dry run", /--once/.test(schedulerSource) && /runPublicAiEventsUpdatePipeline/.test(schedulerSource), schedulerSource.slice(0, 240));
   check("scheduled update script defaults to 72 hour cadence", /72/.test(schedulerSource) && /interval-hours/.test(schedulerSource), schedulerSource.slice(0, 240));
 

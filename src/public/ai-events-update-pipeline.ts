@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import type { OpportunityStore, StoreEntry } from "../agents/opportunity-store";
 import {
   buildPublicAiEventFeed,
@@ -30,6 +32,21 @@ export interface PublicAiEventsUpdatePipelineOptions extends Pick<BuildPublicAiE
   sourceMaxLinks?: number;
   discoverWithSearch?: boolean;
   sourceSearch?: CollectPublicAiEventsOptions["searchSource"];
+  sourceHealthPath?: string;
+}
+
+interface SourceHealthSnapshot {
+  updatedAt: string;
+  runs: number;
+  sources: Record<string, {
+    sourceName: string;
+    lastStatus: string;
+    lastDiscoveryMethod: string;
+    lastDiscoveredCount: number;
+    lastAcceptedCount: number;
+    failureStreak: number;
+    lastError?: string;
+  }>;
 }
 
 export interface PublicAiEventsUpdatePipelineSummary {
@@ -104,6 +121,44 @@ function countImages(entries: StoreEntry[]): PublicAiEventsUpdatePipelineSummary
   };
 }
 
+function persistSourceHealth(
+  sourceCollection: PublicAiEventSourceCollectionResult | undefined,
+  targetPath: string | undefined,
+): void {
+  if (!sourceCollection) return;
+  const outputPath = targetPath
+    ?? process.env.CHANCEPING_AI_EVENTS_SOURCE_HEALTH_PATH
+    ?? path.resolve(process.cwd(), "data", "ai-events-source-health.json");
+  let previous: SourceHealthSnapshot = { updatedAt: "", runs: 0, sources: {} };
+  try {
+    if (fs.existsSync(outputPath)) {
+      previous = JSON.parse(fs.readFileSync(outputPath, "utf-8")) as SourceHealthSnapshot;
+    }
+  } catch {
+    // Health telemetry must not block an otherwise successful refresh.
+  }
+  const sources = { ...previous.sources };
+  for (const item of sourceCollection.sources) {
+    const existing = sources[item.sourceId];
+    const failed = item.status === "failed" || item.status === "empty";
+    sources[item.sourceId] = {
+      sourceName: item.sourceName,
+      lastStatus: item.status,
+      lastDiscoveryMethod: item.discoveryMethod,
+      lastDiscoveredCount: item.discoveredCount,
+      lastAcceptedCount: item.acceptedCount,
+      failureStreak: failed ? (existing?.failureStreak ?? 0) + 1 : 0,
+      ...(item.error ? { lastError: item.error } : {}),
+    };
+  }
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  fs.writeFileSync(outputPath, JSON.stringify({
+    updatedAt: sourceCollection.ranAt,
+    runs: previous.runs + 1,
+    sources,
+  } satisfies SourceHealthSnapshot, null, 2), "utf-8");
+}
+
 export async function runPublicAiEventsUpdatePipeline(
   store: OpportunityStore,
   seedData?: PublicAiEventSampleRoomData,
@@ -128,6 +183,7 @@ export async function runPublicAiEventsUpdatePipeline(
       searchSource: options.sourceSearch,
     })
     : undefined;
+  persistSourceHealth(sourceCollection, options.sourceHealthPath);
   const imageHydration = options.hydrateImages
     ? await hydratePublicAiEventImages(store, {
       limit: options.imageHydrationLimit,

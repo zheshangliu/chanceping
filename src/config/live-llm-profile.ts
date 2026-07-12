@@ -39,6 +39,7 @@ export interface ResolveLiveLlmProfileOptions {
 }
 
 const ENABLE_LOCAL_LIVE_LLM = "CHANCEPING_ENABLE_LOCAL_LIVE_LLM";
+const ENABLE_PRODUCTION_LIVE_LLM = "CHANCEPING_ENABLE_PRODUCTION_LIVE_LLM";
 
 function readEnv(
   env: NodeJS.ProcessEnv | Record<string, string | undefined>,
@@ -108,7 +109,7 @@ function resolveContestProfile(
 ): LiveLlmApiProfile {
   const legacyQwenKey = readEnv(env, "DASHSCOPE_API_KEY");
   const provider = readEnv(env, "CONTEST_LLM_PROVIDER") || (legacyQwenKey ? "qwen" : "");
-  const model = readEnv(env, "CONTEST_LLM_MODEL") || readEnv(env, "QWEN_MODEL") || (legacyQwenKey ? "qwen-plus" : "");
+  const model = readEnv(env, "CONTEST_LLM_MODEL") || readEnv(env, "QWEN_MODEL") || (legacyQwenKey ? "qwen3.7-plus" : "");
   const baseUrl = readEnv(env, "CONTEST_LLM_BASE_URL") || readEnv(env, "DASHSCOPE_BASE_URL") || (legacyQwenKey ? "https://dashscope.aliyuncs.com/compatible-mode/v1" : "");
   const apiKey = readEnv(env, "CONTEST_LLM_API_KEY") || legacyQwenKey;
   const missing = [
@@ -141,21 +142,31 @@ export function isLocalLiveLlmExplicitlyEnabled(
   return readEnv(env, ENABLE_LOCAL_LIVE_LLM) === "true" && nodeEnv !== "production";
 }
 
+/**
+ * Live LLM is opt-in in every runtime. Local development and production use
+ * separate flags so production credentials cannot accidentally enable calls.
+ */
+export function isLiveLlmExplicitlyEnabled(
+  env: NodeJS.ProcessEnv | Record<string, string | undefined> = process.env,
+  nodeEnv: string = env.NODE_ENV ?? process.env.NODE_ENV ?? "",
+): boolean {
+  if (nodeEnv === "production") {
+    return readEnv(env, ENABLE_PRODUCTION_LIVE_LLM) === "true";
+  }
+  return readEnv(env, ENABLE_LOCAL_LIVE_LLM) === "true";
+}
+
 export function resolveLiveLlmProfile(
   options: ResolveLiveLlmProfileOptions = {},
 ): LiveLlmApiProfile {
   const env = options.env ?? process.env;
   const nodeEnv = options.nodeEnv ?? env.NODE_ENV ?? process.env.NODE_ENV ?? "";
-  if (nodeEnv === "production") {
+  if (!isLiveLlmExplicitlyEnabled(env, nodeEnv)) {
     throw new LiveLlmProfileError(
-      "LIVE_LLM_PRODUCTION_DISABLED",
-      "production 环境默认拒绝 live LLM",
-    );
-  }
-  if (readEnv(env, ENABLE_LOCAL_LIVE_LLM) !== "true") {
-    throw new LiveLlmProfileError(
-      "LIVE_LLM_DISABLED",
-      "live LLM 只允许本地显式开启：CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true",
+      nodeEnv === "production" ? "LIVE_LLM_PRODUCTION_DISABLED" : "LIVE_LLM_DISABLED",
+      nodeEnv === "production"
+        ? "生产环境 live LLM 未开启：CHANCEPING_ENABLE_PRODUCTION_LIVE_LLM=true"
+        : "live LLM 只允许本地显式开启：CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true",
     );
   }
 

@@ -135,7 +135,7 @@
       });
     } catch (err) {
       if (err?.name === "AbortError") {
-        const error = new Error("这次盯机会等待超过 10 分钟。雷达已保留，你可以稍后重试；如果线上仍反复超时，需要把线上网关等待时间延长到 10 分钟。");
+        const error = new Error("这次盯机会等待超过 10 分钟。雷达已保留，你可以稍后重试，或继续补充更具体的条件。");
         error.code = "CLIENT_LONG_OPERATION_TIMEOUT";
         throw error;
       }
@@ -1090,7 +1090,7 @@
       }
       await sleep(1600);
     }
-    throw new Error("这次盯机会等待超过 10 分钟。雷达已保留，你可以稍后重试；如果线上仍反复超时，需要把线上网关等待时间延长到 10 分钟。");
+    throw new Error("这次盯机会等待超过 10 分钟。雷达已保留，你可以稍后重试，或继续补充更具体的条件。");
   }
 
   function sleep(ms) {

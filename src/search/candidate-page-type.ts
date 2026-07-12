@@ -90,12 +90,15 @@ const PLATFORM_TERMS_RE = /服务须知|服务条款|线上签署|使用条件|�
 const CALENDAR_RE = /日历|赛历|calendar|schedule/i;
 const FAQ_RE = /faq|常见问题|问答|帮助中心/i;
 const POLICY_RE = /行动方案|规划|政策解读|指导意见|plan|roadmap|policy/i;
+const LEGAL_OR_REGULATION_RE = /中华人民共和国|法律|条例|管理规定|实施细则|征求意见稿|标准(?:规范|办法)?|法规/i;
 const DEPARTMENT_RE = /下属单位|机构职能|组织机构|内设机构|部门列表|department|organization/i;
 const CATEGORY_RE = /栏目|列表|频道|专题|category|list|index/i;
 const DIRECTORY_RE = /目录|名录|会员|成员|协会成员|directory|member list|members/i;
 const AGGREGATOR_RE = /聚合|招标采购信息|采购与招标网|招标网|招标信息网站|推荐公告|采招网|必联网|bidcenter|chinabidding|qianlima|indeed|linkedin|猎聘|智联|boss直聘|job board/i;
 const SPAM_OR_GAMBLING_RE = /beplay|全站登陆|博彩|赌博|casino|betting|sportsbook/i;
 const GENERIC_CATEGORY_TITLE_RE = /^(?:招标采购|采购公告|招标公告|招聘信息|职位信息|活动资讯)\s*[-|｜—]/i;
+const GENERIC_PROCUREMENT_PORTAL_RE = /您现在的位置|公共资源交易网|公共资源交易中心|公共资源平台|政府采购网|门户网站/i;
+const CONCRETE_PROCUREMENT_TITLE_RE = /招标公告|采购公告|竞争性(?:磋商|谈判)|询价公告|公开征集|征集公告|项目(?:采购|招标)|中标公告|成交公告|tender|procurement|rfp/i;
 
 const DIRECT_KEY_TYPES = new Set<OpportunityKind>([
   "direct_opportunity",
@@ -220,7 +223,16 @@ function classifyPageType(result: SearchResult, text: string): CandidatePageType
   if (isTraeOfficialCompetitionPage(result, text)) return hasDirectActionEntry(text) ? "registration_page" : "official_event_detail";
   if (isConcreteEventPlatformRoot(result, text)) return hasDirectActionEntry(text) ? "registration_page" : "official_event_detail";
   if (isLikelyHomepage(result)) return "homepage";
+  // Public-resource portals are useful discovery sources, but their generic
+  // landing/detail-navigation pages are not a project opportunity on their own.
+  // Keep a concrete procurement notice eligible when its title names the action.
+  if (GENERIC_PROCUREMENT_PORTAL_RE.test(text) && !CONCRETE_PROCUREMENT_TITLE_RE.test(normalizedTitle)) {
+    return "generic_procurement_column";
+  }
   if (GENERIC_CATEGORY_TITLE_RE.test(normalizedTitle)) return "category_page";
+  // Regulations and implementation rules can mention procurement or tenders,
+  // but they are reference material rather than a specific project entry.
+  if (LEGAL_OR_REGULATION_RE.test(text)) return "policy_plan";
   if (POLICY_RE.test(text) && !hasDirectActionEntry(text)) return "policy_plan";
   if (AGGREGATOR_RE.test(text)) return "aggregator_page";
   if (PDF_SUMMARY_RE.test(text) && POLICY_RE.test(text)) return "pdf_policy_material";

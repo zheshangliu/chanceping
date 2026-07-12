@@ -111,6 +111,21 @@ const KEY_SEMANTIC_CANDIDATES = new Set<OpportunityKind>([
   "channel_partner_lead",
   "customer_lead",
 ]);
+const INDIVIDUAL_ADMISSIONS_RE = /first[- ]year|undergraduate|graduate admissions?|application dates?|college application|university admissions?|(?:admissions?.{0,80}(?:college|university))|(?:(?:college|university).{0,80}admissions?)|本科申请|研究生申请|高校招生|大学招生|录取日期|申请截止日期/i;
+const ADMISSIONS_INTENT_RE = /留学|招生代理|国际教育|学生申请|本科申请|研究生申请|大学招生|高校招生|admissions?|college application/i;
+
+function isIndividualAdmissionsMismatch(text: string, spec: RadarRequirementSpec): boolean {
+  if (!INDIVIDUAL_ADMISSIONS_RE.test(text)) return false;
+  const radarText = [
+    spec.client_profile?.business_type,
+    spec.core_goals?.primary_goal,
+    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
+    spec.radar_version?.targetUser,
+    spec.radar_version?.businessContext,
+    ...(spec.radar_version?.opportunityIntents ?? []),
+  ].filter(Boolean).join(" ");
+  return !ADMISSIONS_INTENT_RE.test(radarText);
+}
 
 function isRadarVersionSemanticCandidate(result: SearchResult, options?: RuleFilterOptions): boolean {
   if (!options?.allowRadarVersionSemanticCandidates) return false;
@@ -161,6 +176,14 @@ export function ruleFilter(
     const snippet = result.snippet ?? "";
     const text = `${title} ${snippet}`;
     const url = result.url ?? "";
+
+    // An individual student's university admissions page is not a generic
+    // business opportunity merely because it contains an application action.
+    if (isIndividualAdmissionsMismatch(text, spec)) {
+      rejected.push(result);
+      rejectReasons.set(url, "个人学生申请页与当前雷达不匹配");
+      continue;
+    }
 
     // 规则 1：关键词匹配
     if (hasKeywordStrategy) {

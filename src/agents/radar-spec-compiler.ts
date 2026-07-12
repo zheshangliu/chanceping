@@ -39,6 +39,22 @@ function strOrEmpty(v: string | undefined): string {
   return typeof v === "string" && v.trim() !== "" ? v : "";
 }
 
+function deriveDomainKeywordVariants(values: string[]): string[] {
+  const variants: string[] = [];
+  for (const value of values) {
+    const normalized = value
+      .replace(/(?:服务团队|有限公司|有限责任公司|工作室|机构|公司|团队)$/g, "")
+      .trim();
+    if (!normalized) continue;
+    variants.push(normalized);
+    for (const segment of normalized.split(/[、，,和与及/]/)) {
+      const keyword = segment.replace(/^(?:我们|主要|专门)?(?:做|是)/, "").trim();
+      if (keyword.length >= 2 && keyword.length <= 24) variants.push(keyword);
+    }
+  }
+  return Array.from(new Set(variants));
+}
+
 /**
  * 构造"全分置信度"（total=100，各维度 score=100）。
  * 用于 AI 生成器场景：用户在前端确认 spec 后，视为已确认。
@@ -127,9 +143,19 @@ export class RadarSpecCompiler {
     const confidence = options?.confidence ?? calculateConfidence(info);
     const questions = options?.questions ?? [];
 
-    // 关键词：从 info.opportunity_type.primary_types 取
+    // 关键词：自定义雷达必须同时保留用户行业/能力和机会类型。
+    // 只保留“投标机会”这类动作词会让后续查询丢失行业主体。
     const primaryTypes = arrOrEmpty(info.opportunity_type?.primary_types);
-    const coreKeywordsZh = [...primaryTypes];
+    const clientIdentity = info.client_identity ?? {};
+    const domainKeywords = deriveDomainKeywordVariants([
+      strOrEmpty(clientIdentity.industry),
+      ...arrOrEmpty(clientIdentity.core_capabilities),
+      ...arrOrEmpty(clientIdentity.products_or_projects),
+    ]);
+    const coreKeywordsZh = Array.from(new Set([
+      ...domainKeywords,
+      ...primaryTypes,
+    ].map((value) => value.trim()).filter(Boolean))).slice(0, 12);
 
     // 扩展关键词：从 secondary_types 取
     const expandedKeywordsZh = arrOrEmpty(info.opportunity_type?.secondary_types);

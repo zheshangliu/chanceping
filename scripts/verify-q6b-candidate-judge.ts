@@ -10,6 +10,7 @@ import {
   type CandidateJudgeDecision,
 } from "../src/search/candidate-llm-judge";
 import { assessCandidateRelevance } from "../src/search/candidate-relevance";
+import { ruleFilter } from "../src/search/rule-filter";
 
 interface ProfileFixture {
   targetUser: string;
@@ -228,6 +229,34 @@ const cases: CandidateFixture[] = [
     expectedType: "key_opportunity",
     minScore: 75,
   },
+  {
+    id: "q6b-006",
+    profile: profiles.welfareSupplier,
+    result: result(
+      "First-Year Application Dates, Undergraduate Admissions",
+      "Application deadlines and admission requirements for individual undergraduate applicants.",
+      "direct_opportunity",
+      "official_event_site",
+      "https://admissions.example.edu/first-year-dates",
+    ),
+    expectedDecision: "reject",
+    expectedType: "reject",
+    maxScore: 10,
+  },
+  {
+    id: "q6b-007",
+    profile: profiles.welfareSupplier,
+    result: result(
+      "Deadlines · Admissions · Purchase College",
+      "College admissions deadlines and application information for individual applicants.",
+      "direct_opportunity",
+      "official_event_site",
+      "https://college.example.edu/admissions/deadlines",
+    ),
+    expectedDecision: "reject",
+    expectedType: "reject",
+    maxScore: 10,
+  },
 ];
 
 let failed = 0;
@@ -257,6 +286,13 @@ async function main(): Promise<void> {
     if (typeof item.maxScore === "number") {
       check(`${item.id} max score`, assessment.relevance_score <= item.maxScore, `score=${assessment.relevance_score}`);
     }
+    if (item.id === "q6b-006" || item.id === "q6b-007") {
+      check(
+        "individual admissions mismatch is rejected before LLM judging",
+        item.result.relevance_assessment?.reasonCodes.includes("individual_admissions_mismatch") === true,
+        JSON.stringify(item.result.relevance_assessment?.reasonCodes),
+      );
+    }
   }
 
   const spec = toSpec(profiles.kidsCoding);
@@ -274,6 +310,16 @@ async function main(): Promise<void> {
   check("judge gate rejects mismatches", gated.rejected.length >= 1, `rejected=${gated.rejected.length}`);
   check("judge gate does not upgrade rejected candidates", gated.rejected.every((item) => item.semantic_type === "rejected"), "rejected candidate leaked");
   check("judge gate writes assessment", gated.assessedResults.every((item) => item.candidate_judge_assessment), "missing assessment");
+
+  const admissionsCandidate = cases.find((item) => item.id === "q6b-006")!;
+  const admissionsRuleFilter = ruleFilter([admissionsCandidate.result], toSpec(profiles.welfareSupplier), {
+    allowRadarVersionSemanticCandidates: true,
+  });
+  check(
+    "rule filter rejects individual admissions pages before semantic bypass",
+    admissionsRuleFilter.passed.length === 0 && admissionsRuleFilter.rejected.length === 1,
+    JSON.stringify([...admissionsRuleFilter.reject_reasons.values()]),
+  );
 
   const liveParsed = {
     candidates: [

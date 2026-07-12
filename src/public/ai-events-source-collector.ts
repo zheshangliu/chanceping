@@ -8,7 +8,18 @@ import { PUBLIC_AI_EVENTS_RADAR_ID } from "./ai-events-store-sync";
 
 const DEFAULT_TIMEOUT_MS = 12_000;
 const DEFAULT_MAX_LINKS_PER_SOURCE = 12;
-const ACTIVE_SOURCE_IDS = ["devpost", "dorahacks", "lablab", "kaggle"] as const;
+// Each source is promoted only after a concrete-URL collection run succeeds.
+const ACTIVE_SOURCE_IDS = [
+  "devpost",
+  "dorahacks",
+  "lablab",
+  "kaggle",
+  "mlh",
+  "hackerearth",
+  "devfolio",
+] as const;
+// TAIKAI is retained for explicit health probes until it yields concrete event URLs.
+const SECOND_BATCH_SOURCE_IDS = ["taikai"] as const;
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
 
 export type PublicAiEventSourceCollectionStatus = "collected" | "empty" | "failed" | "not_enabled";
@@ -84,6 +95,10 @@ function isConcreteEventUrl(sourceId: string, url: URL): boolean {
   if (sourceId === "dorahacks") return /dorahacks\.io$/i.test(url.hostname) && /^\/hackathon\//i.test(path);
   if (sourceId === "lablab") return /lablab\.ai$/i.test(url.hostname) && /^\/event\//i.test(path);
   if (sourceId === "kaggle") return /kaggle\.com$/i.test(url.hostname) && /^\/competitions\/[a-z0-9][a-z0-9_-]+/i.test(path);
+  if (sourceId === "mlh") return /mlh\.io$/i.test(url.hostname) && /^\/events\/[a-z0-9][a-z0-9_-]+/i.test(path);
+  if (sourceId === "hackerearth") return /hackerearth\.com$/i.test(url.hostname) && /^\/challenges\/hackathon\/[a-z0-9][a-z0-9_-]+/i.test(path);
+  if (sourceId === "taikai") return /taikai\.network$/i.test(url.hostname) && /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path);
+  if (sourceId === "devfolio") return /devfolio\.co$/i.test(url.hostname) && /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path);
   return false;
 }
 
@@ -124,6 +139,7 @@ async function defaultFetchHtml(url: string, timeoutMs: number): Promise<string>
 }
 
 function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
+  if (source.id === "lablab") return "site:lablab.ai/event (AI OR agent OR LLM) hackathon registration";
   const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
   return `site:${source.domain} ${focus}`;
 }
@@ -200,7 +216,8 @@ export async function collectPublicAiEventsFromSources(
   options: CollectPublicAiEventsOptions = {},
 ): Promise<PublicAiEventSourceCollectionResult> {
   const requestedIds = options.sourceIds?.length ? new Set(options.sourceIds) : new Set(ACTIVE_SOURCE_IDS);
-  const enabledSources = AI_EVENT_SOURCE_NETWORK.filter((source) => requestedIds.has(source.id) && ACTIVE_SOURCE_IDS.includes(source.id as typeof ACTIVE_SOURCE_IDS[number]));
+  const collectableIds = new Set<string>([...ACTIVE_SOURCE_IDS, ...SECOND_BATCH_SOURCE_IDS]);
+  const enabledSources = AI_EVENT_SOURCE_NETWORK.filter((source) => requestedIds.has(source.id) && collectableIds.has(source.id));
   const maxLinks = Math.max(1, Math.min(options.maxLinksPerSource ?? DEFAULT_MAX_LINKS_PER_SOURCE, 30));
   const fetchHtml = options.fetchHtml ?? ((url: string) => defaultFetchHtml(url, options.timeoutMs ?? DEFAULT_TIMEOUT_MS));
   const searchSource = options.searchSource ?? defaultSearchSource;

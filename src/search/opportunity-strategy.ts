@@ -47,6 +47,7 @@ const MAX_QUERIES_PER_THEME = 3;
 const ACTION_RE = /报名|申请|申报|招标|采购|投稿|投标|入驻|注册|联系|合作|registration|application|apply|tender|procurement|submission|supplier|contact|partner/i;
 const SOURCE_RE = /官方|官网|协会|目录|平台|portal|directory|association|official|marketplace|agency|chamber/i;
 const REGION_RE = /中国|广东|广州|深圳|香港|新加坡|马来西亚|泰国|越南|印尼|日本|韩国|东南亚|国际|asean|southeast asia|singapore|malaysia|thailand|vietnam|indonesia|japan|korea/i;
+const GENERIC_SEARCH_TOPIC_RE = /^(?:机会|项目|采购|招标|投标|合作|联系|报名|申请|公告|官方|客户|线索|服务|公司|企业|活动|供应商|入库|供应|维护|管理|改造|建设|技术|工程|系统|平台|设备)$/i;
 
 function normalizedKey(value: string): string {
   return value.toLowerCase().replace(/\s+/g, " ").trim();
@@ -54,7 +55,6 @@ function normalizedKey(value: string): string {
 
 function aiEventStrategyText(spec: RadarRequirementSpec, families: RadarVersionQueryFamily[]): string {
   return [
-    spec.primary_subject,
     spec.client_profile?.client_type,
     spec.client_profile?.industry,
     spec.client_profile?.business_type,
@@ -222,6 +222,188 @@ function expandAiEventHeroFamilies(spec: RadarRequirementSpec, families: RadarVe
   return expanded.slice(0, MAX_THEMES);
 }
 
+function uniqueText(values: Array<string | undefined>, limit: number): string[] {
+  const seen = new Set<string>();
+  const output: string[] = [];
+  for (const value of values) {
+    const text = String(value ?? "").trim();
+    const key = normalizedKey(text);
+    if (!text || seen.has(key)) continue;
+    seen.add(key);
+    output.push(text);
+    if (output.length >= limit) break;
+  }
+  return output;
+}
+
+/**
+ * A revision can fall back to deterministic logic when a live model is slow.
+ * Keep a structured-spec query family ahead of the revision prose so the
+ * search still starts from the user's actual industry, not generic action terms.
+ */
+function structuredTopicTerms(spec: RadarRequirementSpec): string[] {
+  const terms = uniqueText([
+    ...(spec.keyword_strategy?.core_keywords_zh ?? []),
+    ...(spec.keyword_strategy?.expanded_keywords_zh ?? []),
+  ], 8);
+  // The compiler preserves the customer's full description for explainability,
+  // but search needs the atomic industry phrases that were derived from it.
+  // Prefer these over a long "A、B 和 C" sentence when both are available.
+  const atomicTerms = terms.filter((term) =>
+    !/[、，,；;]|(?:和|及|与)/.test(term) && !GENERIC_SEARCH_TOPIC_RE.test(term),
+  );
+  const selected = atomicTerms.length > 0 ? atomicTerms : terms;
+  const searchable = selected.flatMap((term) => {
+    const chineseSubjects = term.match(/[\u3400-\u9fff]{3,}/g) ?? [];
+    // Put the source-page-friendly Chinese subject first for mixed labels such
+    // as "供应链金融 SaaS", while retaining the full product label as a fallback.
+    return [...chineseSubjects, term];
+  });
+  return uniqueText(searchable, 4);
+}
+
+function splitStructuredScopeTerms(values: string[]): string[] {
+  return uniqueText(values.flatMap((value) => String(value ?? "")
+    .split(/[、，,；;。]|以及|或者|或|和|与/)
+    .map((item) => item.trim())
+    .filter((item) => item.length >= 3 && item.length <= 18 && !GENERIC_SEARCH_TOPIC_RE.test(item))), 6);
+}
+
+function structuredSearchTerms(spec: RadarRequirementSpec): string[] {
+  const industryTerms = structuredTopicTerms(spec);
+  const scopeTerms = splitStructuredScopeTerms([
+    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
+    ...(spec.opportunity_scope?.secondary_opportunity_types ?? []),
+    ...(spec.opportunity_scope?.must_have_conditions ?? []),
+    ...(spec.opportunity_scope?.nice_to_have_conditions ?? []),
+    ...(spec.core_goals?.primary_goal ? [spec.core_goals.primary_goal] : []),
+    ...(spec.core_goals?.success_definition ? [spec.core_goals.success_definition] : []),
+  ]);
+  // The first query remains anchored on the user's offering. Subsequent
+  // queries deliberately target the buyers, institutions or project forms the
+  // user named, rather than repeating a long prose requirement.
+  return uniqueText([
+    industryTerms[0],
+    ...scopeTerms,
+    ...industryTerms.slice(1),
+  ], 5);
+}
+
+function structuredRegion(spec: RadarRequirementSpec): string {
+  return uniqueText([
+    ...(spec.region_scope?.primary_regions ?? []),
+    ...(spec.client_profile?.regions ?? []),
+  ], 2).join(" ");
+}
+
+function structuredActionText(spec: RadarRequirementSpec, topicTerms: string[]): string {
+  const strategyText = [
+    ...topicTerms,
+    ...(spec.core_goals?.action_intent ?? []),
+    ...(spec.opportunity_scope?.must_have_conditions ?? []),
+    ...(spec.radar_version?.highValueCriteria ?? []),
+  ].join(" ");
+  return /采购|招标|投标|供应商|入库|项目/.test(strategyText)
+    ? "招标 采购 项目公告 供应商"
+    : /合作|渠道|代理|入驻|联名|客户/.test(strategyText)
+      ? "合作 伙伴 入驻 供应商 联系"
+      : "官方公告 申请 报名 合作";
+}
+
+function buildStructuredCoverageFamily(spec: RadarRequirementSpec): RadarVersionQueryFamily | null {
+  const topicTerms = structuredSearchTerms(spec);
+  if (topicTerms.length === 0) return null;
+  const region = structuredRegion(spec);
+  const actions = structuredActionText(spec, topicTerms);
+  const coverageQueries = uniqueText(topicTerms.slice(0, MAX_QUERIES_PER_THEME).map((term) =>
+    `${region ? `${region} ` : ""}${term} ${actions}`,
+  ), MAX_QUERIES_PER_THEME);
+  return {
+    familyName: "当前行业直接机会",
+    intentType: "direct_opportunity",
+    sourceArchetype: "official procurement / tender / partner page",
+    queries: coverageQueries,
+    queryVariants: coverageQueries.map((query, index) => ({
+      query,
+      variant: (index === 0 ? "broad_discovery" : region ? "region_language" : "action_keyword") as SearchQueryVariant,
+    })),
+    whyThisFamily: "直接使用雷达结构化行业词、地区与行动条件，避免修订文本回退时丢失行业主体。",
+    resultBucket: "direct_opportunity",
+  };
+}
+
+function buildStructuredOfficialSourceFamily(spec: RadarRequirementSpec): RadarVersionQueryFamily | null {
+  const topicTerms = structuredSearchTerms(spec);
+  if (topicTerms.length === 0) return null;
+  const region = structuredRegion(spec);
+  const actions = structuredActionText(spec, topicTerms);
+  const queries = uniqueText(topicTerms.slice(0, MAX_QUERIES_PER_THEME).map((term) =>
+    `${region ? `${region} ` : ""}${term} ${actions} 官方 site:gov.cn`,
+  ), MAX_QUERIES_PER_THEME);
+  return {
+    familyName: "当前行业官方项目源",
+    intentType: "direct_opportunity",
+    sourceArchetype: "government grant page / official procurement notice",
+    queries,
+    queryVariants: queries.map((query) => ({ query, variant: "official_source" as const })),
+    whyThisFamily: "优先检查政府、园区、主办方的具体公告与采购入口，不把泛政策法规当成项目机会。",
+    resultBucket: "direct_opportunity",
+  };
+}
+
+function buildStructuredPartnershipFamily(spec: RadarRequirementSpec): RadarVersionQueryFamily | null {
+  const topicTerms = structuredSearchTerms(spec);
+  if (topicTerms.length === 0) return null;
+  const strategyText = [
+    ...topicTerms,
+    ...(spec.core_goals?.action_intent ?? []),
+    ...(spec.opportunity_scope?.primary_opportunity_types ?? []),
+    ...(spec.opportunity_scope?.must_have_conditions ?? []),
+    ...(spec.radar_version?.opportunityIntents ?? []),
+    ...(spec.radar_version?.highValueCriteria ?? []),
+  ].join(" ");
+  if (!/合作|渠道|代理|伙伴|核心企业|金融机构|平台|客户|生态|入驻|招商/.test(strategyText)) return null;
+  const region = structuredRegion(spec);
+  const queries = uniqueText(topicTerms.slice(0, MAX_QUERIES_PER_THEME).map((term) =>
+    `${region ? `${region} ` : ""}${term} 合作 伙伴 平台 联系`,
+  ), MAX_QUERIES_PER_THEME);
+  return {
+    familyName: "当前行业合作与渠道入口",
+    intentType: "business_lead",
+    sourceArchetype: "partner directory / company contact page",
+    queries,
+    queryVariants: queries.map((query) => ({ query, variant: "action_keyword" as const })),
+    whyThisFamily: "当用户同时寻找客户、渠道、平台或核心企业合作时，单独搜索可联系的合作入口，不让招采查询挤占配额。",
+    resultBucket: "business_lead",
+  };
+}
+
+function familyContainsTopic(family: RadarVersionQueryFamily, topicTerms: string[]): boolean {
+  const text = [family.familyName, family.whyThisFamily, ...(family.queries ?? [])].join(" ").toLowerCase();
+  return topicTerms.some((term) => text.includes(term.toLowerCase()));
+}
+
+function enrichFamiliesWithStructuredCoverage(spec: RadarRequirementSpec, families: RadarVersionQueryFamily[]): RadarVersionQueryFamily[] {
+  if (shouldApplyAiEventHeroExpansion(spec, families)) return families;
+  const coverage = buildStructuredCoverageFamily(spec);
+  if (!coverage) return families;
+  const official = buildStructuredOfficialSourceFamily(spec);
+  const partnership = buildStructuredPartnershipFamily(spec);
+  const topicTerms = structuredTopicTerms(spec);
+  const covered = new Set([
+    normalizedKey(coverage.familyName),
+    normalizedKey(official?.familyName ?? ""),
+    normalizedKey(partnership?.familyName ?? ""),
+  ]);
+  const relevantExisting = families.filter((family) =>
+    !covered.has(normalizedKey(family.familyName)) && familyContainsTopic(family, topicTerms),
+  );
+  const existingWithRecovery = relevantExisting.filter((family) => recoveryVariants(family).length > 0);
+  const otherExisting = relevantExisting.filter((family) => !existingWithRecovery.includes(family));
+  return [coverage, ...(official ? [official] : []), ...existingWithRecovery, ...(partnership ? [partnership] : []), ...otherExisting]
+    .slice(0, MAX_THEMES);
+}
+
 export const RESULT_BUCKET_POLICY: OpportunityStrategy["resultBucketPolicy"] = {
   direct_opportunity: "key_opportunity",
   business_lead: "actionable_lead",
@@ -326,13 +508,16 @@ function recoveryVariants(family: RadarVersionQueryFamily): Array<{ query: strin
 }
 
 function explicitVariants(family: RadarVersionQueryFamily): Array<{ query: string; variant: SearchQueryVariant }> {
-  const supplied = family.queryVariants?.filter((item) => item.query.trim()).slice(0, MAX_QUERIES_PER_THEME) ?? [];
-  if (supplied.length > 0) return supplied;
-  const base = family.queries
+  const supplied = family.queryVariants?.filter((item) => item.query.trim()) ?? [];
+  const base = supplied.length > 0 ? supplied : family.queries
     .filter((query) => query.trim())
     .map((query) => ({ query, variant: inferQueryVariant(query) }));
   const seen = new Set<string>();
-  return [...base, ...recoveryVariants(family)]
+  // Keep established recovery routes (official associations, company careers,
+  // marketplace seller centres) ahead of generic prose queries. They exist to
+  // prevent known no-card cases, so they must not be crowded out by a family
+  // that already supplies three draft variants.
+  return [...recoveryVariants(family), ...base]
     .filter((item) => {
       const key = item.query.toLowerCase().replace(/\s+/g, " ").trim();
       if (!key || seen.has(key)) return false;
@@ -360,7 +545,7 @@ function uniqueSourceArchetypes(labels: string[]): Array<{ id: SourceArchetypeId
 export function buildOpportunityStrategy(spec: RadarRequirementSpec): OpportunityStrategy | null {
   const radarVersion = spec.radar_version;
   const rawFamilies = radarVersion?.queryFamilies ?? [];
-  const families = expandAiEventHeroFamilies(spec, rawFamilies);
+  const families = enrichFamiliesWithStructuredCoverage(spec, expandAiEventHeroFamilies(spec, rawFamilies));
   if (!radarVersion || families.length === 0) return null;
 
   const searchThemes: SearchTheme[] = families.map((family, index) => {

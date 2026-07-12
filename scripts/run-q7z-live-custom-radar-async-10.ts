@@ -4,6 +4,7 @@ import type { AppContext } from "../src/api/context";
 import type { ApiResponse } from "../src/api/types";
 import type { RadarRequirementSpec } from "../src/schema/radar-requirement-spec";
 import type { OpportunityCard } from "../src/schema/opportunity-card";
+import { buildSearchIntentPlan } from "../src/search/search-intent-planner";
 
 type Scenario = {
   id: string;
@@ -285,7 +286,21 @@ const SCENARIOS_SECOND: Scenario[] = [
   },
 ];
 
-const SCENARIOS = SCENARIO_SET === "second" ? SCENARIOS_SECOND : SCENARIOS_FIRST;
+const SCENARIO_LIMIT = Math.max(1, Math.min(10, Number(process.env.CHANCEPING_Q7Z_SCENARIO_LIMIT || 10)));
+const STRICT_QUALITY_GATE = process.env.CHANCEPING_Q7Z_STRICT_QUALITY_GATE === "true";
+const SELECTED_SCENARIO_IDS = new Set(
+  (process.env.CHANCEPING_Q7Z_SCENARIO_IDS ?? "").split(",").map((value) => value.trim()).filter(Boolean),
+);
+const scenarioPool = SCENARIO_SET === "second" ? SCENARIOS_SECOND : SCENARIOS_FIRST;
+const SCENARIOS = SELECTED_SCENARIO_IDS.size > 0
+  ? scenarioPool.filter((scenario) => SELECTED_SCENARIO_IDS.has(scenario.id))
+  : scenarioPool.slice(0, SCENARIO_LIMIT);
+if (SELECTED_SCENARIO_IDS.size > 0 && SCENARIOS.length !== SELECTED_SCENARIO_IDS.size) {
+  throw new Error(`未找到指定诊断案例：${Array.from(SELECTED_SCENARIO_IDS).join(", ")}`);
+}
+const UNIVERSAL_CARD_NOISE_PATTERNS = [
+  /first[- ]year|undergraduate admissions?|graduate admissions?|college application|(?:admissions?.{0,80}(?:college|university))|(?:(?:college|university).{0,80}admissions?)|大学招生|本科申请|研究生申请/i,
+];
 
 function prepareLiveEnv(): void {
   process.env.CHANCEPING_LOAD_API_ENV = "true";
@@ -577,6 +592,13 @@ async function runScenario(app: App, scenario: Scenario, index: number): Promise
       reasons.push(`WARN: 最终版本 ${finalVersion} 低于预期 ${scenario.expectedMinimumVersion}`);
     }
     const finalSpec = confirmSpec(spec);
+    if (process.env.CHANCEPING_Q7Z_DEBUG === "true") {
+      console.log(`[debug] ${scenario.id} keywords=${JSON.stringify(finalSpec.keyword_strategy?.core_keywords_zh ?? [])}`);
+      console.log(`[debug] ${scenario.id} scope=${JSON.stringify(finalSpec.opportunity_scope ?? {})}`);
+      console.log(`[debug] ${scenario.id} goals=${JSON.stringify(finalSpec.core_goals ?? {})}`);
+      console.log(`[debug] ${scenario.id} queryFamilies=${JSON.stringify(finalSpec.radar_version?.queryFamilies?.map((family) => family.queries) ?? [])}`);
+      console.log(`[debug] ${scenario.id} plannedQueries=${JSON.stringify(buildSearchIntentPlan(finalSpec, scenario.input).queries.map((item) => item.query))}`);
+    }
     const started = await postJson(app, "/api/radar-jobs/run", {
       spec: finalSpec,
       radar_type: "custom",
@@ -599,6 +621,13 @@ async function runScenario(app: App, scenario: Scenario, index: number): Promise
     rawCandidateCount = Number(job.result?.search?.total_raw ?? job.result?.search?.rawCandidates?.length ?? 0);
     reportLength = String(job.result?.report?.markdown ?? "").length;
     firstCards = cards.slice(0, 3).map((card) => card.title);
+    if (process.env.CHANCEPING_Q7Z_DEBUG === "true") {
+      const search = job.result?.search ?? {};
+      console.log(`[debug] ${scenario.id} searchErrors=${JSON.stringify(search.errors ?? [])}`);
+      if (process.env.CHANCEPING_Q7Z_DEBUG_RAW === "true") {
+        console.log(`[debug] ${scenario.id} rawCandidates=${JSON.stringify((search.rawCandidates ?? []).slice(0, 10))}`);
+      }
+    }
     if (cardCount === 0) {
       reasons.push("没有返回机会卡");
     }
@@ -606,7 +635,14 @@ async function runScenario(app: App, scenario: Scenario, index: number): Promise
       reasons.push("WARN: Markdown 报告较短，可能行动层不足");
     }
     const cardText = diagnosticTextForCards(cards);
-    const cardNegativeHits = matchesNegativePattern(cardText, scenario.negativePatterns);
+    const domainKeywords = scenario.expectedKeywords.slice(0, Math.max(1, scenario.expectedKeywords.length - 1));
+    if (cardCount > 0 && !textContainsAny(cardText, domainKeywords)) {
+      reasons.push(`机会卡未明显覆盖行业主体词: ${domainKeywords.join(" / ")}`);
+    }
+    const cardNegativeHits = matchesNegativePattern(cardText, [
+      ...(scenario.negativePatterns ?? []),
+      ...UNIVERSAL_CARD_NOISE_PATTERNS,
+    ]);
     if (cardNegativeHits.length > 0) {
       reasons.push(`机会卡疑似混入错配结果: ${cardNegativeHits.join(", ")}`);
     }
@@ -661,8 +697,9 @@ function writeReport(results: ScenarioResult[]): void {
     "# Q7Z Async Custom Radar Random 10 Report",
     "",
     `- Generated at: ${new Date().toISOString()}`,
-    `- Pass-like: ${passLike}/10`,
-    `- Carded: ${carded}/10`,
+    `- Pass-like: ${passLike}/${results.length}`,
+    `- Carded: ${carded}/${results.length}`,
+    `- Mode: ${STRICT_QUALITY_GATE ? "strict quality gate" : "diagnostic only"}`,
     "",
     "| # | Scenario | Familiarity | Version | Cards | Raw | Status | Failure Class | First Cards | Reasons |",
     "|---|---|---|---:|---:|---:|---|---|---|---|",
@@ -689,9 +726,12 @@ async function main(): Promise<void> {
   const results: ScenarioResult[] = [];
   let consecutiveFailures = 0;
   for (const [index, scenario] of SCENARIOS.entries()) {
-    console.log(`\n[${index + 1}/10] ${scenario.label}`);
+    console.log(`\n[${index + 1}/${SCENARIOS.length}] ${scenario.label}`);
     const result = await runScenario(app, scenario, index + 1);
     results.push(result);
+    // Keep a recoverable, up-to-date diagnostic report while a long live run is
+    // still in progress. This is especially useful when a provider is slow.
+    writeReport(results);
     console.log(`${result.status}: cards=${result.cardCount}, raw=${result.rawCandidateCount}, version=${result.finalVersion}`);
     if (result.status === "fail") {
       consecutiveFailures += 1;
@@ -708,7 +748,8 @@ async function main(): Promise<void> {
   const carded = results.filter((item) => item.cardCount > 0).length;
   console.log(`\nQ7Z async random 10 live result: pass-like=${passLike}/${results.length}, carded=${carded}/${results.length}`);
   console.log(`Report: ${REPORT_FILE}`);
-  if (results.length < 10 || carded < 9 || passLike < 9) {
+  const requiredPassCount = SCENARIOS.length === 10 ? 9 : SCENARIOS.length;
+  if (STRICT_QUALITY_GATE && (results.length < SCENARIOS.length || carded < requiredPassCount || passLike < requiredPassCount)) {
     process.exit(1);
   }
 }

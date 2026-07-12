@@ -32,6 +32,8 @@ export interface QwenConfig {
   baseUrl: string;
   /** 最大 token 数，默认 4096 */
   maxTokens?: number;
+  /** 单次网络请求上限，默认 90 秒；整轮雷达任务仍可持续到 10 分钟。 */
+  timeoutMs?: number;
   /** Mock 模式开关，无 apiKey 时自动 true */
   mockMode?: boolean;
 }
@@ -40,6 +42,7 @@ export interface QwenConfig {
 const DEFAULT_MODEL = "qwen-plus";
 const DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1";
 const DEFAULT_MAX_TOKENS = 4096;
+const DEFAULT_TIMEOUT_MS = 90_000;
 
 // ============================================================
 // Mock 预设响应
@@ -147,6 +150,7 @@ export class QwenAdapter implements LLMAdapter {
   private readonly model: string;
   private readonly baseUrl: string;
   private readonly maxTokens: number;
+  private readonly timeoutMs: number;
   private readonly mockMode: boolean;
 
   constructor(config?: Partial<QwenConfig>) {
@@ -157,6 +161,7 @@ export class QwenAdapter implements LLMAdapter {
     const envBaseUrl = typeof process !== "undefined" ? process.env?.DASHSCOPE_BASE_URL ?? "" : "";
     this.baseUrl = config?.baseUrl ?? (envBaseUrl || DEFAULT_BASE_URL);
     this.maxTokens = config?.maxTokens ?? DEFAULT_MAX_TOKENS;
+    this.timeoutMs = config?.timeoutMs ?? Number(process.env.CHANCEPING_LLM_REQUEST_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
     // 显式 mockMode 优先，否则无 apiKey 时自动 Mock
     this.mockMode = config?.mockMode ?? this.apiKey === "";
   }
@@ -249,8 +254,11 @@ export class QwenAdapter implements LLMAdapter {
     let lastError: Error | null = null;
     // 网络错误重试 1 次（共 2 次尝试）
     for (let attempt = 0; attempt < 2; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
       try {
         const response = await fetch(url, {
+          signal: controller.signal,
           method: "POST",
           headers: {
             Authorization: `Bearer ${this.apiKey}`,
@@ -288,6 +296,8 @@ export class QwenAdapter implements LLMAdapter {
           break;
         }
         // 第 1 次失败后继续重试
+      } finally {
+        clearTimeout(timeout);
       }
     }
 

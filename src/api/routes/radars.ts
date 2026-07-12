@@ -43,6 +43,7 @@ import { getCurrentUser } from "../../agents/user-context";
 import { RadarQuotaChecker } from "../../agents/radar-quota";
 import { reviseRadarVersion } from "../../agents/radar-version-reviser";
 import { reviseRadarVersionWithLlm } from "../../agents/radar-version-llm-reviser";
+import { isLiveLlmExplicitlyEnabled } from "../../config/live-llm-profile";
 import type { RadarRevisionChatContext } from "../../schema/radar-version-spec";
 
 const PUBLIC_AI_EVENTS_BUILTIN_RADAR_ID = "builtin_ai_competition";
@@ -365,7 +366,7 @@ export function radarsRoutes(ctx: AppContext): Hono {
       const revisionInput = hydrateRadarChatContext(body, ctx);
       const wantsLlmRevision = revisionInput.revisionMode === "llm"
         || (revisionInput.revisionMode === "auto"
-          && process.env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM === "true"
+          && isLiveLlmExplicitlyEnabled()
           && process.env.LLM_MODE === "live");
       const result = wantsLlmRevision
         ? await reviseRadarVersionWithLlm(revisionInput, ctx.llmAdapter)

@@ -8,7 +8,7 @@
 - 生产环境默认不读取本地 `api.env`。
 - `verify:all` 继续保持 mock-safe，不调用 live API。
 - 参赛/阿里云演示 profile 使用 Qwen：`CHANCEPING_LLM_PROFILE=contest`，`CONTEST_LLM_PROVIDER=qwen`。
-- 本地开发可以显式开启 live LLM / live search；生产开启策略必须由阿里云环境变量控制。
+- 本地开发可以显式开启 live LLM / live search；生产默认关闭，必须通过阿里云环境变量显式开启。
 - 公开 AI Events 页面只展示数据库/本地 store 里的赛事卡，不直接调用 `/api/search` 或手动跑雷达。
 
 ## 必配环境变量
@@ -16,14 +16,16 @@
 在阿里云环境变量管理处配置，值不写入仓库：
 
 - `NODE_ENV=production`
-- `DATA_MODE=mock` 或部署时选定的持久化模式
-- `LLM_MODE=mock` 或部署时选定的 live 模式
+- `DATA_MODE=live`（需要真实搜索时）或 `mock`
+- `LLM_MODE=live`（需要线上 Qwen 修订时）或 `mock`
 - `CHANCEPING_LLM_PROFILE=contest`
 - `CONTEST_LLM_PROVIDER=qwen`
-- `CONTEST_LLM_MODEL`
+- `CONTEST_LLM_MODEL=qwen3.7-plus`
 - `CONTEST_LLM_BASE_URL`
 - `CONTEST_LLM_API_KEY`
 - `SERPER_API_KEY`
+- `CHANCEPING_ENABLE_PRODUCTION_LIVE_LLM=true`
+- `CHANCEPING_ENABLE_PRODUCTION_LIVE_SEARCH=true`
 
 可直接参考仓库内无密钥样例：
 
@@ -47,6 +49,7 @@ docs/deployment/aliyun.env.example
 - AI Events 数据源 store：当前公开页 `/api/public/ai-events` 使用的本地数据文件
 - 自定义雷达、运行记录、机会卡和报告 artifact 的本地 data 目录
 - 福利公开雷达数据：`data/welfare-opportunities.json`、`data/welfare-run-summary.json`；官方原文快照在 Git 忽略的 `data/welfare-evidence/`。
+- 福利采集器优先使用 Node HTTPS / curl；SWAS 的 OpenSSL 与部分深圳政务站点不兼容时，自动回退到 `gnutls-cli`，仍直连官方 HTTPS 并验证证书。因此服务器必须安装 `gnutls-bin`。
 
 ## 企业福利雷达灰度（fuli.chanceping.com）
 

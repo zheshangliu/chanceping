@@ -51,7 +51,7 @@ check("api.env loader reports key names only", secretValues.every((value) => !lo
 
 check("local api.env selects contest profile", env.CHANCEPING_LLM_PROFILE === "contest", env.CHANCEPING_LLM_PROFILE ?? "missing");
 check("local api.env contest provider is qwen", env.CONTEST_LLM_PROVIDER === "qwen", env.CONTEST_LLM_PROVIDER ?? "missing");
-check("local api.env contest model is configured", Boolean(env.CONTEST_LLM_MODEL));
+check("local api.env contest model is configured", env.CONTEST_LLM_MODEL === "qwen3.7-plus", env.CONTEST_LLM_MODEL ?? "missing");
 check("local api.env contest base URL is configured", Boolean(env.CONTEST_LLM_BASE_URL));
 check("local api.env contest key is present without printing value", Boolean(env.CONTEST_LLM_API_KEY || env.DASHSCOPE_API_KEY));
 check("local live LLM is explicitly enabled for localhost", env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM === "true", env.CHANCEPING_ENABLE_LOCAL_LIVE_LLM ?? "missing");

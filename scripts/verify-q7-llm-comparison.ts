@@ -36,7 +36,7 @@ check("comparison script requires explicit run flag", compareScript.includes("CH
 check("comparison script loads api.env only through local loader", compareScript.includes("loadLocalApiEnv"));
 check("comparison script resolves public profile metadata", compareScript.includes("toLiveLlmPublicProfile"));
 check("comparison script compares commercial and contest profiles", compareScript.includes('"commercial"') && compareScript.includes('"contest"'));
-check("comparison script records provider model latency and shape", ["profile", "provider", "model", "latencyMs", "contentLength", "parsedKeys"].every((field) => compareScript.includes(field)));
+check("comparison script records provider model latency and shape", ["profile", "provider", "model", "latencyMs", "contentLength", "parsedKeys", "structuredOutput"].every((field) => compareScript.includes(field)));
 check("comparison script uses fixed prompts", compareScript.includes("requirement_understanding") && compareScript.includes("result_feedback") && compareScript.includes("report_explanation"));
 check("comparison script never logs raw apiKey", !/console\.(log|error)\([^)]*apiKey|JSON\.stringify\([^)]*profile[^)]*\)/s.test(compareScript));
 check("comparison script has no obvious key literal", !/sk-[A-Za-z0-9_-]+|API_KEY=\S{8,}/.test(compareScript));

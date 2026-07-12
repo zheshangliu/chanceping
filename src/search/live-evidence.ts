@@ -20,6 +20,7 @@ const REQUIRED_FIELDS: FieldEvidenceName[] = [
 export interface LiveEvidenceFetchOptions {
   maxUrls?: number;
   timeoutMs?: number;
+  concurrency?: number;
 }
 
 export interface LiveEvidenceFetchResult {
@@ -182,15 +183,24 @@ export async function fetchLiveEvidence(
 ): Promise<LiveEvidenceFetchResult> {
   const maxUrls = options.maxUrls ?? DEFAULT_LIVE_EVIDENCE_LIMIT;
   const timeoutMs = options.timeoutMs ?? DEFAULT_LIVE_EVIDENCE_TIMEOUT_MS;
+  const concurrency = Math.max(1, Math.min(options.concurrency ?? Number(process.env.CHANCEPING_LIVE_EVIDENCE_CONCURRENCY || 3), 6));
   const targets = uniqueByUrl(results).slice(0, Math.max(0, maxUrls));
   const fetcher = new JinaReaderFetcher({ mockMode: false, timeoutMs, preferDirect: true });
   const contentsByUrl = new Map<string, CleanedContent>();
   const fieldEvidenceByUrl = new Map<string, FieldEvidenceItem[]>();
   const openedUrls: SearchExecutionLog["openedUrls"] = [];
 
-  for (const result of targets) {
+  const fetchOne = async (result: SearchResult): Promise<{ result: SearchResult; content: CleanedContent; fetchedAt: string }> => {
     const fetchedAt = new Date().toISOString();
     const content = await fetcher.fetch(result.url);
+    return { result, content, fetchedAt };
+  };
+  const fetched: Array<{ result: SearchResult; content: CleanedContent; fetchedAt: string }> = [];
+  for (let start = 0; start < targets.length; start += concurrency) {
+    fetched.push(...await Promise.all(targets.slice(start, start + concurrency).map(fetchOne)));
+  }
+
+  for (const { result, content, fetchedAt } of fetched) {
     contentsByUrl.set(result.url, content);
 
     const status = content.fetch_success

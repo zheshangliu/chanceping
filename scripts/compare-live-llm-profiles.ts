@@ -23,8 +23,8 @@ type ComparisonResult = {
   latencyMs: number;
   contentLength: number;
   parsedKeys: string[];
+  structuredOutput: boolean;
   errorCode?: string;
-  outputPreview?: string;
 };
 
 const RUN_FLAG = "CHANCEPING_RUN_LLM_COMPARISON";
@@ -88,11 +88,13 @@ function sanitize(text: string): string {
 }
 
 function createAdapter(profile: LiveLlmApiProfile): LLMAdapter {
+  const timeoutMs = Math.max(1_000, Math.min(90_000, Number(process.env.CHANCEPING_LLM_COMPARISON_TIMEOUT_MS || 20_000)));
   if (profile.provider === "qwen") {
     return new QwenAdapter({
       model: profile.model,
       apiKey: profile.apiKey,
       baseUrl: profile.baseUrl,
+      timeoutMs,
       mockMode: false,
     });
   }
@@ -100,6 +102,7 @@ function createAdapter(profile: LiveLlmApiProfile): LLMAdapter {
     model: profile.model,
     apiKey: profile.apiKey,
     baseUrl: profile.baseUrl,
+    timeoutMs,
     mockMode: false,
   });
 }
@@ -110,7 +113,26 @@ async function compareProfile(profileName: LiveLlmProfileName): Promise<Comparis
     CHANCEPING_ENABLE_LOCAL_LIVE_LLM: "true",
     CHANCEPING_LLM_PROFILE: profileName,
   };
-  const profile = resolveLiveLlmProfile({ env: profileEnv, nodeEnv: "development" });
+  let profile: LiveLlmApiProfile;
+  try {
+    profile = resolveLiveLlmProfile({ env: profileEnv, nodeEnv: "development" });
+  } catch (error) {
+    const fallback = profileName === "contest"
+      ? { provider: "qwen", model: "qwen3.7-plus" }
+      : { provider: "deepseek", model: "unconfigured" };
+    const errorCode = sanitize(error instanceof Error ? error.message : String(error)).slice(0, 180);
+    return PROMPTS.map((prompt) => ({
+      promptId: prompt.id,
+      profile: profileName,
+      ...fallback,
+      ok: false,
+      latencyMs: 0,
+      contentLength: 0,
+      parsedKeys: [],
+      structuredOutput: false,
+      errorCode,
+    }));
+  }
   const publicProfile = toLiveLlmPublicProfile(profile);
   const adapter = createAdapter(profile);
   const results: ComparisonResult[] = [];
@@ -129,7 +151,7 @@ async function compareProfile(profileName: LiveLlmProfileName): Promise<Comparis
         latencyMs: Date.now() - startedAt,
         contentLength: response.content.length,
         parsedKeys,
-        outputPreview: sanitize(response.content).slice(0, 180),
+        structuredOutput: parsedKeys.length > 0,
       });
     } catch (error) {
       results.push({
@@ -139,6 +161,7 @@ async function compareProfile(profileName: LiveLlmProfileName): Promise<Comparis
         latencyMs: Date.now() - startedAt,
         contentLength: 0,
         parsedKeys: [],
+        structuredOutput: false,
         errorCode: sanitize(error instanceof Error ? error.message : String(error)).slice(0, 180),
       });
     }
@@ -155,8 +178,8 @@ async function main(): Promise<void> {
 
   const loaded = loadLocalApiEnv({ enabled: process.env.CHANCEPING_LOAD_API_ENV === "true" });
   console.log("QWEN_VS_DEEPSEEK_COMPARISON");
-  console.log(`api.env status: ${loaded.reason}; keys: ${loaded.keysLoaded.concat(loaded.keysSkippedExisting).join(",") || "none"}`);
-  console.log("This script records public profile/provider/model, latency, output shape, and a short sanitized preview only.");
+  console.log(`api.env status: ${loaded.reason}`);
+  console.log("This script records provider/model, latency, output shape, and sanitized error categories only.");
 
   const results = [
     ...(await compareProfile("commercial")),
