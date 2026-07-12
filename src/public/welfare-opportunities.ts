@@ -474,7 +474,9 @@ async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
   if (redirects > 4) throw new Error("too many HTTPS redirects");
   const parsed = new URL(url);
   if (parsed.protocol !== "https:" || !WELFARE_SOURCES.some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
-  const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\r\nAccept: text/html,application/xhtml+xml\r\nConnection: close\r\n\r\n`;
+  // gnutls-cli --crlf converts LF input to CRLF. Supplying CRLF here would
+  // produce malformed CRCRLF request lines on Ubuntu's GnuTLS client.
+  const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\nHost: ${parsed.host}\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\nAccept: text/html,application/xhtml+xml\nConnection: close\n\n`;
   const output = await new Promise<string>((resolve, reject) => {
     const child = spawn("gnutls-cli", ["--crlf", "--sni-hostname", parsed.hostname, parsed.hostname, "-p", "443"], { stdio: ["pipe", "pipe", "pipe"] });
     const chunks: Buffer[] = [];
