@@ -57,6 +57,10 @@ assert.match(sourceModule, /gnutls-cli/, "SWAS OpenSSL EC failures must fall bac
 assert.ok(!sourceModule.includes('"--quiet"'), "Ubuntu 22.04 gnutls-cli must use portable options");
 assert.ok(!sourceModule.includes('"--crlf"'), "GnuTLS transport must match the verified default Ubuntu client handshake");
 assert.ok(sourceModule.includes("Handshake was completed"), "GnuTLS transport must wait for handshake completion before sending HTTP");
+assert.ok(sourceModule.includes("r.jina.ai/http://"), "public official pages need an approved compatibility relay after direct TLS failures");
+const relayMarkdown = `Title: 光明区总工会采购消费帮扶慰问物资项目\n\n采购人名称：深圳市光明区总工会\n联系人：张小姐\n联系电话：0755-12345678`;
+const relayParsed = parseWelfareDetail({ html: relayMarkdown, url: "https://www.szgm.gov.cn/example.html", sourceCode: "OFF-SZ-004", retrievedAt: "2026-07-11T00:00:00.000Z" });
+assert.ok(relayParsed && relayParsed.title.includes("消费帮扶"), "Reader Markdown detail must retain the official title");
 async function verifyThreeSources(): Promise<void> {
 const tempDir = fs.mkdtempSync(path.resolve("data/verify-welfare-contracts-"));
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(tempDir, "opportunities.json");

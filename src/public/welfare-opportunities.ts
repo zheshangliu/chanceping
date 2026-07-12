@@ -281,11 +281,28 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       discovered.set(url, { title, url, publishedAt });
     }
   }
+  // Reader-compatible Markdown fallback, used only when the SWAS TLS stack
+  // cannot retrieve the same official public page directly.
+  const markdownLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  let markdownMatch: RegExpExecArray | null;
+  while ((markdownMatch = markdownLink.exec(html)) !== null) {
+    const title = cleanText(markdownMatch[1]);
+    const url = normalizeUrl(markdownMatch[2], source.url);
+    const hasWelfareContext = /(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title);
+    const hasOpportunityAction = /(采购|遴选|供应商|征集|项目)/.test(title);
+    if (!url || !hasWelfareContext || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    discovered.set(url, { title, url, publishedAt: "" });
+  }
   return Array.from(discovered.values());
 }
 
 function extractMeta(html: string, name: string): string {
   const match = html.match(new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["']([^"']*)["']`, "i"));
+  return cleanText(match?.[1] ?? "");
+}
+
+function extractReaderTitle(content: string): string {
+  const match = content.match(/(?:^|\n)Title:\s*(.+?)(?:\r?\n|$)/i);
   return cleanText(match?.[1] ?? "");
 }
 
@@ -303,7 +320,7 @@ function publishedContactName(value: string | undefined): string | undefined {
 
 export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
-  const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "");
+  const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
   if (!title || !/(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title) || !/(采购|遴选|供应商|征集|项目)/.test(title)) return null;
   const text = cleanText(input.html);
   const buyerExcerpt = excerpt(text, /采购人名称[：:]?\s*[^。；]*?(?=\s*(?:联系地址|联系人|联系电话|地址)[：:]|[。；]|$)/);
@@ -461,13 +478,33 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
       try {
         return await gnutlsFetchHtml(url);
       } catch (gnutlsError) {
-        const fetchMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
-        const curlMessage = curlError instanceof Error ? curlError.message : String(curlError);
-        const gnutlsMessage = gnutlsError instanceof Error ? gnutlsError.message : String(gnutlsError);
-        throw new Error(`welfare source fetch failed: node=${fetchMessage}; curl=${curlMessage}; gnutls=${gnutlsMessage}`);
+        try {
+          return await welfareReaderRelayFetchHtml(url);
+        } catch (relayError) {
+          const fetchMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
+          const curlMessage = curlError instanceof Error ? curlError.message : String(curlError);
+          const gnutlsMessage = gnutlsError instanceof Error ? gnutlsError.message : String(gnutlsError);
+          const relayMessage = relayError instanceof Error ? relayError.message : String(relayError);
+          throw new Error(`welfare source fetch failed: node=${fetchMessage}; curl=${curlMessage}; gnutls=${gnutlsMessage}; relay=${relayMessage}`);
+        }
       }
     }
   }
+}
+
+async function welfareReaderRelayFetchHtml(officialUrl: string): Promise<string> {
+  // Explicitly a last-resort compatibility transport. It reads only public
+  // official URLs; public cards and evidence retain the original official URL.
+  const relayBase = process.env.CHANCEPING_WELFARE_RELAY_BASE_URL ?? "https://r.jina.ai/http://";
+  if (!/^https:\/\/r\.jina\.ai\/http:\/\/$/.test(relayBase)) throw new Error("WELFARE_RELAY_BASE_URL_NOT_ALLOWED");
+  const response = await fetch(`${relayBase}${officialUrl}`, {
+    signal: AbortSignal.timeout(30_000),
+    headers: { accept: "text/markdown,text/plain;q=0.9", "user-agent": "ChancePing-WelfareRadar/0.1" },
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const content = await response.text();
+  if (!content.trim()) throw new Error("empty relay response");
+  return content;
 }
 
 async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
