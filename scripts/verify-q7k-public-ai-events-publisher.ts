@@ -377,7 +377,7 @@ async function runProductApiPathCheck(): Promise<void> {
 
   const app = createApp(ctx);
   const response = await app.request("/api/public/ai-events?status=current&page=1&page_size=12");
-  const json = await response.json() as { success?: boolean; data?: { items?: Array<Record<string, unknown>>; stats?: Record<string, unknown> } };
+  const json = await response.json() as { success?: boolean; data?: { items?: Array<Record<string, unknown>>; stats?: Record<string, unknown>; operations?: { sourceHealth?: Record<string, unknown>; updateCadenceDays?: number } } };
   const apiSerialized = JSON.stringify(json);
   const firstApiItem = json.data?.items?.[0] ?? {};
 
@@ -389,6 +389,13 @@ async function runProductApiPathCheck(): Promise<void> {
   check("product API path returns category facets", Array.isArray(json.data?.stats?.categoryFacets) && json.data.stats.categoryFacets.length > 0, JSON.stringify(json.data?.stats));
   check("product API path returns rich AI event fields", typeof firstApiItem.eventModeLabel === "string" && typeof firstApiItem.participantTypeLabel === "string" && typeof firstApiItem.rewardTypeLabel === "string" && typeof firstApiItem.organizerTypeLabel === "string", JSON.stringify(firstApiItem).slice(0, 220));
   check("product API path returns image metadata fields", typeof firstApiItem.imageSourceUrl === "string" && typeof firstApiItem.imageStatus === "string", JSON.stringify(firstApiItem).slice(0, 220));
+  check(
+    "product API path exposes safe update operations summary",
+    typeof json.data?.operations?.updateCadenceDays === "number" &&
+      typeof json.data?.operations?.sourceHealth?.available === "boolean" &&
+      !/lastError|path|api.?key|provider/i.test(JSON.stringify(json.data?.operations)),
+    JSON.stringify(json.data?.operations),
+  );
   check("product API path hides radar internals", !/radar-product-path|radarId|radarIds|dedup_key|contentHash/i.test(apiSerialized), apiSerialized.slice(0, 180));
 }
 

@@ -49,6 +49,54 @@ interface SourceHealthSnapshot {
   }>;
 }
 
+export interface PublicAiEventsSourceHealthSummary {
+  available: boolean;
+  updatedAt?: string;
+  runs: number;
+  healthyCount: number;
+  degradedCount: number;
+  failedCount: number;
+}
+
+function resolveSourceHealthPath(targetPath?: string): string {
+  return targetPath
+    ?? process.env.CHANCEPING_AI_EVENTS_SOURCE_HEALTH_PATH
+    ?? path.resolve(process.cwd(), "data", "ai-events-source-health.json");
+}
+
+/**
+ * Returns operational freshness without exposing source errors, local paths, or
+ * provider details through the public API.
+ */
+export function getPublicAiEventsSourceHealthSummary(targetPath?: string): PublicAiEventsSourceHealthSummary {
+  const outputPath = resolveSourceHealthPath(targetPath);
+  try {
+    if (!fs.existsSync(outputPath)) {
+      return { available: false, runs: 0, healthyCount: 0, degradedCount: 0, failedCount: 0 };
+    }
+    const snapshot = JSON.parse(fs.readFileSync(outputPath, "utf-8")) as SourceHealthSnapshot;
+    const sources = Object.values(snapshot.sources ?? {});
+    let healthyCount = 0;
+    let degradedCount = 0;
+    let failedCount = 0;
+    for (const source of sources) {
+      if (source.lastStatus === "collected") healthyCount += 1;
+      else if (source.lastStatus === "failed") failedCount += 1;
+      else degradedCount += 1;
+    }
+    return {
+      available: true,
+      ...(snapshot.updatedAt ? { updatedAt: snapshot.updatedAt } : {}),
+      runs: Number.isFinite(snapshot.runs) ? snapshot.runs : 0,
+      healthyCount,
+      degradedCount,
+      failedCount,
+    };
+  } catch {
+    return { available: false, runs: 0, healthyCount: 0, degradedCount: 0, failedCount: 0 };
+  }
+}
+
 export interface PublicAiEventsUpdatePipelineSummary {
   radarId: string;
   radarName: string;
@@ -126,9 +174,7 @@ function persistSourceHealth(
   targetPath: string | undefined,
 ): void {
   if (!sourceCollection) return;
-  const outputPath = targetPath
-    ?? process.env.CHANCEPING_AI_EVENTS_SOURCE_HEALTH_PATH
-    ?? path.resolve(process.cwd(), "data", "ai-events-source-health.json");
+  const outputPath = resolveSourceHealthPath(targetPath);
   let previous: SourceHealthSnapshot = { updatedAt: "", runs: 0, sources: {} };
   try {
     if (fs.existsSync(outputPath)) {

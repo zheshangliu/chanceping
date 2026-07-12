@@ -7,7 +7,10 @@ import {
   PUBLIC_AI_EVENTS_RADAR_ID,
   syncPublicAiEventsToStore,
 } from "../../public/ai-events-store-sync";
-import { runPublicAiEventsUpdatePipeline } from "../../public/ai-events-update-pipeline";
+import {
+  getPublicAiEventsSourceHealthSummary,
+  runPublicAiEventsUpdatePipeline,
+} from "../../public/ai-events-update-pipeline";
 import { getPublicAiEventSampleRoomData } from "../../demo/ai-events-sample-room";
 import type { OpportunityStore, StoreEntry } from "../../agents/opportunity-store";
 
@@ -64,7 +67,15 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
 
     return c.json({
       success: true,
-      data,
+      data: {
+        ...data,
+        operations: {
+          lastCollectedAt: data.stats.lastCollectedAt,
+          nextScheduledCollectionAt: data.stats.nextScheduledCollectionAt,
+          updateCadenceDays: data.stats.updateCadenceDays,
+          sourceHealth: getPublicAiEventsSourceHealthSummary(),
+        },
+      },
       error: null,
       duration_ms: Date.now() - start,
     } satisfies ApiResponse);
