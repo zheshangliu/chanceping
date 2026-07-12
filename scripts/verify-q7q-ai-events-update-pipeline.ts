@@ -90,6 +90,10 @@ async function main(): Promise<void> {
       <a href="https://www.kaggle.com/competitions/ai-model-benchmark">AI Model Benchmark Competition</a>
       <a href="https://www.kaggle.com/competitions">All competitions</a>
     `,
+    "https://taikai.network/": `
+      <a href="/en/builders/hackathons/ai-builders-2026/overview">AI Builders Hackathon 2026</a>
+      <a href="/en/hackathons">All TAIKAI hackathons</a>
+    `,
   };
   const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,
@@ -110,15 +114,15 @@ async function main(): Promise<void> {
     "MLH, HackerEarth and Devfolio should be active after source-by-source validation",
   );
   check(
-    "unvalidated TAIKAI stays outside the default scheduler set",
-    /SECOND_BATCH_SOURCE_IDS = \["taikai"\]/.test(sourceCollectorSource),
-    "TAIKAI must remain an explicit probe until a concrete URL is found",
+    "TAIKAI joins the default scheduler after concrete current-path validation",
+    sourceCollectorSource.includes('"taikai"') && /taikai\.network[\s\S]*hackathons/.test(sourceCollectorSource),
+    "TAIKAI must accept concrete /en/{organization}/hackathons/{event}/overview URLs",
   );
-  check("source collection discovers concrete event pages from first-batch indexes", collectedRun.sourceCollection?.discoveredCardCount === 4, JSON.stringify(collectedRun.sourceCollection));
+  check("source collection discovers concrete event pages from first-batch indexes", collectedRun.sourceCollection?.discoveredCardCount === 5, JSON.stringify(collectedRun.sourceCollection));
   check(
     "source collection records every enabled source health result",
     (collectedRun.sourceCollection?.sources.length ?? 0) >= 7 &&
-      ["devpost", "dorahacks", "lablab", "kaggle"].every((id) =>
+      ["devpost", "dorahacks", "lablab", "kaggle", "taikai"].every((id) =>
         collectedRun.sourceCollection?.sources.some((source) => source.sourceId === id && source.status === "collected"),
       ),
     JSON.stringify(collectedRun.sourceCollection),
@@ -174,7 +178,7 @@ async function main(): Promise<void> {
       url: {
         mlh: "https://mlh.io/events/ai-builders-2026",
         hackerearth: "https://www.hackerearth.com/challenges/hackathon/ai-builders-2026/",
-        taikai: "https://taikai.network/hackathons/ai-builders-2026",
+        taikai: "https://taikai.network/en/builders/hackathons/ai-builders-2026/overview",
         devfolio: "https://devfolio.co/hackathons/ai-builders-2026",
       }[source.id] ?? "https://invalid.example.com",
       snippet: "AI hackathon registration and submission details.",

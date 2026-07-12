@@ -727,7 +727,7 @@ export const AI_EVENT_SOURCE_NETWORK: PublicAiEventSource[] = [
     id: "taikai",
     name: "TAIKAI Hackathons",
     domain: "taikai.network",
-    url: "https://taikai.network/hackathons",
+    url: "https://taikai.network/",
     sourceType: "hackathon_platform",
     trustTier: "platform_index",
     role: "欧洲和全球线上 Hackathon 平台，用于补充 AI builder、创业项目和开源挑战。",

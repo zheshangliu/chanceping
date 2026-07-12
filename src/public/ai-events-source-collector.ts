@@ -17,9 +17,9 @@ const ACTIVE_SOURCE_IDS = [
   "mlh",
   "hackerearth",
   "devfolio",
+  "taikai",
 ] as const;
-// TAIKAI is retained for explicit health probes until it yields concrete event URLs.
-const SECOND_BATCH_SOURCE_IDS = ["taikai"] as const;
+const SECOND_BATCH_SOURCE_IDS: readonly string[] = [];
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
 
 export type PublicAiEventSourceCollectionStatus = "collected" | "empty" | "failed" | "not_enabled";
@@ -97,7 +97,13 @@ function isConcreteEventUrl(sourceId: string, url: URL): boolean {
   if (sourceId === "kaggle") return /kaggle\.com$/i.test(url.hostname) && /^\/competitions\/[a-z0-9][a-z0-9_-]+/i.test(path);
   if (sourceId === "mlh") return /mlh\.io$/i.test(url.hostname) && /^\/events\/[a-z0-9][a-z0-9_-]+/i.test(path);
   if (sourceId === "hackerearth") return /hackerearth\.com$/i.test(url.hostname) && /^\/challenges\/hackathon\/[a-z0-9][a-z0-9_-]+/i.test(path);
-  if (sourceId === "taikai") return /taikai\.network$/i.test(url.hostname) && /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path);
+  if (sourceId === "taikai") {
+    // Current TAIKAI cards use /en/{organization}/hackathons/{event}/overview.
+    // Keep the legacy direct pattern too, but never admit platform or organisation index pages.
+    return /taikai\.network$/i.test(url.hostname)
+      && (/^\/(?:[a-z]{2}\/)?[a-z0-9-]+\/hackathons\/[a-z0-9][a-z0-9_-]+(?:\/overview)?$/i.test(path)
+        || /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path));
+  }
   if (sourceId === "devfolio") return /devfolio\.co$/i.test(url.hostname) && /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path);
   return false;
 }
@@ -140,6 +146,7 @@ async function defaultFetchHtml(url: string, timeoutMs: number): Promise<string>
 
 function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
   if (source.id === "lablab") return "site:lablab.ai/event (AI OR agent OR LLM) hackathon registration";
+  if (source.id === "taikai") return "site:taikai.network/en/*/hackathons/* AI hackathon registration";
   const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
   return `site:${source.domain} ${focus}`;
 }
