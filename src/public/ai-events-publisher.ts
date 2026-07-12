@@ -260,7 +260,9 @@ export function normalizePublicReward(value: string | undefined | null, fallback
   const negatedReward = /没有(?:直接)?给出明确|未(?:直接)?给出明确|没有(?:直接)?列出明确|未(?:直接)?列出明确|没有公布|未公布|未披露|not\s+disclosed|not\s+announced/i;
   const platformIntro = /平台|社区|汇聚|举办|培养|开发者|赛事生态|competition\s+platform|developer\s+community/i;
   const summarizeReward = (text: string): string => {
-    const moneyPhrase = text.match(/(?:\$|￥)?\s*(?:\d+(?:\.\d+)?\s*(?:万|万元|元|k|K|m|M|million|billion)?|百万|千万)\s*(?:奖金池|奖池|奖金|cash\s*prize|prize\s*pool|USD|RMB|USDT)?/i)?.[0]?.trim();
+    // Keep a concrete amount such as "$25,000 prize pool". Collapsing it to
+    // the generic word "奖金" makes a public event card materially less useful.
+    const moneyPhrase = text.match(/(?:(?:US\$|USD|RMB|USDT|\$|￥)\s*)?\d{1,3}(?:,\d{3})+(?:\.\d+)?\s*(?:k|K|m|M|million|billion|万|万元|元)?\s*(?:奖金池|奖池|奖金|cash\s*prize|prize\s*pool|USD|RMB|USDT)?|(?:\$|￥)\s*\d+(?:\.\d+)?\s*(?:k|K|m|M|million|billion|万|万元|元)?\s*(?:奖金池|奖池|奖金|cash\s*prize|prize\s*pool)?|(?:\d+(?:\.\d+)?\s*(?:万|万元|元|k|K|m|M|million|billion)|百万|千万)\s*(?:奖金池|奖池|奖金|cash\s*prize|prize\s*pool)?/i)?.[0]?.trim();
     const moneyLabel = moneyPhrase
       ? (/奖|prize|cash/i.test(moneyPhrase) ? moneyPhrase.replace(/\s+/g, " ") : "奖金")
       : "";

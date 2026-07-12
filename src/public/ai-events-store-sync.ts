@@ -45,6 +45,7 @@ export interface HydratePublicAiEventImagesResult {
   radarId: string;
   checkedCount: number;
   hydratedCount: number;
+  metadataEnrichedCount: number;
   sourceLogoCount: number;
   failedCount: number;
   failedDomains: Array<{ domain: string; count: number }>;
@@ -135,6 +136,21 @@ function normalizeText(value: string | undefined, fallback: string): string {
 function hasSourceImage(card: OpportunityCard): boolean {
   const extra = card as OpportunityCard & Record<string, unknown>;
   return extra.imageStatus === "source_image" && typeof extra.coverImageUrl === "string" && extra.coverImageUrl.length > 0;
+}
+
+function isKnownPublicField(value: unknown): boolean {
+  const normalized = typeof value === "string" ? value.trim() : "";
+  return normalized.length > 0 && !/^(见官网|未知|未明确|暂无|待确认|以官方页面为准)$/i.test(normalized);
+}
+
+function needsMetadataEnrichment(card: OpportunityCard): boolean {
+  const extra = card as OpportunityCard & Record<string, unknown>;
+  return !hasSourceImage(card)
+    || !/^\d{4}-\d{2}-\d{2}/.test(card.deadline ?? "")
+    || !isKnownPublicField(extra.prize ?? card.reward_or_value)
+    || !isKnownPublicField(card.region)
+    || !isKnownPublicField(card.organizer)
+    || !/^https?:\/\//i.test(String(extra.registrationUrl ?? card.application_url ?? ""));
 }
 
 async function defaultFetchHtml(url: string, timeoutMs = DEFAULT_IMAGE_HYDRATION_TIMEOUT_MS): Promise<string> {
@@ -320,11 +336,22 @@ export async function hydratePublicAiEventImages(
     sort_order: "asc",
   }).entries;
   const candidates = entries
-    .filter((entry) => !hasSourceImage(entry.card))
+    // A real cover alone is not enough. Revisit concrete pages that still lack
+    // deadline, prize, region, organiser, or a direct registration link.
+    .filter((entry) => needsMetadataEnrichment(entry.card))
     .filter((entry) => /^https?:\/\//i.test(entry.card.official_source_url))
+    .sort((a, b) => {
+      const aHasImage = hasSourceImage(a.card) ? 1 : 0;
+      const bHasImage = hasSourceImage(b.card) ? 1 : 0;
+      if (aHasImage !== bHasImage) return aHasImage - bHasImage;
+      const aDeadline = /^\d{4}-\d{2}-\d{2}/.test(a.card.deadline ?? "") ? 1 : 0;
+      const bDeadline = /^\d{4}-\d{2}-\d{2}/.test(b.card.deadline ?? "") ? 1 : 0;
+      return aDeadline - bDeadline;
+    })
     .slice(0, limit);
   let checkedCount = 0;
   let hydratedCount = 0;
+  let metadataEnrichedCount = 0;
   let sourceLogoCount = 0;
   let failedCount = 0;
   const failedUrls: HydratePublicAiEventImagesResult["failedUrls"] = [];
@@ -337,37 +364,46 @@ export async function hydratePublicAiEventImages(
         const html = await fetchHtml(entry.card.official_source_url);
         const metadata = extractAiEventPageMetadata(html, entry.card.official_source_url);
         const imageUrl = metadata.coverImageUrl ?? metadata.brandLogoUrl;
-        if (!imageUrl) continue;
         const isSourceLogo = !metadata.coverImageUrl && Boolean(metadata.brandLogoUrl);
         const updatedCard: OpportunityCard & Record<string, unknown> = { ...entry.card };
-        updatedCard.coverImageUrl = imageUrl;
-        updatedCard.imageSourceUrl = metadata.imageSourceUrl ?? imageUrl;
-        updatedCard.imageAlt = isSourceLogo
-          ? metadata.brandLogoAlt ?? `${entry.card.title} 来源品牌标识`
-          : metadata.imageAlt ?? `${entry.card.title} 赛事封面`;
-        updatedCard.imageStatus = isSourceLogo ? "source_logo" : "source_image";
-        updatedCard.imageAttribution = isSourceLogo ? "source_logo" : "source_page";
+        let enriched = false;
+        if (imageUrl) {
+          enriched = enriched || imageUrl !== String(updatedCard.coverImageUrl ?? "");
+          updatedCard.coverImageUrl = imageUrl;
+          updatedCard.imageSourceUrl = metadata.imageSourceUrl ?? imageUrl;
+          updatedCard.imageAlt = isSourceLogo
+            ? metadata.brandLogoAlt ?? `${entry.card.title} 来源品牌标识`
+            : metadata.imageAlt ?? `${entry.card.title} 赛事封面`;
+          updatedCard.imageStatus = isSourceLogo ? "source_logo" : "source_image";
+          updatedCard.imageAttribution = isSourceLogo ? "source_logo" : "source_page";
+        }
         if (metadata.registrationUrl) {
+          enriched = enriched || metadata.registrationUrl !== entry.card.application_url;
           updatedCard.application_url = metadata.registrationUrl;
           updatedCard.registrationUrl = metadata.registrationUrl;
         }
         if (metadata.deadline) {
+          enriched = enriched || metadata.deadline !== entry.card.deadline;
           updatedCard.deadline = metadata.deadline;
           updatedCard.deadlineDisplay = metadata.deadline;
         }
         if (metadata.reward) {
           const normalizedReward = normalizePublicReward(metadata.reward, "见官网");
+          enriched = enriched || normalizedReward !== entry.card.reward_or_value;
           updatedCard.reward_or_value = normalizedReward;
           updatedCard.prize = normalizedReward;
         }
         if (metadata.organizer) {
+          enriched = enriched || metadata.organizer !== entry.card.organizer;
           updatedCard.organizer = metadata.organizer;
         }
         if (metadata.region) {
+          enriched = enriched || metadata.region !== entry.card.region;
           updatedCard.region = metadata.region;
         }
         store.update(entry.dedup_key, updatedCard);
-        hydratedCount += 1;
+        if (imageUrl) hydratedCount += 1;
+        if (enriched) metadataEnrichedCount += 1;
         if (isSourceLogo) sourceLogoCount += 1;
       } catch (error) {
         failedCount += 1;
@@ -387,6 +423,7 @@ export async function hydratePublicAiEventImages(
     radarId: PUBLIC_AI_EVENTS_RADAR_ID,
     checkedCount,
     hydratedCount,
+    metadataEnrichedCount,
     sourceLogoCount,
     failedCount,
     failedDomains: summarizeFailedDomains(failedUrls),

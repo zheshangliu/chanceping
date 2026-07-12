@@ -3,7 +3,11 @@ import path from "path";
 import packageJson from "../package.json";
 import { LocalFileStore } from "../src/agents/opportunity-store";
 import { buildPublicAiEventFeed } from "../src/public/ai-events-publisher";
-import { PUBLIC_AI_EVENTS_RADAR_ID } from "../src/public/ai-events-store-sync";
+import {
+  hydratePublicAiEventImages,
+  PUBLIC_AI_EVENTS_RADAR_ID,
+  publicAiEventCardToOpportunityCard,
+} from "../src/public/ai-events-store-sync";
 import { runPublicAiEventsUpdatePipeline } from "../src/public/ai-events-update-pipeline";
 
 let passCount = 0;
@@ -231,8 +235,52 @@ async function main(): Promise<void> {
   check("pipeline can hydrate source images in same backend pass", (hydratedRun.imageHydration?.hydratedCount ?? 0) === 2, JSON.stringify(hydratedRun.imageHydration));
   check("hydrated pipeline updates image coverage summary", hydratedRun.images.sourceImageCount >= 2, JSON.stringify(hydratedRun.images));
 
+  const metadataStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-metadata.json");
+  removeIfExists(metadataStorePath);
+  const metadataStore = new LocalFileStore({ file_path: metadataStorePath, auto_flush: false });
+  const sourceImageCard = publicAiEventCardToOpportunityCard({
+    ...baselineFeed.items[0],
+    title: "Existing Cover, Missing Fields AI Hackathon",
+    officialUrl: "https://metadata.example.com/hackathon",
+    registrationUrl: "https://metadata.example.com/hackathon",
+    deadline: "见官网",
+    deadlineDisplay: "见官网",
+    prize: "见官网",
+    reward: "见官网",
+    region: "见官网",
+    coverImageUrl: "https://metadata.example.com/already-hydrated-cover.jpg",
+    imageStatus: "source_image",
+  });
+  metadataStore.addBatch([sourceImageCard], "ai_competition", PUBLIC_AI_EVENTS_RADAR_ID);
+  const metadataResult = await hydratePublicAiEventImages(metadataStore, {
+    limit: 1,
+    fetchHtml: async () => `
+      <html><head>
+        <meta property="og:title" content="Existing Cover, Missing Fields AI Hackathon">
+      </head><body>
+        <a href="/register">Register now</a>
+        <p>Submission deadline: 2026-09-30</p>
+        <p>$25,000 prize pool</p>
+      </body></html>`,
+  });
+  const metadataEntry = metadataStore.list({ radarId: PUBLIC_AI_EVENTS_RADAR_ID, page: 1, page_size: 5 }).entries[0];
+  check(
+    "metadata hydrator revisits an event with an existing source cover",
+    metadataResult.checkedCount === 1 && metadataResult.metadataEnrichedCount === 1,
+    JSON.stringify(metadataResult),
+  );
+  check(
+    "metadata hydrator fills deadline reward and registration without replacing a valid cover",
+    metadataEntry?.card.deadline === "2026-09-30"
+      && metadataEntry?.card.reward_or_value.includes("$25,000")
+      && metadataEntry?.card.application_url === "https://metadata.example.com/register"
+      && (metadataEntry.card as unknown as Record<string, unknown>).coverImageUrl === "https://metadata.example.com/already-hydrated-cover.jpg",
+    JSON.stringify(metadataEntry?.card),
+  );
+
   const logoFallbackStorePath = path.join(tmpDir, "q7q-ai-events-update-pipeline-logo-fallback.json");
   removeIfExists(logoFallbackStorePath);
+  removeIfExists(metadataStorePath);
   const logoFallbackStore = new LocalFileStore({ file_path: logoFallbackStorePath, auto_flush: false });
   const logoFallbackRun = await runPublicAiEventsUpdatePipeline(logoFallbackStore, undefined, {
     now: referenceNow,
