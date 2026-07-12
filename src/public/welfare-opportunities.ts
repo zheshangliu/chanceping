@@ -283,7 +283,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
   }
   // Reader-compatible Markdown fallback, used only when the SWAS TLS stack
   // cannot retrieve the same official public page directly.
-  const markdownLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const markdownLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)(?:\s+"[^"]*")?\)/g;
   let markdownMatch: RegExpExecArray | null;
   while ((markdownMatch = markdownLink.exec(html)) !== null) {
     const title = cleanText(markdownMatch[1]);
