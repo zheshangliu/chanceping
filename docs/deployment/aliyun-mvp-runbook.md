@@ -381,6 +381,7 @@ systemctl restart chanceping
 - 同步机会卡到本地机会库；
 - 尝试补齐赛事封面图；
 - 没有真实赛事图时回退到来源站点 logo / 平台占位图；
+- 刷新成功后自动重启 `chanceping.service`，让公开页立即读取最新赛事库；
 - 不打印 Qwen / Serper API Key。
 
 仓库提供两个 systemd 模板：

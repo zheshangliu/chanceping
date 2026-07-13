@@ -41,6 +41,7 @@ check(
   /ExecStart=\/usr\/bin\/npm run ai-events:update -- --collect-sources --discover-with-search --source-max-links=12 --hydrate-images --image-limit=60/.test(service),
   service,
 );
+check("service reloads the public API after a successful refresh", /ExecStartPost=\/bin\/systemctl restart chanceping\.service/.test(service), service);
 check("service has bounded timeout", /TimeoutStartSec=30min/.test(service));
 check("service does not contain secret values", !/sk-[A-Za-z0-9_-]+|API_KEY=\S{8,}/.test(service), service);
 

@@ -8,6 +8,9 @@ Type=oneshot
 WorkingDirectory=/opt/chanceping/current
 EnvironmentFile=/etc/chanceping/chanceping.env
 ExecStart=/usr/bin/npm run ai-events:update -- --collect-sources --discover-with-search --source-max-links=12 --hydrate-images --image-limit=60
+# The updater writes data in a separate process. Reload the long-lived API only
+# after a successful refresh so the public event feed reads the new store.
+ExecStartPost=/bin/systemctl restart chanceping.service
 TimeoutStartSec=30min
 User=root
 Group=root
