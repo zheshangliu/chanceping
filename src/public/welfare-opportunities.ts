@@ -12,13 +12,16 @@ export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
-  code: "OFF-SZ-003" | "OFF-SZ-004" | "OFF-SZ-005";
+  code: string;
   name: string;
   url: string;
   allowedHost: string;
   region: string;
   maxDetails: number;
   enabled: boolean;
+  rollout?: "public" | "shadow";
+  opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
+  shadowAccess?: "direct" | "restricted";
 }
 
 export const WELFARE_SOURCES: WelfareSourceConfig[] = [
@@ -27,8 +30,27 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-SZ-003", name: "福田区总工会通知公告", url: "https://www.szft.gov.cn/bmxx_qt/qzgh/tzgg/", allowedHost: "www.szft.gov.cn", region: "深圳福田", maxDetails: 12, enabled: true },
 ];
 
+// Candidates are collected and evidenced in an isolated shadow store first.
+// They must pass the three-day run gate before they can move into WELFARE_SOURCES.
+export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
+  { code: "OFF-N-001", name: "中国政府采购网｜采购公告", url: "https://www.ccgp.gov.cn/cggg/", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  // This public search page uses an access challenge. It is intentionally
+  // monitored as a restricted POC and is never automated around the challenge.
+  { code: "OFF-N-002", name: "中国政府采购网｜政府采购意向", url: "https://cgyx.ccgp.gov.cn/cgyx/pub/pubSearch", allowedHost: "cgyx.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
+  { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GD-002", name: "广东省招标投标监管网", url: "https://zbtb.gd.gov.cn/", allowedHost: "zbtb.gd.gov.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-SZ-002", name: "深圳公共资源交易中心", url: "https://www.szggzy.com/", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GD-004", name: "广东省总工会", url: "https://www.gdftu.org.cn/", allowedHost: "www.gdftu.org.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
+  { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
+  { code: "ORG-001", name: "中山大学政府采购与招投标管理中心", url: "https://bidding.sysu.edu.cn/", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "ORG-002", name: "华南理工大学招标中心", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "WEL-001", name: "关爱通供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership" },
+];
+
 function sourceByCode(code: string): WelfareSourceConfig {
-  const source = WELFARE_SOURCES.find((item) => item.code === code);
+  const source = [...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].find((item) => item.code === code);
   if (!source) throw new Error(`Unknown welfare source: ${code}`);
   return source;
 }
@@ -459,9 +481,60 @@ export async function collectAllWelfareSources(options: { fetchHtml?: (url: stri
   return { ranAt: summary.ranAt, sources: results, totalCount: merged.length, summary };
 }
 
+export interface WelfareShadowSourceResult {
+  sourceCode: string;
+  sourceName: string;
+  retrievedAt: string;
+  status: "succeeded" | "failed" | "empty" | "restricted";
+  bytes: number;
+  rawSha256?: string;
+  error?: string;
+}
+
+export interface WelfareShadowRunSummary {
+  ranAt: string;
+  sources: WelfareShadowSourceResult[];
+}
+
+function isAccessChallenge(html: string): boolean {
+  return /(?:验证码|安全验证|访问验证|captcha|recaptcha|verify\s+(?:you|yourself)|security\s+check)/i.test(html);
+}
+
+// Shadow runs intentionally fetch only the public index page. They establish
+// deployment-network access and retain raw evidence before an adapter is
+// allowed to create any public opportunity card.
+export async function collectWelfareShadowSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; evidenceDir?: string; summaryPath?: string; historyPath?: string } = {}): Promise<WelfareShadowRunSummary> {
+  const fetchHtml = options.fetchHtml ?? defaultWelfareFetchHtml;
+  const retrievedAt = (options.now ?? new Date()).toISOString();
+  const evidenceRoot = path.resolve(process.cwd(), options.evidenceDir ?? "data/welfare-shadow-evidence");
+  const results: WelfareShadowSourceResult[] = [];
+  for (const source of WELFARE_SHADOW_SOURCES.filter((item) => item.enabled)) {
+    try {
+      const html = await fetchHtml(source.url);
+      const bytes = Buffer.byteLength(html);
+      const rawSha256 = crypto.createHash("sha256").update(html).digest("hex");
+      const directory = path.join(evidenceRoot, source.code);
+      fs.mkdirSync(directory, { recursive: true });
+      fs.writeFileSync(path.join(directory, `index-${rawSha256.slice(0, 16)}.html`), html);
+      const restricted = source.shadowAccess === "restricted" || isAccessChallenge(html);
+      results.push({ sourceCode: source.code, sourceName: source.name, retrievedAt, status: restricted ? "restricted" : bytes > 0 ? "succeeded" : "empty", bytes, rawSha256, error: restricted ? "ACCESS_RESTRICTED_NO_BYPASS" : undefined });
+    } catch (error) {
+      results.push({ sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", bytes: 0, error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  const summary = { ranAt: retrievedAt, sources: results };
+  const summaryPath = path.resolve(process.cwd(), options.summaryPath ?? "data/welfare-shadow-run-summary.json");
+  fs.mkdirSync(path.dirname(summaryPath), { recursive: true });
+  fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2));
+  const historyPath = path.resolve(process.cwd(), options.historyPath ?? "data/welfare-shadow-run-history.jsonl");
+  fs.mkdirSync(path.dirname(historyPath), { recursive: true });
+  fs.appendFileSync(historyPath, `${JSON.stringify(summary)}\n`);
+  return summary;
+}
+
 async function defaultWelfareFetchHtml(url: string): Promise<string> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || !WELFARE_SOURCES.some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
@@ -511,7 +584,7 @@ async function welfareReaderRelayFetchHtml(officialUrl: string): Promise<string>
 async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
   if (redirects > 4) throw new Error("too many HTTPS redirects");
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || !WELFARE_SOURCES.some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   // Keep the client invocation identical to the verified default GnuTLS
   // handshake. HTTP requires CRLF, supplied directly without --crlf.
   const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\r\nAccept: text/html,application/xhtml+xml\r\nConnection: close\r\n\r\n`;

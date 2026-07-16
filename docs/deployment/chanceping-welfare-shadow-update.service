@@ -1,0 +1,16 @@
+[Unit]
+Description=ChancePing welfare source shadow monitoring
+Wants=network-online.target
+After=network-online.target chanceping.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/chanceping/current
+EnvironmentFile=/etc/chanceping/chanceping.env
+Environment=TZ=Asia/Shanghai
+ExecStart=/usr/bin/npm run welfare:shadow:update
+TimeoutStartSec=30min
+StandardOutput=journal
+StandardError=journal
+User=root
+Group=root

@@ -1,0 +1,11 @@
+[Unit]
+Description=Monitor ChancePing welfare source candidates at 08:40 and 16:40 China time
+
+[Timer]
+OnCalendar=*-*-* 08:40:00 Asia/Shanghai
+OnCalendar=*-*-* 16:40:00 Asia/Shanghai
+Persistent=true
+Unit=chanceping-welfare-shadow-update.service
+
+[Install]
+WantedBy=timers.target
