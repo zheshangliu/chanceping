@@ -3,8 +3,22 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { createApp } from "../src/api/app";
+import { loadRecordedWelfareOpportunities, savePersistedWelfareOpportunities } from "../src/public/welfare-opportunities";
 
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(os.tmpdir(), `chanceping-welfare-page-${process.pid}.json`);
+
+// The page contract must be independent from the wall clock and from the
+// production store. Seed one official, publicly disclosed fixture whose
+// deadline remains current regardless of when the verification is run.
+const [recorded] = loadRecordedWelfareOpportunities();
+assert.ok(recorded, "recorded welfare fixture must exist");
+savePersistedWelfareOpportunities([{
+  ...recorded,
+  deadline: "2099-12-31T18:00:00+08:00",
+  deadlineDisplay: "2099年12月31日18时00分",
+  lifecycleStatus: "current",
+  retrievedAt: "2099-01-01T00:00:00.000Z",
+}], process.env.CHANCEPING_WELFARE_STORE_PATH);
 
 const html = fs.readFileSync("web/welfare.html", "utf8");
 const css = fs.readFileSync("web/welfare.css", "utf8");
