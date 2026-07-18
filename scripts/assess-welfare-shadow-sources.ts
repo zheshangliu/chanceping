@@ -11,7 +11,11 @@ const results = WELFARE_SHADOW_SOURCES.map((source) => {
   const sourceRuns = runs.flatMap((run) => run.sources.filter((item) => item.sourceCode === source.code));
   const days = new Set(sourceRuns.map((item) => dayKey(item.retrievedAt)));
   const succeeded = sourceRuns.filter((item) => item.status === "succeeded").length;
-  const restricted = sourceRuns.some((item) => item.status === "restricted");
+  // A source pre-classified as restricted stays that way even if its first
+  // network response is a failure rather than a rendered access challenge.
+  // This prevents a captcha-protected POC from being mistaken for an ordinary
+  // source that merely needs more observation.
+  const restricted = source.shadowAccess === "restricted" || sourceRuns.some((item) => item.status === "restricted");
   return { sourceCode: source.code, days: days.size, runs: sourceRuns.length, succeeded, decision: restricted ? "RETAIN_RESTRICTED_POC" : days.size >= 3 && succeeded >= 6 ? "ELIGIBLE_FOR_ADAPTER_REVIEW" : "CONTINUE_SHADOW" };
 });
 console.log(JSON.stringify({ evaluatedAt: new Date().toISOString(), results }, null, 2));
