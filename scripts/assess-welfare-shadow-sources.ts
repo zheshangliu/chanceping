@@ -16,6 +16,9 @@ const results = WELFARE_SHADOW_SOURCES.map((source) => {
   // This prevents a captcha-protected POC from being mistaken for an ordinary
   // source that merely needs more observation.
   const restricted = source.shadowAccess === "restricted" || sourceRuns.some((item) => item.status === "restricted");
-  return { sourceCode: source.code, days: days.size, runs: sourceRuns.length, succeeded, decision: restricted ? "RETAIN_RESTRICTED_POC" : days.size >= 3 && succeeded >= 6 ? "ELIGIBLE_FOR_ADAPTER_REVIEW" : "CONTINUE_SHADOW" };
+  // A first manual run may begin after the morning timer. Five successful
+  // reads still cover the three-day observation window without reducing the
+  // requirement for three distinct China-time calendar days.
+  return { sourceCode: source.code, days: days.size, runs: sourceRuns.length, succeeded, decision: restricted ? "RETAIN_RESTRICTED_POC" : days.size >= 3 && succeeded >= 5 ? "ELIGIBLE_FOR_ADAPTER_REVIEW" : "CONTINUE_SHADOW" };
 });
 console.log(JSON.stringify({ evaluatedAt: new Date().toISOString(), results }, null, 2));

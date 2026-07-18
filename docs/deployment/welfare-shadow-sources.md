@@ -29,7 +29,7 @@ node --run welfare:shadow:update
 node --run assess:welfare:shadow
 ```
 
-判定：连续 3 个自然日、至少 6 次成功读取的直接来源显示 `ELIGIBLE_FOR_ADAPTER_REVIEW`；受限来源显示 `RETAIN_RESTRICTED_POC`；其余显示 `CONTINUE_SHADOW`。即使候选合格，也必须先补对应解析器、字段证据测试和 3 天结果复核，才可以加入公开卡片。
+判定：连续 3 个自然日、至少 5 次成功读取的直接来源显示 `ELIGIBLE_FOR_ADAPTER_REVIEW`；该阈值允许第 1 天在上午定时任务之后才启动。受限来源显示 `RETAIN_RESTRICTED_POC`；其余显示 `CONTINUE_SHADOW`。即使候选合格，也必须先补对应解析器、字段证据测试和 3 天结果复核，才可以加入公开卡片。
 
 ## 停用与回滚
 
