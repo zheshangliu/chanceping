@@ -405,10 +405,12 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
   if (!title || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title)) return null;
   const text = cleanText(input.html);
-  const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址)[：:]|[。；]|$)/);
+  // Government portals often omit punctuation between labeled fields. Stop
+  // at the next known label so a buyer never becomes the whole announcement.
+  const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址|公告时间|发布时间|发布日期|项目概况|采购内容|响应文件|采购文件|项目编号|采购方式|地点)[：:]?|[。；]|$)/);
   const contactNameExcerpt = excerpt(text, /(?:项目联系人|联系人(?:及电话)?)[：:]?\s*[^。；\s]+/);
   const contactPhoneExcerpt = excerpt(text, /(?:联系电话|项目联系电话|项目联系人电话|联系人及电话|采购单位联系方式)[：:]?\s*(?:[^。；\s：:]+[、，,]?){0,3}[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
-  const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式)[：:]|[。；]|$)/);
+  const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式|代理机构|项目概况|项目名称|采购内容|公告时间|发布时间)[：:]?|[。；]|$)/);
   const deadlineExcerpt = excerpt(text, /(?:(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}|(?:投标|报名|响应|递交|提交)[^。；]{0,32}截止时间\s*\d{4}-\d{1,2}-\d{1,2})/);
   const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价|预估(?:年度)?采购总金额)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
   const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?|(\d{4})-(\d{1,2})-(\d{1,2})/);
@@ -615,7 +617,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
         const nestedPath = html.match(/(?:firstLastUrl\s*=|showDetail\([^,]+,[^,]+,\s*)\s*['\"]([^'\"]+\/information\/deal\/html\/b\/[^'\"]+)['\"]/i)?.[1];
         if (nestedPath) {
           fs.writeFileSync(path.join(evidenceDir, `${crypto.createHash("sha256").update(html).digest("hex")}.html`), html);
-          effectiveUrl = normalizeUrl(nestedPath, source.url);
+          effectiveUrl = normalizeUrl(nestedPath, source.url) ?? effectiveUrl;
           html = await fetchHtml(effectiveUrl);
         }
       }
