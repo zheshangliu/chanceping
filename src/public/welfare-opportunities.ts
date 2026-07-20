@@ -19,6 +19,8 @@ export interface WelfareSourceConfig {
   region: string;
   maxDetails: number;
   enabled: boolean;
+  /** One official column can expose several public list pages. */
+  indexUrls?: string[];
   rollout?: "public" | "shadow";
   opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
   shadowAccess?: "direct" | "restricted";
@@ -28,16 +30,16 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-SZ-004", name: "光明区政府/群团工作部公告", url: "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/", allowedHost: "www.szgm.gov.cn", region: "深圳光明", maxDetails: 12, enabled: true },
   { code: "OFF-SZ-005", name: "龙华区群团工作部/总工会通知公告", url: "https://www.szlhq.gov.cn/bmxxgk/qtgzb/dtxx_124446/tzgg_125586/", allowedHost: "www.szlhq.gov.cn", region: "深圳龙华", maxDetails: 12, enabled: true },
   { code: "OFF-SZ-003", name: "福田区总工会通知公告", url: "https://www.szft.gov.cn/bmxx_qt/qzgh/tzgg/", allowedHost: "www.szft.gov.cn", region: "深圳福田", maxDetails: 12, enabled: true },
+  { code: "OFF-N-001", name: "中国政府采购网｜采购公告", url: "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", indexUrls: ["https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/index.htm"] },
+  { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
 ];
 
 // Candidates are collected and evidenced in an isolated shadow store first.
 // They must pass the three-day run gate before they can move into WELFARE_SOURCES.
 export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
-  { code: "OFF-N-001", name: "中国政府采购网｜采购公告", url: "https://www.ccgp.gov.cn/cggg/", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   // This public search page uses an access challenge. It is intentionally
   // monitored as a restricted POC and is never automated around the challenge.
   { code: "OFF-N-002", name: "中国政府采购网｜政府采购意向", url: "https://cgyx.ccgp.gov.cn/cgyx/pub/pubSearch", allowedHost: "cgyx.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
-  { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-GD-002", name: "广东省招标投标监管网", url: "https://zbtb.gd.gov.cn/", allowedHost: "zbtb.gd.gov.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
@@ -281,7 +283,8 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 }
 
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
-  const matches: Array<{ title: string; url: string; publishedAt: string }> = [];
+  const welfareContext = /(慰问|员工福利|职工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
   const patterns = [
     /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi,
     /<li>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>[\s\S]*?<i>(\d{4}-\d{2}-\d{2})<\/i>[\s\S]*?<\/a>[\s\S]*?<\/li>/gi,
@@ -296,12 +299,20 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       const href = isDateFirst ? match[2] : match[1];
       const title = cleanText(isDateFirst ? match[3] : match[2]);
       const url = normalizeUrl(href, source.url);
-      const hasWelfareContext = /(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title);
-    const hasOpportunityAction = /(采购|遴选|供应商|征集|项目)/.test(title);
+      const hasWelfareContext = welfareContext.test(title);
+      const hasOpportunityAction = opportunityAction.test(title);
     if (!url || !hasWelfareContext || !hasOpportunityAction) continue;
     if (/(结果|中标|成交|终止|废标)/.test(title)) continue;
       discovered.set(url, { title, url, publishedAt });
     }
+  }
+  const officialListItem = /<li\b[^>]*>[\s\S]{0,1800}?<a\b[^>]*href=["']([^"']+)["'][^>]*?(?:title=["']([^"']+)["'])?[^>]*>([\s\S]*?)<\/a>[\s\S]{0,900}?(?:发布时间[：:]?\s*<em>)?(\d{4}-\d{2}-\d{2})(?:\s+\d{1,2}:\d{2})?/gi;
+  let itemMatch: RegExpExecArray | null;
+  while ((itemMatch = officialListItem.exec(html)) !== null) {
+    const url = normalizeUrl(itemMatch[1], source.url);
+    const title = cleanText(itemMatch[2] || itemMatch[3]);
+    if (!url || !welfareContext.test(title) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    discovered.set(url, { title, url, publishedAt: itemMatch[4] });
   }
   // Reader-compatible Markdown fallback, used only when the SWAS TLS stack
   // cannot retrieve the same official public page directly.
@@ -311,8 +322,8 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     const title = cleanText(markdownMatch[1]);
     const url = normalizeUrl(markdownMatch[2], source.url);
     const publishedAt = html.slice(Math.max(0, markdownMatch.index - 24), markdownMatch.index).match(/(\d{4}-\d{2}-\d{2})\s*$/)?.[1] ?? "";
-    const hasWelfareContext = /(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title);
-    const hasOpportunityAction = /(采购|遴选|供应商|征集|项目)/.test(title);
+    const hasWelfareContext = welfareContext.test(title);
+    const hasOpportunityAction = opportunityAction.test(title) || source.code === "OFF-N-004";
     if (!url || !hasWelfareContext || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt });
   }
@@ -344,13 +355,13 @@ function publishedContactName(value: string | undefined): string | undefined {
 export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
-  if (!title || !/(慰问|员工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱)/.test(title) || !/(采购|遴选|供应商|征集|项目)/.test(title)) return null;
+  if (!title || !/(慰问|员工福利|职工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|项目)/.test(title)) return null;
   const text = cleanText(input.html);
-  const buyerExcerpt = excerpt(text, /采购人名称[：:]?\s*[^。；]*?(?=\s*(?:联系地址|联系人|联系电话|地址)[：:]|[。；]|$)/);
-  const contactNameExcerpt = excerpt(text, /联系人[：:]?\s*[^。；\s]+/);
-  const contactPhoneExcerpt = excerpt(text, /联系电话[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
-  const contactAddressExcerpt = excerpt(text, /联系地址[：:]?\s*[^。；]+?(?=\s*(?:联系人|联系电话)[：:]|[。；]|$)/);
-  const deadlineExcerpt = excerpt(text, /(?:投标|报名|响应|递交)[^。；]{0,24}(?:截至|截止)[^。；]{0,40}/);
+  const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址)[：:]|[。；]|$)/);
+  const contactNameExcerpt = excerpt(text, /(?:项目联系人|联系人)[：:]?\s*[^。；\s]+/);
+  const contactPhoneExcerpt = excerpt(text, /(?:联系电话|项目联系电话|采购单位联系方式)[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
+  const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式)[：:]|[。；]|$)/);
+  const deadlineExcerpt = excerpt(text, /(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}/);
   const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
   const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?/);
   const publishedAt = input.publishedAtHint || extractMeta(input.html, "PubDate") || "";
@@ -382,7 +393,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     lifecycleStatus: isClosed || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
     currentStage: isClosed ? "CLOSED_PENDING_RESULT" : isCorrection ? "CORRECTED" : "OPEN",
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
-    buyer: buyerExcerpt?.replace(/^采购人名称[：:]?\s*/, "") ?? "待核验",
+    buyer: buyerExcerpt?.replace(/^(?:采购人名称|采购单位|采购人)[：:]?\s*/, "") ?? "待核验",
     contactName: publishedContactName(contactNameExcerpt) ?? "未公开",
     contactPhone: contactPhoneExcerpt?.replace(/^联系电话[：:]?\s*/, "") ?? "未公开",
     contactAddress: contactAddressExcerpt?.replace(/^联系地址[：:]?\s*/, "") ?? "未公开",
@@ -418,23 +429,40 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const now = options.now ?? new Date();
   const retrievedAt = now.toISOString();
   const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? `data/welfare-evidence/${source.code}`);
-  let indexHtml: string;
-  try {
-    indexHtml = await fetchHtml(source.url);
-  } catch (error) {
-    return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: [{ url: source.url, error: error instanceof Error ? error.message : String(error) }] }, records: [] };
-  }
   fs.mkdirSync(evidenceDir, { recursive: true });
-  fs.writeFileSync(path.join(evidenceDir, `index-${crypto.createHash("sha256").update(indexHtml).digest("hex").slice(0, 16)}.html`), indexHtml);
-  const links = extractWelfareIndexLinks(indexHtml, source).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
+  const indexUrls = source.indexUrls?.length ? source.indexUrls : [source.url];
+  const indexErrors: Array<{ url: string; error: string }> = [];
+  const indexLinks = new Map<string, { title: string; url: string; publishedAt: string }>();
+  for (const indexUrl of indexUrls) {
+    try {
+      const indexHtml = await fetchHtml(indexUrl);
+      fs.writeFileSync(path.join(evidenceDir, `index-${crypto.createHash("sha256").update(indexHtml).digest("hex").slice(0, 16)}.html`), indexHtml);
+      for (const link of extractWelfareIndexLinks(indexHtml, { ...source, url: indexUrl })) indexLinks.set(link.url, link);
+    } catch (error) {
+      indexErrors.push({ url: indexUrl, error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  if (indexErrors.length === indexUrls.length) {
+    return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: indexErrors }, records: [] };
+  }
+  const links = Array.from(indexLinks.values()).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
   const records: WelfareOpportunityRecord[] = [];
-  const errors: Array<{ url: string; error: string }> = [];
+  const errors: Array<{ url: string; error: string }> = [...indexErrors];
   for (const link of links) {
     try {
-      const html = await fetchHtml(link.url);
+      let effectiveUrl = link.url;
+      let html = await fetchHtml(effectiveUrl);
+      if (source.code === "OFF-N-004") {
+        const nestedPath = html.match(/(?:firstLastUrl\s*=|showDetail\([^,]+,[^,]+,\s*)\s*['\"]([^'\"]+\/information\/deal\/html\/b\/[^'\"]+)['\"]/i)?.[1];
+        if (nestedPath) {
+          fs.writeFileSync(path.join(evidenceDir, `${crypto.createHash("sha256").update(html).digest("hex")}.html`), html);
+          effectiveUrl = normalizeUrl(nestedPath, source.url);
+          html = await fetchHtml(effectiveUrl);
+        }
+      }
       const sha = crypto.createHash("sha256").update(html).digest("hex");
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
-      const record = parseWelfareDetail({ html, url: link.url, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
+      const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
       if (record) records.push(record);
     } catch (error) {
       errors.push({ url: link.url, error: error instanceof Error ? error.message : String(error) });
