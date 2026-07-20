@@ -55,6 +55,29 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   // The official portal issues a SessionVerify JavaScript redirect. Keep this
   // as a transparent restricted POC; do not automate around that mechanism.
   { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
+  // Batch 2 is intentionally an access-and-evidence POC only. These entries
+  // never flow through the public collector until they clear the three-day
+  // gate and receive a source-specific parser and evidence contract.
+  { code: "OFF-N-003", name: "中国政府采购网｜政府采购合同公告", url: "https://www.ccgp.gov.cn/cggg/zygg/htgg/", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
+  { code: "OFF-N-005", name: "全国公共资源交易平台｜数据服务", url: "https://data.ggzy.gov.cn/", allowedHost: "data.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
+  { code: "OFF-N-006", name: "中国招标投标公共服务平台", url: "https://www.cebpubservice.com/", allowedHost: "www.cebpubservice.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-N-007", name: "中央国家机关政府采购中心", url: "https://www.zycg.gov.cn/", allowedHost: "www.zycg.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-N-008", name: "海关总署采购中心", url: "https://hgcg.customs.gov.cn/", allowedHost: "hgcg.customs.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-N-009", name: "中国人民银行集中采购中心", url: "https://jzcg.pbc.gov.cn/", allowedHost: "jzcg.pbc.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-N-010", name: "国家税务总局集中采购中心", url: "https://swcg.chinatax.gov.cn/", allowedHost: "swcg.chinatax.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-N-011", name: "军队采购网", url: "https://www.plap.mil.cn/", allowedHost: "www.plap.mil.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GD-001", name: "广东政府采购智慧云平台", url: "https://gdgpo.czt.gd.gov.cn/", allowedHost: "gdgpo.czt.gd.gov.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GD-003", name: "广东省公共资源交易平台", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GZ-002", name: "广州市政府采购平台/电子卖场", url: "https://www.gzmall.cn/", allowedHost: "www.gzmall.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-GZ-003", name: "广州交易集团/广州公共资源交易中心", url: "https://www.gzexgrp.com/", allowedHost: "www.gzexgrp.com", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-FS-001", name: "佛山市公共资源交易平台", url: "https://jy.ggzy.foshan.gov.cn/TPBidder", allowedHost: "jy.ggzy.foshan.gov.cn", region: "佛山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-DG-001", name: "东莞公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html#/441900/index", allowedHost: "ygp.gdzwfw.gov.cn", region: "东莞", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-ZH-001", name: "珠海市公共资源交易中心", url: "https://ggzy.zhuhai.gov.cn/", allowedHost: "ggzy.zhuhai.gov.cn", region: "珠海", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-ZS-001", name: "中山市公共资源交易平台", url: "https://www.zsjypt.cn/", allowedHost: "www.zsjypt.cn", region: "中山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "OFF-HZ-001", name: "惠州市公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "惠州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
+  { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
 ];
 
 function sourceByCode(code: string): WelfareSourceConfig {
