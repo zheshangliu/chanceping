@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import {
   buildWelfareFeed,
@@ -66,7 +67,10 @@ const relayMarkdown = `Title: 光明区总工会采购消费帮扶慰问物资�
 const relayParsed = parseWelfareDetail({ html: relayMarkdown, url: "https://www.szgm.gov.cn/example.html", sourceCode: "OFF-SZ-004", retrievedAt: "2026-07-11T00:00:00.000Z" });
 assert.ok(relayParsed && relayParsed.title.includes("消费帮扶"), "Reader Markdown detail must retain the official title");
 async function verifyPublicSources(): Promise<void> {
-const tempDir = fs.mkdtempSync(path.resolve("data/verify-welfare-contracts-"));
+// Release directories are intentionally root-owned on SWAS. Verification must
+// remain runnable by the Workbench admin user, so never create test fixtures
+// below process.cwd().
+const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-welfare-contracts-"));
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(tempDir, "opportunities.json");
 process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH = path.join(tempDir, "summary.json");
 const fixtureIndex: Record<string, string> = {
@@ -80,6 +84,7 @@ const gdftu = WELFARE_SOURCES.find((source) => source.code === "OFF-GD-004")!;
 const guanai = WELFARE_SOURCES.find((source) => source.code === "WEL-001")!;
 const szGgzy = WELFARE_SOURCES.find((source) => source.code === "OFF-SZ-002")!;
 const sysu = WELFARE_SOURCES.find((source) => source.code === "ORG-001")!;
+const scut = WELFARE_SOURCES.find((source) => source.code === "ORG-002")!;
 for (const url of ccgp.indexUrls ?? []) fixtureIndex[url] = `<li><a href="https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/example.html" title="2026年职工疗休养服务采购项目公开招标公告">公告</a> 发布时间：<em>2026-07-10 09:00</em></li>`;
 fixtureIndex[ggzy.url] = `<li><a href="/information/deal/html/a/440000/0201/20260710/wrapper.html">广东省职工餐厅餐饮服务采购项目</a><span>2026-07-10</span></li>`;
 fixtureIndex[gdftu.url] = `<li><span>[2026-07-10]</span><a href="/xwzx/tzgg/content/post_1.html">广东工会大厦关于公开招募粤港澳职工之家项目合作单位的公告</a></li>`;
@@ -94,28 +99,30 @@ fixtureIndex["https://www.szggzy.com/cms/api/v1/trade/content/page"] = JSON.stri
   noticeCloseTime: "2026年7月15日18时",
 }] } });
 fixtureIndex[sysu.url] = `<li class="list-item list-item-line"><p><a href="/node/1">中山大学工会职工体检服务采购项目</a></p></li>`;
+fixtureIndex[scut.url] = `<li><a href="/houqin/2026/0703/c1/page.htm" title="2026年中秋月饼及月饼馅料采购公告">公告</a><span>2026-07-03</span></li>`;
 const fixtureDetail = (title: string) => `<meta name="ArticleTitle" content="${title}"><p>采购单位：测试总工会。采购单位地址：深圳市测试路1号。项目联系人：张三。项目联系电话：0755-12345678。提交投标文件截止时间：2026年7月15日18时。预算金额：10万元。</p>`;
-const detailFor = (url: string) => url.includes("wrapper.html") ? `<title>交易公开页面</title><script>var firstLastUrl = '/information/deal/html/b/440000/0201/20260710/body.html';</script>` : url.includes("gdftu.org.cn") ? `<meta name="ArticleTitle" content="广东工会大厦关于公开招募粤港澳职工之家项目合作单位的公告"><p>联系人：张三。联系电话：020-12345678。联系地址：广州市测试路1号。</p>` : url.includes("bidding.sysu.edu.cn") ? `<title>中山大学工会职工体检服务采购项目</title><div>项目联系人电话 020-84115089 投标响应文件截止时间 2026-07-15</div>` : fixtureDetail(url.includes("ccgp.gov.cn") ? "2026年职工疗休养服务采购项目公开招标公告" : url.includes("ggzy.gov.cn") ? "广东省职工餐厅餐饮服务采购项目" : url.includes("a.html") ? "光明区总工会消费帮扶慰问物资采购公告" : url.includes("b.html") ? "龙华区总工会职工慰问物资采购公告" : "福田区总工会送清凉慰问项目采购公告");
+const detailFor = (url: string) => url.includes("wrapper.html") ? `<title>交易公开页面</title><script>var firstLastUrl = '/information/deal/html/b/440000/0201/20260710/body.html';</script>` : url.includes("gdftu.org.cn") ? `<meta name="ArticleTitle" content="广东工会大厦关于公开招募粤港澳职工之家项目合作单位的公告"><p>联系人：张三。联系电话：020-12345678。联系地址：广州市测试路1号。</p>` : url.includes("bidding.sysu.edu.cn") ? `<title>中山大学工会职工体检服务采购项目</title><div>项目联系人电话 020-84115089 投标响应文件截止时间 2026-07-15</div>` : url.includes("scut.edu.cn/houqin") ? `<title>2026年中秋月饼及月饼馅料采购公告</title><p>预估年度采购总金额：14.78万元。报名、资料递交截止时间：2026年7月8日。联系人及电话：邝老师、郭老师：020-87111386。</p>` : fixtureDetail(url.includes("ccgp.gov.cn") ? "2026年职工疗休养服务采购项目公开招标公告" : url.includes("ggzy.gov.cn") ? "广东省职工餐厅餐饮服务采购项目" : url.includes("a.html") ? "光明区总工会消费帮扶慰问物资采购公告" : url.includes("b.html") ? "龙华区总工会职工慰问物资采购公告" : "福田区总工会送清凉慰问项目采购公告");
 const allRun = await collectAllWelfareSources({ now: new Date("2026-07-11T00:00:00Z"), evidenceDir: tempDir, fetchHtml: async (url) => fixtureIndex[url] ?? detailFor(url) });
-assert.equal(allRun.sources.length, 9);
-assert.equal(allRun.sources.filter((item) => item.status === "succeeded").length, 9);
-assert.equal(allRun.totalCount, 9);
+assert.equal(allRun.sources.length, 10);
+assert.equal(allRun.sources.filter((item) => item.status === "succeeded").length, 10);
+assert.equal(allRun.totalCount, 10);
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-N-001" && item.contactPhone === "0755-12345678"));
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-N-004" && item.contactAddress === "深圳市测试路1号"));
 assert.equal(loadPersistedWelfareOpportunities().find((item) => item.sourceCode === "OFF-GD-004")?.opportunityType, "CHANNEL_PARTNERSHIP");
 assert.equal(loadPersistedWelfareOpportunities().find((item) => item.sourceCode === "WEL-001")?.opportunityType, "SUPPLIER_RECRUITMENT");
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-SZ-002" && item.buyer === "深圳市总工会" && item.contactName === "李女士"), "public JSON notices must retain official buyer and contact evidence");
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "ORG-001" && item.contactPhone === "020-84115089" && item.deadline === "2026-07-15T23:59:00+08:00"), "SYSU Drupal procurement detail must retain public deadline and contact evidence");
+assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "ORG-002" && item.budgetDisplay === "14.78万元" && item.contactPhone.includes("020-87111386")), "SCUT public procurement detail must retain published budget and contact evidence");
 const repeatedRun = await collectAllWelfareSources({ now: new Date("2026-07-11T01:00:00Z"), evidenceDir: tempDir, fetchHtml: async (url) => fixtureIndex[url] ?? detailFor(url) });
-assert.equal(repeatedRun.totalCount, 9, "repeating the same official notices must not duplicate public cards");
+assert.equal(repeatedRun.totalCount, 10, "repeating the same official notices must not duplicate public cards");
 const failedSourceRun = await collectAllWelfareSources({ now: new Date("2026-07-11T02:00:00Z"), evidenceDir: tempDir, fetchHtml: async (url) => {
   if (url === WELFARE_SOURCES[1].url) throw new Error("simulated network failure");
   return fixtureIndex[url] ?? (url.includes("a.html") ? fixtureDetail("光明区总工会消费帮扶慰问物资采购公告（字段更新）") : detailFor(url));
 } });
 assert.equal(failedSourceRun.sources.find((item) => item.sourceCode === "OFF-SZ-005")?.status, "failed");
-assert.equal(failedSourceRun.totalCount, 9, "a failed source must retain its last successful public card");
+assert.equal(failedSourceRun.totalCount, 10, "a failed source must retain its last successful public card");
 const stagedFeed = buildWelfareFeed(JSON.parse(fs.readFileSync(process.env.CHANCEPING_WELFARE_STORE_PATH!, "utf8")).records, { status: "all", now: "2026-07-11T03:00:00Z" });
-assert.equal(stagedFeed.sources.length, 9);
+assert.equal(stagedFeed.sources.length, 10);
 assert.ok(stagedFeed.items.every((item) => item.officialUrl && item.rawSha256 && item.sourceCode));
 const noLeak = JSON.stringify(buildWelfareFeed(loadRecordedWelfareOpportunities()));
 assert.ok(!/radarId|runId|welfare-evidence|stack/i.test(noLeak));

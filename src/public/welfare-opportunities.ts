@@ -41,6 +41,7 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "WEL-001", name: "关爱通｜供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 1, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", directDetail: true },
   { code: "OFF-SZ-002", name: "深圳公共资源交易中心｜政府采购公告", url: "https://www.szggzy.com/jygg/list.html?id=zfcg", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", publicApi: "szggzy-government-procurement" },
   { code: "ORG-001", name: "中山大学政府采购与招投标管理中心｜采购公告", url: "https://bidding.sysu.edu.cn/gg/cg", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
+  { code: "ORG-002", name: "华南理工大学招标中心｜采购公告", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
 ];
 
 // Candidates are collected and evidenced in an isolated shadow store first.
@@ -53,7 +54,6 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
-  { code: "ORG-002", name: "华南理工大学招标中心", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
 ];
 
 function sourceByCode(code: string): WelfareSourceConfig {
@@ -288,7 +288,7 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 }
 
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
-  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
   const patterns = [
     /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi,
@@ -370,7 +370,7 @@ function excerpt(text: string, pattern: RegExp): string | undefined {
 }
 
 function publishedContactName(value: string | undefined): string | undefined {
-  const name = value?.replace(/^联系人[：:]?\s*/, "").trim();
+  const name = value?.replace(/^(?:项目联系人|联系人(?:及电话)?)[：:]?\s*/, "").trim();
   // Do not turn template phrases such as “联系人及联系方式” into a public person.
   if (!name || /^(及|和|、|信息|联系方式|详见|见附件)/.test(name)) return undefined;
   return name;
@@ -379,14 +379,14 @@ function publishedContactName(value: string | undefined): string | undefined {
 export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
-  if (!title || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title)) return null;
+  if (!title || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title)) return null;
   const text = cleanText(input.html);
   const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址)[：:]|[。；]|$)/);
-  const contactNameExcerpt = excerpt(text, /(?:项目联系人|联系人)[：:]?\s*[^。；\s]+/);
-  const contactPhoneExcerpt = excerpt(text, /(?:联系电话|项目联系电话|项目联系人电话|采购单位联系方式)[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
+  const contactNameExcerpt = excerpt(text, /(?:项目联系人|联系人(?:及电话)?)[：:]?\s*[^。；\s]+/);
+  const contactPhoneExcerpt = excerpt(text, /(?:联系电话|项目联系电话|项目联系人电话|联系人及电话|采购单位联系方式)[：:]?\s*(?:[^。；\s：:]+[、，,]?){0,3}[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
   const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式)[：:]|[。；]|$)/);
   const deadlineExcerpt = excerpt(text, /(?:(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}|(?:投标|报名|响应|递交|提交)[^。；]{0,32}截止时间\s*\d{4}-\d{1,2}-\d{1,2})/);
-  const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
+  const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价|预估(?:年度)?采购总金额)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
   const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?|(\d{4})-(\d{1,2})-(\d{1,2})/);
   const publishedAt = input.publishedAtHint || extractMeta(input.html, "PubDate") || "";
   const year = Number(deadlineMatch?.[1] || deadlineMatch?.[6] || publishedAt.slice(0, 4) || new Date().getFullYear());
@@ -421,10 +421,10 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
     buyer: buyerExcerpt?.replace(/^(?:采购人名称|采购单位|采购人)[：:]?\s*/, "") ?? "待核验",
     contactName: publishedContactName(contactNameExcerpt) ?? "未公开",
-    contactPhone: contactPhoneExcerpt?.replace(/^联系电话[：:]?\s*/, "") ?? "未公开",
+    contactPhone: contactPhoneExcerpt?.replace(/^(?:联系电话|项目联系电话|项目联系人电话|联系人及电话|采购单位联系方式)[：:]?\s*/, "") ?? "未公开",
     contactAddress: contactAddressExcerpt?.replace(/^联系地址[：:]?\s*/, "") ?? "未公开",
     region: source.region,
-    budgetDisplay: budgetExcerpt?.replace(/^(?:预算金额|采购预算|最高限价)[：:]?\s*/, "") ?? "未公开",
+    budgetDisplay: budgetExcerpt?.replace(/^(?:预算金额|采购预算|最高限价|预估(?:年度)?采购总金额)[：:]?\s*/, "") ?? "未公开",
     deadline,
     deadlineDisplay: deadlineExcerpt ?? "待核验",
     welfareScenes: [/(消费帮扶)/.test(title) ? "消费帮扶" : /(慰问)/.test(title) ? "职工慰问" : "企业福利采购"],
