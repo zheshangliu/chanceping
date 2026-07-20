@@ -21,8 +21,11 @@ export interface WelfareSourceConfig {
   enabled: boolean;
   /** One official column can expose several public list pages. */
   indexUrls?: string[];
+  /** Some official partnership pages are the detail page and the source itself. */
+  directDetail?: boolean;
   rollout?: "public" | "shadow";
   opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
+  opportunityType?: WelfareOpportunityType;
   shadowAccess?: "direct" | "restricted";
 }
 
@@ -32,6 +35,8 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-SZ-003", name: "福田区总工会通知公告", url: "https://www.szft.gov.cn/bmxx_qt/qzgh/tzgg/", allowedHost: "www.szft.gov.cn", region: "深圳福田", maxDetails: 12, enabled: true },
   { code: "OFF-N-001", name: "中国政府采购网｜采购公告", url: "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", indexUrls: ["https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/index.htm"] },
   { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
+  { code: "OFF-GD-004", name: "广东省总工会｜通知公告", url: "https://www.gdftu.org.cn/", allowedHost: "www.gdftu.org.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "CHANNEL_PARTNERSHIP" },
+  { code: "WEL-001", name: "关爱通｜供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 1, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", directDetail: true },
 ];
 
 // Candidates are collected and evidenced in an isolated shadow store first.
@@ -44,11 +49,9 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-002", name: "深圳公共资源交易中心", url: "https://www.szggzy.com/", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
-  { code: "OFF-GD-004", name: "广东省总工会", url: "https://www.gdftu.org.cn/", allowedHost: "www.gdftu.org.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
   { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
   { code: "ORG-001", name: "中山大学政府采购与招投标管理中心", url: "https://bidding.sysu.edu.cn/", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "ORG-002", name: "华南理工大学招标中心", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
-  { code: "WEL-001", name: "关爱通供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership" },
 ];
 
 function sourceByCode(code: string): WelfareSourceConfig {
@@ -283,7 +286,7 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 }
 
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
-  const welfareContext = /(慰问|员工福利|职工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
   const patterns = [
     /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi,
@@ -313,6 +316,13 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     const title = cleanText(itemMatch[2] || itemMatch[3]);
     if (!url || !welfareContext.test(title) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[4] });
+  }
+  const dateBeforeListItem = /<li\b[^>]*>[\s\S]{0,600}?<span[^>]*>\s*\[?(\d{4}-\d{2}-\d{2})\]?\s*<\/span>[\s\S]{0,600}?<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  while ((itemMatch = dateBeforeListItem.exec(html)) !== null) {
+    const url = normalizeUrl(itemMatch[2], source.url);
+    const title = cleanText(itemMatch[3]);
+    if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    discovered.set(url, { title, url, publishedAt: itemMatch[1] });
   }
   // Reader-compatible Markdown fallback, used only when the SWAS TLS stack
   // cannot retrieve the same official public page directly.
@@ -355,7 +365,7 @@ function publishedContactName(value: string | undefined): string | undefined {
 export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
-  if (!title || !/(慰问|员工福利|职工福利|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|项目)/.test(title)) return null;
+  if (!title || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title)) return null;
   const text = cleanText(input.html);
   const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址)[：:]|[。；]|$)/);
   const contactNameExcerpt = excerpt(text, /(?:项目联系人|联系人)[：:]?\s*[^。；\s]+/);
@@ -389,7 +399,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     retrievedAt: input.retrievedAt ?? new Date().toISOString(),
     rawSha256,
     dataMode: "live",
-    opportunityType: "OPEN_PROCUREMENT",
+    opportunityType: source.opportunityType ?? "OPEN_PROCUREMENT",
     lifecycleStatus: isClosed || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
     currentStage: isClosed ? "CLOSED_PENDING_RESULT" : isCorrection ? "CORRECTED" : "OPEN",
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
@@ -403,7 +413,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     deadlineDisplay: deadlineExcerpt ?? "待核验",
     welfareScenes: [/(消费帮扶)/.test(title) ? "消费帮扶" : /(慰问)/.test(title) ? "职工慰问" : "企业福利采购"],
     productScopes: [/(农副产品|食品|慰问物资)/.test(text) ? "食品生鲜/慰问物资" : "综合福利"],
-    reason: `来自${source.name}官方公告栏目，涉及企业福利、职工慰问或消费帮扶采购。`,
+    reason: source.opportunityType === "CHANNEL_PARTNERSHIP" ? `来自${source.name}官方公告栏目，涉及企业福利渠道或项目合作。` : source.opportunityType === "SUPPLIER_RECRUITMENT" ? `来自${source.name}官方供应商招募页面，涉及员工福利商品或服务合作。` : `来自${source.name}官方公告栏目，涉及企业福利、职工慰问或消费帮扶采购。`,
     nextAction: "打开官方原文，核对采购文件、资格要求、附件和递交方式。",
     riskNote: "公开页面仅整理官方公告；预算、截止和资格要求以官方原文及后续更正为准。",
     evidenceFields,
@@ -445,7 +455,10 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   if (indexErrors.length === indexUrls.length) {
     return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: indexErrors }, records: [] };
   }
-  const links = Array.from(indexLinks.values()).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
+  const links = (source.directDetail
+    ? [{ title: source.name, url: source.url, publishedAt: "" }]
+    : Array.from(indexLinks.values())
+  ).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
   const records: WelfareOpportunityRecord[] = [];
   const errors: Array<{ url: string; error: string }> = [...indexErrors];
   for (const link of links) {
