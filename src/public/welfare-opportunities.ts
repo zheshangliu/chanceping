@@ -24,7 +24,7 @@ export interface WelfareSourceConfig {
   /** Some official partnership pages are the detail page and the source itself. */
   directDetail?: boolean;
   /** A small number of official portals publish their public notice list as JSON. */
-  publicApi?: "szggzy-government-procurement";
+  publicApi?: "szggzy-government-procurement" | "gzgpc-procurement-signals";
   rollout?: "public" | "shadow";
   opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
   opportunityType?: WelfareOpportunityType;
@@ -42,6 +42,7 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-SZ-002", name: "深圳公共资源交易中心｜政府采购公告", url: "https://www.szggzy.com/jygg/list.html?id=zfcg", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", publicApi: "szggzy-government-procurement" },
   { code: "ORG-001", name: "中山大学政府采购与招投标管理中心｜采购公告", url: "https://bidding.sysu.edu.cn/gg/cg", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
   { code: "ORG-002", name: "华南理工大学招标中心｜采购公告", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
+  { code: "OFF-GZ-001", name: "广州市政府采购中心｜意向及供应商征集", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "demand_signal", publicApi: "gzgpc-procurement-signals" },
 ];
 
 // Candidates are collected and evidenced in an isolated shadow store first.
@@ -51,7 +52,6 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   // monitored as a restricted POC and is never automated around the challenge.
   { code: "OFF-N-002", name: "中国政府采购网｜政府采购意向", url: "https://cgyx.ccgp.gov.cn/cgyx/pub/pubSearch", allowedHost: "cgyx.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
   { code: "OFF-GD-002", name: "广东省招标投标监管网", url: "https://zbtb.gd.gov.cn/", allowedHost: "zbtb.gd.gov.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
-  { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
 ];
@@ -395,6 +395,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const deadline = deadlineMatch && deadlineMonth && deadlineDay ? `${year}-${String(deadlineMonth).padStart(2, "0")}-${String(deadlineDay).padStart(2, "0")}T${String(deadlineMatch[4] ?? "23").padStart(2, "0")}:${String(deadlineMatch[5] ?? "59").padStart(2, "0")}:00+08:00` : "";
   const isClosed = /(结果公告|中标公告|成交公告|终止公告|废标公告)/.test(title);
   const isCorrection = /(变更公告|更正公告)/.test(title);
+  const deadlineExpired = Boolean(deadline) && Date.parse(deadline) < new Date(input.retrievedAt ?? Date.now()).getTime();
   const evidenceFields: WelfareEvidenceField[] = [
     { field: "buyer", state: buyerExcerpt ? "verified" : "unknown", excerpt: buyerExcerpt },
     { field: "budget", state: budgetExcerpt ? "verified" : "not_published", excerpt: budgetExcerpt },
@@ -416,7 +417,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     rawSha256,
     dataMode: "live",
     opportunityType: source.opportunityType ?? "OPEN_PROCUREMENT",
-    lifecycleStatus: isClosed || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
+    lifecycleStatus: isClosed || deadlineExpired || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
     currentStage: isClosed ? "CLOSED_PENDING_RESULT" : isCorrection ? "CORRECTED" : "OPEN",
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
     buyer: buyerExcerpt?.replace(/^(?:采购人名称|采购单位|采购人)[：:]?\s*/, "") ?? "待核验",
@@ -511,6 +512,47 @@ async function collectSzGgzyGovernmentProcurement(source: WelfareSourceConfig, o
   }
 }
 
+interface GzGpcArticle {
+  id?: string;
+  title?: string;
+  description?: string;
+  publishDate?: string;
+}
+
+function gzGpcArticleHtml(article: GzGpcArticle): string {
+  return `<html><head><title>${article.title ?? ""}</title><meta name="PubDate" content="${article.publishDate ?? ""}"></head><body>${article.description ?? ""}</body></html>`;
+}
+
+async function collectGzGpcProcurementSignals(source: WelfareSourceConfig, options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir: string; maxDetails?: number; now: Date; retrievedAt: string }): Promise<WelfareSourceCollectionData> {
+  const channels: Array<{ alias: string; type: WelfareOpportunityType }> = [
+    { alias: "purchase-intention", type: "PROCUREMENT_INTENT" },
+    { alias: "demand-collection", type: "SUPPLIER_RECRUITMENT" },
+  ];
+  const errors: Array<{ url: string; error: string }> = [];
+  const records: WelfareOpportunityRecord[] = [];
+  let discoveredCount = 0;
+  for (const channel of channels) {
+    const endpoint = `https://www.guangzhougpc.cn/frontend/content/articles?channel=${channel.alias}&limit=${Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30))}`;
+    try {
+      const raw = options.fetchHtml ? await options.fetchHtml(endpoint) : await defaultWelfareFetchHtml(endpoint);
+      fs.writeFileSync(path.join(options.evidenceDir, `${channel.alias}-${crypto.createHash("sha256").update(raw).digest("hex").slice(0, 16)}.json`), raw);
+      const parsed = JSON.parse(raw) as { content?: GzGpcArticle[] };
+      const articles = parsed.content ?? [];
+      discoveredCount += articles.length;
+      for (const article of articles) {
+        if (!article.id) continue;
+        const officialUrl = `https://www.guangzhougpc.cn/article/${encodeURIComponent(article.id)}`;
+        const record = parseWelfareDetail({ html: gzGpcArticleHtml(article), url: officialUrl, sourceCode: source.code, publishedAtHint: article.publishDate ?? "", retrievedAt: options.retrievedAt });
+        if (record) records.push({ ...record, opportunityType: channel.type, reason: channel.type === "PROCUREMENT_INTENT" ? `来自${source.name}官方采购意向栏目，属于公开的前置需求信号。` : `来自${source.name}官方采购需求供应商征集栏目，属于公开供应商征集机会。` });
+      }
+    } catch (error) {
+      errors.push({ url: endpoint, error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  const status = errors.length === channels.length ? "failed" : errors.length ? "partial" : records.length ? "succeeded" : "empty";
+  return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt: options.retrievedAt, status, discoveredCount, publishedCount: records.length, totalCount: records.length, errors }, records };
+}
+
 async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"], options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}): Promise<WelfareSourceCollectionData> {
   const source = sourceByCode(sourceCode);
   const fetchHtml = options.fetchHtml ?? defaultWelfareFetchHtml;
@@ -519,6 +561,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? `data/welfare-evidence/${source.code}`);
   fs.mkdirSync(evidenceDir, { recursive: true });
   if (source.publicApi === "szggzy-government-procurement") return collectSzGgzyGovernmentProcurement(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
+  if (source.publicApi === "gzgpc-procurement-signals") return collectGzGpcProcurementSignals(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
   const indexUrls = source.indexUrls?.length ? source.indexUrls : [source.url];
   const indexErrors: Array<{ url: string; error: string }> = [];
   const indexLinks = new Map<string, { title: string; url: string; publishedAt: string }>();
