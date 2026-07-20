@@ -40,6 +40,7 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-GD-004", name: "广东省总工会｜通知公告", url: "https://www.gdftu.org.cn/", allowedHost: "www.gdftu.org.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "CHANNEL_PARTNERSHIP" },
   { code: "WEL-001", name: "关爱通｜供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 1, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", directDetail: true },
   { code: "OFF-SZ-002", name: "深圳公共资源交易中心｜政府采购公告", url: "https://www.szggzy.com/jygg/list.html?id=zfcg", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", publicApi: "szggzy-government-procurement" },
+  { code: "ORG-001", name: "中山大学政府采购与招投标管理中心｜采购公告", url: "https://bidding.sysu.edu.cn/gg/cg", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
 ];
 
 // Candidates are collected and evidenced in an isolated shadow store first.
@@ -52,7 +53,6 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
-  { code: "ORG-001", name: "中山大学政府采购与招投标管理中心", url: "https://bidding.sysu.edu.cn/", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "ORG-002", name: "华南理工大学招标中心", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
 ];
 
@@ -326,6 +326,18 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[1] });
   }
+  // Drupal procurement columns used by universities can omit the date from
+  // list cards. Limit this fallback to the reviewed SYSU procurement column;
+  // the detail page supplies its own deadline evidence before a card is shown.
+  if (source.code === "ORG-001") {
+    const drupalListItem = /<li\b[^>]*class=["'][^"']*list-item[^"']*["'][^>]*>[\s\S]{0,1200}?<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+    while ((itemMatch = drupalListItem.exec(html)) !== null) {
+      const url = normalizeUrl(itemMatch[1], source.url);
+      const title = cleanText(itemMatch[2]);
+      if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      discovered.set(url, { title, url, publishedAt: "" });
+    }
+  }
   // Reader-compatible Markdown fallback, used only when the SWAS TLS stack
   // cannot retrieve the same official public page directly.
   const markdownLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)(?:\s+"[^"]*")?\)/g;
@@ -371,14 +383,16 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const text = cleanText(input.html);
   const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址)[：:]|[。；]|$)/);
   const contactNameExcerpt = excerpt(text, /(?:项目联系人|联系人)[：:]?\s*[^。；\s]+/);
-  const contactPhoneExcerpt = excerpt(text, /(?:联系电话|项目联系电话|采购单位联系方式)[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
+  const contactPhoneExcerpt = excerpt(text, /(?:联系电话|项目联系电话|项目联系人电话|采购单位联系方式)[：:]?\s*(?:\+?86[-\s]?)?(?:0\d{2,3}[-\s]?\d{7,8}|1[3-9]\d{9})/);
   const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式)[：:]|[。；]|$)/);
-  const deadlineExcerpt = excerpt(text, /(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}/);
+  const deadlineExcerpt = excerpt(text, /(?:(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}|(?:投标|报名|响应|递交|提交)[^。；]{0,32}截止时间\s*\d{4}-\d{1,2}-\d{1,2})/);
   const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
-  const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?/);
+  const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?|(\d{4})-(\d{1,2})-(\d{1,2})/);
   const publishedAt = input.publishedAtHint || extractMeta(input.html, "PubDate") || "";
-  const year = Number(deadlineMatch?.[1] || publishedAt.slice(0, 4) || new Date().getFullYear());
-  const deadline = deadlineMatch ? `${year}-${String(deadlineMatch[2]).padStart(2, "0")}-${String(deadlineMatch[3]).padStart(2, "0")}T${String(deadlineMatch[4] ?? "23").padStart(2, "0")}:${String(deadlineMatch[5] ?? "59").padStart(2, "0")}:00+08:00` : "";
+  const year = Number(deadlineMatch?.[1] || deadlineMatch?.[6] || publishedAt.slice(0, 4) || new Date().getFullYear());
+  const deadlineMonth = deadlineMatch?.[2] || deadlineMatch?.[7];
+  const deadlineDay = deadlineMatch?.[3] || deadlineMatch?.[8];
+  const deadline = deadlineMatch && deadlineMonth && deadlineDay ? `${year}-${String(deadlineMonth).padStart(2, "0")}-${String(deadlineDay).padStart(2, "0")}T${String(deadlineMatch[4] ?? "23").padStart(2, "0")}:${String(deadlineMatch[5] ?? "59").padStart(2, "0")}:00+08:00` : "";
   const isClosed = /(结果公告|中标公告|成交公告|终止公告|废标公告)/.test(title);
   const isCorrection = /(变更公告|更正公告)/.test(title);
   const evidenceFields: WelfareEvidenceField[] = [
