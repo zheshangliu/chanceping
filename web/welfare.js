@@ -4,6 +4,12 @@
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   const fieldLabels = { buyer: "采购单位", budget: "预算", deadline: "截止", status: "状态", contactName: "联系人", contactPhone: "联系电话", contactAddress: "联系地址" };
   const typeLabels = { OPEN_PROCUREMENT: "公开采购", PROCUREMENT_INTENT: "采购意向", SUPPLIER_RECRUITMENT: "供应商征集", FRAMEWORK_AGREEMENT: "框架协议", CHANNEL_PARTNERSHIP: "渠道合作" };
+  const sourceGroups = [
+    ["全国采购平台", (source) => source.code.startsWith("OFF-N-")],
+    ["广东及深圳地方平台", (source) => /^(OFF-(GD|GZ|SZ)-)/.test(source.code)],
+    ["高校与机构", (source) => source.code.startsWith("ORG-")],
+    ["福利渠道", (source) => source.code.startsWith("WEL-")],
+  ];
 
   function replaceOptions(select, items, placeholder) {
     const value = select.value;
@@ -24,6 +30,16 @@
     root.innerHTML = `<h3>${esc(item.title)}</h3><div class="welfare-evidence-list">${item.evidenceFields.map((field) => `<div class="welfare-evidence-item ${field.state !== "verified" ? "is-unknown" : ""}"><b>${esc(fieldLabels[field.field] || field.field)} · ${field.state === "verified" ? "已核验" : field.state === "not_published" ? "未公开" : "待核验"}</b>${field.excerpt ? `<div>${esc(field.excerpt)}</div>` : ""}</div>`).join("")}</div>`;
   }
 
+  function renderSources(sources) {
+    const active = sources.filter((source) => source.status === "active").length;
+    const degraded = sources.filter((source) => source.status === "degraded").length;
+    const empty = sources.filter((source) => source.status === "empty").length;
+    document.querySelector("#welfare-source-summary").textContent = `${sources.length} 个来源 · ${active} 正常${degraded ? ` · ${degraded} 异常` : ""}${empty ? ` · ${empty} 暂无结果` : ""}`;
+    const statusLabels = { active: "正常运行", degraded: "需要关注", empty: "暂无结果" };
+    const groups = sourceGroups.map(([label, matches]) => [label, sources.filter(matches)]).filter(([, items]) => items.length);
+    document.querySelector("#welfare-sources").innerHTML = groups.map(([label, items]) => `<details class="welfare-source-group"><summary><strong>${esc(label)}</strong><span>${items.length} 个来源</span></summary><div class="welfare-source-list">${items.map((source) => `<article class="welfare-source-item"><div><strong>${esc(source.name)}</strong><small>${esc(source.code)} · ${statusLabels[source.status] || source.status}${source.lastUpdatedAt ? ` · 更新于 ${esc(new Date(source.lastUpdatedAt).toLocaleString("zh-CN", { hour12: false }))}` : ""}</small></div><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">查看官方栏目</a></article>`).join("")}</div></details>`).join("");
+  }
+
   function render(data) {
     state.data = data;
     state.totalPages = data.stats.totalPages;
@@ -38,7 +54,7 @@
     document.querySelector("#welfare-page-info").textContent = `第 ${data.stats.page} / ${data.stats.totalPages} 页`;
     document.querySelector("#welfare-prev").disabled = data.stats.page <= 1;
     document.querySelector("#welfare-next").disabled = data.stats.page >= data.stats.totalPages;
-    document.querySelector("#welfare-sources").innerHTML = data.sources.map((source) => `<p><strong>${esc(source.name)}</strong>（${esc(source.code)}）<br><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">查看官方栏目</a></p>`).join("");
+    renderSources(data.sources);
     document.querySelectorAll(".welfare-decision-row").forEach((button) => button.addEventListener("click", () => renderEvidence(data.items.find((item) => item.id === button.dataset.id))));
     renderEvidence(data.items.find((item) => item.id === state.selected) || data.items[0]);
   }
