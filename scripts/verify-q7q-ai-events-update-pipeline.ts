@@ -99,6 +99,11 @@ async function main(): Promise<void> {
       <a href="/ai-builders-2026/rules">Challenge rules</a>
       <a href="/run-outstanding-hackathons">Run a hackathon</a>
     `,
+    "https://www.hackster.io/contests": `
+      <a href="/contests/ai-edge-challenge">AI Edge Challenge</a>
+      <a href="/contests/ai-edge-challenge/rules">Contest rules</a>
+      <a href="/contests">All contests</a>
+    `,
   };
   const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,
@@ -128,11 +133,16 @@ async function main(): Promise<void> {
     sourceCollectorSource.includes('"challengerocket"') && /sourceId === "challengerocket"/.test(sourceCollectorSource),
     "ChallengeRocket must reject product pages and nested rule pages.",
   );
-  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 6, JSON.stringify(collectedRun.sourceCollection));
+  check(
+    "Hackster joins the default scheduler only with a concrete contest detail URL",
+    sourceCollectorSource.includes('"hackster"') && /sourceId === "hackster"/.test(sourceCollectorSource),
+    "Hackster must reject the contests index and nested support pages.",
+  );
+  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 7, JSON.stringify(collectedRun.sourceCollection));
   check(
     "source collection records every enabled source health result",
-    (collectedRun.sourceCollection?.sources.length ?? 0) >= 8 &&
-      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket"].every((id) =>
+    (collectedRun.sourceCollection?.sources.length ?? 0) >= 9 &&
+      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket", "hackster"].every((id) =>
         collectedRun.sourceCollection?.sources.some((source) => source.sourceId === id && source.status === "collected"),
       ),
     JSON.stringify(collectedRun.sourceCollection),
@@ -143,6 +153,12 @@ async function main(): Promise<void> {
     "ChallengeRocket preserves only its concrete challenge page",
     collectedEntries.some((entry) => entry.card.official_source_url === "https://challengerocket.com/ai-builders-2026/")
       && !collectedEntries.some((entry) => /challengerocket\.com\/(?:ai-builders-2026\/rules|run-outstanding-hackathons)/i.test(entry.card.official_source_url)),
+    JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
+  );
+  check(
+    "Hackster preserves only its concrete contest page",
+    collectedEntries.some((entry) => entry.card.official_source_url === "https://www.hackster.io/contests/ai-edge-challenge")
+      && !collectedEntries.some((entry) => /hackster\.io\/contests\/ai-edge-challenge\/(?:rules|submissions)/i.test(entry.card.official_source_url)),
     JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
   );
 

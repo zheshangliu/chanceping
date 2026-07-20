@@ -19,6 +19,7 @@ const ACTIVE_SOURCE_IDS = [
   "devfolio",
   "taikai",
   "challengerocket",
+  "hackster",
 ] as const;
 const SECOND_BATCH_SOURCE_IDS: readonly string[] = [];
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
@@ -128,6 +129,12 @@ function isConcreteEventUrl(sourceId: string, url: URL): boolean {
       && /^\/[a-z0-9][a-z0-9-]*$/i.test(path)
       && !excluded.has(path);
   }
+  if (sourceId === "hackster") {
+    // Hackster contest detail pages are /contests/{slug}. Keep the contest
+    // itself, but never publish the index, rules, submissions, or project pages.
+    return /hackster\.io$/i.test(url.hostname)
+      && /^\/contests\/[a-z0-9][a-z0-9_-]*$/i.test(path);
+  }
   return false;
 }
 
@@ -171,6 +178,7 @@ function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
   if (source.id === "lablab") return "site:lablab.ai/event (AI OR agent OR LLM) hackathon registration";
   if (source.id === "taikai") return "site:taikai.network/en/*/hackathons/* AI hackathon registration";
   if (source.id === "challengerocket") return "site:challengerocket.com (AI OR hackathon OR challenge) registration -rules -faq -login";
+  if (source.id === "hackster") return "site:hackster.io/contests (AI OR edge AI OR machine learning OR robotics) contest participate";
   const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
   return `site:${source.domain} ${focus}`;
 }
