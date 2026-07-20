@@ -94,6 +94,11 @@ async function main(): Promise<void> {
       <a href="/en/builders/hackathons/ai-builders-2026/overview">AI Builders Hackathon 2026</a>
       <a href="/en/hackathons">All TAIKAI hackathons</a>
     `,
+    "https://challengerocket.com/": `
+      <a href="/ai-builders-2026/">AI Builders Challenge 2026</a>
+      <a href="/ai-builders-2026/rules">Challenge rules</a>
+      <a href="/run-outstanding-hackathons">Run a hackathon</a>
+    `,
   };
   const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,
@@ -118,17 +123,28 @@ async function main(): Promise<void> {
     sourceCollectorSource.includes('"taikai"') && /taikai\.network[\s\S]*hackathons/.test(sourceCollectorSource),
     "TAIKAI must accept concrete /en/{organization}/hackathons/{event}/overview URLs",
   );
-  check("source collection discovers concrete event pages from first-batch indexes", collectedRun.sourceCollection?.discoveredCardCount === 5, JSON.stringify(collectedRun.sourceCollection));
+  check(
+    "ChallengeRocket joins the default scheduler only with a concrete root-level challenge URL",
+    sourceCollectorSource.includes('"challengerocket"') && /sourceId === "challengerocket"/.test(sourceCollectorSource),
+    "ChallengeRocket must reject product pages and nested rule pages.",
+  );
+  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 6, JSON.stringify(collectedRun.sourceCollection));
   check(
     "source collection records every enabled source health result",
-    (collectedRun.sourceCollection?.sources.length ?? 0) >= 7 &&
-      ["devpost", "dorahacks", "lablab", "kaggle", "taikai"].every((id) =>
+    (collectedRun.sourceCollection?.sources.length ?? 0) >= 8 &&
+      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket"].every((id) =>
         collectedRun.sourceCollection?.sources.some((source) => source.sourceId === id && source.status === "collected"),
       ),
     JSON.stringify(collectedRun.sourceCollection),
   );
   check("source collection excludes index and rule pages", !collectedEntries.some((entry) => /\/rules$|devpost\.com\/hackathons$/i.test(entry.card.official_source_url)), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
   check("source collection preserves concrete pages in public radar store", collectedEntries.some((entry) => entry.card.official_source_url === "https://future-ai.devpost.com/"), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
+  check(
+    "ChallengeRocket preserves only its concrete challenge page",
+    collectedEntries.some((entry) => entry.card.official_source_url === "https://challengerocket.com/ai-builders-2026/")
+      && !collectedEntries.some((entry) => /challengerocket\.com\/(?:ai-builders-2026\/rules|run-outstanding-hackathons)/i.test(entry.card.official_source_url)),
+    JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
+  );
 
   const repeatedCollectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,

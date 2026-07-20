@@ -18,6 +18,7 @@ const ACTIVE_SOURCE_IDS = [
   "hackerearth",
   "devfolio",
   "taikai",
+  "challengerocket",
 ] as const;
 const SECOND_BATCH_SOURCE_IDS: readonly string[] = [];
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
@@ -105,6 +106,28 @@ function isConcreteEventUrl(sourceId: string, url: URL): boolean {
         || /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path));
   }
   if (sourceId === "devfolio") return /devfolio\.co$/i.test(url.hostname) && /^\/hackathons\/[a-z0-9][a-z0-9_-]+/i.test(path);
+  if (sourceId === "challengerocket") {
+    // ChallengeRocket's public challenge pages are root-level slugs. Do not
+    // publish its product, account, rules, or nested registration pages.
+    const excluded = new Set([
+      "",
+      "/about",
+      "/contact",
+      "/faq",
+      "/login",
+      "/signup",
+      "/privacy",
+      "/terms",
+      "/hackathons-and-challenges.html",
+      "/open-learning-by-globalworth",
+      "/run-outstanding-hackathons",
+      "/start-intern-recruitment-challenge",
+      "/start-recruitment-challenge",
+    ]);
+    return /challengerocket\.com$/i.test(url.hostname)
+      && /^\/[a-z0-9][a-z0-9-]*$/i.test(path)
+      && !excluded.has(path);
+  }
   return false;
 }
 
@@ -147,6 +170,7 @@ async function defaultFetchHtml(url: string, timeoutMs: number): Promise<string>
 function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
   if (source.id === "lablab") return "site:lablab.ai/event (AI OR agent OR LLM) hackathon registration";
   if (source.id === "taikai") return "site:taikai.network/en/*/hackathons/* AI hackathon registration";
+  if (source.id === "challengerocket") return "site:challengerocket.com (AI OR hackathon OR challenge) registration -rules -faq -login";
   const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
   return `site:${source.domain} ${focus}`;
 }
