@@ -5,12 +5,13 @@ import path from "node:path";
 import { collectWelfareShadowSources, WELFARE_SHADOW_SOURCES, WELFARE_SOURCES } from "../src/public/welfare-opportunities";
 
 async function main(): Promise<void> {
-  assert.equal(WELFARE_SHADOW_SOURCES.length, 8, "four verified sources have moved into the public adapter batch");
-  assert.equal(new Set(WELFARE_SHADOW_SOURCES.map((source) => source.code)).size, 8, "shadow source codes must be unique");
+  assert.equal(WELFARE_SHADOW_SOURCES.length, 7, "five verified sources have moved into the public adapter batch");
+  assert.equal(new Set(WELFARE_SHADOW_SOURCES.map((source) => source.code)).size, 7, "shadow source codes must be unique");
   assert.ok(WELFARE_SOURCES.some((source) => source.code === "OFF-N-001" && source.rollout === "public"), "CCGP procurement announcements must use the public adapter");
   assert.ok(WELFARE_SOURCES.some((source) => source.code === "OFF-N-004" && source.rollout === "public"), "national public-resource announcements must use the public adapter");
   assert.ok(WELFARE_SOURCES.some((source) => source.code === "OFF-GD-004" && source.opportunityType === "CHANNEL_PARTNERSHIP"), "Guangdong federation opportunities must remain channel partnerships");
   assert.ok(WELFARE_SOURCES.some((source) => source.code === "WEL-001" && source.opportunityType === "SUPPLIER_RECRUITMENT"), "Guanaitong must remain supplier recruitment");
+  assert.ok(WELFARE_SOURCES.some((source) => source.code === "OFF-SZ-002" && source.publicApi === "szggzy-government-procurement"), "Shenzhen public-resource procurement must use its official public JSON list");
   assert.ok(WELFARE_SHADOW_SOURCES.every((source) => source.rollout === "shadow" && source.enabled), "candidates must remain enabled only for shadow collection");
   assert.ok(WELFARE_SHADOW_SOURCES.some((source) => source.code === "OFF-N-002" && source.shadowAccess === "restricted"), "procurement intent must retain its restricted POC policy");
 
@@ -23,9 +24,9 @@ async function main(): Promise<void> {
     historyPath: path.join(root, "history.jsonl"),
     fetchHtml: async (url) => url.includes("cgyx.ccgp.gov.cn") ? "<html>安全验证 captcha</html>" : "<html><title>Official source</title></html>",
   });
-  assert.equal(summary.sources.length, 8);
+  assert.equal(summary.sources.length, 7);
   assert.equal(summary.sources.find((source) => source.sourceCode === "OFF-N-002")?.status, "restricted");
-  assert.equal(summary.sources.filter((source) => source.status === "succeeded").length, 7);
+  assert.equal(summary.sources.filter((source) => source.status === "succeeded").length, 6);
   assert.ok(summary.sources.every((source) => source.status === "restricted" || Boolean(source.rawSha256)), "every fetched page must retain a hash");
   assert.ok(fs.existsSync(path.join(root, "summary.json")), "latest run summary must be persisted");
   assert.equal(fs.readFileSync(path.join(root, "history.jsonl"), "utf8").trim().split("\n").length, 1, "run history must append a durable line");

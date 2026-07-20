@@ -23,6 +23,8 @@ export interface WelfareSourceConfig {
   indexUrls?: string[];
   /** Some official partnership pages are the detail page and the source itself. */
   directDetail?: boolean;
+  /** A small number of official portals publish their public notice list as JSON. */
+  publicApi?: "szggzy-government-procurement";
   rollout?: "public" | "shadow";
   opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
   opportunityType?: WelfareOpportunityType;
@@ -37,6 +39,7 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement" },
   { code: "OFF-GD-004", name: "广东省总工会｜通知公告", url: "https://www.gdftu.org.cn/", allowedHost: "www.gdftu.org.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "CHANNEL_PARTNERSHIP" },
   { code: "WEL-001", name: "关爱通｜供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 1, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", directDetail: true },
+  { code: "OFF-SZ-002", name: "深圳公共资源交易中心｜政府采购公告", url: "https://www.szggzy.com/jygg/list.html?id=zfcg", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", publicApi: "szggzy-government-procurement" },
 ];
 
 // Candidates are collected and evidenced in an isolated shadow store first.
@@ -48,7 +51,6 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-GD-002", name: "广东省招标投标监管网", url: "https://zbtb.gd.gov.cn/", allowedHost: "zbtb.gd.gov.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-GZ-001", name: "广州市政府采购中心", url: "https://www.guangzhougpc.cn/", allowedHost: "www.guangzhougpc.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
-  { code: "OFF-SZ-002", name: "深圳公共资源交易中心", url: "https://www.szggzy.com/", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "OFF-ZJ-001", name: "湛江市总工会通知公告", url: "https://www.zjghw.org/tggs/", allowedHost: "www.zjghw.org", region: "广东湛江", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal" },
   { code: "ORG-001", name: "中山大学政府采购与招投标管理中心", url: "https://bidding.sysu.edu.cn/", allowedHost: "bidding.sysu.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
   { code: "ORG-002", name: "华南理工大学招标中心", url: "https://www2.scut.edu.cn/zhaobiao/", allowedHost: "www2.scut.edu.cn", region: "广州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement" },
@@ -433,6 +435,68 @@ export interface WelfareSourceCollectionResult {
 
 interface WelfareSourceCollectionData { result: WelfareSourceCollectionResult; records: WelfareOpportunityRecord[]; }
 
+interface SzGgzyNotice {
+  title?: string;
+  noticeTitle?: string;
+  linkTo?: string;
+  releaseTime?: string;
+  publishTime?: string;
+  projectCode?: string;
+  projectName?: string;
+  purchaseCom?: string;
+  purchaseMan?: string;
+  noticeCloseTime?: string;
+}
+
+function szGgzyNoticeHtml(notice: SzGgzyNotice): string {
+  const title = notice.noticeTitle || notice.title || notice.projectName || "";
+  const values = [
+    notice.purchaseCom ? `采购人：${notice.purchaseCom}` : "",
+    notice.purchaseMan ? `联系人：${notice.purchaseMan}` : "",
+    notice.projectCode ? `项目编号：${notice.projectCode}` : "",
+    notice.noticeCloseTime ? `提交截止：${notice.noticeCloseTime}` : "",
+  ].filter(Boolean).join("；");
+  return `<html><head><title>${title}</title><meta name="PubDate" content="${notice.releaseTime || notice.publishTime || ""}"></head><body>${values}</body></html>`;
+}
+
+async function collectSzGgzyGovernmentProcurement(source: WelfareSourceConfig, options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir: string; maxDetails?: number; now: Date; retrievedAt: string }): Promise<WelfareSourceCollectionData> {
+  const endpoint = "https://www.szggzy.com/cms/api/v1/trade/content/page";
+  const payload = {
+    modelId: 1378,
+    channelId: 2850,
+    parentBusinessType: "政府采购",
+    fields: [{ fieldName: "jygg_gglxmc_rank1", fieldValue: "采购公告" }],
+    title: null,
+    releaseTimeBegin: null,
+    releaseTimeEnd: null,
+    page: 0,
+    size: Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)),
+    siteId: 1,
+  };
+  try {
+    // Tests inject the same safe official-response fixture through fetchHtml.
+    // Production uses the public documented list endpoint with its required POST body.
+    const raw = options.fetchHtml
+      ? await options.fetchHtml(endpoint)
+      : await defaultWelfareFetchJson(endpoint, payload);
+    fs.writeFileSync(path.join(options.evidenceDir, `index-${crypto.createHash("sha256").update(raw).digest("hex").slice(0, 16)}.json`), raw);
+    const parsed = JSON.parse(raw) as { data?: { content?: SzGgzyNotice[] } };
+    const notices = (parsed.data?.content ?? []).slice(0, payload.size);
+    const records: WelfareOpportunityRecord[] = [];
+    for (const notice of notices) {
+      const title = notice.noticeTitle || notice.title || notice.projectName || "";
+      const officialUrl = normalizeUrl(notice.linkTo ?? "", source.url);
+      if (!officialUrl || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      const html = szGgzyNoticeHtml(notice);
+      const record = parseWelfareDetail({ html, url: officialUrl, sourceCode: source.code, publishedAtHint: notice.releaseTime || notice.publishTime || "", retrievedAt: options.retrievedAt });
+      if (record) records.push(record);
+    }
+    return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt: options.retrievedAt, status: records.length ? "succeeded" : "empty", discoveredCount: notices.length, publishedCount: records.length, totalCount: records.length, errors: [] }, records };
+  } catch (error) {
+    return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt: options.retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: [{ url: endpoint, error: error instanceof Error ? error.message : String(error) }] }, records: [] };
+  }
+}
+
 async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"], options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}): Promise<WelfareSourceCollectionData> {
   const source = sourceByCode(sourceCode);
   const fetchHtml = options.fetchHtml ?? defaultWelfareFetchHtml;
@@ -440,6 +504,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const retrievedAt = now.toISOString();
   const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? `data/welfare-evidence/${source.code}`);
   fs.mkdirSync(evidenceDir, { recursive: true });
+  if (source.publicApi === "szggzy-government-procurement") return collectSzGgzyGovernmentProcurement(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
   const indexUrls = source.indexUrls?.length ? source.indexUrls : [source.url];
   const indexErrors: Array<{ url: string; error: string }> = [];
   const indexLinks = new Map<string, { title: string; url: string; publishedAt: string }>();
@@ -605,6 +670,25 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
       }
     }
   }
+}
+
+async function defaultWelfareFetchJson(url: string, payload: unknown): Promise<string> {
+  const parsed = new URL(url);
+  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  const response = await fetch(url, {
+    method: "POST",
+    signal: AbortSignal.timeout(20_000),
+    headers: {
+      "user-agent": "ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)",
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const body = await response.text();
+  if (!body.trim()) throw new Error("empty JSON response");
+  return body;
 }
 
 async function welfareReaderRelayFetchHtml(officialUrl: string): Promise<string> {
