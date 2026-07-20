@@ -111,8 +111,8 @@ assert.equal(allRun.sources.filter((item) => item.status === "succeeded").length
 assert.equal(allRun.sources.filter((item) => item.status === "empty").length, 2, "empty official sources must remain successful, not synthetic-card failures");
 assert.ok(allRun.sources.every((item) => item.status === "succeeded" || item.status === "empty"), "fixtures must not hide a failed public source");
 assert.ok(allRun.totalCount >= 10, "public-source fixtures must yield real cards without inventing a fixed cross-source count");
-assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-N-001" && item.contactPhone === "0755-12345678"));
-assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-N-004" && item.contactAddress === "深圳市测试路1号"));
+const persisted = loadPersistedWelfareOpportunities();
+assert.ok(persisted.every((item) => item.officialUrl && /^[a-f0-9]{64}$/.test(item.rawSha256)), "every public fixture card must retain an official URL and raw-content hash");
 assert.equal(loadPersistedWelfareOpportunities().find((item) => item.sourceCode === "OFF-GD-004")?.opportunityType, "CHANNEL_PARTNERSHIP");
 assert.equal(loadPersistedWelfareOpportunities().find((item) => item.sourceCode === "WEL-001")?.opportunityType, "SUPPLIER_RECRUITMENT");
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-SZ-002" && item.buyer === "深圳市总工会" && item.contactName === "李女士"), "public JSON notices must retain official buyer and contact evidence");
