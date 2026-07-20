@@ -14,6 +14,7 @@ async function main(): Promise<void> {
   assert.ok(WELFARE_SOURCES.some((source) => source.code === "OFF-SZ-002" && source.publicApi === "szggzy-government-procurement"), "Shenzhen public-resource procurement must use its official public JSON list");
   assert.ok(WELFARE_SHADOW_SOURCES.every((source) => source.rollout === "shadow" && source.enabled), "candidates must remain enabled only for shadow collection");
   assert.ok(WELFARE_SHADOW_SOURCES.some((source) => source.code === "OFF-N-002" && source.shadowAccess === "restricted"), "procurement intent must retain its restricted POC policy");
+  assert.ok(WELFARE_SHADOW_SOURCES.some((source) => source.code === "OFF-ZJ-001" && source.shadowAccess === "restricted"), "SessionVerify portals must remain restricted POCs without bypasses");
 
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-welfare-shadow-"));
   const now = new Date("2026-07-16T08:35:00+08:00");
@@ -26,7 +27,8 @@ async function main(): Promise<void> {
   });
   assert.equal(summary.sources.length, 4);
   assert.equal(summary.sources.find((source) => source.sourceCode === "OFF-N-002")?.status, "restricted");
-  assert.equal(summary.sources.filter((source) => source.status === "succeeded").length, 3);
+  assert.equal(summary.sources.filter((source) => source.status === "succeeded").length, 2);
+  assert.equal(summary.sources.filter((source) => source.status === "restricted").length, 2);
   assert.ok(summary.sources.every((source) => source.status === "restricted" || Boolean(source.rawSha256)), "every fetched page must retain a hash");
   assert.ok(fs.existsSync(path.join(root, "summary.json")), "latest run summary must be persisted");
   assert.equal(fs.readFileSync(path.join(root, "history.jsonl"), "utf8").trim().split("\n").length, 1, "run history must append a durable line");

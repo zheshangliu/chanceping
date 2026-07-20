@@ -107,7 +107,9 @@ const fixtureDetail = (title: string) => `<meta name="ArticleTitle" content="${t
 const detailFor = (url: string) => url.includes("wrapper.html") ? `<title>交易公开页面</title><script>var firstLastUrl = '/information/deal/html/b/440000/0201/20260710/body.html';</script>` : url.includes("gdftu.org.cn") ? `<meta name="ArticleTitle" content="广东工会大厦关于公开招募粤港澳职工之家项目合作单位的公告"><p>联系人：张三。联系电话：020-12345678。联系地址：广州市测试路1号。</p>` : url.includes("bidding.sysu.edu.cn") ? `<title>中山大学工会职工体检服务采购项目</title><div>项目联系人电话 020-84115089 投标响应文件截止时间 2026-07-15</div>` : url.includes("scut.edu.cn/houqin") ? `<title>2026年中秋月饼及月饼馅料采购公告</title><p>预估年度采购总金额：14.78万元。报名、资料递交截止时间：2026年7月8日。联系人及电话：邝老师、郭老师：020-87111386。</p>` : fixtureDetail(url.includes("ccgp.gov.cn") ? "2026年职工疗休养服务采购项目公开招标公告" : url.includes("ggzy.gov.cn") ? "广东省职工餐厅餐饮服务采购项目" : url.includes("a.html") ? "光明区总工会消费帮扶慰问物资采购公告" : url.includes("b.html") ? "龙华区总工会职工慰问物资采购公告" : "福田区总工会送清凉慰问项目采购公告");
 const allRun = await collectAllWelfareSources({ now: new Date("2026-07-11T00:00:00Z"), evidenceDir: tempDir, fetchHtml: async (url) => fixtureIndex[url] ?? detailFor(url) });
 assert.equal(allRun.sources.length, 11);
-assert.equal(allRun.sources.filter((item) => item.status === "succeeded").length, 11);
+assert.equal(allRun.sources.filter((item) => item.status === "succeeded").length, 9, "sources without a current welfare match are valid empty results");
+assert.equal(allRun.sources.filter((item) => item.status === "empty").length, 2, "empty official sources must remain successful, not synthetic-card failures");
+assert.ok(allRun.sources.every((item) => item.status === "succeeded" || item.status === "empty"), "fixtures must not hide a failed public source");
 assert.equal(allRun.totalCount, 12);
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-N-001" && item.contactPhone === "0755-12345678"));
 assert.ok(loadPersistedWelfareOpportunities().some((item) => item.sourceCode === "OFF-N-004" && item.contactAddress === "深圳市测试路1号"));
