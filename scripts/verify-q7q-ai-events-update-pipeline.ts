@@ -104,10 +104,11 @@ async function main(): Promise<void> {
       <a href="/contests/ai-edge-challenge/rules">Contest rules</a>
       <a href="/contests">All contests</a>
     `,
-    "https://replit.com/contest": `
-      <a href="https://replit.com/contest">Replit AI App Contest</a>
+    "https://replit.com/blog/category/events": `
+      <a href="https://replit.com/blog/ml-hackathon">Replit AI App Contest</a>
       <a href="https://replit.com/blog/ml-hackathon">Historical ML Hackathon</a>
       <a href="https://replit.com/">Replit home</a>
+      <a href="https://replit.com/blog/category/events">Events index</a>
     `,
   };
   const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
@@ -144,7 +145,7 @@ async function main(): Promise<void> {
     "Hackster must reject the contests index and nested support pages.",
   );
   check(
-    "Replit joins the default scheduler only through its official contest page",
+    "Replit joins the default scheduler through official event articles",
     sourceCollectorSource.includes('"replit"') && /sourceId === "replit"/.test(sourceCollectorSource),
     "Replit must accept /contest but reject blogs, home and ordinary Repls.",
   );
@@ -172,9 +173,9 @@ async function main(): Promise<void> {
     JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
   );
   check(
-    "Replit preserves only its official contest page",
-    collectedEntries.some((entry) => entry.card.official_source_url === "https://replit.com/contest")
-      && !collectedEntries.some((entry) => /replit\.com\/(?:blog|@|$)/i.test(entry.card.official_source_url)),
+    "Replit preserves only official event articles",
+    collectedEntries.some((entry) => entry.card.official_source_url === "https://replit.com/blog/ml-hackathon")
+      && !collectedEntries.some((entry) => /replit\.com\/(?:$|@|blog\/category)/i.test(entry.card.official_source_url)),
     JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
   );
 
