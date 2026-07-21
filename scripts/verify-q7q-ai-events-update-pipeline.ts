@@ -110,6 +110,54 @@ async function main(): Promise<void> {
       <a href="https://replit.com/">Replit home</a>
       <a href="https://replit.com/blog/category/events">Events index</a>
     `,
+    "https://www.aicrowd.com/challenges": `
+      <a href="https://www.aicrowd.com/challenges/ai-builders">AI Builders Challenge</a>
+      <a href="https://www.aicrowd.com/challenges">All challenges</a>
+    `,
+    "https://tianchi.aliyun.com/competition/gameList/activeList": `
+      <a href="https://tianchi.aliyun.com/competition/introduction.htm?raceId=1">AI Algorithm Competition</a>
+      <a href="https://tianchi.aliyun.com/competition/gameList/activeList">Active list</a>
+    `,
+    "https://www.datafountain.cn/competitions": `
+      <a href="https://www.datafountain.cn/competitions/ai-builders">AI Builders Competition</a>
+      <a href="https://www.datafountain.cn/competitions">All competitions</a>
+    `,
+    "https://www.topcoder.com/challenges": `
+      <a href="https://www.topcoder.com/challenges/ai-builders">AI Builders Challenge</a>
+      <a href="https://www.topcoder.com/challenges">All challenges</a>
+    `,
+    "https://aistudio.baidu.com/competition": `
+      <a href="https://aistudio.baidu.com/competition/detail/ai-builders">AI Builders Competition</a>
+      <a href="https://aistudio.baidu.com/competition">Competition index</a>
+    `,
+    "https://developer.huaweicloud.com/competition": `
+      <a href="https://developer.huaweicloud.com/competition/detail?competitionId=ai-builders">AI Builders Competition</a>
+      <a href="https://developer.huaweicloud.com/competition">Competition index</a>
+    `,
+    "https://challenge.xfyun.cn/": `
+      <a href="https://challenge.xfyun.cn/topic/info?type=ai-builders">AI Developer Competition</a>
+      <a href="https://challenge.xfyun.cn/">Challenge home</a>
+    `,
+    "https://www.modelscope.cn/events": `
+      <a href="https://www.modelscope.cn/events/ai-builders">AI Builders Event</a>
+      <a href="https://www.modelscope.cn/events">Events index</a>
+    `,
+    "https://www.drivendata.org/competitions/": `
+      <a href="https://www.drivendata.org/competitions/ai-builders">AI Builders Competition</a>
+      <a href="https://www.drivendata.org/competitions/">All competitions</a>
+    `,
+    "https://zindi.africa/competitions": `
+      <a href="https://zindi.africa/competitions/ai-builders">AI Builders Competition</a>
+      <a href="https://zindi.africa/competitions">All competitions</a>
+    `,
+    "https://www.codabench.org/competitions/": `
+      <a href="https://www.codabench.org/competitions/ai-builders">AI Builders Challenge</a>
+      <a href="https://www.codabench.org/competitions/">All competitions</a>
+    `,
+    "https://eval.ai/web/challenges/challenge-page": `
+      <a href="https://eval.ai/web/challenges/challenge-page/ai-builders/overview">AI Builders Challenge</a>
+      <a href="https://eval.ai/web/challenges/challenge-page">All challenges</a>
+    `,
   };
   const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,
@@ -149,11 +197,26 @@ async function main(): Promise<void> {
     sourceCollectorSource.includes('"replit"') && /sourceId === "replit"/.test(sourceCollectorSource),
     "Replit must accept /contest but reject blogs, home and ordinary Repls.",
   );
-  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 8, JSON.stringify(collectedRun.sourceCollection));
+  check(
+    "first batch sources join the default scheduler through concrete detail pages",
+    ["aicrowd", "tianchi", "datafountain", "topcoder"].every((id) => sourceCollectorSource.includes(`\"${id}\"`)),
+    "AIcrowd, Tianchi, DataFountain and Topcoder should be active after validation",
+  );
+  check(
+    "second batch sources join the default scheduler through concrete detail pages",
+    ["baidu-aistudio", "huaweicloud-competition", "iflytek-ai-competition", "modelscope-events"].every((id) => sourceCollectorSource.includes(`\"${id}\"`)),
+    "AI Studio, Huawei Cloud, iFlytek and ModelScope should be active after validation",
+  );
+  check(
+    "third batch sources join the default scheduler through concrete detail pages",
+    ["drivendata", "zindi", "codabench", "evalai"].every((id) => sourceCollectorSource.includes(`\"${id}\"`)),
+    "DrivenData, Zindi, Codabench and EvalAI should be active after validation",
+  );
+  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 20, JSON.stringify(collectedRun.sourceCollection));
   check(
     "source collection records every enabled source health result",
-    (collectedRun.sourceCollection?.sources.length ?? 0) >= 9 &&
-      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket", "hackster", "replit"].every((id) =>
+    (collectedRun.sourceCollection?.sources.length ?? 0) >= 21 &&
+      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket", "hackster", "replit", "aicrowd", "tianchi", "datafountain", "topcoder", "baidu-aistudio", "huaweicloud-competition", "iflytek-ai-competition", "modelscope-events", "drivendata", "zindi", "codabench", "evalai"].every((id) =>
         collectedRun.sourceCollection?.sources.some((source) => source.sourceId === id && source.status === "collected"),
       ),
     JSON.stringify(collectedRun.sourceCollection),
@@ -178,6 +241,22 @@ async function main(): Promise<void> {
       && !collectedEntries.some((entry) => /replit\.com\/(?:$|@|blog\/category)/i.test(entry.card.official_source_url)),
     JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
   );
+  for (const [sourceId, expectedUrl] of [
+    ["aicrowd", "https://www.aicrowd.com/challenges/ai-builders"],
+    ["tianchi", "https://tianchi.aliyun.com/competition/introduction.htm?raceId=1"],
+    ["datafountain", "https://www.datafountain.cn/competitions/ai-builders"],
+    ["topcoder", "https://www.topcoder.com/challenges/ai-builders"],
+    ["baidu-aistudio", "https://aistudio.baidu.com/competition/detail/ai-builders"],
+    ["huaweicloud-competition", "https://developer.huaweicloud.com/competition/detail?competitionId=ai-builders"],
+    ["iflytek-ai-competition", "https://challenge.xfyun.cn/topic/info?type=ai-builders"],
+    ["modelscope-events", "https://www.modelscope.cn/events/ai-builders"],
+    ["drivendata", "https://www.drivendata.org/competitions/ai-builders"],
+    ["zindi", "https://zindi.africa/competitions/ai-builders"],
+    ["codabench", "https://www.codabench.org/competitions/ai-builders"],
+    ["evalai", "https://eval.ai/web/challenges/challenge-page/ai-builders/overview"],
+  ] as const) {
+    check(`${sourceId} preserves its concrete detail page`, collectedEntries.some((entry) => entry.card.official_source_url === expectedUrl), JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)));
+  }
 
   const repeatedCollectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,

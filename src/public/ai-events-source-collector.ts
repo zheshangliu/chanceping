@@ -21,6 +21,18 @@ const ACTIVE_SOURCE_IDS = [
   "challengerocket",
   "hackster",
   "replit",
+  "aicrowd",
+  "tianchi",
+  "datafountain",
+  "topcoder",
+  "baidu-aistudio",
+  "huaweicloud-competition",
+  "iflytek-ai-competition",
+  "modelscope-events",
+  "drivendata",
+  "zindi",
+  "codabench",
+  "evalai",
 ] as const;
 const SECOND_BATCH_SOURCE_IDS: readonly string[] = [];
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
@@ -144,6 +156,21 @@ function isConcreteEventUrl(sourceId: string, url: URL): boolean {
       && /^\/blog\/[^/]+$/i.test(path)
       && !/^\/blog\/(category|author|tag|page)$/i.test(path);
   }
+  if (sourceId === "aicrowd") return /aicrowd.com$/i.test(url.hostname) && /^\/challenges\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "tianchi") {
+    return /tianchi.aliyun.com$/i.test(url.hostname)
+      && (/^\/competition\/(?:introduction|detail)\.htm$/i.test(path) || /^\/competition\/website\/[a-z0-9][a-z0-9_-]+$/i.test(path));
+  }
+  if (sourceId === "datafountain") return /datafountain.cn$/i.test(url.hostname) && /^\/competitions\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "topcoder") return /topcoder.com$/i.test(url.hostname) && /^\/challenges\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "baidu-aistudio") return /aistudio.baidu.com$/i.test(url.hostname) && /^\/competition\/detail\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "huaweicloud-competition") return /developer.huaweicloud.com$/i.test(url.hostname) && /^\/competition\/detail$/i.test(path) && url.searchParams.has("competitionId");
+  if (sourceId === "iflytek-ai-competition") return /challenge.xfyun.cn$/i.test(url.hostname) && /^\/topic\/info$/i.test(path) && (url.searchParams.has("type") || url.searchParams.has("id"));
+  if (sourceId === "modelscope-events") return /modelscope.cn$/i.test(url.hostname) && /^\/events\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "drivendata") return /drivendata.org$/i.test(url.hostname) && /^\/competitions\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "zindi") return /zindi.africa$/i.test(url.hostname) && /^\/competitions\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "codabench") return /codabench.org$/i.test(url.hostname) && /^\/competitions\/[a-z0-9][a-z0-9_-]+$/i.test(path);
+  if (sourceId === "evalai") return /eval.ai$/i.test(url.hostname) && /^\/web\/challenges\/challenge-page\/[a-z0-9][a-z0-9_-]+(?:\/overview)?$/i.test(path);
   return false;
 }
 
@@ -189,6 +216,18 @@ function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
   if (source.id === "challengerocket") return "site:challengerocket.com (AI OR hackathon OR challenge) registration -rules -faq -login";
   if (source.id === "hackster") return "site:hackster.io/contests (AI OR edge AI OR machine learning OR robotics) contest participate";
   if (source.id === "replit") return "site:replit.com/blog (Replit contest OR hackathon OR challenge) AI prizes deadline";
+  if (source.id === "aicrowd") return "site:aicrowd.com/challenges (AI OR machine learning OR LLM) challenge deadline";
+  if (source.id === "tianchi") return "site:tianchi.aliyun.com/competition (AI OR 算法 OR 大模型) 竞赛 报名";
+  if (source.id === "datafountain") return "site:datafountain.cn/competitions (AI OR 算法 OR 大模型) 比赛 报名";
+  if (source.id === "topcoder") return "site:topcoder.com/challenges (AI OR machine learning OR generative AI) challenge";
+  if (source.id === "baidu-aistudio") return "site:aistudio.baidu.com/competition/detail AI 比赛 报名 奖金";
+  if (source.id === "huaweicloud-competition") return "site:developer.huaweicloud.com/competition/detail AI 赛事 报名 奖金";
+  if (source.id === "iflytek-ai-competition") return "site:challenge.xfyun.cn/topic/info AI 开发者大赛 报名";
+  if (source.id === "modelscope-events") return "site:modelscope.cn/events AI 活动 赛事 报名";
+  if (source.id === "drivendata") return "site:drivendata.org/competitions (AI OR machine learning OR data science) competition";
+  if (source.id === "zindi") return "site:zindi.africa/competitions (AI OR machine learning OR data science) competition";
+  if (source.id === "codabench") return "site:codabench.org/competitions (AI OR machine learning OR challenge) competition";
+  if (source.id === "evalai") return "site:eval.ai/web/challenges/challenge-page AI challenge competition";
   const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
   return `site:${source.domain} ${focus}`;
 }
