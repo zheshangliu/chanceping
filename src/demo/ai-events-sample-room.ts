@@ -445,13 +445,13 @@ export const AI_EVENT_SOURCE_NETWORK: PublicAiEventSource[] = [
   },
   {
     id: "replit",
-    name: "Replit",
+    name: "Replit Contests",
     domain: "replit.com",
-    url: "https://replit.com/",
+    url: "https://replit.com/contest",
     sourceType: "developer_community",
-    trustTier: "watch_signal",
-    role: "AI 编程、应用构建和开发者活动观察源，可发现 Replit 生态 Hackathon 或挑战赛线索。",
-    reviewNote: "Replit 首页不是赛事事实源，必须追溯到官方 challenge、活动页或报名页。",
+    trustTier: "official_first",
+    role: "Replit 官方 AI 应用和开发者 contest 入口，可发现奖金、作品展示与应用构建挑战。",
+    reviewNote: "仅读取官方 contest 页面；普通 Repl、博客回顾和产品页不作为赛事卡。",
   },
   {
     id: "tapnow",

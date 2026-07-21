@@ -20,6 +20,7 @@ const ACTIVE_SOURCE_IDS = [
   "taikai",
   "challengerocket",
   "hackster",
+  "replit",
 ] as const;
 const SECOND_BATCH_SOURCE_IDS: readonly string[] = [];
 const AI_EVENT_HINT = /\bai\b|artificial intelligence|machine learning|llm|agent|generative|aigc|hackathon|黑客松|人工智能|大模型|算法|模型/i;
@@ -135,6 +136,12 @@ function isConcreteEventUrl(sourceId: string, url: URL): boolean {
     return /hackster\.io$/i.test(url.hostname)
       && /^\/contests\/[a-z0-9][a-z0-9_-]*$/i.test(path);
   }
+  if (sourceId === "replit") {
+    // Replit's official contest landing page contains the active contest
+    // schedule and entry rules. Blog posts and ordinary Repls are not event
+    // facts and must stay out of the public event feed.
+    return /replit\.com$/i.test(url.hostname) && path === "/contest";
+  }
   return false;
 }
 
@@ -179,6 +186,7 @@ function buildSourceDiscoveryQuery(source: PublicAiEventSource): string {
   if (source.id === "taikai") return "site:taikai.network/en/*/hackathons/* AI hackathon registration";
   if (source.id === "challengerocket") return "site:challengerocket.com (AI OR hackathon OR challenge) registration -rules -faq -login";
   if (source.id === "hackster") return "site:hackster.io/contests (AI OR edge AI OR machine learning OR robotics) contest participate";
+  if (source.id === "replit") return "site:replit.com/contest Replit contest AI app hackathon prizes deadline";
   const focus = source.id === "kaggle" ? "AI machine learning competition" : "AI hackathon registration";
   return `site:${source.domain} ${focus}`;
 }

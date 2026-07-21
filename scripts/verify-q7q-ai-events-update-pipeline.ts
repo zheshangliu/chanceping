@@ -104,6 +104,11 @@ async function main(): Promise<void> {
       <a href="/contests/ai-edge-challenge/rules">Contest rules</a>
       <a href="/contests">All contests</a>
     `,
+    "https://replit.com/contest": `
+      <a href="https://replit.com/contest">Replit AI App Contest</a>
+      <a href="https://replit.com/blog/ml-hackathon">Historical ML Hackathon</a>
+      <a href="https://replit.com/">Replit home</a>
+    `,
   };
   const collectedRun = await runPublicAiEventsUpdatePipeline(collectedStore, undefined, {
     now: referenceNow,
@@ -138,11 +143,16 @@ async function main(): Promise<void> {
     sourceCollectorSource.includes('"hackster"') && /sourceId === "hackster"/.test(sourceCollectorSource),
     "Hackster must reject the contests index and nested support pages.",
   );
-  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 7, JSON.stringify(collectedRun.sourceCollection));
+  check(
+    "Replit joins the default scheduler only through its official contest page",
+    sourceCollectorSource.includes('"replit"') && /sourceId === "replit"/.test(sourceCollectorSource),
+    "Replit must accept /contest but reject blogs, home and ordinary Repls.",
+  );
+  check("source collection discovers concrete event pages from active source indexes", collectedRun.sourceCollection?.discoveredCardCount === 8, JSON.stringify(collectedRun.sourceCollection));
   check(
     "source collection records every enabled source health result",
     (collectedRun.sourceCollection?.sources.length ?? 0) >= 9 &&
-      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket", "hackster"].every((id) =>
+      ["devpost", "dorahacks", "lablab", "kaggle", "taikai", "challengerocket", "hackster", "replit"].every((id) =>
         collectedRun.sourceCollection?.sources.some((source) => source.sourceId === id && source.status === "collected"),
       ),
     JSON.stringify(collectedRun.sourceCollection),
@@ -159,6 +169,12 @@ async function main(): Promise<void> {
     "Hackster preserves only its concrete contest page",
     collectedEntries.some((entry) => entry.card.official_source_url === "https://www.hackster.io/contests/ai-edge-challenge")
       && !collectedEntries.some((entry) => /hackster\.io\/contests\/ai-edge-challenge\/(?:rules|submissions)/i.test(entry.card.official_source_url)),
+    JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
+  );
+  check(
+    "Replit preserves only its official contest page",
+    collectedEntries.some((entry) => entry.card.official_source_url === "https://replit.com/contest")
+      && !collectedEntries.some((entry) => /replit\.com\/(?:blog|@|$)/i.test(entry.card.official_source_url)),
     JSON.stringify(collectedEntries.map((entry) => entry.card.official_source_url)),
   );
 

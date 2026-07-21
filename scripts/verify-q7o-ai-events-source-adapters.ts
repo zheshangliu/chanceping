@@ -126,7 +126,7 @@ check("source registry keeps official-first sources separate", AI_EVENT_SOURCE_N
 const nextBatchSources = [
   { id: "challengerocket", domain: "challengerocket.com", expectedTier: "platform_index" },
   { id: "hackster", domain: "hackster.io", expectedTier: "platform_index" },
-  { id: "replit", domain: "replit.com", expectedTier: "watch_signal" },
+  { id: "replit", domain: "replit.com", expectedTier: "official_first" },
 ];
 
 for (const expected of nextBatchSources) {
