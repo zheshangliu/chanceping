@@ -213,6 +213,23 @@ function deadlineWindow(deadline: string, now: Date): string {
   return "later";
 }
 
+function compactWelfareField(value: string, labels: string[]): string {
+  const indexes = labels.map((label) => value.indexOf(label)).filter((index) => index > 0);
+  return indexes.length ? value.slice(0, Math.min(...indexes)).trim() : value;
+}
+
+function normalizeWelfareRecordForDisplay(record: WelfareOpportunityRecord): WelfareOpportunityRecord {
+  const buyer = compactWelfareField(record.buyer, ["公告时间", "发布时间", "获取采购文件时间", "响应文件递交地点", "项目概况", "采购内容", "代理机构名称", "行政区域"]);
+  const contactAddress = compactWelfareField(record.contactAddress, ["采购单位联系方式", "代理机构名称", "代理机构地址", "项目概况", "附件"])
+    .replace(/^采购单位地址[：:]?\s*/, "").trim();
+  const evidenceFields = record.evidenceFields.map((field) => {
+    if (!field.excerpt) return field;
+    const labels = field.field === "buyer" ? ["公告时间", "发布时间", "获取采购文件时间", "响应文件递交地点", "项目概况", "代理机构名称"] : field.field === "contactAddress" ? ["采购单位联系方式", "代理机构名称", "代理机构地址", "项目概况", "附件"] : [];
+    return labels.length ? { ...field, excerpt: compactWelfareField(field.excerpt, labels) } : field;
+  });
+  return { ...record, buyer, contactAddress, evidenceFields };
+}
+
 function buildFacets(records: WelfareOpportunityRecord[], values: (record: WelfareOpportunityRecord) => string[], labels?: Record<string, string>) {
   const counts = new Map<string, number>();
   for (const record of records) for (const value of values(record)) counts.set(value, (counts.get(value) ?? 0) + 1);
@@ -223,6 +240,7 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
   const now = options.now instanceof Date ? options.now : new Date(options.now ?? Date.now());
   const status = options.status ?? "current";
   const allRecords = records.map((record) => {
+    record = normalizeWelfareRecordForDisplay(record);
     if (record.lifecycleStatus === "current" && /^\d{4}-\d{2}-\d{2}/.test(record.deadline) && new Date(record.deadline).getTime() < now.getTime()) {
       return { ...record, lifecycleStatus: "historical" as const };
     }
@@ -449,7 +467,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     buyer: buyerExcerpt?.replace(/^(?:采购人名称|采购单位|采购人)[：:]?\s*/, "") ?? "待核验",
     contactName: publishedContactName(contactNameExcerpt) ?? "未公开",
     contactPhone: contactPhoneExcerpt?.replace(/^(?:联系电话|项目联系电话|项目联系人电话|联系人及电话|采购单位联系方式)[：:]?\s*/, "") ?? "未公开",
-    contactAddress: contactAddressExcerpt?.replace(/^联系地址[：:]?\s*/, "") ?? "未公开",
+    contactAddress: contactAddressExcerpt?.replace(/^(?:联系地址|采购单位地址)[：:]?\s*/, "") ?? "未公开",
     region: source.region,
     budgetDisplay: budgetExcerpt?.replace(/^(?:预算金额|采购预算|最高限价|预估(?:年度)?采购总金额)[：:]?\s*/, "") ?? "未公开",
     deadline,

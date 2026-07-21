@@ -45,6 +45,8 @@ assert.equal(parsed.contactAddress, "深圳市光明区测试办公地址");
 const unlabeledBoundary = parseWelfareDetail({ html: `<title>成都市武侯区职工体检服务竞争性磋商公告</title><p>采购单位 成都市武侯区人民政府华兴街道办事处 公告时间 2026年7月20日 响应文件提交截止时间：2026年7月31日10时。联系地址 成都市武侯区测试路。</p>`, url: "https://example.gov.cn/wuhou.html", sourceCode: "OFF-SZ-004", retrievedAt: "2026-07-20T00:00:00.000Z" });
 assert.ok(unlabeledBoundary);
 assert.equal(unlabeledBoundary.buyer, "成都市武侯区人民政府华兴街道办事处", "buyer extraction must stop at the next unlabeled portal field");
+const normalizedFeed = buildWelfareFeed([unlabeledBoundary], { status: "all" });
+assert.equal(normalizedFeed.items[0].buyer, "成都市武侯区人民政府华兴街道办事处", "public feed must normalize persisted buyer text");
 
 const merged = mergeWelfareRecords(records, records);
 assert.equal(merged.length, records.length, "idempotent merge must not duplicate records");
