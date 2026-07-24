@@ -60,20 +60,33 @@
     renderEvidence(data.items.find((item) => item.id === state.selected) || data.items[0]);
   }
 
+  function renderCandidates(data) {
+    state.data = data; state.totalPages = data.stats.totalPages;
+    document.querySelector("#welfare-count").textContent = `${data.stats.totalCount} 条`;
+    document.querySelector("#welfare-list-title").textContent = "待核验销售线索";
+    document.querySelector("#welfare-metrics").innerHTML = [[data.stats.totalCount, "待核验线索"], ["—", "不代表当前可投"], ["—", "需回溯官方原文"]].map(([value, label]) => `<div class="welfare-metric"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join("");
+    document.querySelector("#welfare-decision-list").innerHTML = "<p style='padding:18px'>线索仅用于销售发现，不代表已核验机会。</p>";
+    document.querySelector("#welfare-evidence").innerHTML = "<p>打开线索官方原文并完成核验。</p>";
+    document.querySelector("#welfare-grid").innerHTML = data.items.length ? data.items.map((item) => `<article class="welfare-card"><div class="welfare-badges"><span class="welfare-badge">待核验线索</span><span class="welfare-badge welfare-badge-status">${esc(item.sourceCode)}</span></div><h3>${esc(item.title)}</h3><dl><dt>来源</dt><dd>${esc(item.sourceName)}</dd><dt>地区</dt><dd>${esc(item.region)}</dd><dt>发布时间</dt><dd>${esc(item.publishedAt.slice(0, 10))}</dd></dl><p class="welfare-card-reason">${esc(item.reason)}</p><p class="welfare-card-next"><strong>销售下一步</strong>${esc(item.nextAction)}</p><a href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">打开官方原文</a></article>`).join("") : "<article class='welfare-card'>当前没有待核验线索。</article>";
+    document.querySelector("#welfare-page-info").textContent = `第 ${data.stats.page} / ${data.stats.totalPages} 页`;
+    document.querySelector("#welfare-prev").disabled = data.stats.page <= 1;
+    document.querySelector("#welfare-next").disabled = data.stats.page >= data.stats.totalPages;
+  }
+
   async function load() {
     const params = new URLSearchParams({ status: state.status, page: String(state.page), page_size: "24", type: document.querySelector("#welfare-type").value, scene: document.querySelector("#welfare-scene").value, region: document.querySelector("#welfare-region").value, deadline_window: document.querySelector("#welfare-deadline").value });
     try {
-      const response = await fetch(`/api/public/welfare/opportunities?${params}`);
+      const response = await fetch(state.status === "candidates" ? `/api/public/welfare/candidates?page=${state.page}&page_size=24` : `/api/public/welfare/opportunities?${params}`);
       const json = await response.json();
       if (!response.ok || !json.success) throw new Error(json.error?.message || "加载失败");
-      render(json.data);
+      state.status === "candidates" ? renderCandidates(json.data) : render(json.data);
     } catch (error) {
       document.querySelector("#welfare-grid").innerHTML = `<article class="welfare-card">${esc(error.message || "加载失败")}</article>`;
     }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("[data-status]").forEach((button) => button.addEventListener("click", () => { document.querySelectorAll("[data-status]").forEach((item) => item.classList.remove("is-active")); button.classList.add("is-active"); state.status = button.dataset.status; state.page = 1; load(); }));
+    document.querySelectorAll("[data-status]").forEach((button) => button.addEventListener("click", () => { document.querySelectorAll("[data-status]").forEach((item) => item.classList.remove("is-active")); button.classList.add("is-active"); state.status = button.dataset.status; state.page = 1; document.querySelectorAll(".welfare-filters select").forEach((select) => select.disabled = state.status === "candidates"); load(); }));
     ["#welfare-type", "#welfare-scene", "#welfare-region", "#welfare-deadline"].forEach((id) => document.querySelector(id).addEventListener("change", () => { state.page = 1; load(); }));
     document.querySelector("#welfare-prev").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; load(); } });
     document.querySelector("#welfare-next").addEventListener("click", () => { if (state.page < state.totalPages) { state.page += 1; load(); } });

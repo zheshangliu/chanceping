@@ -33,6 +33,7 @@ assert.ok(css.includes(".welfare-topbar") && !css.includes(".ai-events-page"));
 assert.ok(js.includes("/api/public/welfare/opportunities?"));
 assert.ok(!html.includes("本来生活能力"));
 assert.ok(js.includes("contactName") && js.includes("contactPhone") && js.includes("contactAddress"));
+assert.ok(html.includes("待核验线索") && js.includes("/api/public/welfare/candidates"));
 
 async function main() {
   const app = createApp();
