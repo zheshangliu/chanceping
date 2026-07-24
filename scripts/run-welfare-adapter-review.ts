@@ -7,11 +7,15 @@ const requested = new Set([
 ]);
 
 async function main(): Promise<void> {
-  const results = [];
-  for (const source of WELFARE_SHADOW_SOURCES.filter((item) => requested.has(item.code))) {
-    const result = await collectWelfareSource(source.code, { persist: false, evidenceDir: `data/welfare-adapter-review/${source.code}`, maxDetails: 12 });
-    results.push({ sourceCode: source.code, adapter: source.adapter, status: result.status, discoveredCount: result.discoveredCount, publishedCount: result.publishedCount, errors: result.errors.length });
-  }
+  const sources = WELFARE_SHADOW_SOURCES.filter((item) => requested.has(item.code));
+  const results = await Promise.all(sources.map(async (source) => {
+    try {
+      const result = await collectWelfareSource(source.code, { persist: false, evidenceDir: `data/welfare-adapter-review/${source.code}`, maxDetails: 3 });
+      return { sourceCode: source.code, adapter: source.adapter, status: result.status, discoveredCount: result.discoveredCount, publishedCount: result.publishedCount, errors: result.errors.length };
+    } catch (error) {
+      return { sourceCode: source.code, adapter: source.adapter, status: "failed", discoveredCount: 0, publishedCount: 0, errors: 1, error: error instanceof Error ? error.message : String(error) };
+    }
+  }));
   console.log(JSON.stringify({ reviewedAt: new Date().toISOString(), results }, null, 2));
 }
 
