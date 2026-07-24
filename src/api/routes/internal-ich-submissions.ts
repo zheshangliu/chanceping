@@ -57,7 +57,9 @@ export function internalIchSubmissionRoutes(options: IchInternalSubmissionRouteO
   const acceptance = new IchSubmissionAcceptanceService(
     submissionStore,
     opportunityStore,
-    options.transactionPath ?? path.resolve(process.cwd(), "data/ich-submission-accept.transaction.json"),
+    options.transactionPath ??
+      process.env.CHANCEPING_ICH_SUBMISSION_TRANSACTION_PATH ??
+      path.resolve(process.cwd(), "data/ich-submission-accept.transaction.json"),
   );
   const expectedToken = options.adminToken ?? process.env.CHANCEPING_ICH_ADMIN_TOKEN ?? "";
   const now = options.now ?? (() => new Date());
