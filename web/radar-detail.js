@@ -91,6 +91,34 @@
     return json;
   }
 
+  async function getOpportunityEntriesForView(opportunityRadarId, pageSize) {
+    if (opportunityRadarId !== PUBLIC_AI_EVENTS_RADAR_ID) {
+      const res = await backendFetch(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${pageSize}&sort_by=deadline&sort_order=asc`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error?.message || "请求失败");
+      return Array.isArray(json.data?.entries) ? json.data.entries : [];
+    }
+
+    const publicPageSize = 60;
+    const getPublicPage = async (page) => {
+      const res = await backendFetch(`/api/public/ai-events?status=current&page=${page}&page_size=${publicPageSize}`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error?.message || "请求失败");
+      return json;
+    };
+    const firstPage = await getPublicPage(1);
+    const firstItems = Array.isArray(firstPage.data?.items) ? firstPage.data.items : [];
+    const totalPages = Math.max(1, Number(firstPage.data?.stats?.totalPages || 1));
+    const pageLimit = Math.min(totalPages, Math.ceil(pageSize / publicPageSize));
+    const remainingPages = await Promise.all(
+      Array.from({ length: Math.max(0, pageLimit - 1) }, (_, index) => getPublicPage(index + 2)),
+    );
+    return [
+      ...firstItems,
+      ...remainingPages.flatMap((page) => Array.isArray(page.data?.items) ? page.data.items : []),
+    ].slice(0, pageSize).map((card) => ({ card }));
+  }
+
   function getSearchModeRequest() {
     const mode = typeof window.getChancePingSearchMode === "function" ? window.getChancePingSearchMode() : undefined;
     return mode === "live" ? { search_mode: "live" } : {};
@@ -667,10 +695,9 @@
       if (opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID) {
         list.innerHTML = '<p class="placeholder">正在读取 AI Events 公共赛事库...</p>';
       }
-      const res = await backendFetch(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${pageSize}&sort_by=deadline&sort_order=asc`);
-      const json = await res.json();
-      if (json.success && json.data && Array.isArray(json.data.entries)) {
-        const filteredEntries = filterPublicAiEventCardsForView(json.data.entries, opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID);
+      const entries = await getOpportunityEntriesForView(opportunityRadarId, pageSize);
+      if (Array.isArray(entries)) {
+        const filteredEntries = filterPublicAiEventCardsForView(entries, opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID);
         currentOpportunityCards = filteredEntries
           .map((entry) => entry.card)
           .filter(Boolean);

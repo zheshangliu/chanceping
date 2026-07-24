@@ -70,11 +70,13 @@ function runFrontendBridgeCheck(): void {
   check("view result keeps private radar id for edit and rerun", radarsJs.includes("sourceRadarId") && radarsJs.includes("opportunityRadarId"));
   check("view result fetches enough public events", /getOpportunityPageSizeForView/.test(radarsJs) && /1000/.test(radarsJs));
   check("view result never triggers public AI events writes", !radarsJs.includes("/api/public/ai-events/sync") && !radarsJs.includes("/api/public/ai-events/hydrate-images"));
+  check("view result reads public AI events through the pure-read feed", /getOpportunityDataForView/.test(radarsJs) && radarsJs.includes("/api/public/ai-events?status=current"));
   check("view result filters public events to current cards", /filterPublicAiEventCardsForView/.test(radarsJs) && /isCurrentPublicAiEventCard/.test(radarsJs));
   check("view result explains public AI events library", /公共赛事库|公开赛事库/.test(radarsJs));
   check("radar detail JS knows public AI events radar id", detailJs.includes(PUBLIC_AI_EVENTS_RADAR_ID));
   check("radar detail stored opportunities can use public bridge", /getOpportunityRadarIdForView/.test(detailJs) && /page_size=\$\{pageSize\}/.test(detailJs));
   check("radar detail never triggers public AI events writes", !detailJs.includes("/api/public/ai-events/sync") && !detailJs.includes("/api/public/ai-events/hydrate-images"));
+  check("radar detail reads public AI events through the pure-read feed", /getOpportunityEntriesForView/.test(detailJs) && detailJs.includes("/api/public/ai-events?status=current"));
   check("radar detail filters public events to current cards", /filterPublicAiEventCardsForView/.test(detailJs) && /isCurrentPublicAiEventCard/.test(detailJs));
   check("radar detail explains public library source", /AI Events 公共赛事库/.test(detailJs) && /\/aievents/.test(detailJs));
   check("detail and result pages hide placeholder deadline dates", /displayDeadline/.test(detailJs) && /9999-12-31/.test(detailJs) && /displayDeadline/.test(watchResultJs) && /9999-12-31/.test(watchResultJs));
