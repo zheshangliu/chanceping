@@ -689,7 +689,10 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   }
   const links = (source.directDetail
     ? [{ title: source.name, url: source.url, publishedAt: "" }]
-    : Array.from(indexLinks.values())
+    : Array.from(indexLinks.values()).sort((a, b) => {
+      const context = /(慰问|福利|职工|体检|礼品|送清凉|疗休养|工会)/;
+      return Number(!context.test(a.title)) - Number(!context.test(b.title));
+    })
   ).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
   const records: WelfareOpportunityRecord[] = [];
   const errors: Array<{ url: string; error: string }> = [...indexErrors];
