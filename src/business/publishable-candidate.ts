@@ -82,7 +82,7 @@ export function toPublishableGuangdongProcurement(candidate: CandidateRecord, no
 export function toPublishableOfficialOpportunity(candidate: CandidateRecord, now = new Date()): PublishableOfficialCandidate | undefined {
   const source = loadSourceRegistry().sources.find((item) => item.sourceId === candidate.sourceId);
   const category = candidate.categoryHint;
-  if (!source || source.role !== "official_fact" || source.finalAllowed !== "是" || !["policy", "competition", "exhibition"].includes(category ?? "") || !candidate.canonicalUrl?.startsWith("https://") || !candidate.rawPublishedAt || !isFixedDeadlineCurrent(candidate.rawDeadlineText, now)) return undefined;
+  if (!source || source.role !== "official_fact" || source.finalAllowed !== "是" || !["policy", "competition", "exhibition", "international"].includes(category ?? "") || !candidate.canonicalUrl?.startsWith("https://") || !candidate.rawPublishedAt || !isFixedDeadlineCurrent(candidate.rawDeadlineText, now)) return undefined;
   const url = new URL(candidate.canonicalUrl);
   if (url.hostname !== source.officialDomain && !url.hostname.endsWith(`.${source.officialDomain}`)) return undefined;
   const title = candidate.rawTitle.replace(/\.\.\.$/, "").trim();
@@ -90,7 +90,7 @@ export function toPublishableOfficialOpportunity(candidate: CandidateRecord, now
   const capturedAt = now.toISOString();
   const action = category === "competition" ? "报名参赛" : category === "exhibition" ? "申报参展" : "提交申报材料";
   return {
-    candidateId: candidate.candidateId, title, category: category as PublishableOfficialCandidate["category"], sourceName: source.name, sourceType: "government",
+    candidateId: candidate.candidateId, title, category: category as PublishableOfficialCandidate["category"], sourceName: source.name, sourceType: /(?:人民政府|商务厅|商务局|财政部|部委|机关)/.test(source.authority) ? "government" : "official",
     officialUrl: candidate.canonicalUrl, organizer: source.name, regions: ["guangdong"], editions: ["guangzhou", "tianhe", "shaoguan"], publishedAt: candidate.rawPublishedAt, deadline: candidate.rawDeadlineText!, deadlineType: "fixed", status: "open", verificationStatus: "fully_verified", reviewState: "FULLY_VERIFIED", targetAudience: ["enterprise"],
     eligibilitySummary: `面向符合官方通知要求的企业或申报主体；请按公告要求${action}。`, eligibilityRequirements: ["核对官方通知列明的申报条件、材料与提交渠道", `在固定截止日前完成${action}`], rewardSummary: "支持标准、奖项或权益以官方通知及附件为准。", recommendationLevel: "medium",
     risks: ["资格条件、附件和补充通知以官方原文为准", "提交前应复核截止时间及线上系统状态"], nextActions: ["打开官方通知核对适用条件和材料清单", `在截止日前完成${action}`],

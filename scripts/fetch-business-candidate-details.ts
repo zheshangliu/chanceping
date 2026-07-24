@@ -9,7 +9,7 @@ const candidates = loadCandidates();
 const targets = candidates.filter((item) => (refresh ? ["DISCOVERED", "FETCHED", "EXTRACTED"].includes(item.state) : item.state === "DISCOVERED") && (!selectedSources || selectedSources.includes(item.sourceId))).slice(0, limit);
 
 function publishedAtFrom(content: string): string | undefined {
-  const match = content.match(/(?:发布时间|发布(?:日期|时间)?|时间)\s*[：:]?\s*(20\d{2})[年\-/.](\d{1,2})[月\-/.](\d{1,2})/);
+  const match = content.match(/(?:发布时间|发布(?:日期|时间)?|时间)?\s*[：:]?\s*(20\d{2})\s*[年\-/.]\s*(\d{1,2})\s*[月\-/.]\s*(\d{1,2})/);
   if (!match) return undefined;
   return `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}T00:00:00+08:00`;
 }
@@ -18,12 +18,20 @@ function deadlineFrom(text: string): string | undefined {
   // Official notices use several equivalent forms: 截至、截止至、请在…前、
   // 于…前提交.  Keep this intentionally date-only: a missing time is the end
   // of the announced local calendar day, never an invented clock time.
-  const matches = [...text.matchAll(/(?:截止(?:时间|日期|至)?|截至|请(?:于|在)|须(?:于|在)|应(?:于|在)|报名截止|申报截止|于)[^。；，,]{0,60}?(20\d{2})[年\-/.](\d{1,2})[月\-/.](\d{1,2})[^。；，,]{0,12}?(?:前|止|截止|之前|前提交|前报送)?/g)];
+  const matches = [...text.matchAll(/(?:报名(?:截止|截至)|参展报名截止|申报截止|申请截止|截止(?:时间|日期|至)?|截至)[^。；，,]{0,60}?(?:(20\d{2})\s*年)?\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日[^。；，,]{0,12}?(?:前|止|截止|之前|前提交|前报送)?/g)];
   const match = matches.at(-1);
-  return match ? `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}T23:59:59+08:00` : undefined;
+  return match ? `${match[1] ?? "2026"}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}T23:59:59+08:00` : undefined;
 }
 function signalsFrom(text: string): string[] { return ["申报", "报名", "投标", "响应", "采购", "招标", "征集", "遴选", "参展", "提交材料", "申请"].filter((signal) => text.includes(signal)); }
-function categoryFrom(signals: string[]): string | undefined { if (signals.some((signal) => ["投标", "响应", "采购", "招标"].includes(signal))) return "procurement"; if (signals.includes("参展")) return "exhibition"; if (signals.includes("报名")) return "competition"; if (signals.some((signal) => ["申报", "征集", "遴选", "申请"].includes(signal))) return "policy"; return undefined; }
+function categoryFrom(signals: string[], text: string, title: string): string | undefined {
+  if (/参展|展览|展会|展位|企业展/.test(title)) return "exhibition";
+  if (signals.some((signal) => ["投标", "响应", "采购", "招标"].includes(signal))) return "procurement";
+  if (signals.includes("参展")) return "exhibition";
+  if (/外贸|出口|国际市场|跨境|境外展贸|信用保险/.test(text)) return "international";
+  if (signals.includes("报名")) return "competition";
+  if (signals.some((signal) => ["申报", "征集", "遴选", "申请"].includes(signal))) return "policy";
+  return undefined;
+}
 
 async function fetchOne(index: number): Promise<{ index: number; contentHash?: string; publishedAt?: string; deadline?: string; excerpt?: string; signals?: string[]; category?: string; error?: string }> {
   const candidate = targets[index];
@@ -35,7 +43,7 @@ async function fetchOne(index: number): Promise<{ index: number; contentHash?: s
     const signals = signalsFrom(text);
     // Later sections and attachments commonly contain the only deadline and
     // eligibility wording, so preserve enough text for a human-auditable gate.
-    return { index, contentHash: contentFingerprint(content), publishedAt: publishedAtFrom(text), deadline: deadlineFrom(text), excerpt: text.slice(0, 8_000), signals, category: categoryFrom(signals) };
+    return { index, contentHash: contentFingerprint(content), publishedAt: publishedAtFrom(text), deadline: deadlineFrom(text), excerpt: text.slice(0, 8_000), signals, category: categoryFrom(signals, text, candidate.rawTitle) };
   } catch (error) { return { index, error: error instanceof Error ? error.message : String(error) }; }
 }
 

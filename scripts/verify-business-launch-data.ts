@@ -16,6 +16,10 @@ const largestSourceShare = Math.max(...Object.values(current.reduce<Record<strin
 check("launch includes at least ten current policy opportunities", categoryCount("policy") >= 10);
 check("launch includes at least three current competition opportunities", categoryCount("competition") >= 3);
 check("launch retains current exhibition and international opportunities", categoryCount("exhibition") >= 1 && categoryCount("international") >= 1);
+check("launch includes at least ten current exhibition opportunities", categoryCount("exhibition") >= 10);
+const foreignTradeSignals = /外贸|出口|跨境|国际|境外|东盟|服务贸易|进口/;
+const foreignTradeCount = current.filter((item) => item.category === "international" || foreignTradeSignals.test(`${item.title} ${item.keywords.join(" ")} ${item.summary}`)).length;
+check("launch includes at least ten current foreign-trade opportunities", foreignTradeCount >= 10);
 check("launch is represented by at least five official sources", sourceCounts >= 5);
 check("largest source share is below 90 percent", largestSourceShare < 0.9);
 if (failures > 0) process.exitCode = 1;
