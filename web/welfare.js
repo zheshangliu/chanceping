@@ -45,13 +45,13 @@
     state.data = data;
     state.totalPages = data.stats.totalPages;
     document.querySelector("#welfare-count").textContent = `${data.stats.filteredCount} 条`;
-    document.querySelector("#welfare-list-title").textContent = state.status === "current" ? "当前有效企业福利商机" : "历史企业福利商机";
+    document.querySelector("#welfare-list-title").textContent = state.status === "priority" ? "销售优先机会" : state.status === "current" ? "当前有效企业福利商机" : "历史企业福利商机";
     renderMetrics(data.stats);
     replaceOptions(document.querySelector("#welfare-type"), data.stats.typeFacets, "全部类型");
     replaceOptions(document.querySelector("#welfare-scene"), data.stats.sceneFacets, "全部场景");
     replaceOptions(document.querySelector("#welfare-region"), data.stats.regionFacets, "全部地区");
     document.querySelector("#welfare-decision-list").innerHTML = data.items.length ? data.items.map((item) => `<button class="welfare-decision-row" data-id="${esc(item.id)}"><strong>${esc(item.title)}</strong><span>${esc(item.deadlineDisplay)}</span><span>${esc(item.buyer)} · ${esc(item.region)}</span><span>${esc(verificationLabels[item.verificationState] || "待核验")}</span></button>`).join("") : "<p style='padding:18px'>当前筛选没有匹配商机。</p>";
-    document.querySelector("#welfare-grid").innerHTML = data.items.length ? data.items.map((item) => `<article class="welfare-card"><div class="welfare-badges"><span class="welfare-badge">${esc(typeLabels[item.opportunityType] || item.opportunityType)}</span><span class="welfare-badge welfare-badge-status">${esc(verificationLabels[item.verificationState] || "待核验")}</span>${item.welfareScenes.map((scene) => `<span class="welfare-badge">${esc(scene)}</span>`).join("")}</div><h3>${esc(item.title)}</h3><dl><dt>采购单位</dt><dd>${esc(item.buyer)}</dd><dt>联系人</dt><dd>${esc(item.contactName)}</dd><dt>电话</dt><dd>${esc(item.contactPhone)}</dd><dt>地址</dt><dd>${esc(item.contactAddress)}</dd><dt>地区</dt><dd>${esc(item.region)}</dd><dt>预算</dt><dd>${esc(item.budgetDisplay)}</dd><dt>截止</dt><dd>${esc(item.deadlineDisplay)}</dd></dl><p class="welfare-card-reason">${esc(item.reason)}</p><p class="welfare-card-next"><strong>下一步</strong>${esc(item.nextAction)}</p><a href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">打开官方原文</a></article>`).join("") : "<article class='welfare-card'>暂未发现符合当前筛选的商机。</article>";
+    document.querySelector("#welfare-grid").innerHTML = data.items.length ? data.items.map((item) => `<article class="welfare-card"><div class="welfare-badges"><span class="welfare-badge">${esc(typeLabels[item.opportunityType] || item.opportunityType)}</span><span class="welfare-badge welfare-badge-status">${esc(item.salesPriority === "HIGH" ? "优先跟进" : item.salesPriority === "MEDIUM" ? "建议评估" : "信息跟踪")}</span>${item.welfareScenes.map((scene) => `<span class="welfare-badge">${esc(scene)}</span>`).join("")}</div><h3>${esc(item.title)}</h3><dl><dt>采购单位</dt><dd>${esc(item.buyer)}</dd><dt>联系人</dt><dd>${esc(item.contactName)}</dd><dt>电话</dt><dd>${esc(item.contactPhone)}</dd><dt>地址</dt><dd>${esc(item.contactAddress)}</dd><dt>地区</dt><dd>${esc(item.region)}</dd><dt>预算</dt><dd>${esc(item.budgetDisplay)}</dd><dt>截止</dt><dd>${esc(item.deadlineDisplay)}</dd></dl><p class="welfare-card-reason">${esc(item.reason)}</p><p class="welfare-card-next"><strong>销售建议</strong>${esc(item.salesAction || item.nextAction)}</p><a href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">打开官方原文</a></article>`).join("") : "<article class='welfare-card'>暂未发现符合当前筛选的商机。</article>";
     document.querySelector("#welfare-page-info").textContent = `第 ${data.stats.page} / ${data.stats.totalPages} 页`;
     document.querySelector("#welfare-prev").disabled = data.stats.page <= 1;
     document.querySelector("#welfare-next").disabled = data.stats.page >= data.stats.totalPages;
@@ -74,7 +74,7 @@
   }
 
   async function load() {
-    const params = new URLSearchParams({ status: state.status, page: String(state.page), page_size: "24", type: document.querySelector("#welfare-type").value, scene: document.querySelector("#welfare-scene").value, region: document.querySelector("#welfare-region").value, deadline_window: document.querySelector("#welfare-deadline").value });
+    const params = new URLSearchParams({ status: state.status === "priority" ? "current" : state.status, sort: state.status === "priority" ? "sales" : "deadline", page: String(state.page), page_size: "24", type: document.querySelector("#welfare-type").value, scene: document.querySelector("#welfare-scene").value, region: document.querySelector("#welfare-region").value, deadline_window: document.querySelector("#welfare-deadline").value });
     try {
       const response = await fetch(state.status === "candidates" ? `/api/public/welfare/candidates?page=${state.page}&page_size=24` : `/api/public/welfare/opportunities?${params}`);
       const json = await response.json();

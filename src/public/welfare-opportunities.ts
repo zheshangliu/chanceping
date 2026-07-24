@@ -200,6 +200,10 @@ export interface WelfareOpportunityRecord {
   nextAction: string;
   riskNote: string;
   evidenceFields: WelfareEvidenceField[];
+  /** Sales-facing triage fields derived from public evidence; not a procurement guarantee. */
+  salesScore?: number;
+  salesPriority?: "HIGH" | "MEDIUM" | "LOW";
+  salesAction?: string;
 }
 
 /** A discoverable lead that is not yet safe to present as a verified opportunity. */
@@ -227,6 +231,7 @@ export interface WelfareFeedOptions {
   page?: number;
   pageSize?: number;
   now?: string | Date;
+  sort?: "deadline" | "sales";
 }
 
 export interface WelfareFeed {
@@ -318,7 +323,18 @@ function normalizeWelfareRecordForDisplay(record: WelfareOpportunityRecord): Wel
     const labels = field.field === "buyer" ? ["公告时间", "发布时间", "获取采购文件时间", "响应文件递交地点", "项目概况", "代理机构名称"] : field.field === "contactAddress" ? ["采购单位联系方式", "代理机构名称", "代理机构地址", "项目概况", "附件"] : [];
     return labels.length ? { ...field, excerpt: compactWelfareField(field.excerpt, labels) } : field;
   });
-  return { ...record, buyer, contactAddress, evidenceFields };
+  const daysToDeadline = /^\d{4}-\d{2}-\d{2}/.test(record.deadline) ? Math.ceil((new Date(record.deadline).getTime() - Date.now()) / 86_400_000) : null;
+  let salesScore = 25;
+  if (record.lifecycleStatus === "current") salesScore += 20;
+  if (record.opportunityType === "OPEN_PROCUREMENT") salesScore += 20;
+  if (["SUPPLIER_RECRUITMENT", "CHANNEL_PARTNERSHIP"].includes(record.opportunityType)) salesScore += 14;
+  if (fieldState(evidenceFields, "contactPhone") === "verified") salesScore += 15;
+  if (fieldState(evidenceFields, "deadline") === "verified") salesScore += 10;
+  if (fieldState(evidenceFields, "budget") === "verified") salesScore += 8;
+  if (daysToDeadline !== null && daysToDeadline >= 0 && daysToDeadline <= 14) salesScore += 10;
+  const salesPriority = salesScore >= 78 ? "HIGH" : salesScore >= 55 ? "MEDIUM" : "LOW";
+  const salesAction = record.lifecycleStatus !== "current" ? "作为历史情报，不建议直接投入跟进。" : salesPriority === "HIGH" ? "优先核对资格要求与截止时间，尽快联系采购方或准备报价。" : record.opportunityType === "SUPPLIER_RECRUITMENT" || record.opportunityType === "CHANNEL_PARTNERSHIP" ? "核对合作准入和供应商材料，准备渠道联系。" : "打开官方原文，补齐预算、联系人和资格要求后再决定跟进。";
+  return { ...record, buyer, contactAddress, evidenceFields, salesScore, salesPriority, salesAction };
 }
 
 function buildFacets(records: WelfareOpportunityRecord[], values: (record: WelfareOpportunityRecord) => string[], labels?: Record<string, string>) {
@@ -344,7 +360,8 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
   if (options.scene && options.scene !== "all") filtered = filtered.filter((item) => item.welfareScenes.includes(options.scene!));
   if (options.region && options.region !== "all") filtered = filtered.filter((item) => item.region === options.region);
   if (options.deadlineWindow && options.deadlineWindow !== "all") filtered = filtered.filter((item) => deadlineWindow(item.deadline, now) === options.deadlineWindow);
-  filtered.sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999") || b.publishedAt.localeCompare(a.publishedAt));
+  if (options.sort === "sales") filtered.sort((a, b) => (b.salesScore ?? 0) - (a.salesScore ?? 0) || (a.deadline || "9999").localeCompare(b.deadline || "9999"));
+  else filtered.sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999") || b.publishedAt.localeCompare(a.publishedAt));
   const pageSize = Math.max(1, Math.min(options.pageSize ?? 24, 60));
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const page = Math.max(1, Math.min(options.page ?? 1, totalPages));
