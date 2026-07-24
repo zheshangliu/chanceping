@@ -430,6 +430,18 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       if (!discovered.has(link.url)) discovered.set(link.url, { title: link.title, url: link.url, publishedAt: link.publishedAt });
     }
   }
+  // Shenzhen Bay Lab embeds its procurement list in an inline JSON array
+  // instead of anchor tags. Preserve those official detail paths and dates.
+  if (source.code === "ORG-004") {
+    const jsonItem = /"showTitle":"([^"]+)"[\s\S]{0,500}?"showDate":"(\d{4}-\d{2}-\d{2})"[\s\S]{0,500}?"url":\{"asString":"([^"]+)"\}/g;
+    let item: RegExpExecArray | null;
+    while ((item = jsonItem.exec(html)) !== null) {
+      const url = normalizeUrl(item[3], source.url);
+      const title = cleanText(item[1]);
+      if (!url || !title || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      discovered.set(url, { title, url, publishedAt: item[2] });
+    }
+  }
   return Array.from(discovered.values());
 }
 
