@@ -467,8 +467,9 @@ export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[]
 }
 
 function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: WelfareCandidateRecord[], refreshedSourceCodes: Set<string> = new Set()): WelfareCandidateRecord[] {
-  const byId = new Map(existing.filter((record) => !refreshedSourceCodes.has(record.sourceCode)).map((record) => [record.id, record]));
-  for (const record of incoming) byId.set(record.id, record);
+  const isRejected = (record: WelfareCandidateRecord) => NON_OPPORTUNITY_DISCOVERY.test(record.title) || NON_WELFARE_PROJECT.test(record.title);
+  const byId = new Map(existing.filter((record) => !isRejected(record) && !refreshedSourceCodes.has(record.sourceCode)).map((record) => [record.id, record]));
+  for (const record of incoming) if (!isRejected(record)) byId.set(record.id, record);
   return Array.from(byId.values()).sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt));
 }
 
@@ -487,8 +488,9 @@ export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = pro
 }
 
 export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incoming: WelfareOpportunityRecord[]): WelfareOpportunityRecord[] {
-  const byId = new Map(existing.map((record) => [record.id, record]));
-  for (const record of incoming) byId.set(record.id, { ...byId.get(record.id), ...record });
+  const isRejected = (record: WelfareOpportunityRecord) => NON_OPPORTUNITY_DISCOVERY.test(record.title) || NON_WELFARE_PROJECT.test(record.title);
+  const byId = new Map(existing.filter((record) => !isRejected(record)).map((record) => [record.id, record]));
+  for (const record of incoming) if (!isRejected(record)) byId.set(record.id, { ...byId.get(record.id), ...record });
   return Array.from(byId.values());
 }
 
@@ -892,7 +894,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       if (record) records.push(record);
       else {
         const detailText = cleanText(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " "));
-        const hasWelfareContext = WELFARE_CONTEXT.test(link.title) || WELFARE_CONTEXT.test(detailText);
+        const hasWelfareContext = (WELFARE_CONTEXT.test(link.title) || WELFARE_CONTEXT.test(detailText)) && !NON_OPPORTUNITY_DISCOVERY.test(link.title) && !NON_WELFARE_PROJECT.test(link.title) && !NON_OPPORTUNITY_DISCOVERY.test(detailText);
         const hasAction = WELFARE_ACTION.test(link.title) || WELFARE_ACTION.test(detailText);
         if (hasWelfareContext && hasAction) candidates.push(candidateFromLink(source, { ...link, url: effectiveUrl }, retrievedAt, "详情页出现福利语境与采购行动信号，但字段不足以形成正式机会卡。"));
       }

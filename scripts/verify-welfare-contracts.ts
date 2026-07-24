@@ -58,6 +58,7 @@ assert.equal(normalizedFeed.items[0].buyer, "成都市武侯区人民政府华�
 
 const merged = mergeWelfareRecords(records, records);
 assert.equal(merged.length, records.length, "idempotent merge must not duplicate records");
+assert.equal(mergeWelfareRecords([{ ...records[0], id: "bad", title: "城市体检第三方服务项目公开招标公告" }], []).some((item) => item.id === "bad"), false, "historical false positives must be removed on refresh");
 const feed = buildWelfareFeed(records, { status: "current", now: "2026-07-11T00:00:00+08:00" });
 assert.ok(feed.items.length > 0);
 assert.ok(feed.items.every((item) => item.salesPriority && typeof item.salesScore === "number" && item.salesAction), "every public opportunity must expose sales triage fields");
