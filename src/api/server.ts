@@ -1,7 +1,31 @@
 import { serve } from "@hono/node-server";
+import fs from "fs";
+import path from "path";
 import { loadLocalApiEnv } from "../config/local-env";
+import { getDataMode, getLlmMode } from "../demo/data-mode";
+
+function loadEnvFile(): void {
+  const envPath = path.join(process.cwd(), ".env");
+  if (!fs.existsSync(envPath)) return;
+
+  let loaded = 0;
+  for (const line of fs.readFileSync(envPath, "utf-8").split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const separator = trimmed.indexOf("=");
+    if (separator === -1) continue;
+    const key = trimmed.slice(0, separator).trim();
+    const value = trimmed.slice(separator + 1).trim();
+    if (key && !process.env[key]) {
+      process.env[key] = value;
+      loaded++;
+    }
+  }
+  console.log(`[ChancePing API] 已加载 .env 文件（${loaded} 个新变量）`);
+}
 
 async function main(): Promise<void> {
+  loadEnvFile();
   const localEnv = loadLocalApiEnv();
   if (localEnv.loaded) {
     console.log(`[ChancePing API] 已加载本地 api.env（${localEnv.keysLoaded.length} 个新变量）`);
@@ -15,8 +39,9 @@ async function main(): Promise<void> {
     import("../scheduler/scheduler"),
   ]);
 
+  console.log(`[ChancePing API] 数据模式: ${getDataMode()} | LLM 模式: ${getLlmMode()}`);
+
   const port = parseInt(process.env.PORT ?? "3000", 10);
-  // V1.6-02: 显式创建 ctx，供 Scheduler 复用
   const ctx = createAppContext();
   const app = createApp(ctx);
 
@@ -24,12 +49,10 @@ async function main(): Promise<void> {
   console.log(`[ChancePing API] 端口: ${port}`);
   console.log(`[ChancePing API] 健康检查: http://localhost:${port}/health`);
 
-  // V1.6-02 新增：启动 Scheduler tick 循环（60s 间隔）
-  // V1.6a 自检修复:增加 isTicking 守卫,避免 tick 重叠执行
   const scheduler = new Scheduler(ctx);
   let isTicking = false;
   setInterval(() => {
-    if (isTicking) return; // 前一个 tick 未完成,跳过
+    if (isTicking) return;
     isTicking = true;
     scheduler.tick().catch((err) => {
       console.error("[Scheduler] tick 异常:", err);
@@ -39,11 +62,7 @@ async function main(): Promise<void> {
   }, 60_000);
   console.log(`[Scheduler] 已启动，间隔 60s`);
 
-  serve({
-    fetch: app.fetch,
-    port,
-  });
-
+  serve({ fetch: app.fetch, port });
   console.log(`[ChancePing API] 服务器已启动`);
 }
 
