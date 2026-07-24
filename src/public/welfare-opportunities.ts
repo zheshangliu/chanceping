@@ -350,6 +350,11 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
   const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
+  // Large procurement portals list generic project names and expose the
+  // welfare context only on the detail page. Reviewed adapters may therefore
+  // admit action-looking list links, while parseWelfareDetail remains the
+  // final welfare/action gate before a card is created.
+  const relaxedPortal = Boolean(source.adapter);
   const patterns = [
     /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi,
     /<li>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>[\s\S]*?<i>(\d{4}-\d{2}-\d{2})<\/i>[\s\S]*?<\/a>[\s\S]*?<\/li>/gi,
@@ -366,7 +371,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       const url = normalizeUrl(href, source.url);
       const hasWelfareContext = welfareContext.test(title);
       const hasOpportunityAction = opportunityAction.test(title);
-    if (!url || !hasWelfareContext || !hasOpportunityAction) continue;
+      if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction) continue;
     if (/(结果|中标|成交|终止|废标)/.test(title)) continue;
       discovered.set(url, { title, url, publishedAt });
     }
@@ -376,14 +381,14 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
   while ((itemMatch = officialListItem.exec(html)) !== null) {
     const url = normalizeUrl(itemMatch[1], source.url);
     const title = cleanText(itemMatch[2] || itemMatch[3]);
-    if (!url || !welfareContext.test(title) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (!url || (!relaxedPortal && !welfareContext.test(title)) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[4] });
   }
   const dateBeforeListItem = /<li\b[^>]*>[\s\S]{0,600}?<span[^>]*>\s*\[?(\d{4}-\d{2}-\d{2})\]?\s*<\/span>[\s\S]{0,600}?<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   while ((itemMatch = dateBeforeListItem.exec(html)) !== null) {
     const url = normalizeUrl(itemMatch[2], source.url);
     const title = cleanText(itemMatch[3]);
-    if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (!url || (!relaxedPortal && !welfareContext.test(title)) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[1] });
   }
   // Drupal procurement columns used by universities can omit the date from
@@ -394,7 +399,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     while ((itemMatch = drupalListItem.exec(html)) !== null) {
       const url = normalizeUrl(itemMatch[1], source.url);
       const title = cleanText(itemMatch[2]);
-      if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      if (!url || (!relaxedPortal && !welfareContext.test(title)) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
       discovered.set(url, { title, url, publishedAt: "" });
     }
   }
@@ -408,7 +413,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     const publishedAt = html.slice(Math.max(0, markdownMatch.index - 24), markdownMatch.index).match(/(\d{4}-\d{2}-\d{2})\s*$/)?.[1] ?? "";
     const hasWelfareContext = welfareContext.test(title);
     const hasOpportunityAction = opportunityAction.test(title) || source.code === "OFF-N-004";
-    if (!url || !hasWelfareContext || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt });
   }
   return Array.from(discovered.values());
