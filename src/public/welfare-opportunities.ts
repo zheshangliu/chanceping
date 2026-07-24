@@ -151,6 +151,21 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "HUB-003", name: "TrendRadar社区数据源收集Issue/讨论", url: "https://github.com/sansan0/TrendRadar/issues", allowedHost: "github.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
 ];
 
+// These 20 direct-access sources completed the three-day shadow gate and are
+// now enabled for public collection. Their original registry entries remain
+// in the shadow catalogue so the historical POC evidence is not discarded.
+const PROMOTED_SOURCE_CODES = new Set([
+  "OFF-N-003", "OFF-N-005", "OFF-N-007", "OFF-N-008", "OFF-N-009", "OFF-N-010", "OFF-N-011",
+  "OFF-GD-001", "OFF-GD-002", "OFF-GD-003", "OFF-GZ-002", "OFF-GZ-003", "OFF-FS-001", "OFF-DG-001",
+  "OFF-ZH-001", "OFF-ZS-001", "OFF-HZ-001", "ORG-003", "ORG-004", "ORG-005",
+]);
+WELFARE_SOURCES.push(...WELFARE_SHADOW_SOURCES.filter((source) => PROMOTED_SOURCE_CODES.has(source.code)).map((source) => ({
+  ...source,
+  rollout: "public" as const,
+  shadowAccess: undefined,
+  enabled: true,
+})));
+
 function sourceByCode(code: string): WelfareSourceConfig {
   const source = [...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].find((item) => item.code === code);
   if (!source) throw new Error(`Unknown welfare source: ${code}`);
