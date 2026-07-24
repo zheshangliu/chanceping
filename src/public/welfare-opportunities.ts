@@ -921,8 +921,16 @@ export async function collectOffSz004(options: { fetchHtml?: (url: string) => Pr
 
 export async function collectAllWelfareSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; maxDetails?: number; evidenceDir?: string } = {}) {
   const collected: WelfareSourceCollectionData[] = [];
-  for (const source of WELFARE_SOURCES.filter((item) => item.enabled)) {
-    collected.push(await collectWelfareSourceData(source.code, { ...options, evidenceDir: options.evidenceDir ? path.join(options.evidenceDir, source.code) : undefined }));
+  const sources = WELFARE_SOURCES.filter((item) => item.enabled);
+  // Keep public traffic bounded while avoiding a serial 31-source refresh that
+  // can exceed the systemd window when one government host has slow TLS.
+  for (let offset = 0; offset < sources.length; offset += 4) {
+    const batch = sources.slice(offset, offset + 4);
+    const results = await Promise.all(batch.map((source) => collectWelfareSourceData(source.code, {
+      ...options,
+      evidenceDir: options.evidenceDir ? path.join(options.evidenceDir, source.code) : undefined,
+    })));
+    collected.push(...results);
   }
   const previous = loadPersistedWelfareOpportunities();
   const incoming = collected.flatMap((item) => item.records);
