@@ -423,7 +423,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     while ((anchor = anchorPattern.exec(html)) !== null) {
       const url = normalizeUrl(anchor[1], source.url);
       const title = cleanText(anchor[2] || anchor[3]);
-      if (!url || url === source.url || title.length < 6 || /^(首页|登录|注册|更多|关闭|下一页|上一页|返回)$/.test(title) || /(?:javascript:|mailto:)/i.test(anchor[1])) continue;
+      if (!url || url === source.url || new URL(url).hostname !== source.allowedHost || title.length < 6 || /^(首页|登录|注册|更多|关闭|下一页|上一页|返回)$/.test(title) || /(?:javascript:|mailto:)/i.test(anchor[1])) continue;
       relaxedLinks.push({ title, url, publishedAt: "", priority: opportunityAction.test(title) ? 0 : 1 });
     }
     for (const link of relaxedLinks.sort((a, b) => a.priority - b.priority)) {
