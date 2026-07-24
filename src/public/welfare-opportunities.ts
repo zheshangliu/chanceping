@@ -16,6 +16,7 @@ export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg
 // required before an item can become an opportunity card.
 const WELFARE_CONTEXT = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|防暑降温|疗休养|农副产品|节日(?:慰问|福利)?|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券|福利)?|体检|健康管理|心理服务|职工餐厅|职工食堂|工会|职工服务|职工活动|职工培训|员工关怀|员工体检|福利采购)/;
 const WELFARE_ACTION = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目|服务商|入围|采购意向)/;
+const NON_OPPORTUNITY_DISCOVERY = /(政策|办法|指引|解读|管理规定|工作通知|资格审查)/;
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
@@ -39,6 +40,8 @@ export interface WelfareSourceConfig {
   extraAllowedHosts?: string[];
   /** Reviewed source-specific adapter contract. It may remain shadow until live evidence passes. */
   adapter?: WelfareAdapterKind;
+  /** Admit procurement-looking list links for detail-page welfare discovery. */
+  candidateDiscovery?: boolean;
 }
 
 export type WelfareAdapterKind =
@@ -61,8 +64,8 @@ export const WELFARE_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-SZ-004", name: "光明区政府/群团工作部公告", url: "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/", allowedHost: "www.szgm.gov.cn", region: "深圳光明", maxDetails: 12, enabled: true },
   { code: "OFF-SZ-005", name: "龙华区群团工作部/总工会通知公告", url: "https://www.szlhq.gov.cn/bmxxgk/qtgzb/dtxx_124446/tzgg_125586/", allowedHost: "www.szlhq.gov.cn", region: "深圳龙华", maxDetails: 12, enabled: true },
   { code: "OFF-SZ-003", name: "福田区总工会通知公告", url: "https://www.szft.gov.cn/bmxx_qt/qzgh/tzgg/", allowedHost: "www.szft.gov.cn", region: "深圳福田", maxDetails: 12, enabled: true },
-  { code: "OFF-N-001", name: "中国政府采购网｜采购公告", url: "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", adapter: "html-notice-board", indexUrls: ["https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/index.htm"] },
-  { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "OFF-N-001", name: "中国政府采购网｜采购公告", url: "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", adapter: "html-notice-board", candidateDiscovery: true, indexUrls: ["https://www.ccgp.gov.cn/cggg/dfgg/gkzb/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/index.htm", "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/index.htm"] },
+  { code: "OFF-N-004", name: "全国公共资源交易平台｜交易公开", url: "https://www.ggzy.gov.cn/", allowedHost: "www.ggzy.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", adapter: "html-notice-board", candidateDiscovery: true },
   { code: "OFF-GD-004", name: "广东省总工会｜通知公告", url: "https://www.gdftu.org.cn/", allowedHost: "www.gdftu.org.cn", region: "广东", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "CHANNEL_PARTNERSHIP" },
   { code: "WEL-001", name: "关爱通｜供应商招募", url: "https://www.guanaitong.com/vendor/index.html", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 1, enabled: true, rollout: "public", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", directDetail: true },
   { code: "OFF-SZ-002", name: "深圳公共资源交易中心｜政府采购公告", url: "https://www.szggzy.com/jygg/list.html?id=zfcg", allowedHost: "www.szggzy.com", region: "深圳", maxDetails: 12, enabled: true, rollout: "public", opportunityRole: "procurement", adapter: "city-ggzy-spa", publicApi: "szggzy-government-procurement" },
@@ -461,11 +464,13 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       const publishedAt = isDateFirst ? match[1] : match[3];
       const href = isDateFirst ? match[2] : match[1];
       const title = cleanText(isDateFirst ? match[3] : match[2]);
+      if (NON_OPPORTUNITY_DISCOVERY.test(title)) continue;
       const url = normalizeUrl(href, source.url);
       const hasWelfareContext = welfareContext.test(title);
       const hasOpportunityAction = opportunityAction.test(title);
-      if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction) continue;
-    if (/(结果|中标|成交|终止|废标)/.test(title)) continue;
+      const candidateAction = source.candidateDiscovery && hasOpportunityAction && !NON_OPPORTUNITY_DISCOVERY.test(title);
+      if (!url || (!relaxedPortal && !hasWelfareContext && !candidateAction) || !hasOpportunityAction) continue;
+      if (/(结果|中标|成交|终止|废标)/.test(title)) continue;
       discovered.set(url, { title, url, publishedAt });
     }
   }
@@ -474,13 +479,16 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
   while ((itemMatch = officialListItem.exec(html)) !== null) {
     const url = normalizeUrl(itemMatch[1], source.url);
     const title = cleanText(itemMatch[2] || itemMatch[3]);
-    if (!url || (!relaxedPortal && !welfareContext.test(title)) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (NON_OPPORTUNITY_DISCOVERY.test(title)) continue;
+    const candidateAction = Boolean(source.candidateDiscovery && opportunityAction.test(title) && !NON_OPPORTUNITY_DISCOVERY.test(title));
+    if (!url || (!relaxedPortal && !welfareContext.test(title) && !candidateAction) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[4] });
   }
   const dateBeforeListItem = /<li\b[^>]*>[\s\S]{0,600}?<span[^>]*>\s*\[?(\d{4}-\d{2}-\d{2})\]?\s*<\/span>[\s\S]{0,600}?<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   while ((itemMatch = dateBeforeListItem.exec(html)) !== null) {
     const url = normalizeUrl(itemMatch[2], source.url);
     const title = cleanText(itemMatch[3]);
+    if (NON_OPPORTUNITY_DISCOVERY.test(title)) continue;
     if (!url || (!relaxedPortal && !welfareContext.test(title)) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[1] });
   }
@@ -502,11 +510,13 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
   let markdownMatch: RegExpExecArray | null;
   while ((markdownMatch = markdownLink.exec(html)) !== null) {
     const title = cleanText(markdownMatch[1]);
+    if (NON_OPPORTUNITY_DISCOVERY.test(title)) continue;
     const url = normalizeUrl(markdownMatch[2], source.url);
     const publishedAt = html.slice(Math.max(0, markdownMatch.index - 24), markdownMatch.index).match(/(\d{4}-\d{2}-\d{2})\s*$/)?.[1] ?? "";
     const hasWelfareContext = welfareContext.test(title);
-    const hasOpportunityAction = opportunityAction.test(title) || source.code === "OFF-N-004";
-    if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    const hasOpportunityAction = opportunityAction.test(title);
+    const candidateAction = Boolean(source.candidateDiscovery && hasOpportunityAction && !NON_OPPORTUNITY_DISCOVERY.test(title));
+    if (!url || (!relaxedPortal && !hasWelfareContext && !candidateAction) || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt });
   }
   if (relaxedPortal) {
@@ -516,7 +526,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     while ((anchor = anchorPattern.exec(html)) !== null) {
       const url = normalizeUrl(anchor[1], source.url);
       const title = cleanText(anchor[2] || anchor[3]);
-      if (!url || url === source.url || new URL(url).hostname !== source.allowedHost || title.length < 6 || /^(首页|登录|注册|更多|关闭|下一页|上一页|返回)$/.test(title) || /(?:javascript:|mailto:)/i.test(anchor[1])) continue;
+      if (!url || url === source.url || new URL(url).hostname !== source.allowedHost || title.length < 6 || NON_OPPORTUNITY_DISCOVERY.test(title) || /^(首页|登录|注册|更多|关闭|下一页|上一页|返回)$/.test(title) || /(?:javascript:|mailto:)/i.test(anchor[1])) continue;
       relaxedLinks.push({ title, url, publishedAt: "", priority: opportunityAction.test(title) ? 0 : 1 });
     }
     for (const link of relaxedLinks.sort((a, b) => a.priority - b.priority)) {
@@ -831,7 +841,12 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
       if (record) records.push(record);
-      else if (WELFARE_CONTEXT.test(link.title) && WELFARE_ACTION.test(link.title)) candidates.push(candidateFromLink(source, { ...link, url: effectiveUrl }, retrievedAt, "发现标题同时命中福利语境和采购行动，但详情未达到正式机会字段准入。"));
+      else {
+        const detailText = cleanText(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " "));
+        const hasWelfareContext = WELFARE_CONTEXT.test(link.title) || WELFARE_CONTEXT.test(detailText);
+        const hasAction = WELFARE_ACTION.test(link.title) || WELFARE_ACTION.test(detailText);
+        if (hasWelfareContext && hasAction) candidates.push(candidateFromLink(source, { ...link, url: effectiveUrl }, retrievedAt, "详情页出现福利语境与采购行动信号，但字段不足以形成正式机会卡。"));
+      }
     } catch (error) {
       errors.push({ url: link.url, error: error instanceof Error ? error.message : String(error) });
     }

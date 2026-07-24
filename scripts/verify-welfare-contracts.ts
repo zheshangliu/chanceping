@@ -34,6 +34,10 @@ assert.equal(expandedContextLinks.length, 1, "expanded welfare scenes must be di
 const relayLinks = extractWelfareIndexLinks(`* 2026-07-10[深圳市光明区总工会2026年采购消费帮扶慰问物资项目采购变更公告](https://www.szgm.gov.cn/content/post_1.html "深圳市光明区总工会2026年采购消费帮扶慰问物资项目采购变更公告")`, WELFARE_SOURCES[0]);
 assert.equal(relayLinks.length, 1, "Reader Markdown links with a title attribute must be collected");
 assert.equal(relayLinks[0].publishedAt, "2026-07-10", "Reader Markdown publication dates must drive current/history classification");
+const ccgpDiscovery = extractWelfareIndexLinks(`<li><span>2026-07-10</span><a href="/x.html" title="某单位物业服务采购项目公开招标公告">公告</a></li>`, WELFARE_SOURCES.find((source) => source.code === "OFF-N-001"));
+assert.equal(ccgpDiscovery.length, 1, "candidate discovery must retain procurement links whose welfare context is only on the detail page");
+const ggzyPolicy = extractWelfareIndexLinks(`<li><a href="/policy.html">政府采购政策解读与管理办法</a><span>2026-07-10</span></li>`, WELFARE_SOURCES.find((source) => source.code === "OFF-N-004"));
+assert.equal(ggzyPolicy.length, 0, "generic policy pages must not enter welfare candidate discovery");
 
 const detailHtml = `<html><head><meta name="ArticleTitle" content="光明区总工会采购消费帮扶慰问物资项目变更公告"><meta name="PubDate" content="2026-07-10"></head><body><p>投标时间截至7月15日18时00分。</p><p>采购人名称：深圳市光明区总工会</p><p>联系地址：深圳市光明区测试办公地址</p><p>联系人：某某</p><p>联系电话：0755-12345678</p></body></html>`;
 const parsed = parseWelfareDetail({ html: detailHtml, url: links[0].url, publishedAtHint: links[0].publishedAt, retrievedAt: "2026-07-11T00:00:00.000Z" });
