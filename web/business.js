@@ -20,7 +20,7 @@
   async function boot() {
     const s = state();
     try {
-      const [cr, data] = await Promise.all([fetch(`/api/business/editions/${s.edition}`), fetchList(s.edition, "&status=all")]); const cp = await cr.json(); if (!cr.ok || !cp.success) throw new Error(); const { common, edition } = cp.data;
+      const [cr, data] = await Promise.all([fetch(`/api/business/editions/${s.edition}`), fetchList(s.edition, "&status=all&diverse=1")]); const cp = await cr.json(); if (!cr.ok || !cp.success) throw new Error(); const { common, edition } = cp.data;
       let content;
       if (s.page === "home") content = `<section class="business-hero"><p class="business-kicker">CITY BUSINESS RADAR</p><h1>${esc(edition.headline)}</h1><p class="business-lead">${esc(edition.subheadline)}</p><div class="business-actions"><a class="business-button" href="${edition.route}/opportunities">${esc(common.primaryCtaLabel)}</a></div></section><section class="business-section"><div class="business-section-heading"><h2>最新核验记录</h2><span>${data.totals.current} 条当前有效 · ${data.totals.historical} 条历史记录</span></div><div class="business-card-grid">${data.items.map((i) => card(i, edition)).join("") || empty("暂无可公开展示的机会", "当前没有符合该地区和核验条件的公开机会记录。")}</div></section>`;
       else if (s.page === "opportunities" && !s.slug) content = list(edition, data);
@@ -29,7 +29,7 @@
       else if (s.page === "about") content = `<section class="business-copy"><h1>${esc(edition.name)}</h1><p>${esc(edition.subheadline)}</p><p>${esc(common.disclaimer)}</p></section>`;
       else content = empty("404 页面不存在", "请从当前地区版本的导航继续浏览。");
       app.innerHTML = header(common, edition, s.page, content);
-      const form = document.getElementById("business-filters"); if (form) form.addEventListener("submit", async (e) => { e.preventDefault(); const target = document.getElementById("business-results"); target.innerHTML = "<p>正在筛选…</p>"; const d = await fetchList(edition.id, `&${new URLSearchParams(new FormData(form)).toString()}`); document.getElementById("business-total").textContent = `${d.total} 条记录`; target.innerHTML = d.items.length ? d.items.map((i) => card(i, edition)).join("") : empty("未找到匹配记录", "可以调整搜索词或筛选条件。"); });
+      const form = document.getElementById("business-filters"); if (form) form.addEventListener("submit", async (e) => { e.preventDefault(); const target = document.getElementById("business-results"); target.innerHTML = "<p>正在筛选…</p>"; const d = await fetchList(edition.id, `&diverse=1&${new URLSearchParams(new FormData(form)).toString()}`); document.getElementById("business-total").textContent = `${d.total} 条记录`; target.innerHTML = d.items.length ? d.items.map((i) => card(i, edition)).join("") : empty("未找到匹配记录", "可以调整搜索词或筛选条件。"); });
     } catch { app.innerHTML = `<section class="business-error"><h1>页面暂时无法加载</h1><p>机会数据或地区配置读取失败，请稍后重试。</p></section>`; }
   }
   boot();

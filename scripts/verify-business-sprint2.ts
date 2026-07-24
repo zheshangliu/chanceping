@@ -22,6 +22,11 @@ async function main(): Promise<void> {
   const current = await app.request("/api/business/opportunities?edition=guangzhou&status=current");
   const currentBody = await current.json() as { data?: { total?: number } };
   check("Guangzhou current filter excludes expired records", current.status === 200 && (currentBody.data?.total ?? 0) >= 100);
+  const diverse = await app.request("/api/business/opportunities?edition=guangzhou&status=current&diverse=1");
+  const diverseBody = await diverse.json() as { data?: { sourceDiversityApplied?: boolean; items?: Array<{ sourceName: string; category: string }> } };
+  const diverseItems = diverseBody.data?.items ?? [];
+  const largestShare = diverseItems.length ? Math.max(...Object.values(diverseItems.reduce<Record<string, number>>((counts, item) => ({ ...counts, [item.sourceName]: (counts[item.sourceName] ?? 0) + 1 }), {}))) / diverseItems.length : 1;
+  check("diverse discovery feed caps a source at 60 percent and retains non-procurement categories", diverse.status === 200 && diverseBody.data?.sourceDiversityApplied === true && largestShare <= 0.6 && diverseItems.some((item) => item.category !== "procurement"));
   const shaoguan = await app.request("/api/business/opportunities?edition=shaoguan&status=current");
   const shaoguanBody = await shaoguan.json() as { data?: { total?: number } };
   check("Shaoguan current filter returns launch-scale actionable opportunities", shaoguan.status === 200 && (shaoguanBody.data?.total ?? 0) >= 100);
