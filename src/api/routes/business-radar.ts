@@ -4,6 +4,28 @@ import { CATEGORY_LABELS, loadBusinessOpportunities, lifecycleStatus, RECOMMENDA
 import { sourcesForEdition } from "../../business/source-catalog";
 import type { ApiResponse } from "../types";
 
+/** Keep a discovery feed useful when one trustworthy source has much higher volume. */
+function diversify(items: BusinessOpportunity[]): BusinessOpportunity[] {
+  const result: BusinessOpportunity[] = [];
+  const sourceCounts = new Map<string, number>();
+  const categoryCounts = new Map<string, number>();
+  const remaining = [...items];
+  while (remaining.length) {
+    const totalNext = result.length + 1;
+    const candidateIndex = remaining.findIndex((item) => {
+      const sourceOk = result.length === 0 || ((sourceCounts.get(item.sourceName) ?? 0) + 1) / totalNext <= 0.6;
+      const categoryOk = item.category === "procurement" || (categoryCounts.get(item.category) ?? 0) < Math.ceil(totalNext * 0.35);
+      return sourceOk && categoryOk;
+    });
+    if (candidateIndex < 0) break;
+    const [item] = remaining.splice(candidateIndex, 1);
+    result.push(item);
+    sourceCounts.set(item.sourceName, (sourceCounts.get(item.sourceName) ?? 0) + 1);
+    categoryCounts.set(item.category, (categoryCounts.get(item.category) ?? 0) + 1);
+  }
+  return result;
+}
+
 export function businessRadarRoutes(): Hono {
   const app = new Hono();
   const allItems = () => loadBusinessOpportunities();
@@ -37,10 +59,12 @@ export function businessRadarRoutes(): Hono {
     const category = c.req.query("category") ?? "all";
     const status = c.req.query("status") ?? "all";
     const sort = c.req.query("sort") ?? "updated";
+    const diverse = c.req.query("diverse") === "1";
     const all = allItems().filter((item) => item.editions.includes(edition.id));
     let items = all.filter((item) => (!query || `${item.title} ${item.summary} ${item.keywords.join(" ")} ${item.organizer}`.toLowerCase().includes(query)) && (category === "all" || item.category === category) && (status === "all" || (status === "current" ? lifecycleStatus(item) !== "historical" : lifecycleStatus(item) === status)));
     items = items.sort((a, b) => sort === "deadline" ? String(a.deadline ?? "9999").localeCompare(String(b.deadline ?? "9999")) : sort === "recommendation" ? ({ high: 0, medium: 1, observe: 2 }[a.recommendationLevel] - { high: 0, medium: 1, observe: 2 }[b.recommendationLevel]) : b.updatedAt.localeCompare(a.updatedAt));
-    return c.json({ success: true, data: { edition: edition.id, items: items.map(publicItem), total: items.length, totals: { all: all.length, current: all.filter((item) => lifecycleStatus(item) !== "historical").length, historical: all.filter((item) => lifecycleStatus(item) === "historical").length }, categories: Object.entries(CATEGORY_LABELS).map(([id, label]) => ({ id, label })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
+    const displayed = diverse ? diversify(items) : items;
+    return c.json({ success: true, data: { edition: edition.id, items: displayed.map(publicItem), total: displayed.length, sourceDiversityApplied: diverse, totals: { all: all.length, current: all.filter((item) => lifecycleStatus(item) !== "historical").length, historical: all.filter((item) => lifecycleStatus(item) === "historical").length }, categories: Object.entries(CATEGORY_LABELS).map(([id, label]) => ({ id, label })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
   });
 
   app.get("/opportunities/:slug", (c) => {
