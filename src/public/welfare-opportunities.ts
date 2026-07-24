@@ -414,8 +414,8 @@ export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[]
   fs.renameSync(temporary, absolute);
 }
 
-function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: WelfareCandidateRecord[]): WelfareCandidateRecord[] {
-  const byId = new Map(existing.map((record) => [record.id, record]));
+function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: WelfareCandidateRecord[], refreshedSourceCodes: Set<string> = new Set()): WelfareCandidateRecord[] {
+  const byId = new Map(existing.filter((record) => !refreshedSourceCodes.has(record.sourceCode)).map((record) => [record.id, record]));
   for (const record of incoming) byId.set(record.id, record);
   return Array.from(byId.values()).sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt));
 }
@@ -872,7 +872,8 @@ export async function collectAllWelfareSources(options: { fetchHtml?: (url: stri
   // therefore leaves its last successful public cards intact.
   const merged = mergeWelfareRecords(previous, incoming);
   savePersistedWelfareOpportunities(merged);
-  savePersistedWelfareCandidates(mergeWelfareCandidates(loadPersistedWelfareCandidates(), collected.flatMap((item) => item.candidates ?? [])));
+  const refreshedCandidateSources = new Set(collected.filter((item) => item.result.status !== "failed").map((item) => item.result.sourceCode));
+  savePersistedWelfareCandidates(mergeWelfareCandidates(loadPersistedWelfareCandidates(), collected.flatMap((item) => item.candidates ?? []), refreshedCandidateSources));
   const results = collected.map((item) => ({ ...item.result, totalCount: merged.filter((record) => record.sourceCode === item.result.sourceCode).length }));
   const summary: WelfareRunSummary = {
     ranAt: (options.now ?? new Date()).toISOString(),
