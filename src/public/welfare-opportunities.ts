@@ -718,7 +718,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
         const externalDetail = html.match(/https?:\/\/zfcg\.szggzy\.com:8081\/[^\s"'<>]+/i)?.[0];
         if (externalDetail) {
           fs.writeFileSync(path.join(evidenceDir, `${crypto.createHash("sha256").update(html).digest("hex")}.html`), html);
-          effectiveUrl = externalDetail.replace(/[),.;]+$/, "");
+          effectiveUrl = externalDetail.replace(/[),.;]+$/, "").replace(/^http:\/\//i, "https://");
           html = await fetchHtml(effectiveUrl);
         }
       }
