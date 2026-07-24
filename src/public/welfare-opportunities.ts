@@ -471,6 +471,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式|代理机构|项目概况|项目名称|采购内容|公告时间|发布时间)[：:]?|[。；]|$)/);
   const deadlineExcerpt = excerpt(text, /(?:(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}|(?:投标|报名|响应|递交|提交)[^。；]{0,32}截止时间\s*\d{4}-\d{1,2}-\d{1,2})/);
   const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价|预估(?:年度)?采购总金额)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
+  if (source.adapter && !opportunityAction.test(title) && !/(采购人|采购单位|预算金额|采购预算|最高限价|截止|联系人|联系电话|报名|响应文件)/.test(text)) return null;
   const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?|(\d{4})-(\d{1,2})-(\d{1,2})/);
   const publishedAt = input.publishedAtHint || extractMeta(input.html, "PubDate") || "";
   const year = Number(deadlineMatch?.[1] || deadlineMatch?.[6] || publishedAt.slice(0, 4) || new Date().getFullYear());
