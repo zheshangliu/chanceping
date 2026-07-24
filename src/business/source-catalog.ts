@@ -1,5 +1,6 @@
 import type { BusinessEditionId } from "./edition-config";
 import type { OpportunityCategory } from "./opportunity";
+import { loadSourceRegistry } from "./data-pipeline";
 
 export interface BusinessSource {
   id: string; name: string; officialUrl: string; editions: BusinessEditionId[]; categories: OpportunityCategory[];
@@ -30,4 +31,24 @@ export const BUSINESS_SOURCES: BusinessSource[] = [
   { id: "mofcom-discovery", name: "商务部政府信息公开", officialUrl: "https://www.mofcom.gov.cn/zfxxgk/index.html", editions: ["guangzhou", "tianhe", "shaoguan"], categories: ["international", "exhibition", "channel"], coverage: "全国外贸、展会与国际合作候选", refreshCadence: "weekly", admissionPolicy: "仅生成候选，必须回溯至广东、广州或官方主办方的直接行动通知。", tier: "p2", role: "candidate_discovery" },
 ];
 
-export function sourcesForEdition(edition: BusinessEditionId): BusinessSource[] { return BUSINESS_SOURCES.filter((source) => source.editions.includes(edition)); }
+function registryCategories(value: string): OpportunityCategory[] {
+  const categories = new Set<OpportunityCategory>();
+  if (/采购|招标|工程/.test(value)) categories.add("procurement");
+  if (/政策|资金|补贴|认定|设备更新|人才/.test(value)) categories.add("policy");
+  if (/赛事|大赛|征集/.test(value)) categories.add("competition");
+  if (/展会|参展/.test(value)) categories.add("exhibition");
+  if (/外贸|出口|跨境|国际/.test(value)) categories.add("international");
+  if (/合作|招商|渠道|融资/.test(value)) categories.add("channel");
+  return categories.size ? [...categories] : ["policy"];
+}
+
+/** The public catalogue is derived from the same 48-source registry used by collection. */
+export function sourcesForEdition(edition: BusinessEditionId): BusinessSource[] {
+  const legacy = BUSINESS_SOURCES.filter((source) => source.editions.includes(edition));
+  const registry = loadSourceRegistry().sources.map((source): BusinessSource => ({
+    id: source.sourceId, name: source.name, officialUrl: source.entryUrl, editions: ["guangzhou", "tianhe", "shaoguan"], categories: registryCategories(source.categories), coverage: source.categories,
+    refreshCadence: source.frequency.includes("日") ? "daily" : "weekly", admissionPolicy: source.role === "candidate_discovery" ? "仅作候选发现；必须回到直接官方原文核验后才能公开。" : `仅采纳满足官方原文、字段核验和行动期要求的机会。${source.health ? ` 当前登记状态：${source.health}。` : ""}`,
+    tier: source.priority.toLowerCase() as BusinessSource["tier"], role: source.role,
+  }));
+  return [...legacy, ...registry.filter((source) => !legacy.some((item) => item.officialUrl === source.officialUrl))];
+}
