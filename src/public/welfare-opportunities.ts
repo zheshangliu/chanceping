@@ -1024,7 +1024,9 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
       const { stdout } = await execFileAsync("curl", ["-L", "--fail", "--silent", "--show-error", "--max-time", "20", "--tls-max", "1.2", "--http1.1", "-A", "ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)", url], { maxBuffer: 8 * 1024 * 1024 });
       return stdout;
     } catch (curlError) {
+      const gnutlsHosts = new Set(["www.szgm.gov.cn", "www.szlhq.gov.cn", "www.szft.gov.cn"]);
       try {
+        if (!gnutlsHosts.has(parsed.hostname)) throw new Error("gnutls fallback not required for this host");
         return await gnutlsFetchHtml(url);
       } catch (gnutlsError) {
         try {
