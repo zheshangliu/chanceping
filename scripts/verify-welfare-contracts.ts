@@ -29,6 +29,8 @@ const longhuaLinks = extractWelfareIndexLinks(`<li><a href="/x.html" title="龙�
 assert.equal(longhuaLinks.length, 1);
 const futianLinks = extractWelfareIndexLinks(`<li><a href="/x.html" title="福田区总工会送清凉慰问项目采购公告">公告</a><span>2026-07-10</span></li>`, WELFARE_SOURCES[2]);
 assert.equal(futianLinks.length, 1);
+const expandedContextLinks = extractWelfareIndexLinks(`<li><a href="/x.html" title="职工防暑降温与健康管理服务商征集公告">公告</a><span>2026-07-10</span></li>`, WELFARE_SOURCES[2]);
+assert.equal(expandedContextLinks.length, 1, "expanded welfare scenes must be discoverable");
 const relayLinks = extractWelfareIndexLinks(`* 2026-07-10[深圳市光明区总工会2026年采购消费帮扶慰问物资项目采购变更公告](https://www.szgm.gov.cn/content/post_1.html "深圳市光明区总工会2026年采购消费帮扶慰问物资项目采购变更公告")`, WELFARE_SOURCES[0]);
 assert.equal(relayLinks.length, 1, "Reader Markdown links with a title attribute must be collected");
 assert.equal(relayLinks[0].publishedAt, "2026-07-10", "Reader Markdown publication dates must drive current/history classification");

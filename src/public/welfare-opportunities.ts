@@ -9,6 +9,13 @@ export const PUBLIC_WELFARE_RADAR_NAME = "企业福利商机雷达";
 export const WELFARE_SOURCE_CODE = "OFF-SZ-004";
 export const WELFARE_SOURCE_NAME = "光明区政府/群团工作部公告";
 export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/";
+
+// Keep the radar focused on employee-benefit demand while covering the common
+// procurement vocabulary used by government, unions, and enterprise portals.
+// This is deliberately a context matcher; procurement/action terms are still
+// required before an item can become an opportunity card.
+const WELFARE_CONTEXT = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|防暑降温|疗休养|农副产品|节日(?:慰问|福利)?|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券|福利)?|体检|健康管理|心理服务|职工餐厅|职工食堂|工会|职工服务|职工活动|职工培训|员工关怀|员工体检|福利采购)/;
+const WELFARE_ACTION = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目|服务商|入围|采购意向)/;
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
@@ -97,6 +104,48 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
+  // Expansion POC: official enterprise and central procurement portals. These
+  // remain shadow-only until a source-specific public list/detail contract is
+  // proven with field-level evidence.
+  { code: "HUB-N-001", name: "中国政府采购网｜地方分网与中央部门目录", url: "https://www.ccgp.gov.cn/", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "OFF-SZ-001", name: "深圳市政府采购监管网", url: "https://zfcg.sz.gov.cn/", allowedHost: "zfcg.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-001", name: "南方电网供应链统一服务平台", url: "https://www.bidding.csg.cn/", allowedHost: "www.bidding.csg.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-002", name: "南方电网电子采购交易平台", url: "https://ecsg.com.cn/", allowedHost: "ecsg.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-003", name: "中国移动电子采购与招投标系统", url: "https://es.b2b.10086.cn/newbid/", allowedHost: "es.b2b.10086.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board", shadowAccess: "restricted" },
+  { code: "ENT-004", name: "中国联通合作方门户", url: "https://www.cuecp.cn/", allowedHost: "www.cuecp.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", adapter: "org-notice-board" },
+  { code: "ENT-005", name: "中国联通采购与招标网", url: "https://www.chinaunicombidding.cn/", allowedHost: "www.chinaunicombidding.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-006", name: "中国电信阳光采购网", url: "https://caigou.chinatelecom.com.cn/", allowedHost: "caigou.chinatelecom.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-007", name: "国家电网新一代电子商务平台 ECP2.0", url: "https://ecp.sgcc.com.cn/ecp2.0/portal/", allowedHost: "ecp.sgcc.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-008", name: "中国石油招标投标网", url: "https://www.cnpcbidding.com/", allowedHost: "www.cnpcbidding.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-009", name: "中国石化物资电子招标投标交易平台", url: "https://bidding.epec.com/", allowedHost: "bidding.epec.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-010", name: "中国石化建设工程电子招标投标交易平台", url: "https://ebidding.sinopec.com/", allowedHost: "ebidding.sinopec.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-011", name: "中国海油采办业务管理与交易系统", url: "https://buy.cnooc.com.cn/", allowedHost: "buy.cnooc.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board", shadowAccess: "restricted" },
+  { code: "ENT-012", name: "金融集中采购网", url: "https://www.cfcpn.com/", allowedHost: "www.cfcpn.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board", shadowAccess: "restricted" },
+  { code: "ENT-013", name: "招商银行采购平台", url: "https://xcg-nginx.paas.cmbchina.com/portal/page/platEnter.html", allowedHost: "xcg-nginx.paas.cmbchina.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board" },
+  { code: "ENT-014", name: "中国银行中银智采入口", url: "https://www.boc.cn/", allowedHost: "www.boc.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
+  { code: "ENT-015", name: "中信集团采购共享平台", url: "https://ebid.cfhc.citic/", allowedHost: "ebid.cfhc.citic", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "html-notice-board", shadowAccess: "restricted" },
+  // Discovery, recall, data-service, and welfare-channel candidates. These
+  // are isolated from public cards and require provenance/authorization review.
+  { code: "SIG-001", name: "中华全国总工会", url: "https://www.acftu.org/", allowedHost: "www.acftu.org", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "org-notice-board", shadowAccess: "restricted" },
+  { code: "SIG-002", name: "中国工会新闻网", url: "https://acftu.people.com.cn/", allowedHost: "acftu.people.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "org-notice-board", shadowAccess: "restricted" },
+  { code: "SIG-003", name: "目标单位官网通知公告/采购信息/工会动态栏目池", url: "registry://target-organizations", allowedHost: "manual", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
+  { code: "SIG-004", name: "微信公众号/粤工惠等工会私域信号池", url: "manual://wechat-official-accounts", allowedHost: "manual", region: "广东", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
+  { code: "SIG-005", name: "搜索引擎站点定向发现", url: "search://site-queries", allowedHost: "manual", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
+  { code: "AGG-001", name: "百度寻标宝", url: "https://xunbiaobao.baidu.com/", allowedHost: "xunbiaobao.baidu.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "AGG-002", name: "剑鱼标讯", url: "https://www.jianyu360.cn/", allowedHost: "www.jianyu360.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "AGG-003", name: "乙方宝", url: "https://www.yfbzb.com/", allowedHost: "www.yfbzb.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "AGG-004", name: "标标达/招标雷达", url: "https://bidradar.com.cn/", allowedHost: "bidradar.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "AGG-005", name: "千里马招标网/OKCIS", url: "https://www.okcis.cn/", allowedHost: "www.okcis.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "AGG-006", name: "中国采购与招标网/采招网", url: "https://www.zhaobiao.cn/", allowedHost: "www.zhaobiao.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board", shadowAccess: "restricted" },
+  { code: "AGG-007", name: "中国招标投标网", url: "https://www.cecbid.org.cn/", allowedHost: "www.cecbid.org.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board" },
+  { code: "DATA-001", name: "CnOpenData政府采购/区域招投标数据产品", url: "https://www.cnopendata.com/", allowedHost: "www.cnopendata.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", adapter: "html-notice-board", shadowAccess: "restricted" },
+  { code: "WEL-002", name: "中智关爱通官网", url: "https://www.guanaitong.com/", allowedHost: "www.guanaitong.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", adapter: "org-notice-board" },
+  { code: "WEL-003", name: "京东锦礼/福礼平台", url: "https://jdjl.jd.com/", allowedHost: "jdjl.jd.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", adapter: "org-notice-board" },
+  { code: "WEL-004", name: "CDP弹性福利", url: "https://www.cdpgroupltd.com/flexible-benefits", allowedHost: "www.cdpgroupltd.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", adapter: "org-notice-board" },
+  { code: "WEL-005", name: "东方福利网", url: "https://www.dongfangfuli.com/", allowedHost: "www.dongfangfuli.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", adapter: "org-notice-board" },
+  { code: "WEL-006", name: "上海外服商业福利", url: "https://www.fsg.com.cn/Product_CnB_Benefits.html", allowedHost: "www.fsg.com.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", adapter: "org-notice-board" },
+  { code: "WEL-007", name: "招商银行薪福通福利服务", url: "https://xft.cmbchina.com/index/subproduct/subproduct6.html", allowedHost: "xft.cmbchina.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "channel_partnership", opportunityType: "SUPPLIER_RECRUITMENT", adapter: "org-notice-board" },
+  { code: "HUB-003", name: "TrendRadar社区数据源收集Issue/讨论", url: "https://github.com/sansan0/TrendRadar/issues", allowedHost: "github.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
 ];
 
 function sourceByCode(code: string): WelfareSourceConfig {
@@ -353,7 +402,7 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 }
 
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
-  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const welfareContext = WELFARE_CONTEXT;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
   // Large procurement portals list generic project names and expose the
   // welfare context only on the detail page. Reviewed adapters may therefore
@@ -476,7 +525,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
   const text = cleanText(input.html);
-  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const welfareContext = WELFARE_CONTEXT;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/;
   const contextText = source.adapter ? `${title} ${text}` : title;
   if (!title || !welfareContext.test(contextText) || !opportunityAction.test(contextText)) return null;
@@ -603,7 +652,7 @@ async function collectSzGgzyGovernmentProcurement(source: WelfareSourceConfig, o
     for (const notice of notices) {
       const title = notice.noticeTitle || notice.title || notice.projectName || "";
       const officialUrl = normalizeUrl(notice.linkTo ?? "", source.url);
-      if (!officialUrl || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      if (!officialUrl || !WELFARE_CONTEXT.test(title) || !WELFARE_ACTION.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
       const html = szGgzyNoticeHtml(notice);
       const record = parseWelfareDetail({ html, url: officialUrl, sourceCode: source.code, publishedAtHint: notice.releaseTime || notice.publishTime || "", retrievedAt: options.retrievedAt });
       if (record) records.push(record);
@@ -695,7 +744,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const links = (source.directDetail
     ? [{ title: source.name, url: source.url, publishedAt: "" }]
     : Array.from(indexLinks.values()).sort((a, b) => {
-      const context = /(慰问|福利|职工|体检|礼品|送清凉|疗休养|工会)/;
+      const context = WELFARE_CONTEXT;
       return Number(!context.test(a.title)) - Number(!context.test(b.title));
     })
   ).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));

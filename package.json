@@ -117,6 +117,7 @@
     "verify:welfare:adapters": "tsx scripts/verify-welfare-adapters.ts",
     "verify:welfare:adapter-runtime": "tsx scripts/verify-welfare-adapter-runtime.ts",
     "welfare:adapter-review": "tsx scripts/run-welfare-adapter-review.ts",
+    "welfare:expansion-poc": "tsx scripts/run-welfare-expansion-poc.ts",
     "verify:welfare:remote-smoke": "tsx scripts/verify-welfare-remote-smoke.ts",
     "verify:welfare": "tsx scripts/verify-welfare-contracts.ts && tsx scripts/verify-welfare-page.ts && tsx scripts/verify-welfare-scheduler.ts && tsx scripts/verify-welfare-shadow-run.ts && tsx scripts/verify-welfare-shadow-sources.ts && tsx scripts/verify-welfare-shadow-assessment.ts && tsx scripts/verify-welfare-adapters.ts && tsx scripts/verify-welfare-adapter-runtime.ts",
     "verify:q7:demo": "tsx scripts/verify-q7-ai-competition-demo.ts",
