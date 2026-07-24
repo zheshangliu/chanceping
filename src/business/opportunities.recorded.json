@@ -16229,5 +16229,1254 @@
     "createdAt": "2026-07-24T12:00:00+08:00",
     "updatedAt": "2026-07-24T12:00:00+08:00",
     "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-966d9e3591e5ae7b8cba",
+    "slug": "guangdong-policy-966d9e3591e5ae7b",
+    "title": "广州市科学技术局（广州市外国专家局）转发广东省科学技术厅关于组织申报2027年广东省海外名师项目的通知",
+    "summary": "广州市科学技术局通知公告发布的当前政策申报通知，符合条件的企业可按官方要求办理。",
+    "category": "policy",
+    "subCategory": "official-policy",
+    "keywords": [
+      "官方通知",
+      "policy",
+      "企业机会",
+      "申报"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广州市科学技术局通知公告",
+    "sourceName": "广州市科学技术局通知公告",
+    "sourceType": "official",
+    "officialUrl": "https://kjj.gz.gov.cn/xxgk/zwdt/tztg/wjgg/content/post_10876614.html",
+    "publishedAt": "2026-06-29T00:00:00+08:00",
+    "deadline": "2026-07-31T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对官方通知的发布机构、固定截止日期、行动入口与字段级证据定位；资格、附件及补充通知以官方原文为准。",
+    "targetAudience": [
+      "enterprise"
+    ],
+    "eligibilitySummary": "面向符合官方通知要求的企业或申报主体；请按公告要求提交申报材料。",
+    "eligibilityRequirements": [
+      "核对官方通知列明的申报条件、材料与提交渠道",
+      "在固定截止日前完成提交申报材料"
+    ],
+    "rewardSummary": "支持标准、奖项或权益以官方通知及附件为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "官方来源发布并存在固定截止日期",
+      "已提取行动入口和关键字段证据",
+      "可映射给广州、天河和韶关企业发现机会"
+    ],
+    "risks": [
+      "资格条件、附件和补充通知以官方原文为准",
+      "提交前应复核截止时间及线上系统状态"
+    ],
+    "nextActions": [
+      "打开官方通知核对适用条件和材料清单",
+      "在截止日前完成提交申报材料"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-35b46a04787d72c5fa95",
+    "slug": "guangdong-procurement-35b46a04787d72c5",
+    "title": "广东医科大学附属医院医用回旋加速器（PET/CT配套设备）全保服务",
+    "summary": "广东医科大学附属医院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东医科大学附属医院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260716_26949734.htm",
+    "publishedAt": "2026-07-16T00:00:00+08:00",
+    "deadline": "2026-08-06T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月06日 09时30分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-b18f8c2df1dbaa411324",
+    "slug": "guangdong-procurement-b18f8c2df1dbaa41",
+    "title": "2026年广东省机械技师学院南海校区智能制造学院实训设备设施采购项目",
+    "summary": "广东省机械技师学院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东省机械技师学院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260716_26948642.htm",
+    "publishedAt": "2026-07-16T00:00:00+08:00",
+    "deadline": "2026-08-06T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月06日 09时30分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-e2d832e5551a22713b8d",
+    "slug": "guangdong-procurement-e2d832e5551a2271",
+    "title": "广州校区实验楼电梯更新采购项目",
+    "summary": "广东财经大学发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东财经大学",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260716_26948202.htm",
+    "publishedAt": "2026-07-16T00:00:00+08:00",
+    "deadline": "2026-08-06T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月06日 09时30分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-b21a26201cb393dc5826",
+    "slug": "guangdong-procurement-b21a26201cb393dc",
+    "title": "嘉应学院医学院2026-2027年（两年）教学实验耗材采购项目（三次）",
+    "summary": "嘉应学院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "嘉应学院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260716_26949724.htm",
+    "publishedAt": "2026-07-16T00:00:00+08:00",
+    "deadline": "2026-08-07T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月07日 09时00分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-b1a0f94a95e0f77b5233",
+    "slug": "guangdong-procurement-b1a0f94a95e0f77b",
+    "title": "图书馆阅览桌、阅览椅更新采购项目",
+    "summary": "广东外语外贸大学发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东外语外贸大学",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260716_26948742.htm",
+    "publishedAt": "2026-07-16T00:00:00+08:00",
+    "deadline": "2026-08-07T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月07日 11时00分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-21875bd2c247d471f16e",
+    "slug": "guangdong-policy-21875bd2c247d471",
+    "title": "关于组织开展韶关市2025年科技支撑“百千万工程”项目申报工作的通知",
+    "summary": "韶关市人民政府申报通知发布的当前政策申报通知，符合条件的企业可按官方要求办理。",
+    "category": "policy",
+    "subCategory": "official-policy",
+    "keywords": [
+      "官方通知",
+      "policy",
+      "企业机会",
+      "申报"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "韶关市人民政府申报通知",
+    "sourceName": "韶关市人民政府申报通知",
+    "sourceType": "government",
+    "officialUrl": "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2756948.html",
+    "publishedAt": "2025-07-03T00:00:00+08:00",
+    "deadline": "2026-08-08T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对官方通知的发布机构、固定截止日期、行动入口与字段级证据定位；资格、附件及补充通知以官方原文为准。",
+    "targetAudience": [
+      "enterprise"
+    ],
+    "eligibilitySummary": "面向符合官方通知要求的企业或申报主体；请按公告要求提交申报材料。",
+    "eligibilityRequirements": [
+      "核对官方通知列明的申报条件、材料与提交渠道",
+      "在固定截止日前完成提交申报材料"
+    ],
+    "rewardSummary": "支持标准、奖项或权益以官方通知及附件为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "官方来源发布并存在固定截止日期",
+      "已提取行动入口和关键字段证据",
+      "可映射给广州、天河和韶关企业发现机会"
+    ],
+    "risks": [
+      "资格条件、附件和补充通知以官方原文为准",
+      "提交前应复核截止时间及线上系统状态"
+    ],
+    "nextActions": [
+      "打开官方通知核对适用条件和材料清单",
+      "在截止日前完成提交申报材料"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-63beecbac524b7fed4f7",
+    "slug": "guangdong-procurement-63beecbac524b7fe",
+    "title": "广东省省级2026年度第三期便携式计算机批量集中采购项目（标段一）",
+    "summary": "广东省政府采购中心发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东省政府采购中心",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260720_27003532.htm",
+    "publishedAt": "2026-07-20T00:00:00+08:00",
+    "deadline": "2026-08-10T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网本项目公告附件处 获取招标文件，并于 2026 年 8 月 10 日 09 点 30 分（北京时间）前（ 30分钟内）递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-d6af9a3255845de821f2",
+    "slug": "guangdong-procurement-d6af9a3255845de8",
+    "title": "手持式综合测试仪采购项目",
+    "summary": "zycgr21071303发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "zycgr21071303",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202607/t20260724_27002958.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-14T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在登录“远东招标采购交易网（www.szyd11.com）”下载获取招标文件，并于2026年08月14日 09点30分（北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-2d0601d14637d434e9b4",
+    "slug": "guangdong-procurement-2d0601d14637d434",
+    "title": "深圳出入境边防检查总站医院腹腔镜系统采购项目",
+    "summary": "深圳出入境边防检查总站医院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "深圳出入境边防检查总站医院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202607/t20260724_27002647.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-14T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在登录“远东招标采购交易网（www.szyd11.com）”下载获取招标文件，并于2026年08月14日 09点30分（北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-18f2be97f58fbee911dd",
+    "slug": "guangdong-procurement-18f2be97f58fbee9",
+    "title": "深圳出入境边防检查总站医院移动式C形臂X射线机采购项目",
+    "summary": "深圳出入境边防检查总站医院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "深圳出入境边防检查总站医院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202607/t20260724_27002619.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-14T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在登录“远东招标采购交易网（www.szyd11.com）”下载获取招标文件，并于2026年08月14日 09点30分（北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-9100641dba9fdc3cab67",
+    "slug": "guangdong-procurement-9100641dba9fdc3c",
+    "title": "广东水利科技创新综合能力提升项目（包二）",
+    "summary": "广东省水利水电科学研究院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东省水利水电科学研究院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260724_27002631.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-14T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月14日 14时30分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-b9e038e22d08c3c5991f",
+    "slug": "guangdong-procurement-b9e038e22d08c3c5",
+    "title": "边缘智能计算平台采购项目",
+    "summary": "zycgr21071303发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "zycgr21071303",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202607/t20260724_27001000.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-14T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在登录“远东招标采购交易网（www.szyd11.com）”下载获取招标文件，并于2026年08月14日 09点30分（北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-2f5bc71c13d0c16ab447",
+    "slug": "guangdong-procurement-2f5bc71c13d0c16a",
+    "title": "广州中医药大学第一附属医院信息终端设备驻场维保服务及打印耗材一体化服务项目",
+    "summary": "广州中医药大学第一附属医院发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广州中医药大学第一附属医院",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260724_27001017.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-14T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网(https://gdgpo.czt.gd.gov.cn) 获取招标文件，并于 2026年08月14日 09时30分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-990688207234caecd6e9",
+    "slug": "guangdong-procurement-990688207234caec",
+    "title": "支持新质生产力产业空间的规划设计",
+    "summary": "广东省自然资源厅发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东省自然资源厅",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260724_27001456.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-17T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月17日 09时30分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-0537d778ead44977568d",
+    "slug": "guangdong-procurement-0537d778ead44977",
+    "title": "“岭南膳食模式研究与转化”项目第三方检测服务采购项目",
+    "summary": "广东省疾病预防控制中心发布的广东省政府采购项目，符合条件的供应商可按官方公告获取采购文件并参与投标或响应。",
+    "category": "procurement",
+    "subCategory": "government-procurement",
+    "keywords": [
+      "广东政府采购",
+      "公开招标",
+      "供应商",
+      "投标"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广东省疾病预防控制中心",
+    "sourceName": "中国政府采购网",
+    "sourceType": "government",
+    "officialUrl": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260724_27001715.htm",
+    "publishedAt": "2026-07-24T00:00:00+08:00",
+    "deadline": "2026-08-18T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对中国政府采购网官方公告的采购单位、广东省行政区域、公告类型、固定截止日、潜在投标人行动入口和字段级证据定位。资格、采购文件及更正公告以官方原文为准。",
+    "targetAudience": [
+      "supplier",
+      "enterprise"
+    ],
+    "eligibilitySummary": "潜在投标人应在 广东省政府采购网https://gdgpo.czt.gd.gov.cn/ 获取招标文件，并于 2026年08月18日 10时00分 （北京时间）前递交投标文件。",
+    "eligibilityRequirements": [
+      "按官方公告要求获取招标文件",
+      "在公告规定的截止时间前提交投标或响应文件"
+    ],
+    "rewardSummary": "采购预算、品目及合同要求以官方公告为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "广东省行政区域内的当前政府采购行动公告",
+      "官方页面列出采购单位、文件获取与截止时间",
+      "可映射给广州、天河和韶关供应商发现商机"
+    ],
+    "risks": [
+      "资格条件、采购文件要求和补充公告以官方原文为准",
+      "临近截止前应复核采购公告是否有更正或延期"
+    ],
+    "nextActions": [
+      "打开官方公告核对采购文件与资格条件",
+      "在截止日前完成报名、文件获取和投标准备"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-10741d2519c120123e4b",
+    "slug": "guangdong-policy-10741d2519c12012",
+    "title": "广州市科学技术局（广州市外国专家局）关于转发2026年度“国际友人看中国”摄影征集活动的通知",
+    "summary": "广州市科学技术局通知公告发布的当前政策申报通知，符合条件的企业可按官方要求办理。",
+    "category": "policy",
+    "subCategory": "official-policy",
+    "keywords": [
+      "官方通知",
+      "policy",
+      "企业机会",
+      "申报"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广州市科学技术局通知公告",
+    "sourceName": "广州市科学技术局通知公告",
+    "sourceType": "official",
+    "officialUrl": "https://kjj.gz.gov.cn/xxgk/zwdt/tztg/wjgg/content/post_10892406.html",
+    "publishedAt": "2026-07-07T00:00:00+08:00",
+    "deadline": "2026-08-31T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对官方通知的发布机构、固定截止日期、行动入口与字段级证据定位；资格、附件及补充通知以官方原文为准。",
+    "targetAudience": [
+      "enterprise"
+    ],
+    "eligibilitySummary": "面向符合官方通知要求的企业或申报主体；请按公告要求提交申报材料。",
+    "eligibilityRequirements": [
+      "核对官方通知列明的申报条件、材料与提交渠道",
+      "在固定截止日前完成提交申报材料"
+    ],
+    "rewardSummary": "支持标准、奖项或权益以官方通知及附件为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "官方来源发布并存在固定截止日期",
+      "已提取行动入口和关键字段证据",
+      "可映射给广州、天河和韶关企业发现机会"
+    ],
+    "risks": [
+      "资格条件、附件和补充通知以官方原文为准",
+      "提交前应复核截止时间及线上系统状态"
+    ],
+    "nextActions": [
+      "打开官方通知核对适用条件和材料清单",
+      "在截止日前完成提交申报材料"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-d20df9b0bdf08f7e96e9",
+    "slug": "guangdong-policy-d20df9b0bdf08f7e",
+    "title": "韶关市科学技术局关于组织申报2025年度市级社会发展科技协同创新体系建设项目的通知",
+    "summary": "韶关市人民政府申报通知发布的当前政策申报通知，符合条件的企业可按官方要求办理。",
+    "category": "policy",
+    "subCategory": "official-policy",
+    "keywords": [
+      "官方通知",
+      "policy",
+      "企业机会",
+      "申报"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "韶关市人民政府申报通知",
+    "sourceName": "韶关市人民政府申报通知",
+    "sourceType": "government",
+    "officialUrl": "https://www.sg.gov.cn/zsyz/tzzc/sbtz/content/post_2775107.html",
+    "publishedAt": "2025-08-29T00:00:00+08:00",
+    "deadline": "2026-10-17T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对官方通知的发布机构、固定截止日期、行动入口与字段级证据定位；资格、附件及补充通知以官方原文为准。",
+    "targetAudience": [
+      "enterprise"
+    ],
+    "eligibilitySummary": "面向符合官方通知要求的企业或申报主体；请按公告要求提交申报材料。",
+    "eligibilityRequirements": [
+      "核对官方通知列明的申报条件、材料与提交渠道",
+      "在固定截止日前完成提交申报材料"
+    ],
+    "rewardSummary": "支持标准、奖项或权益以官方通知及附件为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "官方来源发布并存在固定截止日期",
+      "已提取行动入口和关键字段证据",
+      "可映射给广州、天河和韶关企业发现机会"
+    ],
+    "risks": [
+      "资格条件、附件和补充通知以官方原文为准",
+      "提交前应复核截止时间及线上系统状态"
+    ],
+    "nextActions": [
+      "打开官方通知核对适用条件和材料清单",
+      "在截止日前完成提交申报材料"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
+  },
+  {
+    "id": "opp-3d54dc7bf4094fdea92e",
+    "slug": "guangdong-competition-3d54dc7bf4094fde",
+    "title": "广州市2026年度会计中级资格考试报名温馨提示",
+    "summary": "广州市人民政府通知公告发布的当前赛事征集通知，符合条件的企业可按官方要求办理。",
+    "category": "competition",
+    "subCategory": "official-competition",
+    "keywords": [
+      "官方通知",
+      "competition",
+      "企业机会",
+      "申报"
+    ],
+    "industries": [
+      "business-services"
+    ],
+    "regions": [
+      "guangdong"
+    ],
+    "editions": [
+      "guangzhou",
+      "tianhe",
+      "shaoguan"
+    ],
+    "organizer": "广州市人民政府通知公告",
+    "sourceName": "广州市人民政府通知公告",
+    "sourceType": "government",
+    "officialUrl": "https://www.gz.gov.cn/xw/tzgg/content/post_10864535.html",
+    "publishedAt": "2026-06-22T00:00:00+08:00",
+    "deadline": "2026-12-31T23:59:59+08:00",
+    "deadlineType": "fixed",
+    "timezone": "Asia/Shanghai",
+    "status": "open",
+    "verificationStatus": "fully_verified",
+    "verifiedAt": "2026-07-24T12:00:00+08:00",
+    "verificationNotes": "已核对官方通知的发布机构、固定截止日期、行动入口与字段级证据定位；资格、附件及补充通知以官方原文为准。",
+    "targetAudience": [
+      "enterprise"
+    ],
+    "eligibilitySummary": "面向符合官方通知要求的企业或申报主体；请按公告要求报名参赛。",
+    "eligibilityRequirements": [
+      "核对官方通知列明的申报条件、材料与提交渠道",
+      "在固定截止日前完成报名参赛"
+    ],
+    "rewardSummary": "支持标准、奖项或权益以官方通知及附件为准。",
+    "recommendationLevel": "medium",
+    "recommendationReasons": [
+      "官方来源发布并存在固定截止日期",
+      "已提取行动入口和关键字段证据",
+      "可映射给广州、天河和韶关企业发现机会"
+    ],
+    "risks": [
+      "资格条件、附件和补充通知以官方原文为准",
+      "提交前应复核截止时间及线上系统状态"
+    ],
+    "nextActions": [
+      "打开官方通知核对适用条件和材料清单",
+      "在截止日前完成报名参赛"
+    ],
+    "featured": false,
+    "sourceDiscoveredAt": "2026-07-24T12:00:00+08:00",
+    "createdAt": "2026-07-24T12:00:00+08:00",
+    "updatedAt": "2026-07-24T12:00:00+08:00",
+    "dataOwner": "chanceping-business-radar"
   }
 ]
