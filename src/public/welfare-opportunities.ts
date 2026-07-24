@@ -458,8 +458,11 @@ function publishedContactName(value: string | undefined): string | undefined {
 export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
-  if (!title || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title)) return null;
   const text = cleanText(input.html);
+  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/;
+  const contextText = source.adapter ? `${title} ${text}` : title;
+  if (!title || !welfareContext.test(contextText) || !opportunityAction.test(contextText)) return null;
   // Government portals often omit punctuation between labeled fields. Stop
   // at the next known label so a buyer never becomes the whole announcement.
   const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址|公告时间|发布时间|发布日期|项目概况|采购内容|响应文件|采购文件|项目编号|采购方式|地点)[：:]?|[。；]|$)/);
