@@ -624,6 +624,15 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   fs.mkdirSync(evidenceDir, { recursive: true });
   if (source.publicApi === "szggzy-government-procurement") return collectSzGgzyGovernmentProcurement(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
   if (source.publicApi === "gzgpc-procurement-signals") return collectGzGpcProcurementSignals(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
+  // Every reviewed shadow source goes through this explicit adapter contract.
+  // The adapter remains deliberately conservative: it only follows official
+  // same-host links and uses the shared welfare/action gate plus field-level
+  // evidence parser. A source-specific adapter can therefore be promoted by
+  // changing rollout after its live evidence review without changing the
+  // public feed contract.
+  if (source.adapter) {
+    fs.writeFileSync(path.join(evidenceDir, "adapter.json"), JSON.stringify({ sourceCode: source.code, adapter: source.adapter, allowedHost: source.allowedHost, collectedAt: retrievedAt }, null, 2));
+  }
   const indexUrls = source.indexUrls?.length ? source.indexUrls : [source.url];
   const indexErrors: Array<{ url: string; error: string }> = [];
   const indexLinks = new Map<string, { title: string; url: string; publishedAt: string }>();
