@@ -679,6 +679,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   for (const link of links) {
     try {
       let effectiveUrl = link.url;
+      if (source.adapter && effectiveUrl.startsWith("http://")) effectiveUrl = effectiveUrl.replace(/^http:\/\//i, "https://");
       let html = await fetchHtml(effectiveUrl);
       if (source.code === "OFF-N-004") {
         const nestedPath = html.match(/(?:firstLastUrl\s*=|showDetail\([^,]+,[^,]+,\s*)\s*['\"]([^'\"]+\/information\/deal\/html\/b\/[^'\"]+)['\"]/i)?.[1];
