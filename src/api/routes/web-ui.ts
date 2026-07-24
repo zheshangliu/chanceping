@@ -26,6 +26,7 @@ import { Hono } from "hono";
 import type { Context } from "hono";
 import fs from "fs";
 import path from "path";
+import { BUSINESS_EDITION_IDS } from "../../business/edition-config";
 
 /** 根据文件扩展名推断 Content-Type */
 function getContentType(filePath: string): string {
@@ -103,17 +104,26 @@ export function webUiRoutes(): Hono {
     };
   }
 
-  // 根路径 → index.html
-  app.get("/", serveFile("index.html", "text/html; charset=utf-8"));
+  const serveBusinessApp = serveFile("business.html", "text/html; charset=utf-8");
+  const isBusinessHost = (c: Context) => (c.req.header("host") ?? "").split(":")[0].toLowerCase() === "business.chanceping.com";
+
+  // The production Business subdomain shares this service. Its root is the
+  // default Guangzhou edition; the main site root remains unchanged.
+  app.get("/", (c) => isBusinessHost(c) ? c.redirect("/guangzhou", 302) : serveFile("index.html", "text/html; charset=utf-8")(c));
   app.get("/aievents", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/fuli", serveFile("welfare.html", "text/html; charset=utf-8"));
   app.get("/welfare", serveFile("welfare.html", "text/html; charset=utf-8"));
+  for (const edition of BUSINESS_EDITION_IDS) {
+    app.get(`/${edition}`, serveBusinessApp);
+    app.get(`/${edition}/*`, serveBusinessApp);
+  }
 
   // 静态资源
   app.get("/styles.css", serveFile("styles.css", "text/css; charset=utf-8"));
   app.get("/ai-events-hybrid.css", serveFile("ai-events-hybrid.css", "text/css; charset=utf-8"));
   app.get("/welfare.css", serveFile("welfare.css", "text/css; charset=utf-8"));
+  app.get("/business.css", serveFile("business.css", "text/css; charset=utf-8"));
   app.get(
     "/home.js",
     serveFile("home.js", "application/javascript; charset=utf-8"),
@@ -149,6 +159,10 @@ export function webUiRoutes(): Hono {
   app.get(
     "/welfare.js",
     serveFile("welfare.js", "application/javascript; charset=utf-8"),
+  );
+  app.get(
+    "/business.js",
+    serveFile("business.js", "application/javascript; charset=utf-8"),
   );
   app.get(
     "/requirement-chat.js",
