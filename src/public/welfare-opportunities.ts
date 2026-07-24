@@ -29,6 +29,7 @@ export interface WelfareSourceConfig {
   opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
   opportunityType?: WelfareOpportunityType;
   shadowAccess?: "direct" | "restricted";
+  extraAllowedHosts?: string[];
   /** Reviewed source-specific adapter contract. It may remain shadow until live evidence passes. */
   adapter?: WelfareAdapterKind;
 }
@@ -94,7 +95,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-ZS-001", name: "中山市公共资源交易平台", url: "https://www.zsjypt.cn/", allowedHost: "www.zsjypt.cn", region: "中山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-HZ-001", name: "惠州市公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "惠州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
-  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
+  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
 ];
 
@@ -102,6 +103,10 @@ function sourceByCode(code: string): WelfareSourceConfig {
   const source = [...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].find((item) => item.code === code);
   if (!source) throw new Error(`Unknown welfare source: ${code}`);
   return source;
+}
+
+function isAllowedWelfareHost(hostname: string): boolean {
+  return [...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === hostname || source.extraAllowedHosts?.includes(hostname));
 }
 
 export type WelfareLifecycle = "current" | "historical";
@@ -430,6 +435,18 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       if (!discovered.has(link.url)) discovered.set(link.url, { title: link.title, url: link.url, publishedAt: link.publishedAt });
     }
   }
+  // Shenzhen Bay Lab embeds its procurement list in an inline JSON array
+  // instead of anchor tags. Preserve those official detail paths and dates.
+  if (source.code === "ORG-004") {
+    const jsonItem = /"showTitle":"([^"]+)"[\s\S]{0,500}?"showDate":"(\d{4}-\d{2}-\d{2})"[\s\S]{0,500}?"url":\{"asString":"([^"]+)"\}/g;
+    let item: RegExpExecArray | null;
+    while ((item = jsonItem.exec(html)) !== null) {
+      const url = normalizeUrl(item[3], source.url);
+      const title = cleanText(item[1]);
+      if (!url || !title || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      discovered.set(url, { title, url, publishedAt: item[2] });
+    }
+  }
   return Array.from(discovered.values());
 }
 
@@ -471,6 +488,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const contactAddressExcerpt = excerpt(text, /(?:联系地址|采购单位地址)[：:]?\s*[^。；]+?(?=\s*(?:联系人|项目联系人|联系电话|项目联系电话|采购单位联系方式|代理机构|项目概况|项目名称|采购内容|公告时间|发布时间)[：:]?|[。；]|$)/);
   const deadlineExcerpt = excerpt(text, /(?:(?:投标|报名|响应|递交|提交)[^。；]{0,32}(?:截至|截止)[^。；]{0,40}|(?:投标|报名|响应|递交|提交)[^。；]{0,32}截止时间\s*\d{4}-\d{1,2}-\d{1,2})/);
   const budgetExcerpt = excerpt(text, /(?:预算金额|采购预算|最高限价|预估(?:年度)?采购总金额)[：:]?\s*(?:人民币)?\s*[\d,.]+\s*(?:万元|元)/);
+  if (source.adapter && !opportunityAction.test(title) && !/(采购人|采购单位|预算金额|采购预算|最高限价|截止|联系人|联系电话|报名|响应文件)/.test(text)) return null;
   const deadlineMatch = deadlineExcerpt?.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2})时(?:(\d{1,2})分)?)?|(\d{4})-(\d{1,2})-(\d{1,2})/);
   const publishedAt = input.publishedAtHint || extractMeta(input.html, "PubDate") || "";
   const year = Number(deadlineMatch?.[1] || deadlineMatch?.[6] || publishedAt.slice(0, 4) || new Date().getFullYear());
@@ -676,7 +694,10 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   }
   const links = (source.directDetail
     ? [{ title: source.name, url: source.url, publishedAt: "" }]
-    : Array.from(indexLinks.values())
+    : Array.from(indexLinks.values()).sort((a, b) => {
+      const context = /(慰问|福利|职工|体检|礼品|送清凉|疗休养|工会)/;
+      return Number(!context.test(a.title)) - Number(!context.test(b.title));
+    })
   ).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
   const records: WelfareOpportunityRecord[] = [];
   const errors: Array<{ url: string; error: string }> = [...indexErrors];
@@ -690,6 +711,14 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
         if (nestedPath) {
           fs.writeFileSync(path.join(evidenceDir, `${crypto.createHash("sha256").update(html).digest("hex")}.html`), html);
           effectiveUrl = normalizeUrl(nestedPath, source.url) ?? effectiveUrl;
+          html = await fetchHtml(effectiveUrl);
+        }
+      }
+      if (source.code === "ORG-004") {
+        const externalDetail = html.match(/https?:\/\/zfcg\.szggzy\.com:8081\/[^\s"'<>]+/i)?.[0];
+        if (externalDetail) {
+          fs.writeFileSync(path.join(evidenceDir, `${crypto.createHash("sha256").update(html).digest("hex")}.html`), html);
+          effectiveUrl = externalDetail.replace(/[),.;]+$/, "").replace(/^http:\/\//i, "https://");
           html = await fetchHtml(effectiveUrl);
         }
       }
@@ -800,7 +829,7 @@ export async function collectWelfareShadowSources(options: { fetchHtml?: (url: s
 
 async function defaultWelfareFetchHtml(url: string): Promise<string> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !isAllowedWelfareHost(parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
@@ -834,7 +863,7 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
 
 async function defaultWelfareFetchJson(url: string, payload: unknown): Promise<string> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !isAllowedWelfareHost(parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   const response = await fetch(url, {
     method: "POST",
     signal: AbortSignal.timeout(20_000),
@@ -869,7 +898,7 @@ async function welfareReaderRelayFetchHtml(officialUrl: string): Promise<string>
 async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
   if (redirects > 4) throw new Error("too many HTTPS redirects");
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !isAllowedWelfareHost(parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   // Keep the client invocation identical to the verified default GnuTLS
   // handshake. HTTP requires CRLF, supplied directly without --crlf.
   const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\r\nAccept: text/html,application/xhtml+xml\r\nConnection: close\r\n\r\n`;
