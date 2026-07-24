@@ -128,7 +128,7 @@ async function main(): Promise<void> {
   const seedBackedStorePath = path.join(tempDirectory, "seed-backed-store.json");
   const seedBackedStore = new IchOpportunityStore(seedBackedStorePath, verifiedSeedPath);
   const verified = seedBackedStore.load();
-  check("verified production seed passes store validation", verified.entries.length === 1 && verified.invalidEntries.length === 0);
+  check("verified production seed passes store validation", verified.entries.length >= 35 && verified.invalidEntries.length === 0);
   check("verified seed is a published audited opportunity", verified.entries[0]?.workflow.state === "published" && verified.entries[0]?.workflow.history.length === 4);
   check("verified seed uses official government source", verified.entries[0]?.sources[0]?.url.includes("yuexiu.gov.cn") && verified.entries[0]?.sources[0]?.level === "L1");
   check("verified seed has confirmed future deadline", verified.entries[0]?.dates.deadline_at === "2026-10-15");

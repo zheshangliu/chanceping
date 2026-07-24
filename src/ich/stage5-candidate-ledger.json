@@ -1,0 +1,351 @@
+{
+  "version": "1.0",
+  "checked_at": "2026-07-24T16:00:00+08:00",
+  "total_screened": 55,
+  "counts": {
+    "current_publishable": 29,
+    "historical_publishable": 5,
+    "rejected": 15,
+    "duplicate": 6
+  },
+  "publishable": [
+    {
+      "slug": "2026-quanzhou-traditional-building-woodcarving-skills-competition",
+      "title": "2026年泉州市传统建筑木雕技能竞赛",
+      "url": "https://www.quanzhou.gov.cn/zfb/xxgk/zfxxgkzl/ztzl/qzsczjtgylhs/xxgk/202607/t20260715_3309414.htm",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-beijing-planetarium-juxing-cup-cultural-products",
+      "title": "北京天文馆“聚星杯”文化创意产品设计大赛",
+      "url": "https://www.bjp.org.cn/xwzx/gndt/4028c1369e281c7a019e297970aa0005.shtml",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-wuhu-gift-cultural-creative-design-competition",
+      "title": "第三届“芜湖有礼”文旅创意设计大赛",
+      "url": "https://ct.wuhu.gov.cn/xwzx/tzgg/8935666.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-jincheng-cultural-creative-products-competition",
+      "title": "晋城市第八届文化创意产品展示大赛",
+      "url": "https://www.jcgov.gov.cn/dtxx/gsgg/202606/t20260611_2359601.shtml",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-chongming-cultural-tourism-badge-design",
+      "title": "“崇明·瀛洲徽光”文旅徽章设计大赛",
+      "url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-yaozhou-porcelain-creative-competition",
+      "title": "2026中国耀州瓷创意大赛",
+      "url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-xizang-ethnic-unity-calligraphy-photography-call",
+      "title": "西藏民族团结主题书法美术摄影作品征集",
+      "url": "https://wlt.xizang.gov.cn/xwzx_69/tzgg/202607/t20260701_547926.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-taiwan-five-star-market-evaluation",
+      "title": "2026臺灣五星集—優良市集暨樂活名攤評核",
+      "url": "https://www.aoc.gov.tw/showPublic/674",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-kyoto-youme-triennale-open-call",
+      "title": "Kyoto YouMe Triennale 2026 Open Call",
+      "url": "https://you-me-kyoto.org/en",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-future-icons-selects-open-call",
+      "title": "Future Icons Selects 2026 Open Call",
+      "url": "https://www.craftscouncil.org.uk/sector-support/opportunities/future-icons-selects-2026-5",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-london-textile-month-host-event",
+      "title": "London Textile Month 2026—Host an Event",
+      "url": "https://www.craftscouncil.org.uk/sector-support/opportunities/london-textile-month-2026-host-an-event",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-mindful-making-with-textiles-open-call",
+      "title": "Mindful Making with Textiles Open Call",
+      "url": "https://www.arton1st.org/mindful-making-textiles-call-2026",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-ali-cultural-creative-products-procurement",
+      "title": "阿里地区特色文旅文创产品公开征集采购",
+      "url": "https://lyfz.al.gov.cn/info/1932/22841.htm",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-caofeidian-ich-museum-decoration-project",
+      "title": "曹妃甸非遗馆装饰装修项目招标",
+      "url": "https://www.ggzy.gov.cn/information/deal/html/a/130000/0201/20260723/0013979914fd6a9642e0ad1ceb4975bbca93.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-shandong-vocational-college-ich-kongming-lock-equipment",
+      "title": "山东职业学院非遗鲁班锁设备采购",
+      "url": "https://www.ggzy.gov.cn/information/deal/html/a/370000/0201/20260717/0037d50adad34acc40b894ea6b2f326d00b3.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-tianlin-ich-inheritance-practice-center-upgrade",
+      "title": "田林县非遗传承实践中心乡村文旅提升项目",
+      "url": "https://ggzy.jgswj.gxzf.gov.cn/bsggzy/projectDetails.html?categorynum=001002005002&infoid=6e331861-cac7-4012-835f-9228aefcf7cf",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-foshan-shiwan-pottery-training-service-procurement",
+      "title": "2026年石湾陶塑技艺专题培训班承办单位采购",
+      "url": "https://gd.qianlima.com/zbcontent-616089453.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-china-great-wall-museum-cultural-products-partner",
+      "title": "中国长城博物馆文创产品及空间运营合作伙伴招募",
+      "url": "https://capitalmuseum.org.cn/news/b20f254505ee41aa896b1a5c505124b7",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-suzhou-museum-cultural-service-center-partner",
+      "title": "宿州市博物馆文化服务中心非遗项目合作招募",
+      "url": "https://www.ahsz.gov.cn/public/2655611/196422801.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-guangzhou-gift-product-collection",
+      "title": "2026“广州礼物”文创产品征集",
+      "url": "https://wglj.gz.gov.cn/gkmlpt/content/10/10898/post_10898467.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-jiangmen-cultural-tourism-industry-support-funding",
+      "title": "江门市2026年文化旅游产业发展扶持资金申报",
+      "url": "https://www.jiangmen.gov.cn/bmpd/jmswhgdlytyj/zwgk/tzgg/content/post_3524872.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-suzhou-arts-crafts-professional-title",
+      "title": "苏州市2026年度工艺美术专业技术资格申报",
+      "url": "https://gxj.suzhou.gov.cn/szeic/ggl/202606/7db2aa7fc3c744639d7feccfbc60769a.shtml",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-beijing-professional-title-craft-fine-arts",
+      "title": "北京市2026年度工艺美术等职称评价申报",
+      "url": "https://rsj.beijing.gov.cn/xxgk/tzgg/202606/t20260625_4720639.html",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-nomad-art-prize",
+      "title": "Nomad Art Prize 2026",
+      "url": "https://www.craftscouncil.org.uk/sector-support/opportunities/nomad-art-prize",
+      "decision": "publish"
+    },
+    {
+      "slug": "2027-county-hall-pottery-potter-in-residence",
+      "title": "Potter in Residence 2027—County Hall Pottery",
+      "url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-weaveup-wool-residency",
+      "title": "WeaveUp+ Wool Residency Open Call",
+      "url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-royal-museums-greenwich-creative-practitioner-residence",
+      "title": "Royal Museums Greenwich Creative Practitioner in Residence 2026",
+      "url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-zero-material-artist-residency",
+      "title": "zero material Artist in Residence Open Call",
+      "url": "https://www.kakilang.org.uk/2026-open-call-zero-material",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-heritage-crafts-emerging-metalworker-award",
+      "title": "Heritage Crafts Emerging Metalworker of the Year Award 2026",
+      "url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+      "decision": "publish"
+    },
+    {
+      "slug": "2026-ningxia-gift-creative-competition-archived",
+      "title": "2026“宁选好礼”文旅商品暨创意大赛（已截止）",
+      "url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260428_5227435_zzb.html",
+      "decision": "historical"
+    },
+    {
+      "slug": "2026-minning-ich-co-creation-exhibition-archived",
+      "title": "“山海匠心传—非遗共创成果展”作品征集（已截止）",
+      "url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260430_5230275.html",
+      "decision": "historical"
+    },
+    {
+      "slug": "2026-leiwuqi-football-market-recruitment-archived",
+      "title": "类乌齐县“仲确·足球嘉年华”市集招商（已截止）",
+      "url": "https://leiwuqi.changdu.gov.cn/lwqxrmzf/c102126/202606/bdf2aa0a2d4648ca8721aff37f6ca30e.shtml",
+      "decision": "historical"
+    },
+    {
+      "slug": "2026-tianhe-qiqiao-protection-project-archived",
+      "title": "天河乞巧习俗专项保护工作比选（已截止）",
+      "url": "https://www.thnet.gov.cn/thdt/tzgg/zbgg/content/post_10885978.html",
+      "decision": "historical"
+    },
+    {
+      "slug": "2026-kashgar-cultural-art-week-call-archived",
+      "title": "喀什·中亚南亚商品交易会文化艺术周征集（已截止）",
+      "url": "https://www.kashi.gov.cn/ksdqxzgs/c106694/202605/aa19bb455c55427f8bfbbf907b46a009.shtml",
+      "decision": "historical"
+    }
+  ],
+  "screened_out": [
+    {
+      "title": "“国家级非遗项目记忆影像”《匠心·传承》摄制项目结果公告",
+      "url": "https://www.ccgp.gov.cn/cggg/dfgg/cjgg/202607/t20260723_26997193.htm",
+      "decision": "rejected",
+      "reason": "成交结果公告，不再存在可参与行动。"
+    },
+    {
+      "title": "2026年“非遗好物 匠心传承”内蒙古非遗购物月",
+      "url": "https://xfj.xlgl.gov.cn/eportal/ui?articleKey=f7ee10962ba64a8291f9edb8f708708b&columnId=16a970a8fc484a859d610ae4a078a8e1&pageId=7dfeba9c50f34f2fa42c1e26da88caeb",
+      "decision": "rejected",
+      "reason": "活动报道且活动已于7月20日结束，无当前招募入口。"
+    },
+    {
+      "title": "拉萨非遗消费补贴",
+      "url": "https://wlt.xizang.gov.cn/xccx/lytg/202607/t20260702_548087.html",
+      "decision": "rejected",
+      "reason": "面向消费者的优惠信息，不是传承人或机构可申请的经营机会。"
+    },
+    {
+      "title": "第十三届西城区非遗传承志愿者招募",
+      "url": "https://www.bjwmb.gov.cn/yw/10131371.html",
+      "decision": "rejected",
+      "reason": "转载报道未给出明确截止时间和可核验申请入口。"
+    },
+    {
+      "title": "2026年文化和自然遗产日非遗主题宣传展示工作通知",
+      "url": "https://zwgk.mct.gov.cn/zfxxgkml/fwzwhyc/202605/t20260526_965986.html",
+      "decision": "rejected",
+      "reason": "行政工作通知，报送窗口已结束且不面向目标用户。"
+    },
+    {
+      "title": "2026年非遗消夏购物月启动",
+      "url": "https://www.mct.gov.cn/whzx/whyw/202606/t20260611_966225.htm",
+      "decision": "rejected",
+      "reason": "新闻稿，无独立报名入口。"
+    },
+    {
+      "title": "“锦绣中华”壮锦创新大赛报道",
+      "url": "https://www.news.cn/ci/20260630/9122230574b241d6a5d38a40ad5f307f/c.html",
+      "decision": "rejected",
+      "reason": "媒体报道未确认当前报名截止时间和第一方入口。"
+    },
+    {
+      "title": "沈阳故宫“故宫吉市”招募",
+      "url": "https://www.sypm.org.cn/xinwen_1/622.html",
+      "decision": "rejected",
+      "reason": "报名已于2026年7月6日截止。"
+    },
+    {
+      "title": "CRAFTISTANBUL 2026",
+      "url": "https://www.craftfairistanbul.com/en",
+      "decision": "rejected",
+      "reason": "确认展会存在，但未从页面确认当前申请窗口和截止时间。"
+    },
+    {
+      "title": "新加坡传统艺术驻留",
+      "url": "https://www.nac.gov.sg/docs/default-source/ta-residency-2026/2026-ta-residency-open-call-material.pdf?sfvrsn=3a967d94_1",
+      "decision": "rejected",
+      "reason": "申请已于2026年7月15日截止。"
+    },
+    {
+      "title": "Ca’Buccari Summer Residencies",
+      "url": "https://www.ca-buccari.org/residency-open-call-1",
+      "decision": "rejected",
+      "reason": "申请已于2026年6月7日截止。"
+    },
+    {
+      "title": "Houston Center for Contemporary Craft Residency 2026–2027",
+      "url": "https://www.transartists.org/en/air/houston-center-contemporary-craft",
+      "decision": "rejected",
+      "reason": "申请窗口已于2026年3月1日截止。"
+    },
+    {
+      "title": "BEK Nordic & Baltic Residency 2026",
+      "url": "https://bek.no/en/bek-nordic-baltic-residency-2026-2/",
+      "decision": "rejected",
+      "reason": "申请已于2026年2月15日截止。"
+    },
+    {
+      "title": "2026/27 Ceramics Artist-in-Residence",
+      "url": "https://theumbrellaarts.org/sites/default/files/Umbrella%20AiR%202627%20Ceramics%20Call.pdf",
+      "decision": "rejected",
+      "reason": "申请已于2026年4月30日截止。"
+    },
+    {
+      "title": "宁德《匠心·传承》采购转载",
+      "url": "https://www.ccgp.gov.cn/cggg/dfgg/cjgg/202607/t20260723_26997193.htm?from=stage5",
+      "decision": "duplicate",
+      "duplicate_group": "dup-nd-jiangxin",
+      "reason": "与结果公告原页为同一已成交项目，不重复入库。"
+    },
+    {
+      "title": "阿里特色文旅文创产品征集采购转载",
+      "url": "https://lyfz.al.gov.cn/info/1932/22841.htm?from=stage5",
+      "decision": "duplicate",
+      "duplicate_group": "dup-ali-products",
+      "reason": "与正式记录使用同一官方页面，仅保留主记录。"
+    },
+    {
+      "title": "曹妃甸非遗馆装饰装修项目聚合页",
+      "url": "https://www.ggzy.gov.cn/information/deal/html/a/130000/0201/20260723/0013979914fd6a9642e0ad1ceb4975bbca93.html?from=stage5",
+      "decision": "duplicate",
+      "duplicate_group": "dup-caofeidian",
+      "reason": "与全国公共资源交易平台主记录重复。"
+    },
+    {
+      "title": "晋城市文创作品征集转载",
+      "url": "https://www.jcgov.gov.cn/dtxx/gsgg/202606/t20260611_2359601.shtml?from=stage5",
+      "decision": "duplicate",
+      "duplicate_group": "dup-jincheng",
+      "reason": "同一官方方案的重复发现记录。"
+    },
+    {
+      "title": "2026“宁选好礼”赛事后续通知",
+      "url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260428_5227435_zzb.html?from=stage5",
+      "decision": "duplicate",
+      "duplicate_group": "dup-ningxia-gift",
+      "reason": "同一赛事后续材料，合并到历史主记录。"
+    },
+    {
+      "title": "北京市传统工艺美术保护发展资金项目",
+      "url": "https://jxj.beijing.gov.cn/zwgk/2024zcwj/202602/t20260228_4545626.html",
+      "decision": "rejected",
+      "reason": "申报已于2026年4月15日截止。"
+    },
+    {
+      "title": "天河乞巧习俗专项保护项目转载",
+      "url": "https://www.thnet.gov.cn/thdt/tzgg/zbgg/content/post_10885978.html?from=stage5",
+      "decision": "duplicate",
+      "duplicate_group": "dup-tianhe-qiqiao",
+      "reason": "与历史主记录重复。"
+    }
+  ]
+}
