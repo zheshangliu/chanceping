@@ -711,6 +711,11 @@ export async function collectWelfareSource(sourceCode: WelfareSourceConfig["code
   return { ...data.result, totalCount: merged.length };
 }
 
+/** Review-only collection surface; never persists records or changes rollout. */
+export async function collectWelfareSourceForReview(sourceCode: WelfareSourceConfig["code"], options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}): Promise<WelfareSourceCollectionData> {
+  return collectWelfareSourceData(sourceCode, options);
+}
+
 export async function collectOffSz004(options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date } = {}) {
   return collectWelfareSource("OFF-SZ-004", options);
 }
