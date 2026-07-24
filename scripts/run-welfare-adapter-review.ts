@@ -7,7 +7,8 @@ const requested = new Set([
 ]);
 
 async function main(): Promise<void> {
-  const sources = WELFARE_SHADOW_SOURCES.filter((item) => requested.has(item.code));
+  const selected = process.env.WELFARE_ADAPTER_REVIEW_CODES?.split(",").map((item) => item.trim()).filter(Boolean);
+  const sources = WELFARE_SHADOW_SOURCES.filter((item) => requested.has(item.code) && (!selected?.length || selected.includes(item.code)));
   const results = await Promise.all(sources.map(async (source) => {
     try {
       const result = await collectWelfareSource(source.code, { persist: false, evidenceDir: `data/welfare-adapter-review/${source.code}`, maxDetails: 3 });
