@@ -12,7 +12,7 @@ async function main(): Promise<void> {
   const results = await Promise.all(sources.map(async (source) => {
     try {
       const result = await collectWelfareSource(source.code, { persist: false, evidenceDir: `data/welfare-adapter-review/${source.code}`, maxDetails: 3 });
-      return { sourceCode: source.code, adapter: source.adapter, status: result.status, discoveredCount: result.discoveredCount, publishedCount: result.publishedCount, errors: result.errors.length };
+      return { sourceCode: source.code, adapter: source.adapter, status: result.status, discoveredCount: result.discoveredCount, publishedCount: result.publishedCount, errors: result.errors.length, errorMessages: result.errors.slice(0, 2).map((item) => item.error) };
     } catch (error) {
       return { sourceCode: source.code, adapter: source.adapter, status: "failed", discoveredCount: 0, publishedCount: 0, errors: 1, error: error instanceof Error ? error.message : String(error) };
     }
