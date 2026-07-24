@@ -65,6 +65,9 @@ export interface CandidateRecord {
   rawTitle: string;
   rawPublishedAt?: string;
   rawDeadlineText?: string;
+  rawBodyExcerpt?: string;
+  actionSignals?: string[];
+  categoryHint?: string;
   htmlHash?: string;
   contentHash?: string;
   state: CandidateState;

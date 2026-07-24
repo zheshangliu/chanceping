@@ -4,22 +4,33 @@ import { contentFingerprint } from "../src/business/data-quality";
 const limit = Number(process.argv.find((item) => item.startsWith("--limit="))?.slice("--limit=".length) ?? 30);
 const sourceOption = process.argv.find((item) => item.startsWith("--sources="))?.slice("--sources=".length);
 const selectedSources = sourceOption?.split(",").filter(Boolean);
+const refresh = process.argv.includes("--refresh");
 const candidates = loadCandidates();
-const targets = candidates.filter((item) => item.state === "DISCOVERED" && (!selectedSources || selectedSources.includes(item.sourceId))).slice(0, limit);
+const targets = candidates.filter((item) => (refresh ? ["DISCOVERED", "FETCHED", "EXTRACTED"].includes(item.state) : item.state === "DISCOVERED") && (!selectedSources || selectedSources.includes(item.sourceId))).slice(0, limit);
 
 function publishedAtFrom(content: string): string | undefined {
   const match = content.match(/(?:发布时间|发布(?:日期|时间)?|时间)\s*[：:]?\s*(20\d{2})[年\-/.](\d{1,2})[月\-/.](\d{1,2})/);
   if (!match) return undefined;
   return `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}T00:00:00+08:00`;
 }
+function textFromHtml(content: string): string { return content.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#160;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim(); }
+function deadlineFrom(text: string): string | undefined {
+  const matches = [...text.matchAll(/(?:截止(?:时间|日期)?|请于|须于|应于|报名截止|申报截止)[^。；，,]{0,45}?(20\d{2})[年\-/.](\d{1,2})[月\-/.](\d{1,2})/g)];
+  const match = matches.at(-1);
+  return match ? `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}T23:59:59+08:00` : undefined;
+}
+function signalsFrom(text: string): string[] { return ["申报", "报名", "投标", "响应", "采购", "招标", "征集", "遴选", "参展", "提交材料", "申请"].filter((signal) => text.includes(signal)); }
+function categoryFrom(signals: string[]): string | undefined { if (signals.some((signal) => ["投标", "响应", "采购", "招标"].includes(signal))) return "procurement"; if (signals.includes("参展")) return "exhibition"; if (signals.includes("报名")) return "competition"; if (signals.some((signal) => ["申报", "征集", "遴选", "申请"].includes(signal))) return "policy"; return undefined; }
 
-async function fetchOne(index: number): Promise<{ index: number; contentHash?: string; publishedAt?: string; error?: string }> {
+async function fetchOne(index: number): Promise<{ index: number; contentHash?: string; publishedAt?: string; deadline?: string; excerpt?: string; signals?: string[]; category?: string; error?: string }> {
   const candidate = targets[index];
   try {
     const response = await fetch(candidate.discoveryUrl, { signal: AbortSignal.timeout(20_000), headers: { "user-agent": "ChancePing-BusinessRadar/1.0 detail-verification" } });
     if (!response.ok) return { index, error: `HTTP ${response.status}` };
     const content = await response.text();
-    return { index, contentHash: contentFingerprint(content), publishedAt: publishedAtFrom(content) };
+    const text = textFromHtml(content);
+    const signals = signalsFrom(text);
+    return { index, contentHash: contentFingerprint(content), publishedAt: publishedAtFrom(text), deadline: deadlineFrom(text), excerpt: text.slice(0, 1_200), signals, category: categoryFrom(signals) };
   } catch (error) { return { index, error: error instanceof Error ? error.message : String(error) }; }
 }
 
@@ -31,7 +42,7 @@ async function main(): Promise<void> {
   const next = candidates.map((candidate) => {
     const outcome = updated.get(candidate.candidateId);
     if (!outcome) return candidate;
-    return outcome.error ? { ...candidate, state: "FETCH_FAILED" as const, updatedAt: now } : { ...candidate, state: "FETCHED" as const, contentHash: outcome.contentHash, rawPublishedAt: outcome.publishedAt ?? candidate.rawPublishedAt, updatedAt: now };
+    return outcome.error ? { ...candidate, state: "FETCH_FAILED" as const, updatedAt: now } : { ...candidate, state: "EXTRACTED" as const, contentHash: outcome.contentHash, rawPublishedAt: outcome.publishedAt ?? candidate.rawPublishedAt, rawDeadlineText: outcome.deadline, rawBodyExcerpt: outcome.excerpt, actionSignals: outcome.signals, categoryHint: outcome.category, updatedAt: now };
   });
   saveCandidates(next);
   console.log(JSON.stringify({ requested: targets.length, fetched: outcomes.filter((outcome) => !outcome.error).length, failed: outcomes.filter((outcome) => outcome.error).length, failures: outcomes.filter((outcome) => outcome.error).map((outcome) => ({ candidateId: targets[outcome.index].candidateId, error: outcome.error })) }, null, 2));

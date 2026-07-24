@@ -21,9 +21,11 @@ function discoveredFromHtml(source: SourceDefinition, html: string): CandidateRe
     if (!isCandidateTitle(title)) continue;
     let discoveryUrl: string;
     try {
-      discoveryUrl = canonicalizeOfficialUrl(new URL(match[1], source.entryUrl).toString());
-      const hostname = new URL(discoveryUrl).hostname;
+      const url = new URL(match[1], source.entryUrl);
+      const hostname = url.hostname;
       if (hostname !== source.officialDomain && !hostname.endsWith(`.${source.officialDomain}`)) continue;
+      url.protocol = "https:";
+      discoveryUrl = canonicalizeOfficialUrl(url.toString());
     } catch { continue; }
     if (records.some((item) => item.discoveryUrl === discoveryUrl)) continue;
     records.push({ candidateId: candidateKey(source.sourceId, discoveryUrl), sourceId: source.sourceId, discoveryUrl, canonicalUrl: discoveryUrl, rawTitle: title, state: "DISCOVERED", duplicateStatus: "NONE", createdAt: now, updatedAt: now });
@@ -31,12 +33,26 @@ function discoveredFromHtml(source: SourceDefinition, html: string): CandidateRe
   }
   return records;
 }
+function ccgpSearchUrls(): string[] {
+  const end = new Date();
+  const start = new Date(end.getTime() - 21 * 86_400_000);
+  const date = (value: Date) => `${value.getFullYear()}%3A${String(value.getMonth() + 1).padStart(2, "0")}%3A${String(value.getDate()).padStart(2, "0")}`;
+  return Array.from({ length: 10 }, (_, index) => `https://search.ccgp.gov.cn/bxsearch?searchtype=1&page_index=${index + 1}&bidSort=0&buyerName=&projectId=&pinMu=&bidType=1&dbselect=bidx&kw=&start_time=${date(start)}&end_time=${date(end)}&timeType=6&displayZone=440000&zoneId=440000&pppStatus=0&agentName=`);
+}
+function listUrls(source: SourceDefinition): string[] { return source.sourceId === "src_ccgp_national" ? ccgpSearchUrls() : [source.entryUrl]; }
 
 async function collect(source: SourceDefinition): Promise<{ sourceId: string; candidates: CandidateRecord[]; error?: string }> {
   try {
-    const response = await fetch(source.entryUrl, { signal: AbortSignal.timeout(20_000), headers: { "user-agent": "ChancePing-BusinessRadar/1.0 candidate-discovery" } });
-    if (!response.ok) return { sourceId: source.sourceId, candidates: [], error: `HTTP ${response.status}` };
-    return { sourceId: source.sourceId, candidates: discoveredFromHtml(source, await response.text()) };
+    const settled = await Promise.allSettled(listUrls(source).map(async (url) => {
+      const response = await fetch(url, { signal: AbortSignal.timeout(20_000), headers: { "user-agent": "ChancePing-BusinessRadar/1.0 candidate-discovery" } });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return discoveredFromHtml(source, await response.text());
+    }));
+    const results = settled.filter((result): result is PromiseFulfilledResult<CandidateRecord[]> => result.status === "fulfilled").flatMap((result) => result.value);
+    if (!results.length) throw new Error(settled.filter((result) => result.status === "rejected").map((result) => result.reason instanceof Error ? result.reason.message : String(result.reason)).join("; ") || "No list results");
+    const unique = new Map(results.map((candidate) => [candidate.candidateId, candidate]));
+    const failures = settled.filter((result) => result.status === "rejected").length;
+    return { sourceId: source.sourceId, candidates: [...unique.values()], error: failures ? `${failures} list pages failed` : undefined };
   } catch (error) { return { sourceId: source.sourceId, candidates: [], error: error instanceof Error ? error.message : String(error) }; }
 }
 
