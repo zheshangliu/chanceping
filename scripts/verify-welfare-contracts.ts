@@ -61,6 +61,8 @@ assert.equal(merged.length, records.length, "idempotent merge must not duplicate
 const feed = buildWelfareFeed(records, { status: "current", now: "2026-07-11T00:00:00+08:00" });
 assert.ok(feed.items.length > 0);
 assert.ok(feed.items.every((item) => item.salesPriority && typeof item.salesScore === "number" && item.salesAction), "every public opportunity must expose sales triage fields");
+assert.ok(feed.items.every((item) => item.followUpStatus && item.followUpNextAction && Array.isArray(item.supplierMatches)), "every public opportunity must expose follow-up and supplier-fit fields");
+assert.ok(feed.stats.supplierFitFacets.length > 0, "supplier-fit facets must be available for sales filtering");
 assert.ok(feed.items.every((item) => item.lifecycleStatus === "current"));
 const afterDeadline = buildWelfareFeed(records, { status: "current", now: "2026-07-16T00:00:00+08:00" });
 assert.equal(afterDeadline.items.length, 0, "expired opportunities must not stay current");

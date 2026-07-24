@@ -30,6 +30,7 @@ export function publicWelfareOpportunityRoutes(): Hono {
       region: c.req.query("region") ?? "all",
       deadlineWindow: c.req.query("deadline_window") ?? "all",
       sort: c.req.query("sort") === "sales" ? "sales" : "deadline",
+      supplierFit: c.req.query("supplier_fit") ?? "all",
       page: positiveInt(c.req.query("page"), 1, 1000),
       pageSize: positiveInt(c.req.query("page_size"), 24, 60),
     });

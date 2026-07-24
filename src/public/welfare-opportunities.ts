@@ -220,6 +220,9 @@ export interface WelfareOpportunityRecord {
   salesScore?: number;
   salesPriority?: "HIGH" | "MEDIUM" | "LOW";
   salesAction?: string;
+  followUpStatus?: "待联系" | "待核验" | "不建议跟进" | "已结束";
+  followUpNextAction?: string;
+  supplierMatches?: string[];
 }
 
 /** A discoverable lead that is not yet safe to present as a verified opportunity. */
@@ -248,6 +251,7 @@ export interface WelfareFeedOptions {
   pageSize?: number;
   now?: string | Date;
   sort?: "deadline" | "sales";
+  supplierFit?: string;
 }
 
 export interface WelfareFeed {
@@ -267,6 +271,7 @@ export interface WelfareFeed {
     typeFacets: Array<{ id: string; label: string; count: number }>;
     sceneFacets: Array<{ id: string; label: string; count: number }>;
     regionFacets: Array<{ id: string; label: string; count: number }>;
+    supplierFitFacets: Array<{ id: string; label: string; count: number }>;
   };
   sources: Array<{ code: string; name: string; url: string; status: "active" | "degraded" | "empty"; lastUpdatedAt: string | null }>;
 }
@@ -350,7 +355,16 @@ function normalizeWelfareRecordForDisplay(record: WelfareOpportunityRecord): Wel
   if (daysToDeadline !== null && daysToDeadline >= 0 && daysToDeadline <= 14) salesScore += 10;
   const salesPriority = salesScore >= 78 ? "HIGH" : salesScore >= 55 ? "MEDIUM" : "LOW";
   const salesAction = record.lifecycleStatus !== "current" ? "作为历史情报，不建议直接投入跟进。" : salesPriority === "HIGH" ? "优先核对资格要求与截止时间，尽快联系采购方或准备报价。" : record.opportunityType === "SUPPLIER_RECRUITMENT" || record.opportunityType === "CHANNEL_PARTNERSHIP" ? "核对合作准入和供应商材料，准备渠道联系。" : "打开官方原文，补齐预算、联系人和资格要求后再决定跟进。";
-  return { ...record, buyer, contactAddress, evidenceFields, salesScore, salesPriority, salesAction };
+  const supplierMatches = Array.from(new Set([
+    ...(record.welfareScenes.some((scene) => /慰问|消费帮扶|礼品|节日/.test(scene)) ? ["福利礼品与食品"] : []),
+    ...(record.welfareScenes.some((scene) => /体检|健康|心理/.test(scene)) ? ["体检健康服务"] : []),
+    ...(record.welfareScenes.some((scene) => /疗休养|旅游/.test(scene)) ? ["疗休养与团建服务"] : []),
+    ...(record.welfareScenes.some((scene) => /餐饮|食堂/.test(scene)) ? ["团餐与职工餐饮"] : []),
+    ...(record.opportunityType === "SUPPLIER_RECRUITMENT" || record.opportunityType === "CHANNEL_PARTNERSHIP" ? ["企业福利平台与渠道"] : []),
+  ]));
+  const followUpStatus = record.lifecycleStatus !== "current" ? "已结束" : fieldState(evidenceFields, "contactPhone") === "verified" ? "待联系" : "待核验";
+  const followUpNextAction = followUpStatus === "待联系" ? "核对官方原文后记录首次联系结果。" : followUpStatus === "待核验" ? "补齐采购单位、联系人和资格要求，再决定是否联系。" : "保留为历史情报，关注后续同类项目。";
+  return { ...record, buyer, contactAddress, evidenceFields, salesScore, salesPriority, salesAction, followUpStatus, followUpNextAction, supplierMatches };
 }
 
 function buildFacets(records: WelfareOpportunityRecord[], values: (record: WelfareOpportunityRecord) => string[], labels?: Record<string, string>) {
@@ -376,6 +390,7 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
   if (options.scene && options.scene !== "all") filtered = filtered.filter((item) => item.welfareScenes.includes(options.scene!));
   if (options.region && options.region !== "all") filtered = filtered.filter((item) => item.region === options.region);
   if (options.deadlineWindow && options.deadlineWindow !== "all") filtered = filtered.filter((item) => deadlineWindow(item.deadline, now) === options.deadlineWindow);
+  if (options.supplierFit && options.supplierFit !== "all") filtered = filtered.filter((item) => item.supplierMatches?.includes(options.supplierFit!));
   if (options.sort === "sales") filtered.sort((a, b) => (b.salesScore ?? 0) - (a.salesScore ?? 0) || (a.deadline || "9999").localeCompare(b.deadline || "9999"));
   else filtered.sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999") || b.publishedAt.localeCompare(a.publishedAt));
   const pageSize = Math.max(1, Math.min(options.pageSize ?? 24, 60));
@@ -399,6 +414,7 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
       typeFacets: buildFacets(allRecords, (item) => [item.opportunityType], TYPE_LABELS),
       sceneFacets: buildFacets(allRecords, (item) => item.welfareScenes),
       regionFacets: buildFacets(allRecords, (item) => [item.region]),
+      supplierFitFacets: buildFacets(allRecords, (item) => item.supplierMatches ?? []),
     },
     sources: WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
       const summary = loadWelfareRunSummary()?.sources.find((item) => item.sourceCode === source.code);
