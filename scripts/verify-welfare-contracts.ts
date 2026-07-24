@@ -64,6 +64,7 @@ assert.ok(feed.items.length > 0);
 assert.ok(feed.items.every((item) => item.salesPriority && typeof item.salesScore === "number" && item.salesAction), "every public opportunity must expose sales triage fields");
 assert.ok(feed.items.every((item) => item.followUpStatus && item.followUpNextAction && Array.isArray(item.supplierMatches)), "every public opportunity must expose follow-up and supplier-fit fields");
 assert.ok(feed.stats.supplierFitFacets.length > 0, "supplier-fit facets must be available for sales filtering");
+assert.ok(buildWelfareFeed(records, { status: "all", contactKnown: true }).items.every((item) => item.contactPhone !== "未公开" || item.contactName !== "未公开"), "contact filter must retain only opportunities with a public contact");
 assert.ok(feed.items.every((item) => item.lifecycleStatus === "current"));
 const afterDeadline = buildWelfareFeed(records, { status: "current", now: "2026-07-16T00:00:00+08:00" });
 assert.equal(afterDeadline.items.length, 0, "expired opportunities must not stay current");

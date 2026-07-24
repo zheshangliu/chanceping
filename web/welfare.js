@@ -75,7 +75,7 @@
   }
 
   async function load() {
-    const params = new URLSearchParams({ status: state.status === "priority" ? "current" : state.status, sort: state.status === "priority" ? "sales" : "deadline", page: String(state.page), page_size: "24", type: document.querySelector("#welfare-type").value, scene: document.querySelector("#welfare-scene").value, region: document.querySelector("#welfare-region").value, supplier_fit: document.querySelector("#welfare-supplier").value, deadline_window: document.querySelector("#welfare-deadline").value });
+    const params = new URLSearchParams({ status: state.status === "priority" ? "current" : state.status, sort: state.status === "priority" ? "sales" : "deadline", page: String(state.page), page_size: "24", type: document.querySelector("#welfare-type").value, scene: document.querySelector("#welfare-scene").value, region: document.querySelector("#welfare-region").value, supplier_fit: document.querySelector("#welfare-supplier").value, contact: document.querySelector("#welfare-contact").value, deadline_window: document.querySelector("#welfare-deadline").value });
     try {
       const response = await fetch(state.status === "candidates" ? `/api/public/welfare/candidates?page=${state.page}&page_size=24` : `/api/public/welfare/opportunities?${params}`);
       const json = await response.json();
@@ -88,7 +88,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-status]").forEach((button) => button.addEventListener("click", () => { document.querySelectorAll("[data-status]").forEach((item) => item.classList.remove("is-active")); button.classList.add("is-active"); state.status = button.dataset.status; state.page = 1; document.querySelectorAll(".welfare-filters select").forEach((select) => select.disabled = state.status === "candidates"); load(); }));
-    ["#welfare-type", "#welfare-scene", "#welfare-region", "#welfare-supplier", "#welfare-deadline"].forEach((id) => document.querySelector(id).addEventListener("change", () => { state.page = 1; load(); }));
+    ["#welfare-type", "#welfare-scene", "#welfare-region", "#welfare-supplier", "#welfare-contact", "#welfare-deadline"].forEach((id) => document.querySelector(id).addEventListener("change", () => { state.page = 1; load(); }));
     document.querySelector("#welfare-prev").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; load(); } });
     document.querySelector("#welfare-next").addEventListener("click", () => { if (state.page < state.totalPages) { state.page += 1; load(); } });
     load();

@@ -252,6 +252,7 @@ export interface WelfareFeedOptions {
   now?: string | Date;
   sort?: "deadline" | "sales";
   supplierFit?: string;
+  contactKnown?: boolean;
 }
 
 export interface WelfareFeed {
@@ -391,6 +392,7 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
   if (options.region && options.region !== "all") filtered = filtered.filter((item) => item.region === options.region);
   if (options.deadlineWindow && options.deadlineWindow !== "all") filtered = filtered.filter((item) => deadlineWindow(item.deadline, now) === options.deadlineWindow);
   if (options.supplierFit && options.supplierFit !== "all") filtered = filtered.filter((item) => item.supplierMatches?.includes(options.supplierFit!));
+  if (options.contactKnown) filtered = filtered.filter((item) => fieldState(item.evidenceFields, "contactPhone") === "verified" || fieldState(item.evidenceFields, "contactName") === "verified");
   if (options.sort === "sales") filtered.sort((a, b) => (b.salesScore ?? 0) - (a.salesScore ?? 0) || (a.deadline || "9999").localeCompare(b.deadline || "9999"));
   else filtered.sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999") || b.publishedAt.localeCompare(a.publishedAt));
   const pageSize = Math.max(1, Math.min(options.pageSize ?? 24, 60));
