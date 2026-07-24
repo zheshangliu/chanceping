@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { collectWelfareSource, WELFARE_SHADOW_SOURCES } from "../src/public/welfare-opportunities";
 
 const requested = new Set([
@@ -17,7 +19,11 @@ async function main(): Promise<void> {
       return { sourceCode: source.code, adapter: source.adapter, status: "failed", discoveredCount: 0, publishedCount: 0, errors: 1, error: error instanceof Error ? error.message : String(error) };
     }
   }));
-  console.log(JSON.stringify({ reviewedAt: new Date().toISOString(), results }, null, 2));
+  const summary = { reviewedAt: new Date().toISOString(), results };
+  const outputPath = process.env.WELFARE_ADAPTER_REVIEW_SUMMARY_PATH ?? "data/welfare-adapter-review-summary.json";
+  fs.mkdirSync(path.dirname(path.resolve(process.cwd(), outputPath)), { recursive: true });
+  fs.writeFileSync(path.resolve(process.cwd(), outputPath), JSON.stringify(summary, null, 2));
+  console.log(JSON.stringify(summary, null, 2));
 }
 
 main().catch((error) => { console.error(error); process.exit(1); });
