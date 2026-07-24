@@ -658,14 +658,18 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const indexUrls = source.indexUrls?.length ? source.indexUrls : [source.url];
   const indexErrors: Array<{ url: string; error: string }> = [];
   const indexLinks = new Map<string, { title: string; url: string; publishedAt: string }>();
-  for (const indexUrl of indexUrls) {
+  const indexResults = await Promise.all(indexUrls.map(async (indexUrl) => {
     try {
       const indexHtml = await fetchHtml(indexUrl);
       fs.writeFileSync(path.join(evidenceDir, `index-${crypto.createHash("sha256").update(indexHtml).digest("hex").slice(0, 16)}.html`), indexHtml);
-      for (const link of extractWelfareIndexLinks(indexHtml, { ...source, url: indexUrl })) indexLinks.set(link.url, link);
+      return { indexUrl, links: extractWelfareIndexLinks(indexHtml, { ...source, url: indexUrl }) };
     } catch (error) {
-      indexErrors.push({ url: indexUrl, error: error instanceof Error ? error.message : String(error) });
+      return { indexUrl, error: error instanceof Error ? error.message : String(error), links: [] };
     }
+  }));
+  for (const result of indexResults) {
+    if (result.error) indexErrors.push({ url: result.indexUrl, error: result.error });
+    for (const link of result.links) indexLinks.set(link.url, link);
   }
   if (indexErrors.length === indexUrls.length) {
     return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: indexErrors }, records: [] };
