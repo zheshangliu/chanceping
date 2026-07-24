@@ -4,7 +4,7 @@ import { loadSourceRegistry } from "./data-pipeline";
 
 export interface BusinessSource {
   id: string; name: string; officialUrl: string; editions: BusinessEditionId[]; categories: OpportunityCategory[];
-  coverage: string; refreshCadence: "daily" | "weekly"; admissionPolicy: string; tier?: "p0" | "p1" | "p2"; role?: "official_fact" | "candidate_discovery" | "reference";
+  coverage: string; refreshCadence: "daily" | "every_3_days" | "weekly"; admissionPolicy: string; tier?: "p0" | "p1" | "p2"; role?: "official_fact" | "candidate_discovery" | "reference";
 }
 
 /** Official portals only. A portal is a discovery source, not public opportunity data by itself. */
@@ -47,7 +47,7 @@ export function sourcesForEdition(edition: BusinessEditionId): BusinessSource[] 
   const legacy = BUSINESS_SOURCES.filter((source) => source.editions.includes(edition));
   const registry = loadSourceRegistry().sources.map((source): BusinessSource => ({
     id: source.sourceId, name: source.name, officialUrl: source.entryUrl, editions: ["guangzhou", "tianhe", "shaoguan"], categories: registryCategories(source.categories), coverage: source.categories,
-    refreshCadence: source.frequency.includes("日") ? "daily" : "weekly", admissionPolicy: source.role === "candidate_discovery" ? "仅作候选发现；必须回到直接官方原文核验后才能公开。" : `仅采纳满足官方原文、字段核验和行动期要求的机会。${source.health ? ` 当前登记状态：${source.health}。` : ""}`,
+    refreshCadence: source.frequency.includes("周") ? "weekly" : "every_3_days", admissionPolicy: source.role === "candidate_discovery" ? "仅作候选发现；必须回到直接官方原文核验后才能公开。" : `仅采纳满足官方原文、字段核验和行动期要求的机会。${source.health ? ` 当前登记状态：${source.health}。` : ""}`,
     tier: source.priority.toLowerCase() as BusinessSource["tier"], role: source.role,
   }));
   return [...legacy, ...registry.filter((source) => !legacy.some((item) => item.officialUrl === source.officialUrl))];
