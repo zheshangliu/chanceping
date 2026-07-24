@@ -199,6 +199,22 @@ export interface WelfareOpportunityRecord {
   evidenceFields: WelfareEvidenceField[];
 }
 
+/** A discoverable lead that is not yet safe to present as a verified opportunity. */
+export interface WelfareCandidateRecord {
+  id: string;
+  title: string;
+  sourceCode: string;
+  sourceName: string;
+  officialUrl: string;
+  publishedAt: string;
+  retrievedAt: string;
+  rawSha256?: string;
+  region: string;
+  verificationState: "CANDIDATE" | "PARTIAL";
+  reason: string;
+  nextAction: string;
+}
+
 export interface WelfareFeedOptions {
   status?: WelfareLifecycle | "all";
   type?: string;
@@ -379,6 +395,29 @@ export function savePersistedWelfareOpportunities(records: WelfareOpportunityRec
   const temporary = `${absolute}.tmp`;
   fs.writeFileSync(temporary, JSON.stringify({ version: "1.0", updatedAt: new Date().toISOString(), records }, null, 2));
   fs.renameSync(temporary, absolute);
+}
+
+export function loadPersistedWelfareCandidates(filePath = process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? "data/welfare-candidates.json"): WelfareCandidateRecord[] {
+  const absolute = path.resolve(process.cwd(), filePath);
+  if (!fs.existsSync(absolute)) return [];
+  try {
+    const parsed = JSON.parse(fs.readFileSync(absolute, "utf8")) as { records?: WelfareCandidateRecord[] } | WelfareCandidateRecord[];
+    return Array.isArray(parsed) ? parsed : parsed.records ?? [];
+  } catch { return []; }
+}
+
+export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[], filePath = process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? "data/welfare-candidates.json"): void {
+  const absolute = path.resolve(process.cwd(), filePath);
+  fs.mkdirSync(path.dirname(absolute), { recursive: true });
+  const temporary = `${absolute}.tmp`;
+  fs.writeFileSync(temporary, JSON.stringify({ version: "1.0", updatedAt: new Date().toISOString(), records }, null, 2));
+  fs.renameSync(temporary, absolute);
+}
+
+function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: WelfareCandidateRecord[], refreshedSourceCodes: Set<string> = new Set()): WelfareCandidateRecord[] {
+  const byId = new Map(existing.filter((record) => !refreshedSourceCodes.has(record.sourceCode)).map((record) => [record.id, record]));
+  for (const record of incoming) byId.set(record.id, record);
+  return Array.from(byId.values()).sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt));
 }
 
 export function loadWelfareRunSummary(filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): WelfareRunSummary | null {
@@ -588,6 +627,22 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   };
 }
 
+function candidateFromLink(source: WelfareSourceConfig, link: { title: string; url: string; publishedAt: string }, retrievedAt: string, reason: string): WelfareCandidateRecord {
+  return {
+    id: stableId(`candidate:${link.url}`),
+    title: link.title || "未命名福利相关公告",
+    sourceCode: source.code,
+    sourceName: source.name,
+    officialUrl: link.url,
+    publishedAt: link.publishedAt ? `${link.publishedAt.slice(0, 10)}T00:00:00+08:00` : retrievedAt,
+    retrievedAt,
+    region: source.region,
+    verificationState: "CANDIDATE",
+    reason,
+    nextAction: "回溯官方详情，核对采购方、截止时间、项目状态和资格要求。",
+  };
+}
+
 export interface WelfareSourceCollectionResult {
   sourceCode: WelfareSourceConfig["code"];
   sourceName: string;
@@ -599,7 +654,7 @@ export interface WelfareSourceCollectionResult {
   errors: Array<{ url: string; error: string }>;
 }
 
-interface WelfareSourceCollectionData { result: WelfareSourceCollectionResult; records: WelfareOpportunityRecord[]; }
+interface WelfareSourceCollectionData { result: WelfareSourceCollectionResult; records: WelfareOpportunityRecord[]; candidates?: WelfareCandidateRecord[]; }
 
 interface SzGgzyNotice {
   title?: string;
@@ -749,6 +804,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
     })
   ).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
   const records: WelfareOpportunityRecord[] = [];
+  const candidates: WelfareCandidateRecord[] = [];
   const errors: Array<{ url: string; error: string }> = [...indexErrors];
   for (const link of links) {
     try {
@@ -775,11 +831,12 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
       if (record) records.push(record);
+      else if (WELFARE_CONTEXT.test(link.title) && WELFARE_ACTION.test(link.title)) candidates.push(candidateFromLink(source, { ...link, url: effectiveUrl }, retrievedAt, "发现标题同时命中福利语境和采购行动，但详情未达到正式机会字段准入。"));
     } catch (error) {
       errors.push({ url: link.url, error: error instanceof Error ? error.message : String(error) });
     }
   }
-  return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: errors.length > 0 ? "partial" : records.length > 0 ? "succeeded" : "empty", discoveredCount: links.length, publishedCount: records.length, totalCount: records.length, errors }, records };
+  return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: errors.length > 0 ? "partial" : records.length > 0 ? "succeeded" : "empty", discoveredCount: links.length, publishedCount: records.length, totalCount: records.length, errors }, records, candidates };
 }
 
 export async function collectWelfareSource(sourceCode: WelfareSourceConfig["code"], options: { fetchHtml?: (url: string) => Promise<string>; evidenceDir?: string; maxDetails?: number; now?: Date; persist?: boolean } = {}): Promise<WelfareSourceCollectionResult> {
@@ -815,6 +872,8 @@ export async function collectAllWelfareSources(options: { fetchHtml?: (url: stri
   // therefore leaves its last successful public cards intact.
   const merged = mergeWelfareRecords(previous, incoming);
   savePersistedWelfareOpportunities(merged);
+  const refreshedCandidateSources = new Set(collected.filter((item) => item.result.status !== "failed").map((item) => item.result.sourceCode));
+  savePersistedWelfareCandidates(mergeWelfareCandidates(loadPersistedWelfareCandidates(), collected.flatMap((item) => item.candidates ?? []), refreshedCandidateSources));
   const results = collected.map((item) => ({ ...item.result, totalCount: merged.filter((record) => record.sourceCode === item.result.sourceCode).length }));
   const summary: WelfareRunSummary = {
     ranAt: (options.now ?? new Date()).toISOString(),

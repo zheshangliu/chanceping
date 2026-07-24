@@ -3,6 +3,7 @@ import type { ApiResponse } from "../types";
 import {
   buildWelfareFeed,
   loadPersistedWelfareOpportunities,
+  loadPersistedWelfareCandidates,
   loadRecordedWelfareOpportunities,
   renderWelfareMarkdown,
 } from "../../public/welfare-opportunities";
@@ -38,6 +39,17 @@ export function publicWelfareOpportunityRoutes(): Hono {
     c.header("Content-Type", "text/markdown; charset=utf-8");
     c.header("Cache-Control", "no-cache");
     return c.body(renderWelfareMarkdown(allRecords()));
+  });
+  app.get("/candidates", (c) => {
+    const start = Date.now();
+    const sourceCode = c.req.query("source") ?? "all";
+    const page = positiveInt(c.req.query("page"), 1, 1000);
+    const pageSize = positiveInt(c.req.query("page_size"), 24, 60);
+    const all = loadPersistedWelfareCandidates().filter((item) => sourceCode === "all" || item.sourceCode === sourceCode);
+    const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
+    const safePage = Math.min(page, totalPages);
+    const items = all.slice((safePage - 1) * pageSize, safePage * pageSize);
+    return c.json({ success: true, data: { items, stats: { totalCount: all.length, page: safePage, pageSize, totalPages } }, error: null, duration_ms: Date.now() - start } satisfies ApiResponse);
   });
   return app;
 }
