@@ -831,7 +831,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
       if (record) records.push(record);
-      else if (WELFARE_CONTEXT.test(link.title) || WELFARE_ACTION.test(link.title)) candidates.push(candidateFromLink(source, { ...link, url: effectiveUrl }, retrievedAt, "发现标题命中福利或采购语境，但详情未达到正式机会字段准入。"));
+      else if (WELFARE_CONTEXT.test(link.title) && WELFARE_ACTION.test(link.title)) candidates.push(candidateFromLink(source, { ...link, url: effectiveUrl }, retrievedAt, "发现标题同时命中福利语境和采购行动，但详情未达到正式机会字段准入。"));
     } catch (error) {
       errors.push({ url: link.url, error: error instanceof Error ? error.message : String(error) });
     }
