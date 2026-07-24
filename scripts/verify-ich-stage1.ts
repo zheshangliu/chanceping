@@ -178,6 +178,24 @@ function fixture(overrides: Partial<IchOpportunity> = {}): IchOpportunity {
     duplicate_status: "unique",
     duplicate_of_id: null,
     merged_from_ids: [],
+    workflow: {
+      state: "published",
+      revision: 1,
+      review_reason: null,
+      submitted_at: "2026-07-19T00:00:00+08:00",
+      reviewed_at: "2026-07-20T00:00:00+08:00",
+      reviewed_by: "manual_operator",
+      withdrawn_at: null,
+      history: [{
+        action: "published",
+        from: "approved",
+        to: "published",
+        actor: "manual_operator",
+        at: "2026-07-20T00:00:00+08:00",
+        reason: null,
+        revision: 1,
+      }],
+    },
   };
   return { ...opportunity, ...overrides };
 }

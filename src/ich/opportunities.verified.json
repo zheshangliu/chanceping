@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-07-24T13:20:00+08:00",
+  "entries": [
+    {
+      "id": "ich_2026_guangdong_design_competition_11",
+      "slug": "2026-guangdong-ich-creative-design-competition",
+      "external_id": "yuexiu-post-10839528",
+      "title": "“粤韵新彩 共创美好”2026年第十一届广东省非物质文化遗产创意设计大赛",
+      "title_original": "关于征集“粤韵新彩 共创美好”2026年第十一届广东省非物质文化遗产创意设计大赛参赛作品的通知",
+      "title_en": null,
+      "summary": "面向全国及海内外个人、单位和团队征集以广东非遗为核心的创新设计或实物作品，报名截止至2026年10月15日。",
+      "description": "参赛作品须以广东非遗项目为核心，鼓励非遗与现代生活、科技、商业和艺术等领域创新联结。设计稿和实物作品均可投稿，每个个人或团体报送作品不超过3件。",
+      "opportunity_value_text": "设置金、银、铜、优秀、入围及最具市场潜力等奖项；获奖作品须参加优秀作品展览，并有机会推进市场化转化。",
+      "primary_category": "competition",
+      "secondary_tags": ["全国可报", "海外可报", "设计师", "非遗传承人", "院校师生", "文创团队", "免报名费"],
+      "classification_confidence": "high",
+      "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "官方通知明确报名截止至2026年10月15日。",
+      "is_featured": true,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "广东省非物质文化遗产馆（广东省非物质文化遗产保护中心）等",
+        "name_en": null,
+        "type": "public_cultural_institution",
+        "official_website": "https://www.yuexiu.gov.cn/",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "广东省",
+        "city": "广州市",
+        "district": "越秀区",
+        "venue_text": null,
+        "region_groups": ["guangzhou", "guangdong", "greater_bay_area", "nationwide", "overseas"],
+        "participation_scope": "global",
+        "eligible_regions": ["全国", "海外"],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "email",
+        "requires_on_site_presence": false,
+        "participation_notes": "参赛作品照片和报名表通过官方通知指定邮箱提交；获奖作品须参加优秀作品展览。"
+      },
+      "dates": {
+        "published_at": "2026-06-03T10:35:10+08:00",
+        "application_start_at": "2026-06-03T10:35:10+08:00",
+        "deadline_at": "2026-10-15",
+        "deadline_text": "2026年10月15日",
+        "event_start_at": "2026-06-01",
+        "event_end_at": "2026-12-31",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": ["individual", "inheritor", "studio", "enterprise", "organization", "school", "designer", "student", "team"],
+        "eligibility_text": "面向全国及海内外征集。个人参赛者须年满18周岁；单位或团队可为院校、文创产品设计开发单位、产品设计机构、创意设计团队及非遗相关企事业单位。",
+        "ich_status_required": false,
+        "business_license_required": null,
+        "local_registration_required": false,
+        "recommendation_required": false,
+        "age_requirement_text": "个人参赛者及多人合作作品的所有作者均须年满18周岁。",
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": ["award", "exhibition", "market_conversion"],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": null,
+        "channel_opportunity": true,
+        "benefit_text": "设金奖5个、银奖7个、铜奖10个、优秀奖30个、入围奖50个、最具市场潜力奖5个及优秀指导老师奖10个。"
+      },
+      "costs": {
+        "application_fee_amount": 0,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方通知明确本次大赛不收取任何报名费用；其他制作、寄送或参展成本未确认。",
+        "cost_status": "partial"
+      },
+      "requirements": {
+        "documents_required": ["官方报名表", "作品照片"],
+        "portfolio_required": false,
+        "sample_required": false,
+        "proposal_required": false,
+        "invoice_required": false,
+        "bidding_qualification_required": false,
+        "production_capacity_text": "作品设计需考虑产品化可行性，包括可生产性、工艺合理性、价格定位与制作成本。",
+        "requirements_text": "作品须为2023年1月1日以后创作的原创作品；每个个人或团体报送不超过3件，照片须满足官方通知规定的清晰度、分辨率、文件大小和格式要求。"
+      },
+      "application": {
+        "application_url": null,
+        "application_email": "gdsfycyds@qq.com",
+        "application_phone": null,
+        "application_platform": "电子邮件",
+        "application_steps": ["阅读官方通知及知识产权要求", "下载并填写官方报名表", "整理符合规格的作品照片", "按“作者+作品名称”要求命名邮件及附件并发送至指定邮箱"],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10839528.html",
+          "name": "广州市越秀区人民政府门户网站官方通知",
+          "type": "government_announcement",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-06-03T10:35:10+08:00",
+          "last_checked_at": "2026-07-24T13:20:00+08:00",
+          "is_accessible": true,
+          "notes": "人工核验：页面列明组织机构、参赛对象、作品要求、2026年10月15日截止日期、投稿邮箱和免报名费说明。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-07-24T13:20:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": false,
+        "recheck_after": "2026-08-24T00:00:00+08:00"
+      },
+      "seo": {
+        "meta_title": "2026广东省非遗创意设计大赛｜10月15日截止",
+        "meta_description": "2026年第十一届广东省非物质文化遗产创意设计大赛面向全国及海外征集作品，报名截止10月15日。",
+        "canonical_url": null,
+        "og_title": "2026广东省非遗创意设计大赛",
+        "og_description": "全国及海外个人、单位和团队均可参赛，免报名费，2026年10月15日截止。",
+        "og_image": null,
+        "noindex": false
+      },
+      "metadata": {
+        "created_at": "2026-07-24T13:20:00+08:00",
+        "updated_at": "2026-07-24T13:20:00+08:00",
+        "created_by": "chanceping-editor",
+        "updated_by": "chanceping-editor",
+        "first_discovered_at": "2026-07-24T12:50:00+08:00",
+        "last_checked_at": "2026-07-24T13:20:00+08:00",
+        "published_at": "2026-07-24T13:20:00+08:00",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T13:05:00+08:00",
+        "reviewed_at": "2026-07-24T13:15:00+08:00",
+        "reviewed_by": "chanceping-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {"action":"created","from":null,"to":"draft","actor":"chanceping-editor","at":"2026-07-24T13:00:00+08:00","reason":null,"revision":1},
+          {"action":"submitted","from":"draft","to":"pending_review","actor":"chanceping-editor","at":"2026-07-24T13:05:00+08:00","reason":null,"revision":2},
+          {"action":"approved","from":"pending_review","to":"approved","actor":"chanceping-reviewer","at":"2026-07-24T13:15:00+08:00","reason":null,"revision":3},
+          {"action":"published","from":"approved","to":"published","actor":"chanceping-reviewer","at":"2026-07-24T13:20:00+08:00","reason":null,"revision":4}
+        ]
+      }
+    }
+  ]
+}

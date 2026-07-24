@@ -39,6 +39,7 @@ function fixture(overrides: Partial<IchOpportunity> = {}): IchOpportunity {
     seo: null,
     metadata: { created_at: "2026-07-01T00:00:00+08:00", updated_at: "2026-07-20T00:00:00+08:00", created_by: "secret-operator", updated_by: "secret-operator", first_discovered_at: "2026-07-01T00:00:00+08:00", last_checked_at: "2026-07-20T00:00:00+08:00", published_at: "2026-07-20T00:00:00+08:00", archived_at: null, data_version: "1.0", source_import_batch: "internal-batch" },
     duplicate_status: "unique", duplicate_of_id: null, merged_from_ids: [],
+    workflow: { state: "published", revision: 1, review_reason: null, submitted_at: "2026-07-19T00:00:00+08:00", reviewed_at: "2026-07-20T00:00:00+08:00", reviewed_by: "secret-operator", withdrawn_at: null, history: [{ action: "published", from: "approved", to: "published", actor: "secret-operator", at: "2026-07-20T00:00:00+08:00", reason: null, revision: 1 }] },
   } as IchOpportunity;
   return { ...base, ...overrides };
 }

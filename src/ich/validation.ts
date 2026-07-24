@@ -2,6 +2,7 @@ import {
   ICH_OPPORTUNITY_STATUSES,
   ICH_PRIMARY_CATEGORIES,
   ICH_SCHEMA_VERSION,
+  ICH_WORKFLOW_STATES,
   type IchOpportunity,
   type IchOpportunityFile,
 } from "./types";
@@ -30,6 +31,10 @@ function isHttpUrl(value: unknown): value is string {
   }
 }
 
+function isOptionalHttpUrl(value: unknown): boolean {
+  return value === null || value === undefined || isHttpUrl(value);
+}
+
 export function validateIchOpportunity(value: unknown): IchValidationResult<IchOpportunity> {
   const errors: string[] = [];
   if (!isRecord(value)) return { valid: false, errors: ["entry must be an object"] };
@@ -37,15 +42,38 @@ export function validateIchOpportunity(value: unknown): IchValidationResult<IchO
   for (const field of ["id", "slug", "title", "summary"] as const) {
     if (!isNonEmptyString(value[field])) errors.push(`${field} is required`);
   }
+  if (typeof value.slug === "string" && (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug) || value.slug.length > 120)) errors.push("slug is invalid");
+  if (typeof value.title === "string" && value.title.length > 300) errors.push("title is too long");
+  if (typeof value.summary === "string" && value.summary.length > 2_000) errors.push("summary is too long");
+  if (typeof value.description === "string" && value.description.length > 50_000) errors.push("description is too long");
   if (!ICH_PRIMARY_CATEGORIES.includes(value.primary_category as never)) errors.push("primary_category is invalid");
   if (!ICH_OPPORTUNITY_STATUSES.includes(value.status as never)) errors.push("status is invalid");
   if (!["high", "medium", "low"].includes(String(value.classification_confidence))) errors.push("classification_confidence is invalid");
   if (!["confirmed", "pending_review", "rejected"].includes(String(value.classification_status))) errors.push("classification_status is invalid");
   if (typeof value.is_published !== "boolean") errors.push("is_published must be boolean");
   if (value.is_published === true && value.classification_status !== "confirmed") errors.push("unreviewed entry cannot be published");
+  const workflow = isRecord(value.workflow) ? value.workflow : null;
+  if (!workflow || !ICH_WORKFLOW_STATES.includes(workflow.state as never)) errors.push("workflow.state is invalid");
+  if (!workflow || !Number.isInteger(workflow.revision) || Number(workflow.revision) < 1) errors.push("workflow.revision must be a positive integer");
+  if (!workflow || !Array.isArray(workflow.history)) errors.push("workflow.history is required");
+  if (workflow && Array.isArray(workflow.history)) {
+    const history = workflow.history.filter(isRecord);
+    if (history.length !== workflow.history.length) errors.push("workflow.history events must be objects");
+    if (history.length > 500) errors.push("workflow.history is too long");
+    history.forEach((item, index) => {
+      if (!isNonEmptyString(item.action) || !isNonEmptyString(item.actor) || !isNonEmptyString(item.at)) errors.push(`workflow.history[${index}] is invalid`);
+      if (!ICH_WORKFLOW_STATES.includes(item.to as never)) errors.push(`workflow.history[${index}].to is invalid`);
+      if (!Number.isInteger(item.revision) || Number(item.revision) !== index + 1) errors.push(`workflow.history[${index}].revision is invalid`);
+    });
+    const last = history.at(-1);
+    if (last && (last.to !== workflow.state || last.revision !== workflow.revision)) errors.push("workflow history does not match current state");
+  }
+  if (workflow?.state === "published" && value.is_published !== true) errors.push("published workflow must be publicly visible");
+  if (workflow?.state !== "published" && value.is_published === true) errors.push("only published workflow may be publicly visible");
 
   const organizer = isRecord(value.organizer) ? value.organizer : null;
   if (!organizer || !isNonEmptyString(organizer.name) || !isNonEmptyString(organizer.type)) errors.push("organizer name and type are required");
+  if (organizer && !isOptionalHttpUrl(organizer.official_website)) errors.push("organizer official website must use http or https");
   const location = isRecord(value.location) ? value.location : null;
   if (!location || !Array.isArray(location.region_groups) || !isNonEmptyString(location.participation_scope)) errors.push("location contract is invalid");
   const dates = isRecord(value.dates) ? value.dates : null;
@@ -61,9 +89,12 @@ export function validateIchOpportunity(value: unknown): IchValidationResult<IchO
 
   const sources = Array.isArray(value.sources) ? value.sources : [];
   if (sources.length === 0) errors.push("at least one source is required");
+  if (sources.length > 20) errors.push("at most 20 sources are allowed");
   const validSources = sources.filter(isRecord);
   if (validSources.some((source) => !isHttpUrl(source.url))) errors.push("source URL must use http or https");
   if (validSources.filter((source) => source.is_primary === true).length !== 1) errors.push("exactly one primary source is required");
+  const application = isRecord(value.application) ? value.application : null;
+  if (!application || !isOptionalHttpUrl(application.application_url)) errors.push("application URL must use http or https");
 
   const verification = isRecord(value.verification) ? value.verification : null;
   if (!verification || !isNonEmptyString(verification.verification_status)) errors.push("verification_status is required");

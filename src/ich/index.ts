@@ -4,3 +4,4 @@ export * from "./status";
 export * from "./dedup";
 export * from "./store";
 export * from "./query";
+export * from "./publication-service";

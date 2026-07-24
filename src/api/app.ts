@@ -23,6 +23,8 @@ import { publicWelfareOpportunityRoutes } from "./routes/public-welfare-opportun
 import { businessRadarRoutes } from "./routes/business-radar";
 import { publicIchRoutes } from "./routes/public-ich";
 import { ichPagesRoutes } from "./routes/ich-pages";
+import { internalIchRoutes } from "./routes/internal-ich";
+import { ichAdminPagesRoutes } from "./routes/ich-admin-pages";
 import type { ApiResponse } from "./types";
 
 /** 从 package.json 读取版本号（启动时一次性读取，避免每次请求读文件） */
@@ -70,6 +72,8 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/public/welfare", publicWelfareOpportunityRoutes());
   app.route("/api/business", businessRadarRoutes());
   app.route("/api/public/ich", publicIchRoutes());
+  app.route("/api/internal/ich", internalIchRoutes());
+  app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes());
 
   // Web UI 静态文件服务（根路径）

@@ -91,6 +91,7 @@
     "verify:q7:ai-events-detail-bridge": "tsx scripts/verify-q7k-ai-events-detail-bridge.ts",
     "verify:ich:stage1": "tsx scripts/verify-ich-stage1.ts",
     "verify:ich:stage2": "tsx scripts/verify-ich-stage2.ts",
+    "verify:ich:stage3": "tsx scripts/verify-ich-stage3.ts",
     "verify:q7:ai-events-metadata": "tsx scripts/verify-q7k-ai-event-page-metadata.ts",
     "verify:q7:ai-events-public-filters": "tsx scripts/verify-q7n-ai-events-public-filters.ts",
     "verify:q7:ai-events-source-adapters": "tsx scripts/verify-q7o-ai-events-source-adapters.ts",
@@ -162,7 +163,7 @@
     "q5-r:golden20-report": "node scripts/run-q5-r-api-validation.mjs golden20-report",
     "verify:q4:health": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=mock tsx scripts/verify-q4-health.ts",
     "q4:live-server": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=mock tsx scripts/start-q4-live-server.ts",
-    "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
+    "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:ich:stage3 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
     "precheck": "tsx scripts/precheck.ts"
   },
   "dependencies": {

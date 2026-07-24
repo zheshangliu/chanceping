@@ -34,6 +34,37 @@ export type IchArchiveReason =
   | "invalid"
   | "manual_archive";
 export type IchDuplicateStatus = "unique" | "possible_duplicate" | "duplicate" | "merged";
+export const ICH_WORKFLOW_STATES = [
+  "draft",
+  "pending_review",
+  "approved",
+  "published",
+  "rejected",
+  "withdrawn",
+  "archived",
+] as const;
+export type IchWorkflowState = typeof ICH_WORKFLOW_STATES[number];
+
+export interface IchWorkflowEvent {
+  action: "created" | "updated" | "submitted" | "approved" | "rejected" | "published" | "withdrawn" | "archived" | "restored";
+  from: IchWorkflowState | null;
+  to: IchWorkflowState;
+  actor: string;
+  at: string;
+  reason: string | null;
+  revision: number;
+}
+
+export interface IchWorkflow {
+  state: IchWorkflowState;
+  revision: number;
+  review_reason: string | null;
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  withdrawn_at: string | null;
+  history: IchWorkflowEvent[];
+}
 
 export interface IchOrganizer {
   name: string;
@@ -259,6 +290,7 @@ export interface IchOpportunity {
   duplicate_status: IchDuplicateStatus;
   duplicate_of_id: string | null;
   merged_from_ids: string[];
+  workflow: IchWorkflow;
 }
 
 export interface IchOpportunityFile {

@@ -14,11 +14,19 @@ export interface IchStoreLoadResult {
 }
 
 export class IchOpportunityStore {
-  constructor(private readonly filePath: string) {}
+  constructor(
+    private readonly filePath: string,
+    private readonly seedFilePath?: string,
+  ) {}
 
   load(): IchStoreLoadResult {
-    if (!fs.existsSync(this.filePath)) return { entries: [], invalidEntries: [], updatedAt: null };
-    const parsed: unknown = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
+    const readablePath = fs.existsSync(this.filePath)
+      ? this.filePath
+      : this.seedFilePath && fs.existsSync(this.seedFilePath)
+        ? this.seedFilePath
+        : null;
+    if (!readablePath) return { entries: [], invalidEntries: [], updatedAt: null };
+    const parsed: unknown = JSON.parse(fs.readFileSync(readablePath, "utf8"));
     const fileValidation = validateIchOpportunityFile(parsed);
     if (!fileValidation.valid || !fileValidation.value) {
       throw new Error(`Invalid ICH store: ${fileValidation.errors.join("; ")}`);

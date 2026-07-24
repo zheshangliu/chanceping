@@ -19,6 +19,7 @@ export interface IchReadRouteOptions {
 export function defaultIchStore(): IchOpportunityStore {
   return new IchOpportunityStore(
     process.env.CHANCEPING_ICH_STORE_PATH || path.resolve(process.cwd(), "data/ich-opportunities.json"),
+    path.resolve(process.cwd(), "src/ich/opportunities.verified.json"),
   );
 }
 
