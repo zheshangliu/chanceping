@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { collectWelfareSource, WELFARE_SHADOW_SOURCES } from "../src/public/welfare-opportunities";
+import { collectWelfareSourceForReview, WELFARE_SHADOW_SOURCES } from "../src/public/welfare-opportunities";
 
 const requested = new Set([
   "OFF-N-003", "OFF-N-005", "OFF-N-007", "OFF-N-009", "OFF-N-010", "OFF-N-011",
@@ -13,8 +13,9 @@ async function main(): Promise<void> {
   const sources = WELFARE_SHADOW_SOURCES.filter((item) => requested.has(item.code) && (!selected?.length || selected.includes(item.code)));
   const results = await Promise.all(sources.map(async (source) => {
     try {
-      const result = await collectWelfareSource(source.code, { persist: false, evidenceDir: `data/welfare-adapter-review/${source.code}`, maxDetails: 3 });
-      return { sourceCode: source.code, adapter: source.adapter, status: result.status, discoveredCount: result.discoveredCount, publishedCount: result.publishedCount, errors: result.errors.length, errorMessages: result.errors.slice(0, 2).map((item) => item.error) };
+      const data = await collectWelfareSourceForReview(source.code, { evidenceDir: `data/welfare-adapter-review/${source.code}`, maxDetails: 3 });
+      const completeEvidence = data.records.filter((record) => record.evidenceFields.every((field) => ["verified", "not_published"].includes(field.state))).length;
+      return { sourceCode: source.code, adapter: source.adapter, status: data.result.status, discoveredCount: data.result.discoveredCount, publishedCount: data.records.length, completeEvidence, records: data.records.map((record) => ({ title: record.title, officialUrl: record.officialUrl, rawSha256: record.rawSha256, verificationState: record.verificationState, evidenceFields: record.evidenceFields })), errors: data.result.errors.length, errorMessages: data.result.errors.slice(0, 2).map((item) => item.error) };
     } catch (error) {
       return { sourceCode: source.code, adapter: source.adapter, status: "failed", discoveredCount: 0, publishedCount: 0, errors: 1, error: error instanceof Error ? error.message : String(error) };
     }
