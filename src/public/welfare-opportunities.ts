@@ -29,6 +29,7 @@ export interface WelfareSourceConfig {
   opportunityRole?: "procurement" | "demand_signal" | "channel_partnership";
   opportunityType?: WelfareOpportunityType;
   shadowAccess?: "direct" | "restricted";
+  extraAllowedHosts?: string[];
   /** Reviewed source-specific adapter contract. It may remain shadow until live evidence passes. */
   adapter?: WelfareAdapterKind;
 }
@@ -94,7 +95,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-ZS-001", name: "中山市公共资源交易平台", url: "https://www.zsjypt.cn/", allowedHost: "www.zsjypt.cn", region: "中山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-HZ-001", name: "惠州市公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "惠州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
-  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
+  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
 ];
 
@@ -102,6 +103,10 @@ function sourceByCode(code: string): WelfareSourceConfig {
   const source = [...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].find((item) => item.code === code);
   if (!source) throw new Error(`Unknown welfare source: ${code}`);
   return source;
+}
+
+function isAllowedWelfareHost(hostname: string): boolean {
+  return [...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === hostname || source.extraAllowedHosts?.includes(hostname));
 }
 
 export type WelfareLifecycle = "current" | "historical";
@@ -709,6 +714,14 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
           html = await fetchHtml(effectiveUrl);
         }
       }
+      if (source.code === "ORG-004") {
+        const externalDetail = html.match(/https?:\/\/zfcg\.szggzy\.com:8081\/[^\s"'<>]+/i)?.[0];
+        if (externalDetail) {
+          fs.writeFileSync(path.join(evidenceDir, `${crypto.createHash("sha256").update(html).digest("hex")}.html`), html);
+          effectiveUrl = externalDetail.replace(/[),.;]+$/, "");
+          html = await fetchHtml(effectiveUrl);
+        }
+      }
       const sha = crypto.createHash("sha256").update(html).digest("hex");
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
@@ -816,7 +829,7 @@ export async function collectWelfareShadowSources(options: { fetchHtml?: (url: s
 
 async function defaultWelfareFetchHtml(url: string): Promise<string> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !isAllowedWelfareHost(parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(20_000),
@@ -850,7 +863,7 @@ async function defaultWelfareFetchHtml(url: string): Promise<string> {
 
 async function defaultWelfareFetchJson(url: string, payload: unknown): Promise<string> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !isAllowedWelfareHost(parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   const response = await fetch(url, {
     method: "POST",
     signal: AbortSignal.timeout(20_000),
@@ -885,7 +898,7 @@ async function welfareReaderRelayFetchHtml(officialUrl: string): Promise<string>
 async function gnutlsFetchHtml(url: string, redirects = 0): Promise<string> {
   if (redirects > 4) throw new Error("too many HTTPS redirects");
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || ![...WELFARE_SOURCES, ...WELFARE_SHADOW_SOURCES].some((source) => source.allowedHost === parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
+  if (parsed.protocol !== "https:" || !isAllowedWelfareHost(parsed.hostname)) throw new Error("WELFARE_SOURCE_NOT_ALLOWED");
   // Keep the client invocation identical to the verified default GnuTLS
   // handshake. HTTP requires CRLF, supplied directly without --crlf.
   const request = `GET ${parsed.pathname}${parsed.search} HTTP/1.1\r\nHost: ${parsed.host}\r\nUser-Agent: ChancePing-WelfareRadar/0.1 (+https://fuli.chanceping.com)\r\nAccept: text/html,application/xhtml+xml\r\nConnection: close\r\n\r\n`;
