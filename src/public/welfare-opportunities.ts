@@ -9,6 +9,13 @@ export const PUBLIC_WELFARE_RADAR_NAME = "企业福利商机雷达";
 export const WELFARE_SOURCE_CODE = "OFF-SZ-004";
 export const WELFARE_SOURCE_NAME = "光明区政府/群团工作部公告";
 export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/";
+
+// Keep the radar focused on employee-benefit demand while covering the common
+// procurement vocabulary used by government, unions, and enterprise portals.
+// This is deliberately a context matcher; procurement/action terms are still
+// required before an item can become an opportunity card.
+const WELFARE_CONTEXT = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|防暑降温|疗休养|农副产品|节日(?:慰问|福利)?|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券|福利)?|体检|健康管理|心理服务|职工餐厅|职工食堂|工会|职工服务|职工活动|职工培训|员工关怀|员工体检|福利采购)/;
+const WELFARE_ACTION = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目|服务商|入围|采购意向)/;
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
@@ -353,7 +360,7 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 }
 
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
-  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const welfareContext = WELFARE_CONTEXT;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
   // Large procurement portals list generic project names and expose the
   // welfare context only on the detail page. Reviewed adapters may therefore
@@ -476,7 +483,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
   const text = cleanText(input.html);
-  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const welfareContext = WELFARE_CONTEXT;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/;
   const contextText = source.adapter ? `${title} ${text}` : title;
   if (!title || !welfareContext.test(contextText) || !opportunityAction.test(contextText)) return null;
@@ -603,7 +610,7 @@ async function collectSzGgzyGovernmentProcurement(source: WelfareSourceConfig, o
     for (const notice of notices) {
       const title = notice.noticeTitle || notice.title || notice.projectName || "";
       const officialUrl = normalizeUrl(notice.linkTo ?? "", source.url);
-      if (!officialUrl || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      if (!officialUrl || !WELFARE_CONTEXT.test(title) || !WELFARE_ACTION.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
       const html = szGgzyNoticeHtml(notice);
       const record = parseWelfareDetail({ html, url: officialUrl, sourceCode: source.code, publishedAtHint: notice.releaseTime || notice.publishTime || "", retrievedAt: options.retrievedAt });
       if (record) records.push(record);
@@ -695,7 +702,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const links = (source.directDetail
     ? [{ title: source.name, url: source.url, publishedAt: "" }]
     : Array.from(indexLinks.values()).sort((a, b) => {
-      const context = /(慰问|福利|职工|体检|礼品|送清凉|疗休养|工会)/;
+      const context = WELFARE_CONTEXT;
       return Number(!context.test(a.title)) - Number(!context.test(b.title));
     })
   ).slice(0, Math.max(1, Math.min(options.maxDetails ?? source.maxDetails, 30)));
