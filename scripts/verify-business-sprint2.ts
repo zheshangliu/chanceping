@@ -21,6 +21,9 @@ async function main(): Promise<void> {
   const current = await app.request("/api/business/opportunities?edition=guangzhou&status=current");
   const currentBody = await current.json() as { data?: { total?: number } };
   check("current filter does not relabel expired record as active", current.status === 200 && currentBody.data?.total === 0);
+  const sources = await app.request("/api/business/sources?edition=tianhe");
+  const sourcesBody = await sources.json() as { success?: boolean; data?: { items?: Array<{ officialUrl?: string }> } };
+  check("official source catalog is edition-scoped", sources.status === 200 && sourcesBody.success === true && (sourcesBody.data?.items?.length ?? 0) >= 3 && sourcesBody.data?.items?.every((item) => item.officialUrl?.startsWith("https://")) === true);
   if (failures > 0) process.exitCode = 1;
 }
 main();

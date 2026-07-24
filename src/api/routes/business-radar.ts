@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { BUSINESS_COMMON_CONFIG, BUSINESS_EDITIONS, BUSINESS_EDITION_IDS, getBusinessEdition } from "../../business/edition-config";
 import { CATEGORY_LABELS, loadBusinessOpportunities, lifecycleStatus, RECOMMENDATION_LABELS, VERIFICATION_LABELS, type BusinessOpportunity } from "../../business/opportunity";
+import { sourcesForEdition } from "../../business/source-catalog";
 import type { ApiResponse } from "../types";
 
 export function businessRadarRoutes(): Hono {
@@ -21,6 +22,12 @@ export function businessRadarRoutes(): Hono {
       return c.json({ success: false, data: null, error: { code: "EDITION_NOT_FOUND", message: "地区版本不存在" }, duration_ms: 0 } satisfies ApiResponse, 404);
     }
     return c.json({ success: true, data: { common: BUSINESS_COMMON_CONFIG, edition }, error: null, duration_ms: 0 } satisfies ApiResponse);
+  });
+
+  app.get("/sources", (c) => {
+    const edition = getBusinessEdition(c.req.query("edition"));
+    if (!edition) return c.json({ success: false, data: null, error: { code: "EDITION_REQUIRED", message: "需要有效的地区版本" }, duration_ms: 0 } satisfies ApiResponse, 400);
+    return c.json({ success: true, data: { edition: edition.id, items: sourcesForEdition(edition.id) }, error: null, duration_ms: 0 } satisfies ApiResponse);
   });
 
   app.get("/opportunities", (c) => {
