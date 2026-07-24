@@ -3,9 +3,10 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { createApp } from "../src/api/app";
-import { loadRecordedWelfareOpportunities, savePersistedWelfareOpportunities } from "../src/public/welfare-opportunities";
+import { loadRecordedWelfareOpportunities, savePersistedWelfareCandidates, savePersistedWelfareOpportunities } from "../src/public/welfare-opportunities";
 
 process.env.CHANCEPING_WELFARE_STORE_PATH = path.join(os.tmpdir(), `chanceping-welfare-page-${process.pid}.json`);
+process.env.CHANCEPING_WELFARE_CANDIDATE_PATH = path.join(os.tmpdir(), `chanceping-welfare-candidates-${process.pid}.json`);
 
 // The page contract must be independent from the wall clock and from the
 // production store. Seed one official, publicly disclosed fixture whose
@@ -19,6 +20,9 @@ savePersistedWelfareOpportunities([{
   lifecycleStatus: "current",
   retrievedAt: "2099-01-01T00:00:00.000Z",
 }], process.env.CHANCEPING_WELFARE_STORE_PATH);
+savePersistedWelfareCandidates([{
+  id: "candidate_fixture", title: "职工防暑降温服务商征集公告", sourceCode: "ENT-001", sourceName: "南方电网供应链统一服务平台", officialUrl: "https://www.bidding.csg.cn/candidate.html", publishedAt: "2099-01-01T00:00:00+08:00", retrievedAt: "2099-01-01T00:00:00.000Z", region: "全国", verificationState: "CANDIDATE", reason: "详情字段待核验", nextAction: "回溯官方详情并核对截止时间。",
+}], process.env.CHANCEPING_WELFARE_CANDIDATE_PATH);
 
 const html = fs.readFileSync("web/welfare.html", "utf8");
 const css = fs.readFileSync("web/welfare.css", "utf8");
@@ -46,6 +50,11 @@ async function main() {
   assert.ok(/^0755-\d{7,8}$/.test(json.data.items[0].contactPhone));
   assert.ok(json.data.items[0].contactName.length > 0);
   assert.ok(json.data.items[0].contactAddress.length > 0);
+  const candidates = await app.request("/api/public/welfare/candidates?page=1&page_size=12");
+  assert.equal(candidates.status, 200);
+  const candidateJson = await candidates.json() as any;
+  assert.equal(candidateJson.data.items.length, 1);
+  assert.equal(candidateJson.data.items[0].verificationState, "CANDIDATE");
   const report = await app.request("/api/public/welfare/report.md");
   assert.equal(report.status, 200);
   assert.ok((await report.text()).includes(json.data.items[0].title));
