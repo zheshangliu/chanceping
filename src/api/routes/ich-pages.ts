@@ -181,6 +181,7 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       { path: "/ich", lastmod: loaded.updatedAt },
       { path: "/ich/history", lastmod: loaded.updatedAt },
       { path: "/ich/source-principles", lastmod: loaded.updatedAt },
+      { path: "/ich/submit", lastmod: loaded.updatedAt },
     ];
     const details = loaded.entries
       .filter(isPublicIchOpportunity)
@@ -210,10 +211,23 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   ));
   app.get("/submit", (c) => c.html(shell(
     "提交非遗机会来源｜ChancePing",
-    "安全来源提交入口正在准备中。",
+    "向 ChancePing 提交非遗机会的官方来源链接。",
     "/ich/submit",
-    "<main><h1>提交非遗机会来源</h1><section class=\"notice\"><p>安全提交入口正在准备中，暂不接收数据。</p></section></main>",
+    `<main><h1>提交非遗机会来源</h1><section class="card"><p>请提交主办方、政府部门或官方报名页面的 HTTPS 链接。提交内容只进入人工审核队列，不会自动公开。</p>
+<form id="source-form"><p><label>官方来源链接<br><input name="source_url" type="url" required maxlength="2048" placeholder="https://..." style="width:100%;box-sizing:border-box;padding:10px"></label></p>
+<p><label>标题提示（可选）<br><input name="title_hint" maxlength="300" style="width:100%;box-sizing:border-box;padding:10px"></label></p>
+<p><label>补充说明（可选）<br><textarea name="note" maxlength="2000" rows="5" style="width:100%;box-sizing:border-box;padding:10px"></textarea></label></p>
+<p><label>联系邮箱（可选，仅用于核验）<br><input name="contact_email" type="email" maxlength="254" style="width:100%;box-sizing:border-box;padding:10px"></label></p>
+<p aria-hidden="true" style="position:absolute;left:-10000px"><label>网站<input name="website" tabindex="-1" autocomplete="off"></label></p>
+<button type="submit" style="padding:10px 18px">提交来源</button><span id="submit-status" class="meta" role="status"></span></form></section>
+<script>const form=document.getElementById("source-form");const status=document.getElementById("submit-status");const startedAt=Date.now();form.addEventListener("submit",async event=>{event.preventDefault();status.textContent=" 正在提交…";const data=Object.fromEntries(new FormData(form).entries());data.form_started_at=startedAt;try{const response=await fetch("/api/public/ich/submissions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});if(!response.ok)throw new Error("暂时无法提交，请稍后重试");form.reset();status.textContent=" 已收到，我们会进行人工核验。";}catch(error){status.textContent=" "+error.message;}});</script></main>`,
     { noindex: true },
-  ), 503, { "Retry-After": "86400", "Cache-Control": "no-store" }));
+  ), 200, {
+    "Cache-Control": "no-store",
+    "Content-Security-Policy": "default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+    "X-Frame-Options": "DENY",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+  }));
   return app;
 }

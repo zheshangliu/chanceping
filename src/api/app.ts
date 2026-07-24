@@ -25,6 +25,8 @@ import { publicIchRoutes } from "./routes/public-ich";
 import { ichPagesRoutes } from "./routes/ich-pages";
 import { internalIchRoutes } from "./routes/internal-ich";
 import { ichAdminPagesRoutes } from "./routes/ich-admin-pages";
+import { ichSubmissionRoutes } from "./routes/ich-submissions";
+import { internalIchSubmissionRoutes } from "./routes/internal-ich-submissions";
 import type { ApiResponse } from "./types";
 
 /** 从 package.json 读取版本号（启动时一次性读取，避免每次请求读文件） */
@@ -72,7 +74,9 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/public/welfare", publicWelfareOpportunityRoutes());
   app.route("/api/business", businessRadarRoutes());
   app.route("/api/public/ich", publicIchRoutes());
+  app.route("/api/public/ich", ichSubmissionRoutes());
   app.route("/api/internal/ich", internalIchRoutes());
+  app.route("/api/internal/ich", internalIchSubmissionRoutes());
   app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes());
 

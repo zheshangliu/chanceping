@@ -99,7 +99,7 @@ async function main(): Promise<void> {
   check("sitemap includes fixed and published detail pages", sitemap.includes("https://ich.chanceping.com/ich/history") &&
     sitemap.includes("https://ich.chanceping.com/ich/opportunities/seo-visible"));
   check("sitemap excludes drafts and noindex details", !sitemap.includes("draft-hidden") && !sitemap.includes("seo-hidden"));
-  check("sitemap does not advertise unavailable submit form", !sitemap.includes("/ich/submit"));
+  check("sitemap advertises available submit form", sitemap.includes("https://ich.chanceping.com/ich/submit"));
 
   const robotsResponse = await app.request("/ich/robots.txt");
   const robots = await robotsResponse.text();
