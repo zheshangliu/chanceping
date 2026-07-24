@@ -1,4 +1,5 @@
 import type { CandidateRecord, EvidenceRecord } from "./data-pipeline";
+import { loadSourceRegistry } from "./data-pipeline";
 import { isFixedDeadlineCurrent } from "./data-quality";
 
 export interface PublishableCandidate {
@@ -23,6 +24,15 @@ export interface PublishableCandidate {
   risks: string[];
   nextActions: string[];
   evidence: EvidenceRecord;
+}
+
+export interface PublishableOfficialCandidate extends Omit<PublishableCandidate, "category" | "regions" | "editions" | "targetAudience"> {
+  category: "policy" | "competition" | "exhibition" | "international";
+  sourceName: string;
+  sourceType: "government" | "official";
+  regions: ["guangdong"];
+  editions: ["guangzhou", "tianhe", "shaoguan"];
+  targetAudience: ["enterprise"];
 }
 
 function oneLine(value: string): string { return value.replace(/\s+/g, " ").trim(); }
@@ -60,5 +70,30 @@ export function toPublishableGuangdongProcurement(candidate: CandidateRecord, no
     targetAudience: ["supplier", "enterprise"], eligibilitySummary: requirement, eligibilityRequirements: ["按官方公告要求获取招标文件", "在公告规定的截止时间前提交投标或响应文件"], rewardSummary: "采购预算、品目及合同要求以官方公告为准。", recommendationLevel: "medium",
     risks: ["资格条件、采购文件要求和补充公告以官方原文为准", "临近截止前应复核采购公告是否有更正或延期"], nextActions: ["打开官方公告核对采购文件与资格条件", "在截止日前完成报名、文件获取和投标准备"],
     evidence: { candidateId: candidate.candidateId, sourceId: candidate.sourceId, discoveryUrl: candidate.discoveryUrl, officialUrl: candidate.canonicalUrl, fetchedAt: candidate.updatedAt, lastVerifiedAt: capturedAt, documentHash: candidate.contentHash, originalSummary: text.slice(0, 500), fieldEvidence: { organizer: [{ url: candidate.canonicalUrl, locator: "公告概要/采购单位", capturedAt }], deadline: [{ url: candidate.canonicalUrl, locator: "公告概要/开标时间或投标截止时间", capturedAt }], eligibilitySummary: [{ url: candidate.canonicalUrl, locator: "项目概况/潜在投标人", capturedAt }] } },
+  };
+}
+
+/**
+ * A conservative conversion path for non-procurement official notices.  It is
+ * deliberately limited to notices with an extracted future fixed deadline;
+ * evergreen policy interpretation pages and discovered-only sources stay out
+ * of the public opportunity pool.
+ */
+export function toPublishableOfficialOpportunity(candidate: CandidateRecord, now = new Date()): PublishableOfficialCandidate | undefined {
+  const source = loadSourceRegistry().sources.find((item) => item.sourceId === candidate.sourceId);
+  const category = candidate.categoryHint;
+  if (!source || source.role !== "official_fact" || source.finalAllowed !== "是" || !["policy", "competition", "exhibition"].includes(category ?? "") || !candidate.canonicalUrl?.startsWith("https://") || !candidate.rawPublishedAt || !isFixedDeadlineCurrent(candidate.rawDeadlineText, now)) return undefined;
+  const url = new URL(candidate.canonicalUrl);
+  if (url.hostname !== source.officialDomain && !url.hostname.endsWith(`.${source.officialDomain}`)) return undefined;
+  const title = candidate.rawTitle.replace(/\.\.\.$/, "").trim();
+  if (title.length < 8) return undefined;
+  const capturedAt = now.toISOString();
+  const action = category === "competition" ? "报名参赛" : category === "exhibition" ? "申报参展" : "提交申报材料";
+  return {
+    candidateId: candidate.candidateId, title, category: category as PublishableOfficialCandidate["category"], sourceName: source.name, sourceType: "government",
+    officialUrl: candidate.canonicalUrl, organizer: source.name, regions: ["guangdong"], editions: ["guangzhou", "tianhe", "shaoguan"], publishedAt: candidate.rawPublishedAt, deadline: candidate.rawDeadlineText!, deadlineType: "fixed", status: "open", verificationStatus: "fully_verified", reviewState: "FULLY_VERIFIED", targetAudience: ["enterprise"],
+    eligibilitySummary: `面向符合官方通知要求的企业或申报主体；请按公告要求${action}。`, eligibilityRequirements: ["核对官方通知列明的申报条件、材料与提交渠道", `在固定截止日前完成${action}`], rewardSummary: "支持标准、奖项或权益以官方通知及附件为准。", recommendationLevel: "medium",
+    risks: ["资格条件、附件和补充通知以官方原文为准", "提交前应复核截止时间及线上系统状态"], nextActions: ["打开官方通知核对适用条件和材料清单", `在截止日前完成${action}`],
+    evidence: { candidateId: candidate.candidateId, sourceId: candidate.sourceId, discoveryUrl: candidate.discoveryUrl, officialUrl: candidate.canonicalUrl, fetchedAt: candidate.updatedAt, lastVerifiedAt: capturedAt, documentHash: candidate.contentHash, originalSummary: (candidate.rawBodyExcerpt ?? "").slice(0, 500), fieldEvidence: { organizer: [{ url: candidate.canonicalUrl, locator: "官方通知发布机构", capturedAt }], deadline: [{ url: candidate.canonicalUrl, locator: "通知正文中的申报/报名截止日期", capturedAt }], eligibilitySummary: [{ url: candidate.canonicalUrl, locator: "通知正文中的申报对象、条件或材料要求", capturedAt }] } },
   };
 }
