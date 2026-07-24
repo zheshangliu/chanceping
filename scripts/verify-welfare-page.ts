@@ -36,6 +36,7 @@ assert.ok(js.includes("contactName") && js.includes("contactPhone") && js.includ
 assert.ok(html.includes("待核验线索") && js.includes("/api/public/welfare/candidates"));
 assert.ok(html.includes("welfare-contact") && js.includes("welfare-contact") && js.includes("contact:"), "contact-known sales filter must be present");
 assert.ok(js.includes("chanceping:welfare:sales-follow-up:v1") && js.includes("保存跟进记录"), "sales follow-up must persist in browser storage");
+assert.ok(html.includes("welfare-export-followups") && js.includes("text/csv"), "sales follow-up export must be available");
 
 async function main() {
   const app = createApp();

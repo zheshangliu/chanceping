@@ -38,6 +38,17 @@
     try { localStorage.setItem(salesStorageKey, JSON.stringify(salesFollowUps)); } catch { /* private browser storage may be unavailable */ }
   }
 
+  function exportSalesFollowUps() {
+    const rows = [["机会ID", "跟进状态", "下一步记录", "更新时间"]];
+    Object.entries(salesFollowUps).forEach(([id, value]) => rows.push([id, value.status || "", value.note || "", value.updatedAt || ""]));
+    const csv = "\\uFEFF" + rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\\n");
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    link.download = `chanceping-welfare-followups-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
   function wireSalesControls(items) {
     document.querySelectorAll(".welfare-followup-status").forEach((select) => select.addEventListener("change", () => saveSalesFollowUp(select.dataset.id, { status: select.value })));
     document.querySelectorAll(".welfare-followup-note").forEach((input) => input.addEventListener("change", () => saveSalesFollowUp(input.dataset.id, { note: input.value })));
@@ -111,6 +122,7 @@
     ["#welfare-type", "#welfare-scene", "#welfare-region", "#welfare-supplier", "#welfare-contact", "#welfare-deadline"].forEach((id) => document.querySelector(id).addEventListener("change", () => { state.page = 1; load(); }));
     document.querySelector("#welfare-prev").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; load(); } });
     document.querySelector("#welfare-next").addEventListener("click", () => { if (state.page < state.totalPages) { state.page += 1; load(); } });
+    document.querySelector("#welfare-export-followups").addEventListener("click", exportSalesFollowUps);
     load();
   });
 })();
