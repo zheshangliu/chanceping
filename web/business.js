@@ -1,67 +1,36 @@
 (() => {
   const app = document.getElementById("business-app");
-  const editions = new Set(["guangzhou", "tianhe", "shaoguan"]);
-  const categoryLabels = { competition: "赛事", exhibition: "展会", procurement: "采购", channel: "渠道", policy: "政策", international: "国际" };
-
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
-  }
-
-  function routeState() {
-    const parts = window.location.pathname.split("/").filter(Boolean);
-    const edition = editions.has(parts[0]) ? parts[0] : "guangzhou";
-    const page = parts[1] || "home";
-    const slug = parts[2] || "";
-    return { edition, page, slug };
-  }
-
-  function nav(edition, active) {
-    const base = `/${edition.route.replace(/^\//, "")}`;
-    const links = [["首页", base], ["全部机会", `${base}/opportunities`], ["信息来源", `${base}/sources`], ["关于雷达", `${base}/about`]];
-    return `<nav class="business-nav" aria-label="主导航">${links.map(([label, href]) => `<a class="${(active === "home" ? href === base : href.endsWith(`/${active}`)) ? "is-active" : ""}" href="${href}">${label}</a>`).join("")}</nav>`;
-  }
-
-  function shell(common, edition, active, content) {
+  const editionIds = new Set(["guangzhou", "tianhe", "shaoguan"]);
+  const esc = (v) => String(v ?? "").replace(/[&<>'"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
+  const state = () => { const p = location.pathname.split("/").filter(Boolean); return { edition: editionIds.has(p[0]) ? p[0] : "guangzhou", page: p[1] || "home", slug: p[2] || "" }; };
+  const status = (i) => ({ current: "当前有效", closing_soon: "即将截止", rolling: "长期/滚动", historical: "已结束" })[i.lifecycleStatus] || "待核验";
+  const empty = (t, p) => `<section class="business-empty"><span>NO CURRENT DATA</span><h2>${esc(t)}</h2><p>${esc(p)}</p></section>`;
+  function header(common, edition, page, content) {
     document.title = edition.seo.title;
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", edition.seo.description);
-    const base = edition.route;
-    return `<header class="business-header"><a class="business-brand" href="${base}"><span>ChancePing</span><small>${escapeHtml(edition.shortName)}</small></a>${nav(edition, active)}<a class="business-main-link" href="https://www.chanceping.com/">创建我的雷达</a></header><main class="business-shell">${content}</main><footer class="business-footer"><p>${escapeHtml(common.disclaimer)}</p><small>${escapeHtml(edition.footerNote)} · Sprint 1 页面骨架</small></footer>`;
+    const links = [["首页", edition.route, "home"], ["全部机会", `${edition.route}/opportunities`, "opportunities"], ["信息来源", `${edition.route}/sources`, "sources"], ["关于雷达", `${edition.route}/about`, "about"]];
+    return `<header class="business-header"><a class="business-brand" href="${edition.route}"><span>ChancePing</span><small>${esc(edition.shortName)}</small></a><nav class="business-nav">${links.map(([n, href, id]) => `<a class="${page === id ? "is-active" : ""}" href="${href}">${n}</a>`).join("")}</nav><a class="business-main-link" href="https://www.chanceping.com/">创建我的雷达</a></header><main class="business-shell">${content}</main><footer class="business-footer"><p>${esc(common.disclaimer)}</p><small>${esc(edition.footerNote)} · 数据以官方原文为准</small></footer>`;
   }
-
-  function emptyState(title, description) {
-    return `<section class="business-empty"><span>DATA PENDING</span><h2>${escapeHtml(title)}</h2><p>${escapeHtml(description)}</p><p class="business-note">此页面暂未展示或模拟真实机会。首批数据完成核验和导入后将显示官方来源与状态。</p></section>`;
+  function card(item, edition) { return `<article class="business-card"><div class="business-card-meta"><span>${esc(item.categoryLabel)}</span><span>${status(item)}</span></div><h2>${esc(item.title)}</h2><p>${esc(item.summary)}</p><p><strong>${esc(item.verificationLabel)}</strong> · ${item.deadline ? esc(new Date(item.deadline).toLocaleDateString("zh-CN")) : "截止未公开"}</p><a class="business-card-link" href="${edition.route}/opportunities/${encodeURIComponent(item.slug)}">查看详情</a></article>`; }
+  function list(edition, data) {
+    const options = data.categories.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("");
+    return `<section class="business-section"><div class="business-section-heading"><h1>全部机会</h1><span id="business-total">${data.total} 条记录</span></div><form id="business-filters" class="business-filters"><input name="q" placeholder="搜索标题、机构或关键词"><select name="category"><option value="all">全部分类</option>${options}</select><select name="status"><option value="all">全部状态</option><option value="current">当前有效</option><option value="historical">已结束</option></select><select name="sort"><option value="updated">最近更新</option><option value="deadline">截止时间</option></select><button>筛选</button></form><div id="business-results" class="business-card-grid">${data.items.length ? data.items.map((i) => card(i, edition)).join("") : empty("未找到匹配记录", "可以调整搜索词或筛选条件。")}</div></section>`;
   }
-
-  function home(common, edition) {
-    const base = edition.route;
-    return `<section class="business-hero"><p class="business-kicker">CITY BUSINESS RADAR</p><h1>${escapeHtml(edition.headline)}</h1><p class="business-lead">${escapeHtml(edition.subheadline)}</p><p class="business-tagline">${escapeHtml(edition.tagline)}</p><div class="business-actions"><a class="business-button" href="${base}/opportunities">${escapeHtml(common.primaryCtaLabel)}</a><a class="business-button business-button-secondary" href="${base}/about">了解雷达</a></div></section><section class="business-section"><div class="business-section-heading"><p class="business-kicker">LATEST OPPORTUNITIES</p><h2>最新机会</h2></div>${emptyState("机会数据正在准备", "当前为公开页面骨架，尚未导入可公开展示的核验机会数据。")}</section><section class="business-grid"><article><h2>面向谁</h2><p>${escapeHtml(edition.audienceDescription)}</p></article><article><h2>关注方向</h2><p>${edition.featuredCategories.map((id) => categoryLabels[id] || id).join("、")}</p></article><article><h2>使用方式</h2><p>浏览公开信息，并在正式行动前回到官方最新通知核验。</p></article></section>`;
-  }
-
-  function opportunities() { return emptyState("全部机会即将开放", "筛选、排序和机会详情将在真实数据完成校验后接入。本阶段不显示模拟机会。 "); }
-  function detail(slug) { return `<section class="business-copy"><p class="business-kicker">OPPORTUNITY DETAIL</p><h1>机会详情待接入</h1><p>请求的机会标识为 <code>${escapeHtml(slug)}</code>。Sprint 1 尚未导入真实机会，因此不会生成或展示虚构详情。</p><a class="business-button business-button-dark" href="./">返回全部机会</a></section>`; }
-  function sources() { return emptyState("信息来源网络待接入", "来源页面会仅展示允许公开、可回到官方原文且具有核验状态的信息源。 "); }
-  function about(common, edition) { return `<section class="business-copy"><p class="business-kicker">ABOUT THE RADAR</p><h1>${escapeHtml(edition.name)}</h1><p>${escapeHtml(edition.subheadline)}</p><h2>公开信息与决策辅助</h2><p>${escapeHtml(common.disclaimer)}</p><h2>示例使用场景</h2><blockquote>${escapeHtml(edition.exampleScenario)}</blockquote></section>`; }
-  function notFound() { return `<section class="business-empty"><span>404</span><h1>页面不存在</h1><p>请从当前地区版本的导航继续浏览。</p></section>`; }
-
+  function detail(edition, item) { return `<article class="business-detail"><p class="business-kicker">${esc(item.categoryLabel)} · ${status(item)}</p><h1>${esc(item.title)}</h1><p class="business-lead">${esc(item.summary)}</p><div class="business-detail-grid"><section><h2>官方信息</h2><p><strong>主办/采购单位：</strong>${esc(item.organizer)}</p><p><strong>来源：</strong>${esc(item.sourceName)}</p><p><strong>核验：</strong>${esc(item.verificationLabel)}</p><p><strong>截止：</strong>${esc(item.deadline || "未公开")}</p><a class="business-button business-button-dark" href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">查看官方通知</a></section><section><h2>适合条件</h2><p>${esc(item.eligibilitySummary)}</p><h2>推荐理由</h2><ul>${item.recommendationReasons.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><h2>风险与下一步</h2><ul>${item.risks.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><ol>${item.nextActions.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section></div><p class="business-verification-note">核验说明：${esc(item.verificationNotes)}</p><a href="${edition.route}/opportunities">返回全部机会</a></article>`; }
+  async function fetchList(edition, extra = "") { const r = await fetch(`/api/business/opportunities?edition=${edition}${extra}`); const p = await r.json(); if (!r.ok || !p.success) throw new Error(); return p.data; }
   async function boot() {
-    const state = routeState();
+    const s = state();
     try {
-      const response = await fetch(`/api/business/editions/${state.edition}`);
-      const payload = await response.json();
-      if (!response.ok || !payload.success) throw new Error("配置读取失败");
-      const { common, edition } = payload.data;
+      const [cr, data] = await Promise.all([fetch(`/api/business/editions/${s.edition}`), fetchList(s.edition, "&status=all")]); const cp = await cr.json(); if (!cr.ok || !cp.success) throw new Error(); const { common, edition } = cp.data;
       let content;
-      if (state.page === "home") content = home(common, edition);
-      else if (state.page === "opportunities" && !state.slug) content = opportunities();
-      else if (state.page === "opportunities" && state.slug) content = detail(state.slug);
-      else if (state.page === "sources") content = sources();
-      else if (state.page === "about") content = about(common, edition);
-      else content = notFound();
-      app.innerHTML = shell(common, edition, state.page, content);
-    } catch (error) {
-      app.innerHTML = `<section class="business-error"><h1>页面暂时无法加载</h1><p>地区配置读取失败，请稍后重试。</p><a href="/guangzhou">返回广州版</a></section>`;
-    }
+      if (s.page === "home") content = `<section class="business-hero"><p class="business-kicker">CITY BUSINESS RADAR</p><h1>${esc(edition.headline)}</h1><p class="business-lead">${esc(edition.subheadline)}</p><div class="business-actions"><a class="business-button" href="${edition.route}/opportunities">${esc(common.primaryCtaLabel)}</a></div></section><section class="business-section"><div class="business-section-heading"><h2>最新核验记录</h2><span>${data.totals.current} 条当前有效 · ${data.totals.historical} 条历史记录</span></div><div class="business-card-grid">${data.items.map((i) => card(i, edition)).join("") || empty("暂无可公开展示的机会", "当前没有符合该地区和核验条件的公开机会记录。")}</div></section>`;
+      else if (s.page === "opportunities" && !s.slug) content = list(edition, data);
+      else if (s.page === "opportunities") { const r = await fetch(`/api/business/opportunities/${encodeURIComponent(s.slug)}?edition=${edition.id}`); const p = await r.json(); content = r.ok && p.success ? detail(edition, p.data) : empty("机会不存在", "该机会不存在或不适用于当前地区版本。"); }
+      else if (s.page === "sources") content = `<section class="business-section"><h1>信息来源</h1>${data.items.length ? data.items.map((i) => `<article class="business-copy"><h2>${esc(i.sourceName)}</h2><p>${esc(i.verificationLabel)}</p><a href="${esc(i.officialUrl)}" target="_blank" rel="noopener noreferrer">打开官方来源</a></article>`).join("") : empty("尚无公开来源", "来源接入后将显示其核验状态和官方入口。")}</section>`;
+      else if (s.page === "about") content = `<section class="business-copy"><h1>${esc(edition.name)}</h1><p>${esc(edition.subheadline)}</p><p>${esc(common.disclaimer)}</p></section>`;
+      else content = empty("404 页面不存在", "请从当前地区版本的导航继续浏览。");
+      app.innerHTML = header(common, edition, s.page, content);
+      const form = document.getElementById("business-filters"); if (form) form.addEventListener("submit", async (e) => { e.preventDefault(); const target = document.getElementById("business-results"); target.innerHTML = "<p>正在筛选…</p>"; const d = await fetchList(edition.id, `&${new URLSearchParams(new FormData(form)).toString()}`); document.getElementById("business-total").textContent = `${d.total} 条记录`; target.innerHTML = d.items.length ? d.items.map((i) => card(i, edition)).join("") : empty("未找到匹配记录", "可以调整搜索词或筛选条件。"); });
+    } catch { app.innerHTML = `<section class="business-error"><h1>页面暂时无法加载</h1><p>机会数据或地区配置读取失败，请稍后重试。</p></section>`; }
   }
   boot();
 })();
