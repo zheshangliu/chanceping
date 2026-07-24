@@ -24,8 +24,11 @@ function parseCsv(source: string): string[][] {
   return rows;
 }
 
-function list(value: string): string[] { return value ? value.split("|").map((item) => item.trim()).filter(Boolean) : []; }
-function bool(value: string): boolean { if (value === "true") return true; if (value === "false") return false; throw new Error(`Boolean must be true or false, got ${value}`); }
+function list(value: string): string[] { if (!value) return []; if (value.trim().startsWith("[")) { const parsed: unknown = JSON.parse(value); if (!Array.isArray(parsed) || parsed.some((item) => typeof item !== "string")) throw new Error("Array field must be a JSON string array"); return parsed; } return value.split("|").map((item) => item.trim()).filter(Boolean); }
+function bool(value: string): boolean { if (value === "true") return true; if (value === "false" || !value) return false; throw new Error(`Boolean must be true or false, got ${value}`); }
+function normalizeStatus(value: string): string { return ({ "closing-soon": "open", ongoing: "open", "long-term": "rolling", ended: "closed", unverified: "pending_verification" } as Record<string, string>)[value] ?? value; }
+function normalizeVerification(value: string): string { return ({ verified: "fully_verified", "partially-verified": "field_verified", pending: "pending_verification", invalid: "pending_verification" } as Record<string, string>)[value] ?? value; }
+function normalizeSourceType(value: string): string { return ["government", "official", "organization"].includes(value) ? value : value ? "official" : "government"; }
 
 const input = path.resolve(process.cwd(), argument("--input"));
 const output = path.resolve(process.cwd(), argument("--output"));
@@ -37,8 +40,9 @@ const records = body.map((cells, rowIndex) => {
   if (cells.length !== headers.length) throw new Error(`Row ${rowIndex + 2} has ${cells.length} columns; expected ${headers.length}`);
   return {
     ...values,
-    keywords: list(values.keywords), industries: list(values.industries), regions: list(values.regions), editions: list(values.editions), targetAudience: list(values.targetAudience), eligibilityRequirements: list(values.eligibilityRequirements), recommendationReasons: list(values.recommendationReasons), risks: list(values.risks), nextActions: list(values.nextActions),
-    featured: bool(values.featured),
+    regions: list(values.regions), editions: list(values.editions), targetAudience: list(values.targetAudience), eligibilityRequirements: list(values.eligibilityRequirements), recommendationReasons: list(values.recommendationReasons), risks: list(values.risks), nextActions: list(values.nextActions),
+    featured: bool(values.featured), status: normalizeStatus(values.status), verificationStatus: normalizeVerification(values.verificationStatus), sourceType: normalizeSourceType(values.sourceType),
+    dataOwner: values.dataOwner || "ChancePing Business Radar", keywords: list(values.keywords || values.title), industries: list(values.industries),
   };
 });
 const validated = validateBusinessOpportunities(records);

@@ -38,7 +38,7 @@ export function businessRadarRoutes(): Hono {
     const status = c.req.query("status") ?? "all";
     const sort = c.req.query("sort") ?? "updated";
     const all = allItems().filter((item) => item.editions.includes(edition.id));
-    let items = all.filter((item) => (!query || `${item.title} ${item.summary} ${item.keywords.join(" ")} ${item.organizer}`.toLowerCase().includes(query)) && (category === "all" || item.category === category) && (status === "all" || lifecycleStatus(item) === status));
+    let items = all.filter((item) => (!query || `${item.title} ${item.summary} ${item.keywords.join(" ")} ${item.organizer}`.toLowerCase().includes(query)) && (category === "all" || item.category === category) && (status === "all" || (status === "current" ? lifecycleStatus(item) !== "historical" : lifecycleStatus(item) === status)));
     items = items.sort((a, b) => sort === "deadline" ? String(a.deadline ?? "9999").localeCompare(String(b.deadline ?? "9999")) : sort === "recommendation" ? ({ high: 0, medium: 1, observe: 2 }[a.recommendationLevel] - { high: 0, medium: 1, observe: 2 }[b.recommendationLevel]) : b.updatedAt.localeCompare(a.updatedAt));
     return c.json({ success: true, data: { edition: edition.id, items: items.map(publicItem), total: items.length, totals: { all: all.length, current: all.filter((item) => lifecycleStatus(item) !== "historical").length, historical: all.filter((item) => lifecycleStatus(item) === "historical").length }, categories: Object.entries(CATEGORY_LABELS).map(([id, label]) => ({ id, label })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
   });
