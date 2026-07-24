@@ -1,6 +1,8 @@
 (function () {
   "use strict";
   const state = { status: "current", page: 1, totalPages: 1, selected: null, data: null };
+  const salesStorageKey = "chanceping:welfare:sales-follow-up:v1";
+  const salesFollowUps = (() => { try { return JSON.parse(localStorage.getItem(salesStorageKey) || "{}"); } catch { return {}; } })();
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   const fieldLabels = { buyer: "采购单位", budget: "预算", deadline: "截止", status: "状态", contactName: "联系人", contactPhone: "联系电话", contactAddress: "联系地址" };
   const typeLabels = { OPEN_PROCUREMENT: "公开采购", PROCUREMENT_INTENT: "采购意向", SUPPLIER_RECRUITMENT: "供应商征集", FRAMEWORK_AGREEMENT: "框架协议", CHANNEL_PARTNERSHIP: "渠道合作" };
@@ -31,6 +33,23 @@
     root.innerHTML = `<h3>${esc(item.title)}</h3><div class="welfare-evidence-list">${item.evidenceFields.map((field) => `<div class="welfare-evidence-item ${field.state !== "verified" ? "is-unknown" : ""}"><b>${esc(fieldLabels[field.field] || field.field)} · ${field.state === "verified" ? "已核验" : field.state === "not_published" ? "未公开" : "待核验"}</b>${field.excerpt ? `<div>${esc(field.excerpt)}</div>` : ""}</div>`).join("")}</div>`;
   }
 
+  function saveSalesFollowUp(id, patch) {
+    salesFollowUps[id] = { ...(salesFollowUps[id] || {}), ...patch, updatedAt: new Date().toISOString() };
+    try { localStorage.setItem(salesStorageKey, JSON.stringify(salesFollowUps)); } catch { /* private browser storage may be unavailable */ }
+  }
+
+  function wireSalesControls(items) {
+    document.querySelectorAll(".welfare-followup-status").forEach((select) => select.addEventListener("change", () => saveSalesFollowUp(select.dataset.id, { status: select.value })));
+    document.querySelectorAll(".welfare-followup-note").forEach((input) => input.addEventListener("change", () => saveSalesFollowUp(input.dataset.id, { note: input.value })));
+    document.querySelectorAll(".welfare-followup-save").forEach((button) => button.addEventListener("click", () => {
+      const id = button.dataset.id;
+      const input = document.querySelector(`.welfare-followup-note[data-id="${CSS.escape(id)}"]`);
+      saveSalesFollowUp(id, { note: input?.value || "" });
+      button.textContent = "已保存";
+      setTimeout(() => { button.textContent = "保存跟进记录"; }, 1200);
+    }));
+  }
+
   function renderSources(sources) {
     const active = sources.filter((source) => source.status === "active").length;
     const degraded = sources.filter((source) => source.status === "degraded").length;
@@ -52,13 +71,14 @@
     replaceOptions(document.querySelector("#welfare-region"), data.stats.regionFacets, "全部地区");
     replaceOptions(document.querySelector("#welfare-supplier"), data.stats.supplierFitFacets || [], "全部供应商类型");
     document.querySelector("#welfare-decision-list").innerHTML = data.items.length ? data.items.map((item) => `<button class="welfare-decision-row" data-id="${esc(item.id)}"><strong>${esc(item.title)}</strong><span>${esc(item.deadlineDisplay)}</span><span>${esc(item.buyer)} · ${esc(item.region)}</span><span>${esc(verificationLabels[item.verificationState] || "待核验")}</span></button>`).join("") : "<p style='padding:18px'>当前筛选没有匹配商机。</p>";
-    document.querySelector("#welfare-grid").innerHTML = data.items.length ? data.items.map((item) => `<article class="welfare-card"><div class="welfare-badges"><span class="welfare-badge">${esc(typeLabels[item.opportunityType] || item.opportunityType)}</span><span class="welfare-badge welfare-badge-status">${esc(item.salesPriority === "HIGH" ? "优先跟进" : item.salesPriority === "MEDIUM" ? "建议评估" : "信息跟踪")}</span><span class="welfare-badge">${esc(item.followUpStatus || "待核验")}</span>${item.welfareScenes.map((scene) => `<span class="welfare-badge">${esc(scene)}</span>`).join("")}</div><h3>${esc(item.title)}</h3><dl><dt>采购单位</dt><dd>${esc(item.buyer)}</dd><dt>联系人</dt><dd>${esc(item.contactName)}</dd><dt>电话</dt><dd>${esc(item.contactPhone)}</dd><dt>地址</dt><dd>${esc(item.contactAddress)}</dd><dt>地区</dt><dd>${esc(item.region)}</dd><dt>预算</dt><dd>${esc(item.budgetDisplay)}</dd><dt>截止</dt><dd>${esc(item.deadlineDisplay)}</dd><dt>匹配供应商</dt><dd>${esc((item.supplierMatches || []).join("、") || "待判断")}</dd></dl><p class="welfare-card-reason">${esc(item.reason)}</p><p class="welfare-card-next"><strong>销售建议</strong>${esc(item.salesAction || item.nextAction)}<br><small>${esc(item.followUpNextAction || "")}</small></p><a href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">打开官方原文</a></article>`).join("") : "<article class='welfare-card'>暂未发现符合当前筛选的商机。</article>";
+    document.querySelector("#welfare-grid").innerHTML = data.items.length ? data.items.map((item) => { const local = salesFollowUps[item.id] || {}; const status = local.status || item.followUpStatus || "待联系"; return `<article class="welfare-card"><div class="welfare-badges"><span class="welfare-badge">${esc(typeLabels[item.opportunityType] || item.opportunityType)}</span><span class="welfare-badge welfare-badge-status">${esc(item.salesPriority === "HIGH" ? "优先跟进" : item.salesPriority === "MEDIUM" ? "建议评估" : "信息跟踪")}</span><span class="welfare-badge">${esc(status)}</span>${item.welfareScenes.map((scene) => `<span class="welfare-badge">${esc(scene)}</span>`).join("")}</div><h3>${esc(item.title)}</h3><dl><dt>采购单位</dt><dd>${esc(item.buyer)}</dd><dt>联系人</dt><dd>${esc(item.contactName)}</dd><dt>电话</dt><dd>${esc(item.contactPhone)}</dd><dt>地址</dt><dd>${esc(item.contactAddress)}</dd><dt>地区</dt><dd>${esc(item.region)}</dd><dt>预算</dt><dd>${esc(item.budgetDisplay)}</dd><dt>截止</dt><dd>${esc(item.deadlineDisplay)}</dd><dt>匹配供应商</dt><dd>${esc((item.supplierMatches || []).join("、") || "待判断")}</dd></dl><p class="welfare-card-reason">${esc(item.reason)}</p><p class="welfare-card-next"><strong>销售建议</strong>${esc(item.salesAction || item.nextAction)}<br><small>${esc(item.followUpNextAction || "")}</small></p><div class="welfare-followup"><label>跟进状态<select class="welfare-followup-status" data-id="${esc(item.id)}"><option${status === "待联系" ? " selected" : ""}>待联系</option><option${status === "已联系" ? " selected" : ""}>已联系</option><option${status === "待报价" ? " selected" : ""}>待报价</option><option${status === "不跟进" ? " selected" : ""}>不跟进</option></select></label><input class="welfare-followup-note" data-id="${esc(item.id)}" value="${esc(local.note || "")}" placeholder="记录下一步或联系结果"><button class="welfare-followup-save" data-id="${esc(item.id)}" type="button">保存跟进记录</button></div><a href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">打开官方原文</a></article>`; }).join("") : "<article class='welfare-card'>暂未发现符合当前筛选的商机。</article>";
     document.querySelector("#welfare-page-info").textContent = `第 ${data.stats.page} / ${data.stats.totalPages} 页`;
     document.querySelector("#welfare-prev").disabled = data.stats.page <= 1;
     document.querySelector("#welfare-next").disabled = data.stats.page >= data.stats.totalPages;
     renderSources(data.sources);
     document.querySelectorAll(".welfare-decision-row").forEach((button) => button.addEventListener("click", () => renderEvidence(data.items.find((item) => item.id === button.dataset.id))));
     renderEvidence(data.items.find((item) => item.id === state.selected) || data.items[0]);
+    wireSalesControls(data.items);
   }
 
   function renderCandidates(data) {
