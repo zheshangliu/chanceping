@@ -88,7 +88,7 @@ check("public JSON excludes source and conflict notes", !detailText.includes("in
 const homeResponse = await pages.request("/ich");
 const home = await homeResponse.text();
 check("SSR home initial HTML contains opportunity title", homeResponse.status === 200 && home.includes("广州非遗市集招募"));
-check("SSR home includes canonical and OG metadata", home.includes('rel="canonical" href="/ich"') && home.includes('property="og:title"'));
+check("SSR home includes canonical and OG metadata", home.includes('rel="canonical" href="https://ich.chanceping.com/ich"') && home.includes('property="og:title"'));
 check("SSR home contains internal detail link", home.includes('/ich/opportunities/guangzhou-ich-market'));
 
 const detailPageResponse = await pages.request("/ich/opportunities/guangzhou-ich-market");
