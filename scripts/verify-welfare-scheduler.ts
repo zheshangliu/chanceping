@@ -8,7 +8,7 @@ const shadowService = fs.readFileSync(path.resolve("docs/deployment/chanceping-w
 const shadowTimer = fs.readFileSync(path.resolve("docs/deployment/chanceping-welfare-shadow-update.timer"), "utf8");
 assert.match(service, /WorkingDirectory=\/opt\/chanceping\/current/);
 assert.match(service, /EnvironmentFile=\/etc\/chanceping\/chanceping\.env/);
-assert.match(service, /ExecStart=\/usr\/bin\/npm run welfare:update -- --limit 12/);
+assert.match(service, /ExecStart=\/usr\/bin\/npm run welfare:update -- --limit 4/);
 assert.match(service, /TimeoutStartSec=30min/);
 assert.match(service, /network-online\.target/);
 assert.match(timer, /08:30:00 Asia\/Shanghai/);
