@@ -94,8 +94,8 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-ZS-001", name: "中山市公共资源交易平台", url: "https://www.zsjypt.cn/", allowedHost: "www.zsjypt.cn", region: "中山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-HZ-001", name: "惠州市公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "惠州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
-  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
-  { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
+  { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
+  { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
 ];
 
 function sourceByCode(code: string): WelfareSourceConfig {
@@ -350,6 +350,11 @@ export function mergeWelfareRecords(existing: WelfareOpportunityRecord[], incomi
 export function extractWelfareIndexLinks(html: string, source = sourceByCode(WELFARE_SOURCE_CODE)): Array<{ title: string; url: string; publishedAt: string }> {
   const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|项目)/;
+  // Large procurement portals list generic project names and expose the
+  // welfare context only on the detail page. Reviewed adapters may therefore
+  // admit action-looking list links, while parseWelfareDetail remains the
+  // final welfare/action gate before a card is created.
+  const relaxedPortal = Boolean(source.adapter);
   const patterns = [
     /<li>[\s\S]*?<span>(\d{4}-\d{2}-\d{2})<\/span>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>/gi,
     /<li>[\s\S]*?<a\b[^>]*href=["']([^"']+)["'][^>]*title=["']([^"']+)["'][^>]*>[\s\S]*?<i>(\d{4}-\d{2}-\d{2})<\/i>[\s\S]*?<\/a>[\s\S]*?<\/li>/gi,
@@ -366,7 +371,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
       const url = normalizeUrl(href, source.url);
       const hasWelfareContext = welfareContext.test(title);
       const hasOpportunityAction = opportunityAction.test(title);
-    if (!url || !hasWelfareContext || !hasOpportunityAction) continue;
+      if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction) continue;
     if (/(结果|中标|成交|终止|废标)/.test(title)) continue;
       discovered.set(url, { title, url, publishedAt });
     }
@@ -376,14 +381,14 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
   while ((itemMatch = officialListItem.exec(html)) !== null) {
     const url = normalizeUrl(itemMatch[1], source.url);
     const title = cleanText(itemMatch[2] || itemMatch[3]);
-    if (!url || !welfareContext.test(title) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (!url || (!relaxedPortal && !welfareContext.test(title)) || !(opportunityAction.test(title) || source.code === "OFF-N-004") || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[4] });
   }
   const dateBeforeListItem = /<li\b[^>]*>[\s\S]{0,600}?<span[^>]*>\s*\[?(\d{4}-\d{2}-\d{2})\]?\s*<\/span>[\s\S]{0,600}?<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   while ((itemMatch = dateBeforeListItem.exec(html)) !== null) {
     const url = normalizeUrl(itemMatch[2], source.url);
     const title = cleanText(itemMatch[3]);
-    if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (!url || (!relaxedPortal && !welfareContext.test(title)) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt: itemMatch[1] });
   }
   // Drupal procurement columns used by universities can omit the date from
@@ -394,7 +399,7 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     while ((itemMatch = drupalListItem.exec(html)) !== null) {
       const url = normalizeUrl(itemMatch[1], source.url);
       const title = cleanText(itemMatch[2]);
-      if (!url || !welfareContext.test(title) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+      if (!url || (!relaxedPortal && !welfareContext.test(title)) || !opportunityAction.test(title) || /(结果|中标|成交|终止|废标)/.test(title)) continue;
       discovered.set(url, { title, url, publishedAt: "" });
     }
   }
@@ -408,8 +413,22 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     const publishedAt = html.slice(Math.max(0, markdownMatch.index - 24), markdownMatch.index).match(/(\d{4}-\d{2}-\d{2})\s*$/)?.[1] ?? "";
     const hasWelfareContext = welfareContext.test(title);
     const hasOpportunityAction = opportunityAction.test(title) || source.code === "OFF-N-004";
-    if (!url || !hasWelfareContext || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
+    if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt });
+  }
+  if (relaxedPortal) {
+    const relaxedLinks: Array<{ title: string; url: string; publishedAt: string; priority: number }> = [];
+    const anchorPattern = /<a\b[^>]*href=["']([^"']+)["'][^>]*?(?:title=["']([^"']+)["'])?[^>]*>([\s\S]*?)<\/a>/gi;
+    let anchor: RegExpExecArray | null;
+    while ((anchor = anchorPattern.exec(html)) !== null) {
+      const url = normalizeUrl(anchor[1], source.url);
+      const title = cleanText(anchor[2] || anchor[3]);
+      if (!url || url === source.url || new URL(url).hostname !== source.allowedHost || title.length < 6 || /^(首页|登录|注册|更多|关闭|下一页|上一页|返回)$/.test(title) || /(?:javascript:|mailto:)/i.test(anchor[1])) continue;
+      relaxedLinks.push({ title, url, publishedAt: "", priority: opportunityAction.test(title) ? 0 : 1 });
+    }
+    for (const link of relaxedLinks.sort((a, b) => a.priority - b.priority)) {
+      if (!discovered.has(link.url)) discovered.set(link.url, { title: link.title, url: link.url, publishedAt: link.publishedAt });
+    }
   }
   return Array.from(discovered.values());
 }
@@ -439,8 +458,11 @@ function publishedContactName(value: string | undefined): string | undefined {
 export function parseWelfareDetail(input: { html: string; url: string; sourceCode?: WelfareSourceConfig["code"]; publishedAtHint?: string; retrievedAt?: string }): WelfareOpportunityRecord | null {
   const source = sourceByCode(input.sourceCode ?? WELFARE_SOURCE_CODE);
   const title = extractMeta(input.html, "ArticleTitle") || cleanText(input.html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "") || extractReaderTitle(input.html);
-  if (!title || !/(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/.test(title) || !/(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/.test(title)) return null;
   const text = cleanText(input.html);
+  const welfareContext = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|疗休养|农副产品|节日|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券)|体检|职工餐厅|职工食堂|工会)/;
+  const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/;
+  const contextText = source.adapter ? `${title} ${text}` : title;
+  if (!title || !welfareContext.test(contextText) || !opportunityAction.test(contextText)) return null;
   // Government portals often omit punctuation between labeled fields. Stop
   // at the next known label so a buyer never becomes the whole announcement.
   const buyerExcerpt = excerpt(text, /(?:采购人名称|采购单位|采购人)[：:]?\s*[^。；]*?(?=\s*(?:联系地址|采购单位地址|联系人|项目联系人|联系电话|采购单位联系方式|地址|公告时间|发布时间|发布日期|项目概况|采购内容|响应文件|采购文件|项目编号|采购方式|地点)[：:]?|[。；]|$)/);
@@ -657,6 +679,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   for (const link of links) {
     try {
       let effectiveUrl = link.url;
+      if (source.adapter && effectiveUrl.startsWith("http://")) effectiveUrl = effectiveUrl.replace(/^http:\/\//i, "https://");
       let html = await fetchHtml(effectiveUrl);
       if (source.code === "OFF-N-004") {
         const nestedPath = html.match(/(?:firstLastUrl\s*=|showDetail\([^,]+,[^,]+,\s*)\s*['\"]([^'\"]+\/information\/deal\/html\/b\/[^'\"]+)['\"]/i)?.[1];
