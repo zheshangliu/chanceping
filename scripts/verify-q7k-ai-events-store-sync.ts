@@ -67,10 +67,10 @@ check("sync reports real image coverage separately", typeof result.imageCoverage
 
   const publicRouteSource = fs.readFileSync(path.resolve(process.cwd(), "src/api/routes/public-ai-events.ts"), "utf8");
   const imageSyncSource = fs.readFileSync(path.resolve(process.cwd(), "src/public/ai-events-store-sync.ts"), "utf8");
-  check("public AI events route reads from public radar store", publicRouteSource.includes("PUBLIC_AI_EVENTS_RADAR_ID") && publicRouteSource.includes("listPublicAiEventEntries") && publicRouteSource.includes("syncPublicAiEventsToStore"));
-  check("public AI events route keeps source network but not duplicate seed cards", publicRouteSource.includes("items: []") && publicRouteSource.includes("getPublicAiEventSampleRoomData"));
-  check("image hydration default can process the second batch", /parsePositiveInt\(c\.req\.query\("limit"\),\s*30,\s*120\)/.test(publicRouteSource) && /DEFAULT_IMAGE_HYDRATION_LIMIT\s*=\s*30/.test(imageSyncSource), "expected default 30 and max 120 for image hydration");
-check("sync API exposes opt-in image hydration through update pipeline", /hydrate_images/.test(publicRouteSource) && /image_limit/.test(publicRouteSource) && /runPublicAiEventsUpdatePipeline/.test(publicRouteSource), "expected sync route to support hydrate_images and image_limit through update pipeline");
+check("public AI events route reads from public radar store", publicRouteSource.includes("PUBLIC_AI_EVENTS_RADAR_ID") && publicRouteSource.includes("listPublicAiEventEntries"));
+check("public AI events GET has no store synchronization", !publicRouteSource.includes("syncPublicAiEventsToStore") && !publicRouteSource.includes("runPublicAiEventsUpdatePipeline"));
+check("public AI events route retains read-only seed fallback", publicRouteSource.includes("buildPublicAiEventFeed(publicEntries, seedData") && publicRouteSource.includes("getPublicAiEventSampleRoomData"));
+check("image hydration remains available to the CLI pipeline", /DEFAULT_IMAGE_HYDRATION_LIMIT\s*=\s*30/.test(imageSyncSource));
 
 const totalAfterFirstSync = store.list({
   radarId: PUBLIC_AI_EVENTS_RADAR_ID,
@@ -162,6 +162,11 @@ async function runProductApiPathCheck(): Promise<void> {
   const { createAppContext } = await import("../src/api/context");
   const ctx = createAppContext();
   const app = createApp(ctx);
+  const entriesBefore = ctx.store.list({
+    radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+    page: 1,
+    page_size: 1000,
+  }).entries;
   const initialPublicFeedResponse = await app.request("/api/public/ai-events?status=current&page=1&page_size=12");
   const initialPublicFeedJson = await initialPublicFeedResponse.json() as {
     success?: boolean;
@@ -173,25 +178,25 @@ async function runProductApiPathCheck(): Promise<void> {
     data?: { total?: number; entries?: Array<Record<string, unknown>> };
   };
   const syncResponse = await app.request("/api/public/ai-events/sync", { method: "POST" });
-  const syncJson = await syncResponse.json() as {
-    success?: boolean;
-    data?: { radarId?: string; totalForPublicRadar?: number; syncedCount?: number };
-  };
+  const hydrateResponse = await app.request("/api/public/ai-events/hydrate-images", { method: "POST" });
   const opportunitiesResponse = await app.request(`/api/opportunities?radar_id=${PUBLIC_AI_EVENTS_RADAR_ID}&page_size=1000`);
   const opportunitiesJson = await opportunitiesResponse.json() as {
     success?: boolean;
     data?: { total?: number; entries?: Array<Record<string, unknown>> };
   };
-  const apiSerialized = JSON.stringify({ syncJson, opportunitiesJson });
+  const entriesAfter = ctx.store.list({
+    radarId: PUBLIC_AI_EVENTS_RADAR_ID,
+    page: 1,
+    page_size: 1000,
+  }).entries;
+  const apiSerialized = JSON.stringify({ initialPublicFeedJson, opportunitiesJson });
 
-  check("public feed lazily initializes public radar store", initialPublicFeedResponse.status === 200 && initialPublicFeedJson.success === true && Number(initialOpportunitiesJson.data?.total ?? 0) >= Number(initialPublicFeedJson.data?.stats?.currentCount ?? 0), JSON.stringify({ initialPublicFeedJson, initialOpportunitiesJson }).slice(0, 240));
-  check("public feed is backed by database cards after lazy init", Number(initialPublicFeedJson.data?.stats?.databaseCount ?? 0) > 0 && Number(initialPublicFeedJson.data?.stats?.seedCount ?? 1) === 0, JSON.stringify(initialPublicFeedJson.data?.stats));
-  check("product sync API returns 200", syncResponse.status === 200, `status=${syncResponse.status}`);
-  check("product sync API succeeds", syncJson.success === true, apiSerialized.slice(0, 240));
-  check("product sync API returns public radar id", syncJson.data?.radarId === PUBLIC_AI_EVENTS_RADAR_ID, apiSerialized.slice(0, 240));
+  check("public feed GET succeeds with read-only seed fallback", initialPublicFeedResponse.status === 200 && initialPublicFeedJson.success === true && Number(initialPublicFeedJson.data?.stats?.seedCount ?? 0) > 0, JSON.stringify(initialPublicFeedJson.data?.stats));
+  check("public feed GET does not mutate the opportunity store", JSON.stringify(entriesAfter) === JSON.stringify(entriesBefore), `before=${entriesBefore.length}, after=${entriesAfter.length}`);
+  check("anonymous public sync endpoint is unavailable", syncResponse.status === 404, `status=${syncResponse.status}`);
+  check("anonymous public image hydration endpoint is unavailable", hydrateResponse.status === 404, `status=${hydrateResponse.status}`);
   check("product opportunities API returns 200", opportunitiesResponse.status === 200, `status=${opportunitiesResponse.status}`);
-  check("product opportunities API sees public synced entries", Number(opportunitiesJson.data?.total ?? 0) >= Number(syncJson.data?.syncedCount ?? 0), apiSerialized.slice(0, 240));
-  check("product API keeps public image fields", apiSerialized.includes("coverImageUrl") && apiSerialized.includes("imageStatus"), apiSerialized.slice(0, 240));
+  check("read-only API does not seed product opportunities", Number(initialOpportunitiesJson.data?.total ?? 0) === 0 && Number(opportunitiesJson.data?.total ?? 0) === 0, apiSerialized.slice(0, 240));
   check("product API does not leak env keys", !/API_KEY|SERPER_API_KEY|COMMERCIAL_LLM_API_KEY|CONTEST_LLM_API_KEY|sk-[A-Za-z0-9]/i.test(apiSerialized), apiSerialized.slice(0, 240));
 }
 

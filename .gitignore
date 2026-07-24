@@ -46,6 +46,7 @@ artifacts/aliyun-workbench/
 .env.local
 .env.*.local
 api.env
+AccessKey.csv
 # 保留 .env.example / .env.example.commercial / .env.example.competition 作为模板
 
 # TRAE IDE 元数据

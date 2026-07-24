@@ -87,6 +87,7 @@
     "verify:q7:ai-events-source-network": "tsx scripts/verify-q7-ai-events-source-network.ts",
     "verify:q7:public-ai-events": "tsx scripts/verify-q7k-public-ai-events-publisher.ts",
     "verify:q7:ai-events-store-sync": "tsx scripts/verify-q7k-ai-events-store-sync.ts",
+    "verify:q7:ai-events-public-safety": "tsx scripts/verify-q7k-ai-events-store-sync.ts",
     "verify:q7:ai-events-detail-bridge": "tsx scripts/verify-q7k-ai-events-detail-bridge.ts",
     "verify:q7:ai-events-metadata": "tsx scripts/verify-q7k-ai-event-page-metadata.ts",
     "verify:q7:ai-events-public-filters": "tsx scripts/verify-q7n-ai-events-public-filters.ts",

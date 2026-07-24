@@ -2,15 +2,8 @@ import { Hono } from "hono";
 import type { AppContext } from "../context";
 import type { ApiResponse } from "../types";
 import { buildPublicAiEventFeed, type PublicAiEventLifecycle } from "../../public/ai-events-publisher";
-import {
-  hydratePublicAiEventImages,
-  PUBLIC_AI_EVENTS_RADAR_ID,
-  syncPublicAiEventsToStore,
-} from "../../public/ai-events-store-sync";
-import {
-  getPublicAiEventsSourceHealthSummary,
-  runPublicAiEventsUpdatePipeline,
-} from "../../public/ai-events-update-pipeline";
+import { PUBLIC_AI_EVENTS_RADAR_ID } from "../../public/ai-events-store-sync";
+import { getPublicAiEventsSourceHealthSummary } from "../../public/ai-events-update-pipeline";
 import { getPublicAiEventSampleRoomData } from "../../demo/ai-events-sample-room";
 import type { OpportunityStore, StoreEntry } from "../../agents/opportunity-store";
 
@@ -24,10 +17,6 @@ function parsePositiveInt(value: string | undefined, fallback: number, max: numb
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return fallback;
   return Math.max(1, Math.min(max, Math.floor(parsed)));
-}
-
-function parseBoolean(value: string | undefined): boolean {
-  return /^(1|true|yes|on)$/i.test(String(value ?? "").trim());
 }
 
 function listPublicAiEventEntries(store: OpportunityStore): StoreEntry[] {
@@ -46,16 +35,8 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
   app.get("/ai-events", (c) => {
     const start = Date.now();
     const seedData = getPublicAiEventSampleRoomData();
-    let publicEntries = listPublicAiEventEntries(ctx.store);
-    if (publicEntries.length < seedData.items.length) {
-      syncPublicAiEventsToStore(ctx.store, seedData);
-      publicEntries = listPublicAiEventEntries(ctx.store);
-    }
-    const sourceNetworkOnlyData = {
-      ...seedData,
-      items: [],
-    };
-    const data = buildPublicAiEventFeed(publicEntries, sourceNetworkOnlyData, {
+    const publicEntries = listPublicAiEventEntries(ctx.store);
+    const data = buildPublicAiEventFeed(publicEntries, seedData, {
       lifecycle: parseLifecycle(c.req.query("status")),
       category: c.req.query("category") ?? "all",
       region: c.req.query("region") ?? "all",
@@ -76,36 +57,6 @@ export function publicAiEventsRoutes(ctx: AppContext): Hono {
           sourceHealth: getPublicAiEventsSourceHealthSummary(),
         },
       },
-      error: null,
-      duration_ms: Date.now() - start,
-    } satisfies ApiResponse);
-  });
-
-  app.post("/ai-events/sync", async (c) => {
-    const start = Date.now();
-    const hydrateImages = parseBoolean(c.req.query("hydrate_images"));
-    const result = await runPublicAiEventsUpdatePipeline(ctx.store, undefined, {
-      hydrateImages,
-      imageHydrationLimit: parsePositiveInt(c.req.query("image_limit"), 30, 120),
-      collectSources: parseBoolean(c.req.query("collect_sources")),
-      sourceMaxLinks: parsePositiveInt(c.req.query("source_max_links"), 12, 30),
-      discoverWithSearch: parseBoolean(c.req.query("discover_with_search")),
-    });
-    return c.json({
-      success: true,
-      data: result,
-      error: null,
-      duration_ms: Date.now() - start,
-    } satisfies ApiResponse);
-  });
-
-  app.post("/ai-events/hydrate-images", async (c) => {
-    const start = Date.now();
-    const limit = parsePositiveInt(c.req.query("limit"), 30, 120);
-    const result = await hydratePublicAiEventImages(ctx.store, { limit });
-    return c.json({
-      success: true,
-      data: result,
       error: null,
       duration_ms: Date.now() - start,
     } satisfies ApiResponse);

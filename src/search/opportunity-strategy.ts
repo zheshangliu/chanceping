@@ -395,12 +395,41 @@ function enrichFamiliesWithStructuredCoverage(spec: RadarRequirementSpec, famili
     normalizedKey(official?.familyName ?? ""),
     normalizedKey(partnership?.familyName ?? ""),
   ]);
-  const relevantExisting = families.filter((family) =>
-    !covered.has(normalizedKey(family.familyName)) && familyContainsTopic(family, topicTerms),
+  const configuredNonDirectIntents = new Set<SearchIntentType>([
+    "business_lead",
+    "channel_partner_lead",
+    "customer_lead",
+    "watch_signal",
+    "reference_case",
+  ]);
+  // Structured coverage is an addition, not permission to silently discard a
+  // user's configured lead / observation / reference lanes. These lanes are
+  // deliberately different product outcomes even when their query wording
+  // does not repeat the exact industry phrase used by the coverage helper.
+  const relevantExisting = families.filter((family) => {
+    if (covered.has(normalizedKey(family.familyName))) return false;
+    const intent = normalizeOpportunityIntent(family.resultBucket || family.intentType);
+    return familyContainsTopic(family, topicTerms) || configuredNonDirectIntents.has(intent);
+  });
+  const hasConfiguredBusinessLane = relevantExisting.some((family) =>
+    normalizeOpportunityIntent(family.resultBucket || family.intentType) === "business_lead",
   );
-  const existingWithRecovery = relevantExisting.filter((family) => recoveryVariants(family).length > 0);
-  const otherExisting = relevantExisting.filter((family) => !existingWithRecovery.includes(family));
-  return [coverage, ...(official ? [official] : []), ...existingWithRecovery, ...(partnership ? [partnership] : []), ...otherExisting]
+  const supplementalFamilies = [
+    ...relevantExisting,
+    // Prefer the user's explicit business lane over a generated duplicate.
+    ...(partnership && !hasConfiguredBusinessLane ? [partnership] : []),
+    // The official-source variant is useful only after semantic coverage is
+    // retained; the direct coverage family already carries the same intent.
+    ...(official ? [official] : []),
+  ];
+  const seen = new Set<string>([normalizedKey(coverage.familyName)]);
+  return [coverage, ...supplementalFamilies]
+    .filter((family) => {
+      const key = normalizedKey(family.familyName);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
     .slice(0, MAX_THEMES);
 }
 

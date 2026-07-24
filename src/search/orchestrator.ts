@@ -598,6 +598,14 @@ function hasExplicitStructuredTopic(result: SearchResult, spec: RadarRequirement
     result.page_type_assessment?.pageType === "open_call" ||
     result.page_type_assessment?.pageType === "registration_page" ||
     result.page_type_assessment?.pageType === "supplier_onboarding";
+  const semanticKind = result.original_semantic_type ?? result.semantic_type ?? result.intent_type;
+  // Channel and customer leads have already passed semantic, page-type,
+  // ownership and ranking gates. Permit meaningful two-character industry
+  // fragments (for example, \"礼品\" from \"节日礼品\") for those leads, while
+  // keeping the stricter matching rule for broad/direct candidates.
+  const allowShortIndustryTerms = concreteActionPage ||
+    semanticKind === "channel_partner_lead" ||
+    semanticKind === "customer_lead";
   const topicTerms = Array.from(new Set([
     ...(spec.keyword_strategy?.core_keywords_zh ?? []),
     ...(spec.keyword_strategy?.core_keywords_en ?? []),
@@ -605,7 +613,7 @@ function hasExplicitStructuredTopic(result: SearchResult, spec: RadarRequirement
   ]
     .map((value) => String(value ?? "").trim())
     .filter((value) => value.length >= 2 && value.length <= 32 && !GENERIC_TOPIC_RE.test(value))
-    .flatMap((value) => expandStructuredTopicVariants(value, concreteActionPage))))
+    .flatMap((value) => expandStructuredTopicVariants(value, allowShortIndustryTerms))))
     .slice(0, 48);
   if (topicTerms.length === 0) return true;
   // A search provider snippet may echo the original query, which would make a

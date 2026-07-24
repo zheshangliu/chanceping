@@ -224,10 +224,6 @@
     return json;
   }
 
-  async function ensurePublicAiEventsSynced() {
-    await postJson("/api/public/ai-events/sync", {});
-  }
-
   async function getJson(url) {
     const res = await backendFetch(url);
     const json = await res.json();
@@ -551,9 +547,6 @@
       const publicAiEventsBridge = opportunityRadarId === PUBLIC_AI_EVENTS_RADAR_ID && opportunityRadarId !== radar.id;
       const displayName = getRadarDisplayName(radar);
       const opportunityPageSize = getOpportunityPageSizeForView(radar);
-      if (publicAiEventsBridge) {
-        await ensurePublicAiEventsSynced();
-      }
       const [opportunities, runs, reports] = await Promise.all([
         getJson(`/api/opportunities?radar_id=${encodeURIComponent(opportunityRadarId)}&page_size=${opportunityPageSize}&sort_by=deadline&sort_order=asc`),
         getJson(`/api/radars/${encodeURIComponent(radar.id)}/runs?limit=1`),

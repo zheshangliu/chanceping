@@ -28,13 +28,10 @@ async function runProductDataCheck(): Promise<void> {
   const { createApp } = await import("../src/api/app");
   const { createAppContext } = await import("../src/api/context");
   const ctx = createAppContext();
+  syncPublicAiEventsToStore(ctx.store);
   const app = createApp(ctx);
 
   const syncResponse = await app.request("/api/public/ai-events/sync", { method: "POST" });
-  const syncJson = await syncResponse.json() as {
-    success?: boolean;
-    data?: { radarId?: string; totalForPublicRadar?: number; syncedCount?: number };
-  };
   const publicFeedResponse = await app.request("/api/public/ai-events?status=current&page=1&page_size=60");
   const publicFeedJson = await publicFeedResponse.json() as {
     success?: boolean;
@@ -52,8 +49,7 @@ async function runProductDataCheck(): Promise<void> {
     return lifecycle !== "historical" && lifecycle !== "expired" && !/已截止|已结束|报名结束|closed|ended|past event|archive/i.test(title);
   });
 
-  check("public AI events sync succeeds", syncResponse.status === 200 && syncJson.success === true);
-  check("public AI events radar id is stable", syncJson.data?.radarId === PUBLIC_AI_EVENTS_RADAR_ID, JSON.stringify(syncJson.data));
+  check("anonymous public AI events sync is unavailable", syncResponse.status === 404, `status=${syncResponse.status}`);
   check("public feed current API succeeds", publicFeedResponse.status === 200 && publicFeedJson.success === true);
   check("public AI events opportunity API exposes seed/public cards", Number(opportunitiesJson.data?.total ?? 0) >= 20, `total=${opportunitiesJson.data?.total}`);
   check("public AI events entries are available to product pages", Array.isArray(opportunitiesJson.data?.entries) && opportunitiesJson.data.entries.length >= 20, `entries=${opportunitiesJson.data?.entries?.length}`);
@@ -73,12 +69,12 @@ function runFrontendBridgeCheck(): void {
   check("view opportunity result can use public AI events bridge", /getOpportunityRadarIdForView/.test(radarsJs) && radarsJs.includes("public_ai_events"));
   check("view result keeps private radar id for edit and rerun", radarsJs.includes("sourceRadarId") && radarsJs.includes("opportunityRadarId"));
   check("view result fetches enough public events", /getOpportunityPageSizeForView/.test(radarsJs) && /1000/.test(radarsJs));
-  check("view result syncs public AI events before reading product opportunities", radarsJs.includes("/api/public/ai-events/sync") && radarsJs.indexOf("/api/public/ai-events/sync") < radarsJs.indexOf("/api/opportunities?radar_id="));
+  check("view result never triggers public AI events writes", !radarsJs.includes("/api/public/ai-events/sync") && !radarsJs.includes("/api/public/ai-events/hydrate-images"));
   check("view result filters public events to current cards", /filterPublicAiEventCardsForView/.test(radarsJs) && /isCurrentPublicAiEventCard/.test(radarsJs));
   check("view result explains public AI events library", /公共赛事库|公开赛事库/.test(radarsJs));
   check("radar detail JS knows public AI events radar id", detailJs.includes(PUBLIC_AI_EVENTS_RADAR_ID));
   check("radar detail stored opportunities can use public bridge", /getOpportunityRadarIdForView/.test(detailJs) && /page_size=\$\{pageSize\}/.test(detailJs));
-  check("radar detail syncs public AI events before rendering stored opportunities", detailJs.includes("/api/public/ai-events/sync") && detailJs.indexOf("/api/public/ai-events/sync") < detailJs.indexOf("/api/opportunities?radar_id="));
+  check("radar detail never triggers public AI events writes", !detailJs.includes("/api/public/ai-events/sync") && !detailJs.includes("/api/public/ai-events/hydrate-images"));
   check("radar detail filters public events to current cards", /filterPublicAiEventCardsForView/.test(detailJs) && /isCurrentPublicAiEventCard/.test(detailJs));
   check("radar detail explains public library source", /AI Events 公共赛事库/.test(detailJs) && /\/aievents/.test(detailJs));
   check("detail and result pages hide placeholder deadline dates", /displayDeadline/.test(detailJs) && /9999-12-31/.test(detailJs) && /displayDeadline/.test(watchResultJs) && /9999-12-31/.test(watchResultJs));
