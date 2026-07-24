@@ -15,7 +15,10 @@ function publishedAtFrom(content: string): string | undefined {
 }
 function textFromHtml(content: string): string { return content.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;|&#160;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim(); }
 function deadlineFrom(text: string): string | undefined {
-  const matches = [...text.matchAll(/(?:截止(?:时间|日期)?|请于|须于|应于|报名截止|申报截止)[^。；，,]{0,45}?(20\d{2})[年\-/.](\d{1,2})[月\-/.](\d{1,2})/g)];
+  // Official notices use several equivalent forms: 截至、截止至、请在…前、
+  // 于…前提交.  Keep this intentionally date-only: a missing time is the end
+  // of the announced local calendar day, never an invented clock time.
+  const matches = [...text.matchAll(/(?:截止(?:时间|日期|至)?|截至|请(?:于|在)|须(?:于|在)|应(?:于|在)|报名截止|申报截止|于)[^。；，,]{0,60}?(20\d{2})[年\-/.](\d{1,2})[月\-/.](\d{1,2})[^。；，,]{0,12}?(?:前|止|截止|之前|前提交|前报送)?/g)];
   const match = matches.at(-1);
   return match ? `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}T23:59:59+08:00` : undefined;
 }
@@ -30,7 +33,9 @@ async function fetchOne(index: number): Promise<{ index: number; contentHash?: s
     const content = await response.text();
     const text = textFromHtml(content);
     const signals = signalsFrom(text);
-    return { index, contentHash: contentFingerprint(content), publishedAt: publishedAtFrom(text), deadline: deadlineFrom(text), excerpt: text.slice(0, 1_200), signals, category: categoryFrom(signals) };
+    // Later sections and attachments commonly contain the only deadline and
+    // eligibility wording, so preserve enough text for a human-auditable gate.
+    return { index, contentHash: contentFingerprint(content), publishedAt: publishedAtFrom(text), deadline: deadlineFrom(text), excerpt: text.slice(0, 8_000), signals, category: categoryFrom(signals) };
   } catch (error) { return { index, error: error instanceof Error ? error.message : String(error) }; }
 }
 
