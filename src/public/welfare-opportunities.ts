@@ -416,6 +416,20 @@ export function extractWelfareIndexLinks(html: string, source = sourceByCode(WEL
     if (!url || (!relaxedPortal && !hasWelfareContext) || !hasOpportunityAction || /(结果|中标|成交|终止|废标)/.test(title)) continue;
     discovered.set(url, { title, url, publishedAt });
   }
+  if (relaxedPortal) {
+    const relaxedLinks: Array<{ title: string; url: string; publishedAt: string; priority: number }> = [];
+    const anchorPattern = /<a\b[^>]*href=["']([^"']+)["'][^>]*?(?:title=["']([^"']+)["'])?[^>]*>([\s\S]*?)<\/a>/gi;
+    let anchor: RegExpExecArray | null;
+    while ((anchor = anchorPattern.exec(html)) !== null) {
+      const url = normalizeUrl(anchor[1], source.url);
+      const title = cleanText(anchor[2] || anchor[3]);
+      if (!url || url === source.url || title.length < 6 || /^(首页|登录|注册|更多|关闭|下一页|上一页|返回)$/.test(title) || /(?:javascript:|mailto:)/i.test(anchor[1])) continue;
+      relaxedLinks.push({ title, url, publishedAt: "", priority: opportunityAction.test(title) ? 0 : 1 });
+    }
+    for (const link of relaxedLinks.sort((a, b) => a.priority - b.priority)) {
+      if (!discovered.has(link.url)) discovered.set(link.url, { title: link.title, url: link.url, publishedAt: link.publishedAt });
+    }
+  }
   return Array.from(discovered.values());
 }
 
