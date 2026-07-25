@@ -177,10 +177,20 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://scjtglxx.cn/info/1029/64471.htm",
     "https://gh.gdipu.edu.cn/info/1033/2944.htm"
   ] },
-  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com"], region: "全国", maxDetails: 24, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.zqtcm.com/dqjs/zbcg/content_1052",
     "https://cemps.cas.cn/tzgg/2025n_241394/202607/t20260716_8250446.html",
-    "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html"
+    "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html",
+    "https://www.shca.org.cn/Home/news/content/id/395/pid/27462",
+    "https://wap.gz12hospital.cn/a/202604/19253.html",
+    "https://www.gdghospital.org.cn/Researchanment/info_itemid_67725.html",
+    "https://www.zjuch.cn/news/default/id/14011/cid/204",
+    "https://xhhos.com/news/details/4/106/77488",
+    "https://www.lg.gov.cn/zwfw/zdfw/yl/tzgg/content/post_12601016.html",
+    "https://nyd7y.com/xwgg/scdy/content_2889",
+    "https://www.sichuancancer.org/ztbxtnew/info/1002/7521.htm",
+    "https://www.jssdezyy.com/notice/detail/id/4569/pid/3.html",
+    "https://www.mgsyy.com/news/4190.html"
   ] },
   { code: "OFF-N-020", name: "全国工会职工福利与节日物资采购", url: "https://www.dongtai.gov.cn/", allowedHost: "www.dongtai.gov.cn", extraAllowedHosts: ["zfcg.henan.gov.cn", "cgyx.ccgp.gov.cn", "www.ccgp.gov.cn"], region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.dongtai.gov.cn/art/2026/7/21/art_7905_4440949.html",
