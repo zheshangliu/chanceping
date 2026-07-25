@@ -17,7 +17,7 @@ export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg
 const WELFARE_CONTEXT = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|防暑降温|疗休养|农副产品|节日(?:慰问|福利)?|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券|福利)?|体检|健康管理|心理服务|职工餐厅|职工食堂|工会|职工服务|职工活动|职工培训|员工关怀|员工体检|福利采购)/;
 const WELFARE_ACTION = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目|服务商|入围|采购意向)/;
 const NON_OPPORTUNITY_DISCOVERY = /(政策|办法|指引|解读|管理规定|工作通知|资格审查)/;
-const NON_WELFARE_PROJECT = /(城市体检|房屋体检|工程建设|医疗器械|设备采购|人工智能推广|信息化建设|系统开发|检验科耗材|耗材试剂|学校新闻|调研工作|率队赴|中央政府采购网|中国人民银行采购网|审计项目|报废处置|造价评估|人工智能|公众号内容运营|劳动争议|法律服务)/;
+const NON_WELFARE_PROJECT = /(城市体检|房屋体检|工程建设|医疗器械|设备采购|人工智能推广|信息化建设|系统开发|检验科耗材|耗材试剂|学校新闻|率队赴|中央政府采购网|中国人民银行采购网|审计项目|报废处置|造价评估|人工智能|公众号内容运营|劳动争议|法律服务)/;
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
