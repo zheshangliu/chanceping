@@ -1,0 +1,1403 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-07-25T12:00:00+08:00",
+  "entries": [
+    {
+      "id": "ich_stage5_030",
+      "slug": "2026-ningxia-gift-creative-competition-archived",
+      "external_id": null,
+      "title": "2026“宁选好礼”文旅商品暨创意大赛（已截止）",
+      "title_original": "2026“宁选好礼”文旅商品暨创意大赛（已截止）",
+      "title_en": null,
+      "summary": "曾面向全国征集文创设计及产品，征集于2026年7月15日12时截止。",
+      "description": null,
+      "opportunity_value_text": "赛事评选与展示。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "ningxia",
+        "nationwide",
+        "nationwide"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "依据列明的具体来源页、行动窗口和参与条件人工辅助核验并分类。",
+      "classification_status": "confirmed",
+      "status": "ended",
+      "status_reason": "历史线索：官方截止日期 2026-07-15T12:00:00+08:00 已过，仅供来源与项目参考。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": "deadline_passed",
+      "organizer": {
+        "name": "宁夏回族自治区文化和旅游厅",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://whhlyt.nx.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "宁夏回族自治区",
+        "city": null,
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "ningxia",
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "ningxia",
+          "nationwide"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "partially_confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "申请和后续到场要求以官方来源页及其附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-04-27",
+        "application_start_at": "2026-04-27",
+        "deadline_at": "2026-07-15T12:00:00+08:00",
+        "deadline_text": "2026-07-15T12:00:00+08:00",
+        "event_start_at": null,
+        "event_end_at": "2026-08-31",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "公告期内符合条件的单位、团队和个人。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "赛事评选与展示。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方来源页及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方要求的申请材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "历史条目，仅用于状态和归档回归。"
+      },
+      "application": {
+        "application_url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260428_5227435_zzb.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "closed"
+      },
+      "sources": [
+        {
+          "url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260428_5227435_zzb.html",
+          "name": "宁夏文化和旅游厅官方公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-04-27",
+          "last_checked_at": "2026-07-24T16:00:00+08:00",
+          "is_accessible": true,
+          "notes": "阶段5逐条核验：标题、主办方、行动窗口及核心参与条件来自该具体页面；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-07-24T16:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": false,
+        "recheck_after": null
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-07-24T16:00:00+08:00",
+        "created_by": "chanceping-stage5-curation",
+        "updated_by": "chanceping-stage5-curation",
+        "first_discovered_at": "2026-04-27",
+        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "published_at": "2026-07-24T16:00:00+08:00",
+        "archived_at": "2026-07-24T16:00:00+08:00",
+        "data_version": "1.0",
+        "source_import_batch": "ich-stage5-2026-07-24-review"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_by": "chanceping-stage5-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": "具体来源页、时效与分类通过阶段5检查。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_stage5_031",
+      "slug": "2026-minning-ich-co-creation-exhibition-archived",
+      "external_id": null,
+      "title": "“山海匠心传—非遗共创成果展”作品征集（已截止）",
+      "title_original": "“山海匠心传—非遗共创成果展”作品征集（已截止）",
+      "title_en": null,
+      "summary": "闽宁非遗共创成果展作品征集已于2026年6月10日截止。",
+      "description": null,
+      "opportunity_value_text": "共创成果展示。",
+      "primary_category": "exhibition_market",
+      "secondary_tags": [
+        "ningxia",
+        "fujian",
+        "regional"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "依据列明的具体来源页、行动窗口和参与条件人工辅助核验并分类。",
+      "classification_status": "confirmed",
+      "status": "ended",
+      "status_reason": "历史线索：官方截止日期 2026-06-10 已过，仅供来源与项目参考。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": "deadline_passed",
+      "organizer": {
+        "name": "宁夏回族自治区文化和旅游厅、福建省文化和旅游厅",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://whhlyt.nx.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "宁夏回族自治区",
+        "city": null,
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "ningxia",
+          "fujian"
+        ],
+        "participation_scope": "regional",
+        "eligible_regions": [
+          "ningxia",
+          "fujian"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "partially_confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "申请和后续到场要求以官方来源页及其附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-04-30",
+        "application_start_at": "2026-04-30",
+        "deadline_at": "2026-06-10",
+        "deadline_text": "2026-06-10",
+        "event_start_at": null,
+        "event_end_at": "2026-07-20",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "闽宁两地非遗传承人、工艺美术师、院校师生及创作者。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "共创成果展示。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方来源页及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方要求的申请材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "历史条目，仅用于状态和归档回归。"
+      },
+      "application": {
+        "application_url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260430_5230275.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "closed"
+      },
+      "sources": [
+        {
+          "url": "https://whhlyt.nx.gov.cn/zwgk/fdzdgknr/tzgg/202604/t20260430_5230275.html",
+          "name": "宁夏文化和旅游厅官方公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-04-30",
+          "last_checked_at": "2026-07-24T16:00:00+08:00",
+          "is_accessible": true,
+          "notes": "阶段5逐条核验：标题、主办方、行动窗口及核心参与条件来自该具体页面；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-07-24T16:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": false,
+        "recheck_after": null
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-07-24T16:00:00+08:00",
+        "created_by": "chanceping-stage5-curation",
+        "updated_by": "chanceping-stage5-curation",
+        "first_discovered_at": "2026-04-30",
+        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "published_at": "2026-07-24T16:00:00+08:00",
+        "archived_at": "2026-07-24T16:00:00+08:00",
+        "data_version": "1.0",
+        "source_import_batch": "ich-stage5-2026-07-24-review"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_by": "chanceping-stage5-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": "具体来源页、时效与分类通过阶段5检查。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_stage5_032",
+      "slug": "2026-leiwuqi-football-market-recruitment-archived",
+      "external_id": null,
+      "title": "类乌齐县“仲确·足球嘉年华”市集招商（已截止）",
+      "title_original": "类乌齐县“仲确·足球嘉年华”市集招商（已截止）",
+      "title_en": null,
+      "summary": "市集展销会招商已于2026年6月30日18时截止。",
+      "description": null,
+      "opportunity_value_text": "市集展销摊位。",
+      "primary_category": "exhibition_market",
+      "secondary_tags": [
+        "changdu",
+        "xizang",
+        "local_only"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "依据列明的具体来源页、行动窗口和参与条件人工辅助核验并分类。",
+      "classification_status": "confirmed",
+      "status": "ended",
+      "status_reason": "历史线索：官方截止日期 2026-06-30T18:00:00+08:00 已过，仅供来源与项目参考。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": "deadline_passed",
+      "organizer": {
+        "name": "类乌齐县经济信息和商务局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://leiwuqi.changdu.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "西藏自治区",
+        "city": "昌都市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "changdu",
+          "xizang"
+        ],
+        "participation_scope": "local_only",
+        "eligible_regions": [
+          "changdu",
+          "xizang"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "partially_confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "申请和后续到场要求以官方来源页及其附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-06-24",
+        "application_start_at": "2026-06-24",
+        "deadline_at": "2026-06-30T18:00:00+08:00",
+        "deadline_text": "2026-06-30T18:00:00+08:00",
+        "event_start_at": null,
+        "event_end_at": "2026-07-12",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "公告期内符合要求的参展商户。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "市集展销摊位。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方来源页及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方要求的申请材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "历史条目，仅用于状态和归档回归。"
+      },
+      "application": {
+        "application_url": "https://leiwuqi.changdu.gov.cn/lwqxrmzf/c102126/202606/bdf2aa0a2d4648ca8721aff37f6ca30e.shtml",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "closed"
+      },
+      "sources": [
+        {
+          "url": "https://leiwuqi.changdu.gov.cn/lwqxrmzf/c102126/202606/bdf2aa0a2d4648ca8721aff37f6ca30e.shtml",
+          "name": "类乌齐县人民政府官方公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-06-24",
+          "last_checked_at": "2026-07-24T16:00:00+08:00",
+          "is_accessible": true,
+          "notes": "阶段5逐条核验：标题、主办方、行动窗口及核心参与条件来自该具体页面；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-07-24T16:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": false,
+        "recheck_after": null
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-07-24T16:00:00+08:00",
+        "created_by": "chanceping-stage5-curation",
+        "updated_by": "chanceping-stage5-curation",
+        "first_discovered_at": "2026-06-24",
+        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "published_at": "2026-07-24T16:00:00+08:00",
+        "archived_at": "2026-07-24T16:00:00+08:00",
+        "data_version": "1.0",
+        "source_import_batch": "ich-stage5-2026-07-24-review"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_by": "chanceping-stage5-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": "具体来源页、时效与分类通过阶段5检查。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_stage5_033",
+      "slug": "2026-tianhe-qiqiao-protection-project-archived",
+      "external_id": null,
+      "title": "天河乞巧习俗专项保护工作比选（已截止）",
+      "title_original": "天河乞巧习俗专项保护工作比选（已截止）",
+      "title_en": null,
+      "summary": "国家级非遗项目七夕节（天河乞巧习俗）专项保护工作比选已于2026年7月8日截止。",
+      "description": null,
+      "opportunity_value_text": "专项保护项目承办合同。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "guangzhou",
+        "guangdong",
+        "regional"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "依据列明的具体来源页、行动窗口和参与条件人工辅助核验并分类。",
+      "classification_status": "confirmed",
+      "status": "ended",
+      "status_reason": "历史线索：官方截止日期 2026-07-08T17:00:00+08:00 已过，仅供来源与项目参考。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": "deadline_passed",
+      "organizer": {
+        "name": "广州市天河区文化馆",
+        "name_en": null,
+        "type": "public_cultural_institution",
+        "official_website": "https://www.thnet.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "广东省",
+        "city": "广州市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "guangzhou",
+          "guangdong"
+        ],
+        "participation_scope": "regional",
+        "eligible_regions": [
+          "guangzhou",
+          "guangdong"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "partially_confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "申请和后续到场要求以官方来源页及其附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-06-30",
+        "application_start_at": "2026-06-30",
+        "deadline_at": "2026-07-08T17:00:00+08:00",
+        "deadline_text": "2026-07-08T17:00:00+08:00",
+        "event_start_at": null,
+        "event_end_at": "2026-12-31",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "公告期内具备相应业绩和服务能力的单位。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "专项保护项目承办合同。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方来源页及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方要求的申请材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "历史条目，仅用于状态和归档回归。"
+      },
+      "application": {
+        "application_url": "https://www.thnet.gov.cn/thdt/tzgg/zbgg/content/post_10885978.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "closed"
+      },
+      "sources": [
+        {
+          "url": "https://www.thnet.gov.cn/thdt/tzgg/zbgg/content/post_10885978.html",
+          "name": "广州市天河区人民政府官方比选公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-06-30",
+          "last_checked_at": "2026-07-24T16:00:00+08:00",
+          "is_accessible": true,
+          "notes": "阶段5逐条核验：标题、主办方、行动窗口及核心参与条件来自该具体页面；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-07-24T16:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": false,
+        "recheck_after": null
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-07-24T16:00:00+08:00",
+        "created_by": "chanceping-stage5-curation",
+        "updated_by": "chanceping-stage5-curation",
+        "first_discovered_at": "2026-06-30",
+        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "published_at": "2026-07-24T16:00:00+08:00",
+        "archived_at": "2026-07-24T16:00:00+08:00",
+        "data_version": "1.0",
+        "source_import_batch": "ich-stage5-2026-07-24-review"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_by": "chanceping-stage5-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": "具体来源页、时效与分类通过阶段5检查。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_stage5_034",
+      "slug": "2026-kashgar-cultural-art-week-call-archived",
+      "external_id": null,
+      "title": "喀什·中亚南亚商品交易会文化艺术周征集（已截止）",
+      "title_original": "喀什·中亚南亚商品交易会文化艺术周征集（已截止）",
+      "title_en": null,
+      "summary": "美术书法摄影作品征集已于2026年6月30日截止，其中摄影类涵盖民俗非遗。",
+      "description": null,
+      "opportunity_value_text": "文化艺术周展示。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "kashgar",
+        "xinjiang",
+        "nationwide"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "依据列明的具体来源页、行动窗口和参与条件人工辅助核验并分类。",
+      "classification_status": "confirmed",
+      "status": "ended",
+      "status_reason": "历史线索：官方截止日期 2026-06-30 已过，仅供来源与项目参考。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": "deadline_passed",
+      "organizer": {
+        "name": "喀什地区相关活动组委会",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.kashi.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "新疆维吾尔自治区",
+        "city": "喀什地区",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "kashgar",
+          "xinjiang"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "kashgar",
+          "xinjiang"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "partially_confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "申请和后续到场要求以官方来源页及其附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-05-01",
+        "application_start_at": "2026-05-01",
+        "deadline_at": "2026-06-30",
+        "deadline_text": "2026-06-30",
+        "event_start_at": null,
+        "event_end_at": "2026-08-31",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "公告期内面向社会创作者。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "文化艺术周展示。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方来源页及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方要求的申请材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "历史条目，仅用于状态和归档回归。"
+      },
+      "application": {
+        "application_url": "https://www.kashi.gov.cn/ksdqxzgs/c106694/202605/aa19bb455c55427f8bfbbf907b46a009.shtml",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "closed"
+      },
+      "sources": [
+        {
+          "url": "https://www.kashi.gov.cn/ksdqxzgs/c106694/202605/aa19bb455c55427f8bfbbf907b46a009.shtml",
+          "name": "喀什地区行政公署官方公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-05-01",
+          "last_checked_at": "2026-07-24T16:00:00+08:00",
+          "is_accessible": true,
+          "notes": "阶段5逐条核验：标题、主办方、行动窗口及核心参与条件来自该具体页面；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-07-24T16:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": false,
+        "recheck_after": null
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-07-24T16:00:00+08:00",
+        "created_by": "chanceping-stage5-curation",
+        "updated_by": "chanceping-stage5-curation",
+        "first_discovered_at": "2026-05-01",
+        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "published_at": "2026-07-24T16:00:00+08:00",
+        "archived_at": "2026-07-24T16:00:00+08:00",
+        "data_version": "1.0",
+        "source_import_batch": "ich-stage5-2026-07-24-review"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_at": "2026-07-24T16:00:00+08:00",
+        "reviewed_by": "chanceping-stage5-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-stage5-curation",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": "具体来源页、时效与分类通过阶段5检查。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-stage5-review",
+            "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_historical_roman_scotland_exhibition_fitout_2026",
+      "slug": "historical-roman-scotland-exhibition-fitout-2026",
+      "external_id": null,
+      "title": "Roman Scotland Exhibition Fit-out Tender（已截止）",
+      "title_original": "Roman Scotland Exhibition Fit-out Tender（已截止）",
+      "title_en": null,
+      "summary": "美国内政部博物馆展柜采购、交付与安装 RFI 历史线索。",
+      "description": "参赛作品须以广东非遗项目为核心，鼓励非遗与现代生活、科技、商业和艺术等领域创新联结。设计稿和实物作品均可投稿，每个个人或团体报送作品不超过3件。",
+      "opportunity_value_text": "设置金、银、铜、优秀、入围及最具市场潜力等奖项；获奖作品须参加优秀作品展览，并有机会推进市场化转化。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "全国可报",
+        "海外可报",
+        "设计师",
+        "非遗传承人",
+        "院校师生",
+        "文创团队",
+        "免报名费"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
+      "classification_status": "confirmed",
+      "status": "ended",
+      "status_reason": "历史线索：官方投标截止日 2026-03-23 已过，仅供项目参考。",
+      "is_featured": true,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "Smithsonian / SAM.gov",
+        "name_en": null,
+        "type": "public_cultural_institution",
+        "official_website": "https://sam.gov",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "广东省",
+        "city": "广州市",
+        "district": "越秀区",
+        "venue_text": null,
+        "region_groups": [
+          "guangzhou",
+          "guangdong",
+          "greater_bay_area",
+          "nationwide",
+          "overseas"
+        ],
+        "participation_scope": "global",
+        "eligible_regions": [
+          "全国",
+          "海外"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "email",
+        "requires_on_site_presence": false,
+        "participation_notes": "参赛作品照片和报名表通过官方通知指定邮箱提交；获奖作品须参加优秀作品展览。"
+      },
+      "dates": {
+        "published_at": "2026-07-25T12:00:00+08:00",
+        "application_start_at": "2026-07-25T12:00:00+08:00",
+        "deadline_at": "2026-03-23",
+        "deadline_text": "2026-03-23（已截止）",
+        "event_start_at": "2026-06-01",
+        "event_end_at": "2026-12-31",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "inheritor",
+          "studio",
+          "enterprise",
+          "organization",
+          "school",
+          "designer",
+          "student",
+          "team"
+        ],
+        "eligibility_text": "面向全国及海内外征集。个人参赛者须年满18周岁；单位或团队可为院校、文创产品设计开发单位、产品设计机构、创意设计团队及非遗相关企事业单位。",
+        "ich_status_required": false,
+        "business_license_required": null,
+        "local_registration_required": false,
+        "recommendation_required": false,
+        "age_requirement_text": "个人参赛者及多人合作作品的所有作者均须年满18周岁。",
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "award",
+          "exhibition",
+          "market_conversion"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": null,
+        "channel_opportunity": true,
+        "benefit_text": "设金奖5个、银奖7个、铜奖10个、优秀奖30个、入围奖50个、最具市场潜力奖5个及优秀指导老师奖10个。"
+      },
+      "costs": {
+        "application_fee_amount": 0,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方通知明确本次大赛不收取任何报名费用；其他制作、寄送或参展成本未确认。",
+        "cost_status": "partial"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方报名表",
+          "作品照片"
+        ],
+        "portfolio_required": false,
+        "sample_required": false,
+        "proposal_required": false,
+        "invoice_required": false,
+        "bidding_qualification_required": false,
+        "production_capacity_text": "作品设计需考虑产品化可行性，包括可生产性、工艺合理性、价格定位与制作成本。",
+        "requirements_text": "作品须为2023年1月1日以后创作的原创作品；每个个人或团体报送不超过3件，照片须满足官方通知规定的清晰度、分辨率、文件大小和格式要求。"
+      },
+      "application": {
+        "application_url": "https://sam.gov/workspace/contract/opp/993ebf3cc05a45858be25f0d199bc67a/view",
+        "application_email": "gdsfycyds@qq.com",
+        "application_phone": null,
+        "application_platform": "电子邮件",
+        "application_steps": [
+          "阅读官方通知及知识产权要求",
+          "下载并填写官方报名表",
+          "整理符合规格的作品照片",
+          "按“作者+作品名称”要求命名邮件及附件并发送至指定邮箱"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.find-tender.service.gov.uk/Notice/017149-2026",
+          "name": "Find a Tender / National Museums Scotland",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-07-25T12:00:00+08:00",
+          "last_checked_at": "2026-07-25T12:00:00+08:00",
+          "is_accessible": true,
+          "notes": "官方招标详情页，投标截止日2026-03-23，已截止。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-07-25T12:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-07-28T00:00:00+08:00"
+      },
+      "seo": {
+        "meta_title": "2026广东省非遗创意设计大赛｜10月15日截止",
+        "meta_description": "2026年第十一届广东省非物质文化遗产创意设计大赛面向全国及海外征集作品，报名截止10月15日。",
+        "canonical_url": null,
+        "og_title": "2026广东省非遗创意设计大赛",
+        "og_description": "全国及海外个人、单位和团队均可参赛，免报名费，2026年10月15日截止。",
+        "og_image": null,
+        "noindex": false
+      },
+      "metadata": {
+        "created_at": "2026-07-25T12:00:00+08:00",
+        "updated_at": "2026-07-25T12:00:00+08:00",
+        "created_by": "chanceping-editor",
+        "updated_by": "chanceping-editor",
+        "first_discovered_at": "2026-07-24T12:50:00+08:00",
+        "last_checked_at": "2026-07-24T13:20:00+08:00",
+        "published_at": "2026-07-25T12:00:00+08:00",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "expansion-batch-03"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-07-24T13:05:00+08:00",
+        "reviewed_at": "2026-07-24T13:15:00+08:00",
+        "reviewed_by": "chanceping-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "expansion-01",
+            "at": "2026-07-25T12:00:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "expansion-01",
+            "at": "2026-07-25T12:00:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "expansion-01",
+            "at": "2026-07-25T12:00:00+08:00",
+            "reason": "来源和字段通过第一批核验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "expansion-01",
+            "at": "2026-07-25T12:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "application_url": "https://www.find-tender.service.gov.uk/Notice/017149-2026"
+    }
+  ]
+}
