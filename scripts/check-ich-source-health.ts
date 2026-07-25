@@ -8,20 +8,24 @@ const file = JSON.parse(fs.readFileSync(path.resolve(inputPath), "utf8")) as Ich
 const timeoutMs = 8000;
 const results = [] as Array<{ slug: string; url: string; status: number | null; ok: boolean; restricted?: boolean; error?: string }>;
 async function main() {
-for (const entry of file.entries) {
+const check = async (entry: (typeof file.entries)[number]) => {
   const url = entry.sources[0]?.url;
-  if (!url) continue;
+  if (!url) return;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, { method: "HEAD", redirect: "follow", signal: controller.signal, headers: { "user-agent": "ChancePing-ICH-SourceHealth/1.0" } });
-    results.push({ slug: entry.slug, url, status: response.status, ok: response.status >= 200 && response.status < 400, restricted: response.status === 403 });
+    let response = await fetch(url, { method: "HEAD", redirect: "follow", signal: controller.signal, headers: { "user-agent": "ChancePing-ICH-SourceHealth/1.0" } });
+    if ([403, 405, 500].includes(response.status)) {
+      response = await fetch(url, { method: "GET", redirect: "follow", signal: controller.signal, headers: { "user-agent": "ChancePing-ICH-SourceHealth/1.0" } });
+    }
+    results.push({ slug: entry.slug, url, status: response.status, ok: response.status >= 200 && response.status < 400, restricted: response.status === 401 || response.status === 403 });
   } catch (error) {
     results.push({ slug: entry.slug, url, status: null, ok: false, error: error instanceof Error ? error.message : String(error) });
   } finally {
     clearTimeout(timeout);
   }
-}
+};
+for (let i = 0; i < file.entries.length; i += 8) await Promise.all(file.entries.slice(i, i + 8).map(check));
 const failed = results.filter((result) => !result.ok && !result.restricted);
 const restricted = results.filter((result) => result.restricted);
 const report = { input: inputPath, checked_at: new Date().toISOString(), total: results.length, accessible: results.length - failed.length, restricted: restricted.length, failed: failed.length, results };
