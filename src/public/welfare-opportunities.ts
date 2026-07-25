@@ -128,6 +128,24 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
     "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=f941bc33-a4fd-4447-9430-d92208f3aa33"
   ] },
+  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.songjiang.gov.cn/shsj_sijing/xwzx/001002/001002/20260625/6a339e4a-eee6-4c72-9a73-d907156a4731.html",
+    "https://www.songjiang.gov.cn/shsj_xiaokunshan/xwzx/001002/20260525/167ce7d9-b92b-4993-baa5-93c1f1a8797f.html",
+    "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260608/350cf5a7-1049-42d2-875d-58038fef7272.html",
+    "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260702/78360bd9-c96b-4018-910b-406b6d3f5a02.html",
+    "https://www.songjiang.gov.cn/shsj_yueyang/xwzx/002002/20260630/e84d731d-cf99-48a8-9946-07ee0b2df526.html",
+    "https://www.yuxi.gov.cn/yxs/ztb/20260720/1671810.html",
+    "https://www.lw.gov.cn/ywdt/cgxx/content/post_10895532.html",
+    "https://tyjrswj.gz.gov.cn/zwgl/tzgg/content/post_10860801.html",
+    "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
+    "https://www.szns.gov.cn/sz/tzgg/content/post_12888753.html"
+  ] },
+  { code: "OFF-N-015", name: "全国工会疗休养与福利服务采购", url: "https://sft.fujian.gov.cn/", allowedHost: "sft.fujian.gov.cn", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
+    "https://ggzy.suzhou.gov.cn/jyxx/003034/003034001/20260630/3a92ad7d-f758-4ef1-a175-ba2e3cb81bb8.html",
+    "https://nbgh.gov.cn/zghcms/tzgg/127551.jhtml",
+    "https://www.sipac.gov.cn/yqjyj/zbxxjzbgg/202603/a415492ff520457ca509c9c4e722649f.shtml"
+  ] },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
