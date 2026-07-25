@@ -130,7 +130,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://www.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
     "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202606/t20260624_26803450.htm"
   ] },
-  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn", "cdc.fuzhou.gov.cn", "www.jiangmen.gov.cn", "www.gdyunan.gov.cn", "www.bjesr.cn"], region: "全国", maxDetails: 20, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn", "cdc.fuzhou.gov.cn", "www.jiangmen.gov.cn", "www.gdyunan.gov.cn", "www.bjesr.cn", "ggzyjy.benxi.gov.cn", "rsj.nantong.gov.cn", "www.jinjiang.gov.cn", "www.hp.gov.cn", "slj.lasa.gov.cn", "www.bbgu.edu.cn"], region: "全国", maxDetails: 32, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.songjiang.gov.cn/shsj_xiaokunshan/xwzx/001002/20260525/167ce7d9-b92b-4993-baa5-93c1f1a8797f.html",
     "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260608/350cf5a7-1049-42d2-875d-58038fef7272.html",
     "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260702/78360bd9-c96b-4018-910b-406b6d3f5a02.html",
@@ -143,7 +143,13 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://cdc.fuzhou.gov.cn/zz/gsgg/202601/t20260104_5265741.htm",
     "https://www.jiangmen.gov.cn/bmpd/jmsscjdglj/zwdt/tzgg/content/post_3435801.html",
     "https://www.gdyunan.gov.cn/gkmlpt/content/1/1980/post_1980659.html",
-    "https://www.bjesr.cn/tzgg/2026-05-12/54850.html"
+    "https://www.bjesr.cn/tzgg/2026-05-12/54850.html",
+    "https://ggzyjy.benxi.gov.cn/jyxx/003006/003006001/20260527/f807a357-32e4-40e1-8aca-e702aa9f5634.html",
+    "https://rsj.nantong.gov.cn/ntsrsj/gggs/content/5e8fce7a-4da4-472f-b585-2d0c88e53a5b.html",
+    "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202601/t20260128_3262271.htm",
+    "https://www.hp.gov.cn/gzhpwcj/gkmlpt/content/10/10782/post_10782028.html",
+    "https://slj.lasa.gov.cn/lsslj/tggs/202606/16fdc36feaaa48a0b443e3d6d06b1213.shtml",
+    "https://www.bbgu.edu.cn/info/1037/262681.htm"
   ] },
   { code: "OFF-N-015", name: "全国工会疗休养与福利服务采购", url: "https://sft.fujian.gov.cn/", allowedHost: "sft.fujian.gov.cn", extraAllowedHosts: ["ggzy.suzhou.gov.cn", "nbgh.gov.cn", "www.sipac.gov.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
@@ -161,7 +167,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://www.szns.gov.cn/sz/tzgg/content/post_12888753.html",
     "https://kfqgw.beijing.gov.cn/zwgkkfq/tzgg/202607/t20260724_4784850.html"
   ] },
-  { code: "OFF-N-018", name: "全国高校工会福利采购公告", url: "https://www.qztc.edu.cn/", allowedHost: "www.qztc.edu.cn", extraAllowedHosts: ["zc.ucass.edu.cn", "dzb.sicau.edu.cn", "gh.scu.edu.cn", "www.hbmzu.edu.cn", "www.sdfzxy.edu.cn", "ztbgl.yangtzeu.edu.cn", "www.dlmu.edu.cn", "www.afc.edu.cn", "www.lncc.edu.cn", "gonghui.hfut.edu.cn", "xxgk.tongji.edu.cn", "scjtglxx.cn", "gh.gdipu.edu.cn"], region: "全国", maxDetails: 24, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-018", name: "全国高校工会福利采购公告", url: "https://www.qztc.edu.cn/", allowedHost: "www.qztc.edu.cn", extraAllowedHosts: ["zc.ucass.edu.cn", "dzb.sicau.edu.cn", "gh.scu.edu.cn", "www.hbmzu.edu.cn", "www.sdfzxy.edu.cn", "ztbgl.yangtzeu.edu.cn", "www.dlmu.edu.cn", "www.afc.edu.cn", "www.lncc.edu.cn", "gonghui.hfut.edu.cn", "xxgk.tongji.edu.cn", "scjtglxx.cn", "gh.gdipu.edu.cn", "gh.zfc.edu.cn"], region: "全国", maxDetails: 28, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.qztc.edu.cn/2025/1125/c2095a289553/page.htm",
     "https://zc.ucass.edu.cn/",
     "https://dzb.sicau.edu.cn/info/1028/14233.htm",
@@ -175,7 +181,8 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://gonghui.hfut.edu.cn/2026/0527/c615a319354/page.htm",
     "https://xxgk.tongji.edu.cn/index.php?classid=4579&newsid=21183&t=show",
     "https://scjtglxx.cn/info/1029/64471.htm",
-    "https://gh.gdipu.edu.cn/info/1033/2944.htm"
+    "https://gh.gdipu.edu.cn/info/1033/2944.htm",
+    "https://gh.zfc.edu.cn/2025/1216/c2016a65609/page.htm"
   ] },
   { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "www.shca.org.cn", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com"], region: "全国", maxDetails: 24, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.zqtcm.com/dqjs/zbcg/content_1052",
@@ -815,7 +822,11 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const text = cleanText(input.html);
   const welfareContext = WELFARE_CONTEXT;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/;
-  const contextText = source.adapter ? `${title} ${text}` : title;
+  // Official hospital/university pages frequently use a generic <title>
+  // (for example only the institution name) while the procurement/welfare
+  // wording appears in the article body. Evaluate both title and body, while
+  // retaining the strict exclusion and action checks below.
+  const contextText = `${title} ${text}`;
   if (!title || NON_OPPORTUNITY_DISCOVERY.test(title) || NON_WELFARE_PROJECT.test(title) || !welfareContext.test(contextText) || !opportunityAction.test(contextText)) return null;
   // Government portals often omit punctuation between labeled fields. Stop
   // at the next known label so a buyer never becomes the whole announcement.
@@ -855,7 +866,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     retrievedAt: input.retrievedAt ?? new Date().toISOString(),
     rawSha256,
     dataMode: "live",
-    opportunityType: source.opportunityType ?? "OPEN_PROCUREMENT",
+    opportunityType: source.opportunityType ?? (/(采购意向|需求公示|意向公示|市场调研|需求调查|调研公告|供应商征集)/.test(text) ? "PROCUREMENT_INTENT" : "OPEN_PROCUREMENT"),
     lifecycleStatus: isClosed || deadlineExpired || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
     currentStage: isClosed ? "CLOSED_PENDING_RESULT" : isCorrection ? "CORRECTED" : "OPEN",
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
