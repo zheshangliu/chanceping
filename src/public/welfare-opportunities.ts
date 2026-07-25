@@ -826,6 +826,33 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   };
 }
 
+/** Split official procurement-intent tables into one signal per welfare item.
+ * Government intent pages commonly publish many rows under one announcement;
+ * keeping only the page title hides real demand signals and undercounts the
+ * funnel. Each split card retains the same official URL/hash and cites the
+ * row title in its evidence reason.
+ */
+function expandProcurementIntentTable(base: WelfareOpportunityRecord, html: string): WelfareOpportunityRecord[] {
+  if (base.opportunityType !== "PROCUREMENT_INTENT") return [base];
+  const rows: string[] = [];
+  const rowPattern = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = rowPattern.exec(html)) !== null) rows.push(match[1]);
+  const titles = rows.map((row) => {
+    const cells = Array.from(row.matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)).map((cell) => cleanText(cell[1]));
+    return cells.find((cell) => WELFARE_CONTEXT.test(cell) && WELFARE_ACTION.test(cell) && !NON_WELFARE_PROJECT.test(cell));
+  }).filter((title): title is string => Boolean(title));
+  const uniqueTitles = Array.from(new Set(titles)).slice(0, 30);
+  if (uniqueTitles.length <= 1) return [base];
+  return uniqueTitles.map((title, index) => ({
+    ...base,
+    id: stableId(`${base.officialUrl}#intent-${index + 1}`),
+    title,
+    reason: `${base.reason} 官方采购意向表第${index + 1}条：${title}`,
+    evidenceFields: base.evidenceFields.map((field) => field.field === "status" ? { ...field, excerpt: `采购意向表条目：${title}` } : field),
+  }));
+}
+
 function candidateFromLink(source: WelfareSourceConfig, link: { title: string; url: string; publishedAt: string }, retrievedAt: string, reason: string): WelfareCandidateRecord {
   return {
     id: stableId(`candidate:${link.url}`),
@@ -1031,7 +1058,10 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       const sha = crypto.createHash("sha256").update(html).digest("hex");
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
-      if (record) records.push((/采购意向|需求公示|意向公示/.test(record.title) ? { ...record, opportunityType: "PROCUREMENT_INTENT" as const } : record));
+      if (record) {
+        const normalized = /采购意向|需求公示|意向公示/.test(record.title) ? { ...record, opportunityType: "PROCUREMENT_INTENT" as const } : record;
+        records.push(...expandProcurementIntentTable(normalized, html));
+      }
       else {
         const detailText = cleanText(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " "));
         const hasWelfareContext = (WELFARE_CONTEXT.test(link.title) || WELFARE_CONTEXT.test(detailText)) && !NON_OPPORTUNITY_DISCOVERY.test(link.title) && !NON_WELFARE_PROJECT.test(link.title) && !NON_OPPORTUNITY_DISCOVERY.test(detailText);
