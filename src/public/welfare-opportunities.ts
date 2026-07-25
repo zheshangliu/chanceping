@@ -226,6 +226,7 @@ const PROMOTED_SOURCE_CODES = new Set([
   "OFF-GD-001", "OFF-GD-002", "OFF-GD-003", "OFF-GZ-002", "OFF-GZ-003", "OFF-FS-001", "OFF-DG-001",
   "OFF-ZH-001", "OFF-ZS-001", "OFF-HZ-001", "ORG-003", "ORG-004", "ORG-005",
   "OFF-SZ-006", "OFF-SZ-009", "OFF-SZ-010", "OFF-ZS-002", "OFF-DG-002", "OFF-GZ-004", "WEL-002",
+  "OFF-N-014", "OFF-N-015", "OFF-N-016", "OFF-N-018", "OFF-N-019", "OFF-N-020",
 ]);
 WELFARE_SOURCES.push(...WELFARE_SHADOW_SOURCES.filter((source) => PROMOTED_SOURCE_CODES.has(source.code)).map((source) => ({
   ...source,
