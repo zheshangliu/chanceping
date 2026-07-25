@@ -111,6 +111,9 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-SZ-007", name: "南山区总工会采购公告", url: "https://www.szns.gov.cn/ztzl/slh/tzgg/content/post_12358223.html", allowedHost: "www.szns.gov.cn", region: "深圳南山", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
   { code: "OFF-SZ-009", name: "宝安区街道工会慰问采购公告", url: "https://www.baoan.gov.cn/", allowedHost: "www.baoan.gov.cn", region: "深圳宝安", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.baoan.gov.cn/sjjd/zwgk/zbcg/content/post_12617822.html", "https://www.baoan.gov.cn/rlzyj/zwgk/zbgg/content/post_12609011.html", "https://www.baoan.gov.cn/xajd/zwgk/zbcg/content/post_12603326.html", "https://www.baoan.gov.cn/fyjd/xxgk/zbcg/cgyx/content/post_12692680.html"] },
   { code: "OFF-SZ-010", name: "罗湖区机关/街道慰问采购公告", url: "https://www.szlh.gov.cn/", allowedHost: "www.szlh.gov.cn", region: "深圳罗湖", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.szlh.gov.cn/lhmzj/gkmlpt/content/12/12828/post_12828504.html", "https://www.szlh.gov.cn/lhgafj/gkmlpt/content/12/12728/post_12728305.html"] },
+  { code: "OFF-ZS-002", name: "中山市镇街总工会慰问采购公告", url: "https://www.zs.gov.cn/", allowedHost: "www.zs.gov.cn", region: "中山", maxDetails: 8, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.zs.gov.cn/zshpz/gkmlpt/content/2/2623/post_2623220.html", "https://www.zs.gov.cn/zssxz/gkmlpt/content/2/2629/post_2629889.html", "https://www.zs.gov.cn/zshpz/gkmlpt/content/2/2595/post_2595258.html", "https://www.zs.gov.cn/zstzz/gkmlpt/content/2/2629/post_2629008.html", "https://www.zs.gov.cn/zstzz/gkmlpt/content/2/2633/post_2633877.html"] },
+  { code: "OFF-DG-002", name: "东莞市及镇街工会慰问采购公告", url: "https://www.dg.gov.cn/", allowedHost: "www.dg.gov.cn", region: "东莞", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.dg.gov.cn/zwgk/zfxxgkml/styjrswj/qt/cgzb/content/post_4500915.html", "https://www.dg.gov.cn/zwgk/zfxxgkml/qxz/qt/gzdt/content/post_4495842.html"] },
+  { code: "OFF-GZ-004", name: "广州市黄埔区街道工会慰问采购公告", url: "https://www.hp.gov.cn/gzhpwcj/gkmlpt/content/10/10782/post_10782028.html", allowedHost: "www.hp.gov.cn", region: "广州黄埔", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
@@ -158,13 +161,14 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "HUB-003", name: "TrendRadar社区数据源收集Issue/讨论", url: "https://github.com/sansan0/TrendRadar/issues", allowedHost: "github.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
 ];
 
-// These 20 direct-access sources completed the three-day shadow gate and are
+// These direct-access sources completed source review and are
 // now enabled for public collection. Their original registry entries remain
 // in the shadow catalogue so the historical POC evidence is not discarded.
 const PROMOTED_SOURCE_CODES = new Set([
   "OFF-N-003", "OFF-N-005", "OFF-N-007", "OFF-N-008", "OFF-N-009", "OFF-N-010", "OFF-N-011",
   "OFF-GD-001", "OFF-GD-002", "OFF-GD-003", "OFF-GZ-002", "OFF-GZ-003", "OFF-FS-001", "OFF-DG-001",
   "OFF-ZH-001", "OFF-ZS-001", "OFF-HZ-001", "ORG-003", "ORG-004", "ORG-005",
+  "OFF-SZ-006", "OFF-SZ-009", "OFF-SZ-010", "OFF-ZS-002", "OFF-DG-002", "OFF-GZ-004", "WEL-002",
 ]);
 WELFARE_SOURCES.push(...WELFARE_SHADOW_SOURCES.filter((source) => PROMOTED_SOURCE_CODES.has(source.code)).map((source) => ({
   ...source,
