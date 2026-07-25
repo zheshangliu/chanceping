@@ -130,7 +130,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://www.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
     "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202606/t20260624_26803450.htm"
   ] },
-  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn", "cdc.fuzhou.gov.cn", "www.jiangmen.gov.cn", "www.gdyunan.gov.cn", "www.bjesr.cn", "ggzyjy.benxi.gov.cn", "rsj.nantong.gov.cn", "www.jinjiang.gov.cn", "www.hp.gov.cn", "slj.lasa.gov.cn", "www.bbgu.edu.cn"], region: "全国", maxDetails: 32, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn", "cdc.fuzhou.gov.cn", "www.jiangmen.gov.cn", "www.gdyunan.gov.cn", "www.bjesr.cn", "ggzyjy.benxi.gov.cn", "rsj.nantong.gov.cn", "www.jinjiang.gov.cn", "www.hp.gov.cn", "slj.lasa.gov.cn", "www.bbgu.edu.cn", "www.sse.com.cn"], region: "全国", maxDetails: 36, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.songjiang.gov.cn/shsj_xiaokunshan/xwzx/001002/20260525/167ce7d9-b92b-4993-baa5-93c1f1a8797f.html",
     "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260608/350cf5a7-1049-42d2-875d-58038fef7272.html",
     "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260702/78360bd9-c96b-4018-910b-406b6d3f5a02.html",
@@ -149,7 +149,8 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202601/t20260128_3262271.htm",
     "https://www.hp.gov.cn/gzhpwcj/gkmlpt/content/10/10782/post_10782028.html",
     "https://slj.lasa.gov.cn/lsslj/tggs/202606/16fdc36feaaa48a0b443e3d6d06b1213.shtml",
-    "https://www.bbgu.edu.cn/info/1037/262681.htm"
+    "https://www.bbgu.edu.cn/info/1037/262681.htm",
+    "https://www.sse.com.cn/purchase/information/c/c_20260313_10811666.shtml"
   ] },
   { code: "OFF-N-015", name: "全国工会疗休养与福利服务采购", url: "https://sft.fujian.gov.cn/", allowedHost: "sft.fujian.gov.cn", extraAllowedHosts: ["ggzy.suzhou.gov.cn", "nbgh.gov.cn", "www.sipac.gov.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
@@ -184,7 +185,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://gh.gdipu.edu.cn/info/1033/2944.htm",
     "https://gh.zfc.edu.cn/2025/1216/c2016a65609/page.htm"
   ] },
-  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "www.shca.org.cn", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com"], region: "全国", maxDetails: 24, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "www.shca.org.cn", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com", "www.jinjiang.gov.cn", "www.ntu.edu.cn", "gh.haust.edu.cn"], region: "全国", maxDetails: 30, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.zqtcm.com/dqjs/zbcg/content_1052",
     "https://cemps.cas.cn/tzgg/2025n_241394/202607/t20260716_8250446.html",
     "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html",
@@ -197,7 +198,11 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://nyd7y.com/xwgg/scdy/content_2889",
     "https://www.sichuancancer.org/ztbxtnew/info/1002/7521.htm",
     "https://www.jssdezyy.com/notice/detail/id/4569/pid/3.html",
-    "https://www.mgsyy.com/news/4190.html"
+    "https://www.mgsyy.com/news/4190.html",
+    "https://www.sichuancancer.org/ztbxtnew/info/1002/8032.htm",
+    "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202512/t20251208_3239047.htm",
+    "https://www.lg.gov.cn/xxgk/zwgk/tzgg/content/post_12779529.html",
+    "https://gh.haust.edu.cn/info/1019/8490.htm"
   ] },
   { code: "OFF-N-020", name: "全国工会职工福利与节日物资采购", url: "https://www.dongtai.gov.cn/", allowedHost: "www.dongtai.gov.cn", extraAllowedHosts: ["zfcg.henan.gov.cn", "cgyx.ccgp.gov.cn", "www.ccgp.gov.cn"], region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.dongtai.gov.cn/art/2026/7/21/art_7905_4440949.html",
