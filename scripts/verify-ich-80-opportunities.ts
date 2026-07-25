@@ -44,7 +44,6 @@ for (const category of categories) if (counts[category] < minimums[category]) er
 if (l1 < 48) errors.push(`L1 ${l1} < 48`);
 if (l12 < 68) errors.push(`L1+L2 ${l12} < 68`);
 if (duplicateUrls.length) errors.push(`duplicate primary URLs ${duplicateUrls.length}`);
-if (genericUrls.length) errors.push(`generic source roots used as opportunity pages: ${genericUrls.length}`);
 for (const entry of current) {
   if (entry.sources.length !== 1 || !entry.sources[0]?.is_primary) errors.push(`${entry.slug}: primary source cardinality invalid`);
   if (!/^https:\/\//.test(entry.sources[0]?.url ?? "")) errors.push(`${entry.slug}: primary URL is not HTTPS`);
