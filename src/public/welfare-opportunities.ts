@@ -177,7 +177,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://scjtglxx.cn/info/1029/64471.htm",
     "https://gh.gdipu.edu.cn/info/1033/2944.htm"
   ] },
-  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com"], region: "全国", maxDetails: 24, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "www.shca.org.cn", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com"], region: "全国", maxDetails: 24, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.zqtcm.com/dqjs/zbcg/content_1052",
     "https://cemps.cas.cn/tzgg/2025n_241394/202607/t20260716_8250446.html",
     "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html",
@@ -1109,7 +1109,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
       if (record) {
-        const normalized = /采购意向|需求公示|意向公示/.test(record.title) ? { ...record, opportunityType: "PROCUREMENT_INTENT" as const } : record;
+        const normalized = /采购意向|需求公示|意向公示|市场调研|需求调查|调研公告|供应商征集/.test(record.title) ? { ...record, opportunityType: "PROCUREMENT_INTENT" as const } : record;
         records.push(...expandProcurementIntentTable(normalized, html));
       }
       else {
