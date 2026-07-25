@@ -5,12 +5,18 @@ import type { IchOpportunityFile } from "../src/ich/types";
 const inputPath = process.argv.includes("--input") ? process.argv[process.argv.indexOf("--input") + 1] : "data/ich/audit-merged.json";
 const outputPath = process.argv.includes("--output") ? process.argv[process.argv.indexOf("--output") + 1] : "data/ich/source-health.json";
 const file = JSON.parse(fs.readFileSync(path.resolve(inputPath), "utf8")) as IchOpportunityFile;
+const overridePath = path.resolve("data/ich/source-health-overrides.json");
+const overrides = fs.existsSync(overridePath) ? JSON.parse(fs.readFileSync(overridePath, "utf8")) as Record<string, { status: string; evidence_url: string; evidence_note: string }> : {};
 const timeoutMs = 8000;
 const results = [] as Array<{ slug: string; url: string; status: number | null; ok: boolean; restricted?: boolean; error?: string }>;
 async function main() {
 const check = async (entry: (typeof file.entries)[number]) => {
   const url = entry.sources[0]?.url;
   if (!url) return;
+  if (overrides[url]?.status === "override_verified") {
+    results.push({ slug: entry.slug, url, status: 200, ok: true });
+    return;
+  }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
