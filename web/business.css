@@ -35,6 +35,10 @@ body.business-page { background: #f4f7f6; }
 .business-filters input, .business-filters select, .business-filters button { background: var(--business-paper); border-radius: 7px; }
 .business-filters button, .business-button-dark { background: var(--business-accent); border-color: var(--business-accent); }
 .business-footer { background: var(--business-paper); }
+.business-shell { padding-top: 32px; }
+.business-section { margin-top: 34px; }
+.business-hero { padding: 38px min(8vw, 96px); }
+.business-hero-search { display: flex; max-width: 720px; gap: 8px; margin-top: 22px; }.business-hero-search input { flex: 1; min-height: 48px; padding: 0 16px; color: var(--business-ink); background: var(--business-paper); border: 1px solid var(--business-line); border-radius: 8px; font-size: 15px; }.business-hero-search .business-button { min-height: 48px; padding-inline: 26px; border: 0; cursor: pointer; }.business-hero-links { display: flex; gap: 18px; align-items: center; margin-top: 16px; color: var(--business-muted); font-size: 13px; }.business-hero-links a { color: var(--business-accent); font-weight: 700; }
 .business-view-toggle { display: flex; gap: 4px; margin-left: auto; padding: 3px; border: 1px solid var(--business-line); border-radius: 8px; background: var(--business-sky); }
 .business-view-toggle button { padding: 6px 11px; color: var(--business-muted); background: transparent; border: 0; border-radius: 6px; cursor: pointer; }.business-view-toggle button.is-active { color: #fff; background: var(--business-accent); }
 .business-card-facts { display: grid; gap: 7px; margin: 12px 0 18px; }.business-card-facts div { display: grid; grid-template-columns: 72px 1fr; gap: 8px; font-size: 13px; }.business-card-facts dt { color: var(--business-muted); }.business-card-facts dd { margin: 0; }.business-deadline { color: #a86622; font-weight: 700; }.business-card-summary { min-height: 46px; }
