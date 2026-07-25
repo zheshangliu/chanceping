@@ -24,17 +24,30 @@ const counts = Object.fromEntries(categories.map((category) => [category, curren
 const l1 = current.filter((entry) => entry.sources[0]?.level === "L1").length;
 const l12 = current.filter((entry) => ["L1", "L2"].includes(entry.sources[0]?.level ?? "")).length;
 const duplicateUrls = current.map((entry) => entry.sources[0]?.url).filter((url, i, all) => Boolean(url) && all.indexOf(url) !== i);
+const genericSourceRoots = [
+  "https://www.mct.gov.cn/whzx/ggtz/",
+  "https://www.ihchina.cn/",
+  "https://www.ccgp.gov.cn/",
+  "https://www.ggzy.gov.cn/",
+  "https://www.gov.cn/zhengce/",
+  "https://www.moe.gov.cn/jyb_xxgk/gggs/",
+  "https://www.cnaf.cn/",
+  "https://www.asef.org/",
+  "https://www.cac.gov.cn/",
+];
+const genericUrls = current.filter((entry) => genericSourceRoots.some((root) => entry.sources[0]?.url === root || entry.sources[0]?.url?.endsWith(root.replace(/\/$/, "")))).map((entry) => entry.slug);
 const errors: string[] = [];
 if (current.length < 80) errors.push(`current_total ${current.length} < 80`);
 for (const category of categories) if (counts[category] < minimums[category]) errors.push(`${category} ${counts[category]} < ${minimums[category]}`);
 if (l1 < 48) errors.push(`L1 ${l1} < 48`);
 if (l12 < 68) errors.push(`L1+L2 ${l12} < 68`);
 if (duplicateUrls.length) errors.push(`duplicate primary URLs ${duplicateUrls.length}`);
+if (genericUrls.length) errors.push(`generic source roots used as opportunity pages: ${genericUrls.length}`);
 for (const entry of current) {
   if (entry.sources.length !== 1 || !entry.sources[0]?.is_primary) errors.push(`${entry.slug}: primary source cardinality invalid`);
   if (!/^https:\/\//.test(entry.sources[0]?.url ?? "")) errors.push(`${entry.slug}: primary URL is not HTTPS`);
   if (entry.verification.verification_status !== "verified") errors.push(`${entry.slug}: not verified`);
 }
-const result = { input: inputPath, audited_at: new Date().toISOString(), current_total: current.length, historical_total: file.entries.filter((entry) => entry.status === "ended" || entry.status === "cancelled").length, categories: counts, source_levels: { L1: l1, L1_L2: l12 }, duplicate_primary_urls: duplicateUrls.length, errors };
+const result = { input: inputPath, audited_at: new Date().toISOString(), current_total: current.length, historical_total: file.entries.filter((entry) => entry.status === "ended" || entry.status === "cancelled").length, categories: counts, source_levels: { L1: l1, L1_L2: l12 }, duplicate_primary_urls: duplicateUrls.length, generic_source_roots: genericUrls.length, errors };
 console.log(JSON.stringify(result, null, 2));
 if (errors.length) process.exitCode = 1;
