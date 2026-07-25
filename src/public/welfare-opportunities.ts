@@ -125,16 +125,13 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://www.gdyunan.gov.cn/gkmlpt/content/1/1980/post_1980659.html"
   ] },
   { code: "OFF-N-013", name: "中国政府采购网｜工会福利采购意向", url: "https://zfcg.henan.gov.cn/cmsweb35rc67w/gongyi/cgxx/cgyx/webinfo/2026/07/1979309.htm", allowedHost: "zfcg.henan.gov.cn", extraAllowedHosts: ["cgyx.ccgp.gov.cn", "ggzy.changzhou.gov.cn"], region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", opportunityType: "PROCUREMENT_INTENT", directDetail: true, detailUrls: [
-    "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
-    "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=f941bc33-a4fd-4447-9430-d92208f3aa33",
-    "https://www.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
-    "https://cgyx.ccgp.gov.cn/cgyx/pub/details?groupId=a78e60cc-5224-404a-8f16-aec7c2044e3f",
-    "https://cgyx.ccgp.gov.cn/cgyx/pub/details?groupId=3d69c705-3aba-4919-8d5b-333c66700b2c",
-    "https://cgyx.ccgp.gov.cn/cgyx/pub/details?groupId=f89bc483-9a57-4a60-9e5c-1d9be69412ce",
-    "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202606/t20260624_26803450.htm",
     "https://zfcg.henan.gov.cn/cmsweb35rc67w/gongyi/cgxx/cgyx/webinfo/2026/07/1979309.htm",
     "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/4.html",
-    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/13.html"
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/13.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/2.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/10.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/11.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/29.html"
   ] },
   { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn", "cdc.fuzhou.gov.cn", "www.jiangmen.gov.cn", "www.gdyunan.gov.cn", "www.bjesr.cn", "ggzyjy.benxi.gov.cn", "rsj.nantong.gov.cn", "www.jinjiang.gov.cn", "www.hp.gov.cn", "slj.lasa.gov.cn", "www.bbgu.edu.cn", "www.sse.com.cn", "www.gl.gov.cn"], region: "全国", maxDetails: 40, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.songjiang.gov.cn/shsj_xiaokunshan/xwzx/001002/20260525/167ce7d9-b92b-4993-baa5-93c1f1a8797f.html",
