@@ -372,6 +372,10 @@ export interface WelfareFunnelDiagnostics {
 
 export function buildWelfareFunnelDiagnostics(records = loadPersistedWelfareOpportunities(), summary = loadWelfareRunSummary()): WelfareFunnelDiagnostics {
   const sourceRuns = summary?.sources ?? [];
+  const layerOf = (record: WelfareOpportunityRecord): WelfareOpportunityLayer => {
+    if (record.lifecycleStatus !== "current") return "historical";
+    return ["PROCUREMENT_INTENT", "SUPPLIER_RECRUITMENT", "CHANNEL_PARTNERSHIP"].includes(record.opportunityType) ? "signal" : "current";
+  };
   const bySource = new Map(records.map((record) => [record.sourceCode, records.filter((item) => item.sourceCode === record.sourceCode)]));
   const sources = WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
     const run = sourceRuns.find((item) => item.sourceCode === source.code);
@@ -390,9 +394,9 @@ export function buildWelfareFunnelDiagnostics(records = loadPersistedWelfareOppo
       reason_if_zero: accepted.length === 0 ? (run?.status === "failed" ? "来源访问失败，保留上次成功数据" : run?.status === "empty" ? "本轮无通过福利准入规则的公告" : "尚未运行") : undefined,
     };
   });
-  const current = records.filter((item) => item.opportunityLayer === "current").length;
-  const signal = records.filter((item) => item.opportunityLayer === "signal").length;
-  const history = records.filter((item) => item.opportunityLayer === "historical").length;
+  const current = records.filter((item) => layerOf(item) === "current").length;
+  const signal = records.filter((item) => layerOf(item) === "signal").length;
+  const history = records.filter((item) => layerOf(item) === "historical").length;
   return {
     evaluatedAt: new Date().toISOString(),
     sources_total: sources.length,
