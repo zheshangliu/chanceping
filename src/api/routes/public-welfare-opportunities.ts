@@ -29,6 +29,7 @@ export function publicWelfareOpportunityRoutes(): Hono {
       scene: c.req.query("scene") ?? "all",
       region: c.req.query("region") ?? "all",
       deadlineWindow: c.req.query("deadline_window") ?? "all",
+      layer: c.req.query("layer") === "signal" || c.req.query("layer") === "historical" || c.req.query("layer") === "current" ? c.req.query("layer") as "signal" | "historical" | "current" : "all",
       sort: c.req.query("sort") === "sales" ? "sales" : "deadline",
       supplierFit: c.req.query("supplier_fit") ?? "all",
       contactKnown: c.req.query("contact") === "known",

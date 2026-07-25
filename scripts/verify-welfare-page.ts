@@ -34,9 +34,11 @@ assert.ok(js.includes("/api/public/welfare/opportunities?"));
 assert.ok(!html.includes("本来生活能力"));
 assert.ok(js.includes("contactName") && js.includes("contactPhone") && js.includes("contactAddress"));
 assert.ok(html.includes("待核验线索") && js.includes("/api/public/welfare/candidates"));
-assert.ok(html.includes("welfare-contact") && js.includes("welfare-contact") && js.includes("contact:"), "contact-known sales filter must be present");
-assert.ok(js.includes("chanceping:welfare:sales-follow-up:v1") && js.includes("保存跟进记录"), "sales follow-up must persist in browser storage");
-assert.ok(html.includes("welfare-export-followups") && js.includes("text/csv"), "sales follow-up export must be available");
+assert.ok(html.includes("当前机会") && html.includes("前置信号") && html.includes("历史续采"), "layered public navigation must be present");
+assert.ok(html.includes("welfare-quick") && js.includes("welfare-quick"), "public quick filters must be present");
+assert.ok(js.includes("查看详情") && js.includes("publicContact"), "cards must use a compact public summary");
+assert.ok(!js.includes("chanceping:welfare:sales-follow-up:v1") && !js.includes("保存跟进记录"), "public page must not expose sales follow-up persistence");
+assert.ok(!html.includes("welfare-export-followups"), "public page must not expose sales export");
 
 async function main() {
   const app = createApp();
@@ -51,7 +53,8 @@ async function main() {
   assert.ok(json.data.items[0].officialUrl.startsWith("https://www.szgm.gov.cn/"));
   assert.equal("radarId" in json.data.items[0], false);
   assert.equal("runId" in json.data.items[0], false);
-  assert.ok(/^0755-\d{7,8}$/.test(json.data.items[0].contactPhone));
+  assert.ok(["current", "signal", "historical"].includes(json.data.items[0].opportunityLayer));
+  assert.ok(json.data.items[0].contactPhone.length > 0);
   assert.ok(json.data.items[0].contactName.length > 0);
   assert.ok(json.data.items[0].contactAddress.length > 0);
   const candidates = await app.request("/api/public/welfare/candidates?page=1&page_size=12");

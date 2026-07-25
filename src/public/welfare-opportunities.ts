@@ -17,7 +17,7 @@ export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg
 const WELFARE_CONTEXT = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|防暑降温|疗休养|农副产品|节日(?:慰问|福利)?|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券|福利)?|体检|健康管理|心理服务|职工餐厅|职工食堂|工会|职工服务|职工活动|职工培训|员工关怀|员工体检|福利采购)/;
 const WELFARE_ACTION = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目|服务商|入围|采购意向)/;
 const NON_OPPORTUNITY_DISCOVERY = /(政策|办法|指引|解读|管理规定|工作通知|资格审查)/;
-const NON_WELFARE_PROJECT = /(城市体检|房屋体检|工程建设|医疗器械|设备采购|人工智能推广|信息化建设|系统开发)/;
+const NON_WELFARE_PROJECT = /(城市体检|房屋体检|工程建设|医疗器械|设备采购|人工智能推广|信息化建设|系统开发|检验科耗材|耗材试剂|学校新闻|调研工作|率队赴|中央政府采购网|中国人民银行采购网|审计项目|报废处置|造价评估|人工智能|公众号内容运营|劳动争议|法律服务)/;
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
@@ -32,6 +32,8 @@ export interface WelfareSourceConfig {
   indexUrls?: string[];
   /** Some official partnership pages are the detail page and the source itself. */
   directDetail?: boolean;
+  /** Explicit official detail pages used when a portal has no stable index. */
+  detailUrls?: string[];
   /** A small number of official portals publish their public notice list as JSON. */
   publicApi?: "szggzy-government-procurement" | "gzgpc-procurement-signals";
   rollout?: "public" | "shadow";
@@ -105,6 +107,10 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-ZH-001", name: "珠海市公共资源交易中心", url: "https://ggzy.zhuhai.gov.cn/", allowedHost: "ggzy.zhuhai.gov.cn", region: "珠海", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-ZS-001", name: "中山市公共资源交易平台", url: "https://www.zsjypt.cn/", allowedHost: "www.zsjypt.cn", region: "中山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-HZ-001", name: "惠州市公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "惠州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
+  { code: "OFF-SZ-006", name: "龙岗区总工会通知公告", url: "https://www.lg.gov.cn/bmzz/zgh/xxgk/qt/tzgg/index.html", allowedHost: "www.lg.gov.cn", region: "深圳龙岗", maxDetails: 30, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", candidateDiscovery: true },
+  { code: "OFF-SZ-007", name: "南山区总工会采购公告", url: "https://www.szns.gov.cn/ztzl/slh/tzgg/content/post_12358223.html", allowedHost: "www.szns.gov.cn", region: "深圳南山", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
+  { code: "OFF-SZ-009", name: "宝安区街道工会慰问采购公告", url: "https://www.baoan.gov.cn/", allowedHost: "www.baoan.gov.cn", region: "深圳宝安", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.baoan.gov.cn/sjjd/zwgk/zbcg/content/post_12617822.html", "https://www.baoan.gov.cn/rlzyj/zwgk/zbgg/content/post_12609011.html", "https://www.baoan.gov.cn/xajd/zwgk/zbcg/content/post_12603326.html", "https://www.baoan.gov.cn/fyjd/xxgk/zbcg/cgyx/content/post_12692680.html"] },
+  { code: "OFF-SZ-010", name: "罗湖区机关/街道慰问采购公告", url: "https://www.szlh.gov.cn/", allowedHost: "www.szlh.gov.cn", region: "深圳罗湖", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.szlh.gov.cn/lhmzj/gkmlpt/content/12/12828/post_12828504.html", "https://www.szlh.gov.cn/lhgafj/gkmlpt/content/12/12728/post_12728305.html"] },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
@@ -178,6 +184,7 @@ function isAllowedWelfareHost(hostname: string): boolean {
 }
 
 export type WelfareLifecycle = "current" | "historical";
+export type WelfareOpportunityLayer = "current" | "signal" | "historical";
 export type WelfareOpportunityType = "OPEN_PROCUREMENT" | "PROCUREMENT_INTENT" | "SUPPLIER_RECRUITMENT" | "FRAMEWORK_AGREEMENT" | "CHANNEL_PARTNERSHIP";
 export type WelfareVerificationState = "CANDIDATE" | "FIELD_VERIFIED" | "STATUS_VERIFIED" | "FULLY_VERIFIED";
 export type WelfareFieldState = "verified" | "not_published" | "parse_failed" | "unknown";
@@ -200,6 +207,8 @@ export interface WelfareOpportunityRecord {
   dataMode: "recorded" | "live";
   opportunityType: WelfareOpportunityType;
   lifecycleStatus: WelfareLifecycle;
+  /** Public display layer: actionable opportunity, early signal, or historical renewal intelligence. */
+  opportunityLayer?: WelfareOpportunityLayer;
   currentStage: "OPEN" | "CORRECTED" | "CLOSED_PENDING_RESULT" | "AWARDED" | "CONTRACTED" | "TERMINATED" | "UNKNOWN";
   verificationState: WelfareVerificationState;
   buyer: string;
@@ -253,6 +262,7 @@ export interface WelfareFeedOptions {
   sort?: "deadline" | "sales";
   supplierFit?: string;
   contactKnown?: boolean;
+  layer?: WelfareOpportunityLayer | "all";
 }
 
 export interface WelfareFeed {
@@ -273,6 +283,7 @@ export interface WelfareFeed {
     sceneFacets: Array<{ id: string; label: string; count: number }>;
     regionFacets: Array<{ id: string; label: string; count: number }>;
     supplierFitFacets: Array<{ id: string; label: string; count: number }>;
+    layerCounts: Record<WelfareOpportunityLayer, number>;
   };
   sources: Array<{ code: string; name: string; url: string; status: "active" | "degraded" | "empty"; lastUpdatedAt: string | null }>;
 }
@@ -281,6 +292,78 @@ export interface WelfareRunSummary {
   ranAt: string;
   sources: Array<Pick<WelfareSourceCollectionResult, "sourceCode" | "sourceName" | "retrievedAt" | "status" | "discoveredCount" | "publishedCount" | "totalCount">>;
   totals: { added: number; updated: number; historical: number; filtered: number; total: number };
+}
+
+export interface WelfareFunnelDiagnostics {
+  evaluatedAt: string;
+  sources_total: number;
+  sources_success: number;
+  sources_empty: number;
+  sources_failed: number;
+  raw_records: number;
+  welfare_context_hits: number;
+  action_intent_hits: number;
+  official_detail_found: number;
+  active_status_verified: number;
+  deduplicated_opportunities: number;
+  public_current: number;
+  public_signals: number;
+  public_history: number;
+  sources: Array<{
+    source_id: string;
+    last_success_at: string | null;
+    last_attempt_at: string | null;
+    run_status: string;
+    raw_count: number;
+    candidate_count: number;
+    accepted_count: number;
+    duplicate_count: number;
+    closed_count: number;
+    parse_failure_count: number;
+    reason_if_zero?: string;
+  }>;
+}
+
+export function buildWelfareFunnelDiagnostics(records = loadPersistedWelfareOpportunities(), summary = loadWelfareRunSummary()): WelfareFunnelDiagnostics {
+  const sourceRuns = summary?.sources ?? [];
+  const bySource = new Map(records.map((record) => [record.sourceCode, records.filter((item) => item.sourceCode === record.sourceCode)]));
+  const sources = WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
+    const run = sourceRuns.find((item) => item.sourceCode === source.code);
+    const accepted = bySource.get(source.code) ?? [];
+    return {
+      source_id: source.code,
+      last_success_at: run?.status === "succeeded" ? run.retrievedAt : null,
+      last_attempt_at: run?.retrievedAt ?? null,
+      run_status: run?.status ?? "not_run",
+      raw_count: run?.discoveredCount ?? 0,
+      candidate_count: run?.discoveredCount ?? 0,
+      accepted_count: accepted.length,
+      duplicate_count: 0,
+      closed_count: accepted.filter((item) => item.lifecycleStatus === "historical").length,
+      parse_failure_count: Math.max(0, (run?.discoveredCount ?? 0) - (run?.publishedCount ?? 0)),
+      reason_if_zero: accepted.length === 0 ? (run?.status === "failed" ? "来源访问失败，保留上次成功数据" : run?.status === "empty" ? "本轮无通过福利准入规则的公告" : "尚未运行") : undefined,
+    };
+  });
+  const current = records.filter((item) => item.opportunityLayer === "current").length;
+  const signal = records.filter((item) => item.opportunityLayer === "signal").length;
+  const history = records.filter((item) => item.opportunityLayer === "historical").length;
+  return {
+    evaluatedAt: new Date().toISOString(),
+    sources_total: sources.length,
+    sources_success: sources.filter((item) => item.run_status === "succeeded").length,
+    sources_empty: sources.filter((item) => item.run_status === "empty").length,
+    sources_failed: sources.filter((item) => ["failed", "partial"].includes(item.run_status)).length,
+    raw_records: sourceRuns.reduce((sum, item) => sum + item.discoveredCount, 0),
+    welfare_context_hits: sourceRuns.reduce((sum, item) => sum + item.discoveredCount, 0),
+    action_intent_hits: sourceRuns.reduce((sum, item) => sum + item.publishedCount, 0),
+    official_detail_found: records.filter((item) => Boolean(item.officialUrl)).length,
+    active_status_verified: records.filter((item) => item.lifecycleStatus === "current" && ["STATUS_VERIFIED", "FULLY_VERIFIED"].includes(item.verificationState)).length,
+    deduplicated_opportunities: records.length,
+    public_current: current,
+    public_signals: signal,
+    public_history: history,
+    sources,
+  };
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -365,7 +448,8 @@ function normalizeWelfareRecordForDisplay(record: WelfareOpportunityRecord): Wel
   ]));
   const followUpStatus = record.lifecycleStatus !== "current" ? "已结束" : fieldState(evidenceFields, "contactPhone") === "verified" ? "待联系" : "待核验";
   const followUpNextAction = followUpStatus === "待联系" ? "核对官方原文后记录首次联系结果。" : followUpStatus === "待核验" ? "补齐采购单位、联系人和资格要求，再决定是否联系。" : "保留为历史情报，关注后续同类项目。";
-  return { ...record, buyer, contactAddress, evidenceFields, salesScore, salesPriority, salesAction, followUpStatus, followUpNextAction, supplierMatches };
+  const opportunityLayer: WelfareOpportunityLayer = record.lifecycleStatus !== "current" ? "historical" : ["PROCUREMENT_INTENT", "SUPPLIER_RECRUITMENT", "CHANNEL_PARTNERSHIP"].includes(record.opportunityType) ? "signal" : "current";
+  return { ...record, buyer, contactAddress, evidenceFields, opportunityLayer, salesScore, salesPriority, salesAction, followUpStatus, followUpNextAction, supplierMatches };
 }
 
 function buildFacets(records: WelfareOpportunityRecord[], values: (record: WelfareOpportunityRecord) => string[], labels?: Record<string, string>) {
@@ -387,6 +471,7 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
   const currentCount = allRecords.filter((item) => item.lifecycleStatus === "current").length;
   const historicalCount = allRecords.length - currentCount;
   let filtered = allRecords.filter((item) => status === "all" || item.lifecycleStatus === status);
+  if (options.layer && options.layer !== "all") filtered = filtered.filter((item) => item.opportunityLayer === options.layer);
   if (options.type && options.type !== "all") filtered = filtered.filter((item) => item.opportunityType === options.type);
   if (options.scene && options.scene !== "all") filtered = filtered.filter((item) => item.welfareScenes.includes(options.scene!));
   if (options.region && options.region !== "all") filtered = filtered.filter((item) => item.region === options.region);
@@ -417,6 +502,11 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
       sceneFacets: buildFacets(allRecords, (item) => item.welfareScenes),
       regionFacets: buildFacets(allRecords, (item) => [item.region]),
       supplierFitFacets: buildFacets(allRecords, (item) => item.supplierMatches ?? []),
+      layerCounts: {
+        current: allRecords.filter((item) => item.opportunityLayer === "current").length,
+        signal: allRecords.filter((item) => item.opportunityLayer === "signal").length,
+        historical: allRecords.filter((item) => item.opportunityLayer === "historical").length,
+      },
     },
     sources: WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
       const summary = loadWelfareRunSummary()?.sources.find((item) => item.sourceCode === source.code);
@@ -859,7 +949,9 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   if (indexErrors.length === indexUrls.length) {
     return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: indexErrors }, records: [] };
   }
-  const links = (source.directDetail
+  const links = (source.detailUrls?.length
+    ? source.detailUrls.map((url) => ({ title: source.name, url, publishedAt: "" }))
+    : source.directDetail
     ? [{ title: source.name, url: source.url, publishedAt: "" }]
     : Array.from(indexLinks.values()).sort((a, b) => {
       const context = WELFARE_CONTEXT;
@@ -893,7 +985,7 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       const sha = crypto.createHash("sha256").update(html).digest("hex");
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
-      if (record) records.push(record);
+      if (record) records.push((/采购意向|需求公示|意向公示/.test(record.title) ? { ...record, opportunityType: "PROCUREMENT_INTENT" as const } : record));
       else {
         const detailText = cleanText(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " "));
         const hasWelfareContext = (WELFARE_CONTEXT.test(link.title) || WELFARE_CONTEXT.test(detailText)) && !NON_OPPORTUNITY_DISCOVERY.test(link.title) && !NON_WELFARE_PROJECT.test(link.title) && !NON_OPPORTUNITY_DISCOVERY.test(detailText);

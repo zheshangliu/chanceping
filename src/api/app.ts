@@ -20,6 +20,7 @@ import { radarChatRoutes } from "./routes/radar-chats";
 import { radarJobRoutes } from "./routes/radar-jobs";
 import { publicAiEventsRoutes } from "./routes/public-ai-events";
 import { publicWelfareOpportunityRoutes } from "./routes/public-welfare-opportunities";
+import { internalWelfareDiagnosticsRoutes } from "./routes/internal-welfare-diagnostics";
 import { businessRadarRoutes } from "./routes/business-radar";
 import { publicIchRoutes } from "./routes/public-ich";
 import { ichPagesRoutes } from "./routes/ich-pages";
@@ -72,6 +73,7 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/radar-jobs", radarJobRoutes(ctx));
   app.route("/api/public", publicAiEventsRoutes(ctx));
   app.route("/api/public/welfare", publicWelfareOpportunityRoutes());
+  app.route("/api/internal/welfare", internalWelfareDiagnosticsRoutes());
   app.route("/api/business", businessRadarRoutes());
   app.route("/api/public/ich", publicIchRoutes());
   app.route("/api/public/ich", ichSubmissionRoutes());
