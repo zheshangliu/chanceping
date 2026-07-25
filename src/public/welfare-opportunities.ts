@@ -165,6 +165,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://cemps.cas.cn/tzgg/2025n_241394/202607/t20260716_8250446.html",
     "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html"
   ] },
+  { code: "OFF-SZ-011", name: "光明区工伤职工探视服务采购公告", url: "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/content/post_12904814.html", allowedHost: "www.szgm.gov.cn", region: "深圳光明", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
