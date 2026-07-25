@@ -114,6 +114,20 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-ZS-002", name: "中山市镇街总工会慰问采购公告", url: "https://www.zs.gov.cn/", allowedHost: "www.zs.gov.cn", region: "中山", maxDetails: 8, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.zs.gov.cn/zshpz/gkmlpt/content/2/2623/post_2623220.html", "https://www.zs.gov.cn/zssxz/gkmlpt/content/2/2629/post_2629889.html", "https://www.zs.gov.cn/zshpz/gkmlpt/content/2/2595/post_2595258.html", "https://www.zs.gov.cn/zstzz/gkmlpt/content/2/2629/post_2629008.html", "https://www.zs.gov.cn/zstzz/gkmlpt/content/2/2633/post_2633877.html"] },
   { code: "OFF-DG-002", name: "东莞市及镇街工会慰问采购公告", url: "https://www.dg.gov.cn/", allowedHost: "www.dg.gov.cn", region: "东莞", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.dg.gov.cn/zwgk/zfxxgkml/styjrswj/qt/cgzb/content/post_4500915.html", "https://www.dg.gov.cn/zwgk/zfxxgkml/qxz/qt/gzdt/content/post_4495842.html"] },
   { code: "OFF-GZ-004", name: "广州市黄埔区街道工会慰问采购公告", url: "https://www.hp.gov.cn/gzhpwcj/gkmlpt/content/10/10782/post_10782028.html", allowedHost: "www.hp.gov.cn", region: "广州黄埔", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
+  { code: "OFF-N-012", name: "全国地方机关/高校工会福利采购公告", url: "https://www.ccgp.gov.cn/", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.sipac.gov.cn/yqjyj/zbxxjzbgg/202603/a415492ff520457ca509c9c4e722649f.shtml",
+    "https://rsj.nantong.gov.cn/ntsrsj/gggs/content/5e8fce7a-4da4-472f-b585-2d0c88e53a5b.html",
+    "https://www.njqxq.gov.cn/qxqrmzf/202601/t20260126_5779269.html",
+    "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202601/t20260126_3260885.htm",
+    "https://www.lg.gov.cn/xxgk/zwgk/tzgg/content/post_12779529.html",
+    "https://www.tjftz.gov.cn/contents/6152/380266.html",
+    "https://www.gl.gov.cn/xjwz/zwgkml/zdlyxxgk/zfcg/zbgg/zbgg_gdjd_40821/202601/t20260109_5269298.htm",
+    "https://www.gdyunan.gov.cn/gkmlpt/content/1/1980/post_1980659.html"
+  ] },
+  { code: "OFF-N-013", name: "中国政府采购网｜工会福利采购意向", url: "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf", allowedHost: "cgyx.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", opportunityType: "PROCUREMENT_INTENT", directDetail: true, detailUrls: [
+    "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
+    "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=f941bc33-a4fd-4447-9430-d92208f3aa33"
+  ] },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
