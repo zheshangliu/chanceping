@@ -15,15 +15,6 @@ const minimums: Record<(typeof categories)[number], number> = {
   international: 14,
 };
 
-const current = file.entries.filter((entry) => {
-  if (!entry.is_published || entry.status !== "active") return false;
-  if (!entry.dates.deadline_at) return /长期|ongoing|open-ended/i.test(entry.status_reason ?? "");
-  return new Date(`${entry.dates.deadline_at}T23:59:59+08:00`) >= now;
-});
-const counts = Object.fromEntries(categories.map((category) => [category, current.filter((entry) => entry.primary_category === category).length]));
-const l1 = current.filter((entry) => entry.sources[0]?.level === "L1").length;
-const l12 = current.filter((entry) => ["L1", "L2"].includes(entry.sources[0]?.level ?? "")).length;
-const duplicateUrls = current.map((entry) => entry.sources[0]?.url).filter((url, i, all) => Boolean(url) && all.indexOf(url) !== i);
 const genericSourceRoots = [
   "https://www.mct.gov.cn/whzx/ggtz/",
   "https://www.ihchina.cn/",
@@ -35,7 +26,18 @@ const genericSourceRoots = [
   "https://www.asef.org/",
   "https://www.cac.gov.cn/",
 ];
-const genericUrls = current.filter((entry) => genericSourceRoots.some((root) => entry.sources[0]?.url === root || entry.sources[0]?.url?.endsWith(root.replace(/\/$/, "")))).map((entry) => entry.slug);
+const isGenericSource = (entry: IchOpportunity) => genericSourceRoots.some((root) => entry.sources[0]?.url === root || entry.sources[0]?.url?.endsWith(root.replace(/\/$/, "")));
+const current = file.entries.filter((entry) => {
+  if (!entry.is_published || entry.status !== "active") return false;
+  if (isGenericSource(entry)) return false;
+  if (!entry.dates.deadline_at) return /长期|ongoing|open-ended/i.test(entry.status_reason ?? "");
+  return new Date(`${entry.dates.deadline_at}T23:59:59+08:00`) >= now;
+});
+const counts = Object.fromEntries(categories.map((category) => [category, current.filter((entry) => entry.primary_category === category).length]));
+const l1 = current.filter((entry) => entry.sources[0]?.level === "L1").length;
+const l12 = current.filter((entry) => ["L1", "L2"].includes(entry.sources[0]?.level ?? "")).length;
+const duplicateUrls = current.map((entry) => entry.sources[0]?.url).filter((url, i, all) => Boolean(url) && all.indexOf(url) !== i);
+const genericUrls = file.entries.filter((entry) => isGenericSource(entry)).map((entry) => entry.slug);
 const errors: string[] = [];
 if (current.length < 80) errors.push(`current_total ${current.length} < 80`);
 for (const category of categories) if (counts[category] < minimums[category]) errors.push(`${category} ${counts[category]} < ${minimums[category]}`);
