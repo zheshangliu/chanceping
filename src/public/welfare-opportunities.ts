@@ -128,7 +128,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
     "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=f941bc33-a4fd-4447-9430-d92208f3aa33"
   ] },
-  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn"], region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.songjiang.gov.cn/shsj_sijing/xwzx/001002/001002/20260625/6a339e4a-eee6-4c72-9a73-d907156a4731.html",
     "https://www.songjiang.gov.cn/shsj_xiaokunshan/xwzx/001002/20260525/167ce7d9-b92b-4993-baa5-93c1f1a8797f.html",
     "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260608/350cf5a7-1049-42d2-875d-58038fef7272.html",
@@ -140,7 +140,7 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
     "https://www.szns.gov.cn/sz/tzgg/content/post_12888753.html"
   ] },
-  { code: "OFF-N-015", name: "全国工会疗休养与福利服务采购", url: "https://sft.fujian.gov.cn/", allowedHost: "sft.fujian.gov.cn", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-015", name: "全国工会疗休养与福利服务采购", url: "https://sft.fujian.gov.cn/", allowedHost: "sft.fujian.gov.cn", extraAllowedHosts: ["ggzy.suzhou.gov.cn", "nbgh.gov.cn", "www.sipac.gov.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
     "https://ggzy.suzhou.gov.cn/jyxx/003034/003034001/20260630/3a92ad7d-f758-4ef1-a175-ba2e3cb81bb8.html",
     "https://nbgh.gov.cn/zghcms/tzgg/127551.jhtml",
@@ -156,16 +156,16 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
     "https://www.szns.gov.cn/sz/tzgg/content/post_12888753.html",
     "https://kfqgw.beijing.gov.cn/zwgkkfq/tzgg/202607/t20260724_4784850.html"
   ] },
-  { code: "OFF-N-018", name: "全国高校工会福利采购公告", url: "https://www.qztc.edu.cn/", allowedHost: "www.qztc.edu.cn", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-018", name: "全国高校工会福利采购公告", url: "https://www.qztc.edu.cn/", allowedHost: "www.qztc.edu.cn", extraAllowedHosts: ["zc.ucass.edu.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.qztc.edu.cn/2025/1125/c2095a289553/page.htm",
     "https://zc.ucass.edu.cn/"
   ] },
-  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.zqtcm.com/dqjs/zbcg/content_1052",
     "https://cemps.cas.cn/tzgg/2025n_241394/202607/t20260716_8250446.html",
     "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html"
   ] },
-  { code: "OFF-N-020", name: "全国工会职工福利与节日物资采购", url: "https://www.dongtai.gov.cn/", allowedHost: "www.dongtai.gov.cn", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+  { code: "OFF-N-020", name: "全国工会职工福利与节日物资采购", url: "https://www.dongtai.gov.cn/", allowedHost: "www.dongtai.gov.cn", extraAllowedHosts: ["zfcg.henan.gov.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
     "https://www.dongtai.gov.cn/art/2026/7/21/art_7905_4440949.html",
     "https://zfcg.henan.gov.cn/gongyi/content?bz=1&channelCode=D310207&infoId=1979309",
     "https://zfcg.henan.gov.cn/cmsweb35rc67w/gongyi/cgxx/cgyx/webinfo/2026/07/1979309.htm"
@@ -1111,9 +1111,10 @@ export async function collectOffSz004(options: { fetchHtml?: (url: string) => Pr
   return collectWelfareSource("OFF-SZ-004", options);
 }
 
-export async function collectAllWelfareSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; maxDetails?: number; evidenceDir?: string } = {}) {
+export async function collectAllWelfareSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; maxDetails?: number; evidenceDir?: string; sourceCodes?: string[] } = {}) {
   const collected: WelfareSourceCollectionData[] = [];
-  const sources = WELFARE_SOURCES.filter((item) => item.enabled);
+  const requestedCodes = options.sourceCodes?.length ? new Set(options.sourceCodes) : undefined;
+  const sources = WELFARE_SOURCES.filter((item) => item.enabled && (!requestedCodes || requestedCodes.has(item.code)));
   // Keep public traffic bounded while avoiding a serial 31-source refresh that
   // can exceed the systemd window when one government host has slow TLS.
   for (let offset = 0; offset < sources.length; offset += 4) {
