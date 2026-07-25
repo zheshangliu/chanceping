@@ -10,6 +10,8 @@ export type DeadlineType = "fixed" | "rolling" | "long_term" | "unknown";
 
 export interface BusinessOpportunity {
   id: string;
+  /** Optional stable registry link; legacy records remain valid without migration. */
+  sourceId?: string;
   slug: string;
   title: string;
   shortTitle?: string;

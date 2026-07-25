@@ -1,0 +1,13 @@
+[
+  {
+    "id": "demo-runjia-cultural",
+    "name": "广州非遗文创小微企业",
+    "businessType": "小微企业",
+    "regions": ["guangzhou", "tianhe"],
+    "targetAudience": ["enterprise", "sme", "creative_business"],
+    "categories": ["policy", "funding", "exhibition", "competition"],
+    "industries": ["文化创意", "非遗", "文创", "设计"],
+    "keywords": ["创新", "非遗", "文创", "展会", "小微企业"],
+    "constraints": ["需要确认企业注册地", "需要准备资质与申报材料", "有限的人力和预算"]
+  }
+]

@@ -2,6 +2,12 @@ import { Hono } from "hono";
 import { BUSINESS_COMMON_CONFIG, BUSINESS_EDITIONS, BUSINESS_EDITION_IDS, getBusinessEdition, type BusinessEditionId } from "../../business/edition-config";
 import { CATEGORY_LABELS, loadBusinessOpportunities, lifecycleStatus, RECOMMENDATION_LABELS, VERIFICATION_LABELS, type BusinessOpportunity } from "../../business/opportunity";
 import { sourcesForEdition } from "../../business/source-catalog";
+import { loadSourceRegistry } from "../../business/data-pipeline";
+import { evaluateEligibility } from "../../business/matching/eligibility-gate";
+import { calculateFitScore } from "../../business/matching/fit-score";
+import { evaluateLocalRelevance } from "../../business/matching/local-relevance";
+import type { BusinessProfile } from "../../business/matching/types";
+import { loadDemoProfiles } from "../../business/matching/types";
 import type { ApiResponse } from "../types";
 
 /** Keep a discovery feed useful when one trustworthy source has much higher volume. */
@@ -31,17 +37,9 @@ import type { ApiResponse } from "../types";
 export function businessRadarRoutes(): Hono {
   const app = new Hono();
   const allItems = () => loadBusinessOpportunities();
-  const publicItem = (item: BusinessOpportunity) => ({ ...item, lifecycleStatus: lifecycleStatus(item), categoryLabel: CATEGORY_LABELS[item.category], verificationLabel: VERIFICATION_LABELS[item.verificationStatus], recommendationLabel: RECOMMENDATION_LABELS[item.recommendationLevel] });
+  const sourceIdFor = (item: BusinessOpportunity) => item.sourceId ?? loadSourceRegistry().sources.find((source) => source.name === item.sourceName || item.officialUrl.startsWith(source.officialDomain) || item.officialUrl.startsWith(source.entryUrl))?.sourceId;
+  const publicItem = (item: BusinessOpportunity) => ({ ...item, sourceId: sourceIdFor(item), lifecycleStatus: lifecycleStatus(item), categoryLabel: CATEGORY_LABELS[item.category], verificationLabel: VERIFICATION_LABELS[item.verificationStatus], recommendationLabel: RECOMMENDATION_LABELS[item.recommendationLevel] });
 
-  const scoreForProfile = (item: BusinessOpportunity, profile: { keywords?: string[]; industries?: string[]; regions?: string[]; categories?: string[] }) => {
-    const terms = [...(profile.keywords ?? []), ...(profile.industries ?? [])].map((value) => value.toLowerCase()).filter(Boolean);
-    const haystack = `${item.title} ${item.summary} ${item.keywords.join(" ")} ${item.industries.join(" ")}`.toLowerCase();
-    const termHits = terms.filter((term) => haystack.includes(term)).length;
-    const regionHit = (profile.regions ?? []).some((region) => item.regions.some((value) => value.includes(region)) || item.editions.includes(region as BusinessEditionId));
-    const categoryHit = (profile.categories ?? []).includes(item.category);
-    const score = Math.min(99, Math.max(35, 45 + termHits * 12 + (regionHit ? 10 : 0) + (categoryHit ? 8 : 0) + (item.recommendationLevel === "high" ? 8 : 0)));
-    return { score, reasons: [termHits ? `命中 ${termHits} 个关注关键词` : "与关注方向存在基础关联", regionHit ? "地区范围匹配" : "地区范围待确认", categoryHit ? "机会类型匹配" : "建议结合企业阶段判断"] };
-  };
 
   app.get("/editions", (c) => c.json({
     success: true,
@@ -100,9 +98,15 @@ export function businessRadarRoutes(): Hono {
   app.post("/matches", async (c) => {
     const edition = getBusinessEdition(c.req.query("edition"));
     if (!edition) return c.json({ success: false, data: null, error: { code: "EDITION_REQUIRED", message: "需要有效的地区版本" }, duration_ms: 0 } satisfies ApiResponse, 400);
-    const profile = await c.req.json().catch(() => ({})) as { keywords?: string[]; industries?: string[]; regions?: string[]; categories?: string[] };
-    const matches = allItems().filter((item) => item.editions.includes(edition.id) && lifecycleStatus(item) !== "historical").map((item) => ({ item, ...scoreForProfile(item, profile) })).sort((a, b) => b.score - a.score || b.item.updatedAt.localeCompare(a.item.updatedAt)).slice(0, 20);
-    return c.json({ success: true, data: { edition: edition.id, profile, gate: { passed: matches.length >= 20, reason: matches.length >= 20 ? "已达到首发匹配数量门槛" : "当前有效机会不足 20 条" }, items: matches.map(({ item, score, reasons }) => ({ ...publicItem(item), fitScore: score, fitReasons: reasons })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
+    const input = await c.req.json().catch(() => ({})) as Partial<BusinessProfile>;
+    const profile = { ...loadDemoProfiles()[0], ...input, id: input.id ?? "demo-runjia-cultural" } as BusinessProfile;
+    const matches = allItems().filter((item) => item.editions.includes(edition.id) && lifecycleStatus(item) !== "historical").map((item) => {
+      const gate = evaluateEligibility(item, profile);
+      const localRelevance = evaluateLocalRelevance(item, edition.id);
+      const fit = calculateFitScore(item, profile, gate, localRelevance);
+      return { item, gate, localRelevance, fit };
+    }).sort((a, b) => b.fit.score - a.fit.score || b.item.updatedAt.localeCompare(a.item.updatedAt)).slice(0, 20);
+    return c.json({ success: true, data: { edition: edition.id, profile, gate: { passed: matches.length >= 20, reason: matches.length >= 20 ? "已达到首发匹配数量门槛" : "当前有效机会不足 20 条" }, items: matches.map(({ item, gate, localRelevance, fit }) => ({ ...publicItem(item), fitScore: fit.score, fitLabel: fit.label, fitReasons: fit.reasons, unknowns: gate.unknowns, gate, preparationCost: fit.preparationCost, localRelevance })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
   });
 
   return app;
