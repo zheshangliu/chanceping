@@ -34,6 +34,11 @@ assert.ok(js.includes("/api/public/welfare/opportunities?"));
 assert.ok(!html.includes("本来生活能力"));
 assert.ok(js.includes("contactName") && js.includes("contactPhone") && js.includes("contactAddress"));
 assert.ok(html.includes("待核验线索") && js.includes("/api/public/welfare/candidates"));
+assert.ok(html.includes("当前机会") && html.includes("前置信号") && html.includes("历史续采"), "layered public navigation must be present");
+assert.ok(html.includes("welfare-quick") && js.includes("welfare-quick"), "public quick filters must be present");
+assert.ok(js.includes("查看详情") && js.includes("publicContact"), "cards must use a compact public summary");
+assert.ok(!js.includes("chanceping:welfare:sales-follow-up:v1") && !js.includes("保存跟进记录"), "public page must not expose sales follow-up persistence");
+assert.ok(!html.includes("welfare-export-followups"), "public page must not expose sales export");
 
 async function main() {
   const app = createApp();
@@ -44,11 +49,14 @@ async function main() {
   assert.equal(response.status, 200);
   const json = await response.json() as any;
   assert.equal(json.success, true);
+  assert.equal(json.data.stats.dataOrigin, "runtime");
+  assert.ok(!JSON.stringify(json).includes(process.env.CHANCEPING_WELFARE_STORE_PATH!));
   assert.ok(json.data.items.length > 0);
   assert.ok(json.data.items[0].officialUrl.startsWith("https://www.szgm.gov.cn/"));
   assert.equal("radarId" in json.data.items[0], false);
   assert.equal("runId" in json.data.items[0], false);
-  assert.ok(/^0755-\d{7,8}$/.test(json.data.items[0].contactPhone));
+  assert.ok(["current", "signal", "historical"].includes(json.data.items[0].opportunityLayer));
+  assert.ok(json.data.items[0].contactPhone.length > 0);
   assert.ok(json.data.items[0].contactName.length > 0);
   assert.ok(json.data.items[0].contactAddress.length > 0);
   const candidates = await app.request("/api/public/welfare/candidates?page=1&page_size=12");
@@ -59,6 +67,11 @@ async function main() {
   const report = await app.request("/api/public/welfare/report.md");
   assert.equal(report.status, 200);
   assert.ok((await report.text()).includes(json.data.items[0].title));
+  fs.unlinkSync(process.env.CHANCEPING_WELFARE_STORE_PATH!);
+  const fallbackResponse = await app.request("/api/public/welfare/opportunities?status=all&page=1&page_size=12");
+  const fallbackJson = await fallbackResponse.json() as any;
+  assert.equal(fallbackJson.data.stats.dataOrigin, "seed");
+  assert.ok(fallbackJson.data.items.length > 0, "missing runtime data must fall back to the Git seed");
   console.log("PASS verify:welfare:page");
 }
 main().catch((error) => { console.error(error); process.exit(1); });

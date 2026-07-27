@@ -17,7 +17,7 @@ export const WELFARE_SOURCE_URL = "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg
 const WELFARE_CONTEXT = /(慰问|员工福利|职工福利|职工之家|消费帮扶|送清凉|防暑降温|疗休养|农副产品|节日(?:慰问|福利)?|礼品|月饼|关爱职工|职工关爱|福利品|生日(?:礼|蛋糕|券|福利)?|体检|健康管理|心理服务|职工餐厅|职工食堂|工会|职工服务|职工活动|职工培训|员工关怀|员工体检|福利采购)/;
 const WELFARE_ACTION = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目|服务商|入围|采购意向)/;
 const NON_OPPORTUNITY_DISCOVERY = /(政策|办法|指引|解读|管理规定|工作通知|资格审查)/;
-const NON_WELFARE_PROJECT = /(城市体检|房屋体检|工程建设|医疗器械|设备采购|人工智能推广|信息化建设|系统开发)/;
+const NON_WELFARE_PROJECT = /(城市体检|房屋体检|工程建设|医疗器械|设备采购|人工智能推广|信息化建设|系统开发|检验科耗材|耗材试剂|学校新闻|率队赴|中央政府采购网|中国人民银行采购网|审计项目|报废处置|造价评估|人工智能|公众号内容运营|劳动争议|法律服务)/;
 const execFileAsync = promisify(execFile);
 
 export interface WelfareSourceConfig {
@@ -32,6 +32,8 @@ export interface WelfareSourceConfig {
   indexUrls?: string[];
   /** Some official partnership pages are the detail page and the source itself. */
   directDetail?: boolean;
+  /** Explicit official detail pages used when a portal has no stable index. */
+  detailUrls?: string[];
   /** A small number of official portals publish their public notice list as JSON. */
   publicApi?: "szggzy-government-procurement" | "gzgpc-procurement-signals";
   rollout?: "public" | "shadow";
@@ -105,6 +107,119 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "OFF-ZH-001", name: "珠海市公共资源交易中心", url: "https://ggzy.zhuhai.gov.cn/", allowedHost: "ggzy.zhuhai.gov.cn", region: "珠海", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-ZS-001", name: "中山市公共资源交易平台", url: "https://www.zsjypt.cn/", allowedHost: "www.zsjypt.cn", region: "中山", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
   { code: "OFF-HZ-001", name: "惠州市公共资源交易入口", url: "https://ygp.gdzwfw.gov.cn/ggzy-portal/index.html", allowedHost: "ygp.gdzwfw.gov.cn", region: "惠州", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "city-ggzy-spa" },
+  { code: "OFF-SZ-006", name: "龙岗区总工会通知公告", url: "https://www.lg.gov.cn/bmzz/zgh/xxgk/qt/tzgg/index.html", allowedHost: "www.lg.gov.cn", region: "深圳龙岗", maxDetails: 30, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", candidateDiscovery: true },
+  { code: "OFF-SZ-007", name: "南山区总工会采购公告", url: "https://www.szns.gov.cn/ztzl/slh/tzgg/content/post_12358223.html", allowedHost: "www.szns.gov.cn", region: "深圳南山", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
+  { code: "OFF-SZ-009", name: "宝安区街道工会慰问采购公告", url: "https://www.baoan.gov.cn/", allowedHost: "www.baoan.gov.cn", region: "深圳宝安", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.baoan.gov.cn/sjjd/zwgk/zbcg/content/post_12617822.html", "https://www.baoan.gov.cn/rlzyj/zwgk/zbgg/content/post_12609011.html", "https://www.baoan.gov.cn/xajd/zwgk/zbcg/content/post_12603326.html", "https://www.baoan.gov.cn/fyjd/xxgk/zbcg/cgyx/content/post_12692680.html"] },
+  { code: "OFF-SZ-010", name: "罗湖区机关/街道慰问采购公告", url: "https://www.szlh.gov.cn/", allowedHost: "www.szlh.gov.cn", region: "深圳罗湖", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.szlh.gov.cn/lhmzj/gkmlpt/content/12/12828/post_12828504.html", "https://www.szlh.gov.cn/lhgafj/gkmlpt/content/12/12728/post_12728305.html"] },
+  { code: "OFF-ZS-002", name: "中山市镇街总工会慰问采购公告", url: "https://www.zs.gov.cn/", allowedHost: "www.zs.gov.cn", region: "中山", maxDetails: 8, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.zs.gov.cn/zshpz/gkmlpt/content/2/2623/post_2623220.html", "https://www.zs.gov.cn/zssxz/gkmlpt/content/2/2629/post_2629889.html", "https://www.zs.gov.cn/zshpz/gkmlpt/content/2/2595/post_2595258.html", "https://www.zs.gov.cn/zstzz/gkmlpt/content/2/2629/post_2629008.html", "https://www.zs.gov.cn/zstzz/gkmlpt/content/2/2633/post_2633877.html"] },
+  { code: "OFF-DG-002", name: "东莞市及镇街工会慰问采购公告", url: "https://www.dg.gov.cn/", allowedHost: "www.dg.gov.cn", region: "东莞", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: ["https://www.dg.gov.cn/zwgk/zfxxgkml/styjrswj/qt/cgzb/content/post_4500915.html", "https://www.dg.gov.cn/zwgk/zfxxgkml/qxz/qt/gzdt/content/post_4495842.html"] },
+  { code: "OFF-GZ-004", name: "广州市黄埔区街道工会慰问采购公告", url: "https://www.hp.gov.cn/gzhpwcj/gkmlpt/content/10/10782/post_10782028.html", allowedHost: "www.hp.gov.cn", region: "广州黄埔", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
+  { code: "OFF-N-012", name: "全国地方机关/高校工会福利采购公告", url: "https://www.ccgp.gov.cn/", allowedHost: "www.ccgp.gov.cn", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.sipac.gov.cn/yqjyj/zbxxjzbgg/202603/a415492ff520457ca509c9c4e722649f.shtml",
+    "https://rsj.nantong.gov.cn/ntsrsj/gggs/content/5e8fce7a-4da4-472f-b585-2d0c88e53a5b.html",
+    "https://www.njqxq.gov.cn/qxqrmzf/202601/t20260126_5779269.html",
+    "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202601/t20260126_3260885.htm",
+    "https://www.lg.gov.cn/xxgk/zwgk/tzgg/content/post_12779529.html",
+    "https://www.tjftz.gov.cn/contents/6152/380266.html",
+    "https://www.gl.gov.cn/xjwz/zwgkml/zdlyxxgk/zfcg/zbgg/zbgg_gdjd_40821/202601/t20260109_5269298.htm",
+    "https://www.gdyunan.gov.cn/gkmlpt/content/1/1980/post_1980659.html"
+  ] },
+  { code: "OFF-N-013", name: "中国政府采购网｜工会福利采购意向", url: "https://zfcg.henan.gov.cn/cmsweb35rc67w/gongyi/cgxx/cgyx/webinfo/2026/07/1979309.htm", allowedHost: "zfcg.henan.gov.cn", extraAllowedHosts: ["cgyx.ccgp.gov.cn", "ggzy.changzhou.gov.cn"], region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", opportunityType: "PROCUREMENT_INTENT", directDetail: true, detailUrls: [
+    "https://zfcg.henan.gov.cn/cmsweb35rc67w/gongyi/cgxx/cgyx/webinfo/2026/07/1979309.htm",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/4.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/13.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/2.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/10.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/11.html",
+    "https://ggzy.changzhou.gov.cn/wjfzx/jyxx/005007/005007002/005007002001/29.html"
+  ] },
+  { code: "OFF-N-014", name: "全国工会慰问与职工福利公开采购", url: "https://www.songjiang.gov.cn/", allowedHost: "www.songjiang.gov.cn", extraAllowedHosts: ["www.yuxi.gov.cn", "www.lw.gov.cn", "tyjrswj.gz.gov.cn", "sft.fujian.gov.cn", "www.szns.gov.cn", "cdc.fuzhou.gov.cn", "www.jiangmen.gov.cn", "www.gdyunan.gov.cn", "www.bjesr.cn", "ggzyjy.benxi.gov.cn", "rsj.nantong.gov.cn", "www.jinjiang.gov.cn", "www.hp.gov.cn", "slj.lasa.gov.cn", "www.bbgu.edu.cn", "www.sse.com.cn", "www.gl.gov.cn"], region: "全国", maxDetails: 40, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.songjiang.gov.cn/shsj_xiaokunshan/xwzx/001002/20260525/167ce7d9-b92b-4993-baa5-93c1f1a8797f.html",
+    "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260608/350cf5a7-1049-42d2-875d-58038fef7272.html",
+    "https://www.songjiang.gov.cn/shsj_yexie/xwzx/001002/20260702/78360bd9-c96b-4018-910b-406b6d3f5a02.html",
+    "https://www.songjiang.gov.cn/shsj_yueyang/xwzx/002002/20260630/e84d731d-cf99-48a8-9946-07ee0b2df526.html",
+    "https://www.yuxi.gov.cn/yxs/ztb/20260720/1671810.html",
+    "https://www.lw.gov.cn/ywdt/cgxx/content/post_10895532.html",
+    "https://tyjrswj.gz.gov.cn/zwgl/tzgg/content/post_10860801.html",
+    "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
+    "https://www.szns.gov.cn/sz/tzgg/content/post_12888753.html",
+    "https://cdc.fuzhou.gov.cn/zz/gsgg/202601/t20260104_5265741.htm",
+    "https://www.jiangmen.gov.cn/bmpd/jmsscjdglj/zwdt/tzgg/content/post_3435801.html",
+    "https://www.gdyunan.gov.cn/gkmlpt/content/1/1980/post_1980659.html",
+    "https://www.bjesr.cn/tzgg/2026-05-12/54850.html",
+    "https://ggzyjy.benxi.gov.cn/jyxx/003006/003006001/20260527/f807a357-32e4-40e1-8aca-e702aa9f5634.html",
+    "https://rsj.nantong.gov.cn/ntsrsj/gggs/content/5e8fce7a-4da4-472f-b585-2d0c88e53a5b.html",
+    "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202601/t20260128_3262271.htm",
+    "https://www.hp.gov.cn/gzhpwcj/gkmlpt/content/10/10782/post_10782028.html",
+    "https://slj.lasa.gov.cn/lsslj/tggs/202606/16fdc36feaaa48a0b443e3d6d06b1213.shtml",
+    "https://www.bbgu.edu.cn/info/1037/262681.htm",
+    "https://www.sse.com.cn/purchase/information/c/c_20260313_10811666.shtml",
+    "https://www.gl.gov.cn/xjwz/zwgkml/zdlyxxgk/zfcg/zbgg/zbgg_fy_40889/202605/t20260522_5324835.htm",
+    "https://www.gl.gov.cn/xjwz/zwgkml/zdlyxxgk/zfcg/zbgg/zbgg_fy_40889/202607/t20260714_5346522.htm"
+  ] },
+  { code: "OFF-N-015", name: "全国工会疗休养与福利服务采购", url: "https://sft.fujian.gov.cn/", allowedHost: "sft.fujian.gov.cn", extraAllowedHosts: ["ggzy.suzhou.gov.cn", "nbgh.gov.cn", "www.sipac.gov.cn"], region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
+    "https://ggzy.suzhou.gov.cn/jyxx/003034/003034001/20260630/3a92ad7d-f758-4ef1-a175-ba2e3cb81bb8.html",
+    "https://nbgh.gov.cn/zghcms/tzgg/127551.jhtml",
+    "https://www.sipac.gov.cn/yqjyj/zbxxjzbgg/202603/a415492ff520457ca509c9c4e722649f.shtml"
+  ] },
+  { code: "OFF-N-016", name: "全国职工福利与工会服务采购公告", url: "https://kfqgw.beijing.gov.cn/", allowedHost: "kfqgw.beijing.gov.cn", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://kfqgw.beijing.gov.cn/zwgkkfq/tzgg/202607/t20260724_4784850.html",
+    "https://www.sft.fujian.gov.cn/zwgk/czzj/zbgg/202607/t20260721_7190604.htm",
+    "https://www.songjiang.gov.cn/shsj_sijing/xwzx/001002/20260708/38df1fb1-8463-4fe0-b88d-8eb0ad904f02.html"
+  ] },
+  { code: "OFF-N-017", name: "全国工会职工服务与福利活动采购", url: "https://www.yantian.gov.cn/", allowedHost: "www.yantian.gov.cn", region: "全国", maxDetails: 6, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.yantian.gov.cn/cn/zwgk/tzgg/content/post_12898831.html",
+    "https://www.szns.gov.cn/sz/tzgg/content/post_12888753.html",
+    "https://kfqgw.beijing.gov.cn/zwgkkfq/tzgg/202607/t20260724_4784850.html"
+  ] },
+  { code: "OFF-N-018", name: "全国高校工会福利采购公告", url: "https://www.qztc.edu.cn/", allowedHost: "www.qztc.edu.cn", extraAllowedHosts: ["zc.ucass.edu.cn", "dzb.sicau.edu.cn", "gh.scu.edu.cn", "www.hbmzu.edu.cn", "www.sdfzxy.edu.cn", "ztbgl.yangtzeu.edu.cn", "www.dlmu.edu.cn", "www.afc.edu.cn", "www.lncc.edu.cn", "gonghui.hfut.edu.cn", "xxgk.tongji.edu.cn", "scjtglxx.cn", "gh.gdipu.edu.cn", "gh.zfc.edu.cn", "gh.ntu.edu.cn", "ztb.dhu.edu.cn"], region: "全国", maxDetails: 32, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.qztc.edu.cn/2025/1125/c2095a289553/page.htm",
+    "https://zc.ucass.edu.cn/",
+    "https://dzb.sicau.edu.cn/info/1028/14233.htm",
+    "https://gh.scu.edu.cn/front/news.do?dispatch=showProNews&news_uuid=fe8ce0b1-f25e-4219-b57e-791939e366db&ntype_id=081201",
+    "https://www.hbmzu.edu.cn/zcglc/info/1051/15145.htm",
+    "https://www.sdfzxy.edu.cn/info/1901/91451.htm",
+    "https://ztbgl.yangtzeu.edu.cn/info/1234/15378.htm",
+    "https://www.dlmu.edu.cn/info/1825/205388.htm",
+    "https://www.afc.edu.cn/xxgkw/info/1169/8502.htm",
+    "https://www.lncc.edu.cn/info/1199/377547.htm",
+    "https://gonghui.hfut.edu.cn/2026/0527/c615a319354/page.htm",
+    "https://xxgk.tongji.edu.cn/index.php?classid=4579&newsid=21183&t=show",
+    "https://scjtglxx.cn/info/1029/64471.htm",
+    "https://gh.gdipu.edu.cn/info/1033/2944.htm",
+    "https://gh.zfc.edu.cn/2025/1216/c2016a65609/page.htm",
+    "https://gh.ntu.edu.cn/2026/0603/c1621a292380/pagem.htm",
+    "https://ztb.dhu.edu.cn/2026/0316/c27266a372532/page.htm"
+  ] },
+  { code: "OFF-N-019", name: "全国科研院所与医院工会福利采购", url: "https://www.zqtcm.com/", allowedHost: "www.zqtcm.com", extraAllowedHosts: ["cemps.cas.cn", "sioc.cas.cn", "www.shca.org", "www.shca.org.cn", "wap.gz12hospital.cn", "www.gdghospital.org.cn", "www.zjuch.cn", "xhhos.com", "www.lg.gov.cn", "nyd7y.com", "www.sichuancancer.org", "www.jssdezyy.com", "www.mgsyy.com", "www.jinjiang.gov.cn", "www.ntu.edu.cn", "gh.haust.edu.cn"], region: "全国", maxDetails: 30, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.zqtcm.com/dqjs/zbcg/content_1052",
+    "https://cemps.cas.cn/tzgg/2025n_241394/202607/t20260716_8250446.html",
+    "https://sioc.cas.cn/news/tzgg/202607/t20260724_8254671.html",
+    "https://www.shca.org.cn/Home/news/content/id/395/pid/27462",
+    "https://wap.gz12hospital.cn/a/202604/19253.html",
+    "https://www.gdghospital.org.cn/Researchanment/info_itemid_67725.html",
+    "https://www.zjuch.cn/news/default/id/14011/cid/204",
+    "https://xhhos.com/news/details/4/106/77488",
+    "https://www.lg.gov.cn/zwfw/zdfw/yl/tzgg/content/post_12601016.html",
+    "https://nyd7y.com/xwgg/scdy/content_2889",
+    "https://www.sichuancancer.org/ztbxtnew/info/1002/7521.htm",
+    "https://www.jssdezyy.com/notice/detail/id/4569/pid/3.html",
+    "https://www.mgsyy.com/news/4190.html",
+    "https://www.sichuancancer.org/ztbxtnew/info/1002/8032.htm",
+    "https://www.jinjiang.gov.cn/xxgk/zdxxgk/jbylws/ywgk/202512/t20251208_3239047.htm",
+    "https://www.lg.gov.cn/xxgk/zwgk/tzgg/content/post_12779529.html",
+    "https://gh.haust.edu.cn/info/1019/8490.htm"
+  ] },
+  { code: "OFF-N-020", name: "全国工会职工福利与节日物资采购", url: "https://www.dongtai.gov.cn/", allowedHost: "www.dongtai.gov.cn", extraAllowedHosts: ["zfcg.henan.gov.cn", "cgyx.ccgp.gov.cn", "www.ccgp.gov.cn"], region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", detailUrls: [
+    "https://www.dongtai.gov.cn/art/2026/7/21/art_7905_4440949.html",
+    "https://zfcg.henan.gov.cn/gongyi/content?bz=1&channelCode=D310207&infoId=1979309",
+    "https://zfcg.henan.gov.cn/cmsweb35rc67w/gongyi/cgxx/cgyx/webinfo/2026/07/1979309.htm",
+    "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=d536bf88-a49f-44d1-bcfb-94157b77a4cf",
+    "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=f941bc33-a4fd-4447-9430-d92208f3aa33",
+    "https://www.ccgp.gov.cn/cggg/zygg/gkzb/202606/t20260624_26803450.htm"
+  ] },
+  { code: "OFF-SZ-011", name: "光明区工伤职工探视服务采购公告", url: "https://www.szgm.gov.cn/xxgk/xqgwhxxgkml/gzgg/content/post_12904814.html", allowedHost: "www.szgm.gov.cn", region: "深圳光明", maxDetails: 1, enabled: true, rollout: "shadow", opportunityRole: "procurement", directDetail: true },
   { code: "ORG-003", name: "深圳开放大学采购公告", url: "https://www.szou.edu.cn/", allowedHost: "www.szou.edu.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board" },
   { code: "ORG-004", name: "深圳湾实验室采购信息", url: "https://www.szbl.ac.cn/", allowedHost: "www.szbl.ac.cn", extraAllowedHosts: ["zfcg.szggzy.com"], region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://www.szbl.ac.cn/cgxx/cgyxgk.htm", "https://www.szbl.ac.cn/cgxx/zbxx.htm"] },
   { code: "ORG-005", name: "深圳市卫生健康系统单位采购栏目", url: "https://wjw.sz.gov.cn/", allowedHost: "wjw.sz.gov.cn", region: "深圳", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "procurement", adapter: "org-notice-board", indexUrls: ["https://wjw.sz.gov.cn/zfcg/index.html"] },
@@ -152,13 +267,15 @@ export const WELFARE_SHADOW_SOURCES: WelfareSourceConfig[] = [
   { code: "HUB-003", name: "TrendRadar社区数据源收集Issue/讨论", url: "https://github.com/sansan0/TrendRadar/issues", allowedHost: "github.com", region: "全国", maxDetails: 12, enabled: true, rollout: "shadow", opportunityRole: "demand_signal", shadowAccess: "restricted" },
 ];
 
-// These 20 direct-access sources completed the three-day shadow gate and are
+// These direct-access sources completed source review and are
 // now enabled for public collection. Their original registry entries remain
 // in the shadow catalogue so the historical POC evidence is not discarded.
 const PROMOTED_SOURCE_CODES = new Set([
   "OFF-N-003", "OFF-N-005", "OFF-N-007", "OFF-N-008", "OFF-N-009", "OFF-N-010", "OFF-N-011",
   "OFF-GD-001", "OFF-GD-002", "OFF-GD-003", "OFF-GZ-002", "OFF-GZ-003", "OFF-FS-001", "OFF-DG-001",
   "OFF-ZH-001", "OFF-ZS-001", "OFF-HZ-001", "ORG-003", "ORG-004", "ORG-005",
+  "OFF-SZ-006", "OFF-SZ-009", "OFF-SZ-010", "OFF-ZS-002", "OFF-DG-002", "OFF-GZ-004", "WEL-002",
+  "OFF-N-014", "OFF-N-015", "OFF-N-016", "OFF-N-018", "OFF-N-019", "OFF-N-020",
 ]);
 WELFARE_SOURCES.push(...WELFARE_SHADOW_SOURCES.filter((source) => PROMOTED_SOURCE_CODES.has(source.code)).map((source) => ({
   ...source,
@@ -178,6 +295,7 @@ function isAllowedWelfareHost(hostname: string): boolean {
 }
 
 export type WelfareLifecycle = "current" | "historical";
+export type WelfareOpportunityLayer = "current" | "signal" | "historical";
 export type WelfareOpportunityType = "OPEN_PROCUREMENT" | "PROCUREMENT_INTENT" | "SUPPLIER_RECRUITMENT" | "FRAMEWORK_AGREEMENT" | "CHANNEL_PARTNERSHIP";
 export type WelfareVerificationState = "CANDIDATE" | "FIELD_VERIFIED" | "STATUS_VERIFIED" | "FULLY_VERIFIED";
 export type WelfareFieldState = "verified" | "not_published" | "parse_failed" | "unknown";
@@ -200,6 +318,8 @@ export interface WelfareOpportunityRecord {
   dataMode: "recorded" | "live";
   opportunityType: WelfareOpportunityType;
   lifecycleStatus: WelfareLifecycle;
+  /** Public display layer: actionable opportunity, early signal, or historical renewal intelligence. */
+  opportunityLayer?: WelfareOpportunityLayer;
   currentStage: "OPEN" | "CORRECTED" | "CLOSED_PENDING_RESULT" | "AWARDED" | "CONTRACTED" | "TERMINATED" | "UNKNOWN";
   verificationState: WelfareVerificationState;
   buyer: string;
@@ -253,6 +373,7 @@ export interface WelfareFeedOptions {
   sort?: "deadline" | "sales";
   supplierFit?: string;
   contactKnown?: boolean;
+  layer?: WelfareOpportunityLayer | "all";
 }
 
 export interface WelfareFeed {
@@ -273,6 +394,8 @@ export interface WelfareFeed {
     sceneFacets: Array<{ id: string; label: string; count: number }>;
     regionFacets: Array<{ id: string; label: string; count: number }>;
     supplierFitFacets: Array<{ id: string; label: string; count: number }>;
+    layerCounts: Record<WelfareOpportunityLayer, number>;
+    dataOrigin?: WelfareDataOrigin;
   };
   sources: Array<{ code: string; name: string; url: string; status: "active" | "degraded" | "empty"; lastUpdatedAt: string | null }>;
 }
@@ -281,6 +404,82 @@ export interface WelfareRunSummary {
   ranAt: string;
   sources: Array<Pick<WelfareSourceCollectionResult, "sourceCode" | "sourceName" | "retrievedAt" | "status" | "discoveredCount" | "publishedCount" | "totalCount">>;
   totals: { added: number; updated: number; historical: number; filtered: number; total: number };
+}
+
+export interface WelfareFunnelDiagnostics {
+  evaluatedAt: string;
+  sources_total: number;
+  sources_success: number;
+  sources_empty: number;
+  sources_failed: number;
+  raw_records: number;
+  welfare_context_hits: number;
+  action_intent_hits: number;
+  official_detail_found: number;
+  active_status_verified: number;
+  deduplicated_opportunities: number;
+  public_current: number;
+  public_signals: number;
+  public_history: number;
+  sources: Array<{
+    source_id: string;
+    last_success_at: string | null;
+    last_attempt_at: string | null;
+    run_status: string;
+    raw_count: number;
+    candidate_count: number;
+    accepted_count: number;
+    duplicate_count: number;
+    closed_count: number;
+    parse_failure_count: number;
+    reason_if_zero?: string;
+  }>;
+}
+
+export function buildWelfareFunnelDiagnostics(records = loadPersistedWelfareOpportunities(), summary = loadWelfareRunSummary()): WelfareFunnelDiagnostics {
+  const sourceRuns = summary?.sources ?? [];
+  const layerOf = (record: WelfareOpportunityRecord): WelfareOpportunityLayer => {
+    if (record.lifecycleStatus !== "current") return "historical";
+    return ["PROCUREMENT_INTENT", "SUPPLIER_RECRUITMENT", "CHANNEL_PARTNERSHIP"].includes(record.opportunityType) ? "signal" : "current";
+  };
+  const bySource = new Map(records.map((record) => [record.sourceCode, records.filter((item) => item.sourceCode === record.sourceCode)]));
+  const sources = WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
+    const run = sourceRuns.find((item) => item.sourceCode === source.code);
+    const accepted = bySource.get(source.code) ?? [];
+    return {
+      source_id: source.code,
+      last_success_at: run?.status === "succeeded" ? run.retrievedAt : null,
+      last_attempt_at: run?.retrievedAt ?? null,
+      run_status: run?.status ?? "not_run",
+      raw_count: run?.discoveredCount ?? 0,
+      candidate_count: run?.discoveredCount ?? 0,
+      accepted_count: accepted.length,
+      duplicate_count: 0,
+      closed_count: accepted.filter((item) => item.lifecycleStatus === "historical").length,
+      parse_failure_count: Math.max(0, (run?.discoveredCount ?? 0) - (run?.publishedCount ?? 0)),
+      reason_if_zero: accepted.length === 0 ? (run?.status === "failed" ? "来源访问失败，保留上次成功数据" : run?.status === "empty" ? "本轮无通过福利准入规则的公告" : "尚未运行") : undefined,
+    };
+  });
+  const current = records.filter((item) => layerOf(item) === "current").length;
+  const signal = records.filter((item) => layerOf(item) === "signal").length;
+  const history = records.filter((item) => layerOf(item) === "historical").length;
+  return {
+    evaluatedAt: new Date().toISOString(),
+    sources_total: sources.length,
+    sources_success: sources.filter((item) => item.run_status === "succeeded").length,
+    sources_empty: sources.filter((item) => item.run_status === "empty").length,
+    sources_failed: sources.filter((item) => ["failed", "partial"].includes(item.run_status)).length,
+    raw_records: sourceRuns.reduce((sum, item) => sum + item.discoveredCount, 0),
+    welfare_context_hits: sourceRuns.reduce((sum, item) => sum + item.discoveredCount, 0),
+    action_intent_hits: sourceRuns.reduce((sum, item) => sum + item.publishedCount, 0),
+    official_detail_found: records.filter((item) => Boolean(item.officialUrl)).length,
+    active_status_verified: records.filter((item) => item.lifecycleStatus === "current" && ["STATUS_VERIFIED", "FULLY_VERIFIED"].includes(item.verificationState)).length,
+    deduplicated_opportunities: records.length,
+    public_current: current,
+    public_signals: signal,
+    public_history: history,
+    sources,
+  };
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -365,7 +564,8 @@ function normalizeWelfareRecordForDisplay(record: WelfareOpportunityRecord): Wel
   ]));
   const followUpStatus = record.lifecycleStatus !== "current" ? "已结束" : fieldState(evidenceFields, "contactPhone") === "verified" ? "待联系" : "待核验";
   const followUpNextAction = followUpStatus === "待联系" ? "核对官方原文后记录首次联系结果。" : followUpStatus === "待核验" ? "补齐采购单位、联系人和资格要求，再决定是否联系。" : "保留为历史情报，关注后续同类项目。";
-  return { ...record, buyer, contactAddress, evidenceFields, salesScore, salesPriority, salesAction, followUpStatus, followUpNextAction, supplierMatches };
+  const opportunityLayer: WelfareOpportunityLayer = record.lifecycleStatus !== "current" ? "historical" : ["PROCUREMENT_INTENT", "SUPPLIER_RECRUITMENT", "CHANNEL_PARTNERSHIP"].includes(record.opportunityType) ? "signal" : "current";
+  return { ...record, buyer, contactAddress, evidenceFields, opportunityLayer, salesScore, salesPriority, salesAction, followUpStatus, followUpNextAction, supplierMatches };
 }
 
 function buildFacets(records: WelfareOpportunityRecord[], values: (record: WelfareOpportunityRecord) => string[], labels?: Record<string, string>) {
@@ -387,6 +587,7 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
   const currentCount = allRecords.filter((item) => item.lifecycleStatus === "current").length;
   const historicalCount = allRecords.length - currentCount;
   let filtered = allRecords.filter((item) => status === "all" || item.lifecycleStatus === status);
+  if (options.layer && options.layer !== "all") filtered = filtered.filter((item) => item.opportunityLayer === options.layer);
   if (options.type && options.type !== "all") filtered = filtered.filter((item) => item.opportunityType === options.type);
   if (options.scene && options.scene !== "all") filtered = filtered.filter((item) => item.welfareScenes.includes(options.scene!));
   if (options.region && options.region !== "all") filtered = filtered.filter((item) => item.region === options.region);
@@ -417,6 +618,11 @@ export function buildWelfareFeed(records: WelfareOpportunityRecord[], options: W
       sceneFacets: buildFacets(allRecords, (item) => item.welfareScenes),
       regionFacets: buildFacets(allRecords, (item) => [item.region]),
       supplierFitFacets: buildFacets(allRecords, (item) => item.supplierMatches ?? []),
+      layerCounts: {
+        current: allRecords.filter((item) => item.opportunityLayer === "current").length,
+        signal: allRecords.filter((item) => item.opportunityLayer === "signal").length,
+        historical: allRecords.filter((item) => item.opportunityLayer === "historical").length,
+      },
     },
     sources: WELFARE_SOURCES.filter((source) => source.enabled).map((source) => {
       const summary = loadWelfareRunSummary()?.sources.find((item) => item.sourceCode === source.code);
@@ -436,22 +642,72 @@ export function loadRecordedWelfareOpportunities(): WelfareOpportunityRecord[] {
   return JSON.parse(fs.readFileSync(file, "utf8")) as WelfareOpportunityRecord[];
 }
 
-export function loadPersistedWelfareOpportunities(filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): WelfareOpportunityRecord[] {
-  const absolute = path.resolve(process.cwd(), filePath);
-  if (!fs.existsSync(absolute)) return [];
-  const parsed = JSON.parse(fs.readFileSync(absolute, "utf8")) as { records?: WelfareOpportunityRecord[] } | WelfareOpportunityRecord[];
+export type WelfareDataOrigin = "runtime" | "seed";
+
+export interface WelfareDataSnapshot {
+  records: WelfareOpportunityRecord[];
+  origin: WelfareDataOrigin;
+  runtimeError?: "missing" | "invalid" | "empty";
+}
+
+export function resolveWelfareRuntimePaths() {
+  const production = process.env.NODE_ENV === "production";
+  const root = process.env.CHANCEPING_WELFARE_RUNTIME_DIR ?? (production ? "/var/lib/chanceping/welfare" : "data");
+  return {
+    opportunities: process.env.CHANCEPING_WELFARE_STORE_PATH ?? path.join(root, production ? "opportunities.json" : "welfare-opportunities.json"),
+    candidates: process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? path.join(root, production ? "candidates.json" : "welfare-candidates.json"),
+    summary: process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? path.join(root, production ? "run-summary.json" : "welfare-run-summary.json"),
+    evidence: process.env.CHANCEPING_WELFARE_EVIDENCE_DIR
+      ?? (process.env.NODE_ENV === "production" ? path.join(root, "evidence") : "data/welfare-evidence"),
+  };
+}
+
+function readWelfareRecords(filePath: string): WelfareOpportunityRecord[] {
+  const parsed = JSON.parse(fs.readFileSync(filePath, "utf8")) as { records?: WelfareOpportunityRecord[] } | WelfareOpportunityRecord[];
   return Array.isArray(parsed) ? parsed : parsed.records ?? [];
 }
 
-export function savePersistedWelfareOpportunities(records: WelfareOpportunityRecord[], filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): void {
+export function loadWelfareDataSnapshot(
+  runtimePath = resolveWelfareRuntimePaths().opportunities,
+  seedPath = "src/demo/welfare-opportunities.recorded.json",
+): WelfareDataSnapshot {
+  const runtimeAbsolute = path.resolve(process.cwd(), runtimePath);
+  const seedAbsolute = path.resolve(process.cwd(), seedPath);
+  let runtimeError: WelfareDataSnapshot["runtimeError"];
+  if (!fs.existsSync(runtimeAbsolute)) runtimeError = "missing";
+  else {
+    try {
+      const records = readWelfareRecords(runtimeAbsolute);
+      if (records.length > 0) {
+        const seedRecords = readWelfareRecords(seedAbsolute);
+        return { records: mergeWelfareRecords(seedRecords, records), origin: "runtime" };
+      }
+      runtimeError = "empty";
+    } catch {
+      runtimeError = "invalid";
+    }
+  }
+  return { records: readWelfareRecords(seedAbsolute), origin: "seed", runtimeError };
+}
+
+export function loadPersistedWelfareOpportunities(filePath = resolveWelfareRuntimePaths().opportunities): WelfareOpportunityRecord[] {
   const absolute = path.resolve(process.cwd(), filePath);
+  if (!fs.existsSync(absolute)) return [];
+  return readWelfareRecords(absolute);
+}
+
+export function savePersistedWelfareOpportunities(records: WelfareOpportunityRecord[], filePath = resolveWelfareRuntimePaths().opportunities): void {
+  const absolute = path.resolve(process.cwd(), filePath);
+  if (records.length === 0 && fs.existsSync(absolute)) {
+    try { if (readWelfareRecords(absolute).length > 0) return; } catch { /* replace an invalid snapshot */ }
+  }
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
   fs.writeFileSync(temporary, JSON.stringify({ version: "1.0", updatedAt: new Date().toISOString(), records }, null, 2));
   fs.renameSync(temporary, absolute);
 }
 
-export function loadPersistedWelfareCandidates(filePath = process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? "data/welfare-candidates.json"): WelfareCandidateRecord[] {
+export function loadPersistedWelfareCandidates(filePath = resolveWelfareRuntimePaths().candidates): WelfareCandidateRecord[] {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return [];
   try {
@@ -460,7 +716,7 @@ export function loadPersistedWelfareCandidates(filePath = process.env.CHANCEPING
   } catch { return []; }
 }
 
-export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[], filePath = process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? "data/welfare-candidates.json"): void {
+export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[], filePath = resolveWelfareRuntimePaths().candidates): void {
   const absolute = path.resolve(process.cwd(), filePath);
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
@@ -475,13 +731,17 @@ function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: We
   return Array.from(byId.values()).sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt));
 }
 
-export function loadWelfareRunSummary(filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): WelfareRunSummary | null {
+export function loadWelfareRunSummary(filePath = resolveWelfareRuntimePaths().summary): WelfareRunSummary | null {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return null;
-  try { return JSON.parse(fs.readFileSync(absolute, "utf8")) as WelfareRunSummary; } catch { return null; }
+  try {
+    const summary = JSON.parse(fs.readFileSync(absolute, "utf8")) as Partial<WelfareRunSummary>;
+    if (!Array.isArray(summary.sources) || !summary.totals || typeof summary.ranAt !== "string") return null;
+    return summary as WelfareRunSummary;
+  } catch { return null; }
 }
 
-export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): void {
+export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = resolveWelfareRuntimePaths().summary): void {
   const absolute = path.resolve(process.cwd(), filePath);
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
@@ -629,7 +889,11 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
   const text = cleanText(input.html);
   const welfareContext = WELFARE_CONTEXT;
   const opportunityAction = /(采购|招标|磋商|询价|遴选|供应商|征集|招募|合作|项目)/;
-  const contextText = source.adapter ? `${title} ${text}` : title;
+  // Official hospital/university pages frequently use a generic <title>
+  // (for example only the institution name) while the procurement/welfare
+  // wording appears in the article body. Evaluate both title and body, while
+  // retaining the strict exclusion and action checks below.
+  const contextText = `${title} ${text}`;
   if (!title || NON_OPPORTUNITY_DISCOVERY.test(title) || NON_WELFARE_PROJECT.test(title) || !welfareContext.test(contextText) || !opportunityAction.test(contextText)) return null;
   // Government portals often omit punctuation between labeled fields. Stop
   // at the next known label so a buyer never becomes the whole announcement.
@@ -669,7 +933,7 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     retrievedAt: input.retrievedAt ?? new Date().toISOString(),
     rawSha256,
     dataMode: "live",
-    opportunityType: source.opportunityType ?? "OPEN_PROCUREMENT",
+    opportunityType: source.opportunityType ?? (/(采购意向|需求公示|意向公示|市场调研|需求调查|调研公告|供应商征集)/.test(text) ? "PROCUREMENT_INTENT" : "OPEN_PROCUREMENT"),
     lifecycleStatus: isClosed || deadlineExpired || (!deadline && publishedAt && Date.parse(publishedAt) < (new Date(input.retrievedAt ?? Date.now()).getTime() - 45 * 86_400_000)) ? "historical" : "current",
     currentStage: isClosed ? "CLOSED_PENDING_RESULT" : isCorrection ? "CORRECTED" : "OPEN",
     verificationState: buyerExcerpt && deadlineExcerpt ? "STATUS_VERIFIED" : "FIELD_VERIFIED",
@@ -688,6 +952,33 @@ export function parseWelfareDetail(input: { html: string; url: string; sourceCod
     riskNote: "公开页面仅整理官方公告；预算、截止和资格要求以官方原文及后续更正为准。",
     evidenceFields,
   };
+}
+
+/** Split official procurement-intent tables into one signal per welfare item.
+ * Government intent pages commonly publish many rows under one announcement;
+ * keeping only the page title hides real demand signals and undercounts the
+ * funnel. Each split card retains the same official URL/hash and cites the
+ * row title in its evidence reason.
+ */
+function expandProcurementIntentTable(base: WelfareOpportunityRecord, html: string): WelfareOpportunityRecord[] {
+  if (base.opportunityType !== "PROCUREMENT_INTENT") return [base];
+  const rows: string[] = [];
+  const rowPattern = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = rowPattern.exec(html)) !== null) rows.push(match[1]);
+  const titles = rows.map((row) => {
+    const cells = Array.from(row.matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)).map((cell) => cleanText(cell[1]));
+    return cells.find((cell) => WELFARE_CONTEXT.test(cell) && WELFARE_ACTION.test(cell) && !NON_WELFARE_PROJECT.test(cell));
+  }).filter((title): title is string => Boolean(title));
+  const uniqueTitles = Array.from(new Set(titles)).slice(0, 30);
+  if (uniqueTitles.length <= 1) return [base];
+  return uniqueTitles.map((title, index) => ({
+    ...base,
+    id: stableId(`${base.officialUrl}#intent-${index + 1}`),
+    title,
+    reason: `${base.reason} 官方采购意向表第${index + 1}条：${title}`,
+    evidenceFields: base.evidenceFields.map((field) => field.field === "status" ? { ...field, excerpt: `采购意向表条目：${title}` } : field),
+  }));
 }
 
 function candidateFromLink(source: WelfareSourceConfig, link: { title: string; url: string; publishedAt: string }, retrievedAt: string, reason: string): WelfareCandidateRecord {
@@ -827,7 +1118,8 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const fetchHtml = options.fetchHtml ?? defaultWelfareFetchHtml;
   const now = options.now ?? new Date();
   const retrievedAt = now.toISOString();
-  const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? `data/welfare-evidence/${source.code}`);
+  const evidenceRoot = resolveWelfareRuntimePaths().evidence;
+  const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? path.join(evidenceRoot, source.code));
   fs.mkdirSync(evidenceDir, { recursive: true });
   if (source.publicApi === "szggzy-government-procurement") return collectSzGgzyGovernmentProcurement(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
   if (source.publicApi === "gzgpc-procurement-signals") return collectGzGpcProcurementSignals(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
@@ -859,7 +1151,9 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   if (indexErrors.length === indexUrls.length) {
     return { result: { sourceCode: source.code, sourceName: source.name, retrievedAt, status: "failed", discoveredCount: 0, publishedCount: 0, totalCount: 0, errors: indexErrors }, records: [] };
   }
-  const links = (source.directDetail
+  const links = (source.detailUrls?.length
+    ? source.detailUrls.map((url) => ({ title: source.name, url, publishedAt: "" }))
+    : source.directDetail
     ? [{ title: source.name, url: source.url, publishedAt: "" }]
     : Array.from(indexLinks.values()).sort((a, b) => {
       const context = WELFARE_CONTEXT;
@@ -893,7 +1187,10 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
       const sha = crypto.createHash("sha256").update(html).digest("hex");
       fs.writeFileSync(path.join(evidenceDir, `${sha}.html`), html);
       const record = parseWelfareDetail({ html, url: effectiveUrl, sourceCode: source.code, publishedAtHint: link.publishedAt, retrievedAt });
-      if (record) records.push(record);
+      if (record) {
+        const normalized = /采购意向|需求公示|意向公示|市场调研|需求调查|调研公告|供应商征集/.test(record.title) ? { ...record, opportunityType: "PROCUREMENT_INTENT" as const } : record;
+        records.push(...expandProcurementIntentTable(normalized, html));
+      }
       else {
         const detailText = cleanText(html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " "));
         const hasWelfareContext = (WELFARE_CONTEXT.test(link.title) || WELFARE_CONTEXT.test(detailText)) && !NON_OPPORTUNITY_DISCOVERY.test(link.title) && !NON_WELFARE_PROJECT.test(link.title) && !NON_OPPORTUNITY_DISCOVERY.test(detailText);
@@ -923,9 +1220,10 @@ export async function collectOffSz004(options: { fetchHtml?: (url: string) => Pr
   return collectWelfareSource("OFF-SZ-004", options);
 }
 
-export async function collectAllWelfareSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; maxDetails?: number; evidenceDir?: string } = {}) {
+export async function collectAllWelfareSources(options: { fetchHtml?: (url: string) => Promise<string>; now?: Date; maxDetails?: number; evidenceDir?: string; sourceCodes?: string[] } = {}) {
   const collected: WelfareSourceCollectionData[] = [];
-  const sources = WELFARE_SOURCES.filter((item) => item.enabled);
+  const requestedCodes = options.sourceCodes?.length ? new Set(options.sourceCodes) : undefined;
+  const sources = WELFARE_SOURCES.filter((item) => item.enabled && (!requestedCodes || requestedCodes.has(item.code)));
   // Keep public traffic bounded while avoiding a serial 31-source refresh that
   // can exceed the systemd window when one government host has slow TLS.
   for (let offset = 0; offset < sources.length; offset += 4) {

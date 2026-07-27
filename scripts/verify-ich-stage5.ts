@@ -12,7 +12,7 @@ const output = path.join(tempDir, "opportunities.json");
 const verifiedFile = JSON.parse(fs.readFileSync(fixture, "utf8")) as {
   schema_version: string;
   updated_at: string;
-  entries: unknown[];
+  entries: Array<{ id: string; slug: string }>;
 };
 assert.ok(verifiedFile.entries.length >= 35, "formal seed must retain the stage 5 launch dataset");
 const before = `${JSON.stringify({ ...verifiedFile, entries: verifiedFile.entries.slice(0, 1) }, null, 2)}\n`;
@@ -43,7 +43,7 @@ try {
 
   const dryRun = spawnSync(
     process.execPath,
-    ["--import", "tsx", "scripts/import-ich-stage5.ts", "--input", singleton, "--output", output, "--batch", "test-dry-run", "--now", "2026-07-24T00:00:00+08:00"],
+    ["--import", "tsx", "scripts/import-ich-stage5.ts", "--input", singleton, "--base", singleton, "--output", output, "--batch", "test-dry-run", "--now", "2026-07-24T00:00:00+08:00"],
     { cwd: process.cwd(), encoding: "utf8" },
   );
   assert.equal(dryRun.status, 0, dryRun.stderr);
@@ -55,13 +55,45 @@ try {
 
   const blocked = spawnSync(
     process.execPath,
-    ["--import", "tsx", "scripts/import-ich-stage5.ts", "--input", singleton, "--output", output, "--batch", "test-write", "--now", "2026-07-24T00:00:00+08:00", "--write"],
+    ["--import", "tsx", "scripts/import-ich-stage5.ts", "--input", singleton, "--base", singleton, "--output", output, "--batch", "test-write", "--now", "2026-07-24T00:00:00+08:00", "--write"],
     { cwd: process.cwd(), encoding: "utf8" },
   );
   assert.notEqual(blocked.status, 0, "write below stage 5 thresholds must fail");
   assert.equal(fs.readFileSync(output, "utf8"), before, "blocked write must not modify output");
   assert.equal(new IchOpportunityStore(output).list().length, 1);
-  console.log("ICH stage 5 importer, registry and screening ledger: 18/18 checks passed");
+
+  const seedPreservationOutput = path.join(tempDir, "seed-preservation.json");
+  fs.writeFileSync(seedPreservationOutput, before);
+  const seedPreservation = spawnSync(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      "scripts/import-ich-stage5.ts",
+      "--input",
+      singleton,
+      "--base",
+      fixture,
+      "--output",
+      seedPreservationOutput,
+      "--batch",
+      "test-seed-preservation",
+      "--now",
+      "2026-07-24T00:00:00+08:00",
+      "--write",
+    ],
+    { cwd: process.cwd(), encoding: "utf8" },
+  );
+  assert.equal(seedPreservation.status, 0, seedPreservation.stderr || seedPreservation.stdout);
+  const preservedEntries = new IchOpportunityStore(seedPreservationOutput).list();
+  assert.equal(preservedEntries.length, verifiedFile.entries.length, "a controlled import must preserve the verified seed size");
+  for (const seedEntry of verifiedFile.entries) {
+    assert.ok(
+      preservedEntries.some((entry) => entry.id === seedEntry.id && entry.slug === seedEntry.slug),
+      `a controlled import must preserve verified seed entry ${seedEntry.slug}`,
+    );
+  }
+  console.log("ICH stage 5 importer, registry and screening ledger: 20/20 checks passed");
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });
 }

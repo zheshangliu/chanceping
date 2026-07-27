@@ -16,7 +16,10 @@ SHARED_DIR="$APP_ROOT/shared"
 CURRENT_LINK="$APP_ROOT/current"
 ENV_DIR="/etc/chanceping"
 ENV_FILE="$ENV_DIR/chanceping.env"
+WELFARE_DIR="/var/lib/chanceping/welfare"
 SERVICE_FILE="/etc/systemd/system/chanceping.service"
+WELFARE_SERVICE_FILE="/etc/systemd/system/chanceping-welfare-update.service"
+WELFARE_TIMER_FILE="/etc/systemd/system/chanceping-welfare-update.timer"
 NGINX_SITE="/etc/nginx/sites-available/chanceping.conf"
 NGINX_ENABLED="/etc/nginx/sites-enabled/chanceping.conf"
 
@@ -110,6 +113,18 @@ else
   echo "[chanceping] keeping existing env file: $ENV_FILE"
 fi
 
+ensure_env_setting() {
+  local key="$1"
+  local value="$2"
+  if ! grep -q "^${key}=" "$ENV_FILE"; then
+    printf '%s=%s\n' "$key" "$value" >>"$ENV_FILE"
+  fi
+}
+ensure_env_setting CHANCEPING_WELFARE_STORE_PATH "$WELFARE_DIR/opportunities.json"
+ensure_env_setting CHANCEPING_WELFARE_CANDIDATE_PATH "$WELFARE_DIR/candidates.json"
+ensure_env_setting CHANCEPING_WELFARE_RUN_SUMMARY_PATH "$WELFARE_DIR/run-summary.json"
+ensure_env_setting CHANCEPING_WELFARE_EVIDENCE_DIR "$WELFARE_DIR/evidence"
+
 cd "$release_dir"
 npm ci --include=dev
 
@@ -118,6 +133,10 @@ if [[ "${CHANCEPING_SKIP_REMOTE_TYPECHECK:-false}" != "true" ]]; then
 fi
 
 ln -sfn "$release_dir" "$CURRENT_LINK"
+install -d -m 0755 -o root -g root "$WELFARE_DIR"
+CHANCEPING_WELFARE_RUNTIME_DIR="$WELFARE_DIR" npm run welfare:migrate-storage
+install -m 0644 "$release_dir/docs/deployment/chanceping-welfare-update.service" "$WELFARE_SERVICE_FILE"
+install -m 0644 "$release_dir/docs/deployment/chanceping-welfare-update.timer" "$WELFARE_TIMER_FILE"
 
 cat >"$SERVICE_FILE" <<'EOF'
 [Unit]
@@ -140,6 +159,7 @@ EOF
 
 systemctl daemon-reload
 systemctl enable chanceping
+systemctl enable --now chanceping-welfare-update.timer
 systemctl restart chanceping
 
 cat >"$NGINX_SITE" <<'EOF'

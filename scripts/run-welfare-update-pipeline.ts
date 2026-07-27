@@ -13,7 +13,8 @@ function argValue(name: string): string | undefined {
 
 async function main(): Promise<void> {
   const limit = Math.max(1, Math.min(Number(argValue("--limit") ?? 12), 30));
-  const summary = await collectAllWelfareSources({ maxDetails: limit });
+  const sourceCodes = argValue("--codes")?.split(",").map((item) => item.trim()).filter(Boolean);
+  const summary = await collectAllWelfareSources({ maxDetails: limit, sourceCodes });
   const reportsDir = path.resolve(process.cwd(), "reports");
   fs.mkdirSync(reportsDir, { recursive: true });
   const reportPath = path.join(reportsDir, "welfare-opportunities-latest.md");

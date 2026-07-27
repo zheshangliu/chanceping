@@ -130,7 +130,6 @@ function regionMatches(entry: IchOpportunity, region: IchRegionFilter): boolean 
     entry.location.city,
     entry.location.province_state,
     ...entry.location.region_groups,
-    ...entry.location.eligible_regions,
   ].filter((value): value is string => Boolean(value)).map(normalize);
   if (region === "online_or_unrestricted") {
     return entry.location.is_online || entry.location.participation_scope === "unrestricted";

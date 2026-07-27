@@ -35,9 +35,9 @@
       <div class="welfare-panel-head">
         <div><p class="welfare-kicker">OPPORTUNITY CARDS</p><h2 id="welfare-list-title">当前有效企业福利商机</h2></div>
         <div class="welfare-status-tabs" role="tablist" aria-label="商机状态">
-          <button class="is-active" data-status="current" type="button">当前有效</button>
-          <button data-status="priority" type="button">销售优先</button>
-          <button data-status="historical" type="button">历史商机</button>
+          <button class="is-active" data-status="current" type="button">当前机会</button>
+          <button data-status="signal" type="button">前置信号</button>
+          <button data-status="historical" type="button">历史续采</button>
           <button data-status="candidates" type="button">待核验线索</button>
         </div>
         <span id="welfare-count">加载中</span>
@@ -48,9 +48,8 @@
         <label>商机类型<select id="welfare-type"><option value="all">全部类型</option></select></label>
         <label>福利场景<select id="welfare-scene"><option value="all">全部场景</option></select></label>
         <label>地区<select id="welfare-region"><option value="all">全部地区</option></select></label>
-        <label>供应商匹配<select id="welfare-supplier"><option value="all">全部供应商类型</option></select></label>
-        <label>联系人<select id="welfare-contact"><option value="all">全部</option><option value="known">有联系人</option></select></label>
         <label>截止窗口<select id="welfare-deadline"><option value="all">全部截止</option><option value="7d">7天内</option><option value="30d">30天内</option><option value="later">30天后</option><option value="unknown">待核验</option></select></label>
+        <label>快捷筛选<select id="welfare-quick"><option value="all">全部机会</option><option value="contact">有官方联系人</option><option value="priority">重点推荐</option><option value="budget">有明确预算</option></select></label>
       </div>
 
       <div class="welfare-decision-layout">

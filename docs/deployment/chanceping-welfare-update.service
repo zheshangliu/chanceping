@@ -8,6 +8,11 @@ Type=oneshot
 WorkingDirectory=/opt/chanceping/current
 EnvironmentFile=/etc/chanceping/chanceping.env
 Environment=TZ=Asia/Shanghai
+Environment=CHANCEPING_WELFARE_STORE_PATH=/var/lib/chanceping/welfare/opportunities.json
+Environment=CHANCEPING_WELFARE_CANDIDATE_PATH=/var/lib/chanceping/welfare/candidates.json
+Environment=CHANCEPING_WELFARE_RUN_SUMMARY_PATH=/var/lib/chanceping/welfare/run-summary.json
+Environment=CHANCEPING_WELFARE_EVIDENCE_DIR=/var/lib/chanceping/welfare/evidence
+ExecStartPre=/usr/bin/install -d -m 0755 -o root -g root /var/lib/chanceping/welfare
 ExecStart=/usr/bin/npm run welfare:update -- --limit 4
 TimeoutStartSec=30min
 StandardOutput=journal

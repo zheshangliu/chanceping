@@ -1,10 +1,11 @@
 import type { BusinessEditionId } from "./edition-config";
 import type { OpportunityCategory } from "./opportunity";
-import { loadSourceRegistry } from "./data-pipeline";
+import { loadSourceRegistry, sourceIntegrationStatus, type SourceIntegrationStatus } from "./data-pipeline";
 
 export interface BusinessSource {
   id: string; name: string; officialUrl: string; editions: BusinessEditionId[]; categories: OpportunityCategory[];
   coverage: string; refreshCadence: "daily" | "every_3_days" | "weekly"; admissionPolicy: string; tier?: "p0" | "p1" | "p2"; role?: "official_fact" | "candidate_discovery" | "reference";
+  integrationStatus?: SourceIntegrationStatus;
 }
 
 /** Official portals only. A portal is a discovery source, not public opportunity data by itself. */
@@ -46,9 +47,18 @@ function registryCategories(value: string): OpportunityCategory[] {
 export function sourcesForEdition(edition: BusinessEditionId): BusinessSource[] {
   const legacy = BUSINESS_SOURCES.filter((source) => source.editions.includes(edition));
   const registry = loadSourceRegistry().sources.map((source): BusinessSource => ({
-    id: source.sourceId, name: source.name, officialUrl: source.entryUrl, editions: ["guangzhou", "tianhe", "shaoguan"], categories: registryCategories(source.categories), coverage: source.categories,
+    id: source.sourceId, name: source.name, officialUrl: source.entryUrl, editions: sourceEligibleEditions(source.regions), categories: registryCategories(source.categories), coverage: source.categories,
     refreshCadence: source.frequency.includes("周") ? "weekly" : "every_3_days", admissionPolicy: source.role === "candidate_discovery" ? "仅作候选发现；必须回到直接官方原文核验后才能公开。" : `仅采纳满足官方原文、字段核验和行动期要求的机会。${source.health ? ` 当前登记状态：${source.health}。` : ""}`,
-    tier: source.priority.toLowerCase() as BusinessSource["tier"], role: source.role,
+    tier: source.priority.toLowerCase() as BusinessSource["tier"], role: source.role, integrationStatus: sourceIntegrationStatus(source),
   }));
-  return [...legacy, ...registry.filter((source) => !legacy.some((item) => item.officialUrl === source.officialUrl))];
+  const activeLegacy = legacy.filter((source) => source.role !== "candidate_discovery").map((source) => ({ ...source, integrationStatus: "ACTIVE" as const }));
+  return [...activeLegacy, ...registry.filter((source) => source.editions.includes(edition) && (source.integrationStatus === "ACTIVE" || source.integrationStatus === "MANUAL_ONLY") && !legacy.some((item) => item.officialUrl === source.officialUrl))];
+}
+
+function sourceEligibleEditions(regions: string): BusinessEditionId[] {
+  const editions = new Set<BusinessEditionId>();
+  if (/广州|天河/.test(regions)) { editions.add("guangzhou"); editions.add("tianhe"); }
+  if (/韶关/.test(regions)) editions.add("shaoguan");
+  if (/广东|全省|全国/.test(regions)) { editions.add("guangzhou"); editions.add("tianhe"); editions.add("shaoguan"); }
+  return editions.size ? [...editions] : ["guangzhou", "tianhe", "shaoguan"];
 }

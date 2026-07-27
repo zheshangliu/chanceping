@@ -4,10 +4,14 @@ import os from "node:os";
 import path from "node:path";
 import {
   buildWelfareFeed,
+  buildWelfareFunnelDiagnostics,
   collectAllWelfareSources,
   extractWelfareIndexLinks,
   loadRecordedWelfareOpportunities,
+  loadWelfareDataSnapshot,
   loadPersistedWelfareOpportunities,
+  loadWelfareRunSummary,
+  savePersistedWelfareOpportunities,
   mergeWelfareRecords,
   parseWelfareDetail,
   renderWelfareMarkdown,
@@ -15,10 +19,40 @@ import {
   WELFARE_SOURCES,
 } from "../src/public/welfare-opportunities";
 
+const snapshotDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-welfare-snapshot-"));
+const snapshotRuntime = path.join(snapshotDir, "runtime.json");
+const snapshotSeed = path.join(snapshotDir, "seed.json");
+const seedRecord = { ...loadRecordedWelfareOpportunities()[0], id: "seed-record" };
+const runtimeRecord = { ...seedRecord, id: "runtime-record" };
+fs.writeFileSync(snapshotSeed, JSON.stringify([seedRecord]));
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "missing" });
+fs.writeFileSync(snapshotRuntime, JSON.stringify({ records: [] }));
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "empty" });
+fs.writeFileSync(snapshotRuntime, "{invalid");
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "invalid" });
+fs.writeFileSync(snapshotRuntime, JSON.stringify({ records: [runtimeRecord] }));
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord, runtimeRecord], origin: "runtime" });
+const incompleteSummary = path.join(snapshotDir, "incomplete-summary.json");
+fs.writeFileSync(incompleteSummary, JSON.stringify({ status: "seeded" }));
+assert.equal(loadWelfareRunSummary(incompleteSummary), null, "incomplete runtime summaries must not break the public feed");
+fs.rmSync(snapshotDir, { recursive: true, force: true });
+
 const records = loadRecordedWelfareOpportunities();
 assert.ok(records.length > 0, "recorded welfare opportunities must not be empty");
-assert.ok(records.every((item) => item.sourceCode === WELFARE_SOURCE_CODE));
-assert.ok(records.every((item) => /^https:\/\/www\.szgm\.gov\.cn\//.test(item.officialUrl)));
+const seedDiagnostics = buildWelfareFunnelDiagnostics(records);
+assert.ok(seedDiagnostics.public_current >= 40, "Git seed must contain at least 40 actionable opportunities");
+assert.ok(seedDiagnostics.public_signals >= 20, "Git seed must contain at least 20 early signals");
+assert.ok(seedDiagnostics.public_history >= 20, "Git seed must contain at least 20 historical renewal leads");
+assert.ok(seedDiagnostics.deduplicated_opportunities >= 80, "Git seed must contain at least 80 opportunities in total");
+assert.ok(records.every((item) => item.officialUrl && item.sourceCode && item.retrievedAt && /^[a-f0-9]{64}$/.test(item.rawSha256)), "Git seed records must retain official evidence metadata");
+const protectedStoreDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-welfare-protected-save-"));
+const protectedStore = path.join(protectedStoreDir, "opportunities.json");
+savePersistedWelfareOpportunities([records[0]], protectedStore);
+savePersistedWelfareOpportunities([], protectedStore);
+assert.equal(loadPersistedWelfareOpportunities(protectedStore).length, 1, "empty refresh must not replace a non-empty runtime snapshot");
+fs.rmSync(protectedStoreDir, { recursive: true, force: true });
+assert.ok(records.some((item) => item.sourceCode === WELFARE_SOURCE_CODE));
+assert.ok(records.some((item) => /^https:\/\/www\.szgm\.gov\.cn\//.test(item.officialUrl)));
 assert.ok(records.every((item) => /^[a-f0-9]{64}$/.test(item.rawSha256)));
 assert.ok(records.every((item) => item.contactName && item.contactPhone && item.contactAddress));
 
@@ -66,7 +100,9 @@ assert.ok(feed.items.every((item) => item.followUpStatus && item.followUpNextAct
 assert.ok(feed.stats.supplierFitFacets.length > 0, "supplier-fit facets must be available for sales filtering");
 assert.ok(buildWelfareFeed(records, { status: "all", contactKnown: true }).items.every((item) => item.contactPhone !== "未公开" || item.contactName !== "未公开"), "contact filter must retain only opportunities with a public contact");
 assert.ok(feed.items.every((item) => item.lifecycleStatus === "current"));
-const afterDeadline = buildWelfareFeed(records, { status: "current", now: "2026-07-16T00:00:00+08:00" });
+const deadlineFixture = records.find((item) => item.sourceCode === WELFARE_SOURCE_CODE && item.deadline.startsWith("2026-07-15"));
+assert.ok(deadlineFixture, "seed must retain the original deadline transition fixture");
+const afterDeadline = buildWelfareFeed([deadlineFixture], { status: "current", now: "2026-07-16T00:00:00+08:00" });
 assert.equal(afterDeadline.items.length, 0, "expired opportunities must not stay current");
 const markdown = renderWelfareMarkdown(records, "2026-07-11T00:00:00.000Z");
 assert.ok(markdown.includes(records[0].title));

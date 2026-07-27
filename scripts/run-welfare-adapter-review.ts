@@ -6,6 +6,8 @@ const requested = new Set([
   "OFF-N-003", "OFF-N-005", "OFF-N-007", "OFF-N-009", "OFF-N-010", "OFF-N-011",
   "OFF-GD-003", "OFF-GZ-002", "OFF-GZ-003", "OFF-DG-001", "OFF-ZS-001", "OFF-HZ-001",
   "ORG-003", "ORG-004", "ORG-005", "OFF-N-008", "OFF-GD-001", "OFF-FS-001", "OFF-ZH-001", "OFF-GD-002",
+  "OFF-SZ-006", "OFF-SZ-009", "OFF-SZ-010", "OFF-ZS-002", "OFF-DG-002", "OFF-GZ-004", "WEL-002",
+  "WEL-003", "WEL-004", "WEL-005", "WEL-006", "WEL-007",
 ]);
 
 async function main(): Promise<void> {

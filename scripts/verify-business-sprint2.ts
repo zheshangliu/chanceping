@@ -13,8 +13,9 @@ async function main(): Promise<void> {
   check("recorded Business data includes at least 100 current verified opportunities", records.filter((item) => lifecycleStatus(item, new Date("2026-07-24T12:00:00+08:00")) !== "historical").length >= 100);
   const app = createApp();
   const list = await app.request("/api/business/opportunities?edition=guangzhou&status=all");
-  const listBody = await list.json() as { success?: boolean; data?: { items?: Array<{ slug?: string; lifecycleStatus?: string }> } };
+  const listBody = await list.json() as { success?: boolean; data?: { items?: Array<{ slug?: string; lifecycleStatus?: string }>; total?: number; displayedTotal?: number } };
   check("Guangzhou Business list returns verified records", list.status === 200 && listBody.success === true && (listBody.data?.items?.length ?? 0) >= 100);
+  check("Business list exposes filtered total separately from diverse display count", list.status === 200 && (listBody.data?.total ?? 0) >= (listBody.data?.displayedTotal ?? 0));
   const slug = listBody.data?.items?.find((item) => item.lifecycleStatus === "current")?.slug ?? "missing";
   const detail = await app.request(`/api/business/opportunities/${slug}?edition=guangzhou`);
   const detailBody = await detail.json() as { success?: boolean; data?: { officialUrl?: string; verificationStatus?: string; risks?: string[] } };
@@ -31,8 +32,9 @@ async function main(): Promise<void> {
   const shaoguanBody = await shaoguan.json() as { data?: { total?: number } };
   check("Shaoguan current filter returns launch-scale actionable opportunities", shaoguan.status === 200 && (shaoguanBody.data?.total ?? 0) >= 100);
   const sources = await app.request("/api/business/sources?edition=tianhe");
-  const sourcesBody = await sources.json() as { success?: boolean; data?: { items?: Array<{ officialUrl?: string }> } };
+  const sourcesBody = await sources.json() as { success?: boolean; data?: { items?: Array<{ officialUrl?: string; role?: string; integrationStatus?: string }> } };
   check("official source catalog is edition-scoped", sources.status === 200 && sourcesBody.success === true && (sourcesBody.data?.items?.length ?? 0) >= 3 && sourcesBody.data?.items?.every((item) => item.officialUrl?.startsWith("https://")) === true);
+  check("public source catalog excludes candidate and technical-review sources", sources.status === 200 && sourcesBody.data?.items?.every((item) => item.role !== "candidate_discovery" && (item.integrationStatus === undefined || ["ACTIVE", "MANUAL_ONLY"].includes(item.integrationStatus))) === true);
   if (failures > 0) process.exitCode = 1;
 }
 main();

@@ -13,6 +13,7 @@ import { validateIchOpportunity, validateIchOpportunityFile } from "../src/ich/v
 
 interface Options {
   input: string;
+  base: string;
   output: string;
   batch: string;
   now: Date;
@@ -53,13 +54,14 @@ function argument(name: string): string | undefined {
 
 function parseOptions(): Options {
   const input = path.resolve(argument("--input") ?? "data/ich/stage5-candidates.json");
+  const base = path.resolve(argument("--base") ?? "src/ich/opportunities.verified.json");
   const output = path.resolve(argument("--output") ?? "src/ich/opportunities.verified.json");
   const batch = argument("--batch") ?? `ich-stage5-${new Date().toISOString().slice(0, 10)}`;
   const nowRaw = argument("--now") ?? new Date().toISOString();
   const now = new Date(nowRaw);
   if (Number.isNaN(now.getTime())) throw new Error(`Invalid --now value: ${nowRaw}`);
   if (!/^[a-z0-9][a-z0-9._-]{2,79}$/i.test(batch)) throw new Error("Invalid --batch value");
-  return { input, output, batch, now, write: process.argv.includes("--write") };
+  return { input, base, output, batch, now, write: process.argv.includes("--write") };
 }
 
 function readFile(filePath: string): IchOpportunityFile {
@@ -72,10 +74,17 @@ function readFile(filePath: string): IchOpportunityFile {
 function main(): void {
   const options = parseOptions();
   if (!fs.existsSync(options.input)) throw new Error(`Candidate file not found: ${options.input}`);
+  if (!fs.existsSync(options.base)) throw new Error(`Verified seed file not found: ${options.base}`);
   const candidateFile = readFile(options.input);
+  const baseFile = readFile(options.base);
   const existingStore = new IchOpportunityStore(options.output);
   const existing = fs.existsSync(options.output) ? existingStore.list() : [];
-  const merged = [...existing];
+  const merged = [...baseFile.entries];
+  for (const entry of existing) {
+    const sameIndex = merged.findIndex((seed) => seed.id === entry.id || seed.slug === entry.slug);
+    if (sameIndex >= 0) merged[sameIndex] = entry;
+    else merged.push(entry);
+  }
   const errors: string[] = [];
   let invalid = 0;
   let duplicates = 0;
