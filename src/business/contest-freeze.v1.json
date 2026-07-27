@@ -1,0 +1,14 @@
+{
+  "version": "contest-freeze-v1",
+  "frozenAt": "2026-07-27T12:00:00+08:00",
+  "edition": "guangzhou",
+  "profileId": "demo-runjia-cultural",
+  "demoOpportunityIds": [
+    "opp-gz-innovation-sme-2026",
+    "opp-gz-tech-innovation-startup-competition-2026",
+    "opp-gz-expo-tech-innovation-zone-2026",
+    "opp-849f0eb6fb338261bac1",
+    "opp-a459174cab3564d58628"
+  ],
+  "notes": "广州比赛演示集：政策、赛事、展会、文创相关采购与医疗设备采购反例。仅允许修正官方事实、截止状态和失效链接。"
+}

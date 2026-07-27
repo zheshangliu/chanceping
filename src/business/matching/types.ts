@@ -17,6 +17,7 @@ export interface BusinessProfile {
   industries: string[];
   keywords: string[];
   constraints: string[];
+  excludedKeywords?: string[];
 }
 
 export interface EligibilityResult { status: GateStatus; reasons: string[]; unknowns: string[]; }
