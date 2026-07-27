@@ -734,7 +734,11 @@ function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: We
 export function loadWelfareRunSummary(filePath = resolveWelfareRuntimePaths().summary): WelfareRunSummary | null {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return null;
-  try { return JSON.parse(fs.readFileSync(absolute, "utf8")) as WelfareRunSummary; } catch { return null; }
+  try {
+    const summary = JSON.parse(fs.readFileSync(absolute, "utf8")) as Partial<WelfareRunSummary>;
+    if (!Array.isArray(summary.sources) || !summary.totals || typeof summary.ranAt !== "string") return null;
+    return summary as WelfareRunSummary;
+  } catch { return null; }
 }
 
 export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = resolveWelfareRuntimePaths().summary): void {

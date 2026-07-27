@@ -25,4 +25,8 @@ if (!hasValidRecords(opportunitiesPath)) {
   console.log(JSON.stringify({ action: "preserved" }));
 }
 if (!fs.existsSync(candidatesPath)) fs.writeFileSync(candidatesPath, JSON.stringify({ version: "1.0", updatedAt: new Date().toISOString(), records: [] }, null, 2));
-if (!fs.existsSync(summaryPath)) fs.writeFileSync(summaryPath, JSON.stringify({ status: "seeded", retrievedAt: new Date().toISOString() }, null, 2));
+if (!fs.existsSync(summaryPath)) fs.writeFileSync(summaryPath, JSON.stringify({
+  ranAt: new Date().toISOString(),
+  sources: [],
+  totals: { added: 0, updated: 0, historical: 0, filtered: 0, total: loadRecordedWelfareOpportunities().length },
+}, null, 2));

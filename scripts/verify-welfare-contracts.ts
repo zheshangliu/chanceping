@@ -10,6 +10,7 @@ import {
   loadRecordedWelfareOpportunities,
   loadWelfareDataSnapshot,
   loadPersistedWelfareOpportunities,
+  loadWelfareRunSummary,
   savePersistedWelfareOpportunities,
   mergeWelfareRecords,
   parseWelfareDetail,
@@ -31,6 +32,9 @@ fs.writeFileSync(snapshotRuntime, "{invalid");
 assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "invalid" });
 fs.writeFileSync(snapshotRuntime, JSON.stringify({ records: [runtimeRecord] }));
 assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord, runtimeRecord], origin: "runtime" });
+const incompleteSummary = path.join(snapshotDir, "incomplete-summary.json");
+fs.writeFileSync(incompleteSummary, JSON.stringify({ status: "seeded" }));
+assert.equal(loadWelfareRunSummary(incompleteSummary), null, "incomplete runtime summaries must not break the public feed");
 fs.rmSync(snapshotDir, { recursive: true, force: true });
 
 const records = loadRecordedWelfareOpportunities();
