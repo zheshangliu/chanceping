@@ -36,6 +36,10 @@ assert.ok(js.includes("contactName") && js.includes("contactPhone") && js.includ
 assert.ok(html.includes("待核验线索") && js.includes("/api/public/welfare/candidates"));
 assert.ok(html.includes("当前机会") && html.includes("前置信号") && html.includes("历史续采"), "layered public navigation must be present");
 assert.ok(html.includes('id="welfare-stage"'), "opportunity stage must be the first-class filter control");
+assert.ok(!html.includes('class="welfare-hero"'), "standalone welfare hero must be removed");
+assert.ok(html.includes('<strong>企业福利商机雷达</strong>'), "top bar must carry the page identity");
+assert.ok(html.includes('盯机会｜持续发现企业福利采购与供应商征集机会'), "top bar must carry the compact product promise");
+assert.ok(html.includes('class="welfare-back-mobile">创建雷达</span>'), "mobile CTA must use compact copy");
 assert.ok(!html.includes("welfare-status-tabs"), "redundant status tabs must be removed");
 assert.ok(js.includes('querySelector("#welfare-stage")'), "stage selection must drive the public feed");
 assert.ok(js.includes('textContent = "待核验线索"'), "candidate stage must render its own heading");

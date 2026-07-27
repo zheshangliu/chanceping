@@ -29,10 +29,10 @@
 /* 福利生活方式风：温暖、轻服务、可执行 */
 :root{--w-blue:#557d52;--w-ink:#3b2f26;--w-muted:#82776d;--w-line:#ece3d8;--w-bg:#fbf8f3;--w-card:#fffdf9;--w-green:#557d52;--w-warn:#c87642}
 body{background:var(--w-bg);color:var(--w-ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
-.welfare-topbar{height:76px;background:rgba(255,253,249,.96);border-bottom:1px solid var(--w-line);padding:0 max(24px,calc((100vw - 1240px)/2))}
-.welfare-brand{gap:11px}.welfare-brand img{width:36px;height:36px}.welfare-brand strong{font-size:18px;letter-spacing:.02em}.welfare-brand small{color:var(--w-muted)}
+.welfare-topbar{height:84px;background:rgba(255,253,249,.96);border-bottom:1px solid var(--w-line);padding:0 max(24px,calc((100vw - 1240px)/2))}
+.welfare-brand{gap:12px}.welfare-brand img{width:38px;height:38px}.welfare-brand strong{font-size:18px;letter-spacing:.01em}.welfare-brand small{color:var(--w-muted);font-size:12px;line-height:1.45}.welfare-back-mobile{display:none}
 .welfare-back{background:var(--w-green);border-radius:999px;padding:10px 17px;font-weight:650}
-.welfare-shell{max-width:1240px;padding:30px 24px 64px}
+.welfare-shell{max-width:1240px;padding:20px 24px 64px}
 .welfare-hero{grid-template-columns:1fr;margin-bottom:24px}.welfare-hero>div{padding:18px 0 8px;background:transparent;border:0}.welfare-hero aside{display:none}
 .welfare-kicker{color:var(--w-green);letter-spacing:.1em}.welfare-hero h1{font-size:38px;letter-spacing:-.8px;margin:8px 0 10px}.welfare-hero>div>p:last-child{font-size:16px;line-height:1.7;color:var(--w-muted);max-width:640px}
 .welfare-panel{padding:0;background:transparent;border:0}.welfare-panel-head{padding:20px 0 12px;border-bottom:1px solid var(--w-line);grid-template-columns:1fr auto}.welfare-panel-head h2,.welfare-source-map h2{font-size:25px;letter-spacing:-.2px}
@@ -46,3 +46,4 @@ body{background:var(--w-bg);color:var(--w-ink);font-family:"Noto Sans SC","PingF
 .welfare-about{grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}.welfare-about article{background:var(--w-card);border-color:var(--w-line);border-radius:14px;padding:20px}.welfare-about article>span{color:var(--w-green)}.welfare-footer{background:transparent;border-color:var(--w-line);color:var(--w-muted)}
 @media(max-width:1020px){.welfare-filters{grid-template-columns:repeat(3,1fr)}.welfare-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:860px){.welfare-panel-head{grid-template-columns:1fr auto}.welfare-metrics{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(132px,1fr);grid-template-columns:none;overflow-x:auto}.welfare-metric{border-bottom:0}.welfare-grid,.welfare-about{grid-template-columns:1fr}}
+@media(max-width:480px){.welfare-topbar{height:68px}.welfare-brand{gap:9px}.welfare-brand img{width:34px;height:34px}.welfare-brand strong{font-size:16px}.welfare-brand small{display:none}.welfare-back{padding:9px 13px}.welfare-back-desktop{display:none}.welfare-back-mobile{display:inline}.welfare-shell{padding-top:14px}}
