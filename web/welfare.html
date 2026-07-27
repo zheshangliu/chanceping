@@ -34,17 +34,12 @@
     <section class="welfare-panel" aria-labelledby="welfare-list-title">
       <div class="welfare-panel-head">
         <div><p class="welfare-kicker">OPPORTUNITY CARDS</p><h2 id="welfare-list-title">当前有效企业福利商机</h2></div>
-        <div class="welfare-status-tabs" role="tablist" aria-label="商机状态">
-          <button class="is-active" data-status="current" type="button">当前机会</button>
-          <button data-status="signal" type="button">前置信号</button>
-          <button data-status="historical" type="button">历史续采</button>
-          <button data-status="candidates" type="button">待核验线索</button>
-        </div>
         <span id="welfare-count">加载中</span>
       </div>
 
       <div id="welfare-metrics" class="welfare-metrics" aria-label="雷达指标"></div>
       <div class="welfare-filters">
+        <label>机会阶段<select id="welfare-stage"><option value="current">当前机会</option><option value="signal">前置信号</option><option value="historical">历史续采</option><option value="candidates">待核验线索</option></select></label>
         <label>商机类型<select id="welfare-type"><option value="all">全部类型</option></select></label>
         <label>福利场景<select id="welfare-scene"><option value="all">全部场景</option></select></label>
         <label>地区<select id="welfare-region"><option value="all">全部地区</option></select></label>

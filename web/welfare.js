@@ -67,7 +67,7 @@
   function renderCandidates(data) {
     state.data = data; state.totalPages = data.stats.totalPages;
     document.querySelector("#welfare-count").textContent = `${data.stats.totalCount} 条`;
-    document.querySelector("#welfare-list-title").textContent = "前置信号与渠道机会";
+    document.querySelector("#welfare-list-title").textContent = "待核验线索";
     document.querySelector("#welfare-metrics").innerHTML = [[data.stats.totalCount, "待核验线索"], ["—", "不代表当前可投"], ["—", "需回溯官方原文"]].map(([value, label]) => `<div class="welfare-metric"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join("");
     document.querySelector("#welfare-decision-list").innerHTML = "<p style='padding:18px'>线索仅用于销售发现，不代表已核验机会。</p>";
     document.querySelector("#welfare-evidence").innerHTML = "<p>打开线索官方原文并完成核验。</p>";
@@ -91,7 +91,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("[data-status]").forEach((button) => button.addEventListener("click", () => { document.querySelectorAll("[data-status]").forEach((item) => item.classList.remove("is-active")); button.classList.add("is-active"); state.status = button.dataset.status; state.page = 1; load(); }));
+    document.querySelector("#welfare-stage").addEventListener("change", (event) => { state.status = event.currentTarget.value; state.page = 1; load(); });
     ["#welfare-type", "#welfare-scene", "#welfare-region", "#welfare-deadline", "#welfare-quick"].forEach((id) => document.querySelector(id).addEventListener("change", () => { state.page = 1; load(); }));
     document.querySelector("#welfare-prev").addEventListener("click", () => { if (state.page > 1) { state.page -= 1; load(); } });
     document.querySelector("#welfare-next").addEventListener("click", () => { if (state.page < state.totalPages) { state.page += 1; load(); } });
