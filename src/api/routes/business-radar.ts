@@ -1,6 +1,4 @@
 import { Hono } from "hono";
-import fs from "node:fs";
-import path from "node:path";
 import { BUSINESS_COMMON_CONFIG, BUSINESS_EDITIONS, BUSINESS_EDITION_IDS, getBusinessEdition, type BusinessEditionId } from "../../business/edition-config";
 import { CATEGORY_LABELS, loadBusinessOpportunities, lifecycleStatus, RECOMMENDATION_LABELS, VERIFICATION_LABELS, type BusinessOpportunity } from "../../business/opportunity";
 import { sourcesForEdition } from "../../business/source-catalog";
@@ -12,8 +10,6 @@ import type { BusinessProfile } from "../../business/matching/types";
 import { loadDemoProfiles } from "../../business/matching/types";
 import type { ApiResponse } from "../types";
 
-type ContestFreeze = { version: string; frozenAt: string; edition: BusinessEditionId; profileId: string; demoOpportunityIds: string[]; notes: string };
-const loadContestFreeze = (): ContestFreeze => JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "src/business/contest-freeze.v1.json"), "utf8")) as ContestFreeze;
 function isEditionRelevant(item: BusinessOpportunity, edition: BusinessEditionId): boolean {
   if (!item.editions.includes(edition)) return false;
   const text = `${item.title} ${item.organizer} ${item.regions.join(" ")}`;
@@ -108,21 +104,6 @@ export function businessRadarRoutes(): Hono {
     items = items.sort((a, b) => sort === "deadline" ? String(a.deadline ?? "9999").localeCompare(String(b.deadline ?? "9999")) : sort === "recommendation" ? ({ high: 0, medium: 1, observe: 2 }[a.recommendationLevel] - { high: 0, medium: 1, observe: 2 }[b.recommendationLevel]) : b.updatedAt.localeCompare(a.updatedAt));
     const displayed = diverse ? diversify(items) : items;
     return c.json({ success: true, data: { edition: edition.id, items: displayed.map(publicItem), total: items.length, displayedTotal: displayed.length, sourceDiversityApplied: diverse, totals: { all: all.length, current: all.filter((item) => lifecycleStatus(item) !== "historical").length, historical: all.filter((item) => lifecycleStatus(item) === "historical").length }, categories: Object.entries(CATEGORY_LABELS).map(([id, label]) => ({ id, label })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
-  });
-
-  app.get("/demo-package", (c) => {
-    const edition = getBusinessEdition(c.req.query("edition") || "guangzhou");
-    if (!edition) return c.json({ success: false, data: null, error: { code: "EDITION_REQUIRED", message: "需要有效的地区版本" }, duration_ms: 0 } satisfies ApiResponse, 400);
-    const freeze = loadContestFreeze();
-    const profile = loadDemoProfiles().find((candidate) => candidate.id === freeze.profileId) ?? loadDemoProfiles()[0];
-    const scored = allItems().filter((item) => isEditionRelevant(item, edition.id) && lifecycleStatus(item) !== "historical").map((item) => {
-      const gate = evaluateEligibility(item, profile); const localRelevance = evaluateLocalRelevance(item, edition.id); const fit = calculateFitScore(item, profile, gate, localRelevance);
-      return { item, gate, localRelevance, fit };
-    }).sort((a, b) => b.fit.score - a.fit.score || b.item.updatedAt.localeCompare(a.item.updatedAt));
-    const featured = freeze.demoOpportunityIds.map((id) => scored.find((match) => match.item.id === id)).filter((value): value is (typeof scored)[number] => Boolean(value));
-    const matches = [...featured, ...scored.filter((match) => !featured.includes(match))].slice(0, 20);
-    const mapMatch = ({ item, gate, localRelevance, fit }: (typeof matches)[number]) => ({ ...publicItem(item), fitScore: fit.score, fitLabel: fit.label, fitReasons: fit.reasons, unknowns: gate.unknowns, gate, preparationCost: fit.preparationCost, localRelevance });
-    return c.json({ success: true, data: { edition: edition.id, profile, items: matches.map(mapMatch), featured: featured.map(mapMatch), actionPlan: ["先打开官方原文，确认主体资格、截止时间和材料清单", "优先准备营业执照、项目说明和过往案例等基础证明", "对待确认项联系主办方或属地部门核实", "按截止时间倒排内部准备节点并提交前复核一次"], freeze, gate: { passed: matches.length === 20 && featured.length === 5, reason: matches.length === 20 && featured.length === 5 ? "已冻结20条匹配与5条广州演示机会" : "演示集或当前有效机会未达到冻结门槛" } }, error: null, duration_ms: 0 } satisfies ApiResponse);
   });
 
   app.get("/opportunities/:slug", (c) => {
