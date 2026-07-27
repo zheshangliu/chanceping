@@ -395,6 +395,7 @@ export interface WelfareFeed {
     regionFacets: Array<{ id: string; label: string; count: number }>;
     supplierFitFacets: Array<{ id: string; label: string; count: number }>;
     layerCounts: Record<WelfareOpportunityLayer, number>;
+    dataOrigin?: WelfareDataOrigin;
   };
   sources: Array<{ code: string; name: string; url: string; status: "active" | "degraded" | "empty"; lastUpdatedAt: string | null }>;
 }
