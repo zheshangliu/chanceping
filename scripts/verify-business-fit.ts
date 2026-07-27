@@ -1,0 +1,22 @@
+import assert from "node:assert/strict";
+import { loadBusinessOpportunities } from "../src/business/opportunity";
+import { evaluateEligibility } from "../src/business/matching/eligibility-gate";
+import { calculateFitScore } from "../src/business/matching/fit-score";
+import { evaluateLocalRelevance } from "../src/business/matching/local-relevance";
+import { loadDemoProfiles } from "../src/business/matching/types";
+
+const items = loadBusinessOpportunities();
+const profile = loadDemoProfiles()[0];
+assert.ok(profile, "demo profile exists");
+const direct = items.find((item) => item.editions.includes("guangzhou") && item.category === "policy");
+const procurement = items.find((item) => item.editions.includes("guangzhou") && item.category === "procurement");
+assert.ok(direct && procurement, "fit fixtures exist");
+const passGate = evaluateEligibility(direct, profile);
+const failGate = evaluateEligibility(procurement, { ...profile, targetAudience: ["enterprise"], regions: ["guangzhou"], categories: ["policy"] });
+assert.ok(["PASS", "UNKNOWN"].includes(passGate.status));
+assert.equal(failGate.status, "FAIL");
+assert.ok(evaluateLocalRelevance(direct, "guangzhou").reason.length > 0);
+const scored = calculateFitScore(direct, profile, passGate, evaluateLocalRelevance(direct, "guangzhou"));
+assert.ok(scored.score >= 0 && scored.score <= 100);
+assert.ok(scored.reasons.length > 0 && scored.preparationCost.length > 0);
+console.log("Business fit verifier passed: PASS/FAIL/UNKNOWN gates, relevance, score and preparation cost");

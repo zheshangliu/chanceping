@@ -5,6 +5,7 @@ export type SourcePriority = "P0" | "P1" | "P2";
 export type SourceRole = "official_fact" | "candidate_discovery";
 export type CandidateState = "DISCOVERED" | "FETCH_FAILED" | "FETCHED" | "EXTRACTED" | "NEEDS_MANUAL_PARSE" | "NORMALIZED" | "DEDUPE_REVIEW" | "DUPLICATE" | "MANUAL_DEDUPE" | "PENDING_VERIFICATION" | "FIELD_VERIFIED" | "FULLY_VERIFIED" | "PUBLISHED" | "NEEDS_REVIEW" | "EXPIRED" | "REVOKED" | "REJECTED" | "ARCHIVED";
 export type SourceHealthStatus = "HEALTHY" | "DEGRADED" | "DOWN" | "MANUAL_ONLY";
+export type SourceIntegrationStatus = "PLANNED" | "TECHNICAL_REVIEW" | "MANUAL_ONLY" | "ACTIVE" | "DEGRADED" | "PAUSED" | "RETIRED";
 
 export interface SourceDefinition {
   sourceId: string;
@@ -26,6 +27,11 @@ export interface SourceDefinition {
   health: string;
   lastChecked: string;
   notes: string;
+  /** Optional governance fields; legacy registry rows are derived safely below. */
+  integrationStatus?: SourceIntegrationStatus;
+  eligibleEditions?: Array<"guangzhou" | "tianhe" | "shaoguan">;
+  lastSuccessfulFetchAt?: string;
+  lastManualReviewAt?: string;
 }
 
 export interface SourceRegistry {
@@ -130,6 +136,14 @@ export function loadSourceRegistry(file = REGISTRY_PATH): SourceRegistry {
 /** P2 sources may discover records, but their own URLs are never eligible as public facts. */
 export function sourceMayPublish(source: SourceDefinition): boolean {
   return source.role === "official_fact" && (source.priority === "P0" || source.priority === "P1") && source.finalAllowed === "是";
+}
+
+export function sourceIntegrationStatus(source: SourceDefinition): SourceIntegrationStatus {
+  if (source.integrationStatus) return source.integrationStatus;
+  if (source.role === "candidate_discovery" || source.priority === "P2") return "PLANNED";
+  if (source.health.includes("待")) return "TECHNICAL_REVIEW";
+  if (source.health.includes("已核验")) return "ACTIVE";
+  return "TECHNICAL_REVIEW";
 }
 
 export function sourceById(sourceId: string): SourceDefinition | undefined {
