@@ -641,11 +641,43 @@ export function loadRecordedWelfareOpportunities(): WelfareOpportunityRecord[] {
   return JSON.parse(fs.readFileSync(file, "utf8")) as WelfareOpportunityRecord[];
 }
 
+export type WelfareDataOrigin = "runtime" | "seed";
+
+export interface WelfareDataSnapshot {
+  records: WelfareOpportunityRecord[];
+  origin: WelfareDataOrigin;
+  runtimeError?: "missing" | "invalid" | "empty";
+}
+
+function readWelfareRecords(filePath: string): WelfareOpportunityRecord[] {
+  const parsed = JSON.parse(fs.readFileSync(filePath, "utf8")) as { records?: WelfareOpportunityRecord[] } | WelfareOpportunityRecord[];
+  return Array.isArray(parsed) ? parsed : parsed.records ?? [];
+}
+
+export function loadWelfareDataSnapshot(
+  runtimePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json",
+  seedPath = "src/demo/welfare-opportunities.recorded.json",
+): WelfareDataSnapshot {
+  const runtimeAbsolute = path.resolve(process.cwd(), runtimePath);
+  const seedAbsolute = path.resolve(process.cwd(), seedPath);
+  let runtimeError: WelfareDataSnapshot["runtimeError"];
+  if (!fs.existsSync(runtimeAbsolute)) runtimeError = "missing";
+  else {
+    try {
+      const records = readWelfareRecords(runtimeAbsolute);
+      if (records.length > 0) return { records, origin: "runtime" };
+      runtimeError = "empty";
+    } catch {
+      runtimeError = "invalid";
+    }
+  }
+  return { records: readWelfareRecords(seedAbsolute), origin: "seed", runtimeError };
+}
+
 export function loadPersistedWelfareOpportunities(filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): WelfareOpportunityRecord[] {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return [];
-  const parsed = JSON.parse(fs.readFileSync(absolute, "utf8")) as { records?: WelfareOpportunityRecord[] } | WelfareOpportunityRecord[];
-  return Array.isArray(parsed) ? parsed : parsed.records ?? [];
+  return readWelfareRecords(absolute);
 }
 
 export function savePersistedWelfareOpportunities(records: WelfareOpportunityRecord[], filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): void {

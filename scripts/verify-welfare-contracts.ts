@@ -7,6 +7,7 @@ import {
   collectAllWelfareSources,
   extractWelfareIndexLinks,
   loadRecordedWelfareOpportunities,
+  loadWelfareDataSnapshot,
   loadPersistedWelfareOpportunities,
   mergeWelfareRecords,
   parseWelfareDetail,
@@ -14,6 +15,21 @@ import {
   WELFARE_SOURCE_CODE,
   WELFARE_SOURCES,
 } from "../src/public/welfare-opportunities";
+
+const snapshotDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-welfare-snapshot-"));
+const snapshotRuntime = path.join(snapshotDir, "runtime.json");
+const snapshotSeed = path.join(snapshotDir, "seed.json");
+const seedRecord = { ...loadRecordedWelfareOpportunities()[0], id: "seed-record" };
+const runtimeRecord = { ...seedRecord, id: "runtime-record" };
+fs.writeFileSync(snapshotSeed, JSON.stringify([seedRecord]));
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "missing" });
+fs.writeFileSync(snapshotRuntime, JSON.stringify({ records: [] }));
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "empty" });
+fs.writeFileSync(snapshotRuntime, "{invalid");
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "invalid" });
+fs.writeFileSync(snapshotRuntime, JSON.stringify({ records: [runtimeRecord] }));
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [runtimeRecord], origin: "runtime" });
+fs.rmSync(snapshotDir, { recursive: true, force: true });
 
 const records = loadRecordedWelfareOpportunities();
 assert.ok(records.length > 0, "recorded welfare opportunities must not be empty");
