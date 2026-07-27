@@ -678,7 +678,10 @@ export function loadWelfareDataSnapshot(
   else {
     try {
       const records = readWelfareRecords(runtimeAbsolute);
-      if (records.length > 0) return { records, origin: "runtime" };
+      if (records.length > 0) {
+        const seedRecords = readWelfareRecords(seedAbsolute);
+        return { records: mergeWelfareRecords(seedRecords, records), origin: "runtime" };
+      }
       runtimeError = "empty";
     } catch {
       runtimeError = "invalid";

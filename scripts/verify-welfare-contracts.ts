@@ -30,7 +30,7 @@ assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { recor
 fs.writeFileSync(snapshotRuntime, "{invalid");
 assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord], origin: "seed", runtimeError: "invalid" });
 fs.writeFileSync(snapshotRuntime, JSON.stringify({ records: [runtimeRecord] }));
-assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [runtimeRecord], origin: "runtime" });
+assert.deepEqual(loadWelfareDataSnapshot(snapshotRuntime, snapshotSeed), { records: [seedRecord, runtimeRecord], origin: "runtime" });
 fs.rmSync(snapshotDir, { recursive: true, force: true });
 
 const records = loadRecordedWelfareOpportunities();
