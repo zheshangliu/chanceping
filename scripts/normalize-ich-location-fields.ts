@@ -10,8 +10,10 @@ const overseasRules: Array<[RegExp, string, string]> = [
   [/Philippines|菲律宾/i, "菲律宾", "PH"],
   [/Malta|马耳他/i, "马耳他", "MT"],
   [/Auckland|Kāpiti|Waitaki|New Zealand|新西兰/i, "新西兰", "NZ"],
+  [/Lottozero|WeaveUp/i, "意大利", "IT"],
   [/Nordic|L-AIR|Europe|欧洲|Horizon/i, "欧洲", "EU"],
-  [/Austin|SAM |Miami|Tennessee|Tribal|American Latino|美国/i, "美国", "US"],
+  [/Austin|SAM |Miami|Tennessee|Tribal|American Latino|National Heritage Fellowships|National Endowment|Center for Craft|Greater Denton|美国/i, "美国", "US"],
+  [/TransArtists/i, "海外", "ZZ"],
   [/Crafts Council|Greenwich|British Council|Historic England|Heritage Crafts|Royal Museums|Workroom|Collect|Present Makers|D'Oyly|National Lottery|Craft NI|County Hall|Potter in Residence/i, "英国", "GB"],
 ];
 const domesticProvinceRules: Array<[RegExp, string]> = [
@@ -20,15 +22,18 @@ const domesticProvinceRules: Array<[RegExp, string]> = [
 let overseasCount = 0;
 for (const entry of file.entries) {
   const haystack = `${entry.title} ${entry.title_original ?? ""} ${entry.organizer.name} ${entry.sources[0]?.url ?? ""}`;
-  const overseas = overseasRules.find(([pattern]) => pattern.test(haystack));
+  const province = domesticProvinceRules.find(([pattern]) => pattern.test(haystack))?.[1] ?? null;
+  const overseas = overseasRules.find(([pattern]) => pattern.test(haystack)) ?? (entry.primary_category === "international" && !province ? [/./, "海外", "ZZ"] as [RegExp, string, string] : undefined);
   if (overseas) {
     const [, country, code] = overseas;
     entry.location = { ...entry.location, country_code: code, country_name: country, province_state: null, city: null, district: null, region_groups: ["overseas", "online_or_unrestricted"], location_status: "confirmed" };
     overseasCount += 1;
     continue;
   }
-  const province = domesticProvinceRules.find(([pattern]) => pattern.test(haystack))?.[1] ?? null;
-  entry.location = { ...entry.location, country_code: "CN", country_name: "中国", province_state: province, city: province === "广东省" && /广州|广东/.test(haystack) ? "广州" : null, district: null, region_groups: [...new Set(entry.location.region_groups.filter((group) => group !== "overseas"))], location_status: province ? "confirmed" : "unknown" };
+  const city = province === "广东省" && (/广州/.test(haystack) || /yuexiu\.gov\.cn/i.test(haystack)) ? "广州" : null;
+  const regionGroups = province === "广东省" ? [...(city ? ["guangzhou"] : []), "guangdong", "greater_bay_area"] : ["nationwide"];
+  if (entry.location.is_online) regionGroups.push("online_or_unrestricted");
+  entry.location = { ...entry.location, country_code: "CN", country_name: "中国", province_state: province, city, district: null, region_groups: [...new Set(regionGroups)], location_status: province ? "confirmed" : "unknown" };
 }
 file.updated_at = new Date().toISOString();
 fs.writeFileSync(filePath, `${JSON.stringify(file, null, 2)}\n`);
