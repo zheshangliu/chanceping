@@ -107,8 +107,6 @@
     "verify:ich:stage4:integration": "tsx scripts/verify-ich-stage4-integration.ts",
     "verify:ich:stage4": "node --run verify:ich:stage4:seo && node --run verify:ich:stage4:submissions && node --run verify:ich:stage4:integration",
     "verify:ich:stage5": "tsx scripts/verify-ich-stage5.ts",
-    "verify:ich:80": "tsx scripts/verify-ich-80-opportunities.ts",
-    "verify:ich:source-health": "tsx scripts/check-ich-source-health.ts",
     "ich:stage5:build-candidates": "tsx scripts/build-ich-stage5-candidates.ts",
     "ich:stage5:dry-run": "tsx scripts/import-ich-stage5.ts",
     "verify:q7:ai-events-metadata": "tsx scripts/verify-q7k-ai-event-page-metadata.ts",
