@@ -4,8 +4,9 @@ import path from "node:path";
 import type { CandidateRecord } from "./data-pipeline";
 
 export const DEFAULT_CANDIDATE_PATH = path.resolve(process.cwd(), "data/business/candidates/candidates.ndjson");
+function candidatePath(): string { return path.resolve(process.cwd(), process.env.CHANCEPING_BUSINESS_CANDIDATES_PATH ?? "data/business/candidates/candidates.ndjson"); }
 
-export function loadCandidates(file = DEFAULT_CANDIDATE_PATH): CandidateRecord[] {
+export function loadCandidates(file = candidatePath()): CandidateRecord[] {
   if (!fs.existsSync(file)) return [];
   return fs.readFileSync(file, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line) as CandidateRecord);
 }
@@ -15,7 +16,7 @@ export function candidateKey(sourceId: string, discoveryUrl: string): string {
 }
 
 /** Writes through a temporary file so a failed collection never leaves a partial pool. */
-export function saveCandidates(items: CandidateRecord[], file = DEFAULT_CANDIDATE_PATH): void {
+export function saveCandidates(items: CandidateRecord[], file = candidatePath()): void {
   const absolute = path.resolve(file);
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
