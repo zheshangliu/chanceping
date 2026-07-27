@@ -88,6 +88,21 @@ export function businessRadarRoutes(): Hono {
     return c.json({ success: true, data: { edition: edition.id, items: displayed.map(publicItem), total: items.length, displayedTotal: displayed.length, sourceDiversityApplied: diverse, totals: { all: all.length, current: all.filter((item) => lifecycleStatus(item) !== "historical").length, historical: all.filter((item) => lifecycleStatus(item) === "historical").length }, categories: Object.entries(CATEGORY_LABELS).map(([id, label]) => ({ id, label })) }, error: null, duration_ms: 0 } satisfies ApiResponse);
   });
 
+  app.get("/demo-package", (c) => {
+    const edition = getBusinessEdition(c.req.query("edition") || "guangzhou");
+    if (!edition) return c.json({ success: false, data: null, error: { code: "EDITION_REQUIRED", message: "需要有效的地区版本" }, duration_ms: 0 } satisfies ApiResponse, 400);
+    const profile = loadDemoProfiles()[0];
+    const matches = allItems().filter((item) => item.editions.includes(edition.id) && lifecycleStatus(item) !== "historical").map((item) => {
+      const gate = evaluateEligibility(item, profile); const localRelevance = evaluateLocalRelevance(item, edition.id); const fit = calculateFitScore(item, profile, gate, localRelevance);
+      return { item, gate, localRelevance, fit };
+    }).sort((a, b) => b.fit.score - a.fit.score || b.item.updatedAt.localeCompare(a.item.updatedAt)).slice(0, 20);
+    const preferred = ["policy", "competition", "exhibition", "procurement", "international"];
+    const featured = preferred.map((category) => matches.find((match) => match.item.category === category)).filter((value): value is (typeof matches)[number] => Boolean(value));
+    for (const match of matches) if (featured.length < 5 && !featured.includes(match)) featured.push(match);
+    const mapMatch = ({ item, gate, localRelevance, fit }: (typeof matches)[number]) => ({ ...publicItem(item), fitScore: fit.score, fitLabel: fit.label, fitReasons: fit.reasons, unknowns: gate.unknowns, gate, preparationCost: fit.preparationCost, localRelevance });
+    return c.json({ success: true, data: { edition: edition.id, profile, items: matches.map(mapMatch), featured: featured.map(mapMatch), actionPlan: ["先打开官方原文，确认主体资格、截止时间和材料清单", "优先准备营业执照、项目说明和过往案例等基础证明", "对待确认项联系主办方或属地部门核实", "按截止时间倒排内部准备节点并提交前复核一次"], gate: { passed: matches.length === 20, reason: matches.length === 20 ? "已完成20条当前机会匹配" : "当前有效机会不足20条" } }, error: null, duration_ms: 0 } satisfies ApiResponse);
+  });
+
   app.get("/opportunities/:slug", (c) => {
     const edition = getBusinessEdition(c.req.query("edition"));
     const item = allItems().find((candidate) => candidate.slug === c.req.param("slug") && (!edition || candidate.editions.includes(edition.id)));
