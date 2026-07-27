@@ -75,7 +75,7 @@ function listPage(result: IchQueryResult, history: boolean): string {
   const empty = history ? "暂无历史机会记录。" : "当前暂无已发布的非遗机会。我们只在来源和基本信息达到发布条件后展示。";
   const queryParams = new URLSearchParams({ q: result.filters.q, category: result.filters.category, region: result.filters.region, status: result.filters.status, sort: result.filters.sort });
   const href = (patch: Record<string, string>) => { const next = new URLSearchParams(queryParams); Object.entries(patch).forEach(([key, value]) => next.set(key, value)); if (!("page" in patch)) next.delete("page"); return `/ich?${next.toString()}`; };
-  const categories = [["all","赛事 / 征集","比赛与作品征集"],["exhibition_market","项目合作","展会、市集与展销"],["procurement_project","采购 / 订单","采购与项目需求"],["channel_collaboration","渠道 / 合作","入驻与联名"],["policy_funding","资助 / 扶持","政策与资金"],["international","培训 / 国际","研学与交流"]];
+  const categories = [["competition","赛事 / 征集","比赛与作品征集"],["exhibition_market","项目合作","展会、市集与展销"],["procurement_project","采购 / 订单","采购与项目需求"],["channel_collaboration","渠道 / 合作","入驻与联名"],["policy_funding","资助 / 扶持","政策与资金"],["international","培训 / 国际","研学与交流"]];
   const regions = [["all","全部"],["guangzhou","广州"],["guangdong","广东省"],["greater_bay_area","粤港澳大湾区"],["nationwide","全国"],["hong_kong_macao_taiwan","港澳台"],["overseas","海外"],["online_or_unrestricted","线上"]];
   const statuses = [["current","全部当前"],["closing_soon","近期截止"],["long_term","长期征集"]];
   const content = items.length > 0 ? `<div class="ich-grid">${items.map((item, index) => card(item, history, (result.page - 1) * result.page_size + index + 1)).join("")}</div>` : `<section class="ich-notice"><h2>暂无可展示机会</h2><p>${empty}</p></section>`;
