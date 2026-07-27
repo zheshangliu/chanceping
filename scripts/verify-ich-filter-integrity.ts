@@ -10,7 +10,7 @@ const errors: string[] = [];
 const run = (patch: Partial<IchQuery>) => queryIchOpportunities(file.entries, { q: "", category: "all", region: "all", status: "current", sort: "default", page: 1, page_size: 60, ...patch }, now, file.updated_at);
 
 const guangzhou = run({ region: "guangzhou" });
-if (guangzhou.items.some((item) => item.location.city !== "广州" || !item.location.region_groups.includes("guangzhou"))) errors.push("Guangzhou filter returned non-Guangzhou item");
+if (guangzhou.items.some((item) => !["广州", "广州市"].includes(item.location.city ?? "") || !item.location.region_groups.includes("guangzhou"))) errors.push("Guangzhou filter returned non-Guangzhou item");
 const overseas = run({ region: "overseas" });
 if (overseas.items.some((item) => item.location.country_code === "CN" || !item.location.region_groups.includes("overseas"))) errors.push("overseas filter returned domestic item");
 for (const category of ICH_PRIMARY_CATEGORIES) {

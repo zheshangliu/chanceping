@@ -47,9 +47,7 @@
         "region_groups": [
           "guangzhou",
           "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "greater_bay_area"
         ],
         "participation_scope": "global",
         "eligible_regions": [
