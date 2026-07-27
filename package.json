@@ -30,6 +30,7 @@
     "verify:business:p0-p1-p2-release": "tsx scripts/verify-business-p0-p1-p2-release.ts",
     "verify:business:new-user": "tsx scripts/verify-business-new-user.ts",
     "verify:business:contest-package": "tsx scripts/verify-business-contest-package.ts",
+    "verify:business:contest-readiness": "tsx scripts/verify-business-contest-readiness.ts",
     "verify:business:view-toggle": "tsx scripts/verify-business-view-toggle.ts",
     "verify:notify": "tsx scripts/verify-task029.ts",
     "verify:review": "tsx scripts/verify-task030.ts",

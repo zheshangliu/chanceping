@@ -160,6 +160,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const watchBtn = document.getElementById("home-watch-btn");
   if (!input || !watchBtn) return;
 
+  const businessContext = urlParams.get("business_context");
+  if (businessContext) {
+    try {
+      const context = JSON.parse(businessContext);
+      const eligibility = Array.isArray(context.eligibility) && context.eligibility.length ? `资格要求：${context.eligibility.join("；")}。` : "";
+      const risks = Array.isArray(context.risks) && context.risks.length ? `风险：${context.risks.join("；")}。` : "";
+      input.value = `请作为 ChancePing AI 机会官，判断“${context.title || context.opportunityId || "当前机会"}”是否适合广州非遗文创小微企业。${eligibility}${risks}请输出：是否建议参与、资格缺口、准备工作量、截止前行动时间表和3至5步下一步行动。`;
+      input.dataset.businessContext = JSON.stringify(context);
+      window.dispatchEvent(new CustomEvent("chanceping:business-context-received", { detail: context }));
+    } catch {
+      // Invalid context must never block the ordinary home-page flow.
+    }
+  }
+
   renderMvpTemplates(input);
   hideLegacyTemplatesForHero();
   bindHeroDemoPrompts(input);

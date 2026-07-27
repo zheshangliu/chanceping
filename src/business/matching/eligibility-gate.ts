@@ -6,6 +6,9 @@ const hasAny = (values: string[], terms: string[]) => values.some((value) => ter
 export function evaluateEligibility(item: BusinessOpportunity, profile: BusinessProfile): EligibilityResult {
   const reasons: string[] = [];
   const unknowns: string[] = [];
+  const searchable = `${item.title} ${item.summary} ${item.eligibilityRequirements.join(" ")}`.toLowerCase();
+  const excluded = (profile.excludedKeywords ?? []).find((term) => searchable.includes(term.toLowerCase()));
+  if (excluded) return { status: "FAIL", reasons: [`企业画像明确排除“${excluded}”类机会`], unknowns };
   if (!item.editions.some((edition) => profile.regions.includes(edition))) return { status: "FAIL", reasons: ["机会地区与企业画像不匹配"], unknowns };
   if (profile.categories.length && !profile.categories.includes(item.category)) return { status: "FAIL", reasons: ["机会类型不在企业画像的优先范围"], unknowns };
   if (profile.targetAudience.length && item.targetAudience.length && !hasAny(item.targetAudience, profile.targetAudience)) return { status: "FAIL", reasons: ["目标对象与企业画像不匹配"], unknowns };
