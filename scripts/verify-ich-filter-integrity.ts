@@ -24,5 +24,12 @@ for (const status of ["closing_soon", "long_term"] as const) {
 const first = run({ page: 1, page_size: 8 });
 const second = run({ page: 2, page_size: 8 });
 if (first.items.length && second.items.length && first.items[0]?.slug === second.items[0]?.slug) errors.push("pagination did not advance");
+const withdrawnSourceMismatch = file.entries.find((entry) => entry.slug === "expansion-batch-03-007");
+if (!withdrawnSourceMismatch) errors.push("withdrawn source-mismatch audit record is missing");
+else {
+  if (withdrawnSourceMismatch.is_published || withdrawnSourceMismatch.workflow.state !== "withdrawn") errors.push("source-mismatch record remains public");
+  if (withdrawnSourceMismatch.verification.verification_status !== "pending_verification" || !withdrawnSourceMismatch.verification.needs_recheck) errors.push("source-mismatch record is not pending re-verification");
+}
+if (run({ q: "2026广东省工艺美术精品展作品征集" }).total !== 0) errors.push("source-mismatch record remains searchable in the public current feed");
 console.log(JSON.stringify({ guangzhou: guangzhou.total, overseas: overseas.total, categories: Object.fromEntries(ICH_PRIMARY_CATEGORIES.map((category) => [category, run({ category }).total])), closing_soon: run({ status: "closing_soon" }).total, long_term: run({ status: "long_term" }).total, page_2: second.page, errors }, null, 2));
 if (errors.length) process.exitCode = 1;

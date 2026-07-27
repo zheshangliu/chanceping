@@ -93,7 +93,60 @@ try {
       `a controlled import must preserve verified seed entry ${seedEntry.slug}`,
     );
   }
-  console.log("ICH stage 5 importer, registry and screening ledger: 20/20 checks passed");
+
+  const formalFile = JSON.parse(fs.readFileSync(path.resolve("data/ich-opportunities.json"), "utf8")) as {
+    schema_version: string;
+    updated_at: string;
+    entries: Array<Record<string, any>>;
+  };
+  const publishedMismatch = formalFile.entries.find((entry) => entry.slug === "expansion-batch-03-007");
+  assert.ok(publishedMismatch, "source-mismatch fixture must exist");
+  const withdrawnFile = structuredClone(formalFile);
+  const withdrawnMismatch = withdrawnFile.entries.find((entry) => entry.slug === "expansion-batch-03-007")!;
+  withdrawnMismatch.is_published = false;
+  withdrawnMismatch.workflow.state = "withdrawn";
+  withdrawnMismatch.workflow.revision += 1;
+  withdrawnMismatch.workflow.withdrawn_at = "2026-07-27T15:30:00+08:00";
+  withdrawnMismatch.workflow.history.push({
+    action: "withdrawn",
+    from: "published",
+    to: "withdrawn",
+    actor: "test-source-auditor",
+    at: "2026-07-27T15:30:00+08:00",
+    reason: "source does not belong to the claimed organizer",
+    revision: withdrawnMismatch.workflow.revision,
+  });
+  withdrawnMismatch.verification.verification_status = "pending_verification";
+  withdrawnMismatch.verification.needs_recheck = true;
+  const withdrawnOutput = path.join(tempDir, "withdrawn-preservation.json");
+  fs.writeFileSync(withdrawnOutput, `${JSON.stringify(withdrawnFile, null, 2)}\n`);
+  const mismatchCandidate = path.join(tempDir, "source-mismatch-candidate.json");
+  fs.writeFileSync(mismatchCandidate, `${JSON.stringify({ ...formalFile, entries: [publishedMismatch] }, null, 2)}\n`);
+  const withdrawnPreservation = spawnSync(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      "scripts/import-ich-stage5.ts",
+      "--input",
+      mismatchCandidate,
+      "--base",
+      fixture,
+      "--output",
+      withdrawnOutput,
+      "--batch",
+      "test-withdrawn-preservation",
+      "--now",
+      "2026-07-27T15:30:00+08:00",
+      "--write",
+    ],
+    { cwd: process.cwd(), encoding: "utf8" },
+  );
+  assert.equal(withdrawnPreservation.status, 0, withdrawnPreservation.stderr || withdrawnPreservation.stdout);
+  const preservedWithdrawal = new IchOpportunityStore(withdrawnOutput).getBySlug("expansion-batch-03-007");
+  assert.equal(preservedWithdrawal?.workflow.state, "withdrawn", "a routine import must not republish a withdrawn opportunity");
+  assert.equal(preservedWithdrawal?.is_published, false, "a routine import must keep a withdrawn opportunity private");
+  console.log("ICH stage 5 importer, registry and screening ledger: 22/22 checks passed");
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });
 }
