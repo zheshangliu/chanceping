@@ -48,7 +48,7 @@ docs/deployment/aliyun.env.example
 - 雷达聊天窗口 store：`CHANCEPING_RADAR_CHAT_STORE_PATH`
 - AI Events 数据源 store：当前公开页 `/api/public/ai-events` 使用的本地数据文件
 - 自定义雷达、运行记录、机会卡和报告 artifact 的本地 data 目录
-- 福利公开雷达数据：`data/welfare-opportunities.json`、`data/welfare-run-summary.json`；官方原文快照在 Git 忽略的 `data/welfare-evidence/`。
+- 福利公开雷达运行数据：`/var/lib/chanceping/welfare/opportunities.json`、`candidates.json`、`run-summary.json`；官方原文快照在 `/var/lib/chanceping/welfare/evidence/`。Git 基线位于 `src/demo/welfare-opportunities.recorded.json`，运行数据缺失、为空或损坏时公开 API 自动降级到该基线。
 - 福利采集器优先使用 Node HTTPS / curl；SWAS 的 OpenSSL 与部分深圳政务站点不兼容时，自动回退到 `gnutls-cli`，仍直连官方 HTTPS 并验证证书。因此服务器必须安装 `gnutls-bin`。
 
 ## 企业福利雷达灰度（fuli.chanceping.com）
@@ -59,12 +59,16 @@ docs/deployment/aliyun.env.example
 # 1) 在已验证分支推送后，按现有 release 安装流程部署；安装脚本会创建 fuli Nginx block。
 bash /tmp/chanceping-workbench-install.sh /tmp/chanceping-workbench-YYYYMMDD-HHMMSS.tar.gz
 
-# 2) 安装福利定时刷新（每天 08:30、16:30，Asia/Shanghai）
+# 2) 初始化独立于 release 的持久目录，并安装福利定时刷新
+sudo install -d -m 0755 -o root -g root /var/lib/chanceping/welfare
+cd /opt/chanceping/current
+sudo CHANCEPING_WELFARE_RUNTIME_DIR=/var/lib/chanceping/welfare npm run welfare:migrate-storage
 sudo cp /opt/chanceping/current/docs/deployment/chanceping-welfare-update.service /etc/systemd/system/
 sudo cp /opt/chanceping/current/docs/deployment/chanceping-welfare-update.timer /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now chanceping-welfare-update.timer
-sudo systemctl start chanceping-welfare-update.service
+sudo systemctl start --no-block chanceping-welfare-update.service
+sudo systemctl status chanceping-welfare-update.service --no-pager -l
 sudo journalctl -u chanceping-welfare-update.service -n 120 --no-pager
 
 # 3) DNS 的 fuli.chanceping.com 已指向本机后，签发 HTTPS
@@ -76,7 +80,7 @@ curl -fsS http://127.0.0.1:3000/api/public/welfare/opportunities | head -c 500; 
 CHANCEPING_WELFARE_BASE_URL=https://fuli.chanceping.com npm run verify:welfare:remote-smoke
 ```
 
-失败回退：`sudo systemctl disable --now chanceping-welfare-update.timer`，然后从 `/etc/nginx/sites-available/chanceping.conf` 删除 `fuli.chanceping.com` server block 并 `sudo nginx -t && sudo systemctl reload nginx`；如应用本身回归，按既有 release 软链切回上一版本。不要删除 `data/welfare-opportunities.json`，它是失败降级所需的上一轮有效公开数据。
+失败回退：`sudo systemctl disable --now chanceping-welfare-update.timer`，然后从 `/etc/nginx/sites-available/chanceping.conf` 删除 `fuli.chanceping.com` server block 并 `sudo nginx -t && sudo systemctl reload nginx`；如应用本身回归，按既有 release 软链切回上一版本。不要删除 `/var/lib/chanceping/welfare`，它是失败降级所需的上一轮有效公开数据；即使该目录不可用，Git 基线仍会提供公开卡片。
 
 ## 上线前本地闸门
 

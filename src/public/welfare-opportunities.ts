@@ -650,13 +650,25 @@ export interface WelfareDataSnapshot {
   runtimeError?: "missing" | "invalid" | "empty";
 }
 
+export function resolveWelfareRuntimePaths() {
+  const production = process.env.NODE_ENV === "production";
+  const root = process.env.CHANCEPING_WELFARE_RUNTIME_DIR ?? (production ? "/var/lib/chanceping/welfare" : "data");
+  return {
+    opportunities: process.env.CHANCEPING_WELFARE_STORE_PATH ?? path.join(root, production ? "opportunities.json" : "welfare-opportunities.json"),
+    candidates: process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? path.join(root, production ? "candidates.json" : "welfare-candidates.json"),
+    summary: process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? path.join(root, production ? "run-summary.json" : "welfare-run-summary.json"),
+    evidence: process.env.CHANCEPING_WELFARE_EVIDENCE_DIR
+      ?? (process.env.NODE_ENV === "production" ? path.join(root, "evidence") : "data/welfare-evidence"),
+  };
+}
+
 function readWelfareRecords(filePath: string): WelfareOpportunityRecord[] {
   const parsed = JSON.parse(fs.readFileSync(filePath, "utf8")) as { records?: WelfareOpportunityRecord[] } | WelfareOpportunityRecord[];
   return Array.isArray(parsed) ? parsed : parsed.records ?? [];
 }
 
 export function loadWelfareDataSnapshot(
-  runtimePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json",
+  runtimePath = resolveWelfareRuntimePaths().opportunities,
   seedPath = "src/demo/welfare-opportunities.recorded.json",
 ): WelfareDataSnapshot {
   const runtimeAbsolute = path.resolve(process.cwd(), runtimePath);
@@ -675,13 +687,13 @@ export function loadWelfareDataSnapshot(
   return { records: readWelfareRecords(seedAbsolute), origin: "seed", runtimeError };
 }
 
-export function loadPersistedWelfareOpportunities(filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): WelfareOpportunityRecord[] {
+export function loadPersistedWelfareOpportunities(filePath = resolveWelfareRuntimePaths().opportunities): WelfareOpportunityRecord[] {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return [];
   return readWelfareRecords(absolute);
 }
 
-export function savePersistedWelfareOpportunities(records: WelfareOpportunityRecord[], filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): void {
+export function savePersistedWelfareOpportunities(records: WelfareOpportunityRecord[], filePath = resolveWelfareRuntimePaths().opportunities): void {
   const absolute = path.resolve(process.cwd(), filePath);
   if (records.length === 0 && fs.existsSync(absolute)) {
     try { if (readWelfareRecords(absolute).length > 0) return; } catch { /* replace an invalid snapshot */ }
@@ -692,7 +704,7 @@ export function savePersistedWelfareOpportunities(records: WelfareOpportunityRec
   fs.renameSync(temporary, absolute);
 }
 
-export function loadPersistedWelfareCandidates(filePath = process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? "data/welfare-candidates.json"): WelfareCandidateRecord[] {
+export function loadPersistedWelfareCandidates(filePath = resolveWelfareRuntimePaths().candidates): WelfareCandidateRecord[] {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return [];
   try {
@@ -701,7 +713,7 @@ export function loadPersistedWelfareCandidates(filePath = process.env.CHANCEPING
   } catch { return []; }
 }
 
-export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[], filePath = process.env.CHANCEPING_WELFARE_CANDIDATE_PATH ?? "data/welfare-candidates.json"): void {
+export function savePersistedWelfareCandidates(records: WelfareCandidateRecord[], filePath = resolveWelfareRuntimePaths().candidates): void {
   const absolute = path.resolve(process.cwd(), filePath);
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
@@ -716,13 +728,13 @@ function mergeWelfareCandidates(existing: WelfareCandidateRecord[], incoming: We
   return Array.from(byId.values()).sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt));
 }
 
-export function loadWelfareRunSummary(filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): WelfareRunSummary | null {
+export function loadWelfareRunSummary(filePath = resolveWelfareRuntimePaths().summary): WelfareRunSummary | null {
   const absolute = path.resolve(process.cwd(), filePath);
   if (!fs.existsSync(absolute)) return null;
   try { return JSON.parse(fs.readFileSync(absolute, "utf8")) as WelfareRunSummary; } catch { return null; }
 }
 
-export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = process.env.CHANCEPING_WELFARE_RUN_SUMMARY_PATH ?? "data/welfare-run-summary.json"): void {
+export function saveWelfareRunSummary(summary: WelfareRunSummary, filePath = resolveWelfareRuntimePaths().summary): void {
   const absolute = path.resolve(process.cwd(), filePath);
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
@@ -1099,7 +1111,8 @@ async function collectWelfareSourceData(sourceCode: WelfareSourceConfig["code"],
   const fetchHtml = options.fetchHtml ?? defaultWelfareFetchHtml;
   const now = options.now ?? new Date();
   const retrievedAt = now.toISOString();
-  const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? `data/welfare-evidence/${source.code}`);
+  const evidenceRoot = resolveWelfareRuntimePaths().evidence;
+  const evidenceDir = path.resolve(process.cwd(), options.evidenceDir ?? path.join(evidenceRoot, source.code));
   fs.mkdirSync(evidenceDir, { recursive: true });
   if (source.publicApi === "szggzy-government-procurement") return collectSzGgzyGovernmentProcurement(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
   if (source.publicApi === "gzgpc-procurement-signals") return collectGzGpcProcurementSignals(source, { fetchHtml: options.fetchHtml, evidenceDir, maxDetails: options.maxDetails, now, retrievedAt });
