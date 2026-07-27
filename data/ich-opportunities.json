@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-07-27T12:00:00.000+08:00",
+  "updated_at": "2026-07-27T15:30:00.000+08:00",
   "entries": [
     {
       "id": "ich_expansion_batch_01_001",
@@ -5465,32 +5465,24 @@
       "title": "2026广东省工艺美术精品展作品征集",
       "title_original": "2026广东省工艺美术精品展作品征集",
       "title_en": null,
-      "summary": "省级协会官方展览入口。 申请前请以官方来源最新页面为准。",
-      "description": "参赛作品须以广东非遗项目为核心，鼓励非遗与现代生活、科技、商业和艺术等领域创新联结。设计稿和实物作品均可投稿，每个个人或团体报送作品不超过3件。",
-      "opportunity_value_text": "设置金、银、铜、优秀、入围及最具市场潜力等奖项；获奖作品须参加优秀作品展览，并有机会推进市场化转化。",
+      "summary": "原来源域名与主办方不匹配，且未找到对应的具体官方通知；该线索已撤下并等待重新核验。",
+      "description": "未确认。重新发布前必须取得广东省工艺美术协会的具体通知详情页，并重新核对全部报名字段。",
+      "opportunity_value_text": "未确认。",
       "primary_category": "exhibition_market",
-      "secondary_tags": [
-        "全国可报",
-        "海外可报",
-        "设计师",
-        "非遗传承人",
-        "院校师生",
-        "文创团队",
-        "免报名费"
-      ],
-      "classification_confidence": "high",
-      "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
-      "status": "active",
-      "status_reason": "官方页面列明截止日期 2026-09-20。",
-      "is_featured": true,
-      "is_published": true,
-      "archive_reason": null,
+      "secondary_tags": [],
+      "classification_confidence": "low",
+      "classification_reason": "原来源 gdgm.org.cn 属于北京生态设计与绿色制造促进会，并非广东省工艺美术协会；具体机会通知未确认。",
+      "classification_status": "pending_review",
+      "status": "pending_confirmation",
+      "status_reason": "来源与主办方不匹配，截止日期及报名信息均未确认。",
+      "is_featured": false,
+      "is_published": false,
+      "archive_reason": "invalid",
       "organizer": {
         "name": "广东省工艺美术协会",
         "name_en": null,
-        "type": "public_cultural_institution",
-        "official_website": "https://www.gdgm.org.cn",
+        "type": "association",
+        "official_website": "http://www.gzartware.com/",
         "contact_text": null
       },
       "location": {
@@ -5516,50 +5508,38 @@
         "location_status": "confirmed"
       },
       "participation_mode": {
-        "mode": "online",
-        "submission_method": "email",
-        "requires_on_site_presence": false,
-        "participation_notes": "参赛作品照片和报名表通过官方通知指定邮箱提交；获奖作品须参加优秀作品展览。"
+        "mode": "unknown",
+        "submission_method": "unknown",
+        "requires_on_site_presence": null,
+        "participation_notes": "未确认。"
       },
       "dates": {
-        "published_at": "2026-07-25T12:00:00+08:00",
-        "application_start_at": "2026-07-25T12:00:00+08:00",
-        "deadline_at": "2026-09-20",
-        "deadline_text": "2026-09-20",
-        "event_start_at": "2026-06-01",
-        "event_end_at": "2026-12-31",
+        "published_at": null,
+        "application_start_at": null,
+        "deadline_at": null,
+        "deadline_text": "未确认",
+        "event_start_at": null,
+        "event_end_at": null,
         "timezone": "Asia/Shanghai",
         "is_deadline_all_day": true,
         "is_long_term": false,
-        "date_status": "confirmed"
+        "date_status": "unknown"
       },
       "eligibility": {
         "eligible_applicant_types": [
-          "individual",
-          "inheritor",
-          "studio",
-          "enterprise",
-          "organization",
-          "school",
-          "designer",
-          "student",
-          "team"
+          "unknown"
         ],
-        "eligibility_text": "面向全国及海内外征集。个人参赛者须年满18周岁；单位或团队可为院校、文创产品设计开发单位、产品设计机构、创意设计团队及非遗相关企事业单位。",
-        "ich_status_required": false,
+        "eligibility_text": "未确认。",
+        "ich_status_required": null,
         "business_license_required": null,
-        "local_registration_required": false,
-        "recommendation_required": false,
-        "age_requirement_text": "个人参赛者及多人合作作品的所有作者均须年满18周岁。",
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
         "language_requirement_text": null,
-        "eligibility_status": "confirmed"
+        "eligibility_status": "unknown"
       },
       "benefits": {
-        "value_types": [
-          "award",
-          "exhibition",
-          "market_conversion"
-        ],
+        "value_types": [],
         "prize_amount": null,
         "prize_currency": null,
         "funding_amount": null,
@@ -5568,12 +5548,12 @@
         "procurement_budget_max": null,
         "procurement_currency": null,
         "sales_opportunity": null,
-        "channel_opportunity": true,
-        "benefit_text": "设金奖5个、银奖7个、铜奖10个、优秀奖30个、入围奖50个、最具市场潜力奖5个及优秀指导老师奖10个。"
+        "channel_opportunity": null,
+        "benefit_text": "未确认。"
       },
       "costs": {
-        "application_fee_amount": 0,
-        "application_fee_currency": "CNY",
+        "application_fee_amount": null,
+        "application_fee_currency": null,
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -5583,74 +5563,66 @@
         "accommodation_self_funded": null,
         "materials_self_funded": null,
         "shipping_self_funded": null,
-        "cost_text": "官方通知明确本次大赛不收取任何报名费用；其他制作、寄送或参展成本未确认。",
-        "cost_status": "partial"
+        "cost_text": "未确认。",
+        "cost_status": "unknown"
       },
       "requirements": {
-        "documents_required": [
-          "官方报名表",
-          "作品照片"
-        ],
+        "documents_required": [],
         "portfolio_required": false,
         "sample_required": false,
         "proposal_required": false,
         "invoice_required": false,
         "bidding_qualification_required": false,
-        "production_capacity_text": "作品设计需考虑产品化可行性，包括可生产性、工艺合理性、价格定位与制作成本。",
-        "requirements_text": "作品须为2023年1月1日以后创作的原创作品；每个个人或团体报送不超过3件，照片须满足官方通知规定的清晰度、分辨率、文件大小和格式要求。"
+        "production_capacity_text": null,
+        "requirements_text": "未确认。"
       },
       "application": {
-        "application_url": "https://www.gdgm.org.cn/",
-        "application_email": "gdsfycyds@qq.com",
+        "application_url": null,
+        "application_email": null,
         "application_phone": null,
-        "application_platform": "电子邮件",
-        "application_steps": [
-          "阅读官方通知及知识产权要求",
-          "下载并填写官方报名表",
-          "整理符合规格的作品照片",
-          "按“作者+作品名称”要求命名邮件及附件并发送至指定邮箱"
-        ],
+        "application_platform": null,
+        "application_steps": [],
         "contact_text": null,
-        "application_status": "confirmed"
+        "application_status": "unknown"
       },
       "sources": [
         {
-          "url": "https://www.gdgm.org.cn/",
+          "url": "http://www.gzartware.com/",
           "name": "广东省工艺美术协会",
-          "type": "specific_opportunity_page",
+          "type": "official_homepage",
           "level": "L2",
           "is_primary": true,
-          "published_at": "2026-07-25T12:00:00+08:00",
-          "last_checked_at": "2026-07-25T12:00:00+08:00",
+          "published_at": null,
+          "last_checked_at": "2026-07-27T15:30:00+08:00",
           "is_accessible": true,
-          "notes": "省级协会官方展览入口。"
+          "notes": "广东省工艺美术协会官网首页；截至核查时未找到该标题对应的具体通知，不能作为报名链接。"
         }
       ],
       "verification": {
-        "verification_status": "verified",
-        "verified_by": "manual",
-        "verified_at": "2026-07-25T12:00:00+08:00",
-        "source_conflict": false,
-        "conflict_notes": null,
+        "verification_status": "pending_verification",
+        "verified_by": "unknown",
+        "verified_at": null,
+        "source_conflict": true,
+        "conflict_notes": "原来源 gdgm.org.cn 属于北京生态设计与绿色制造促进会；协会官网未找到对应具体通知，原截止日期、邮箱和报名字段已清空。",
         "needs_recheck": true,
-        "recheck_after": "2026-07-28T00:00:00+08:00"
+        "recheck_after": null
       },
       "seo": {
-        "meta_title": "2026广东省非遗创意设计大赛｜10月15日截止",
-        "meta_description": "2026年第十一届广东省非物质文化遗产创意设计大赛面向全国及海外征集作品，报名截止10月15日。",
+        "meta_title": null,
+        "meta_description": null,
         "canonical_url": null,
-        "og_title": "2026广东省非遗创意设计大赛",
-        "og_description": "全国及海外个人、单位和团队均可参赛，免报名费，2026年10月15日截止。",
+        "og_title": null,
+        "og_description": null,
         "og_image": null,
-        "noindex": false
+        "noindex": true
       },
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-07-25T12:00:00+08:00",
+        "updated_at": "2026-07-27T15:30:00+08:00",
         "created_by": "chanceping-editor",
-        "updated_by": "chanceping-editor",
+        "updated_by": "chanceping-source-auditor",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-07-24T13:20:00+08:00",
+        "last_checked_at": "2026-07-27T15:30:00+08:00",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -5660,13 +5632,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 4,
-        "review_reason": null,
+        "state": "withdrawn",
+        "revision": 5,
+        "review_reason": "来源域名与主办方不匹配，具体机会通知及报名字段未确认。",
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-07-27T15:30:00+08:00",
         "history": [
           {
             "action": "created",
@@ -5703,6 +5675,15 @@
             "at": "2026-07-25T12:00:00+08:00",
             "reason": null,
             "revision": 4
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "chanceping-source-auditor",
+            "at": "2026-07-27T15:30:00+08:00",
+            "reason": "来源域名与主办方不匹配，具体机会通知及报名字段未确认。",
+            "revision": 5
           }
         ]
       }

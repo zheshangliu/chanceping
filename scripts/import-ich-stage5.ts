@@ -103,6 +103,8 @@ function main(): void {
     }
     const sameIndex = merged.findIndex((entry) => entry.id === candidate.id || entry.slug === candidate.slug);
     if (sameIndex >= 0) {
+      const existingEntry = merged[sameIndex]!;
+      if (existingEntry.workflow.state === "withdrawn" || existingEntry.workflow.state === "archived") continue;
       merged[sameIndex] = candidate;
       updated += 1;
       continue;
