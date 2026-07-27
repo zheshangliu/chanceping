@@ -50,7 +50,7 @@ async function main() {
   const json = await response.json() as any;
   assert.equal(json.success, true);
   assert.equal(json.data.stats.dataOrigin, "runtime");
-  assert.ok(!JSON.stringify(json).includes(process.env.CHANCEPING_WELFARE_STORE_PATH));
+  assert.ok(!JSON.stringify(json).includes(process.env.CHANCEPING_WELFARE_STORE_PATH!));
   assert.ok(json.data.items.length > 0);
   assert.ok(json.data.items[0].officialUrl.startsWith("https://www.szgm.gov.cn/"));
   assert.equal("radarId" in json.data.items[0], false);

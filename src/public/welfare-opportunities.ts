@@ -683,6 +683,9 @@ export function loadPersistedWelfareOpportunities(filePath = process.env.CHANCEP
 
 export function savePersistedWelfareOpportunities(records: WelfareOpportunityRecord[], filePath = process.env.CHANCEPING_WELFARE_STORE_PATH ?? "data/welfare-opportunities.json"): void {
   const absolute = path.resolve(process.cwd(), filePath);
+  if (records.length === 0 && fs.existsSync(absolute)) {
+    try { if (readWelfareRecords(absolute).length > 0) return; } catch { /* replace an invalid snapshot */ }
+  }
   fs.mkdirSync(path.dirname(absolute), { recursive: true });
   const temporary = `${absolute}.tmp`;
   fs.writeFileSync(temporary, JSON.stringify({ version: "1.0", updatedAt: new Date().toISOString(), records }, null, 2));
