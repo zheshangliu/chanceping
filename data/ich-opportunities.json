@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-07-26T16:00:00.000Z",
+  "updated_at": "2026-07-27T02:59:36.265Z",
   "entries": [
     {
       "id": "ich_expansion_batch_01_001",
@@ -40,16 +40,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -59,7 +58,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -291,16 +290,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "浙江省",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -542,16 +540,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -561,7 +558,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -793,16 +790,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "西藏自治区",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -1044,16 +1040,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "北京市",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -1295,16 +1290,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -1314,7 +1308,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -1546,16 +1540,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -1565,7 +1558,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -1795,18 +1788,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "US",
+        "country_name": "美国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -2046,18 +2036,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -2297,18 +2284,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "US",
+        "country_name": "美国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -2550,16 +2534,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -2569,7 +2552,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -2801,16 +2784,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -2820,7 +2802,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -3052,16 +3034,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -3071,7 +3052,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -3303,16 +3284,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -3322,7 +3302,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -3552,18 +3532,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -3805,16 +3782,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -3824,7 +3800,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -4054,18 +4030,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "MX",
+        "country_name": "墨西哥",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -4305,18 +4278,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "EU",
+        "country_name": "欧洲",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -4556,18 +4526,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -4809,16 +4776,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -4828,7 +4794,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -5060,16 +5026,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -5079,7 +5044,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -5309,18 +5274,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "JP",
+        "country_name": "日本",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -5563,15 +5525,14 @@
         "country_code": "CN",
         "country_name": "中国",
         "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "city": "广州",
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -5813,16 +5774,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -5832,7 +5792,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -6064,16 +6024,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "北京市",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -6315,16 +6274,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -6334,7 +6292,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -6566,16 +6524,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "云南省",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -6817,16 +6774,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "江苏省",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -7068,16 +7024,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -7087,7 +7042,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -7319,16 +7274,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -7338,7 +7292,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -7570,16 +7524,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -7589,7 +7542,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -7821,16 +7774,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -7840,7 +7792,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -8072,16 +8024,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -8091,7 +8042,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -8323,16 +8274,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -8342,7 +8292,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -8572,18 +8522,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -8823,18 +8770,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -9074,18 +9018,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -9325,18 +9266,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "US",
+        "country_name": "美国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -9578,16 +9516,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -9597,7 +9534,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -9827,18 +9764,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "JP",
+        "country_name": "日本",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -10080,16 +10014,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -10099,7 +10032,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -10331,16 +10264,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -10350,7 +10282,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -10582,16 +10514,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "江西省",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -10831,18 +10762,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -11082,18 +11010,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -11333,18 +11258,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -11586,16 +11508,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "山东省",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -11837,16 +11758,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": "安徽省",
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -12088,16 +12008,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -12107,7 +12026,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -12339,16 +12258,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -12358,7 +12276,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -12588,18 +12506,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -12839,18 +12754,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "PH",
+        "country_name": "菲律宾",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -13090,18 +13002,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "US",
+        "country_name": "美国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -13341,18 +13250,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -13592,18 +13498,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "MT",
+        "country_name": "马耳他",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -13843,18 +13746,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -14094,18 +13994,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -14345,18 +14242,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "NZ",
+        "country_name": "新西兰",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -14596,18 +14490,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -14847,18 +14738,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "US",
+        "country_name": "美国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -15098,18 +14986,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "NZ",
+        "country_name": "新西兰",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -15349,18 +15234,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "NZ",
+        "country_name": "新西兰",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -15600,18 +15482,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "EU",
+        "country_name": "欧洲",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -15851,18 +15730,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "EU",
+        "country_name": "欧洲",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -16104,16 +15980,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -16123,7 +15998,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -16353,18 +16228,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "JP",
+        "country_name": "日本",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -16604,18 +16476,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "US",
+        "country_name": "美国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -16855,18 +16724,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -17106,18 +16972,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -17359,16 +17222,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -17378,7 +17240,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -17608,18 +17470,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -17859,18 +17718,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -18110,18 +17966,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -18361,18 +18214,15 @@
         "contact_text": null
       },
       "location": {
-        "country_code": "CN",
-        "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "country_code": "GB",
+        "country_name": "英国",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
-          "guangzhou",
-          "guangdong",
-          "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "overseas",
+          "online_or_unrestricted"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -18626,7 +18476,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "partially_confirmed"
+        "location_status": "confirmed"
       },
       "participation_mode": {
         "mode": "online",
@@ -18855,7 +18705,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "partially_confirmed"
+        "location_status": "confirmed"
       },
       "participation_mode": {
         "mode": "online",
@@ -19069,7 +18919,7 @@
         "country_code": "CN",
         "country_name": "中国",
         "province_state": "西藏自治区",
-        "city": "昌都市",
+        "city": null,
         "district": null,
         "venue_text": null,
         "region_groups": [
@@ -19084,7 +18934,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "partially_confirmed"
+        "location_status": "confirmed"
       },
       "participation_mode": {
         "mode": "online",
@@ -19298,7 +19148,7 @@
         "country_code": "CN",
         "country_name": "中国",
         "province_state": "广东省",
-        "city": "广州市",
+        "city": "广州",
         "district": null,
         "venue_text": null,
         "region_groups": [
@@ -19313,7 +19163,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "partially_confirmed"
+        "location_status": "confirmed"
       },
       "participation_mode": {
         "mode": "online",
@@ -19526,8 +19376,8 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "新疆维吾尔自治区",
-        "city": "喀什地区",
+        "province_state": null,
+        "city": null,
         "district": null,
         "venue_text": null,
         "region_groups": [
@@ -19542,7 +19392,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "partially_confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
@@ -19759,16 +19609,15 @@
       "location": {
         "country_code": "CN",
         "country_name": "中国",
-        "province_state": "广东省",
-        "city": "广州市",
-        "district": "越秀区",
+        "province_state": null,
+        "city": null,
+        "district": null,
         "venue_text": null,
         "region_groups": [
           "guangzhou",
           "guangdong",
           "greater_bay_area",
-          "nationwide",
-          "overseas"
+          "nationwide"
         ],
         "participation_scope": "global",
         "eligible_regions": [
@@ -19778,7 +19627,7 @@
         "is_online": true,
         "is_hybrid": false,
         "is_multi_location": false,
-        "location_status": "confirmed"
+        "location_status": "pending_confirmation"
       },
       "participation_mode": {
         "mode": "online",
