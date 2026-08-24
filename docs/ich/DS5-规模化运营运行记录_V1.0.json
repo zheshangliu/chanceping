@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "stage": "DS5",
+  "run_id": "ich-ds5-20260824080000",
+  "ran_at": "2026-08-24T08:00:00.000Z",
+  "gate": "pass",
+  "operation_mode": "candidate_discovery_and_review",
+  "formal_store_write": false,
+  "promotion_policy": "仅通过 DS1-D 审批包的条目允许受控晋级；发现、审计和质量分层不得写正式库。",
+  "next_scheduled_run_at": "2026-08-27T08:00:00.000Z",
+  "source_registry": {
+    "total": 31,
+    "scan_frequency_counts": {
+      "daily": 12,
+      "every_3_days": 17,
+      "weekly": 2
+    },
+    "operational_status_counts": {
+      "planned": 31,
+      "discovery_only": 0,
+      "adapter_ready": 0,
+      "disabled": 0
+    },
+    "query_packs": 5
+  },
+  "upstream_runs": {
+    "ds4_gate": "pass",
+    "ds2_gate": "pass",
+    "ds2_candidate_count": 9,
+    "ds3_gate": "pass",
+    "ds3_assessments": [
+      {
+        "candidate_id": "ds1b-ccgp-66226700a75d",
+        "source_id": "ccgp",
+        "score": 55,
+        "band": "medium",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": true,
+          "deadline_confirmed": true,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": false,
+          "action_signal": false,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题未提供明确非遗/传统工艺相关性，需人工确认",
+          "标题可能是结果/更正或未体现当前行动窗口",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-ccgp-db98de6e8560",
+        "source_id": "ccgp",
+        "score": 40,
+        "band": "low",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": true,
+          "deadline_confirmed": false,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": false,
+          "action_signal": false,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题未提供明确非遗/传统工艺相关性，需人工确认",
+          "标题可能是结果/更正或未体现当前行动窗口",
+          "截止字段未被详情页确认",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-ccgp-6028b9e50b5e",
+        "source_id": "ccgp",
+        "score": 40,
+        "band": "low",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": true,
+          "deadline_confirmed": false,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": false,
+          "action_signal": false,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题未提供明确非遗/传统工艺相关性，需人工确认",
+          "标题可能是结果/更正或未体现当前行动窗口",
+          "截止字段未被详情页确认",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-gd-culture-f88f45cf525f",
+        "source_id": "gd-culture",
+        "score": 0,
+        "band": "low",
+        "decision": "reject",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": true,
+          "deadline_confirmed": true,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": true,
+          "action_signal": true,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": false
+        },
+        "reasons": [
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认",
+          "候选详情 URL 重复"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-gd-culture-b28dd4d3af8b",
+        "source_id": "gd-culture",
+        "score": 85,
+        "band": "high",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": true,
+          "deadline_confirmed": true,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": true,
+          "action_signal": true,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-gd-culture-2880a23b614a",
+        "source_id": "gd-culture",
+        "score": 48,
+        "band": "low",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": true,
+          "deadline_confirmed": false,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": true,
+          "action_signal": false,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题可能是结果/更正或未体现当前行动窗口",
+          "截止字段未被详情页确认",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
+        "source_id": "yuexiu-notices",
+        "score": 25,
+        "band": "low",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": false,
+          "deadline_confirmed": false,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": false,
+          "action_signal": false,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题未提供明确非遗/传统工艺相关性，需人工确认",
+          "标题可能是结果/更正或未体现当前行动窗口",
+          "截止字段未被详情页确认",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-yuexiu-notices-bafdbbc7e73f",
+        "source_id": "yuexiu-notices",
+        "score": 25,
+        "band": "low",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": false,
+          "deadline_confirmed": false,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": false,
+          "action_signal": false,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题未提供明确非遗/传统工艺相关性，需人工确认",
+          "标题可能是结果/更正或未体现当前行动窗口",
+          "截止字段未被详情页确认",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      },
+      {
+        "candidate_id": "ds1b-yuexiu-notices-50346cb1a19c",
+        "source_id": "yuexiu-notices",
+        "score": 62,
+        "band": "medium",
+        "decision": "review_required",
+        "formal_publish_blocked": true,
+        "checks": {
+          "detail_page": true,
+          "title_confirmed": true,
+          "organizer_confirmed": false,
+          "deadline_confirmed": true,
+          "geography_confirmed": false,
+          "category_confirmed": false,
+          "snapshot_hash": true,
+          "primary_or_secondary_source": true,
+          "relevance_signal": false,
+          "action_signal": true,
+          "known_template_marker_absent": true,
+          "duplicate_url_absent": true
+        },
+        "reasons": [
+          "标题未提供明确非遗/传统工艺相关性，需人工确认",
+          "地区字段未被详情页确认",
+          "分类仍是适配器提示，未逐条确认"
+        ]
+      }
+    ]
+  },
+  "formal_store_snapshot": {
+    "sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+    "total": 119,
+    "current": 61,
+    "historical": 51,
+    "level12_ratio": 0.9916
+  },
+  "errors": []
+}

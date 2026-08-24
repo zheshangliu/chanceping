@@ -1,12 +1,12 @@
 {
   "schema_version": "ich-ds2-readonly-discovery.v1",
-  "run_id": "ich-ds2-20260824073002",
-  "started_at": "2026-08-24T07:30:02.123Z",
-  "finished_at": "2026-08-24T07:30:03.233Z",
+  "run_id": "ich-ds2-20260824075359",
+  "started_at": "2026-08-24T07:53:59.936Z",
+  "finished_at": "2026-08-24T07:54:01.684Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
-  "formal_store_before_sha256": "75a5bc9f5b5dbce38f5a1593bf84bb0127d772918f433d043392b17943734714",
+  "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
   "source_count": 3,
   "candidate_count": 9,
   "source_runs": [
@@ -15,164 +15,46 @@
       "adapter_id": "ccgp-procurement-listing-v1",
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "access_mode": "search",
-      "started_at": "2026-08-24T07:30:02.124Z",
-      "finished_at": "2026-08-24T07:30:02.776Z",
+      "started_at": "2026-08-24T07:53:59.936Z",
+      "finished_at": "2026-08-24T07:54:00.949Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-      "raw_snapshot_hash": "0c404d7bf0b5fa7855f7b69a3cd60ddc085f80daabe6bfd97b50fc8f515319d1",
+      "raw_snapshot_hash": "917bf4a465d6742782eb7c723d02d27092e19e88259032b605312e3afa988c46",
       "candidate_count": 3,
       "candidates": [
         {
-          "candidate_id": "ds1b-ccgp-81db65be4280",
+          "candidate_id": "ds1b-ccgp-66226700a75d",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-          "title": "西安市临潼区临潼中学2026年普通高中教育学位扩容项目（临潼中学）设备购置招标公告",
-          "organizer": "西安市临潼区临潼中学",
-          "deadline_text": "2026年09月15日 14时30分",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 15:16",
-          "raw_snapshot_hash": "95dd9aeb01f7525c9046a6a052d9962e3cc555c7abf0e7a59d10202bd76b3b18",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "西安市临潼区临潼中学2026年普通高中教育学位扩容项目（临潼中学）设备购置招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-              "method": "html_title",
-              "evidence_excerpt": "西安市临潼区临潼中学2026年普通高中教育学位扩容项目（临潼中学）设备购置招标公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "西安市临潼区临潼中学",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 西安市临潼区临潼中学",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月15日 14时30分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月15日 14时30分 （北京时间）前",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190554.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-f072d534946f",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-          "title": "山西省贺龙中学2025-2026年度教师队伍建设与教学提升专项培训项目结果公告",
-          "organizer": "山西省贺龙中学",
-          "deadline_text": null,
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 15:16",
-          "raw_snapshot_hash": "516ee046697692e8d5d4d8fd468870f5180f69f75cb3dfb0914b00b520f2bf11",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "山西省贺龙中学2025-2026年度教师队伍建设与教学提升专项培训项目结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-              "method": "html_title",
-              "evidence_excerpt": "山西省贺龙中学2025-2026年度教师队伍建设与教学提升专项培训项目结果公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "山西省贺龙中学",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 山西省贺龙中学",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190553.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-e43424cd141c",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
-          "title": "萝北县水保与水资源服务中心萝北县2026年度农业“以电折水”维修养护项目竞争性磋商公告",
-          "organizer": "萝北县水保与水资源服务中心",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
+          "title": "西安建筑科技大学子午书院4号学生公寓楼项目方案、初步设计竞争性磋商公告",
+          "organizer": "西安建筑科技大学",
           "deadline_text": "2026年09月04日 09时00分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 15:16",
-          "raw_snapshot_hash": "de2b10f844be491958977f985c77db4f5d20d23ca86b4fd7abde689713273cc2",
+          "published_text": "2026年08月24日 15:41",
+          "raw_snapshot_hash": "e32a5c8f31f12d429b206d0af1a37e96277459bee6f659899dc077599e97e9f2",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "萝北县水保与水资源服务中心萝北县2026年度农业“以电折水”维修养护项目竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
+              "value": "西安建筑科技大学子午书院4号学生公寓楼项目方案、初步设计竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
               "method": "html_title",
-              "evidence_excerpt": "萝北县水保与水资源服务中心萝北县2026年度农业“以电折水”维修养护项目竞争性磋商公告",
+              "evidence_excerpt": "西安建筑科技大学子午书院4号学生公寓楼项目方案、初步设计竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "萝北县水保与水资源服务中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
+              "value": "西安建筑科技大学",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 萝北县水保与水资源服务中心",
+              "evidence_excerpt": "采购单位 西安建筑科技大学",
               "confirmed": true
             },
             "deadline_text": {
               "value": "2026年09月04日 09时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
               "method": "structured_text",
               "evidence_excerpt": "于 2026年09月04日 09时00分 （北京时间）前",
               "confirmed": true
@@ -192,10 +74,128 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27190569.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-db98de6e8560",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+          "title": "晋城市2026年航空应急救援服务项目结果公告",
+          "organizer": "晋城市应急管理局",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月24日 15:40",
+          "raw_snapshot_hash": "8e38d470f7207eb86c2f6194c828f5598b0ef2d34e6f91f065dc84c2af475f55",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "晋城市2026年航空应急救援服务项目结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "method": "html_title",
+              "evidence_excerpt": "晋城市2026年航空应急救援服务项目结果公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "晋城市应急管理局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 晋城市应急管理局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-6028b9e50b5e",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+          "title": "平定县农业农村局2026年高素质农民培育项目结果公告",
+          "organizer": "平定县农业农村局",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月24日 15:40",
+          "raw_snapshot_hash": "86653ffbc53858780489188351820c56fd82e55e0b91b97bc3c7f4ab004956d5",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "平定县农业农村局2026年高素质农民培育项目结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "method": "html_title",
+              "evidence_excerpt": "平定县农业农村局2026年高素质农民培育项目结果公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "平定县农业农村局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 平定县农业农村局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
               "confirmed": true
             }
           }
@@ -208,8 +208,8 @@
       "adapter_id": "gd-culture-notices-v1",
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-24T07:30:02.776Z",
-      "finished_at": "2026-08-24T07:30:03.037Z",
+      "started_at": "2026-08-24T07:54:00.949Z",
+      "finished_at": "2026-08-24T07:54:01.337Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://whly.gd.gov.cn/open_newggl/index.html",
@@ -401,8 +401,8 @@
       "adapter_id": "yuexiu-notices-v1",
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "started_at": "2026-08-24T07:30:03.037Z",
-      "finished_at": "2026-08-24T07:30:03.233Z",
+      "started_at": "2026-08-24T07:54:01.337Z",
+      "finished_at": "2026-08-24T07:54:01.684Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",

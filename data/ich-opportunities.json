@@ -24,11 +24,11 @@
       ],
       "classification_confidence": "high",
       "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
+      "classification_status": "pending_review",
       "status": "closing_soon",
       "status_reason": "官方页面列明截止日期 2026-08-05。",
       "is_featured": true,
-      "is_published": true,
+      "is_published": false,
       "archive_reason": null,
       "organizer": {
         "name": "阿里地区文化和旅游局",
@@ -161,9 +161,9 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "ich-ds4-dedup",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
         "last_checked_at": "2026-08-24T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
@@ -175,13 +175,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 5,
-        "review_reason": "DS0：模板字段已清除，等待按原始来源重新核验。",
+        "state": "withdrawn",
+        "revision": 6,
+        "review_reason": null,
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-08-24T08:00:00.000Z",
         "history": [
           {
             "action": "created",
@@ -227,6 +227,15 @@
             "at": "2026-08-24T04:00:00.000Z",
             "reason": "清除跨机会复制字段，保留标题、来源和线索信息。",
             "revision": 5
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "ich-ds4-dedup",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS4 主来源重复修复：与 2026-ali-cultural-creative-products-procurement 共享同一主来源，保留更高可信度的唯一正式记录。",
+            "revision": 6
           }
         ]
       }
@@ -253,11 +262,11 @@
       ],
       "classification_confidence": "high",
       "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
+      "classification_status": "pending_review",
       "status": "active",
       "status_reason": "官方页面列明截止日期 2026-08-18。",
       "is_featured": true,
-      "is_published": true,
+      "is_published": false,
       "archive_reason": null,
       "organizer": {
         "name": "崇明区文化和旅游局",
@@ -390,9 +399,9 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "ich-ds4-dedup",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
         "last_checked_at": "2026-08-24T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
@@ -404,13 +413,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 5,
-        "review_reason": "DS0：模板字段已清除，等待按原始来源重新核验。",
+        "state": "withdrawn",
+        "revision": 6,
+        "review_reason": null,
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-08-24T08:00:00.000Z",
         "history": [
           {
             "action": "created",
@@ -456,6 +465,15 @@
             "at": "2026-08-24T04:00:00.000Z",
             "reason": "清除跨机会复制字段，保留标题、来源和线索信息。",
             "revision": 5
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "ich-ds4-dedup",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS4 主来源重复修复：与 2026-chongming-cultural-tourism-badge-design 共享同一主来源，保留更高可信度的唯一正式记录。",
+            "revision": 6
           }
         ]
       }
@@ -3230,11 +3248,11 @@
       ],
       "classification_confidence": "high",
       "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
+      "classification_status": "pending_review",
       "status": "closing_soon",
       "status_reason": "官方页面列明截止日期 2026-07-30。",
       "is_featured": true,
-      "is_published": true,
+      "is_published": false,
       "archive_reason": null,
       "organizer": {
         "name": "County Hall Pottery",
@@ -3367,9 +3385,9 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "ich-ds4-dedup",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
         "last_checked_at": "2026-08-24T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
@@ -3381,13 +3399,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 5,
-        "review_reason": "DS0：模板字段已清除，等待按原始来源重新核验。",
+        "state": "withdrawn",
+        "revision": 6,
+        "review_reason": null,
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-08-24T08:00:00.000Z",
         "history": [
           {
             "action": "created",
@@ -3433,6 +3451,15 @@
             "at": "2026-08-24T04:00:00.000Z",
             "reason": "清除跨机会复制字段，保留标题、来源和线索信息。",
             "revision": 5
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "ich-ds4-dedup",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS4 主来源重复修复：与 2027-county-hall-pottery-potter-in-residence 共享同一主来源，保留更高可信度的唯一正式记录。",
+            "revision": 6
           }
         ]
       }
@@ -4375,11 +4402,11 @@
       ],
       "classification_confidence": "high",
       "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
+      "classification_status": "pending_review",
       "status": "active",
       "status_reason": "官方页面列明截止日期 2026-08-31。",
       "is_featured": true,
-      "is_published": true,
+      "is_published": false,
       "archive_reason": null,
       "organizer": {
         "name": "Lottozero",
@@ -4512,9 +4539,9 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "ich-ds4-dedup",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
         "last_checked_at": "2026-08-24T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
@@ -4526,13 +4553,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 5,
-        "review_reason": "DS0：模板字段已清除，等待按原始来源重新核验。",
+        "state": "withdrawn",
+        "revision": 6,
+        "review_reason": null,
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-08-24T08:00:00.000Z",
         "history": [
           {
             "action": "created",
@@ -4578,6 +4605,15 @@
             "at": "2026-08-24T04:00:00.000Z",
             "reason": "清除跨机会复制字段，保留标题、来源和线索信息。",
             "revision": 5
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "ich-ds4-dedup",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS4 主来源重复修复：与 2026-weaveup-wool-residency 共享同一主来源，保留更高可信度的唯一正式记录。",
+            "revision": 6
           }
         ]
       }
@@ -9872,11 +9908,11 @@
       ],
       "classification_confidence": "high",
       "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
+      "classification_status": "pending_review",
       "status": "closing_soon",
       "status_reason": "官方页面列明截止日期 2026-08-03。",
       "is_featured": true,
-      "is_published": true,
+      "is_published": false,
       "archive_reason": null,
       "organizer": {
         "name": "Royal Museums Greenwich",
@@ -10009,9 +10045,9 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "ich-ds4-dedup",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
         "last_checked_at": "2026-08-24T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
@@ -10023,13 +10059,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 5,
-        "review_reason": "DS0：模板字段已清除，等待按原始来源重新核验。",
+        "state": "withdrawn",
+        "revision": 6,
+        "review_reason": null,
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-08-24T08:00:00.000Z",
         "history": [
           {
             "action": "created",
@@ -10075,6 +10111,15 @@
             "at": "2026-08-24T04:00:00.000Z",
             "reason": "清除跨机会复制字段，保留标题、来源和线索信息。",
             "revision": 5
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "ich-ds4-dedup",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS4 主来源重复修复：与 2026-royal-museums-greenwich-creative-practitioner-residence 共享同一主来源，保留更高可信度的唯一正式记录。",
+            "revision": 6
           }
         ]
       }
@@ -16284,11 +16329,11 @@
       ],
       "classification_confidence": "high",
       "classification_reason": "官方政府通知明确公开征集参赛作品、参赛对象、提交方式、截止日期和奖项。",
-      "classification_status": "confirmed",
+      "classification_status": "pending_review",
       "status": "active",
       "status_reason": "官方页面列明截止日期 2026-08-21。",
       "is_featured": true,
-      "is_published": true,
+      "is_published": false,
       "archive_reason": null,
       "organizer": {
         "name": "Heritage Crafts",
@@ -16421,9 +16466,9 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "ich-ds4-dedup",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
         "last_checked_at": "2026-08-24T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
@@ -16435,13 +16480,13 @@
       "duplicate_of_id": null,
       "merged_from_ids": [],
       "workflow": {
-        "state": "published",
-        "revision": 5,
-        "review_reason": "DS0：模板字段已清除，等待按原始来源重新核验。",
+        "state": "withdrawn",
+        "revision": 6,
+        "review_reason": null,
         "submitted_at": "2026-07-24T13:05:00+08:00",
         "reviewed_at": "2026-07-24T13:15:00+08:00",
         "reviewed_by": "chanceping-reviewer",
-        "withdrawn_at": null,
+        "withdrawn_at": "2026-08-24T08:00:00.000Z",
         "history": [
           {
             "action": "created",
@@ -16487,6 +16532,15 @@
             "at": "2026-08-24T04:00:00.000Z",
             "reason": "清除跨机会复制字段，保留标题、来源和线索信息。",
             "revision": 5
+          },
+          {
+            "action": "withdrawn",
+            "from": "published",
+            "to": "withdrawn",
+            "actor": "ich-ds4-dedup",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS4 主来源重复修复：与 2026-heritage-crafts-emerging-metalworker-award 共享同一主来源，保留更高可信度的唯一正式记录。",
+            "revision": 6
           }
         ]
       }

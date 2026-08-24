@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "stage": "DS4",
+  "mode": "write",
+  "executed_at": "2026-08-24T08:00:00.000Z",
+  "before_sha256": "75a5bc9f5b5dbce38f5a1593bf84bb0127d772918f433d043392b17943734714",
+  "after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "actions": [
+    {
+      "id": "ich_expansion_batch_01_001",
+      "slug": "expansion-batch-01-001",
+      "preferred_slug": "2026-ali-cultural-creative-products-procurement",
+      "preferred_id": "ich_stage5_013",
+      "revision_before": 5
+    },
+    {
+      "id": "ich_expansion_batch_01_002",
+      "slug": "expansion-batch-01-002",
+      "preferred_slug": "2026-chongming-cultural-tourism-badge-design",
+      "preferred_id": "ich_stage5_005",
+      "revision_before": 5
+    },
+    {
+      "id": "ich_expansion_batch_01_027",
+      "slug": "expansion-batch-01-027",
+      "preferred_slug": "2027-county-hall-pottery-potter-in-residence",
+      "preferred_id": "ich_stage5_025",
+      "revision_before": 5
+    },
+    {
+      "id": "ich_expansion_batch_02_005",
+      "slug": "expansion-batch-02-005",
+      "preferred_slug": "2026-weaveup-wool-residency",
+      "preferred_id": "ich_stage5_026",
+      "revision_before": 5
+    },
+    {
+      "id": "ich_expansion_batch_03_051",
+      "slug": "expansion-batch-03-051",
+      "preferred_slug": "2026-royal-museums-greenwich-creative-practitioner-residence",
+      "preferred_id": "ich_stage5_027",
+      "revision_before": 5
+    },
+    {
+      "id": "ich_expansion_batch_03_079",
+      "slug": "expansion-batch-03-079",
+      "preferred_slug": "2026-heritage-crafts-emerging-metalworker-award",
+      "preferred_id": "ich_stage5_029",
+      "revision_before": 5
+    }
+  ],
+  "before_total": 119,
+  "after_total": 119,
+  "withdrawn_count": 6,
+  "rollback_backup": "data/ich-opportunities.json.bak",
+  "production_store_write": true
+}

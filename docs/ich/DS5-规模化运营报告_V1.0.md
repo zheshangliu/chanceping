@@ -1,0 +1,30 @@
+# DS5 规模化运营报告 V1.0
+
+- 门禁：**pass**
+- 运行时间：2026-08-24T08:00:00.000Z
+- 运行模式：候选发现与人工审核，不写正式库
+- 下次建议运行：2026-08-27T08:00:00.000Z
+- 注册来源：31 个；查询包 5 个
+- 正式库快照：119 条（当前 61，历史 51）
+- DS2：9 条只读候选；DS3：[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] 条质量评估（待审 undefined，拒绝 undefined）
+- 正式库写入：**false**
+
+## 运行频率
+
+- daily: 12
+- every_3_days: 17
+- weekly: 2
+
+## 持续优化边界
+
+1. 每次先运行来源健康/端点核验，再进入只读发现。
+2. 候选必须经过语义、去重、状态和来源审计。
+3. 只有 DS1-D 审批包通过的条目可以单批受控导入。
+4. 导入后刷新 DS2/DS3 基线并进行 API、SSR、完整回归。
+5. 任何来源失效或字段冲突先降级/撤回，不以数量换取可信度。
+
+## 错误
+
+- 无
+
+机器记录：[DS5-规模化运营运行记录_V1.0.json](./DS5-规模化运营运行记录_V1.0.json)。
