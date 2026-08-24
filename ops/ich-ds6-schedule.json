@@ -1,0 +1,11 @@
+{
+  "schema_version": "ich-ds6-schedule.v1",
+  "enabled": true,
+  "timezone": "Asia/Shanghai",
+  "interval_days": 3,
+  "run_mode": "readonly",
+  "formal_store_write": false,
+  "command": "npm run ich:ds6:run-once",
+  "failure_policy": "retain_previous_formal_store_and_record_failure",
+  "requires_manual_promotion": true
+}

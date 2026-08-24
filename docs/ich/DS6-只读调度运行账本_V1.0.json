@@ -1,0 +1,134 @@
+{
+  "schema_version": "ich-ds6-scheduled-readonly.v1",
+  "runs": [
+    {
+      "schema_version": "ich-ds6-scheduled-readonly.v1",
+      "run_id": "ich-ds6-20260824080000",
+      "ran_at": "2026-08-24T08:00:00.000Z",
+      "schedule": {
+        "timezone": "Asia/Shanghai",
+        "interval_days": 3,
+        "skip_endpoints": true
+      },
+      "readonly": true,
+      "formal_store_write": false,
+      "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_unchanged": true,
+      "steps": [
+        {
+          "name": "ds2-readonly-discovery",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS2-只读发现运行记录_V1.0.json\",\n  \"run_id\": \"ich-ds2-20260824081806\",\n  \"source_count\": 3,\n  \"candidate_count\": 9,\n  \"statuses\": [\n    {\n      \"source_id\": \"ccgp\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gd-culture\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"yuexiu-notices\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    }\n  ],\n  \"readonly\": true,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds3-candidate-quality",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS3-候选质量运行记录_V1.0.json\",\n  \"input_candidate_count\": 9,\n  \"assessment_count\": 9,\n  \"review_required_count\": 8,\n  \"rejected_count\": 1,\n  \"approved_count\": 0,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds4-release-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 61,\n  \"historical\": 51,\n  \"total\": 119,\n  \"categories\": {\n    \"competition\": 16,\n    \"exhibition_market\": 12,\n    \"procurement_project\": 5,\n    \"channel_collaboration\": 7,\n    \"policy_funding\": 9,\n    \"international\": 12\n  },\n  \"level12_ratio\": 0.9916,\n  \"semantic_issue_count\": 0,\n  \"output\": \"docs/ich/DS4-发布候选审计记录_V1.0.json\"\n}\n"
+        },
+        {
+          "name": "ds5-operations-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"sources\": 31,\n  \"current\": 61,\n  \"historical\": 51,\n  \"next_scheduled_run_at\": \"2026-08-27T08:00:00.000Z\",\n  \"formal_store_write\": false\n}\n"
+        },
+        {
+          "name": "ds5-consistency",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 61,\n  \"historical\": 51,\n  \"ds3_assessments\": 9,\n  \"report_clean\": true\n}\n"
+        }
+      ],
+      "gate": "pass"
+    },
+    {
+      "schema_version": "ich-ds6-scheduled-readonly.v1",
+      "run_id": "ich-ds6-20260827080000",
+      "ran_at": "2026-08-27T08:00:00.000Z",
+      "schedule": {
+        "timezone": "Asia/Shanghai",
+        "interval_days": 3,
+        "skip_endpoints": true
+      },
+      "readonly": true,
+      "formal_store_write": false,
+      "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_unchanged": true,
+      "steps": [
+        {
+          "name": "ds2-readonly-discovery",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS2-只读发现运行记录_V1.0.json\",\n  \"run_id\": \"ich-ds2-20260824081338\",\n  \"source_count\": 3,\n  \"candidate_count\": 9,\n  \"statuses\": [\n    {\n      \"source_id\": \"ccgp\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gd-culture\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"yuexiu-notices\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    }\n  ],\n  \"readonly\": true,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds3-candidate-quality",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS3-候选质量运行记录_V1.0.json\",\n  \"input_candidate_count\": 9,\n  \"assessment_count\": 9,\n  \"review_required_count\": 8,\n  \"rejected_count\": 1,\n  \"approved_count\": 0,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds4-release-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 59,\n  \"historical\": 53,\n  \"total\": 119,\n  \"categories\": {\n    \"competition\": 16,\n    \"exhibition_market\": 12,\n    \"procurement_project\": 4,\n    \"channel_collaboration\": 6,\n    \"policy_funding\": 9,\n    \"international\": 12\n  },\n  \"level12_ratio\": 0.9916,\n  \"semantic_issue_count\": 0,\n  \"output\": \"docs/ich/DS4-发布候选审计记录_V1.0.json\"\n}\n"
+        },
+        {
+          "name": "ds5-operations-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"sources\": 31,\n  \"current\": 59,\n  \"historical\": 53,\n  \"next_scheduled_run_at\": \"2026-08-30T08:00:00.000Z\",\n  \"formal_store_write\": false\n}\n"
+        },
+        {
+          "name": "ds5-consistency",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 59,\n  \"historical\": 53,\n  \"ds3_assessments\": 9,\n  \"report_clean\": true\n}\n"
+        }
+      ],
+      "gate": "pass"
+    },
+    {
+      "schema_version": "ich-ds6-scheduled-readonly.v1",
+      "run_id": "ich-ds6-20260830080000",
+      "ran_at": "2026-08-30T08:00:00.000Z",
+      "schedule": {
+        "timezone": "Asia/Shanghai",
+        "interval_days": 3,
+        "skip_endpoints": true
+      },
+      "readonly": true,
+      "formal_store_write": false,
+      "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_unchanged": true,
+      "steps": [
+        {
+          "name": "ds2-readonly-discovery",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS2-只读发现运行记录_V1.0.json\",\n  \"run_id\": \"ich-ds2-20260824081340\",\n  \"source_count\": 3,\n  \"candidate_count\": 9,\n  \"statuses\": [\n    {\n      \"source_id\": \"ccgp\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gd-culture\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"yuexiu-notices\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    }\n  ],\n  \"readonly\": true,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds3-candidate-quality",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS3-候选质量运行记录_V1.0.json\",\n  \"input_candidate_count\": 9,\n  \"assessment_count\": 9,\n  \"review_required_count\": 8,\n  \"rejected_count\": 1,\n  \"approved_count\": 0,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds4-release-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 56,\n  \"historical\": 56,\n  \"total\": 119,\n  \"categories\": {\n    \"competition\": 15,\n    \"exhibition_market\": 11,\n    \"procurement_project\": 4,\n    \"channel_collaboration\": 6,\n    \"policy_funding\": 9,\n    \"international\": 11\n  },\n  \"level12_ratio\": 0.9916,\n  \"semantic_issue_count\": 0,\n  \"output\": \"docs/ich/DS4-发布候选审计记录_V1.0.json\"\n}\n"
+        },
+        {
+          "name": "ds5-operations-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"sources\": 31,\n  \"current\": 56,\n  \"historical\": 56,\n  \"next_scheduled_run_at\": \"2026-09-02T08:00:00.000Z\",\n  \"formal_store_write\": false\n}\n"
+        },
+        {
+          "name": "ds5-consistency",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 56,\n  \"historical\": 56,\n  \"ds3_assessments\": 9,\n  \"report_clean\": true\n}\n"
+        }
+      ],
+      "gate": "pass"
+    }
+  ]
+}

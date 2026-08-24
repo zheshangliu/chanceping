@@ -1,8 +1,8 @@
 {
   "schema_version": "ich-ds2-readonly-discovery.v1",
-  "run_id": "ich-ds2-20260824075359",
-  "started_at": "2026-08-24T07:53:59.936Z",
-  "finished_at": "2026-08-24T07:54:01.684Z",
+  "run_id": "ich-ds2-20260824081806",
+  "started_at": "2026-08-24T08:18:06.714Z",
+  "finished_at": "2026-08-24T08:18:08.424Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
@@ -15,105 +15,46 @@
       "adapter_id": "ccgp-procurement-listing-v1",
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "access_mode": "search",
-      "started_at": "2026-08-24T07:53:59.936Z",
-      "finished_at": "2026-08-24T07:54:00.949Z",
+      "started_at": "2026-08-24T08:18:06.715Z",
+      "finished_at": "2026-08-24T08:18:07.290Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-      "raw_snapshot_hash": "917bf4a465d6742782eb7c723d02d27092e19e88259032b605312e3afa988c46",
+      "raw_snapshot_hash": "22ca2ba41cc9acd0b71576d69d4db1679329bd62915eaedc8577154493a03d4a",
       "candidate_count": 3,
       "candidates": [
         {
-          "candidate_id": "ds1b-ccgp-66226700a75d",
+          "candidate_id": "ds1b-ccgp-98dc229a140d",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-          "title": "西安建筑科技大学子午书院4号学生公寓楼项目方案、初步设计竞争性磋商公告",
-          "organizer": "西安建筑科技大学",
-          "deadline_text": "2026年09月04日 09时00分",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 15:41",
-          "raw_snapshot_hash": "e32a5c8f31f12d429b206d0af1a37e96277459bee6f659899dc077599e97e9f2",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "西安建筑科技大学子午书院4号学生公寓楼项目方案、初步设计竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-              "method": "html_title",
-              "evidence_excerpt": "西安建筑科技大学子午书院4号学生公寓楼项目方案、初步设计竞争性磋商公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "西安建筑科技大学",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 西安建筑科技大学",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月04日 09时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月04日 09时00分 （北京时间）前",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191007.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-db98de6e8560",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
-          "title": "晋城市2026年航空应急救援服务项目结果公告",
-          "organizer": "晋城市应急管理局",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
+          "title": "南京鼓楼医院受试者智能筛选系统采购公告",
+          "organizer": "南京鼓楼医院",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 15:40",
-          "raw_snapshot_hash": "8e38d470f7207eb86c2f6194c828f5598b0ef2d34e6f91f065dc84c2af475f55",
+          "published_text": "2026年08月24日 16:05",
+          "raw_snapshot_hash": "c4c9b08f09a690408e77c8efe4ce4c6ab0b056fca6681e0405c3a71a582ffb8f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "晋城市2026年航空应急救援服务项目结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "value": "南京鼓楼医院受试者智能筛选系统采购公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
               "method": "html_title",
-              "evidence_excerpt": "晋城市2026年航空应急救援服务项目结果公告",
+              "evidence_excerpt": "南京鼓楼医院受试者智能筛选系统采购公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "晋城市应急管理局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "value": "南京鼓楼医院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 晋城市应急管理局",
+              "evidence_excerpt": "采购单位 南京鼓楼医院",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -133,49 +74,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27190976.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27191435.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-6028b9e50b5e",
+          "candidate_id": "ds1b-ccgp-30a321a4202c",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
-          "title": "平定县农业农村局2026年高素质农民培育项目结果公告",
-          "organizer": "平定县农业农村局",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
+          "title": "浙江信镧建设工程咨询有限公司关于浙江省福利彩票管理中心2026年福彩公益文化和责任彩票推广宣传品项目公开招标公告",
+          "organizer": "浙江省福利彩票管理中心（本级）",
+          "deadline_text": "2026年09月14日 14:00",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 15:40",
-          "raw_snapshot_hash": "86653ffbc53858780489188351820c56fd82e55e0b91b97bc3c7f4ab004956d5",
+          "published_text": "2026年08月24日 16:05",
+          "raw_snapshot_hash": "7b1dc6e76a394f8fb3b1fe0a09ad4c49ed7dbe7e8a571e31cd90e11752198683",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "平定县农业农村局2026年高素质农民培育项目结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "value": "浙江信镧建设工程咨询有限公司关于浙江省福利彩票管理中心2026年福彩公益文化和责任彩票推广宣传品项目公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
               "method": "html_title",
-              "evidence_excerpt": "平定县农业农村局2026年高素质农民培育项目结果公告",
+              "evidence_excerpt": "浙江信镧建设工程咨询有限公司关于浙江省福利彩票管理中心2026年福彩公益文化和责任彩票推广宣传品项目公开招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "平定县农业农村局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "value": "浙江省福利彩票管理中心（本级）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 平定县农业农村局",
+              "evidence_excerpt": "采购单位 浙江省福利彩票管理中心（本级）",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月14日 14:00",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "开标时间 2026年09月14日 14:00",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -192,10 +133,69 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27191006.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191448.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-22732e10198e",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
+          "title": "财务绩效管理系统采购采购公告",
+          "organizer": "太仓市娄江新城医院（瑞金医院太仓分院）",
+          "deadline_text": "2026年09月21日 09:30",
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月24日 16:04",
+          "raw_snapshot_hash": "77b0c0f5c9bf6c48de28ba77007dcb23cd6913ef20d18415aecb4e4f561978b4",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "财务绩效管理系统采购采购公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
+              "method": "html_title",
+              "evidence_excerpt": "财务绩效管理系统采购采购公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "太仓市娄江新城医院（瑞金医院太仓分院）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 太仓市娄江新城医院（瑞金医院太仓分院）",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年09月21日 09:30",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "开标时间 2026年09月21日 09:30",
+              "confirmed": true
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27191443.htm",
               "confirmed": true
             }
           }
@@ -208,8 +208,8 @@
       "adapter_id": "gd-culture-notices-v1",
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-24T07:54:00.949Z",
-      "finished_at": "2026-08-24T07:54:01.337Z",
+      "started_at": "2026-08-24T08:18:07.290Z",
+      "finished_at": "2026-08-24T08:18:08.094Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://whly.gd.gov.cn/open_newggl/index.html",
@@ -401,8 +401,8 @@
       "adapter_id": "yuexiu-notices-v1",
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "started_at": "2026-08-24T07:54:01.337Z",
-      "finished_at": "2026-08-24T07:54:01.684Z",
+      "started_at": "2026-08-24T08:18:08.094Z",
+      "finished_at": "2026-08-24T08:18:08.424Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",

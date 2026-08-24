@@ -1,7 +1,7 @@
 {
   "schema_version": "ich-ds3-candidate-quality.v1",
-  "run_id": "ich-ds3-quality-20260824075402",
-  "ran_at": "2026-08-24T07:54:02.236Z",
+  "run_id": "ich-ds3-quality-20260824081808",
+  "ran_at": "2026-08-24T08:18:08.527Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
@@ -13,10 +13,64 @@
   "rejected_count": 1,
   "assessments": [
     {
-      "candidate_id": "ds1b-ccgp-66226700a75d",
+      "candidate_id": "ds1b-ccgp-98dc229a140d",
       "source_id": "ccgp",
-      "score": 55,
+      "score": 62,
       "band": "medium",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": true,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-30a321a4202c",
+      "source_id": "ccgp",
+      "score": 85,
+      "band": "high",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": true,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": true,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-22732e10198e",
+      "source_id": "ccgp",
+      "score": 77,
+      "band": "high",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -29,71 +83,12 @@
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-db98de6e8560",
-      "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": false,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-6028b9e50b5e",
-      "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": false,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
