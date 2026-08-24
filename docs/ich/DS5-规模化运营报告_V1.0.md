@@ -6,7 +6,7 @@
 - 下次建议运行：2026-08-27T08:00:00.000Z
 - 注册来源：31 个；查询包 5 个
 - 正式库快照：119 条（当前 61，历史 51）
-- DS2：9 条只读候选；DS3：[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object] 条质量评估（待审 undefined，拒绝 undefined）
+- DS2：9 条只读候选；DS3：9 条质量评估（待审 8，拒绝 1）
 - 正式库写入：**false**
 
 ## 运行频率

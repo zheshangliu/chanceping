@@ -1,0 +1,26 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { IchOpportunityStore } from "../src/ich/store";
+import { queryIchOpportunities } from "../src/ich/query";
+
+const ds4 = JSON.parse(fs.readFileSync(path.resolve("docs/ich/DS4-发布候选审计记录_V1.0.json"), "utf8")) as { counts: { current: number; historical: number } };
+const ds5 = JSON.parse(fs.readFileSync(path.resolve("docs/ich/DS5-规模化运营运行记录_V1.0.json"), "utf8")) as { ran_at: string; formal_store_snapshot: { current: number; historical: number }; upstream_runs: { ds3_assessments: number; ds3_review_required: number; ds3_rejected: number } };
+const ds3 = JSON.parse(fs.readFileSync(path.resolve("docs/ich/DS3-候选质量运行记录_V1.0.json"), "utf8")) as { assessment_count: number; review_required_count: number; rejected_count: number };
+const store = new IchOpportunityStore(path.resolve("data/ich-opportunities.json"));
+const loaded = store.load();
+const now = new Date(ds5.ran_at);
+assert(!Number.isNaN(now.getTime()));
+const current = queryIchOpportunities(loaded.entries, { q: "", category: "all", region: "all", status: "current", sort: "default", page: 1, page_size: 60 }, now, loaded.updatedAt);
+const history = queryIchOpportunities(loaded.entries, { q: "", category: "all", region: "all", status: "history", sort: "default", page: 1, page_size: 60 }, now, loaded.updatedAt);
+assert.equal(current.total, ds4.counts.current, "dynamic current count must match DS4");
+assert.equal(history.total, ds4.counts.historical, "dynamic history count must match DS4");
+assert.equal(ds5.formal_store_snapshot.current, current.total, "DS5 snapshot current count must match query");
+assert.equal(ds5.formal_store_snapshot.historical, history.total, "DS5 snapshot history count must match query");
+assert.equal(ds5.upstream_runs.ds3_assessments, ds3.assessment_count);
+assert.equal(ds5.upstream_runs.ds3_review_required, ds3.review_required_count);
+assert.equal(ds5.upstream_runs.ds3_rejected, ds3.rejected_count);
+const report = fs.readFileSync(path.resolve("docs/ich/DS5-规模化运营报告_V1.0.md"), "utf8");
+assert(!report.includes("[object Object]"));
+assert(!report.includes("undefined"));
+console.log(JSON.stringify({ gate: "pass", current: current.total, historical: history.total, ds3_assessments: ds5.upstream_runs.ds3_assessments, report_clean: true }, null, 2));
