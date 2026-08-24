@@ -916,14 +916,14 @@ function buildMvpOpportunityTable(opps: OpportunityCard[]): string {
   const lines = [
     "## 3. S / A / B 级机会总览",
     "",
-    "| 等级 | 机会名称 | 截止时间 | 适配度 | 建议动作 | 来源 |",
-    "|---|---|---|---|---|---|",
+    "| 等级 | 机会名称 | 截止时间 | 适配度 | 证据状态 | 行动状态 | 建议动作 | 来源 |",
+    "|---|---|---|---|---|---|---|---|",
   ];
   if (opps.length === 0) {
     lines.push("| - | 本轮暂无机会 | - | - | 放宽条件或继续监控 | - |");
   } else {
     for (const opp of opps) {
-      lines.push(`| ${getVisibleLevel(opp)} | ${opp.title} | ${fmtStr(opp.deadline)} | ${fmtStr(opp.match_reason)} | ${fmtStr(opp.next_action)} | ${fmtOpportunitySource(opp)} |`);
+      lines.push(`| ${getVisibleLevel(opp)} | ${opp.title} | ${fmtStr(opp.deadline)} | ${fmtStr(opp.match_reason)} | ${fmtStr(opp.evidence_status || "needs_review")} | ${fmtStr(opp.action_status || "prepare")} | ${fmtStr(opp.next_action)} | ${fmtOpportunitySource(opp)} |`);
     }
   }
   lines.push("");
