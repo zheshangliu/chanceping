@@ -117,9 +117,12 @@ async function main(): Promise<void> {
   check("contact author page exposes requested radar description and contact channels",
     principlesHtml.includes("定制你的机会雷达") &&
     principlesHtml.includes("持续盯住比赛、客户线索、采购项目、合作机会、政策扶持或行业信息") &&
+    principlesHtml.includes('<address class="ich-contact-details"><strong class="ich-contact-name">Jason 刘哲赏</strong><a href="mailto:sunny251610056@gmail.com">') &&
     principlesHtml.includes('href="mailto:sunny251610056@gmail.com"') &&
     principlesHtml.includes("liuzheshangwx") &&
     principlesHtml.includes('/assets/ich-jason-wechat-qr.jpg'));
+  check("contact author page footer uses the contact label",
+    principlesHtml.includes('<a href="/ich/source-principles">联系作者</a> ·'));
   check("all SEO GET requests remain read-only", loads > 0 && JSON.stringify(entries) === before);
 
   console.log(`\nICH Stage 4A result: ${passed} passed, ${failed} failed\n`);
