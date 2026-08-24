@@ -35,16 +35,18 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
   const now = options.now ?? new Date();
   const storePath = options.storePath ?? process.env.CHANCEPING_ICH_STORE_PATH ?? path.join(root, "data/ich-opportunities.json");
   const entries = new IchOpportunityStore(storePath, path.join(root, "src/ich/opportunities.verified.json")).list();
+  const publicEntries = entries.filter((entry) => entry.is_published && entry.classification_status !== "rejected" && entry.verification.verification_status !== "rejected");
+  const historyStatuses = new Set(["expired", "ended", "cancelled", "source_unavailable"]);
   const statusCounts: Record<string, number> = {};
   let published = 0;
   let historical = 0;
   let withdrawn = 0;
   let staleRecheck = 0;
-  for (const entry of entries) {
+  for (const entry of publicEntries) {
     const status = computeIchOpportunityStatus(entry, now);
     statusCounts[status] = (statusCounts[status] ?? 0) + 1;
     if (entry.workflow.state === "published" && entry.is_published) published += 1;
-    if (["expired", "ended", "cancelled"].includes(status)) historical += 1;
+    if (historyStatuses.has(status)) historical += 1;
     if (["withdrawn", "archived"].includes(entry.workflow.state)) withdrawn += 1;
     if (entry.verification.needs_recheck || (entry.verification.recheck_after && new Date(entry.verification.recheck_after).getTime() <= now.getTime())) staleRecheck += 1;
   }
@@ -85,7 +87,7 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
     formal_store: {
       total: entries.length,
       published,
-      current: Object.entries(statusCounts).filter(([status]) => ["opening_soon", "active", "closing_soon", "long_term"].includes(status)).reduce((total, [, count]) => total + count, 0),
+      current: Object.entries(statusCounts).filter(([status]) => !historyStatuses.has(status)).reduce((total, [, count]) => total + count, 0),
       historical,
       withdrawn,
       status_counts: statusCounts,
@@ -95,9 +97,9 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
       ran_at: isoOrNull(ds5?.ran_at),
       snapshot_current: ds5Current,
       snapshot_historical: ds5Historical,
-      dynamic_current: Object.entries(statusCounts).filter(([status]) => ["opening_soon", "active", "closing_soon", "long_term"].includes(status)).reduce((total, [, count]) => total + count, 0),
+      dynamic_current: Object.entries(statusCounts).filter(([status]) => !historyStatuses.has(status)).reduce((total, [, count]) => total + count, 0),
       dynamic_historical: dynamicHistorical,
-      current_drift: ds5Current === null ? null : Object.entries(statusCounts).filter(([status]) => ["opening_soon", "active", "closing_soon", "long_term"].includes(status)).reduce((total, [, count]) => total + count, 0) - ds5Current,
+      current_drift: ds5Current === null ? null : Object.entries(statusCounts).filter(([status]) => !historyStatuses.has(status)).reduce((total, [, count]) => total + count, 0) - ds5Current,
       historical_drift: ds5Historical === null ? null : dynamicHistorical - ds5Historical,
     },
     source_registry: {

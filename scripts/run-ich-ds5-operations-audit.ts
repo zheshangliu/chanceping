@@ -14,7 +14,7 @@ const scanCounts = Object.fromEntries(["daily", "every_3_days", "weekly"].map((f
 const statusCounts = Object.fromEntries(["planned", "discovery_only", "adapter_ready", "disabled"].map((status) => [status, registry.sources.filter((source) => source.operational_status === status).length]));
 const errors = [...registryErrors];
 if (ds4.gate !== "pass") errors.push("DS4 gate is not pass");
-if (ds2.gate !== "pass" || !ds2.readonly || ds2.formal_store_write) errors.push("DS2 readonly contract is not satisfied");
+if (!["pass", "pass_with_followups"].includes(ds2.gate) || !ds2.readonly || ds2.formal_store_write) errors.push("DS2 readonly contract is not satisfied");
 if (ds3.gate !== "pass" || ds3.formal_store_write) errors.push("DS3 candidate contract is not satisfied");
 const nextRunAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
 const record = {

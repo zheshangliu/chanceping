@@ -1,34 +1,34 @@
 {
   "schema_version": "ich-ds9-admin-operations-audit.v1",
   "stage": "DS9",
-  "audited_at": "2026-08-24T08:53:17.222Z",
+  "audited_at": "2026-08-24T09:09:35.411Z",
   "gate": "pass",
   "formal_store_write": false,
   "dashboard": {
     "schema_version": "ich-operations-dashboard.v1",
-    "generated_at": "2026-08-24T08:53:17.222Z",
+    "generated_at": "2026-08-24T09:09:35.411Z",
     "formal_store": {
       "total": 119,
       "published": 112,
-      "current": 17,
-      "historical": 56,
-      "withdrawn": 7,
+      "current": 61,
+      "historical": 51,
+      "withdrawn": 0,
       "status_counts": {
-        "expired": 56,
-        "pending_confirmation": 46,
+        "pending_confirmation": 44,
+        "expired": 51,
         "active": 9,
         "closing_soon": 8
       },
-      "stale_recheck": 114
+      "stale_recheck": 107
     },
     "ds5_snapshot": {
       "ran_at": "2026-08-24T08:00:00.000Z",
       "snapshot_current": 61,
       "snapshot_historical": 51,
-      "dynamic_current": 17,
-      "dynamic_historical": 56,
-      "current_drift": -44,
-      "historical_drift": 5
+      "dynamic_current": 61,
+      "dynamic_historical": 51,
+      "current_drift": 0,
+      "historical_drift": 0
     },
     "source_registry": {
       "total": 31,

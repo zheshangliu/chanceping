@@ -130,6 +130,7 @@
     "ich:ds4:repair-duplicate-sources": "tsx scripts/repair-ich-primary-url-duplicates.ts",
     "verify:ich:ds4": "tsx scripts/verify-ich-ds4-release-audit.ts",
     "ich:ds5:operations-audit": "tsx scripts/run-ich-ds5-operations-audit.ts",
+    "verify:ich:ds5:operations-audit": "tsx scripts/verify-ich-ds5-operations-audit.ts",
     "verify:ich:ds5": "tsx scripts/verify-ich-ds5-operations-audit.ts",
     "verify:ich:ds5:consistency": "tsx scripts/verify-ich-ds5-consistency.ts",
     "ich:ds6:run-once": "tsx scripts/run-ich-ds6-scheduled-readonly.ts",
