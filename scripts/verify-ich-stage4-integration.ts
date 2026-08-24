@@ -61,6 +61,10 @@ async function main(): Promise<void> {
   check("full app mounts ICH SSR with absolute canonical", homeResponse.status === 200 &&
     home.includes('href="https://ich.chanceping.com/ich"'));
   check("full app serves source principles", (await app.request("/ich/source-principles")).status === 200);
+  const contactQr = await app.request("/assets/ich-jason-wechat-qr.jpg");
+  check("full app serves the contact author QR image", contactQr.status === 200 &&
+    contactQr.headers.get("content-type") === "image/jpeg" &&
+    (await contactQr.arrayBuffer()).byteLength > 100_000);
 
   const submitPageResponse = await app.request("/ich/submit");
   const submitPage = await submitPageResponse.text();

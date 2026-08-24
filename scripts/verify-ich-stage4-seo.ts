@@ -107,7 +107,19 @@ async function main(): Promise<void> {
   check("robots blocks admin and internal API", robots.includes("Disallow: /ich/admin") && robots.includes("Disallow: /api/internal/"));
 
   const principles = await app.request("/ich/source-principles");
-  check("source principles footer target exists", principles.status === 200);
+  const principlesHtml = await principles.text();
+  check("contact author page retains source principles", principles.status === 200 &&
+    principlesHtml.includes("联系作者｜ChancePing 非遗机会雷达") &&
+    principlesHtml.includes("来源与审核原则"));
+  check("ICH navigation labels the contact author destination", principlesHtml.includes(
+    '<a href="/ich/source-principles" aria-current="page">联系作者</a>',
+  ));
+  check("contact author page exposes requested radar description and contact channels",
+    principlesHtml.includes("定制你的机会雷达") &&
+    principlesHtml.includes("持续盯住比赛、客户线索、采购项目、合作机会、政策扶持或行业信息") &&
+    principlesHtml.includes('href="mailto:sunny251610056@gmail.com"') &&
+    principlesHtml.includes("liuzheshangwx") &&
+    principlesHtml.includes('/assets/ich-jason-wechat-qr.jpg'));
   check("all SEO GET requests remain read-only", loads > 0 && JSON.stringify(entries) === before);
 
   console.log(`\nICH Stage 4A result: ${passed} passed, ${failed} failed\n`);
