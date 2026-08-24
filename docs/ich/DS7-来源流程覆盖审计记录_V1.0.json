@@ -1,11 +1,11 @@
 {
   "schema_version": "ich-ds7-source-coverage.v1",
   "stage": "DS7",
-  "audited_at": "2026-08-24T09:27:18.962Z",
+  "audited_at": "2026-08-24T09:36:16.842Z",
   "gate": "pass",
   "workflow_count": 13,
-  "adapter_count": 4,
-  "manual_workflow_count": 9,
+  "adapter_count": 5,
+  "manual_workflow_count": 8,
   "gba_workflow_count": 7,
   "international_workflow_count": 2,
   "category_coverage": {
@@ -137,6 +137,39 @@
         "nationwide"
       ],
       "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-cnaf-guides",
+      "source_id": "cnaf",
+      "mode": "adapter",
+      "discovery_url": "https://www.cnaf.cn/",
+      "categories": [
+        "policy_funding",
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "every_3_days",
       "status": "ready",
       "candidate_contract": [
         "具体详情页 URL",
@@ -410,40 +443,6 @@
       ],
       "geography": [
         "international"
-      ],
-      "scan_frequency": "every_3_days",
-      "status": "ready",
-      "candidate_contract": [
-        "具体详情页 URL",
-        "标题",
-        "主办方",
-        "截止或长期有效证据",
-        "地区",
-        "参与资格",
-        "行动方式",
-        "字段 provenance",
-        "原始快照哈希"
-      ],
-      "collection_steps": [
-        "打开来源入口",
-        "定位当前公告/机会详情页",
-        "保存原始 URL 与页面快照",
-        "逐字段填写候选表",
-        "回到第一方页面复核后提交 DS3"
-      ]
-    },
-    {
-      "workflow_id": "manual-national-art-fund",
-      "source_id": "cnaf",
-      "mode": "manual",
-      "discovery_url": "https://www.cnaf.cn/",
-      "categories": [
-        "policy_funding",
-        "competition",
-        "international"
-      ],
-      "geography": [
-        "nationwide"
       ],
       "scan_frequency": "every_3_days",
       "status": "ready",

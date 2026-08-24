@@ -35,6 +35,7 @@ export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [
   make("adapter-gd-culture-notices", "gd-culture", "adapter"),
   make("adapter-yuexiu-notices", "yuexiu-notices", "adapter"),
   make("adapter-mct-notices", "mct-notices", "adapter"),
+  make("adapter-cnaf-guides", "cnaf", "adapter"),
   make("manual-gd-procurement", "gd-procurement", "manual"),
   make("manual-ggzy", "ggzy", "manual"),
   make("manual-gz-public-resources", "gz-ggzy", "manual"),
@@ -43,5 +44,4 @@ export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [
   make("manual-cnicif", "cnicif", "manual"),
   make("manual-crafts-council", "crafts-council-uk", "manual"),
   make("manual-unesco-ich", "unesco-ich", "manual"),
-  make("manual-national-art-fund", "cnaf", "manual"),
 ];

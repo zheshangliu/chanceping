@@ -157,6 +157,7 @@ const ccgp = requiredSource("ccgp");
 const gdCulture = requiredSource("gd-culture");
 const yuexiu = requiredSource("yuexiu-notices");
 const mct = requiredSource("mct-notices");
+const cnaf = requiredSource("cnaf");
 
 export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   {
@@ -213,6 +214,20 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       organizerPatterns: [/发布单位\s*[:：]\s*([^\s]{2,40})/u, /主办单位\s*[:：]\s*([^\s]{2,40})/u],
       deadlinePatterns: [/(?:截止|申报截止|报名截止)(?:时间)?\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日(?:\s*\d{1,2}(?:时|:)\d{0,2}分?)?)/u],
       publishedPatterns: [/(?:发布时间|发布日期|成文日期)\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+    }),
+  },
+  {
+    adapter_id: "cnaf-guides-listing-v1",
+    source_id: cnaf.id,
+    discovery_url: "https://www.cnaf.cn/guide.html",
+    category_hint: "policy_funding",
+    geography_hint: "全国",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /cnaf\.cn\/guide_detail\/\d+\.html$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "cnaf-guides-listing-v1", sourceId: cnaf.id, categoryHint: "policy_funding", geographyHint: "全国", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/编辑\s*[:：]\s*([^\s]{2,30})/u, /(国家艺术基金管理中心)/u],
+      deadlinePatterns: [/至\s*(\d{1,2}月\d{1,2}日)\s*截止申报/u, /申报材料应于\s*(\d{4}年\d{1,2}月\d{1,2}日)前/u, /申报时间[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/时间\s*[:：]\s*(\d{4}\.\d{1,2}\.\d{1,2})/u, /时间\s*[:：]\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
     }),
   },
 ];

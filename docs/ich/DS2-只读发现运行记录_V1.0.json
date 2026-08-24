@@ -1,63 +1,63 @@
 {
   "schema_version": "ich-ds2-readonly-discovery.v1",
-  "run_id": "ich-ds2-20260824092716",
-  "started_at": "2026-08-24T09:27:16.165Z",
-  "finished_at": "2026-08-24T09:27:18.047Z",
+  "run_id": "ich-ds2-20260824093613",
+  "started_at": "2026-08-24T09:36:13.694Z",
+  "finished_at": "2026-08-24T09:36:15.904Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
   "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
-  "source_count": 4,
-  "candidate_count": 12,
+  "source_count": 5,
+  "candidate_count": 15,
   "source_runs": [
     {
       "source_id": "ccgp",
       "adapter_id": "ccgp-procurement-listing-v1",
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "access_mode": "search",
-      "started_at": "2026-08-24T09:27:16.165Z",
-      "finished_at": "2026-08-24T09:27:16.688Z",
+      "started_at": "2026-08-24T09:36:13.694Z",
+      "finished_at": "2026-08-24T09:36:14.248Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-      "raw_snapshot_hash": "1f290452ca4d60f12de04cbb7294387f5e7c8ba5593c58a80087412058a46e6e",
+      "raw_snapshot_hash": "993dd6191aa770d56cab817df8b8d1760447a80b8829ae70716ebbc00882817d",
       "candidate_count": 3,
       "candidates": [
         {
-          "candidate_id": "ds1b-ccgp-183adf386b50",
+          "candidate_id": "ds1b-ccgp-b6858a2104fc",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
-          "title": "大洲设计咨询集团有限公司关于广西城市建设学校（会仙校区）实训楼至大门总平工程(项目编号：GXZC2026-C2-002538-DZSJ)更改通知（一）",
-          "organizer": "广西城市建设学校",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+          "title": "内江市东兴区水利局内江市东兴区引沱入清工程环境影响评价报告编制服务竞争性磋商公告",
+          "organizer": "内江市东兴区水利局",
+          "deadline_text": "2026年09月08日 09时30分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:18",
-          "raw_snapshot_hash": "6440b0b624b040adb100f7923402f85628ecd6dc1c7cc7f72f95a39b72f911ad",
+          "published_text": "2026年08月24日 17:24",
+          "raw_snapshot_hash": "8e87de8572daf18f3207770698c3b9efe9a1c482fdcceedc4a594c8f5ee0f8ba",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "大洲设计咨询集团有限公司关于广西城市建设学校（会仙校区）实训楼至大门总平工程(项目编号：GXZC2026-C2-002538-DZSJ)更改通知（一）",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+              "value": "内江市东兴区水利局内江市东兴区引沱入清工程环境影响评价报告编制服务竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
               "method": "html_title",
-              "evidence_excerpt": "大洲设计咨询集团有限公司关于广西城市建设学校（会仙校区）实训楼至大门总平工程(项目编号：GXZC2026-C2-002538-DZSJ)更改通知（一）",
+              "evidence_excerpt": "内江市东兴区水利局内江市东兴区引沱入清工程环境影响评价报告编制服务竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "广西城市建设学校",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+              "value": "内江市东兴区水利局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 广西城市建设学校",
+              "evidence_excerpt": "采购单位 内江市东兴区水利局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月08日 09时30分",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "于 2026年09月08日 09时30分 （北京时间）前",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -74,49 +74,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-7e3ef2d90de9",
+          "candidate_id": "ds1b-ccgp-0a769a60a469",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
-          "title": "重要信息系统商用密码安全性评估服务项目中标（成交）结果公告",
-          "organizer": "甘肃省交通科技通信中心",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+          "title": "2026东莞杯国际工业设计大赛策划及承办服务竞争性磋商公告",
+          "organizer": "东莞市工业和信息化局",
+          "deadline_text": "2026年09月04日 09时30分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:16",
-          "raw_snapshot_hash": "61b03ee7f956d616ff78d168f0aa13e85ca585c08c301c6a4cc146ad5ee85163",
+          "published_text": "2026年08月24日 17:24",
+          "raw_snapshot_hash": "d9a493dc230f02f32d7091a483d2935c8e55422cd0d876d5780453d4bf26f4eb",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "重要信息系统商用密码安全性评估服务项目中标（成交）结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+              "value": "2026东莞杯国际工业设计大赛策划及承办服务竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
               "method": "html_title",
-              "evidence_excerpt": "重要信息系统商用密码安全性评估服务项目中标（成交）结果公告",
+              "evidence_excerpt": "2026东莞杯国际工业设计大赛策划及承办服务竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "甘肃省交通科技通信中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+              "value": "东莞市工业和信息化局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 甘肃省交通科技通信中心",
+              "evidence_excerpt": "采购单位 东莞市工业和信息化局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月04日 09时30分",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "于 2026年09月04日 09时30分 （北京时间）前",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -133,49 +133,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-3fe1d44ac623",
+          "candidate_id": "ds1b-ccgp-1ce77b7045af",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
-          "title": "浙江省政府采购中心关于浙江建设职业技术学院 2026-2029年物业管理项目中标(成交)结果公告",
-          "organizer": "浙江建设职业技术学院",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+          "title": "紫阳县2026年“开麦吧茶乡”“夏亲水”“秋丰收”系列文旅活动保障服务项目竞争性磋商公告",
+          "organizer": "紫阳县文化和旅游广电局",
+          "deadline_text": "2026年09月09日 16时00分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:16",
-          "raw_snapshot_hash": "c71eda455e30dc8e0c367bf494d35b7e1b28b098d68a6281637a0b472e1ef241",
+          "published_text": "2026年08月24日 17:24",
+          "raw_snapshot_hash": "3dab0b505303617b1870cd167985f9ca256348665280a656c5d7e66daa5ec75e",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "浙江省政府采购中心关于浙江建设职业技术学院 2026-2029年物业管理项目中标(成交)结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "value": "紫阳县2026年“开麦吧茶乡”“夏亲水”“秋丰收”系列文旅活动保障服务项目竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
               "method": "html_title",
-              "evidence_excerpt": "浙江省政府采购中心关于浙江建设职业技术学院 2026-2029年物业管理项目中标(成交)结果公告",
+              "evidence_excerpt": "紫阳县2026年“开麦吧茶乡”“夏亲水”“秋丰收”系列文旅活动保障服务项目竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "浙江建设职业技术学院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "value": "紫阳县文化和旅游广电局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 浙江建设职业技术学院",
+              "evidence_excerpt": "采购单位 紫阳县文化和旅游广电局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月09日 16时00分",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "于 2026年09月09日 16时00分 （北京时间）前",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -192,10 +192,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
               "confirmed": true
             }
           }
@@ -208,8 +208,8 @@
       "adapter_id": "gd-culture-notices-v1",
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:27:16.688Z",
-      "finished_at": "2026-08-24T09:27:16.859Z",
+      "started_at": "2026-08-24T09:36:14.248Z",
+      "finished_at": "2026-08-24T09:36:14.527Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://whly.gd.gov.cn/open_newggl/index.html",
@@ -401,8 +401,8 @@
       "adapter_id": "yuexiu-notices-v1",
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:27:16.859Z",
-      "finished_at": "2026-08-24T09:27:17.376Z",
+      "started_at": "2026-08-24T09:36:14.527Z",
+      "finished_at": "2026-08-24T09:36:14.847Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
@@ -594,8 +594,8 @@
       "adapter_id": "mct-notices-listing-v1",
       "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:27:17.376Z",
-      "finished_at": "2026-08-24T09:27:18.047Z",
+      "started_at": "2026-08-24T09:36:14.847Z",
+      "finished_at": "2026-08-24T09:36:15.562Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
@@ -775,6 +775,199 @@
               "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
               "method": "listing_anchor",
               "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_id": "cnaf",
+      "adapter_id": "cnaf-guides-listing-v1",
+      "discovery_url": "https://www.cnaf.cn/guide.html",
+      "access_mode": "listing",
+      "started_at": "2026-08-24T09:36:15.562Z",
+      "finished_at": "2026-08-24T09:36:15.904Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://www.cnaf.cn/guide.html",
+      "raw_snapshot_hash": "ddfe53c657b300cb43d401991788157091c78207fc2379194277c8df2bb82944",
+      "candidate_count": 3,
+      "candidates": [
+        {
+          "candidate_id": "ds1b-cnaf-44a5cec5347d",
+          "adapter_id": "cnaf-guides-listing-v1",
+          "source_id": "cnaf",
+          "discovery_url": "https://www.cnaf.cn/guide.html",
+          "source_url": "https://www.cnaf.cn/guide_detail/5546.html",
+          "title": "国家艺术基金（一般项目）2027年度舞台艺术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+          "organizer": "国家艺术基金",
+          "deadline_text": "6月15日",
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026.03.24",
+          "raw_snapshot_hash": "12a67728d561911be32eb5b579e6b70b11d73ee49803f3ea1a4d3499d8a6b732",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "国家艺术基金（一般项目）2027年度舞台艺术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+              "source_url": "https://www.cnaf.cn/guide_detail/5546.html",
+              "method": "html_title",
+              "evidence_excerpt": "国家艺术基金（一般项目）2027年度舞台艺术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "国家艺术基金",
+              "source_url": "https://www.cnaf.cn/guide_detail/5546.html",
+              "method": "structured_text",
+              "evidence_excerpt": "编辑：国家艺术基金",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "6月15日",
+              "source_url": "https://www.cnaf.cn/guide_detail/5546.html",
+              "method": "structured_text",
+              "evidence_excerpt": "至6月15日截止申报",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.cnaf.cn/guide.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.cnaf.cn/guide.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.cnaf.cn/guide_detail/5546.html",
+              "source_url": "https://www.cnaf.cn/guide_detail/5546.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.cnaf.cn/guide_detail/5546.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-cnaf-b64ad3ec085d",
+          "adapter_id": "cnaf-guides-listing-v1",
+          "source_id": "cnaf",
+          "discovery_url": "https://www.cnaf.cn/guide.html",
+          "source_url": "https://www.cnaf.cn/guide_detail/5547.html",
+          "title": "国家艺术基金（一般项目）2027年度美术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+          "organizer": "国家艺术基金",
+          "deadline_text": "6月15日",
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026.03.24",
+          "raw_snapshot_hash": "7aff23f650b54a3d807b6ad75b94ea2afb0f41945ba849c4ba6a65590d065166",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "国家艺术基金（一般项目）2027年度美术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+              "source_url": "https://www.cnaf.cn/guide_detail/5547.html",
+              "method": "html_title",
+              "evidence_excerpt": "国家艺术基金（一般项目）2027年度美术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "国家艺术基金",
+              "source_url": "https://www.cnaf.cn/guide_detail/5547.html",
+              "method": "structured_text",
+              "evidence_excerpt": "编辑：国家艺术基金",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "6月15日",
+              "source_url": "https://www.cnaf.cn/guide_detail/5547.html",
+              "method": "structured_text",
+              "evidence_excerpt": "至6月15日截止申报",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.cnaf.cn/guide.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.cnaf.cn/guide.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.cnaf.cn/guide_detail/5547.html",
+              "source_url": "https://www.cnaf.cn/guide_detail/5547.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.cnaf.cn/guide_detail/5547.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-cnaf-2090663f6af0",
+          "adapter_id": "cnaf-guides-listing-v1",
+          "source_id": "cnaf",
+          "discovery_url": "https://www.cnaf.cn/guide.html",
+          "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
+          "title": "国家艺术基金（一般项目）2027年度传播交流推广资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+          "organizer": "国家艺术基金",
+          "deadline_text": "6月15日",
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026.03.24",
+          "raw_snapshot_hash": "8dcc20710ce8b7ff4f537a4bd957ddbd6963108c621fbee03106e92d0b497bd8",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "国家艺术基金（一般项目）2027年度传播交流推广资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+              "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
+              "method": "html_title",
+              "evidence_excerpt": "国家艺术基金（一般项目）2027年度传播交流推广资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "国家艺术基金",
+              "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
+              "method": "structured_text",
+              "evidence_excerpt": "编辑：国家艺术基金",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "6月15日",
+              "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
+              "method": "structured_text",
+              "evidence_excerpt": "至6月15日截止申报",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.cnaf.cn/guide.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.cnaf.cn/guide.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.cnaf.cn/guide_detail/5548.html",
+              "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.cnaf.cn/guide_detail/5548.html",
               "confirmed": true
             }
           }

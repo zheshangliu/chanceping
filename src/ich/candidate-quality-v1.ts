@@ -19,7 +19,7 @@ function isDetailPage(sample: IchCandidateSample): boolean {
   try {
     const source = new URL(sample.source_url);
     const discovery = new URL(sample.discovery_url);
-    return source.pathname !== discovery.pathname && /(?:post_|t\d+_\d+|content\/)/u.test(source.pathname);
+    return source.pathname !== discovery.pathname && /(?:post_|t\d+_\d+|content\/|\/(?:guide_detail|work_notice_detail|normal_detail|fund_work_detail|policy_detail|newslncb_detail|single_detail)\/\d+\.html$)/u.test(source.pathname);
   } catch { return false; }
 }
 
