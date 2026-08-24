@@ -1,0 +1,41 @@
+{
+  "schema_version": "ich-ds15-observation-readiness.v1",
+  "stage": "DS15",
+  "observation_window_start": "2026-08-24T12:00:00.000Z",
+  "planned_observation_end": "2026-08-27T12:00:00.000Z",
+  "remote_timer": {
+    "unit": "chanceping-ich-ds6.timer",
+    "enabled": true,
+    "active_state": "active",
+    "sub_state": "waiting",
+    "last_trigger": "2026-08-24 17:05:17 CST",
+    "next_trigger": "2026-08-27 17:10:42 CST",
+    "last_result": "success",
+    "service_active": true
+  },
+  "upstream": {
+    "ds5_gate": "pass",
+    "ds5_formal_store_write": false,
+    "ds5_next_scheduled_run_at": "2026-08-27T08:00:00.000Z",
+    "ds6_run_id": "ich-ds6-20260824104410",
+    "ds6_gate": "pass",
+    "ds6_readonly": true,
+    "ds6_formal_store_write": false,
+    "ds6_formal_store_unchanged": true
+  },
+  "baseline": {
+    "formal_store_path": "data/ich-opportunities.json",
+    "formal_store_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
+    "formal_store_write": false,
+    "public_regression_required": true
+  },
+  "observation_checks": [
+    "timer remains enabled/active",
+    "DS6 service exits 0",
+    "DS4/DS5 counts and consistency remain aligned",
+    "public /ich list/filter/detail/SSR remain healthy",
+    "no unapproved candidate enters formal store"
+  ],
+  "half_automatic_update_decision": "pending_until_observation_end",
+  "gate": "observation_started"
+}

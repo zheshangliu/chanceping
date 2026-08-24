@@ -1,11 +1,11 @@
 {
   "schema_version": "ich-ds1b-sample-run.v1",
-  "ran_at": "2026-08-24T11:08:05.956Z",
+  "ran_at": "2026-08-24T11:28:55.917Z",
   "readonly": true,
   "formal_store_write": false,
   "minimum_samples_per_adapter": 3,
-  "adapter_count": 10,
-  "total_samples": 30,
+  "adapter_count": 12,
+  "total_samples": 36,
   "gate": "pass",
   "runs": [
     {
@@ -14,46 +14,46 @@
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm"
+        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm"
       ],
       "samples": [
         {
-          "candidate_id": "ds1b-ccgp-aafa53c68203",
+          "candidate_id": "ds1b-ccgp-8371e56fcc78",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
-          "title": "盐池县公安局2026年道路交通安全隐患治理项目中标公告",
-          "organizer": "盐池县公安局",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+          "title": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
+          "organizer": "陕西省自然资源信息中心（陕西省地质资料档案馆）",
+          "deadline_text": "2026年09月04日 09时30分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 19:00",
-          "raw_snapshot_hash": "62cc83521207c8b6ad54069655c04483acdd51fb9372d4f62741b5f26f909f4f",
+          "published_text": "2026年08月24日 19:18",
+          "raw_snapshot_hash": "d99f19542d3e89055d5260ace276137869ba3619ac42eff399a809207dbf46da",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "盐池县公安局2026年道路交通安全隐患治理项目中标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+              "value": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
               "method": "html_title",
-              "evidence_excerpt": "盐池县公安局2026年道路交通安全隐患治理项目中标公告",
+              "evidence_excerpt": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "盐池县公安局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+              "value": "陕西省自然资源信息中心（陕西省地质资料档案馆）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 盐池县公安局",
+              "evidence_excerpt": "采购单位 陕西省自然资源信息中心（陕西省地质资料档案馆）",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月04日 09时30分",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "于 2026年09月04日 09时30分 （北京时间）前",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -70,49 +70,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-72bd0ed6a088",
+          "candidate_id": "ds1b-ccgp-e898e0fd0db1",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
-          "title": "广西北部湾宏亚建设管理有限公司关于无人机侦测及相关设备采购（QZZC2026-J1-990234-BBWH）采购结果更正公告",
-          "organizer": "钦州市公安局",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+          "title": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
+          "organizer": "塔河县市政建设服务中心",
+          "deadline_text": "2026年09月04日 09时15分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 19:00",
-          "raw_snapshot_hash": "dad41b0253acc69201ac85b42f366c1c1a878d36e6a5ce4fc04fce826099ca92",
+          "published_text": "2026年08月24日 19:16",
+          "raw_snapshot_hash": "e5926ee129518119af075d46df30af9cfbc3af0a8e18c474f04650a42bff15a9",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "广西北部湾宏亚建设管理有限公司关于无人机侦测及相关设备采购（QZZC2026-J1-990234-BBWH）采购结果更正公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+              "value": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
               "method": "html_title",
-              "evidence_excerpt": "广西北部湾宏亚建设管理有限公司关于无人机侦测及相关设备采购（QZZC2026-J1-990234-BBWH）采购结果更正公告",
+              "evidence_excerpt": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "钦州市公安局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+              "value": "塔河县市政建设服务中心",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 钦州市公安局",
+              "evidence_excerpt": "采购单位 塔河县市政建设服务中心",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月04日 09时15分",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "于 2026年09月04日 09时15分 （北京时间）前",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -129,49 +129,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-48c6e681de48",
+          "candidate_id": "ds1b-ccgp-464365e14bb0",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
-          "title": "吊塔(BBQ26A00250)采购更正公告",
-          "organizer": "广州中医药大学第一附属医院重庆医院（重庆市北碚区中医院）",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+          "title": "渭南市公路局超限检测站工作服装采购项目招标公告",
+          "organizer": "渭南市公路局",
+          "deadline_text": "2026年09月14日 09时30分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 19:00",
-          "raw_snapshot_hash": "b31efebed840731a2dfe6691b1180724d8ab3d84cfb58625a4a9c7095251387b",
+          "published_text": "2026年08月24日 19:15",
+          "raw_snapshot_hash": "f366bdc352d18b66ff5e407ea5331db6bb849f7a5ff404a351e29ae427f09624",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "吊塔(BBQ26A00250)采购更正公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+              "value": "渭南市公路局超限检测站工作服装采购项目招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
               "method": "html_title",
-              "evidence_excerpt": "吊塔(BBQ26A00250)采购更正公告",
+              "evidence_excerpt": "渭南市公路局超限检测站工作服装采购项目招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "广州中医药大学第一附属医院重庆医院（重庆市北碚区中医院）",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+              "value": "渭南市公路局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 广州中医药大学第一附属医院重庆医院（重庆市北碚区中医院）",
+              "evidence_excerpt": "采购单位 渭南市公路局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
+              "value": "2026年09月14日 09时30分",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "于 2026年09月14日 09时30分 （北京时间）前",
+              "confirmed": true
             },
             "geography": {
               "value": null,
@@ -188,10 +188,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
               "confirmed": true
             }
           }
@@ -986,7 +986,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-27 13:48:00",
-          "raw_snapshot_hash": "f440e915aceefcc0fa4e3883eea7fc494cca03d2e33f094fdcdd1cdf5109ce2e",
+          "raw_snapshot_hash": "c6e32205561aa8981f1b2ecca134ec58c1c30463922c69b3897f5720b3e06ba8",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1045,7 +1045,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-07 09:15:00",
-          "raw_snapshot_hash": "78b112624898247234d485561adba08e01f0c6db3650090a327f4bd67a83f73b",
+          "raw_snapshot_hash": "ac94963cf8a34806199637defb047bb84d8379fd9364b183b3e03c9e0c444dea",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1104,7 +1104,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-13 09:24:00",
-          "raw_snapshot_hash": "b60434b3a1b3544ae35c650c90d6d98c9585da90d6981cbb1cc3c0c2f10a66d6",
+          "raw_snapshot_hash": "398287d8610d346342135040afaa36a8698a4e64565377cf2c37cf173ced7501",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1750,7 +1750,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年07月01日",
-          "raw_snapshot_hash": "f3a031b809aa83c7b15b99f4c9752af277b1ead47964a815fd0274028a9e7772",
+          "raw_snapshot_hash": "98b3b06ca38df2ba8d7517f9f6de2996dd53b00989bcbceeaaddf9bee1a6fac0",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1809,7 +1809,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月29日",
-          "raw_snapshot_hash": "f82355795a9734d5b44ca583495a2020d0ce55d4e1edd691cd5d8064b94028ee",
+          "raw_snapshot_hash": "c34aaeebedb1a50495edb68a32cd6725a9f353b72ce8855b424ed6abf7db600d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1868,7 +1868,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月26日",
-          "raw_snapshot_hash": "761e60c0c34e9d64a39d4687175d4ad00686d85535eed4f149fef1d3b57c7a75",
+          "raw_snapshot_hash": "e2f36d81c20979798213bba1acee56a13180f4efa62d237c9867382e6730e58f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1911,6 +1911,388 @@
               "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
               "method": "listing_anchor",
               "evidence_excerpt": "https://www.gdmuseum.org.cn/cn/col51/18013",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "gdmoa-exhibitions-listing-v1",
+      "source_id": "gdmoa",
+      "discovery_url": "https://www.gdmoa.org/Exhibition/",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+        "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+        "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-gdmoa-1dfc582f58c3",
+          "adapter_id": "gdmoa-exhibitions-listing-v1",
+          "source_id": "gdmoa",
+          "discovery_url": "https://www.gdmoa.org/Exhibition/",
+          "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+          "title": "新馆 | “在希望的田野上”——2026年度许钦松创作奖全国总评选优秀作品展 - 广东美术馆",
+          "organizer": "广东美术馆",
+          "deadline_text": null,
+          "geography": "广东省",
+          "category_hint": "exhibition_market",
+          "published_text": "2026年8月18日",
+          "raw_snapshot_hash": "1d92d545eda0dd36d2c00789f18429067831fe30e44463642352d39ac8e73a3a",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "新馆 | “在希望的田野上”——2026年度许钦松创作奖全国总评选优秀作品展 - 广东美术馆",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+              "method": "html_title",
+              "evidence_excerpt": "新馆 | “在希望的田野上”——2026年度许钦松创作奖全国总评选优秀作品展 - 广东美术馆",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东美术馆",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+              "method": "structured_text",
+              "evidence_excerpt": "广东美术馆",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省",
+              "source_url": "https://www.gdmoa.org/Exhibition/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "exhibition_market",
+              "source_url": "https://www.gdmoa.org/Exhibition/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gdmoa-683af9e9aed8",
+          "adapter_id": "gdmoa-exhibitions-listing-v1",
+          "source_id": "gdmoa",
+          "discovery_url": "https://www.gdmoa.org/Exhibition/",
+          "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+          "title": "新馆 | 奥斯瓦尔多·维加斯回顾展——心外无物 - 广东美术馆",
+          "organizer": "广东美术馆",
+          "deadline_text": null,
+          "geography": "广东省",
+          "category_hint": "exhibition_market",
+          "published_text": "2026年8月15日",
+          "raw_snapshot_hash": "9190825dc1f60241d332a03c7af66e5459f58e895a8d8deb41145ad4ab063d9d",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "新馆 | 奥斯瓦尔多·维加斯回顾展——心外无物 - 广东美术馆",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+              "method": "html_title",
+              "evidence_excerpt": "新馆 | 奥斯瓦尔多·维加斯回顾展——心外无物 - 广东美术馆",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东美术馆",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+              "method": "structured_text",
+              "evidence_excerpt": "广东美术馆",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省",
+              "source_url": "https://www.gdmoa.org/Exhibition/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "exhibition_market",
+              "source_url": "https://www.gdmoa.org/Exhibition/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gdmoa-765e754d1ee8",
+          "adapter_id": "gdmoa-exhibitions-listing-v1",
+          "source_id": "gdmoa",
+          "discovery_url": "https://www.gdmoa.org/Exhibition/",
+          "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+          "title": "新馆 | 百变通才——广东美术馆藏汤集祥绘画作品展 - 广东美术馆",
+          "organizer": "广东美术馆",
+          "deadline_text": null,
+          "geography": "广东省",
+          "category_hint": "exhibition_market",
+          "published_text": "2026年7月28日",
+          "raw_snapshot_hash": "eea4ea46cfdd89058b5b854e3dbdc1f2d7dec8ef6e68b67cada1e0c720413ac8",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "新馆 | 百变通才——广东美术馆藏汤集祥绘画作品展 - 广东美术馆",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+              "method": "html_title",
+              "evidence_excerpt": "新馆 | 百变通才——广东美术馆藏汤集祥绘画作品展 - 广东美术馆",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东美术馆",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+              "method": "structured_text",
+              "evidence_excerpt": "广东美术馆",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省",
+              "source_url": "https://www.gdmoa.org/Exhibition/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "exhibition_market",
+              "source_url": "https://www.gdmoa.org/Exhibition/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+              "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "unesco-ich-news-listing-v1",
+      "source_id": "unesco-ich",
+      "discovery_url": "https://ich.unesco.org/en/news",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+        "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+        "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-unesco-ich-c14a859a6e4e",
+          "adapter_id": "unesco-ich-news-listing-v1",
+          "source_id": "unesco-ich",
+          "discovery_url": "https://ich.unesco.org/en/news",
+          "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+          "title": "Call for expressions of interest for the elaboration of a policy paper on the contribution of community-based approaches to... - UNESCO Intangible Cultural Heritage",
+          "organizer": "UNESCO",
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "international",
+          "published_text": null,
+          "raw_snapshot_hash": "39afd39c7e027a67f757b9bfe0782c001c98a4470c093a56889286a369ee1c23",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "Call for expressions of interest for the elaboration of a policy paper on the contribution of community-based approaches to... - UNESCO Intangible Cultural Heritage",
+              "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+              "method": "html_title",
+              "evidence_excerpt": "Call for expressions of interest for the elaboration of a policy paper on the contribution of community-based approaches to... - UNESCO Intangible Cultural Heritage",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "UNESCO",
+              "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+              "method": "structured_text",
+              "evidence_excerpt": "UNESCO",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://ich.unesco.org/en/news",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "international",
+              "source_url": "https://ich.unesco.org/en/news",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+              "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-unesco-ich-b970461625e2",
+          "adapter_id": "unesco-ich-news-listing-v1",
+          "source_id": "unesco-ich",
+          "discovery_url": "https://ich.unesco.org/en/news",
+          "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+          "title": "Single global submission system of periodic reporting: revised forms available - UNESCO Intangible Cultural Heritage",
+          "organizer": "UNESCO",
+          "deadline_text": "30 June 2027",
+          "geography": "国际",
+          "category_hint": "international",
+          "published_text": "30 September 2026",
+          "raw_snapshot_hash": "da02870821b60a2b2d0eaf188edb68a73ad93551183ce63eb631bf838cb4710c",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "Single global submission system of periodic reporting: revised forms available - UNESCO Intangible Cultural Heritage",
+              "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+              "method": "html_title",
+              "evidence_excerpt": "Single global submission system of periodic reporting: revised forms available - UNESCO Intangible Cultural Heritage",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "UNESCO",
+              "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+              "method": "structured_text",
+              "evidence_excerpt": "UNESCO",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "30 June 2027",
+              "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+              "method": "structured_text",
+              "evidence_excerpt": "deadline of 30 June 2027",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://ich.unesco.org/en/news",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "international",
+              "source_url": "https://ich.unesco.org/en/news",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+              "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-unesco-ich-887e508b3d3a",
+          "adapter_id": "unesco-ich-news-listing-v1",
+          "source_id": "unesco-ich",
+          "discovery_url": "https://ich.unesco.org/en/news",
+          "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+          "title": "Eleventh session of the 2003 Convention’s General Assembly (17-18 June 2026) - UNESCO Intangible Cultural Heritage",
+          "organizer": "UNESCO",
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "international",
+          "published_text": null,
+          "raw_snapshot_hash": "0db9349396c2854e24780e7216e21621dee1e0872b6b05b9b16ec3f5b8136b35",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "Eleventh session of the 2003 Convention’s General Assembly (17-18 June 2026) - UNESCO Intangible Cultural Heritage",
+              "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+              "method": "html_title",
+              "evidence_excerpt": "Eleventh session of the 2003 Convention’s General Assembly (17-18 June 2026) - UNESCO Intangible Cultural Heritage",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "UNESCO",
+              "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+              "method": "structured_text",
+              "evidence_excerpt": "UNESCO",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://ich.unesco.org/en/news",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "international",
+              "source_url": "https://ich.unesco.org/en/news",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+              "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
               "confirmed": true
             }
           }

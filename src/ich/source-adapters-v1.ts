@@ -65,7 +65,7 @@ function htmlToText(html: string): string {
 
 function titleFromHtml(html: string, fallback: string): { value: string; excerpt: string } {
   const title = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.replace(/\s+/g, " ").trim();
-  const genericSiteTitle = !title || /^(?:中国工艺美术馆 中国非物质文化遗产馆|中国工艺美术馆·中国非物质文化遗产馆|广东省博物馆)$/u.test(title);
+  const genericSiteTitle = !title || /^(?:中国工艺美术馆 中国非物质文化遗产馆|中国工艺美术馆·中国非物质文化遗产馆|广东省博物馆|广东美术馆)$/u.test(title);
   const value = (genericSiteTitle ? fallback : title).replace(/_(?:通知公告|地市新闻|招标公告|中标公告)(?:_.*)?$/u, "").trim();
   return { value, excerpt: value.slice(0, 180) };
 }
@@ -166,6 +166,8 @@ const gmfyg = requiredSource("gmfyg");
 const gzCulture = requiredSource("gz-culture");
 const cnacs = requiredSource("cnacs");
 const gdMuseum = requiredSource("gdmuseum");
+const gdMoa = requiredSource("gdmoa");
+const unescoIch = requiredSource("unesco-ich");
 
 export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   {
@@ -306,6 +308,34 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       organizerPatterns: [/(广东省博物馆)/u, /主办单位\s*[:：]\s*([^\s]{2,50})/u],
       deadlinePatterns: [/(?:截止|开放至|报名)[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u, /至\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
       publishedPatterns: [/(\d{4}年\d{1,2}月\d{1,2}日)/u],
+    }),
+  },
+  {
+    adapter_id: "gdmoa-exhibitions-listing-v1",
+    source_id: gdMoa.id,
+    discovery_url: "https://www.gdmoa.org/Exhibition/",
+    category_hint: "exhibition_market",
+    geography_hint: "广东省",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /gdmoa\.org\/Exhibition\/Exhibitions\/\d{4}\/\d{6}\/t\d+_\d+\.shtml$/i.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "gdmoa-exhibitions-listing-v1", sourceId: gdMoa.id, categoryHint: "exhibition_market", geographyHint: "广东省", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/(广东美术馆)/u, /主办单位\s*[:：]\s*([^。；;]{2,60})/u],
+      deadlinePatterns: [/(?:展览时间|展期|开放至)[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u, /(?:报名|申请|征集)[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/(?:发布时间|发布日期|日期)\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u, /(\d{4}年\d{1,2}月\d{1,2}日)/u],
+    }),
+  },
+  {
+    adapter_id: "unesco-ich-news-listing-v1",
+    source_id: unescoIch.id,
+    discovery_url: "https://ich.unesco.org/en/news",
+    category_hint: "international",
+    geography_hint: "国际",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /ich\.unesco\.org\/en\/news\/[^/?#]+-\d+$/i.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "unesco-ich-news-listing-v1", sourceId: unescoIch.id, categoryHint: "international", geographyHint: "国际", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/(UNESCO)/u, /(?:organized|organised|发布机构)\s*(?:by|：|:)\s*([^.;]{2,60})/iu],
+      deadlinePatterns: [/(?:deadline|submission|applications?)[^.;]{0,100}?(\d{1,2}\s+[A-Z][a-z]+\s+\d{4})/u, /(?:截止|申请截止)[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/(?:published|date)[^\d]{0,20}(\d{1,2}\s+[A-Z][a-z]+\s+\d{4})/u, /(\d{4}-\d{2}-\d{2})/u],
     }),
   },
 ];

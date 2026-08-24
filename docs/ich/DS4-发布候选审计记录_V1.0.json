@@ -2,23 +2,23 @@
   "schema_version": "1.0",
   "stage": "DS4",
   "gate": "pass",
-  "audited_at": "2026-08-24T10:44:10.594Z",
+  "audited_at": "2026-08-24T08:00:00.000Z",
   "formal_store": {
     "path": "data/ich-opportunities.json",
-    "sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+    "sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
     "schema_version": "1.0",
-    "updated_at": "2026-08-24T08:00:00.000Z",
+    "updated_at": "2026-08-24T12:00:00.000Z",
     "total": 119
   },
   "counts": {
-    "current": 60,
-    "historical": 52,
+    "current": 61,
+    "historical": 51,
     "published": 112
   },
   "categories": {
     "competition": 16,
     "exhibition_market": 12,
-    "procurement_project": 4,
+    "procurement_project": 5,
     "channel_collaboration": 7,
     "policy_funding": 9,
     "international": 12

@@ -1,8 +1,8 @@
 # DS4 发布候选审计报告 V1.0
 
 - 门禁：**pass**
-- 审计时间：2026-08-24T10:44:10.594Z
-- 正式库：119 条（当前 60，历史 52）
+- 审计时间：2026-08-24T08:00:00.000Z
+- 正式库：119 条（当前 61，历史 51）
 - 来源等级：L1 86，L2 32，L3 1；L1/L2 比例 0.9916
 - 语义问题：0
 - 主来源重复：0
@@ -12,7 +12,7 @@
 
 - competition: 16
 - exhibition_market: 12
-- procurement_project: 4
+- procurement_project: 5
 - channel_collaboration: 7
 - policy_funding: 9
 - international: 12

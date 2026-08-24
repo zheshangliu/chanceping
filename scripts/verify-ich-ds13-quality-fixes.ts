@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+const audit = JSON.parse(fs.readFileSync("docs/ich/DS13-质量修复审计_V1.0.json", "utf8")) as Record<string, any>;
+assert.equal(audit.stage, "DS13");
+assert.equal(audit.gate, "pass_with_followups");
+assert.equal(audit.source_gate, true);
+assert.deepEqual(audit.target_ids, ["ich_e22d46a41a3f48c7a0300a73b9aea86e", "ich_stage5_006"]);
+assert.equal(audit.formal_store_write, true);
+assert.equal(audit.formal_store_changed, true);
+assert.equal(audit.patches.length, 2);
+assert.ok(audit.source_checks.every((check: Record<string, unknown>) => check.ok === true && check.status === 200));
+const currentHash = crypto.createHash("sha256").update(fs.readFileSync("data/ich-opportunities.json")).digest("hex");
+assert.equal(audit.after_sha256, currentHash);
+console.log(JSON.stringify({ stage: audit.stage, gate: audit.gate, formal_store_write: audit.formal_store_write, target_ids: audit.target_ids }, null, 2));

@@ -1,11 +1,11 @@
 {
   "schema_version": "ich-ds7-source-coverage.v1",
   "stage": "DS7",
-  "audited_at": "2026-08-24T11:14:28.860Z",
+  "audited_at": "2026-08-24T11:32:59.941Z",
   "gate": "pass",
   "workflow_count": 31,
-  "adapter_count": 10,
-  "manual_workflow_count": 21,
+  "adapter_count": 12,
+  "manual_workflow_count": 19,
   "gba_workflow_count": 11,
   "international_workflow_count": 12,
   "category_coverage": {
@@ -362,6 +362,73 @@
       ]
     },
     {
+      "workflow_id": "adapter-gdmoa-exhibitions",
+      "source_id": "gdmoa",
+      "mode": "adapter",
+      "discovery_url": "https://www.gdmoa.org/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "competition"
+      ],
+      "geography": [
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-unesco-ich-news",
+      "source_id": "unesco-ich",
+      "mode": "adapter",
+      "discovery_url": "https://ich.unesco.org/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
       "workflow_id": "manual-gd-procurement",
       "source_id": "gd-procurement",
       "mode": "manual",
@@ -531,40 +598,6 @@
       ]
     },
     {
-      "workflow_id": "manual-unesco-ich",
-      "source_id": "unesco-ich",
-      "mode": "manual",
-      "discovery_url": "https://ich.unesco.org/",
-      "categories": [
-        "policy_funding",
-        "international",
-        "competition"
-      ],
-      "geography": [
-        "international"
-      ],
-      "scan_frequency": "every_3_days",
-      "status": "ready",
-      "candidate_contract": [
-        "具体详情页 URL",
-        "标题",
-        "主办方",
-        "截止或长期有效证据",
-        "地区",
-        "参与资格",
-        "行动方式",
-        "字段 provenance",
-        "原始快照哈希"
-      ],
-      "collection_steps": [
-        "打开来源入口",
-        "定位当前公告/机会详情页",
-        "保存原始 URL 与页面快照",
-        "逐字段填写候选表",
-        "回到第一方页面复核后提交 DS3"
-      ]
-    },
-    {
       "workflow_id": "manual-shenzhen-public-resources",
       "source_id": "sz-ggzy",
       "mode": "manual",
@@ -679,41 +712,6 @@
       ],
       "geography": [
         "nationwide"
-      ],
-      "scan_frequency": "every_3_days",
-      "status": "ready",
-      "candidate_contract": [
-        "具体详情页 URL",
-        "标题",
-        "主办方",
-        "截止或长期有效证据",
-        "地区",
-        "参与资格",
-        "行动方式",
-        "字段 provenance",
-        "原始快照哈希"
-      ],
-      "collection_steps": [
-        "打开来源入口",
-        "定位当前公告/机会详情页",
-        "保存原始 URL 与页面快照",
-        "逐字段填写候选表",
-        "回到第一方页面复核后提交 DS3"
-      ]
-    },
-    {
-      "workflow_id": "manual-gd-museum-art",
-      "source_id": "gdmoa",
-      "mode": "manual",
-      "discovery_url": "https://www.gdmoa.org/",
-      "categories": [
-        "exhibition_market",
-        "channel_collaboration",
-        "competition"
-      ],
-      "geography": [
-        "guangdong",
-        "greater_bay_area"
       ],
       "scan_frequency": "every_3_days",
       "status": "ready",

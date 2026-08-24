@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+const audit = JSON.parse(fs.readFileSync("docs/ich/DS14-受控导入门禁审计_V1.0.json", "utf8")) as Record<string, any>;
+assert.equal(audit.stage, "DS14");
+assert.equal(audit.gate, "pass_with_followups");
+assert.equal(audit.import_decision, "hold_no_approved_candidates");
+assert.equal(audit.approved_candidate_count, 0);
+assert.equal(audit.formal_store_write, false);
+assert.equal(audit.formal_store_unchanged, true);
+assert.equal(audit.selected_count, 0);
+console.log(JSON.stringify({ stage: audit.stage, gate: audit.gate, import_decision: audit.import_decision, formal_store_write: audit.formal_store_write }, null, 2));

@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+const audit = JSON.parse(fs.readFileSync("docs/ich/DS15-三日观察启动记录_V1.0.json", "utf8")) as Record<string, any>;
+assert.equal(audit.stage, "DS15");
+assert.equal(audit.gate, "observation_started");
+assert.equal(audit.remote_timer.enabled, true);
+assert.equal(audit.remote_timer.active_state, "active");
+assert.equal(audit.remote_timer.last_result, "success");
+assert.equal(audit.baseline.formal_store_write, false);
+assert.equal(audit.half_automatic_update_decision, "pending_until_observation_end");
+console.log(JSON.stringify({ stage: audit.stage, gate: audit.gate, next_trigger: audit.remote_timer.next_trigger, half_automatic_update_decision: audit.half_automatic_update_decision }, null, 2));

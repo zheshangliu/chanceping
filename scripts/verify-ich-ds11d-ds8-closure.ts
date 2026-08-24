@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+const artifact = JSON.parse(fs.readFileSync("docs/ich/DS11-D-DS8人工队列闭环_V1.0.json", "utf8")) as Record<string, any>;
+assert.equal(artifact.stage, "DS11-D");
+assert.equal(artifact.gate, "pass_with_followups");
+assert.equal(artifact.queue_total, 114);
+assert.equal(artifact.formal_store_write, false);
+assert.equal(artifact.formal_store_unchanged, true);
+assert.equal(artifact.publish_count, 0);
+assert.equal(artifact.all_records_have_action, true);
+assert.equal(artifact.duplicate_group_count, 4);
+assert.equal(artifact.disposition_counts.archive_review, 34);
+assert.equal(artifact.disposition_counts.manual_field_review, 40);
+assert.equal(artifact.disposition_counts.source_unavailable, 28);
+console.log(JSON.stringify({ stage: artifact.stage, queue_total: artifact.queue_total, gate: artifact.gate, formal_store_write: artifact.formal_store_write, formal_store_unchanged: artifact.formal_store_unchanged }, null, 2));

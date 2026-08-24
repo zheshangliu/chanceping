@@ -1,0 +1,101 @@
+{
+  "schema_version": "ich-ds13-quality-fix.v1",
+  "stage": "DS13",
+  "mode": "write",
+  "audited_at": "2026-08-24T12:00:00.000Z",
+  "target_ids": [
+    "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+    "ich_stage5_006"
+  ],
+  "source_checks": [
+    {
+      "id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+      "requested_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+      "final_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+      "status": 200,
+      "response_bytes": 28917,
+      "snapshot_hash": "b3ec693c79d51b10e885dbfd5d96b4b6f6853b02e0c1ed0ef039dc6b532e0f79",
+      "markers": [
+        {
+          "marker": "发放平台要求",
+          "found": true
+        },
+        {
+          "marker": "广东省",
+          "found": true
+        },
+        {
+          "marker": "营业执照",
+          "found": true
+        },
+        {
+          "marker": "提交方式与截止时间",
+          "found": true
+        },
+        {
+          "marker": "wl_gdwltcyfzc@gd.gov.cn",
+          "found": true
+        }
+      ],
+      "ok": true
+    },
+    {
+      "id": "ich_stage5_006",
+      "requested_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+      "final_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+      "status": 200,
+      "response_bytes": 36706,
+      "snapshot_hash": "eb828e1b775c084f2c2045c134f8f926aee8afe208c796d8271e3101876d426e",
+      "markers": [
+        {
+          "marker": "作品征集",
+          "found": true
+        },
+        {
+          "marker": "参赛对象",
+          "found": true
+        },
+        {
+          "marker": "ZGYZY0919@163.com",
+          "found": true
+        },
+        {
+          "marker": "8月31日18:00",
+          "found": true
+        }
+      ],
+      "ok": true
+    }
+  ],
+  "source_gate": true,
+  "missing_target_ids": [],
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_write": true,
+  "before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "after_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
+  "formal_store_changed": true,
+  "backup_path": "data/ich-opportunities.json.bak",
+  "patches": [
+    {
+      "id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+      "patch": "gd_subsidy_scope_and_eligibility",
+      "field_scope": [
+        "location.participation_scope",
+        "location.eligible_regions",
+        "location.location_status",
+        "eligibility.eligibility_status"
+      ]
+    },
+    {
+      "id": "ich_stage5_006",
+      "patch": "yaozhou_application_email_and_scope",
+      "field_scope": [
+        "location.participation_scope",
+        "location.eligible_regions",
+        "location.location_status",
+        "application.application_email"
+      ]
+    }
+  ],
+  "gate": "pass_with_followups"
+}

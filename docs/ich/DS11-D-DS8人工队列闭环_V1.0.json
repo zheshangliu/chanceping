@@ -1,0 +1,411 @@
+{
+  "schema_version": "ich-ds11d-ds8-closure.v1",
+  "stage": "DS11-D",
+  "audited_at": "2026-08-24T11:36:34.191Z",
+  "readonly": true,
+  "queue_total": 114,
+  "disposition_counts": {
+    "archive_review": 34,
+    "manual_field_review": 40,
+    "source_unavailable": 28,
+    "ready_for_manual_confirmation": 4,
+    "duplicate_review": 8
+  },
+  "duplicate_group_count": 4,
+  "reviewed_count": 9,
+  "actions": {
+    "ready_for_manual_confirmation": {
+      "records": [
+        {
+          "id": "ich_auto_20260824_008",
+          "slug": "2026-heluo-feihua-digital-ich-showcase-procurement",
+          "title": "“河洛飞花·数说非遗”2026国家级文化生态保护（实验）区展示交流活动项目",
+          "queue": "urgent_deadline",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+            "accessible": true,
+            "title_match": true,
+            "response_bytes": 7181,
+            "snapshot_hash": "72b27ef3d9eac6ec1e4e33a4becbbbebd53d637901984032fda032de75334189",
+            "error": null
+          },
+          "store_state": {
+            "is_published": true,
+            "classification_status": "confirmed",
+            "workflow_state": "published",
+            "verification_status": "verified"
+          },
+          "inherited_missing_fields": [],
+          "inherited_reason_codes": [],
+          "resolution": "confirmed_existing_record_no_change",
+          "formal_publish_blocked": false,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_2026_guangdong_design_competition_11",
+          "slug": "2026-guangdong-ich-creative-design-competition",
+          "title": "“粤韵新彩 共创美好”2026年第十一届广东省非物质文化遗产创意设计大赛",
+          "queue": "current_recheck",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10839528.html",
+            "accessible": true,
+            "title_match": true,
+            "response_bytes": 39408,
+            "snapshot_hash": "d7083402b3a335cd4619442c42d95df84059e76a7ece671cb5926bcdf736f944",
+            "error": null
+          },
+          "store_state": {
+            "is_published": true,
+            "classification_status": "confirmed",
+            "workflow_state": "published",
+            "verification_status": "verified"
+          },
+          "inherited_missing_fields": [],
+          "inherited_reason_codes": [],
+          "resolution": "confirmed_existing_record_no_change",
+          "formal_publish_blocked": false,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_auto_20260824_001",
+          "slug": "2026-beijing-opera-week-ai-creative-call",
+          "title": "第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集",
+          "queue": "current_recheck",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+            "accessible": true,
+            "title_match": true,
+            "response_bytes": 47865,
+            "snapshot_hash": "1d8c204ce7b5ed64774dcc44b1b02df7a7d85a51216758badc1f7e23b0d10d73",
+            "error": null
+          },
+          "store_state": {
+            "is_published": true,
+            "classification_status": "confirmed",
+            "workflow_state": "published",
+            "verification_status": "verified"
+          },
+          "inherited_missing_fields": [],
+          "inherited_reason_codes": [],
+          "resolution": "confirmed_existing_record_no_change",
+          "formal_publish_blocked": false,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_auto_20260824_002",
+          "slug": "2026-fuzhou-intangible-cultural-heritage-craft-design-competition",
+          "title": "“闽都福韵·榕城有礼”福州非遗工美文创大赛",
+          "queue": "current_recheck",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+            "accessible": true,
+            "title_match": true,
+            "response_bytes": 130498,
+            "snapshot_hash": "510d48bd49795e4ded8a21aa6e9bae4cf9256f31a9337a3bc03d0fa4760e62ad",
+            "error": null
+          },
+          "store_state": {
+            "is_published": true,
+            "classification_status": "confirmed",
+            "workflow_state": "published",
+            "verification_status": "verified"
+          },
+          "inherited_missing_fields": [],
+          "inherited_reason_codes": [],
+          "resolution": "confirmed_existing_record_no_change",
+          "formal_publish_blocked": false,
+          "formal_store_write_required": false
+        }
+      ],
+      "action": "confirmed_existing_record_no_change",
+      "write": false
+    },
+    "manual_field_review": {
+      "reviewed": [
+        {
+          "id": "ich_auto_20260824_006",
+          "slug": "2026-zibo-landmark-products-promotion-invitation",
+          "title": "2026“国货新字号·消费新趋势”地标名品推介会参展征集",
+          "queue": "urgent_deadline",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+            "accessible": true,
+            "title_match": false,
+            "signals": [
+              "截止",
+              "报名",
+              "参展",
+              "邮箱",
+              "采购"
+            ],
+            "snapshot_hash": "7f6ebfbbf47b85ed71637686095474f9f880873e9df187c68ac79a517b28dd68",
+            "response_bytes": 53240,
+            "error": null
+          },
+          "inherited_missing_fields": [],
+          "inherited_reason_codes": [
+            "title_not_found_in_snapshot"
+          ],
+          "existing_store_state": {
+            "is_published": true,
+            "workflow_state": "published",
+            "verification_status": "verified",
+            "source_conflict": false
+          },
+          "manual_decision": "confirmed_existing_record_no_change",
+          "reason": "官方详情页明确活动日期、参展企业范围、免费参展和2026-08-28报名截止；现有记录字段已覆盖可确认信息。",
+          "proposed_patch": null,
+          "formal_publish_blocked": false,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+          "slug": "2026-guangdong-cultural-tourism-subsidy-platform-selection",
+          "title": "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+          "queue": "urgent_deadline",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+            "accessible": true,
+            "title_match": true,
+            "signals": [
+              "截止",
+              "报名",
+              "申请",
+              "邮箱",
+              "采购"
+            ],
+            "snapshot_hash": "b3ec693c79d51b10e885dbfd5d96b4b6f6853b02e0c1ed0ef039dc6b532e0f79",
+            "response_bytes": 28917,
+            "error": null
+          },
+          "inherited_missing_fields": [
+            "location",
+            "eligibility"
+          ],
+          "inherited_reason_codes": [
+            "missing_fields:location,eligibility"
+          ],
+          "existing_store_state": {
+            "is_published": true,
+            "workflow_state": "published",
+            "verification_status": "partially_verified",
+            "source_conflict": false
+          },
+          "manual_decision": "field_patch_ready_hold_write",
+          "reason": "官方公告明确面向平台企业、广东省文旅消费券服务范围和资质条件；可补齐服务地域与资格确认状态，但需受控写入。",
+          "proposed_patch": {
+            "location.participation_scope": "province_only",
+            "location.eligible_regions": [
+              "guangdong"
+            ],
+            "location.location_status": "confirmed",
+            "eligibility.eligibility_status": "confirmed"
+          },
+          "formal_publish_blocked": true,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_expansion_batch_01_003",
+          "slug": "expansion-batch-01-003",
+          "title": "2026第九届金茶花国际文创设计大赛",
+          "queue": "urgent_deadline",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+            "accessible": true,
+            "title_match": true,
+            "signals": [
+              "报名",
+              "征集",
+              "参赛",
+              "邮箱"
+            ],
+            "snapshot_hash": "a4bf8e325811fa6be5ee2066b0008bd200b005d528d14a10b891bf2487dc3b40",
+            "response_bytes": 15244,
+            "error": null
+          },
+          "inherited_missing_fields": [
+            "eligibility",
+            "application"
+          ],
+          "inherited_reason_codes": [
+            "missing_fields:eligibility,application"
+          ],
+          "existing_store_state": {
+            "is_published": true,
+            "workflow_state": "published",
+            "verification_status": "partially_verified",
+            "source_conflict": true
+          },
+          "manual_decision": "hold_source_conflict",
+          "reason": "当前官方页面是启动报道，未提供可核对的报名截止与申请入口；现有记录已标记来源冲突，不放行。",
+          "proposed_patch": null,
+          "formal_publish_blocked": true,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_expansion_batch_03_013",
+          "slug": "expansion-batch-03-013",
+          "title": "2026北京国际设计周非遗设计单元征集",
+          "queue": "urgent_deadline",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://www.bjdw.org/",
+            "accessible": true,
+            "title_match": false,
+            "signals": [
+              "邮箱"
+            ],
+            "snapshot_hash": "e52985c3757ea788e96d286e8a69fefe29752370a1a066a0a4bd07c9a9df2042",
+            "response_bytes": 14701,
+            "error": null
+          },
+          "inherited_missing_fields": [
+            "eligibility",
+            "application"
+          ],
+          "inherited_reason_codes": [
+            "missing_fields:eligibility,application",
+            "title_not_found_in_snapshot"
+          ],
+          "existing_store_state": {
+            "is_published": true,
+            "workflow_state": "published",
+            "verification_status": "partially_verified",
+            "source_conflict": true
+          },
+          "manual_decision": "hold_non_specific_source",
+          "reason": "当前链接为北京国际设计周首页，未找到2026非遗设计单元具体征集页；不得用首页替代详情页。",
+          "proposed_patch": null,
+          "formal_publish_blocked": true,
+          "formal_store_write_required": false
+        },
+        {
+          "id": "ich_stage5_006",
+          "slug": "2026-yaozhou-porcelain-creative-competition",
+          "title": "2026中国耀州瓷创意大赛",
+          "queue": "urgent_deadline",
+          "source_recheck": {
+            "status": 200,
+            "final_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+            "accessible": true,
+            "title_match": true,
+            "signals": [
+              "报名",
+              "征集",
+              "申请",
+              "参展",
+              "参赛",
+              "邮箱",
+              "采购"
+            ],
+            "snapshot_hash": "eb828e1b775c084f2c2045c134f8f926aee8afe208c796d8271e3101876d426e",
+            "response_bytes": 36706,
+            "error": null
+          },
+          "inherited_missing_fields": [
+            "location"
+          ],
+          "inherited_reason_codes": [
+            "missing_fields:location"
+          ],
+          "existing_store_state": {
+            "is_published": true,
+            "workflow_state": "published",
+            "verification_status": "verified",
+            "source_conflict": false
+          },
+          "manual_decision": "field_patch_ready_hold_write",
+          "reason": "官方报名要求页明确全国参赛对象、2026-08-31 18:00截止、报名邮箱和材料要求；可补齐申请邮箱并将地点确认状态提升，但需受控写入。",
+          "proposed_patch": {
+            "application.application_email": "ZGYZY0919@163.com",
+            "application.application_status": "confirmed",
+            "location.location_status": "confirmed"
+          },
+          "formal_publish_blocked": true,
+          "formal_store_write_required": false
+        }
+      ],
+      "reviewed_count": 5,
+      "remaining_count": 35,
+      "action": "field_reviewed_or_held_for_patch",
+      "write": false
+    },
+    "duplicate_review": {
+      "groups": [
+        {
+          "pair": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+          "ids": [
+            "expansion-batch-02-005",
+            "ich_stage5_026",
+            "2026-weaveup-wool-residency",
+            "ich_expansion_batch_02_005"
+          ],
+          "decision": "hold_duplicate_pair_no_write",
+          "reason": "两条正式记录共用同一主来源；未获单独撤回授权，不自动删除或撤回任何一条。"
+        },
+        {
+          "pair": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+          "ids": [
+            "expansion-batch-03-051",
+            "ich_stage5_027",
+            "2026-royal-museums-greenwich-creative-practitioner-residence",
+            "ich_expansion_batch_03_051"
+          ],
+          "decision": "hold_duplicate_pair_no_write",
+          "reason": "两条正式记录共用同一主来源；未获单独撤回授权，不自动删除或撤回任何一条。"
+        },
+        {
+          "pair": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+          "ids": [
+            "expansion-batch-01-002",
+            "ich_stage5_005",
+            "2026-chongming-cultural-tourism-badge-design",
+            "ich_expansion_batch_01_002"
+          ],
+          "decision": "hold_duplicate_pair_no_write",
+          "reason": "两条正式记录共用同一主来源；未获单独撤回授权，不自动删除或撤回任何一条。"
+        },
+        {
+          "pair": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+          "ids": [
+            "expansion-batch-03-079",
+            "ich_stage5_029",
+            "2026-heritage-crafts-emerging-metalworker-award",
+            "ich_expansion_batch_03_079"
+          ],
+          "decision": "hold_duplicate_pair_no_write",
+          "reason": "两条正式记录共用同一主来源；未获单独撤回授权，不自动删除或撤回任何一条。"
+        }
+      ],
+      "action": "hold_duplicate_pair_no_write",
+      "write": false
+    },
+    "archive_review": {
+      "count": 34,
+      "action": "archive_candidate_hold_no_write",
+      "reason": "已过期或历史记录保留在历史集合，未覆盖正式库状态。",
+      "write": false
+    },
+    "source_unavailable": {
+      "count": 28,
+      "action": "source_recovery_retry_hold_no_write",
+      "reason": "主来源不可访问或返回非 2xx，未用二手页面替代，暂不发布或撤回。",
+      "write": false
+    }
+  },
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_write": false,
+  "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_unchanged": true,
+  "publish_count": 0,
+  "all_records_have_action": true,
+  "gate": "pass_with_followups"
+}

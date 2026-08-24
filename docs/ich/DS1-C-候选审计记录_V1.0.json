@@ -1,70 +1,67 @@
 {
   "schema_version": "ich-ds1c-candidate-audit.v1",
-  "audited_at": "2026-08-24T11:08:19.645Z",
+  "audited_at": "2026-08-24T11:30:22.773Z",
   "readonly": true,
   "input": "docs/ich/DS1-B-候选样本运行记录_V1.0.json",
-  "total_candidates": 30,
-  "candidate_review_count": 30,
+  "total_candidates": 36,
+  "candidate_review_count": 36,
   "blocked_count": 0,
   "template_contamination_count": 0,
   "duplicate_count": 0,
-  "missing_deadline_count": 23,
-  "unconfirmed_geography_count": 30,
-  "unconfirmed_category_count": 30,
+  "missing_deadline_count": 25,
+  "unconfirmed_geography_count": 36,
+  "unconfirmed_category_count": 36,
   "gate": "pass",
   "items": [
     {
-      "candidate_id": "ds1b-ccgp-aafa53c68203",
+      "candidate_id": "ds1b-ccgp-8371e56fcc78",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "pending_confirmation",
+      "status_hint": "closing_soon",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed",
-        "deadline_unconfirmed"
+        "category_unconfirmed"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-72bd0ed6a088",
+      "candidate_id": "ds1b-ccgp-e898e0fd0db1",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "pending_confirmation",
+      "status_hint": "closing_soon",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed",
-        "deadline_unconfirmed"
+        "category_unconfirmed"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-48c6e681de48",
+      "candidate_id": "ds1b-ccgp-464365e14bb0",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "pending_confirmation",
+      "status_hint": "active",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed",
-        "deadline_unconfirmed"
+        "category_unconfirmed"
       ]
     },
     {
@@ -534,6 +531,113 @@
       "source_level": "L2",
       "source_role": "secondary",
       "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gdmoa-1dfc582f58c3",
+      "source_id": "gdmoa",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gdmoa-683af9e9aed8",
+      "source_id": "gdmoa",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gdmoa-765e754d1ee8",
+      "source_id": "gdmoa",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-unesco-ich-c14a859a6e4e",
+      "source_id": "unesco-ich",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-unesco-ich-b970461625e2",
+      "source_id": "unesco-ich",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-unesco-ich-887e508b3d3a",
+      "source_id": "unesco-ich",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,

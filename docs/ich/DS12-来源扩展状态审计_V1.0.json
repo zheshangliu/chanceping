@@ -1,0 +1,55 @@
+{
+  "schema_version": "ich-ds12-source-reconciliation.v1",
+  "stage": "DS12",
+  "audited_at": "2026-08-24T11:31:50.897Z",
+  "source_ids": [
+    "gdmoa",
+    "unesco-ich"
+  ],
+  "readonly": true,
+  "formal_store_write": false,
+  "upstream_gates": {
+    "ds1b": "pass",
+    "ds1c": "pass",
+    "ds2": "pass",
+    "ds3": "pass"
+  },
+  "global_safety": {
+    "ds1b_formal_store_write": false,
+    "ds1c_template_contamination": 0,
+    "ds1c_duplicates": 0,
+    "ds2_formal_store_write": false,
+    "ds3_approved_count": 0,
+    "ds3_formal_store_write": false
+  },
+  "promotion_decision": "eligible_for_registry_status_promotion",
+  "sources": [
+    {
+      "source_id": "gdmoa",
+      "before_status": "planned",
+      "adapter_samples": 3,
+      "ds1c_candidates": 3,
+      "ds1c_blocked": 0,
+      "ds2_status": "completed",
+      "ds2_candidates": 3,
+      "ds3_assessments": 3,
+      "ds3_approved": 0,
+      "ds3_rejected": 0,
+      "promotion_eligible": true
+    },
+    {
+      "source_id": "unesco-ich",
+      "before_status": "planned",
+      "adapter_samples": 3,
+      "ds1c_candidates": 3,
+      "ds1c_blocked": 0,
+      "ds2_status": "completed",
+      "ds2_candidates": 3,
+      "ds3_assessments": 3,
+      "ds3_approved": 0,
+      "ds3_rejected": 3,
+      "promotion_eligible": true
+    }
+  ],
+  "gate": "pass_with_followups"
+}
