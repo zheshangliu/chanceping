@@ -79,10 +79,52 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
   const fullResults = Array.isArray(ds8Full?.results) ? ds8Full.results.filter((item): item is JsonRecord => Boolean(item && typeof item === "object" && !Array.isArray(item))) : [];
   const fullDispositionCounts = ds8Full?.disposition_counts && typeof ds8Full.disposition_counts === "object" && !Array.isArray(ds8Full.disposition_counts) ? ds8Full.disposition_counts as JsonRecord : {};
   const ds5 = readJson<JsonRecord>(path.join(root, "docs/ich/DS5-规模化运营运行记录_V1.0.json"));
+  const ds1b = readJson<JsonRecord>(path.join(root, "docs/ich/DS1-B-候选样本运行记录_V1.0.json"));
+  const ds1c = readJson<JsonRecord>(path.join(root, "docs/ich/DS1-C-候选审计记录_V1.0.json"));
+  const ds2 = readJson<JsonRecord>(path.join(root, "docs/ich/DS2-只读发现运行记录_V1.0.json"));
+  const ds3 = readJson<JsonRecord>(path.join(root, "docs/ich/DS3-候选质量运行记录_V1.0.json"));
   const ds5Snapshot = (ds5?.formal_store_snapshot && typeof ds5.formal_store_snapshot === "object" ? ds5.formal_store_snapshot : {}) as JsonRecord;
   const dynamicHistorical = historical;
   const ds5Current = typeof ds5Snapshot.current === "number" ? ds5Snapshot.current : null;
   const ds5Historical = typeof ds5Snapshot.historical === "number" ? ds5Snapshot.historical : null;
+  const ds2SourceRuns = Array.isArray(ds2?.source_runs) ? ds2.source_runs.filter((run): run is JsonRecord => Boolean(run && typeof run === "object" && !Array.isArray(run))) : [];
+  const ds1cItems = Array.isArray(ds1c?.items) ? ds1c.items.filter((item): item is JsonRecord => Boolean(item && typeof item === "object" && !Array.isArray(item))) : [];
+  const ds3Assessments = Array.isArray(ds3?.assessments) ? ds3.assessments.filter((item): item is JsonRecord => Boolean(item && typeof item === "object" && !Array.isArray(item))) : [];
+  const sourceHealthItems = registry.sources.map((source) => {
+    const run = ds2SourceRuns.find((item) => item.source_id === source.id);
+    const candidates = ds1cItems.filter((item) => item.source_id === source.id);
+    const assessments = ds3Assessments.filter((item) => item.source_id === source.id);
+    const detailAccessible = candidates.filter((item) => item.source_is_detail_page === true).length;
+    const fieldMissing = assessments.filter((item) => {
+      const checks = item.checks && typeof item.checks === "object" && !Array.isArray(item.checks) ? item.checks as JsonRecord : {};
+      return ["organizer_confirmed", "deadline_confirmed", "geography_confirmed", "category_confirmed"].some((key) => checks[key] !== true);
+    }).length;
+    const duplicateCount = candidates.filter((item) => typeof item.duplicate_of_candidate_id === "string" && item.duplicate_of_candidate_id.length > 0).length;
+    const candidateCount = typeof run?.candidate_count === "number" ? run.candidate_count : candidates.length;
+    return {
+      source_id: source.id,
+      name: source.name,
+      operational_status: source.operational_status,
+      workflow_mode: ICH_DS7_SOURCE_WORKFLOWS.find((workflow) => workflow.source_id === source.id)?.mode ?? "unmapped",
+      http_status: typeof run?.http_status === "number" ? run.http_status : null,
+      last_successful_collection: run?.status === "completed" ? isoOrNull(run.finished_at) : null,
+      candidate_count: candidateCount,
+      detail_page_accessibility_rate: candidates.length > 0 ? Math.round(detailAccessible / candidates.length * 10000) / 100 : null,
+      field_missing_rate: assessments.length > 0 ? Math.round(fieldMissing / assessments.length * 10000) / 100 : null,
+      duplicate_rate: candidates.length > 0 ? Math.round(duplicateCount / candidates.length * 10000) / 100 : null,
+      sample_count: candidates.length,
+      action_required: source.operational_status === "planned" ? "manual_or_promotion_review" : source.operational_status === "adapter_ready" && run?.status !== "completed" ? "collection_check" : "none",
+    };
+  });
+  const attemptedSources = sourceHealthItems.filter((item) => item.http_status !== null);
+  const totalCandidates = sourceHealthItems.reduce((sum, item) => sum + item.candidate_count, 0);
+  const totalAccessible = sourceHealthItems.reduce((sum, item) => sum + (item.sample_count > 0 ? Math.round(item.detail_page_accessibility_rate! * item.sample_count / 100) : 0), 0);
+  const totalAssessments = ds3Assessments.length;
+  const totalMissing = ds3Assessments.filter((item) => {
+    const checks = item.checks && typeof item.checks === "object" && !Array.isArray(item.checks) ? item.checks as JsonRecord : {};
+    return ["organizer_confirmed", "deadline_confirmed", "geography_confirmed", "category_confirmed"].some((key) => checks[key] !== true);
+  }).length;
+  const totalDuplicates = ds1cItems.filter((item) => typeof item.duplicate_of_candidate_id === "string" && item.duplicate_of_candidate_id.length > 0).length;
 
   return {
     schema_version: ICH_OPERATIONS_DASHBOARD_SCHEMA,
@@ -118,6 +160,23 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
       greater_bay_area: ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.geography.some((item) => ["guangzhou", "guangdong", "greater_bay_area"].includes(item))).length,
       international: ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.geography.includes("international")).length,
       category_coverage: categoryCoverage,
+    },
+    source_health: {
+      snapshot_at: isoOrNull(ds2?.finished_at) ?? isoOrNull(ds1b?.ran_at),
+      summary: {
+        registered_sources: registry.sources.length,
+        attempted_sources: attemptedSources.length,
+        successful_sources: attemptedSources.filter((item) => item.last_successful_collection !== null).length,
+        collection_success_rate: attemptedSources.length > 0 ? Math.round(attemptedSources.filter((item) => item.last_successful_collection !== null).length / attemptedSources.length * 10000) / 100 : null,
+        candidate_total: totalCandidates,
+        detail_page_accessibility_rate: totalCandidates > 0 ? Math.round(totalAccessible / totalCandidates * 10000) / 100 : null,
+        field_missing_rate: totalAssessments > 0 ? Math.round(totalMissing / totalAssessments * 10000) / 100 : null,
+        duplicate_rate: ds1cItems.length > 0 ? Math.round(totalDuplicates / ds1cItems.length * 10000) / 100 : null,
+        planned_sources: sourceStatus.planned,
+        manual_workflow_sources: ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.mode === "manual").length,
+        sources_needing_action: sourceHealthItems.filter((item) => item.action_required !== "none").length,
+      },
+      items: sourceHealthItems,
     },
     ds6_schedule: {
       enabled: schedule?.enabled === true,

@@ -1,6 +1,6 @@
 {
   "schema_version": "ich-source-endpoints.v1",
-  "checked_at": "2026-08-24T09:21:00.314Z",
+  "checked_at": "2026-08-24T10:44:46.094Z",
   "readonly": true,
   "registry_schema_version": "2.0",
   "total": 31,
@@ -32,7 +32,7 @@
       "name": "文化和旅游部公告通知",
       "canonical_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:01.725Z",
+      "checked_at": "2026-08-24T10:44:10.661Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
@@ -45,7 +45,7 @@
       "javascript_signals": [],
       "link_count": 103,
       "pagination_signal": true,
-      "elapsed_ms": 359,
+      "elapsed_ms": 268,
       "error": null
     },
     {
@@ -53,7 +53,7 @@
       "name": "中国非物质文化遗产网",
       "canonical_url": "https://www.ihchina.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:01.750Z",
+      "checked_at": "2026-08-24T10:44:10.691Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.ihchina.cn/",
@@ -66,7 +66,7 @@
       "javascript_signals": [],
       "link_count": 172,
       "pagination_signal": true,
-      "elapsed_ms": 740,
+      "elapsed_ms": 615,
       "error": null
     },
     {
@@ -74,7 +74,7 @@
       "name": "国家艺术基金",
       "canonical_url": "https://www.cnaf.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:01.751Z",
+      "checked_at": "2026-08-24T10:44:10.692Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.cnaf.cn/index.html",
@@ -87,7 +87,7 @@
       "javascript_signals": [],
       "link_count": 307,
       "pagination_signal": true,
-      "elapsed_ms": 559,
+      "elapsed_ms": 432,
       "error": null
     },
     {
@@ -95,7 +95,7 @@
       "name": "中国工艺美术馆·中国非物质文化遗产馆",
       "canonical_url": "https://www.gmfyg.org.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:01.752Z",
+      "checked_at": "2026-08-24T10:44:10.692Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.gmfyg.org.cn/",
@@ -108,7 +108,7 @@
       "javascript_signals": [],
       "link_count": 153,
       "pagination_signal": true,
-      "elapsed_ms": 3622,
+      "elapsed_ms": 444,
       "error": null
     },
     {
@@ -116,12 +116,12 @@
       "name": "广东省文化和旅游厅",
       "canonical_url": "https://whly.gd.gov.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:01.752Z",
+      "checked_at": "2026-08-24T10:44:10.693Z",
       "status": 200,
       "ok": true,
       "final_url": "https://whly.gd.gov.cn/",
       "content_type": "text/html; charset=utf-8",
-      "response_bytes": 99539,
+      "response_bytes": 99509,
       "title": "广东省文化和旅游厅",
       "page_type": "listing",
       "page_type_basis": "Listing URL/path or repeated links detected (INFERENCE)",
@@ -129,7 +129,7 @@
       "javascript_signals": [],
       "link_count": 262,
       "pagination_signal": true,
-      "elapsed_ms": 294,
+      "elapsed_ms": 165,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "name": "广州市文化广电旅游局",
       "canonical_url": "https://wglj.gz.gov.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:01.753Z",
+      "checked_at": "2026-08-24T10:44:10.693Z",
       "status": 200,
       "ok": true,
       "final_url": "https://wglj.gz.gov.cn/",
@@ -150,7 +150,7 @@
       "javascript_signals": [],
       "link_count": 302,
       "pagination_signal": true,
-      "elapsed_ms": 372,
+      "elapsed_ms": 225,
       "error": null
     },
     {
@@ -158,12 +158,12 @@
       "name": "广州市越秀区人民政府通知公告",
       "canonical_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.374Z",
+      "checked_at": "2026-08-24T10:44:11.306Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "content_type": "text/html; charset=utf-8",
-      "response_bytes": 36234,
+      "response_bytes": 36240,
       "title": "广州市越秀区人民政府门户网站",
       "page_type": "listing",
       "page_type_basis": "Listing URL/path or repeated links detected (INFERENCE)",
@@ -171,7 +171,7 @@
       "javascript_signals": [],
       "link_count": 66,
       "pagination_signal": true,
-      "elapsed_ms": 125,
+      "elapsed_ms": 123,
       "error": null
     },
     {
@@ -179,12 +179,12 @@
       "name": "中国政府采购网",
       "canonical_url": "https://www.ccgp.gov.cn/cggg/",
       "access_mode": "search",
-      "checked_at": "2026-08-24T09:20:05.377Z",
+      "checked_at": "2026-08-24T10:44:11.308Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.ccgp.gov.cn/cggg/",
       "content_type": "text/html",
-      "response_bytes": 19899,
+      "response_bytes": 19389,
       "title": "采购公告 - 中国政府采购网",
       "page_type": "search",
       "page_type_basis": "Configured search mode or query URL (INFERENCE)",
@@ -192,7 +192,7 @@
       "javascript_signals": [],
       "link_count": 42,
       "pagination_signal": true,
-      "elapsed_ms": 347,
+      "elapsed_ms": 214,
       "error": null
     },
     {
@@ -200,12 +200,12 @@
       "name": "全国公共资源交易平台",
       "canonical_url": "https://www.ggzy.gov.cn/",
       "access_mode": "search",
-      "checked_at": "2026-08-24T09:20:05.378Z",
+      "checked_at": "2026-08-24T10:44:11.310Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.ggzy.gov.cn/",
       "content_type": "text/html",
-      "response_bytes": 67289,
+      "response_bytes": 66995,
       "title": "全国公共资源交易平台",
       "page_type": "search",
       "page_type_basis": "Configured search mode or query URL (INFERENCE)",
@@ -213,7 +213,7 @@
       "javascript_signals": [],
       "link_count": 251,
       "pagination_signal": true,
-      "elapsed_ms": 491,
+      "elapsed_ms": 445,
       "error": null
     },
     {
@@ -221,7 +221,7 @@
       "name": "广东政府采购智慧云平台",
       "canonical_url": "https://gdgpo.czt.gd.gov.cn/",
       "access_mode": "search",
-      "checked_at": "2026-08-24T09:20:05.379Z",
+      "checked_at": "2026-08-24T10:44:11.312Z",
       "status": 200,
       "ok": true,
       "final_url": "https://gdgpo.czt.gd.gov.cn/",
@@ -234,7 +234,7 @@
       "javascript_signals": [],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 272,
+      "elapsed_ms": 145,
       "error": null
     },
     {
@@ -242,7 +242,7 @@
       "name": "广州市公共资源交易平台",
       "canonical_url": "https://ggzy.gz.gov.cn/",
       "access_mode": "search",
-      "checked_at": "2026-08-24T09:20:05.382Z",
+      "checked_at": "2026-08-24T10:44:11.314Z",
       "status": null,
       "ok": false,
       "final_url": null,
@@ -255,7 +255,7 @@
       "javascript_signals": [],
       "link_count": null,
       "pagination_signal": null,
-      "elapsed_ms": 109,
+      "elapsed_ms": 68,
       "error": "TypeError: fetch failed"
     },
     {
@@ -263,7 +263,7 @@
       "name": "深圳公共资源交易平台",
       "canonical_url": "https://www.szggzy.com/",
       "access_mode": "search",
-      "checked_at": "2026-08-24T09:20:05.383Z",
+      "checked_at": "2026-08-24T10:44:11.316Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.szggzy.com/",
@@ -276,7 +276,7 @@
       "javascript_signals": [],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 394,
+      "elapsed_ms": 200,
       "error": null
     },
     {
@@ -284,7 +284,7 @@
       "name": "深圳市文化广电旅游体育局",
       "canonical_url": "https://wtl.sz.gov.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.869Z",
+      "checked_at": "2026-08-24T10:44:11.755Z",
       "status": null,
       "ok": false,
       "final_url": null,
@@ -297,7 +297,7 @@
       "javascript_signals": [],
       "link_count": null,
       "pagination_signal": null,
-      "elapsed_ms": 409,
+      "elapsed_ms": 132,
       "error": "TypeError: fetch failed"
     },
     {
@@ -305,7 +305,7 @@
       "name": "中国非物质文化遗产保护协会",
       "canonical_url": "https://www.chinaich.org/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.871Z",
+      "checked_at": "2026-08-24T10:44:11.757Z",
       "status": null,
       "ok": false,
       "final_url": null,
@@ -318,7 +318,7 @@
       "javascript_signals": [],
       "link_count": null,
       "pagination_signal": null,
-      "elapsed_ms": 20511,
+      "elapsed_ms": 20581,
       "error": "TypeError: fetch failed"
     },
     {
@@ -326,7 +326,7 @@
       "name": "中国工艺美术学会",
       "canonical_url": "https://www.cnacs.net.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.874Z",
+      "checked_at": "2026-08-24T10:44:11.759Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.cnacs.net.cn/",
@@ -339,7 +339,7 @@
       "javascript_signals": [],
       "link_count": 201,
       "pagination_signal": true,
-      "elapsed_ms": 491,
+      "elapsed_ms": 246,
       "error": null
     },
     {
@@ -347,7 +347,7 @@
       "name": "中国工艺美术协会",
       "canonical_url": "https://www.cnaca.org/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.876Z",
+      "checked_at": "2026-08-24T10:44:11.761Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.cnaca.org/dist/",
@@ -360,7 +360,7 @@
       "javascript_signals": [],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 841,
+      "elapsed_ms": 406,
       "error": null
     },
     {
@@ -368,7 +368,7 @@
       "name": "广东省博物馆",
       "canonical_url": "https://www.gdmuseum.org.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.877Z",
+      "checked_at": "2026-08-24T10:44:11.762Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.gdmuseum.org.cn/",
@@ -381,7 +381,7 @@
       "javascript_signals": [],
       "link_count": 207,
       "pagination_signal": true,
-      "elapsed_ms": 2362,
+      "elapsed_ms": 2615,
       "error": null
     },
     {
@@ -389,7 +389,7 @@
       "name": "广东美术馆",
       "canonical_url": "https://www.gdmoa.org/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:05.878Z",
+      "checked_at": "2026-08-24T10:44:11.762Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.gdmoa.org/",
@@ -402,7 +402,7 @@
       "javascript_signals": [],
       "link_count": 129,
       "pagination_signal": false,
-      "elapsed_ms": 836,
+      "elapsed_ms": 355,
       "error": null
     },
     {
@@ -410,7 +410,7 @@
       "name": "广州博物馆",
       "canonical_url": "https://www.guangzhoumuseum.cn/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:26.382Z",
+      "checked_at": "2026-08-24T10:44:32.339Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.guangzhoumuseum.cn/",
@@ -423,7 +423,7 @@
       "javascript_signals": [],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 560,
+      "elapsed_ms": 387,
       "error": null
     },
     {
@@ -431,7 +431,7 @@
       "name": "中国国际文化产业博览交易会",
       "canonical_url": "https://www.cnicif.com/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:26.384Z",
+      "checked_at": "2026-08-24T10:44:32.340Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.cnicif.com/",
@@ -444,7 +444,7 @@
       "javascript_signals": [],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 211,
+      "elapsed_ms": 206,
       "error": null
     },
     {
@@ -452,12 +452,12 @@
       "name": "UNESCO Intangible Cultural Heritage",
       "canonical_url": "https://ich.unesco.org/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:26.386Z",
+      "checked_at": "2026-08-24T10:44:32.341Z",
       "status": 200,
       "ok": true,
       "final_url": "https://ich.unesco.org/en/home",
       "content_type": "text/html; charset=UTF-8",
-      "response_bytes": 151169,
+      "response_bytes": 150789,
       "title": "ICH - UNESCO Intangible Cultural Heritage",
       "page_type": "listing",
       "page_type_basis": "Listing URL/path or repeated links detected (INFERENCE)",
@@ -465,7 +465,7 @@
       "javascript_signals": [],
       "link_count": 270,
       "pagination_signal": false,
-      "elapsed_ms": 2191,
+      "elapsed_ms": 2182,
       "error": null
     },
     {
@@ -473,7 +473,7 @@
       "name": "Crafts Council UK Opportunities",
       "canonical_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:26.387Z",
+      "checked_at": "2026-08-24T10:44:32.342Z",
       "status": 403,
       "ok": false,
       "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
@@ -488,7 +488,7 @@
       ],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 738,
+      "elapsed_ms": 932,
       "error": null
     },
     {
@@ -496,7 +496,7 @@
       "name": "Heritage Crafts",
       "canonical_url": "https://heritagecrafts.org.uk/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:26.388Z",
+      "checked_at": "2026-08-24T10:44:32.343Z",
       "status": 200,
       "ok": true,
       "final_url": "https://heritagecrafts.org.uk/",
@@ -509,7 +509,7 @@
       "javascript_signals": [],
       "link_count": 159,
       "pagination_signal": true,
-      "elapsed_ms": 11260,
+      "elapsed_ms": 4877,
       "error": null
     },
     {
@@ -517,7 +517,7 @@
       "name": "ASEF culture360 Opportunities",
       "canonical_url": "https://culture360.asef.org/opportunities/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:26.389Z",
+      "checked_at": "2026-08-24T10:44:32.344Z",
       "status": 200,
       "ok": true,
       "final_url": "https://culture360.asef.org/opportunities/",
@@ -530,7 +530,7 @@
       "javascript_signals": [],
       "link_count": 71,
       "pagination_signal": true,
-      "elapsed_ms": 4806,
+      "elapsed_ms": 5223,
       "error": null
     },
     {
@@ -538,7 +538,7 @@
       "name": "Japan Foundation Programs",
       "canonical_url": "https://www.jpf.go.jp/e/program/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:37.648Z",
+      "checked_at": "2026-08-24T10:44:37.567Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.jpf.go.jp/e/program/",
@@ -551,7 +551,7 @@
       "javascript_signals": [],
       "link_count": 157,
       "pagination_signal": false,
-      "elapsed_ms": 645,
+      "elapsed_ms": 404,
       "error": null
     },
     {
@@ -559,7 +559,7 @@
       "name": "Korea Craft & Design Foundation",
       "canonical_url": "https://www.kcdf.or.kr/main",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:37.650Z",
+      "checked_at": "2026-08-24T10:44:37.569Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.kcdf.or.kr/main",
@@ -572,7 +572,7 @@
       "javascript_signals": [],
       "link_count": 577,
       "pagination_signal": true,
-      "elapsed_ms": 771,
+      "elapsed_ms": 611,
       "error": null
     },
     {
@@ -580,7 +580,7 @@
       "name": "Creative Europe Culture",
       "canonical_url": "https://culture.ec.europa.eu/creative-europe",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:37.651Z",
+      "checked_at": "2026-08-24T10:44:37.570Z",
       "status": 200,
       "ok": true,
       "final_url": "https://culture.ec.europa.eu/creative-europe",
@@ -593,7 +593,7 @@
       "javascript_signals": [],
       "link_count": 46,
       "pagination_signal": true,
-      "elapsed_ms": 1532,
+      "elapsed_ms": 1714,
       "error": null
     },
     {
@@ -601,20 +601,20 @@
       "name": "Res Artis Open Calls",
       "canonical_url": "https://resartis.org/open-calls/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:37.653Z",
+      "checked_at": "2026-08-24T10:44:37.571Z",
       "status": 200,
       "ok": true,
       "final_url": "https://resartis.org/open-calls/",
       "content_type": "text/html; charset=UTF-8",
-      "response_bytes": 559102,
+      "response_bytes": 562404,
       "title": "Open Calls &#8211; Res Artis",
       "page_type": "listing",
       "page_type_basis": "Listing URL/path or repeated links detected (INFERENCE)",
       "javascript_required": false,
       "javascript_signals": [],
-      "link_count": 768,
+      "link_count": 776,
       "pagination_signal": true,
-      "elapsed_ms": 2388,
+      "elapsed_ms": 3124,
       "error": null
     },
     {
@@ -622,7 +622,7 @@
       "name": "TransArtists Open Calls",
       "canonical_url": "https://www.transartists.org/en/open-calls",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:37.653Z",
+      "checked_at": "2026-08-24T10:44:37.572Z",
       "status": 403,
       "ok": false,
       "final_url": "https://www.transartists.org/en/open-calls",
@@ -637,7 +637,7 @@
       ],
       "link_count": 0,
       "pagination_signal": false,
-      "elapsed_ms": 17887,
+      "elapsed_ms": 6160,
       "error": null
     },
     {
@@ -645,7 +645,7 @@
       "name": "Center for Craft",
       "canonical_url": "https://www.centerforcraft.org/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:37.654Z",
+      "checked_at": "2026-08-24T10:44:37.574Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.centerforcraft.org/",
@@ -658,7 +658,7 @@
       "javascript_signals": [],
       "link_count": 50,
       "pagination_signal": true,
-      "elapsed_ms": 6385,
+      "elapsed_ms": 2366,
       "error": null
     },
     {
@@ -666,12 +666,12 @@
       "name": "World Crafts Council International",
       "canonical_url": "https://www.wccinternational.org/",
       "access_mode": "listing",
-      "checked_at": "2026-08-24T09:20:55.540Z",
+      "checked_at": "2026-08-24T10:44:43.732Z",
       "status": 200,
       "ok": true,
       "final_url": "https://www.wccinternational.org/",
       "content_type": "text/html; charset=UTF-8",
-      "response_bytes": 2009053,
+      "response_bytes": 1996882,
       "title": "World Crafts Council International (WCC) — Global Leader in Craft Preservation, Education &amp; Certification",
       "page_type": "listing",
       "page_type_basis": "Listing URL/path or repeated links detected (INFERENCE)",
@@ -679,7 +679,7 @@
       "javascript_signals": [],
       "link_count": 52,
       "pagination_signal": true,
-      "elapsed_ms": 4774,
+      "elapsed_ms": 2361,
       "error": null
     }
   ]

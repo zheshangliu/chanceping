@@ -1,11 +1,11 @@
 {
   "schema_version": "ich-ds1b-sample-run.v1",
-  "ran_at": "2026-08-24T10:05:37.092Z",
+  "ran_at": "2026-08-24T10:32:36.721Z",
   "readonly": true,
   "formal_store_write": false,
   "minimum_samples_per_adapter": 3,
-  "adapter_count": 7,
-  "total_samples": 21,
+  "adapter_count": 10,
+  "total_samples": 30,
   "gate": "pass",
   "runs": [
     {
@@ -14,46 +14,46 @@
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm"
+        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm"
       ],
       "samples": [
         {
-          "candidate_id": "ds1b-ccgp-5c743e90f2ec",
+          "candidate_id": "ds1b-ccgp-eee8da08b2ea",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
-          "title": "陕西省女子监狱陕西女子监狱数智安防设备更新维护招标公告",
-          "organizer": "陕西省女子监狱",
-          "deadline_text": "2026年09月15日 09时30分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+          "title": "秦皇岛市公路养护服务中心秦皇岛市普通干线公路增设技术性监测预警系统项目施工竞争性磋商公告",
+          "organizer": "秦皇岛市公路养护服务中心",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:52",
-          "raw_snapshot_hash": "0e8c6e3c31a65ebe0f0873f84aa7d4989b65d76eeea37b13762d1231b394eade",
+          "published_text": "2026年08月24日 18:24",
+          "raw_snapshot_hash": "72a202a3e3cc283e02e193172fe1b0b9ab88fdc380b7a4f75aa6b169307261f1",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "陕西省女子监狱陕西女子监狱数智安防设备更新维护招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
+              "value": "秦皇岛市公路养护服务中心秦皇岛市普通干线公路增设技术性监测预警系统项目施工竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
               "method": "html_title",
-              "evidence_excerpt": "陕西省女子监狱陕西女子监狱数智安防设备更新维护招标公告",
+              "evidence_excerpt": "秦皇岛市公路养护服务中心秦皇岛市普通干线公路增设技术性监测预警系统项目施工竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "陕西省女子监狱",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
+              "value": "秦皇岛市公路养护服务中心",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 陕西省女子监狱",
+              "evidence_excerpt": "采购单位 秦皇岛市公路养护服务中心",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月15日 09时30分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月15日 09时30分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -70,49 +70,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-780fd4a57bfa",
+          "candidate_id": "ds1b-ccgp-5212fe65c7b4",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
-          "title": "兰州文理学院数智内容生成与交互教学科研平台项目(二次)招标公告",
-          "organizer": "兰州文理学院",
-          "deadline_text": "2026年09月16日 09时00分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+          "title": "赞皇县供销合作社赞皇县2026年中央财政支持农业社会化服务第二批项目竞争性磋商公告",
+          "organizer": "赞皇县供销合作社",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:52",
-          "raw_snapshot_hash": "a9463ecdcc1d84a0e27e07813f9ecf824cd2376e09e9db7d5e7f32c7e671fff1",
+          "published_text": "2026年08月24日 18:24",
+          "raw_snapshot_hash": "17e05cca7720e644dc04150c1df6119c2e9d24f9960a5056ca3f9516b5744e26",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "兰州文理学院数智内容生成与交互教学科研平台项目(二次)招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
+              "value": "赞皇县供销合作社赞皇县2026年中央财政支持农业社会化服务第二批项目竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
               "method": "html_title",
-              "evidence_excerpt": "兰州文理学院数智内容生成与交互教学科研平台项目(二次)招标公告",
+              "evidence_excerpt": "赞皇县供销合作社赞皇县2026年中央财政支持农业社会化服务第二批项目竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "兰州文理学院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
+              "value": "赞皇县供销合作社",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 兰州文理学院",
+              "evidence_excerpt": "采购单位 赞皇县供销合作社",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月16日 09时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月16日 09时00分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -129,46 +129,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-cea1b1dc65e4",
+          "candidate_id": "ds1b-ccgp-052768671dd8",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
-          "title": "哈尔滨市第一专科医院医疗设备采购第一批（一）(四次)招标公告",
-          "organizer": "哈尔滨市第一专科医院",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+          "title": "庆城县农机作业服务队建设项目（二次）招标公告",
+          "organizer": "庆城县农业机械化服务中心",
           "deadline_text": "2026年09月14日 09时00分",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:52",
-          "raw_snapshot_hash": "a136ccf1317d8f3525912c602750e8c223f712c36e3cce5f922664d12c97b839",
+          "published_text": "2026年08月24日 18:22",
+          "raw_snapshot_hash": "bc53a4c1a0ca130d159b918c7e1adb01e6af961139f4224121888f1c9d0a31ee",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "哈尔滨市第一专科医院医疗设备采购第一批（一）(四次)招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
+              "value": "庆城县农机作业服务队建设项目（二次）招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
               "method": "html_title",
-              "evidence_excerpt": "哈尔滨市第一专科医院医疗设备采购第一批（一）(四次)招标公告",
+              "evidence_excerpt": "庆城县农机作业服务队建设项目（二次）招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "哈尔滨市第一专科医院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
+              "value": "庆城县农业机械化服务中心",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 哈尔滨市第一专科医院",
+              "evidence_excerpt": "采购单位 庆城县农业机械化服务中心",
               "confirmed": true
             },
             "deadline_text": {
               "value": "2026年09月14日 09时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
               "method": "structured_text",
               "evidence_excerpt": "于 2026年09月14日 09时00分 （北京时间）前",
               "confirmed": true
@@ -188,10 +188,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
               "confirmed": true
             }
           }
@@ -986,7 +986,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-27 13:48:00",
-          "raw_snapshot_hash": "7bee14fd4b265df2cb64839487ff3327e7b5b830d918f7f1bcdaab7b6c50fe40",
+          "raw_snapshot_hash": "6a48fcdce56d0c2d8d2d20ce8a6b8783a1806e2a416e3d86a1f260a0b7bc306d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1045,7 +1045,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-07 09:15:00",
-          "raw_snapshot_hash": "24bd19a592b498ea07068b31dadc3d1967704357b5b17c8405ebd1e454effd9b",
+          "raw_snapshot_hash": "5a460915f1883ac74996082308fac4a90931243e233fb7ba53b7d21380f11443",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1104,7 +1104,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-13 09:24:00",
-          "raw_snapshot_hash": "a5a167150651ce4c3be9cfc26ea0e1009976dfa553a1affea6407388920520de",
+          "raw_snapshot_hash": "0facf3b45f16eb33d0cde444c9babab1bfb69defabba30da5a46f41eb7436aa3",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1338,6 +1338,579 @@
               "source_url": "https://www.gmfyg.org.cn/event/detail/1263",
               "method": "listing_anchor",
               "evidence_excerpt": "https://www.gmfyg.org.cn/event/detail/1263",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "gz-culture-notices-listing-v1",
+      "source_id": "gz-culture",
+      "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-gz-culture-4eed25d47ff7",
+          "adapter_id": "gz-culture-notices-listing-v1",
+          "source_id": "gz-culture",
+          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+          "title": "广州市文化广电旅游局关于2026年第二批督促旅行社补足旅游质保金及限制平台电子合同使用权限的通知",
+          "organizer": "广州市文化广电旅游局",
+          "deadline_text": null,
+          "geography": "广州市",
+          "category_hint": "policy_funding",
+          "published_text": null,
+          "raw_snapshot_hash": "72679da724badc3f063f03b429ecdee602176218a8b04a8f15b2c59cf45c7e6a",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广州市文化广电旅游局关于2026年第二批督促旅行社补足旅游质保金及限制平台电子合同使用权限的通知",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+              "method": "html_title",
+              "evidence_excerpt": "广州市文化广电旅游局关于2026年第二批督促旅行社补足旅游质保金及限制平台电子合同使用权限的通知",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广州市文化广电旅游局",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：广州市文化广电旅游局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广州市",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gz-culture-6ec0406440a0",
+          "adapter_id": "gz-culture-notices-listing-v1",
+          "source_id": "gz-culture",
+          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+          "title": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
+          "organizer": "广州市文化广电旅游局",
+          "deadline_text": null,
+          "geography": "广州市",
+          "category_hint": "policy_funding",
+          "published_text": null,
+          "raw_snapshot_hash": "4c25f9afb17449cbecc8703b5c8a7542d2592b0abf686c80741a5725473555ff",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+              "method": "html_title",
+              "evidence_excerpt": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广州市文化广电旅游局",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：广州市文化广电旅游局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广州市",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gz-culture-bc0276853842",
+          "adapter_id": "gz-culture-notices-listing-v1",
+          "source_id": "gz-culture",
+          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+          "title": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
+          "organizer": "广州市文化广电旅游局",
+          "deadline_text": "2026年6月30日",
+          "geography": "广州市",
+          "category_hint": "policy_funding",
+          "published_text": null,
+          "raw_snapshot_hash": "82cb550ae7c2cada8c3ede2a4777aa7ea9ae6816a78e87138aa410d8ef5e1096",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+              "method": "html_title",
+              "evidence_excerpt": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广州市文化广电旅游局",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：广州市文化广电旅游局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年6月30日",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+              "method": "structured_text",
+              "evidence_excerpt": "申报项目须为2026年6月30日前",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "广州市",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "cnacs-competition-listing-v1",
+      "source_id": "cnacs",
+      "discovery_url": "https://www.cnacs.net.cn/82/index.html",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://www.cnacs.net.cn/82/202601/7856.html",
+        "https://www.cnacs.net.cn/82/202507/7306.html",
+        "https://www.cnacs.net.cn/82/202507/7297.html"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-cnacs-b4903e7722a6",
+          "adapter_id": "cnacs-competition-listing-v1",
+          "source_id": "cnacs",
+          "discovery_url": "https://www.cnacs.net.cn/82/index.html",
+          "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+          "title": "赏析 | “神话・太行”全国彩色雕塑创作大赛——获奖作品赏析（第一期）_中国工艺美术学会",
+          "organizer": "中国工艺美术学会",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2026-01-16",
+          "raw_snapshot_hash": "2ab9925e3a9b89d9ab42e5403f215afc6cf50a9bc0491b1468d8fbaa1cb8833f",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "赏析 | “神话・太行”全国彩色雕塑创作大赛——获奖作品赏析（第一期）_中国工艺美术学会",
+              "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+              "method": "html_title",
+              "evidence_excerpt": "赏析 | “神话・太行”全国彩色雕塑创作大赛——获奖作品赏析（第一期）_中国工艺美术学会",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "中国工艺美术学会",
+              "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源： 中国工艺美术学会",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.cnacs.net.cn/82/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.cnacs.net.cn/82/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.cnacs.net.cn/82/202601/7856.html",
+              "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.cnacs.net.cn/82/202601/7856.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-cnacs-9492e30fdfd2",
+          "adapter_id": "cnacs-competition-listing-v1",
+          "source_id": "cnacs",
+          "discovery_url": "https://www.cnacs.net.cn/82/index.html",
+          "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+          "title": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第五期）_中国工艺美术学会",
+          "organizer": "中国工艺美术学会",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2025-07-14",
+          "raw_snapshot_hash": "6af9da5b60476dfee182e092e8480f09e6307249451d79b6a04c7e1e8cfbf430",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第五期）_中国工艺美术学会",
+              "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+              "method": "html_title",
+              "evidence_excerpt": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第五期）_中国工艺美术学会",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "中国工艺美术学会",
+              "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源： 中国工艺美术学会",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.cnacs.net.cn/82/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.cnacs.net.cn/82/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.cnacs.net.cn/82/202507/7306.html",
+              "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.cnacs.net.cn/82/202507/7306.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-cnacs-7b1de94d920a",
+          "adapter_id": "cnacs-competition-listing-v1",
+          "source_id": "cnacs",
+          "discovery_url": "https://www.cnacs.net.cn/82/index.html",
+          "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+          "title": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第四期）_中国工艺美术学会",
+          "organizer": "中国工艺美术学会",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2025-07-13",
+          "raw_snapshot_hash": "6dcd1154f10b99822d16e7102e99a01dde337f1399fffc567ac93fe492c73f95",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第四期）_中国工艺美术学会",
+              "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+              "method": "html_title",
+              "evidence_excerpt": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第四期）_中国工艺美术学会",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "中国工艺美术学会",
+              "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源： 中国工艺美术学会",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.cnacs.net.cn/82/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.cnacs.net.cn/82/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.cnacs.net.cn/82/202507/7297.html",
+              "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.cnacs.net.cn/82/202507/7297.html",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "gdmuseum-announcements-listing-v1",
+      "source_id": "gdmuseum",
+      "discovery_url": "https://www.gdmuseum.org.cn/col51/list",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://www.gdmuseum.org.cn/cn/col51/18020",
+        "https://www.gdmuseum.org.cn/cn/col51/18015",
+        "https://www.gdmuseum.org.cn/cn/col51/18013"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-gdmuseum-d0d6cc97ad55",
+          "adapter_id": "gdmuseum-announcements-listing-v1",
+          "source_id": "gdmuseum",
+          "discovery_url": "https://www.gdmuseum.org.cn/col51/list",
+          "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+          "title": "01 2026-07 关于海洋馆、古生物馆暂停开放的公告",
+          "organizer": "广东省博物馆",
+          "deadline_text": null,
+          "geography": "广东省广州市",
+          "category_hint": "exhibition_market",
+          "published_text": "2026年07月01日",
+          "raw_snapshot_hash": "c1ba50ef90986a2143dd9286686e1e777ca5ac5664c822ceb06a625cfbadadc0",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "01 2026-07 关于海洋馆、古生物馆暂停开放的公告",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+              "method": "html_title",
+              "evidence_excerpt": "01 2026-07 关于海洋馆、古生物馆暂停开放的公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东省博物馆",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+              "method": "structured_text",
+              "evidence_excerpt": "广东省博物馆",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省广州市",
+              "source_url": "https://www.gdmuseum.org.cn/col51/list",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "exhibition_market",
+              "source_url": "https://www.gdmuseum.org.cn/col51/list",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gdmuseum.org.cn/cn/col51/18020",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gdmuseum.org.cn/cn/col51/18020",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gdmuseum-82d232d51513",
+          "adapter_id": "gdmuseum-announcements-listing-v1",
+          "source_id": "gdmuseum",
+          "discovery_url": "https://www.gdmuseum.org.cn/col51/list",
+          "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+          "title": "29 2026-06 入选啦！“用画笔定格可爱虫虫”获奖名单公布",
+          "organizer": "广东省博物馆",
+          "deadline_text": null,
+          "geography": "广东省广州市",
+          "category_hint": "exhibition_market",
+          "published_text": "2026年06月29日",
+          "raw_snapshot_hash": "8b8c5c423de8cc8e931205c71df353accb868be79c076d5bf2d1da4398562772",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "29 2026-06 入选啦！“用画笔定格可爱虫虫”获奖名单公布",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+              "method": "html_title",
+              "evidence_excerpt": "29 2026-06 入选啦！“用画笔定格可爱虫虫”获奖名单公布",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东省博物馆",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+              "method": "structured_text",
+              "evidence_excerpt": "广东省博物馆",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省广州市",
+              "source_url": "https://www.gdmuseum.org.cn/col51/list",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "exhibition_market",
+              "source_url": "https://www.gdmuseum.org.cn/col51/list",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gdmuseum.org.cn/cn/col51/18015",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gdmuseum.org.cn/cn/col51/18015",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gdmuseum-500d52696887",
+          "adapter_id": "gdmuseum-announcements-listing-v1",
+          "source_id": "gdmuseum",
+          "discovery_url": "https://www.gdmuseum.org.cn/col51/list",
+          "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+          "title": "26 2026-06 关于2026年暑期延时开放的公告",
+          "organizer": "广东省博物馆",
+          "deadline_text": null,
+          "geography": "广东省广州市",
+          "category_hint": "exhibition_market",
+          "published_text": "2026年06月26日",
+          "raw_snapshot_hash": "16f70341c9f0a8a7209d9a44021e27375e3da867b76124961d29548ce63c2f31",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "26 2026-06 关于2026年暑期延时开放的公告",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+              "method": "html_title",
+              "evidence_excerpt": "26 2026-06 关于2026年暑期延时开放的公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东省博物馆",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+              "method": "structured_text",
+              "evidence_excerpt": "广东省博物馆",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省广州市",
+              "source_url": "https://www.gdmuseum.org.cn/col51/list",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "exhibition_market",
+              "source_url": "https://www.gdmuseum.org.cn/col51/list",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gdmuseum.org.cn/cn/col51/18013",
+              "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gdmuseum.org.cn/cn/col51/18013",
               "confirmed": true
             }
           }

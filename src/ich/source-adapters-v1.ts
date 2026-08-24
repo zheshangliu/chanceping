@@ -65,7 +65,7 @@ function htmlToText(html: string): string {
 
 function titleFromHtml(html: string, fallback: string): { value: string; excerpt: string } {
   const title = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.replace(/\s+/g, " ").trim();
-  const genericSiteTitle = !title || /^(?:中国工艺美术馆 中国非物质文化遗产馆|中国工艺美术馆·中国非物质文化遗产馆)$/u.test(title);
+  const genericSiteTitle = !title || /^(?:中国工艺美术馆 中国非物质文化遗产馆|中国工艺美术馆·中国非物质文化遗产馆|广东省博物馆)$/u.test(title);
   const value = (genericSiteTitle ? fallback : title).replace(/_(?:通知公告|地市新闻|招标公告|中标公告)(?:_.*)?$/u, "").trim();
   return { value, excerpt: value.slice(0, 180) };
 }
@@ -80,7 +80,7 @@ function firstMatch(text: string, patterns: RegExp[]): { value: string; excerpt:
 
 function normalizeUrl(href: string, baseUrl: string): string {
   const url = new URL(href, baseUrl);
-  if (url.protocol === "http:" && ["www.yuexiu.gov.cn", "yuexiu.gov.cn"].includes(url.hostname)) url.protocol = "https:";
+  if (url.protocol === "http:" && ["www.yuexiu.gov.cn", "yuexiu.gov.cn", "wglj.gz.gov.cn"].includes(url.hostname)) url.protocol = "https:";
   url.hash = "";
   return url.toString();
 }
@@ -163,6 +163,9 @@ const mct = requiredSource("mct-notices");
 const cnaf = requiredSource("cnaf");
 const ichina = requiredSource("ichina");
 const gmfyg = requiredSource("gmfyg");
+const gzCulture = requiredSource("gz-culture");
+const cnacs = requiredSource("cnacs");
+const gdMuseum = requiredSource("gdmuseum");
 
 export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   {
@@ -261,6 +264,48 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       organizerPatterns: [/出品方\s+([^\s]{2,40})/u, /主办单位\s*[:：]\s*([^。；;]{2,60})/u, /(中国工艺美术馆[^\s，。；;]{0,20})/u],
       deadlinePatterns: [/(?:活动时间|活动日期)\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u, /活动当日[^。；]{0,40}?(\d{1,2}月\d{1,2}日)/u, /报名[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u],
       publishedPatterns: [/发布(?:时间|日期)\s*[:：]?\s*(\d{4}[-年]\d{1,2}[-月]\d{1,2}(?:日)?)/u],
+    }),
+  },
+  {
+    adapter_id: "gz-culture-notices-listing-v1",
+    source_id: gzCulture.id,
+    discovery_url: "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+    category_hint: "policy_funding",
+    geography_hint: "广州市",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /wglj\.gz\.gov\.cn\/(?:xxgk\/gzdt\/tzgsgg|tzgg\/zbcg)\/content\/post_\d+\.html$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "gz-culture-notices-listing-v1", sourceId: gzCulture.id, categoryHint: "policy_funding", geographyHint: "广州市", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/来源\s*[:：]\s*([^\s]{2,50})/u, /发布单位\s*[:：]\s*([^\s]{2,50})/u, /主办单位\s*[:：]\s*([^\s]{2,50})/u],
+      deadlinePatterns: [/(?:截止|申报截止|报名截止)(?:时间)?\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日(?:\s*\d{1,2}(?:时|:).{0,4})?)/u, /(?:申报|报名|提交)[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)(?:前|截止|止)/u],
+      publishedPatterns: [/(?:发布时间|发布日期)\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+    }),
+  },
+  {
+    adapter_id: "cnacs-competition-listing-v1",
+    source_id: cnacs.id,
+    discovery_url: "https://www.cnacs.net.cn/82/index.html",
+    category_hint: "competition",
+    geography_hint: "全国",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /cnacs\.net\.cn\/82\/\d{6}\/\d+\.html$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "cnacs-competition-listing-v1", sourceId: cnacs.id, categoryHint: "competition", geographyHint: "全国", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/来源\s*[:：]\s*([^\s]{2,50})/u, /(中国工艺美术学会)/u, /主办单位\s*[:：]\s*([^\s]{2,50})/u],
+      deadlinePatterns: [/(?:报名|申报|投稿|提交)[^。；]{0,100}?(\d{4}年\d{1,2}月\d{1,2}日)(?:前|截止|止)/u, /截止(?:时间)?\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/时间\s*[:：]?\s*(\d{4}[-年]\d{1,2}[-月]\d{1,2}(?:日)?)/u],
+    }),
+  },
+  {
+    adapter_id: "gdmuseum-announcements-listing-v1",
+    source_id: gdMuseum.id,
+    discovery_url: "https://www.gdmuseum.org.cn/col51/list",
+    category_hint: "exhibition_market",
+    geography_hint: "广东省广州市",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /gdmuseum\.org\.cn\/cn\/col51\/\d+$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "gdmuseum-announcements-listing-v1", sourceId: gdMuseum.id, categoryHint: "exhibition_market", geographyHint: "广东省广州市", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/(广东省博物馆)/u, /主办单位\s*[:：]\s*([^\s]{2,50})/u],
+      deadlinePatterns: [/(?:截止|开放至|报名)[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u, /至\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/(\d{4}年\d{1,2}月\d{1,2}日)/u],
     }),
   },
 ];

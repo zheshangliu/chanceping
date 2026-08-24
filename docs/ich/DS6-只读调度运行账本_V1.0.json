@@ -129,6 +129,54 @@
         }
       ],
       "gate": "pass"
+    },
+    {
+      "schema_version": "ich-ds6-scheduled-readonly.v1",
+      "run_id": "ich-ds6-20260824104410",
+      "ran_at": "2026-08-24T10:44:10.594Z",
+      "schedule": {
+        "timezone": "Asia/Shanghai",
+        "interval_days": 3,
+        "skip_endpoints": false
+      },
+      "readonly": true,
+      "formal_store_write": false,
+      "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+      "formal_store_unchanged": true,
+      "steps": [
+        {
+          "name": "source-endpoints",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS1-A-来源端点核验记录_V1.0.json\",\n  \"total\": 31,\n  \"status_counts\": {\n    \"200\": 26,\n    \"403\": 2,\n    \"error\": 3\n  },\n  \"page_type_counts\": {\n    \"listing\": 19,\n    \"search\": 4,\n    \"error\": 3,\n    \"unknown\": 1,\n    \"homepage_or_landing\": 2,\n    \"blocked\": 2\n  },\n  \"follow_up_count\": 6,\n  \"gate\": \"pass_with_followups\"\n}\n"
+        },
+        {
+          "name": "ds2-readonly-discovery",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS2-只读发现运行记录_V1.0.json\",\n  \"run_id\": \"ich-ds2-20260824104446\",\n  \"source_count\": 10,\n  \"candidate_count\": 30,\n  \"statuses\": [\n    {\n      \"source_id\": \"ccgp\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gd-culture\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"yuexiu-notices\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"mct-notices\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"cnaf\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"ichina\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gmfyg\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gz-culture\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"cnacs\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    },\n    {\n      \"source_id\": \"gdmuseum\",\n      \"status\": \"completed\",\n      \"candidates\": 3,\n      \"errors\": 0\n    }\n  ],\n  \"readonly\": true,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds3-candidate-quality",
+          "exit_code": 0,
+          "output": "{\n  \"output\": \"docs/ich/DS3-候选质量运行记录_V1.0.json\",\n  \"input_candidate_count\": 30,\n  \"assessment_count\": 30,\n  \"review_required_count\": 29,\n  \"rejected_count\": 1,\n  \"approved_count\": 0,\n  \"formal_store_write\": false,\n  \"gate\": \"pass\"\n}\n"
+        },
+        {
+          "name": "ds4-release-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 60,\n  \"historical\": 52,\n  \"total\": 119,\n  \"categories\": {\n    \"competition\": 16,\n    \"exhibition_market\": 12,\n    \"procurement_project\": 4,\n    \"channel_collaboration\": 7,\n    \"policy_funding\": 9,\n    \"international\": 12\n  },\n  \"level12_ratio\": 0.9916,\n  \"semantic_issue_count\": 0,\n  \"output\": \"docs/ich/DS4-发布候选审计记录_V1.0.json\"\n}\n"
+        },
+        {
+          "name": "ds5-operations-audit",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"sources\": 31,\n  \"current\": 60,\n  \"historical\": 52,\n  \"next_scheduled_run_at\": \"2026-08-27T10:44:10.594Z\",\n  \"formal_store_write\": false\n}\n"
+        },
+        {
+          "name": "ds5-consistency",
+          "exit_code": 0,
+          "output": "{\n  \"gate\": \"pass\",\n  \"current\": 60,\n  \"historical\": 52,\n  \"ds3_assessments\": 30,\n  \"report_clean\": true\n}\n"
+        }
+      ],
+      "gate": "pass"
     }
   ]
 }

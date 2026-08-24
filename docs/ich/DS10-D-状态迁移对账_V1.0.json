@@ -1,0 +1,108 @@
+{
+  "schema_version": "ich-ds10d-status-reconciliation.v1",
+  "stage": "DS10-D",
+  "audited_at": "2026-08-24T10:43:55.746Z",
+  "snapshot_at": "2026-08-24T08:00:00.000Z",
+  "evaluated_at": "2026-08-24T10:41:42.923Z",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "opportunity_reconciliation": {
+    "ds5_snapshot_total": 119,
+    "ds5_snapshot_current": 61,
+    "ds5_snapshot_historical": 51,
+    "computed_snapshot_total": 112,
+    "computed_snapshot_current": 61,
+    "computed_snapshot_historical": 51,
+    "dynamic_current": 60,
+    "dynamic_historical": 52,
+    "current_drift": -1,
+    "historical_drift": 1,
+    "current_delta_from_transitions": -1,
+    "historical_delta_from_transitions": 1,
+    "unexplained_current_drift": 0,
+    "unexplained_historical_drift": 0,
+    "snapshot_status_counts": {
+      "pending_confirmation": 44,
+      "expired": 51,
+      "active": 9,
+      "closing_soon": 8
+    },
+    "dynamic_status_counts": {
+      "pending_confirmation": 44,
+      "expired": 52,
+      "active": 9,
+      "closing_soon": 7
+    },
+    "transitions": [
+      {
+        "id": "ich_auto_20260824_005",
+        "slug": "2026-lhasa-products-jiangsu-promotion-service-selection",
+        "title": "2026年苏拉产业对接暨拉萨产品江苏行活动服务采购比选（二次）",
+        "deadline_at": "2026-08-24T18:00:00+08:00",
+        "from": "closing_soon",
+        "to": "expired"
+      }
+    ]
+  },
+  "source_reconciliation": {
+    "ds5_snapshot_status_counts": {
+      "planned": 31,
+      "discovery_only": 0,
+      "adapter_ready": 0,
+      "disabled": 0
+    },
+    "current_status_counts": {
+      "planned": 24,
+      "adapter_ready": 7,
+      "discovery_only": 0,
+      "disabled": 0
+    },
+    "transitions": [
+      {
+        "source_id": "mct-notices",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      },
+      {
+        "source_id": "ichina",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      },
+      {
+        "source_id": "cnaf",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      },
+      {
+        "source_id": "gmfyg",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      },
+      {
+        "source_id": "gz-culture",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      },
+      {
+        "source_id": "cnacs",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      },
+      {
+        "source_id": "gdmuseum",
+        "from": "planned",
+        "to": "adapter_ready",
+        "reason": "DS10-B passed endpoint, 3-sample, DS2 readonly, DS1C and DS3 publish-blocked gates"
+      }
+    ]
+  },
+  "gate": true
+}

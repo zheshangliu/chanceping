@@ -1,58 +1,60 @@
 {
   "schema_version": "ich-ds1c-candidate-audit.v1",
-  "audited_at": "2026-08-24T10:05:37.356Z",
+  "audited_at": "2026-08-24T10:38:23.664Z",
   "readonly": true,
   "input": "docs/ich/DS1-B-候选样本运行记录_V1.0.json",
-  "total_candidates": 21,
-  "candidate_review_count": 21,
+  "total_candidates": 30,
+  "candidate_review_count": 30,
   "blocked_count": 0,
   "template_contamination_count": 0,
   "duplicate_count": 0,
-  "missing_deadline_count": 12,
-  "unconfirmed_geography_count": 21,
-  "unconfirmed_category_count": 21,
+  "missing_deadline_count": 22,
+  "unconfirmed_geography_count": 30,
+  "unconfirmed_category_count": 30,
   "gate": "pass",
   "items": [
     {
-      "candidate_id": "ds1b-ccgp-5c743e90f2ec",
+      "candidate_id": "ds1b-ccgp-eee8da08b2ea",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193851.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "active",
+      "status_hint": "pending_confirmation",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed"
+        "category_unconfirmed",
+        "deadline_unconfirmed"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-780fd4a57bfa",
+      "candidate_id": "ds1b-ccgp-5212fe65c7b4",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193841.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "active",
+      "status_hint": "pending_confirmation",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed"
+        "category_unconfirmed",
+        "deadline_unconfirmed"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-cea1b1dc65e4",
+      "candidate_id": "ds1b-ccgp-052768671dd8",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193850.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
@@ -370,6 +372,167 @@
       "source_level": "L1",
       "source_role": "primary",
       "source_url": "https://www.gmfyg.org.cn/event/detail/1263",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gz-culture-4eed25d47ff7",
+      "source_id": "gz-culture",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gz-culture-6ec0406440a0",
+      "source_id": "gz-culture",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gz-culture-bc0276853842",
+      "source_id": "gz-culture",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "expired",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-cnacs-b4903e7722a6",
+      "source_id": "cnacs",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-cnacs-9492e30fdfd2",
+      "source_id": "cnacs",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-cnacs-7b1de94d920a",
+      "source_id": "cnacs",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gdmuseum-d0d6cc97ad55",
+      "source_id": "gdmuseum",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gdmuseum-82d232d51513",
+      "source_id": "gdmuseum",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gdmuseum-500d52696887",
+      "source_id": "gdmuseum",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,

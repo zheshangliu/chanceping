@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0",
   "stage": "DS5",
-  "run_id": "ich-ds5-20260824080000",
-  "ran_at": "2026-08-24T08:00:00.000Z",
+  "run_id": "ich-ds5-20260824104410",
+  "ran_at": "2026-08-24T10:44:10.594Z",
   "gate": "pass",
   "operation_mode": "candidate_discovery_and_review",
   "formal_store_write": false,
   "promotion_policy": "仅通过 DS1-D 审批包的条目允许受控晋级；发现、审计和质量分层不得写正式库。",
-  "next_scheduled_run_at": "2026-08-27T08:00:00.000Z",
+  "next_scheduled_run_at": "2026-08-27T10:44:10.594Z",
   "source_registry": {
     "total": 31,
     "scan_frequency_counts": {
@@ -16,9 +16,9 @@
       "weekly": 2
     },
     "operational_status_counts": {
-      "planned": 31,
+      "planned": 24,
       "discovery_only": 0,
-      "adapter_ready": 0,
+      "adapter_ready": 7,
       "disabled": 0
     },
     "query_packs": 5
@@ -26,17 +26,17 @@
   "upstream_runs": {
     "ds4_gate": "pass",
     "ds2_gate": "pass",
-    "ds2_candidate_count": 9,
+    "ds2_candidate_count": 30,
     "ds3_gate": "pass",
-    "ds3_assessments": 9,
-    "ds3_review_required": 8,
+    "ds3_assessments": 30,
+    "ds3_review_required": 29,
     "ds3_rejected": 1
   },
   "formal_store_snapshot": {
     "sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
     "total": 119,
-    "current": 61,
-    "historical": 51,
+    "current": 60,
+    "historical": 52,
     "level12_ratio": 0.9916
   },
   "errors": []

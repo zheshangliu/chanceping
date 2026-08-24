@@ -1,0 +1,104 @@
+{
+  "schema_version": "ich-ds10b-source-promotion-audit.v1",
+  "stage": "DS10-B",
+  "audited_at": "2026-08-24T10:39:00.985Z",
+  "source_count": 3,
+  "source_ids": [
+    "gz-culture",
+    "cnacs",
+    "gdmuseum"
+  ],
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "upstream_gates": {
+    "ds1b": "pass",
+    "ds1c": "pass",
+    "ds2": "pass",
+    "ds3": "pass"
+  },
+  "global_safety_checks": {
+    "ds1b_formal_store_write": false,
+    "ds1c_template_contamination": 0,
+    "ds1c_duplicates": 0,
+    "ds2_formal_store_write": false,
+    "ds3_formal_store_write": false,
+    "ds3_approved_count": 0,
+    "store_hash_matches_ds2": true,
+    "store_hash_matches_ds3": true
+  },
+  "sources": [
+    {
+      "source_id": "gz-culture",
+      "adapter_id": "gz-culture-notices-listing-v1",
+      "operational_status": "adapter_ready",
+      "checks": {
+        "registry_adapter_ready": true,
+        "adapter_registered": true,
+        "sample_run_present": true,
+        "sample_minimum_met": true,
+        "sample_run_clean": true,
+        "readonly_discovery_completed": true,
+        "readonly_candidates_minimum_met": true,
+        "candidate_audit_present": true,
+        "candidate_audit_blocked_or_reviewed": true,
+        "ds3_present": true,
+        "ds3_publish_blocked": true
+      },
+      "sample_count": 3,
+      "readonly_candidate_count": 3,
+      "candidate_review_count": 3,
+      "candidate_blocked_count": 0,
+      "ds3_review_or_rejected_count": 3
+    },
+    {
+      "source_id": "cnacs",
+      "adapter_id": "cnacs-competition-listing-v1",
+      "operational_status": "adapter_ready",
+      "checks": {
+        "registry_adapter_ready": true,
+        "adapter_registered": true,
+        "sample_run_present": true,
+        "sample_minimum_met": true,
+        "sample_run_clean": true,
+        "readonly_discovery_completed": true,
+        "readonly_candidates_minimum_met": true,
+        "candidate_audit_present": true,
+        "candidate_audit_blocked_or_reviewed": true,
+        "ds3_present": true,
+        "ds3_publish_blocked": true
+      },
+      "sample_count": 3,
+      "readonly_candidate_count": 3,
+      "candidate_review_count": 3,
+      "candidate_blocked_count": 0,
+      "ds3_review_or_rejected_count": 3
+    },
+    {
+      "source_id": "gdmuseum",
+      "adapter_id": "gdmuseum-announcements-listing-v1",
+      "operational_status": "adapter_ready",
+      "checks": {
+        "registry_adapter_ready": true,
+        "adapter_registered": true,
+        "sample_run_present": true,
+        "sample_minimum_met": true,
+        "sample_run_clean": true,
+        "readonly_discovery_completed": true,
+        "readonly_candidates_minimum_met": true,
+        "candidate_audit_present": true,
+        "candidate_audit_blocked_or_reviewed": true,
+        "ds3_present": true,
+        "ds3_publish_blocked": true
+      },
+      "sample_count": 3,
+      "readonly_candidate_count": 3,
+      "candidate_review_count": 3,
+      "candidate_blocked_count": 0,
+      "ds3_review_or_rejected_count": 3
+    }
+  ],
+  "promotion_decision": "adapter_ready_with_formal_publish_blocked",
+  "gate": "pass_with_followups"
+}

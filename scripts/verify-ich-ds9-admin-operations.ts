@@ -37,6 +37,8 @@ async function main(): Promise<void> {
   check("operations endpoint is available to authenticated admin", response.status === 200 && body.schema_version === "ich-operations-dashboard.v1");
   check("formal store metrics are dynamic and non-empty", body.formal_store.total >= 35 && typeof body.formal_store.current === "number");
   check("source registry and DS7 workflow metrics are exposed", body.source_registry.total >= 20 && body.source_workflows.total >= 10 && Object.keys(body.source_workflows.category_coverage).length === 6);
+  check("DS10-C source health metrics are exposed", body.source_health?.items?.length === body.source_registry.total && typeof body.source_health.summary.collection_success_rate === "number" && typeof body.source_health.summary.field_missing_rate === "number" && typeof body.source_health.summary.duplicate_rate === "number");
+  check("DS10-C source health rows include action and endpoint fields", body.source_health.items.every((item: any) => "http_status" in item && "last_successful_collection" in item && "candidate_count" in item && "action_required" in item));
   check("DS6 cadence is read-only and three-day based", body.ds6_schedule.interval_days === 3 && body.ds6_schedule.run_mode === "readonly" && body.ds6_schedule.formal_store_write === false);
   check("DS8 lifecycle gate and stale queue are visible", ["pass", "pass_with_followups"].includes(body.ds8_lifecycle.gate) && typeof body.ds8_lifecycle.stale_recheck === "number");
   check("DS5 snapshot drift is explicit", typeof body.ds5_snapshot.current_drift === "number" && typeof body.ds5_snapshot.dynamic_current === "number");
@@ -46,7 +48,7 @@ async function main(): Promise<void> {
   const pageResponse = await page.request("/ich/admin");
   const html = await pageResponse.text();
   check("admin page is no-store and noindex", pageResponse.headers.get("cache-control") === "no-store" && html.includes('name="robots" content="noindex,nofollow"'));
-  check("admin page renders DS9 operations panel and endpoint", html.includes("数据源与运行状态") && html.includes('api("/operations")') && html.includes("formal_store"));
+  check("admin page renders DS9 operations panel and endpoint", html.includes("数据源与运行状态") && html.includes("来源健康与采集质量") && html.includes('api("/operations")') && html.includes("formal_store"));
   check("admin page does not embed credentials", !html.includes(token) && !html.includes("CHANCEPING_ICH_ADMIN_TOKEN"));
 
   process.env.CHANCEPING_ICH_ADMIN_TOKEN = token;
