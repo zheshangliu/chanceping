@@ -1,0 +1,24 @@
+{
+  "schema_version": "ich-ds8-lifecycle-audit.v1",
+  "stage": "DS8",
+  "audited_at": "2026-08-24T08:00:00.000Z",
+  "gate": "pass_with_followups",
+  "formal_store": {
+    "sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+    "total": 119
+  },
+  "status_counts": {
+    "expired": 56,
+    "pending_confirmation": 46,
+    "active": 9,
+    "closing_soon": 8
+  },
+  "stale_recheck_count": 114,
+  "published_primary_url_duplicate_groups": [],
+  "batch_policy": {
+    "max_batch_size": 10,
+    "requires_approved_workflow": true,
+    "formal_store_write": false
+  },
+  "errors": []
+}

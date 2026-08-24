@@ -1,0 +1,22 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { evaluateControlledBatch } from "../src/ich/controlled-batch-publisher-v1";
+import { IchOpportunityStore } from "../src/ich/store";
+
+const audit = JSON.parse(fs.readFileSync(path.resolve("docs/ich/DS8-生命周期审计记录_V1.0.json"), "utf8")) as { gate: string; published_primary_url_duplicate_groups: unknown[]; batch_policy: { max_batch_size: number; formal_store_write: boolean }; errors: string[] };
+assert(["pass", "pass_with_followups"].includes(audit.gate));
+assert.equal(audit.published_primary_url_duplicate_groups.length, 0);
+assert.equal(audit.batch_policy.max_batch_size, 10);
+assert.equal(audit.batch_policy.formal_store_write, false);
+assert.equal(audit.errors.length, 0);
+const store = new IchOpportunityStore(path.resolve("data/ich-opportunities.json"));
+const existing = store.list();
+const published = existing.find((entry) => entry.is_published)!;
+const blockedPublished = evaluateControlledBatch([published], existing, new Date("2026-08-24T16:00:00+08:00"))[0]!;
+assert.equal(blockedPublished.decision, "blocked");
+assert(blockedPublished.reasons.some((reason) => reason.includes("already published") || reason.includes("workflow")));
+const oversized = evaluateControlledBatch(Array.from({ length: 11 }, () => published), existing, new Date("2026-08-24T16:00:00+08:00"));
+assert(oversized.every((decision) => decision.decision === "blocked"));
+assert(oversized.every((decision) => decision.reasons.some((reason) => reason.includes("max 10"))));
+console.log(JSON.stringify({ gate: "pass", duplicate_groups: 0, max_batch_size: 10, unsafe_publish_blocked: true, oversized_batch_blocked: true, formal_store_write: false }, null, 2));
