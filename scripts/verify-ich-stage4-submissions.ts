@@ -7,6 +7,11 @@ import { ichSubmissionRoutes } from "../src/api/routes/ich-submissions";
 import { internalIchSubmissionRoutes } from "../src/api/routes/internal-ich-submissions";
 import { publicIchRoutes } from "../src/api/routes/public-ich";
 import { IchPublicationService } from "../src/ich/publication-service";
+import {
+  defaultIchSubmissionRuntimeDir,
+  defaultIchSubmissionStorePath,
+  defaultIchSubmissionTransactionPath,
+} from "../src/ich/submission-runtime";
 import { IchSubmissionAcceptanceService } from "../src/ich/submission-service";
 import { IchSubmissionStore } from "../src/ich/submission-store";
 import { IchOpportunityStore } from "../src/ich/store";
@@ -77,6 +82,27 @@ async function submit(url: string, userAgent = "stage4-test"): Promise<Response>
 
 async function main(): Promise<void> {
   console.log("\n[ICH Stage 4B] Safe source submission and review queue\n");
+
+  const originalNodeEnv = process.env.NODE_ENV;
+  const originalRuntimeDir = process.env.CHANCEPING_ICH_RUNTIME_DIR;
+  const originalStorePath = process.env.CHANCEPING_ICH_SUBMISSION_STORE_PATH;
+  const originalTransactionPath = process.env.CHANCEPING_ICH_SUBMISSION_TRANSACTION_PATH;
+  delete process.env.CHANCEPING_ICH_RUNTIME_DIR;
+  delete process.env.CHANCEPING_ICH_SUBMISSION_STORE_PATH;
+  delete process.env.CHANCEPING_ICH_SUBMISSION_TRANSACTION_PATH;
+  process.env.NODE_ENV = "production";
+  check("production submissions default to persistent runtime storage",
+    defaultIchSubmissionRuntimeDir() === "/var/lib/chanceping/ich" &&
+    defaultIchSubmissionStorePath() === "/var/lib/chanceping/ich/ich-source-submissions.json" &&
+    defaultIchSubmissionTransactionPath() === "/var/lib/chanceping/ich/ich-submission-accept.transaction.json");
+  process.env.CHANCEPING_ICH_RUNTIME_DIR = root;
+  check("submission runtime directory remains configurable",
+    defaultIchSubmissionStorePath() === path.join(root, "ich-source-submissions.json") &&
+    defaultIchSubmissionTransactionPath() === path.join(root, "ich-submission-accept.transaction.json"));
+  if (originalNodeEnv === undefined) delete process.env.NODE_ENV; else process.env.NODE_ENV = originalNodeEnv;
+  if (originalRuntimeDir === undefined) delete process.env.CHANCEPING_ICH_RUNTIME_DIR; else process.env.CHANCEPING_ICH_RUNTIME_DIR = originalRuntimeDir;
+  if (originalStorePath === undefined) delete process.env.CHANCEPING_ICH_SUBMISSION_STORE_PATH; else process.env.CHANCEPING_ICH_SUBMISSION_STORE_PATH = originalStorePath;
+  if (originalTransactionPath === undefined) delete process.env.CHANCEPING_ICH_SUBMISSION_TRANSACTION_PATH; else process.env.CHANCEPING_ICH_SUBMISSION_TRANSACTION_PATH = originalTransactionPath;
 
   const disabled = new Hono().route("/api/public/ich", ichSubmissionRoutes({
     store: new IchSubmissionStore(path.join(root, "disabled.json")),
@@ -212,6 +238,12 @@ async function main(): Promise<void> {
     (await import("../src/api/routes/ich-admin-pages")).ichAdminPagesRoutes()).request("/ich/admin")).text();
   check("admin UI exposes submission review controls", adminPage.includes("来源提交队列") &&
     adminPage.includes("接受并转草稿") && adminPage.includes("/submissions/"));
+
+  const submitPage = await (await new Hono().route("/ich", ichPagesRoutes({ store: opportunityStore, now }))
+    .request("/ich/submit")).text();
+  check("submit UI prevents duplicate clicks and surfaces safe API messages",
+    submitPage.includes("button.disabled=true") && submitPage.includes("body.error?.message") &&
+    submitPage.includes("来源已进入人工审核队列"));
 
   console.log(`\nICH Stage 4B result: ${passed} passed, ${failed} failed\n`);
   if (failed > 0) process.exit(1);

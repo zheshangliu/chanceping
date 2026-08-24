@@ -1,6 +1,6 @@
 import crypto from "crypto";
-import path from "path";
 import { Hono, type Context } from "hono";
+import { defaultIchSubmissionStorePath } from "../../ich/submission-runtime";
 import { IchSubmissionError, IchSubmissionService } from "../../ich/submission-service";
 import { IchSubmissionStore } from "../../ich/submission-store";
 
@@ -15,10 +15,7 @@ export interface IchSubmissionRouteOptions {
 }
 
 export function defaultIchSubmissionStore(): IchSubmissionStore {
-  return new IchSubmissionStore(
-    process.env.CHANCEPING_ICH_SUBMISSION_STORE_PATH ||
-      path.resolve(process.cwd(), "data/ich-source-submissions.json"),
-  );
+  return new IchSubmissionStore(defaultIchSubmissionStorePath());
 }
 
 function fixedResponse(c: Context, code: string, message: string, status: 400 | 413 | 429 | 503) {

@@ -94,8 +94,10 @@ interface IchSourceSubmission {
 }
 ```
 
-存储文件建议为 `data/ich-source-submissions.json`，与
-`data/ich-opportunities.json` 隔离。写入沿用临时文件、fsync、rename 和备份策略。
+本地开发存储文件默认为 `data/ich-source-submissions.json`；生产环境默认使用
+`/var/lib/chanceping/ich/ich-source-submissions.json`，避免 release 切换导致审核队列丢失。
+可通过 `CHANCEPING_ICH_RUNTIME_DIR` 或更具体的 store/transaction 路径变量覆盖。
+来源提交仍与 `data/ich-opportunities.json` 隔离，写入沿用临时文件、fsync、rename 和备份策略。
 
 公开 API 永不返回：
 

@@ -1,7 +1,7 @@
 import crypto from "crypto";
-import path from "path";
 import { Hono, type Context } from "hono";
 import { IchPublicationError } from "../../ich/publication-service";
+import { defaultIchSubmissionTransactionPath } from "../../ich/submission-runtime";
 import {
   IchSubmissionAcceptanceService,
   IchSubmissionError,
@@ -57,9 +57,7 @@ export function internalIchSubmissionRoutes(options: IchInternalSubmissionRouteO
   const acceptance = new IchSubmissionAcceptanceService(
     submissionStore,
     opportunityStore,
-    options.transactionPath ??
-      process.env.CHANCEPING_ICH_SUBMISSION_TRANSACTION_PATH ??
-      path.resolve(process.cwd(), "data/ich-submission-accept.transaction.json"),
+    options.transactionPath ?? defaultIchSubmissionTransactionPath(),
   );
   const expectedToken = options.adminToken ?? process.env.CHANCEPING_ICH_ADMIN_TOKEN ?? "";
   const now = options.now ?? (() => new Date());
