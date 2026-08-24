@@ -1,0 +1,11 @@
+[Unit]
+Description=Run ChancePing ICH DS6 readonly audit every 72 hours
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=72h
+Persistent=true
+Unit=chanceping-ich-ds6.service
+
+[Install]
+WantedBy=timers.target

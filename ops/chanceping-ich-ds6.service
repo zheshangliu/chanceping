@@ -1,0 +1,14 @@
+[Unit]
+Description=ChancePing ICH DS6 readonly source and lifecycle audit
+After=network-online.target chanceping.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/chanceping/current
+EnvironmentFile=-/etc/chanceping/chanceping.env
+Environment=CHANCEPING_ICH_STORE_PATH=/opt/chanceping/current/data/ich-opportunities.json
+ExecStart=/usr/bin/npm run ich:ds6:run-once
+TimeoutStartSec=30min
+User=root
+Group=root
