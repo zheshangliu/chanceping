@@ -6,6 +6,7 @@ import type {
 } from "./types";
 import { IchOpportunityStore } from "./store";
 import { validateIchOpportunity } from "./validation";
+import { findIchSemanticIssues } from "./semantic-validation";
 
 export class IchPublicationError extends Error {
   constructor(
@@ -119,6 +120,10 @@ export class IchPublicationService {
     });
     const result = validateIchOpportunity(created);
     if (!result.valid) throw new IchPublicationError("VALIDATION_FAILED", "候选机会校验失败", result.errors);
+    const semanticIssues = findIchSemanticIssues(created, entries);
+    if (semanticIssues.length > 0) {
+      throw new IchPublicationError("VALIDATION_FAILED", "候选机会包含与来源不匹配的重复字段", semanticIssues.map((issue) => `${issue.field}: ${issue.reason}`));
+    }
     this.store.replaceAll([...entries, created], now);
     return clone(created);
   }
@@ -211,6 +216,10 @@ export class IchPublicationService {
     const result = validateIchOpportunity(next);
     if (!result.valid) throw new IchPublicationError("VALIDATION_FAILED", "机会校验失败", result.errors);
     const entries = this.store.list();
+    const semanticIssues = findIchSemanticIssues(next, entries.filter((entry) => entry.id !== next.id));
+    if (semanticIssues.length > 0) {
+      throw new IchPublicationError("VALIDATION_FAILED", "机会包含与来源不匹配的重复字段", semanticIssues.map((issue) => `${issue.field}: ${issue.reason}`));
+    }
     const index = entries.findIndex((entry) => entry.id === current.id);
     if (index < 0) throw new IchPublicationError("CONFLICT", "机会在写入前已不存在");
     entries[index] = next;

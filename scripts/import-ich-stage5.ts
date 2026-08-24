@@ -10,6 +10,7 @@ import {
   type IchPrimaryCategory,
 } from "../src/ich/types";
 import { validateIchOpportunity, validateIchOpportunityFile } from "../src/ich/validation";
+import { findIchSemanticIssues } from "../src/ich/semantic-validation";
 
 interface Options {
   input: string;
@@ -136,6 +137,12 @@ function main(): void {
     if (!validation.valid) {
       invalid += 1;
       errors.push(`candidate[${index}] ${candidate.slug || "(no slug)"}: ${validation.errors.join("; ")}`);
+      continue;
+    }
+    const semanticIssues = findIchSemanticIssues(candidate, merged);
+    if (semanticIssues.length > 0) {
+      invalid += 1;
+      errors.push(`candidate[${index}] ${candidate.slug || "(no slug)"}: ${semanticIssues.map((issue) => `${issue.field}: ${issue.reason}`).join("; ")}`);
       continue;
     }
     const sameIndex = merged.findIndex((entry) => entry.id === candidate.id || entry.slug === candidate.slug);
