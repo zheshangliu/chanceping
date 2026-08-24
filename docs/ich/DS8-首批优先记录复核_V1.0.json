@@ -1,0 +1,212 @@
+{
+  "schema_version": "ich-ds8-priority-recheck.v1",
+  "stage": "DS8-R1",
+  "audited_at": "2026-08-24T09:18:11.532Z",
+  "formal_store_write": false,
+  "formal_store_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "selected_count": 10,
+  "accessible_count": 7,
+  "duplicate_count": 0,
+  "results": [
+    {
+      "id": "ich_auto_20260824_005",
+      "slug": "2026-lhasa-products-jiangsu-promotion-service-selection",
+      "title": "2026年苏拉产业对接暨拉萨产品江苏行活动服务采购比选（二次）",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+      "slug": "2026-guangdong-cultural-tourism-subsidy-platform-selection",
+      "title": "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "location",
+        "eligibility"
+      ],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_stage5_001",
+      "slug": "2026-quanzhou-traditional-building-woodcarving-skills-competition",
+      "title": "2026年泉州市传统建筑木雕技能竞赛",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://www.quanzhou.gov.cn/zfb/xxgk/zfxxgkzl/ztzl/qzsczjtgylhs/xxgk/202607/t20260715_3309414.htm",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 404,
+        "final_url": "https://www.quanzhou.gov.cn/zfb/xxgk/zfxxgkzl/ztzl/qzsczjtgylhs/xxgk/202607/t20260715_3309414.htm",
+        "accessible": false,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "location"
+      ],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_auto_20260824_006",
+      "slug": "2026-zibo-landmark-products-promotion-invitation",
+      "title": "2026“国货新字号·消费新趋势”地标名品推介会参展征集",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_expansion_batch_01_019",
+      "slug": "expansion-batch-01-019",
+      "title": "British Council Cultural Protection Fund 2026",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://cultural-protection-fund.britishcouncil.org/2026-funding-round",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 403,
+        "final_url": "https://cultural-protection-fund.britishcouncil.org/2026-funding-round",
+        "accessible": false,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_auto_20260824_008",
+      "slug": "2026-heluo-feihua-digital-ich-showcase-procurement",
+      "title": "“河洛飞花·数说非遗”2026国家级文化生态保护（实验）区展示交流活动项目",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_stage5_006",
+      "slug": "2026-yaozhou-porcelain-creative-competition",
+      "title": "2026中国耀州瓷创意大赛",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "location"
+      ],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_expansion_batch_01_003",
+      "slug": "expansion-batch-01-003",
+      "title": "2026第九届金茶花国际文创设计大赛",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_expansion_batch_03_013",
+      "slug": "expansion-batch-03-013",
+      "title": "2026北京国际设计周非遗设计单元征集",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://www.bjdw.org/",
+      "primary_level": "L1",
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.bjdw.org/",
+        "accessible": true,
+        "error": null
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "formal_store_write": false
+    },
+    {
+      "id": "ich_expansion_batch_03_048",
+      "slug": "expansion-batch-03-048",
+      "title": "全国农业展览馆博物馆展厅服务采购意向",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_url": "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=df834c3f-0cef-45f0-a436-efbaa09ee5bc",
+      "primary_level": "L1",
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "error": "TypeError: fetch failed"
+      },
+      "duplicate_slugs": [],
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "formal_store_write": false
+    }
+  ]
+}
