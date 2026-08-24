@@ -1,23 +1,23 @@
 {
   "schema_version": "ich-ds9-admin-operations-audit.v1",
   "stage": "DS9",
-  "audited_at": "2026-08-24T09:46:39.048Z",
+  "audited_at": "2026-08-24T10:15:06.856Z",
   "gate": "pass",
   "formal_store_write": false,
   "dashboard": {
     "schema_version": "ich-operations-dashboard.v1",
-    "generated_at": "2026-08-24T09:46:39.048Z",
+    "generated_at": "2026-08-24T10:15:06.856Z",
     "formal_store": {
       "total": 119,
       "published": 112,
-      "current": 61,
-      "historical": 51,
+      "current": 60,
+      "historical": 52,
       "withdrawn": 0,
       "status_counts": {
         "pending_confirmation": 44,
-        "expired": 51,
+        "expired": 52,
         "active": 9,
-        "closing_soon": 8
+        "closing_soon": 7
       },
       "stale_recheck": 107
     },
@@ -25,35 +25,35 @@
       "ran_at": "2026-08-24T08:00:00.000Z",
       "snapshot_current": 61,
       "snapshot_historical": 51,
-      "dynamic_current": 61,
-      "dynamic_historical": 51,
-      "current_drift": 0,
-      "historical_drift": 0
+      "dynamic_current": 60,
+      "dynamic_historical": 52,
+      "current_drift": -1,
+      "historical_drift": 1
     },
     "source_registry": {
       "total": 31,
       "query_packs": 5,
       "status_counts": {
-        "planned": 29,
-        "adapter_ready": 2,
+        "planned": 27,
+        "adapter_ready": 4,
         "discovery_only": 0,
         "disabled": 0
       },
       "primary_detail_page_required": true
     },
     "source_workflows": {
-      "total": 13,
-      "adapters": 5,
-      "manual": 8,
-      "greater_bay_area": 7,
-      "international": 2,
+      "total": 31,
+      "adapters": 7,
+      "manual": 24,
+      "greater_bay_area": 11,
+      "international": 12,
       "category_coverage": {
-        "competition": 7,
-        "exhibition_market": 6,
-        "procurement_project": 8,
-        "channel_collaboration": 8,
-        "policy_funding": 6,
-        "international": 5
+        "competition": 17,
+        "exhibition_market": 16,
+        "procurement_project": 10,
+        "channel_collaboration": 20,
+        "policy_funding": 14,
+        "international": 17
       }
     },
     "ds6_schedule": {

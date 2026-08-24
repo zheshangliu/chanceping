@@ -1,7 +1,7 @@
 {
   "schema_version": "ich-planned-source-audit.v1",
   "stage": "SRC-R0",
-  "audited_at": "2026-08-24T10:05:47.835Z",
+  "audited_at": "2026-08-24T10:14:46.163Z",
   "formal_store_write": false,
   "planned_total": 27,
   "recommendation_counts": {

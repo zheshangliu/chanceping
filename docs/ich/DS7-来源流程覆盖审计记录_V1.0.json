@@ -1,20 +1,20 @@
 {
   "schema_version": "ich-ds7-source-coverage.v1",
   "stage": "DS7",
-  "audited_at": "2026-08-24T10:05:47.389Z",
+  "audited_at": "2026-08-24T10:14:46.227Z",
   "gate": "pass",
-  "workflow_count": 15,
+  "workflow_count": 31,
   "adapter_count": 7,
-  "manual_workflow_count": 8,
-  "gba_workflow_count": 7,
-  "international_workflow_count": 2,
+  "manual_workflow_count": 24,
+  "gba_workflow_count": 11,
+  "international_workflow_count": 12,
   "category_coverage": {
-    "competition": 9,
-    "exhibition_market": 8,
-    "procurement_project": 8,
-    "channel_collaboration": 9,
-    "policy_funding": 7,
-    "international": 6
+    "competition": 17,
+    "exhibition_market": 16,
+    "procurement_project": 10,
+    "channel_collaboration": 20,
+    "policy_funding": 14,
+    "international": 17
   },
   "formal_store_write": false,
   "errors": [],
@@ -512,6 +512,552 @@
         "international"
       ],
       "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-shenzhen-public-resources",
+      "source_id": "sz-ggzy",
+      "mode": "manual",
+      "discovery_url": "https://www.szggzy.com/",
+      "categories": [
+        "procurement_project",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "greater_bay_area"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-shenzhen-culture",
+      "source_id": "sz-culture",
+      "mode": "manual",
+      "discovery_url": "https://wtl.sz.gov.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "greater_bay_area"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-china-ich-association",
+      "source_id": "chinaich",
+      "mode": "manual",
+      "discovery_url": "https://www.chinaich.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "policy_funding"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-cnacs",
+      "source_id": "cnacs",
+      "mode": "manual",
+      "discovery_url": "https://www.cnacs.net.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "nationwide",
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-cnaca",
+      "source_id": "cnaca",
+      "mode": "manual",
+      "discovery_url": "https://www.cnaca.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-gd-museum-art",
+      "source_id": "gdmoa",
+      "mode": "manual",
+      "discovery_url": "https://www.gdmoa.org/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "competition"
+      ],
+      "geography": [
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-guangzhou-museum",
+      "source_id": "gz-museum",
+      "mode": "manual",
+      "discovery_url": "https://www.guangzhoumuseum.cn/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "procurement_project"
+      ],
+      "geography": [
+        "guangzhou",
+        "greater_bay_area"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-asef-culture360",
+      "source_id": "asef-culture360",
+      "mode": "manual",
+      "discovery_url": "https://culture360.asef.org/opportunities/",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-japan-foundation",
+      "source_id": "japan-foundation",
+      "mode": "manual",
+      "discovery_url": "https://www.jpf.go.jp/e/program/",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-kcdf",
+      "source_id": "kcdf",
+      "mode": "manual",
+      "discovery_url": "https://www.kcdf.or.kr/main",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-creative-europe",
+      "source_id": "creative-europe",
+      "mode": "manual",
+      "discovery_url": "https://culture.ec.europa.eu/creative-europe",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-res-artis",
+      "source_id": "res-artis",
+      "mode": "manual",
+      "discovery_url": "https://resartis.org/open-calls/",
+      "categories": [
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-transartists",
+      "source_id": "transartists",
+      "mode": "manual",
+      "discovery_url": "https://www.transartists.org/en/open-calls",
+      "categories": [
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-heritage-crafts",
+      "source_id": "heritage-crafts",
+      "mode": "manual",
+      "discovery_url": "https://heritagecrafts.org.uk/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-center-for-craft",
+      "source_id": "center-for-craft",
+      "mode": "manual",
+      "discovery_url": "https://www.centerforcraft.org/",
+      "categories": [
+        "competition",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-wcc-international",
+      "source_id": "wcc-international",
+      "mode": "manual",
+      "discovery_url": "https://www.wccinternational.org/",
+      "categories": [
+        "international",
+        "exhibition_market",
+        "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
       "status": "ready",
       "candidate_contract": [
         "具体详情页 URL",
