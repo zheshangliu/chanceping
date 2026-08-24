@@ -1,17 +1,17 @@
 # DS7 来源流程覆盖审计报告 V1.0
 
 - 门禁：**pass**
-- 来源流程：14（适配器 6，人工流程 8）
+- 来源流程：15（适配器 7，人工流程 8）
 - 广州/广东/大湾区流程：7
 - 国际流程：2
 - 正式库写入：**false**
 
 ## 六类覆盖
 
-- competition: 8
-- exhibition_market: 7
+- competition: 9
+- exhibition_market: 8
 - procurement_project: 8
-- channel_collaboration: 8
+- channel_collaboration: 9
 - policy_funding: 7
 - international: 6
 

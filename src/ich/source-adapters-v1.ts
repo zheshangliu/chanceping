@@ -51,6 +51,8 @@ function htmlToText(html: string): string {
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
+    .replace(/&#x([0-9a-f]+);/gi, (_match, value: string) => String.fromCodePoint(Number.parseInt(value, 16)))
+    .replace(/&#(\d+);/gu, (_match, value: string) => String.fromCodePoint(Number.parseInt(value, 10)))
     .replace(/&nbsp;|&#160;/gi, " ")
     .replace(/&quot;/gi, '"')
     .replace(/&amp;/gi, "&")
@@ -63,7 +65,8 @@ function htmlToText(html: string): string {
 
 function titleFromHtml(html: string, fallback: string): { value: string; excerpt: string } {
   const title = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.replace(/\s+/g, " ").trim();
-  const value = (title || fallback).replace(/_(?:通知公告|地市新闻|招标公告|中标公告)(?:_.*)?$/u, "").trim();
+  const genericSiteTitle = !title || /^(?:中国工艺美术馆 中国非物质文化遗产馆|中国工艺美术馆·中国非物质文化遗产馆)$/u.test(title);
+  const value = (genericSiteTitle ? fallback : title).replace(/_(?:通知公告|地市新闻|招标公告|中标公告)(?:_.*)?$/u, "").trim();
   return { value, excerpt: value.slice(0, 180) };
 }
 
@@ -159,6 +162,7 @@ const yuexiu = requiredSource("yuexiu-notices");
 const mct = requiredSource("mct-notices");
 const cnaf = requiredSource("cnaf");
 const ichina = requiredSource("ichina");
+const gmfyg = requiredSource("gmfyg");
 
 export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   {
@@ -243,6 +247,20 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       organizerPatterns: [/来源\s*[:：]\s*([^\s]{2,40})/u, /主办\s*[:：]\s*([^\n]{2,60})/u],
       deadlinePatterns: [/公示时间\s*[:：]\s*(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}日)/u, /(?:申报|报名|提交)[^。；]{0,100}?(\d{4}年\d{1,2}月\d{1,2}日)/u, /截至\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
       publishedPatterns: [/创建时间\s*[:：]\s*(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{2}:\d{2})/u],
+    }),
+  },
+  {
+    adapter_id: "gmfyg-events-listing-v1",
+    source_id: gmfyg.id,
+    discovery_url: "https://www.gmfyg.org.cn/event",
+    category_hint: "exhibition_market",
+    geography_hint: "北京市朝阳区",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /gmfyg\.org\.cn\/event\/detail\/\d+$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "gmfyg-events-listing-v1", sourceId: gmfyg.id, categoryHint: "exhibition_market", geographyHint: "北京市朝阳区", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/出品方\s+([^\s]{2,40})/u, /主办单位\s*[:：]\s*([^。；;]{2,60})/u, /(中国工艺美术馆[^\s，。；;]{0,20})/u],
+      deadlinePatterns: [/(?:活动时间|活动日期)\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u, /活动当日[^。；]{0,40}?(\d{1,2}月\d{1,2}日)/u, /报名[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/发布(?:时间|日期)\s*[:：]?\s*(\d{4}[-年]\d{1,2}[-月]\d{1,2}(?:日)?)/u],
     }),
   },
 ];
