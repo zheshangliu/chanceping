@@ -1,0 +1,27 @@
+import fs from "node:fs";
+import path from "node:path";
+import { ICH_PRIMARY_CATEGORIES } from "../src/ich/types";
+import { getIchSourceRegistryV2 } from "../src/ich/source-registry-v2";
+import { ICH_DS7_SOURCE_WORKFLOWS } from "../src/ich/source-workflows-v1";
+
+const registry = getIchSourceRegistryV2();
+const registered = new Set(registry.sources.map((source) => source.id));
+const errors: string[] = [];
+if (ICH_DS7_SOURCE_WORKFLOWS.length < 10) errors.push("source workflows < 10");
+if (new Set(ICH_DS7_SOURCE_WORKFLOWS.map((workflow) => workflow.workflow_id)).size !== ICH_DS7_SOURCE_WORKFLOWS.length) errors.push("workflow ids are not unique");
+for (const workflow of ICH_DS7_SOURCE_WORKFLOWS) if (!registered.has(workflow.source_id)) errors.push(`${workflow.workflow_id}: source is not registered`);
+const categoryCoverage = Object.fromEntries(ICH_PRIMARY_CATEGORIES.map((category) => [category, ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.categories.includes(category)).length]));
+for (const category of ICH_PRIMARY_CATEGORIES) if (!categoryCoverage[category]) errors.push(`${category}: no workflow coverage`);
+const manual = ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.mode === "manual").length;
+const adapters = ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.mode === "adapter").length;
+const gba = ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.geography.includes("guangzhou") || workflow.geography.includes("guangdong") || workflow.geography.includes("greater_bay_area")).length;
+const international = ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.geography.includes("international")).length;
+if (gba < 4) errors.push(`GBA workflows=${gba} < 4`);
+if (international < 2) errors.push(`international workflows=${international} < 2`);
+const audit = { schema_version: "ich-ds7-source-coverage.v1", stage: "DS7", audited_at: new Date().toISOString(), gate: errors.length === 0 ? "pass" : "blocked", workflow_count: ICH_DS7_SOURCE_WORKFLOWS.length, adapter_count: adapters, manual_workflow_count: manual, gba_workflow_count: gba, international_workflow_count: international, category_coverage: categoryCoverage, formal_store_write: false, errors, workflows: ICH_DS7_SOURCE_WORKFLOWS };
+const outputPath = path.resolve("docs/ich/DS7-来源流程覆盖审计记录_V1.0.json");
+const reportPath = path.resolve("docs/ich/DS7-来源流程覆盖审计报告_V1.0.md");
+fs.writeFileSync(outputPath, `${JSON.stringify(audit, null, 2)}\n`);
+fs.writeFileSync(reportPath, `# DS7 来源流程覆盖审计报告 V1.0\n\n- 门禁：**${audit.gate}**\n- 来源流程：${audit.workflow_count}（适配器 ${audit.adapter_count}，人工流程 ${audit.manual_workflow_count}）\n- 广州/广东/大湾区流程：${audit.gba_workflow_count}\n- 国际流程：${audit.international_workflow_count}\n- 正式库写入：**false**\n\n## 六类覆盖\n\n${Object.entries(categoryCoverage).map(([category, count]) => `- ${category}: ${count}`).join("\n")}\n\n## 边界\n\n人工流程只产生候选，不代表来源已自动采集；所有候选仍须经过 DS3、DS4 和 DS1-D 审批。\n\n机器记录：[DS7-来源流程覆盖审计记录_V1.0.json](./DS7-来源流程覆盖审计记录_V1.0.json)。\n`, "utf8");
+console.log(JSON.stringify({ gate: audit.gate, workflow_count: audit.workflow_count, adapters, manual, gba, international, formal_store_write: false }, null, 2));
+if (errors.length) process.exitCode = 1;
