@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-08-24T03:56:38.923Z",
+  "updated_at": "2026-08-24T06:20:00.000Z",
   "entries": [
     {
       "id": "ich_expansion_batch_01_001",
@@ -28036,6 +28036,463 @@
             "actor": "chanceping-automation-review",
             "at": "2026-08-24T03:56:18.233Z",
             "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_007",
+      "slug": "2026-shanghai-feiyi-new-experience-design-contest",
+      "external_id": null,
+      "title": "第五届“非遗新体验”国潮文创设计大赛征集",
+      "title_original": "第五届“非遗新体验”国潮文创设计大赛征集",
+      "title_en": null,
+      "summary": "上海市文化和旅游局主办的第五届“非遗新体验”国潮文创设计大赛面向全社会征集文化日用、传统节日、中医康养、非遗美食及其他作品，报名截止2026年9月24日17:00。",
+      "description": null,
+      "opportunity_value_text": "设最佳作品奖、最佳设计奖、最具潜力奖各10名，优秀作品可获组委会组织推荐并参与产品研发、市场销售等相关活动。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "shanghai",
+        "nationwide",
+        "unrestricted"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026年9月24日17:00。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "上海市文化和旅游局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://whlyj.sh.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "上海市",
+        "city": "上海市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "shanghai",
+          "nationwide"
+        ],
+        "participation_scope": "unrestricted",
+        "eligible_regions": [
+          "shanghai",
+          "nationwide"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-07-08",
+        "application_start_at": "2026-07-08",
+        "deadline_at": "2026-09-24T17:00:00+08:00",
+        "deadline_text": "2026年9月24日17:00",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "面向全社会公开征集，文化日用、传统节日、中医康养、非遗美食等类别参赛作品均可参加。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "设最佳作品奖、最佳设计奖、最具潜力奖各10名，优秀作品可获组委会组织推荐并参与产品研发、市场销售等相关活动。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": true,
+        "sample_required": true,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "提交符合官方作品要求的图片或视频资料；传统节日类别需与节日礼仪或民俗有关，其他类别按公告说明执行。"
+      },
+      "application": {
+        "application_url": "https://whlyj.sh.gov.cn/wbzx/20260708/d64ae7225cca4bbbaf0c60b96c10e707.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://whlyj.sh.gov.cn/wbzx/20260708/d64ae7225cca4bbbaf0c60b96c10e707.html",
+          "name": "上海市文化和旅游局官方征集公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-07-08",
+          "last_checked_at": "2026-08-24T14:18:00+08:00",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T14:18:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T14:18:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T14:18:00+08:00",
+        "updated_at": "2026-08-24T14:18:00+08:00",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T14:18:00+08:00",
+        "last_checked_at": "2026-08-24T14:18:00+08:00",
+        "published_at": "2026-08-24T14:18:00+08:00",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T14:18:00+08:00",
+        "reviewed_at": "2026-08-24T14:18:00+08:00",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": "进入本轮非遗机会正式增量。",
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_008",
+      "slug": "2026-heluo-feihua-digital-ich-showcase-procurement",
+      "external_id": null,
+      "title": "“河洛飞花·数说非遗”2026国家级文化生态保护（实验）区展示交流活动项目",
+      "title_original": "“河洛飞花·数说非遗”2026国家级文化生态保护（实验）区展示交流活动项目",
+      "title_en": null,
+      "summary": "河洛文化生态保护发展中心采购洛阳“河洛飞花·数说非遗”活动全流程配套服务，覆盖数字发布、非遗市集、接待、考察和传播推广，预算149.2万元，响应文件截止2026年8月31日09:20。",
+      "description": null,
+      "opportunity_value_text": "成交供应商获得预算149.2万元的国家级文化生态保护（实验）区展示交流活动全流程配套服务合同。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "henan",
+        "luoyang",
+        "nationwide",
+        "nationwide"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "closing_soon",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026年08月31日09时20分。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "河洛文化生态保护发展中心",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://sanmenxia.zfcg.henan.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "河南省",
+        "city": "洛阳市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "henan",
+          "luoyang",
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "henan",
+          "luoyang",
+          "nationwide"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": true,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "procurement_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-08-19",
+        "application_start_at": "2026-08-19",
+        "deadline_at": "2026-08-31T09:20:00+08:00",
+        "deadline_text": "2026年08月31日09时20分",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "供应商须满足政府采购法第二十二条规定，具备独立承担民事责任能力和有效营业执照；本项目专门面向中小微企业，不接受联合体。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": 1492000,
+        "procurement_budget_max": 1492000,
+        "procurement_currency": "CNY",
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "成交供应商获得预算149.2万元的国家级文化生态保护（实验）区展示交流活动全流程配套服务合同。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "confirmed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": true,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "通过洛阳市公共资源交易中心网站获取采购文件并上传加密响应文件，服务内容包括数字发布活动、河洛非遗市集、嘉宾接待、沿线参观考察和全媒体传播推广。"
+      },
+      "application": {
+        "application_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "洛阳市公共资源交易中心网站",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+          "name": "河南省政府采购网竞争性磋商公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-08-19",
+          "last_checked_at": "2026-08-24T14:18:00+08:00",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T14:18:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T14:18:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T14:18:00+08:00",
+        "updated_at": "2026-08-24T14:18:00+08:00",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T14:18:00+08:00",
+        "last_checked_at": "2026-08-24T14:18:00+08:00",
+        "published_at": "2026-08-24T14:18:00+08:00",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T14:18:00+08:00",
+        "reviewed_at": "2026-08-24T14:18:00+08:00",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T14:18:00+08:00",
+            "reason": "进入本轮非遗机会正式增量。",
             "revision": 4
           }
         ]
