@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-07-27T15:30:00.000+08:00",
+  "updated_at": "2026-08-24T03:56:38.923Z",
   "entries": [
     {
       "id": "ich_expansion_batch_01_001",
@@ -26655,6 +26655,1386 @@
             "to": "published",
             "actor": "chanceping-stage5-review",
             "at": "2026-07-24T16:00:00+08:00",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_001",
+      "slug": "2026-beijing-opera-week-ai-creative-call",
+      "external_id": null,
+      "title": "第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集",
+      "title_original": "第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集",
+      "title_en": null,
+      "summary": "面向全国高校在校学生及不超过3人的创作团队，征集AI戏曲视觉、短视频与创意文案作品，截止2026年9月15日24时。",
+      "description": null,
+      "opportunity_value_text": "入选作品可获专题奖项、文化周主会场展示及荣誉颁授机会。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "beijing",
+        "nationwide",
+        "nationwide"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026-09-15T23:59:59+08:00。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "第十届中国戏曲文化周组委会",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.beijing.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "北京市",
+        "city": "北京市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "beijing",
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "beijing",
+          "nationwide"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-08-18",
+        "application_start_at": "2026-08-18",
+        "deadline_at": "2026-09-15T23:59:59+08:00",
+        "deadline_text": "2026-09-15T23:59:59+08:00",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "全国高校在校学生可个人或组队申报，团队人数不超过3人。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "入选作品可获专题奖项、文化周主会场展示及荣誉颁授机会。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "按官方公告提交符合规格的原创AI戏曲视觉、短视频或文案作品，并说明AI工具及素材来源。"
+      },
+      "application": {
+        "application_url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+          "name": "北京市人民政府门户网站官方征集公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-08-18",
+          "last_checked_at": "2026-08-24T03:56:18.233Z",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T03:56:18.233Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T03:56:18.234Z"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T03:56:18.233Z",
+        "updated_at": "2026-08-24T03:56:18.233Z",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T03:56:18.233Z",
+        "last_checked_at": "2026-08-24T03:56:18.233Z",
+        "published_at": "2026-08-24T03:56:18.233Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_002",
+      "slug": "2026-fuzhou-intangible-cultural-heritage-craft-design-competition",
+      "external_id": null,
+      "title": "“闽都福韵·榕城有礼”福州非遗工美文创大赛",
+      "title_original": "“闽都福韵·榕城有礼”福州非遗工美文创大赛",
+      "title_en": null,
+      "summary": "面向福州工艺美术、民间手工艺和设计从业者及在榕院校师生，征集寿山石雕、脱胎漆器、软木画、木雕等非遗工美文创作品。",
+      "description": null,
+      "opportunity_value_text": "每个类别按比例评选入围作品，入选作品奖金3000元，并可推荐进入“福州有礼”专柜。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "fuzhou",
+        "fujian",
+        "local_only"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026-09-14。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "福州市工业和信息化局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.fuzhou.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "福建省",
+        "city": "福州市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "fuzhou",
+          "fujian"
+        ],
+        "participation_scope": "local_only",
+        "eligible_regions": [
+          "fuzhou",
+          "fujian"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-07-27",
+        "application_start_at": "2026-07-27",
+        "deadline_at": "2026-09-14",
+        "deadline_text": "2026-09-14",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "福州市辖区内工艺美术、民间手工艺、设计从业者，以及在榕院校师生等可报名。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": true,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "每个类别按比例评选入围作品，入选作品奖金3000元，并可推荐进入“福州有礼”专柜。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "提交报名表、至少3张作品图及版权登记或承诺材料，作品须使用福州非遗工美技法并融入福州元素。"
+      },
+      "application": {
+        "application_url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+          "name": "福州市工业和信息化局官方通知",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-07-27",
+          "last_checked_at": "2026-08-24T03:56:18.233Z",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T03:56:18.233Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T03:56:18.234Z"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T03:56:18.233Z",
+        "updated_at": "2026-08-24T03:56:18.233Z",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T03:56:18.233Z",
+        "last_checked_at": "2026-08-24T03:56:18.233Z",
+        "published_at": "2026-08-24T03:56:18.233Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_003",
+      "slug": "2026-jiulongpo-cultural-tourism-products-call",
+      "external_id": null,
+      "title": "九龙坡区2026年“一批文创”特色旅游商品征集评选",
+      "title_original": "九龙坡区2026年“一批文创”特色旅游商品征集评选",
+      "title_en": null,
+      "summary": "面向企业、工作室、院校师生、非遗传承人和文创爱好者征集融入九龙坡文化与非遗元素的原创实物文创产品。",
+      "description": null,
+      "opportunity_value_text": "设置金银铜奖与优秀创意奖，最高奖金3000元，获奖产品纳入官方文旅商品名录并优先推荐展示。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "chongqing",
+        "jiulongpo",
+        "local_only"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026-09-21T23:59:59+08:00。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "重庆市九龙坡区文化和旅游发展委员会",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://cqjlp.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "重庆市",
+        "city": "重庆市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "chongqing",
+          "jiulongpo"
+        ],
+        "participation_scope": "local_only",
+        "eligible_regions": [
+          "chongqing",
+          "jiulongpo"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-08-06",
+        "application_start_at": "2026-08-06",
+        "deadline_at": "2026-09-21T23:59:59+08:00",
+        "deadline_text": "2026-09-21T23:59:59+08:00",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "文创设计、工艺美术、非遗传承、手工创业相关企业、工作室、院校师生、个人创作者均可申报。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": true,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "设置金银铜奖与优秀创意奖，最高奖金3000元，获奖产品纳入官方文旅商品名录并优先推荐展示。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "提交可实物落地、具有九龙坡文化或非遗元素的原创产品及官方要求的报送材料。"
+      },
+      "application": {
+        "application_url": "https://cqjlp.gov.cn/zwxx/qxdt/202608/t20260807_15903968_wap.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://cqjlp.gov.cn/zwxx/qxdt/202608/t20260807_15903968_wap.html",
+          "name": "重庆市九龙坡区人民政府官方征集信息",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-08-06",
+          "last_checked_at": "2026-08-24T03:56:18.233Z",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T03:56:18.233Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T03:56:18.234Z"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T03:56:18.233Z",
+        "updated_at": "2026-08-24T03:56:18.233Z",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T03:56:18.233Z",
+        "last_checked_at": "2026-08-24T03:56:18.233Z",
+        "published_at": "2026-08-24T03:56:18.233Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_004",
+      "slug": "2026-gansu-innovation-cup-traditional-craft-exhibition",
+      "external_id": null,
+      "title": "甘肃省第六届“创新杯”工业设计大赛工艺美术作品征集",
+      "title_original": "甘肃省第六届“创新杯”工业设计大赛工艺美术作品征集",
+      "title_en": null,
+      "summary": "省级工业设计大赛增设工艺美术作品特色展区，征集雕塑雕刻、漆器、刺绣、地毯、美术陶瓷、编织及民间手工艺术等实物作品。",
+      "description": null,
+      "opportunity_value_text": "进入省级大赛评审及工艺美术作品特色展区，获得展示、荣誉和产业推广机会。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "gansu",
+        "pingliang",
+        "province_only"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026-09-10。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "甘肃省工业和信息化厅等",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://gxj.pingliang.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "甘肃省",
+        "city": "平凉市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "gansu",
+          "pingliang"
+        ],
+        "participation_scope": "province_only",
+        "eligible_regions": [
+          "gansu",
+          "pingliang"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-07-20",
+        "application_start_at": "2026-07-20",
+        "deadline_at": "2026-09-10",
+        "deadline_text": "2026-09-10",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "甘肃省内符合大赛方案的企业、单位、高校、个人或团队，通过属地或规定渠道汇总报送。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "进入省级大赛评审及工艺美术作品特色展区，获得展示、荣誉和产业推广机会。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "报送近三年原创实物工艺美术作品、申报书及展示版面，作品须具备自主知识产权。"
+      },
+      "application": {
+        "application_url": "https://gxj.pingliang.gov.cn/xwdt/tzgg/art/2026/art_f5d8db25f99d4828a1c2c393549e3474.html",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://gxj.pingliang.gov.cn/xwdt/tzgg/art/2026/art_f5d8db25f99d4828a1c2c393549e3474.html",
+          "name": "平凉市工业和信息化局转发的官方大赛方案",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-07-20",
+          "last_checked_at": "2026-08-24T03:56:18.233Z",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T03:56:18.233Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T03:56:18.234Z"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T03:56:18.233Z",
+        "updated_at": "2026-08-24T03:56:18.233Z",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T03:56:18.233Z",
+        "last_checked_at": "2026-08-24T03:56:18.233Z",
+        "published_at": "2026-08-24T03:56:18.233Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_005",
+      "slug": "2026-lhasa-products-jiangsu-promotion-service-selection",
+      "external_id": null,
+      "title": "2026年苏拉产业对接暨拉萨产品江苏行活动服务采购比选（二次）",
+      "title_original": "2026年苏拉产业对接暨拉萨产品江苏行活动服务采购比选（二次）",
+      "title_en": null,
+      "summary": "拉萨市经信局采购第三方承办产业对接和“拉萨产品江苏行”活动，包含特色产品展区搭建、展示销售、活动执行及宣传推广，预算50万元。",
+      "description": null,
+      "opportunity_value_text": "中选单位获得预算50万元的活动策划、特色产品展区搭建、推广与执行服务合同。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "lhasa",
+        "xizang",
+        "jiangsu",
+        "nationwide",
+        "nationwide"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "closing_soon",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026-08-24T18:00:00+08:00。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "拉萨市经济和信息化局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://iib.lasa.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "西藏自治区",
+        "city": "拉萨市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "lhasa",
+          "xizang",
+          "jiangsu",
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "lhasa",
+          "xizang",
+          "jiangsu",
+          "nationwide"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": true,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-08-21",
+        "application_start_at": "2026-08-21",
+        "deadline_at": "2026-08-24T18:00:00+08:00",
+        "deadline_text": "2026-08-24T18:00:00+08:00",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "中国大陆境内具有独立法人资格、活动策划执行能力、相关案例和政府采购信用记录的单位。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": 500000,
+        "procurement_budget_max": 500000,
+        "procurement_currency": "CNY",
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "中选单位获得预算50万元的活动策划、特色产品展区搭建、推广与执行服务合同。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": true,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "须在8月24日18时前完成邮件报名，并于8月27日18时前递交密封响应文件及实施方案、报价和资质材料。"
+      },
+      "application": {
+        "application_url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+          "name": "拉萨市经济和信息化局官方比选公告",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-08-21",
+          "last_checked_at": "2026-08-24T03:56:18.233Z",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T03:56:18.233Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T03:56:18.234Z"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T03:56:18.233Z",
+        "updated_at": "2026-08-24T03:56:18.233Z",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T03:56:18.233Z",
+        "last_checked_at": "2026-08-24T03:56:18.233Z",
+        "published_at": "2026-08-24T03:56:18.233Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_auto_20260824_006",
+      "slug": "2026-zibo-landmark-products-promotion-invitation",
+      "external_id": null,
+      "title": "2026“国货新字号·消费新趋势”地标名品推介会参展征集",
+      "title_original": "2026“国货新字号·消费新趋势”地标名品推介会参展征集",
+      "title_en": null,
+      "summary": "公益性地标名品推介会面向地方传统品牌及文创非遗等品类生产经营企业开放，由属地商务主管部门汇总推荐，报名截止2026年8月28日。",
+      "description": null,
+      "opportunity_value_text": "入选企业可参加公益性地标名品推介和双节消费促进活动，获得产品展示、渠道对接与品牌推广机会。",
+      "primary_category": "exhibition_market",
+      "secondary_tags": [
+        "zibo",
+        "shandong",
+        "regional"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "本轮逐页核验政府或主管部门官方页面、参与窗口、主办方和核心条件后分类。",
+      "classification_status": "confirmed",
+      "status": "closing_soon",
+      "status_reason": "本轮核验时官方页面仍显示可参与，截止日期为2026-08-28。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "淄博市商务局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://boftec.zibo.gov.cn",
+        "contact_text": null
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "山东省",
+        "city": "淄博市",
+        "district": null,
+        "venue_text": null,
+        "region_groups": [
+          "zibo",
+          "shandong"
+        ],
+        "participation_scope": "regional",
+        "eligible_regions": [
+          "zibo",
+          "shandong"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "报名及后续递交、送展或到场要求以官方页面和附件为准。"
+      },
+      "dates": {
+        "published_at": "2026-08-19",
+        "application_start_at": "2026-08-19",
+        "deadline_at": "2026-08-28",
+        "deadline_text": "2026-08-28",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": true,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "organization",
+          "designer",
+          "team"
+        ],
+        "eligibility_text": "合规经营、质效良好，具有地方产业代表性的文创非遗、老字号、地理标志等品类企业。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "入选企业可参加公益性地标名品推介和双节消费促进活动，获得产品展示、渠道对接与品牌推广机会。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "费用未在本条摘要中确认，申请前须以官方页面及附件为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "官方公告要求的报名或申报材料"
+        ],
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "向属地商务主管部门提交报名材料，由主管部门统一汇总报送。"
+      },
+      "application": {
+        "application_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方来源页",
+        "application_steps": [
+          "打开官方来源页",
+          "核对最新截止时间与资格",
+          "按页面或附件要求提交材料"
+        ],
+        "contact_text": null,
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+          "name": "淄博市商务局官方邀请函",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-08-19",
+          "last_checked_at": "2026-08-24T03:56:18.233Z",
+          "is_accessible": true,
+          "notes": "本轮已访问官方页面并核对标题、主办方、参与窗口、地区和核心资格；未披露字段保持未确认。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "ai_assisted",
+        "verified_at": "2026-08-24T03:56:18.233Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-27T03:56:18.234Z"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T03:56:18.233Z",
+        "updated_at": "2026-08-24T03:56:18.233Z",
+        "created_by": "chanceping-automation",
+        "updated_by": "chanceping-automation",
+        "first_discovered_at": "2026-08-24T03:56:18.233Z",
+        "last_checked_at": "2026-08-24T03:56:18.233Z",
+        "published_at": "2026-08-24T03:56:18.233Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-automation-2026-08-24"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_at": "2026-08-24T03:56:18.233Z",
+        "reviewed_by": "chanceping-automation-review",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "chanceping-automation",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": null,
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
+            "reason": "官方来源、行动窗口、地区和分类通过本轮受控校验。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "chanceping-automation-review",
+            "at": "2026-08-24T03:56:18.233Z",
             "reason": null,
             "revision": 4
           }
