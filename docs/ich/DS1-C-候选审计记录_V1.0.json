@@ -1,24 +1,24 @@
 {
   "schema_version": "ich-ds1c-candidate-audit.v1",
-  "audited_at": "2026-08-24T07:14:17.517Z",
+  "audited_at": "2026-08-24T09:27:15.938Z",
   "readonly": true,
   "input": "docs/ich/DS1-B-候选样本运行记录_V1.0.json",
-  "total_candidates": 9,
-  "candidate_review_count": 9,
+  "total_candidates": 12,
+  "candidate_review_count": 12,
   "blocked_count": 0,
   "template_contamination_count": 0,
   "duplicate_count": 0,
-  "missing_deadline_count": 5,
-  "unconfirmed_geography_count": 9,
-  "unconfirmed_category_count": 9,
+  "missing_deadline_count": 10,
+  "unconfirmed_geography_count": 12,
+  "unconfirmed_category_count": 12,
   "gate": "pass",
   "items": [
     {
-      "candidate_id": "ds1b-ccgp-f69f4392b367",
+      "candidate_id": "ds1b-ccgp-183adf386b50",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
@@ -32,28 +32,29 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-dc637476c187",
+      "candidate_id": "ds1b-ccgp-7e3ef2d90de9",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "active",
+      "status_hint": "pending_confirmation",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed"
+        "category_unconfirmed",
+        "deadline_unconfirmed"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-90e63fb45613",
+      "candidate_id": "ds1b-ccgp-3fe1d44ac623",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
@@ -119,6 +120,24 @@
       ]
     },
     {
+      "candidate_id": "ds1b-yuexiu-notices-e716f02c5415",
+      "source_id": "yuexiu-notices",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
       "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
       "source_id": "yuexiu-notices",
       "source_level": "L1",
@@ -155,20 +174,57 @@
       ]
     },
     {
-      "candidate_id": "ds1b-yuexiu-notices-50346cb1a19c",
-      "source_id": "yuexiu-notices",
+      "candidate_id": "ds1b-mct-notices-7c1624fc46bf",
+      "source_id": "mct-notices",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+      "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "closing_soon",
+      "status_hint": "pending_confirmation",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed"
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-mct-notices-128e7fa74fe8",
+      "source_id": "mct-notices",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-mct-notices-a46b14e963dc",
+      "source_id": "mct-notices",
+      "source_level": "L1",
+      "source_role": "primary",
+      "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+      "source_is_detail_page": true,
+      "template_contamination": false,
+      "duplicate_of_candidate_id": null,
+      "status_hint": "pending_confirmation",
+      "admission": "candidate_review",
+      "formal_publish_blocked": true,
+      "flags": [
+        "geography_unconfirmed",
+        "category_unconfirmed",
+        "deadline_unconfirmed"
       ]
     }
   ]

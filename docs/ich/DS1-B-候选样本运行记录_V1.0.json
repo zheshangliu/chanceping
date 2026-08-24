@@ -1,11 +1,11 @@
 {
   "schema_version": "ich-ds1b-sample-run.v1",
-  "ran_at": "2026-08-24T07:09:42.479Z",
+  "ran_at": "2026-08-24T09:27:15.692Z",
   "readonly": true,
   "formal_store_write": false,
   "minimum_samples_per_adapter": 3,
-  "adapter_count": 3,
-  "total_samples": 9,
+  "adapter_count": 4,
+  "total_samples": 12,
   "gate": "pass",
   "runs": [
     {
@@ -14,43 +14,43 @@
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm"
+        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm"
       ],
       "samples": [
         {
-          "candidate_id": "ds1b-ccgp-f69f4392b367",
+          "candidate_id": "ds1b-ccgp-183adf386b50",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
-          "title": "石阡县中等职业学校关于石阡县中等职业学校（综合高级中学）学生食堂食材采购项目的更正公告",
-          "organizer": "石阡县中等职业学校",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+          "title": "大洲设计咨询集团有限公司关于广西城市建设学校（会仙校区）实训楼至大门总平工程(项目编号：GXZC2026-C2-002538-DZSJ)更改通知（一）",
+          "organizer": "广西城市建设学校",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 14:58",
-          "raw_snapshot_hash": "62fe7ac02fe125597fa11baa79e983d562811a9a04de561ac131ef158ac7fda9",
+          "published_text": "2026年08月24日 17:18",
+          "raw_snapshot_hash": "6440b0b624b040adb100f7923402f85628ecd6dc1c7cc7f72f95a39b72f911ad",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "石阡县中等职业学校关于石阡县中等职业学校（综合高级中学）学生食堂食材采购项目的更正公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+              "value": "大洲设计咨询集团有限公司关于广西城市建设学校（会仙校区）实训楼至大门总平工程(项目编号：GXZC2026-C2-002538-DZSJ)更改通知（一）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
               "method": "html_title",
-              "evidence_excerpt": "石阡县中等职业学校关于石阡县中等职业学校（综合高级中学）学生食堂食材采购项目的更正公告",
+              "evidence_excerpt": "大洲设计咨询集团有限公司关于广西城市建设学校（会仙校区）实训楼至大门总平工程(项目编号：GXZC2026-C2-002538-DZSJ)更改通知（一）",
               "confirmed": true
             },
             "organizer": {
-              "value": "石阡县中等职业学校",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+              "value": "广西城市建设学校",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 石阡县中等职业学校",
+              "evidence_excerpt": "采购单位 广西城市建设学校",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -70,105 +70,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27193159.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-dc637476c187",
+          "candidate_id": "ds1b-ccgp-7e3ef2d90de9",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-          "title": "贵州省2026年度农村生活污水治理成效评估项目（二次）公开招标公告",
-          "organizer": "贵州省生态环境厅",
-          "deadline_text": "2026年09月15日 09:30",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 14:58",
-          "raw_snapshot_hash": "eda1ceecedf60d118b7a3e3ce5f49a2a5b355a522cd48446775006d20cef1697",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "贵州省2026年度农村生活污水治理成效评估项目（二次）公开招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-              "method": "html_title",
-              "evidence_excerpt": "贵州省2026年度农村生活污水治理成效评估项目（二次）公开招标公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "贵州省生态环境厅",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 贵州省生态环境厅",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月15日 09:30",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "开标时间 2026年09月15日 09:30",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-90e63fb45613",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
-          "title": "宜宾市南溪区农业农村局2026年扩种油菜种子、农药、配方肥采购项目采购更正公告（第一次）",
-          "organizer": "宜宾市南溪区农业农村局",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+          "title": "重要信息系统商用密码安全性评估服务项目中标（成交）结果公告",
+          "organizer": "甘肃省交通科技通信中心",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 14:58",
-          "raw_snapshot_hash": "3baa25a47055f1e2beb130d991cd54ed278367311f0cd4f908ea28eacc42a9fd",
+          "published_text": "2026年08月24日 17:16",
+          "raw_snapshot_hash": "61b03ee7f956d616ff78d168f0aa13e85ca585c08c301c6a4cc146ad5ee85163",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "宜宾市南溪区农业农村局2026年扩种油菜种子、农药、配方肥采购项目采购更正公告（第一次）",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+              "value": "重要信息系统商用密码安全性评估服务项目中标（成交）结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
               "method": "html_title",
-              "evidence_excerpt": "宜宾市南溪区农业农村局2026年扩种油菜种子、农药、配方肥采购项目采购更正公告（第一次）",
+              "evidence_excerpt": "重要信息系统商用密码安全性评估服务项目中标（成交）结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "宜宾市南溪区农业农村局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+              "value": "甘肃省交通科技通信中心",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 宜宾市南溪区农业农村局",
+              "evidence_excerpt": "采购单位 甘肃省交通科技通信中心",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -188,10 +129,69 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193153.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-3fe1d44ac623",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+          "title": "浙江省政府采购中心关于浙江建设职业技术学院 2026-2029年物业管理项目中标(成交)结果公告",
+          "organizer": "浙江建设职业技术学院",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月24日 17:16",
+          "raw_snapshot_hash": "c71eda455e30dc8e0c367bf494d35b7e1b28b098d68a6281637a0b472e1ef241",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "浙江省政府采购中心关于浙江建设职业技术学院 2026-2029年物业管理项目中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "method": "html_title",
+              "evidence_excerpt": "浙江省政府采购中心关于浙江建设职业技术学院 2026-2029年物业管理项目中标(成交)结果公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "浙江建设职业技术学院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 浙江建设职业技术学院",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193152.htm",
               "confirmed": true
             }
           }
@@ -396,11 +396,70 @@
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "listing_status": 200,
       "selected_detail_urls": [
+        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
         "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
-        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
-        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html"
+        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html"
       ],
       "samples": [
+        {
+          "candidate_id": "ds1b-yuexiu-notices-e716f02c5415",
+          "adapter_id": "yuexiu-notices-v1",
+          "source_id": "yuexiu-notices",
+          "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
+          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+          "title": "广州市越秀区农林街道环境卫生管理站章程",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "广州市越秀区",
+          "category_hint": "procurement_project",
+          "published_text": null,
+          "raw_snapshot_hash": "cdb0fe68351f9baa47d6de8f97d9fc81fef15f53ef50ab41bed0b741ba6aa590",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广州市越秀区农林街道环境卫生管理站章程",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "method": "html_title",
+              "evidence_excerpt": "广州市越秀区农林街道环境卫生管理站章程",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广州市越秀区",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "confirmed": true
+            }
+          }
+        },
         {
           "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
           "adapter_id": "yuexiu-notices-v1",
@@ -518,62 +577,194 @@
               "confirmed": true
             }
           }
-        },
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "mct-notices-listing-v1",
+      "source_id": "mct-notices",
+      "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
+        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html"
+      ],
+      "samples": [
         {
-          "candidate_id": "ds1b-yuexiu-notices-50346cb1a19c",
-          "adapter_id": "yuexiu-notices-v1",
-          "source_id": "yuexiu-notices",
-          "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
-          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
-          "title": "2026年越秀区科学质量管理方法推广项目采购公告",
+          "candidate_id": "ds1b-mct-notices-7c1624fc46bf",
+          "adapter_id": "mct-notices-listing-v1",
+          "source_id": "mct-notices",
+          "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+          "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
+          "title": "关于第十届中国戏曲文化周“精品大戏展”<div>拟入选名单的公示</div>",
           "organizer": null,
-          "deadline_text": "2026年8月26日18时",
-          "geography": "广州市越秀区",
-          "category_hint": "procurement_project",
-          "published_text": null,
-          "raw_snapshot_hash": "c85d09bd2e94e675342993ca28ef79f667f4ea8758f5a4fd7839d69322e6a0f5",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026年08月21日",
+          "raw_snapshot_hash": "902a5530b0ffd1757d10c365cb772319a43472eec29395dcb323749a3353a316",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "2026年越秀区科学质量管理方法推广项目采购公告",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+              "value": "关于第十届中国戏曲文化周“精品大戏展”<div>拟入选名单的公示</div>",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
               "method": "html_title",
-              "evidence_excerpt": "2026年越秀区科学质量管理方法推广项目采购公告",
+              "evidence_excerpt": "关于第十届中国戏曲文化周“精品大戏展”<div>拟入选名单的公示</div>",
               "confirmed": true
             },
             "organizer": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
             },
             "deadline_text": {
-              "value": "2026年8月26日18时",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
-              "method": "structured_text",
-              "evidence_excerpt": "提交资料时间：2026年8月26日18时止",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
-              "value": "广州市越秀区",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
+              "value": "全国",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
               "method": "registry_scope",
               "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
               "confirmed": false
             },
             "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
+              "value": "policy_funding",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
               "method": "registry_scope",
               "evidence_excerpt": "适配器类别提示，需候选审核确认",
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+              "value": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+              "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-mct-notices-128e7fa74fe8",
+          "adapter_id": "mct-notices-listing-v1",
+          "source_id": "mct-notices",
+          "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+          "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+          "title": "文化和旅游部艺术司关于公布第十届全国<div>优秀儿童戏剧展演参演作品名单的函</div>",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026年08月21日",
+          "raw_snapshot_hash": "d9aeab53c13cfe481d8708f73e061415cfa7eba0285c972c199094050439cb1e",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "文化和旅游部艺术司关于公布第十届全国<div>优秀儿童戏剧展演参演作品名单的函</div>",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+              "method": "html_title",
+              "evidence_excerpt": "文化和旅游部艺术司关于公布第十届全国<div>优秀儿童戏剧展演参演作品名单的函</div>",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-mct-notices-a46b14e963dc",
+          "adapter_id": "mct-notices-listing-v1",
+          "source_id": "mct-notices",
+          "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+          "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+          "title": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026年07月17日",
+          "raw_snapshot_hash": "4005eb2dfc1e1132dc849b568f935865613b1fe1ee054b989ac45d0a6ab5b55a",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+              "method": "html_title",
+              "evidence_excerpt": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
               "confirmed": true
             }
           }

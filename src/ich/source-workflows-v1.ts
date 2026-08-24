@@ -34,6 +34,7 @@ export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [
   make("adapter-ccgp-procurement", "ccgp", "adapter"),
   make("adapter-gd-culture-notices", "gd-culture", "adapter"),
   make("adapter-yuexiu-notices", "yuexiu-notices", "adapter"),
+  make("adapter-mct-notices", "mct-notices", "adapter"),
   make("manual-gd-procurement", "gd-procurement", "manual"),
   make("manual-ggzy", "ggzy", "manual"),
   make("manual-gz-public-resources", "gz-ggzy", "manual"),

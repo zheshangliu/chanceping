@@ -1,22 +1,22 @@
 {
   "schema_version": "ich-ds3-candidate-quality.v1",
-  "run_id": "ich-ds3-quality-20260824081808",
-  "ran_at": "2026-08-24T08:18:08.527Z",
+  "run_id": "ich-ds3-quality-20260824092718",
+  "ran_at": "2026-08-24T09:27:18.522Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
   "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
-  "input_candidate_count": 9,
-  "assessment_count": 9,
+  "input_candidate_count": 12,
+  "assessment_count": 12,
   "approved_count": 0,
-  "review_required_count": 8,
+  "review_required_count": 11,
   "rejected_count": 1,
   "assessments": [
     {
-      "candidate_id": "ds1b-ccgp-98dc229a140d",
+      "candidate_id": "ds1b-ccgp-183adf386b50",
       "source_id": "ccgp",
-      "score": 62,
-      "band": "medium",
+      "score": 40,
+      "band": "low",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -29,66 +29,72 @@
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": true,
+        "action_signal": false,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-30a321a4202c",
+      "candidate_id": "ds1b-ccgp-7e3ef2d90de9",
       "source_id": "ccgp",
-      "score": 85,
-      "band": "high",
+      "score": 40,
+      "band": "low",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
         "detail_page": true,
         "title_confirmed": true,
         "organizer_confirmed": true,
-        "deadline_confirmed": true,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": true,
-        "action_signal": true,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-22732e10198e",
-      "source_id": "ccgp",
-      "score": 77,
-      "band": "high",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": true,
+        "deadline_confirmed": false,
         "geography_confirmed": false,
         "category_confirmed": false,
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": true,
+        "action_signal": false,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-3fe1d44ac623",
+      "source_id": "ccgp",
+      "score": 40,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
@@ -175,6 +181,35 @@
       ]
     },
     {
+      "candidate_id": "ds1b-yuexiu-notices-e716f02c5415",
+      "source_id": "yuexiu-notices",
+      "score": 25,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
       "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
       "source_id": "yuexiu-notices",
       "score": 25,
@@ -233,28 +268,85 @@
       ]
     },
     {
-      "candidate_id": "ds1b-yuexiu-notices-50346cb1a19c",
-      "source_id": "yuexiu-notices",
-      "score": 62,
-      "band": "medium",
+      "candidate_id": "ds1b-mct-notices-7c1624fc46bf",
+      "source_id": "mct-notices",
+      "score": 33,
+      "band": "low",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
         "detail_page": true,
         "title_confirmed": true,
         "organizer_confirmed": false,
-        "deadline_confirmed": true,
+        "deadline_confirmed": false,
         "geography_confirmed": false,
         "category_confirmed": false,
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": true,
+        "relevance_signal": true,
+        "action_signal": false,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-mct-notices-128e7fa74fe8",
+      "source_id": "mct-notices",
+      "score": 33,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-mct-notices-a46b14e963dc",
+      "source_id": "mct-notices",
+      "score": 33,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]

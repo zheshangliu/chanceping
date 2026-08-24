@@ -1,20 +1,20 @@
 {
   "schema_version": "ich-ds7-source-coverage.v1",
   "stage": "DS7",
-  "audited_at": "2026-08-24T08:22:42.744Z",
+  "audited_at": "2026-08-24T09:27:18.962Z",
   "gate": "pass",
-  "workflow_count": 12,
-  "adapter_count": 3,
+  "workflow_count": 13,
+  "adapter_count": 4,
   "manual_workflow_count": 9,
   "gba_workflow_count": 7,
   "international_workflow_count": 2,
   "category_coverage": {
-    "competition": 6,
-    "exhibition_market": 5,
+    "competition": 7,
+    "exhibition_market": 6,
     "procurement_project": 8,
     "channel_collaboration": 8,
-    "policy_funding": 5,
-    "international": 4
+    "policy_funding": 6,
+    "international": 5
   },
   "formal_store_write": false,
   "errors": [],
@@ -101,6 +101,40 @@
       "geography": [
         "guangzhou",
         "greater_bay_area"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-mct-notices",
+      "source_id": "mct-notices",
+      "mode": "adapter",
+      "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "nationwide"
       ],
       "scan_frequency": "daily",
       "status": "ready",

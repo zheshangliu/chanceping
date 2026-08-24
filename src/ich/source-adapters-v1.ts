@@ -149,13 +149,14 @@ function buildCandidate(args: {
 function requiredSource(sourceId: string): IchSourceRegistryV2Entry {
   const source = getIchSourceRegistryV2().sources.find((item) => item.id === sourceId);
   if (!source) throw new Error(`DS1-B source not registered: ${sourceId}`);
-  if (source.operational_status !== "planned") throw new Error(`DS1-B source must remain planned: ${sourceId}`);
+  if (!["planned", "adapter_ready"].includes(source.operational_status)) throw new Error(`DS1-B source is not collectible: ${sourceId}`);
   return source;
 }
 
 const ccgp = requiredSource("ccgp");
 const gdCulture = requiredSource("gd-culture");
 const yuexiu = requiredSource("yuexiu-notices");
+const mct = requiredSource("mct-notices");
 
 export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   {
@@ -198,6 +199,20 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       organizerPatterns: [/项目建设单位\s*[:：]\s*([^。；;]{2,60})/u, /采购单位\s*[:：]\s*([^。；;]{2,60})/u],
       deadlinePatterns: [/(?:提交资料时间|报名文件递交截止时间|递交报名资料的起止时间)\s*[:：]?\s*([^。；;]{4,80}?)(?:止|截止)/u, /(?:公示时间|公告期限)\s*[:：]?\s*([^。；;]{4,80}?)(?:止|截止)/u],
       publishedPatterns: [/日期\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+    }),
+  },
+  {
+    adapter_id: "mct-notices-listing-v1",
+    source_id: mct.id,
+    discovery_url: mct.canonical_url,
+    category_hint: "policy_funding",
+    geography_hint: "全国",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /mct\.gov\.cn\/zfxxgkml\/[^/]+\/\d{6}\/t\d+_\d+\.html$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "mct-notices-listing-v1", sourceId: mct.id, categoryHint: "policy_funding", geographyHint: "全国", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/发布单位\s*[:：]\s*([^\s]{2,40})/u, /主办单位\s*[:：]\s*([^\s]{2,40})/u],
+      deadlinePatterns: [/(?:截止|申报截止|报名截止)(?:时间)?\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日(?:\s*\d{1,2}(?:时|:)\d{0,2}分?)?)/u],
+      publishedPatterns: [/(?:发布时间|发布日期|成文日期)\s*[:：]?\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
     }),
   },
 ];

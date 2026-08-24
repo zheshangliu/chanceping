@@ -9,7 +9,9 @@ assert.equal(registry.sources.length, 31, "DS1 core source registry must start w
 assert.ok(registry.sources.filter((source) => source.family === "procurement_platform").length >= 5, "procurement coverage must have at least five platform sources");
 assert.ok(registry.sources.filter((source) => source.geography.includes("guangzhou")).length >= 3, "Guangzhou coverage must have at least three sources");
 assert.ok(registry.sources.filter((source) => source.role === "discovery").length >= 3, "discovery layer must be represented");
-assert.ok(registry.sources.filter((source) => source.operational_status === "planned").length === registry.sources.length, "DS1 must remain design-only before adapter verification");
+const adapterReady = registry.sources.filter((source) => source.operational_status === "adapter_ready");
+assert.ok(adapterReady.every((source) => source.id === "mct-notices"), "only the audited MCT adapter may be adapter_ready");
+assert.ok(adapterReady.length <= 1, "DS1 adapter-ready promotion must remain incremental");
 for (const category of ICH_PRIMARY_CATEGORIES) assert.ok(listIchSourceRegistryV2ByCategory(category).length > 0, `category ${category} must have a source`);
 assert.ok(listIchSourceRegistryV2ByGeography("greater_bay_area").length >= 5, "Greater Bay Area source pool must be represented");
 assert.ok(registry.query_packs.some((pack) => pack.id === "ich-cn-procurement"));
