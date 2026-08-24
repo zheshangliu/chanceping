@@ -1,0 +1,20 @@
+{
+  "schema_version": "ich-ds1d-approval-check.v1",
+  "checked_at": "2026-08-24T08:00:00.000Z",
+  "readonly": true,
+  "production_store_write": false,
+  "official_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+  "http_status": 200,
+  "final_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+  "official_title_match": true,
+  "official_deadline_match": true,
+  "official_application_email_present": true,
+  "deadline_at": "2026-08-26T17:00:00+08:00",
+  "deadline_in_future": true,
+  "draft_validation": "pass",
+  "semantic_issue_count": 0,
+  "already_in_store": false,
+  "template_marker_detected": false,
+  "gate": "pass",
+  "errors": []
+}

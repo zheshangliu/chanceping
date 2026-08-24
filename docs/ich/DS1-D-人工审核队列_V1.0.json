@@ -1,0 +1,326 @@
+{
+  "schema_version": "ich-ds1d-review-queue.v1",
+  "generated_at": "2026-08-24T07:21:49.793Z",
+  "readonly": true,
+  "production_store_write": false,
+  "total": 9,
+  "pending_manual_review": 9,
+  "approved": 0,
+  "items": [
+    {
+      "review_id": "review-ds1b-ccgp-f69f4392b367",
+      "candidate_id": "ds1b-ccgp-f69f4392b367",
+      "source_id": "ccgp",
+      "title": "石阡县中等职业学校关于石阡县中等职业学校（综合高级中学）学生食堂食材采购项目的更正公告",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "possible_action",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-ccgp-dc637476c187",
+      "candidate_id": "ds1b-ccgp-dc637476c187",
+      "source_id": "ccgp",
+      "title": "贵州省2026年度农村生活污水治理成效评估项目（二次）公开招标公告",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "active",
+      "machine_precheck": {
+        "action_signal": "possible_action",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-ccgp-90e63fb45613",
+      "candidate_id": "ds1b-ccgp-90e63fb45613",
+      "source_id": "ccgp",
+      "title": "宜宾市南溪区农业农村局2026年扩种油菜种子、农药、配方肥采购项目采购更正公告（第一次）",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "possible_action",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gd-culture-f88f45cf525f",
+      "candidate_id": "ds1b-gd-culture-f88f45cf525f",
+      "source_id": "gd-culture",
+      "title": "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+      "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "closing_soon",
+      "machine_precheck": {
+        "action_signal": "possible_action",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gd-culture-b28dd4d3af8b",
+      "candidate_id": "ds1b-gd-culture-b28dd4d3af8b",
+      "source_id": "gd-culture",
+      "title": "2026年广东“人工智能+文旅”应用场景“揭榜挂帅”项目榜单开始征集",
+      "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "closing_soon",
+      "machine_precheck": {
+        "action_signal": "possible_action",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gd-culture-2880a23b614a",
+      "candidate_id": "ds1b-gd-culture-2880a23b614a",
+      "source_id": "gd-culture",
+      "title": "2026广东国际旅游产业博览会广东主题形象馆、广东文旅消费新场景展区、广东文旅产业融合展区布展设计及搭建相关服务采购项目中选结果公告",
+      "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "result_or_closed",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-yuexiu-notices-624b99268ca9",
+      "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
+      "source_id": "yuexiu-notices",
+      "title": "关于确定2026年越秀区残疾人职业技能培训项目评价承接机构的结果公示",
+      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "result_or_closed",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-yuexiu-notices-bafdbbc7e73f",
+      "candidate_id": "ds1b-yuexiu-notices-bafdbbc7e73f",
+      "source_id": "yuexiu-notices",
+      "title": "关于确定2026年越秀区残疾人职业技能培训项目承接机构的结果公示",
+      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "result_or_closed",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-yuexiu-notices-50346cb1a19c",
+      "candidate_id": "ds1b-yuexiu-notices-50346cb1a19c",
+      "source_id": "yuexiu-notices",
+      "title": "2026年越秀区科学质量管理方法推广项目采购公告",
+      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "closing_soon",
+      "machine_precheck": {
+        "action_signal": "possible_action",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    }
+  ]
+}

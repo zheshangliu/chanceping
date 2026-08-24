@@ -1,0 +1,55 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createIchFixture } from "./fixtures/ich-opportunity";
+import { compareIchOpportunities } from "../src/ich/dedup";
+import { findIchSemanticIssues } from "../src/ich/semantic-validation";
+import { validateIchOpportunity } from "../src/ich/validation";
+import { IchOpportunityStore } from "../src/ich/store";
+import type { IchOpportunity } from "../src/ich/types";
+
+const now = "2026-08-24T16:00:00+08:00";
+const officialUrl = "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html";
+const draft = createIchFixture({
+  id: "ds1d_candidate_gd_platform_selection_20260826",
+  slug: "2026-guangdong-cultural-tourism-subsidy-platform-selection",
+  external_id: "gd-culture-post-4944921",
+  title: "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+  title_original: "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+  summary: "广东省文化和旅游厅面向符合条件的平台企业，征选承担2026年广东金秋文旅消费惠民补贴活动的线上发放工作，材料截止2026年8月26日17:00。",
+  description: "官方通知载明活动计划于2026年9月至10月开展，平台企业需完成专区搭建、商家报名审核、消费券发放核销、宣传推广和服务保障等工作。",
+  opportunity_value_text: "文旅消费券项目平台合作与运营服务机会。",
+  primary_category: "channel_collaboration",
+  secondary_tags: ["广东省", "平台企业", "文旅消费", "企业", "合作"],
+  classification_confidence: "medium",
+  classification_reason: "官方详情页明确面向平台企业公开征选并列明提交材料、截止时间和服务内容；是否符合具体非遗业务场景仍需申请方自行判断。",
+  classification_status: "pending_review",
+  status: "closing_soon",
+  status_reason: "官方详情页列明材料提交截止至2026年8月26日17:00；本草稿核验时间为2026年8月24日。",
+  is_featured: false,
+  is_published: false,
+  organizer: { name: "广东省文化和旅游厅", name_en: null, type: "government", official_website: "https://whly.gd.gov.cn/", contact_text: "产业发展处；官方公告列明联系人和电话" },
+  location: { country_code: "CN", country_name: "中国", province_state: "广东省", city: "广州市", district: "越秀区", venue_text: "广东省文化和旅游厅（纸质材料邮寄地址）", region_groups: ["guangdong", "guangzhou", "greater_bay_area"], participation_scope: "unknown", eligible_regions: ["广东省"], is_online: true, is_hybrid: true, is_multi_location: false, location_status: "partially_confirmed" },
+  participation_mode: { mode: "hybrid", submission_method: "email", requires_on_site_presence: null, participation_notes: "公告要求电子材料发送至官方邮箱，同时提交纸质盖章材料；是否需要线下履约以正式文件和合同为准。" },
+  dates: { published_at: "2026-08-20T17:34:00+08:00", application_start_at: "2026-08-20T17:34:00+08:00", deadline_at: "2026-08-26T17:00:00+08:00", deadline_text: "2026年8月26日17:00前", event_start_at: null, event_end_at: null, timezone: "Asia/Shanghai", is_deadline_all_day: false, is_long_term: false, date_status: "confirmed" },
+  eligibility: { eligible_applicant_types: ["enterprise", "organization"], eligibility_text: "公告面向依法登记设立的平台企业；需具备营业执照、经营许可或支付业务许可等相关资质以及相应运营能力，具体以官方通知为准。", ich_status_required: null, business_license_required: true, local_registration_required: null, recommendation_required: null, age_requirement_text: null, language_requirement_text: null, eligibility_status: "partial" },
+  benefits: { value_types: ["channel", "service_contract"], prize_amount: null, prize_currency: null, funding_amount: null, funding_currency: null, procurement_budget_min: null, procurement_budget_max: null, procurement_currency: null, sales_opportunity: null, channel_opportunity: true, benefit_text: "获得承接文旅消费券线上发放、专区搭建、商家组织与活动服务的合作机会；合同、费用和结算条件未在本页面完整确认。" },
+  costs: { application_fee_amount: null, application_fee_currency: null, booth_fee_amount: null, booth_fee_currency: null, deposit_amount: null, deposit_currency: null, commission_rate: null, travel_self_funded: null, accommodation_self_funded: null, materials_self_funded: null, shipping_self_funded: null, cost_text: "申请费用未在本公告中确认；平台投入、履约成本和结算条件以正式文件或合同为准。", cost_status: "unknown" },
+  requirements: { documents_required: ["申请书", "相关资质证明", "实施方案", "盖章扫描件", "纸质盖章材料"], portfolio_required: null, sample_required: null, proposal_required: true, invoice_required: null, bidding_qualification_required: null, production_capacity_text: "需具备线上专区、消费券制券/领用/核销、商家审核、宣传推广和服务保障能力。", requirements_text: "按官方公告准备申请书、相关资质证明、实施方案等材料，并按要求发送电子版和邮寄纸质版。", },
+  application: { application_url: null, application_email: "wl_gdwltcyfzc@gd.gov.cn", application_phone: null, application_platform: "电子邮件+纸质材料邮寄", application_steps: ["阅读官方公告及资质条件", "准备申请书、资质证明和实施方案", "将盖章电子材料发送至官方邮箱", "将纸质盖章材料按公告地址邮寄，并在2026年8月26日17:00前完成"], contact_text: "官方公告列明产业发展处联系人、电话和邮寄地址。", application_status: "confirmed" },
+  sources: [{ url: officialUrl, name: "广东省文化和旅游厅官方通知公告", type: "government_announcement", level: "L1", is_primary: true, published_at: "2026-08-20T17:34:00+08:00", last_checked_at: now, is_accessible: true, notes: "只读人工预审：详情页列明征选对象、服务内容、资质条件、提交方式和2026年8月26日17:00截止时间。" }],
+  verification: { verification_status: "partially_verified", verified_by: "ai_assisted", verified_at: now, source_conflict: false, conflict_notes: null, needs_recheck: true, recheck_after: "2026-08-25T09:00:00+08:00" },
+  metadata: { created_at: now, updated_at: now, created_by: "ich-ds1d-review-prep", updated_by: "ich-ds1d-review-prep", first_discovered_at: now, last_checked_at: now, published_at: null, archived_at: null, data_version: "1.0", source_import_batch: "ich-ds1d-review-prep-2026-08-24" },
+  duplicate_status: "unique", duplicate_of_id: null, merged_from_ids: [],
+  workflow: { state: "draft", revision: 1, review_reason: "待用户批准后进入正式审核；当前不公开。", submitted_at: null, reviewed_at: null, reviewed_by: null, withdrawn_at: null, history: [{ action: "created", from: null, to: "draft", actor: "ich-ds1d-review-prep", at: now, reason: "只读人工预审草稿，不写入正式机会库。", revision: 1 }] },
+}) as IchOpportunity;
+
+const validation = validateIchOpportunity(draft);
+if (!validation.valid) throw new Error(`draft validation failed: ${validation.errors.join("; ")}`);
+const semanticIssues = findIchSemanticIssues(draft, []);
+if (semanticIssues.length > 0) throw new Error(`draft semantic audit failed: ${semanticIssues.map((issue) => `${issue.field}: ${issue.reason}`).join("; ")}`);
+const store = new IchOpportunityStore(path.resolve("data/ich-opportunities.json"));
+const duplicate = store.list().map((entry) => ({ entry, result: compareIchOpportunities(entry, draft) })).find(({ result }) => result.decision === "duplicate");
+if (duplicate) throw new Error(`draft duplicate: ${duplicate.entry.slug}`);
+const outputPath = path.resolve("docs/ich/DS1-D-待批准机会草稿_V1.0.json");
+fs.writeFileSync(outputPath, `${JSON.stringify({ schema_version: "ich-ds1d-reviewed-draft.v1", generated_at: now, readonly: true, production_store_write: false, user_approval_required: true, candidate: draft }, null, 2)}\n`);
+console.log(JSON.stringify({ output: path.relative(process.cwd(), outputPath), candidate_id: draft.id, source: officialUrl, validation: "pass", semantic_issues: semanticIssues.length, duplicate: false, is_published: draft.is_published, workflow: draft.workflow.state, production_store_write: false, user_approval_required: true }, null, 2));

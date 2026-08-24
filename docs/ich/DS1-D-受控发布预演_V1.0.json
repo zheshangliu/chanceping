@@ -1,0 +1,17 @@
+{
+  "schema_version": "ich-ds1d-release-dry-run.v1",
+  "ran_at": "2026-08-24T07:21:50.606Z",
+  "readonly": true,
+  "formal_store_write": false,
+  "input": "docs/ich/DS1-C-候选审计记录_V1.0.json",
+  "input_candidates": 9,
+  "eligible_for_formal_publish": 0,
+  "would_add": 0,
+  "would_update": 0,
+  "would_withdraw": 0,
+  "blocked_reasons": [
+    "候选审计明确阻断正式发布",
+    "候选尚未完成人工审核批准"
+  ],
+  "gate": "not_ready"
+}

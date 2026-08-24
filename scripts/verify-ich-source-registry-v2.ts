@@ -1,0 +1,17 @@
+import assert from "node:assert/strict";
+import { ICH_PRIMARY_CATEGORIES } from "../src/ich/types";
+import { getIchSourceRegistryV2, listIchSourceRegistryV2ByCategory, listIchSourceRegistryV2ByGeography, validateIchSourceRegistryV2 } from "../src/ich/source-registry-v2";
+
+const registry = getIchSourceRegistryV2();
+const errors = validateIchSourceRegistryV2(registry);
+assert.deepEqual(errors, [], errors.join("; "));
+assert.equal(registry.sources.length, 31, "DS1 core source registry must start with 31 entries");
+assert.ok(registry.sources.filter((source) => source.family === "procurement_platform").length >= 5, "procurement coverage must have at least five platform sources");
+assert.ok(registry.sources.filter((source) => source.geography.includes("guangzhou")).length >= 3, "Guangzhou coverage must have at least three sources");
+assert.ok(registry.sources.filter((source) => source.role === "discovery").length >= 3, "discovery layer must be represented");
+assert.ok(registry.sources.filter((source) => source.operational_status === "planned").length === registry.sources.length, "DS1 must remain design-only before adapter verification");
+for (const category of ICH_PRIMARY_CATEGORIES) assert.ok(listIchSourceRegistryV2ByCategory(category).length > 0, `category ${category} must have a source`);
+assert.ok(listIchSourceRegistryV2ByGeography("greater_bay_area").length >= 5, "Greater Bay Area source pool must be represented");
+assert.ok(registry.query_packs.some((pack) => pack.id === "ich-cn-procurement"));
+assert.ok(registry.query_packs.some((pack) => pack.id === "ich-grants-intl"));
+console.log(`ICH DS1 source registry V2: ${registry.sources.length} sources, ${registry.query_packs.length} query packs, all checks passed`);

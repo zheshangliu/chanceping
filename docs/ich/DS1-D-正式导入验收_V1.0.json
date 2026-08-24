@@ -1,0 +1,29 @@
+{
+  "schema_version": "ich-ds1d-controlled-import.v1",
+  "imported_at": "2026-08-24T08:00:00.000Z",
+  "authorized_by": "user_granted_stage_gate_authority",
+  "input_draft_id": "ds1d_candidate_gd_platform_selection_20260826",
+  "published_id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+  "slug": "2026-guangdong-cultural-tourism-subsidy-platform-selection",
+  "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+  "mode": "write",
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_before_sha256": "615dfb4dc65ed07f40c4664e20d39c4162f470966ed8b012d9e50ce67563c08a",
+  "formal_store_after_sha256": "75a5bc9f5b5dbce38f5a1593bf84bb0127d772918f433d043392b17943734714",
+  "before_count": 118,
+  "after_count": 119,
+  "count_delta": 1,
+  "workflow_revisions": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "final_state": "published",
+  "final_is_published": true,
+  "validation": "pass",
+  "semantic_issue_count": 0,
+  "rollback_backup_expected": true,
+  "errors": [],
+  "gate": "pass"
+}
