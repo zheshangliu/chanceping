@@ -7,12 +7,10 @@ const baseUrl = (process.argv.find((arg) => arg.startsWith("--base-url="))?.spli
 const timerEvidencePath = process.argv.find((arg) => arg.startsWith("--timer-evidence="))?.split("=").slice(1).join("=") ?? null;
 const ds6EvidencePath = process.argv.find((arg) => arg.startsWith("--ds6-evidence="))?.split("=").slice(1).join("=") ?? null;
 const ds15Path = path.resolve("docs/ich/DS15-三日观察启动记录_V1.0.json");
-const ds6Path = path.resolve("docs/ich/DS6-只读调度运行账本_V1.0.json");
 const storePath = path.resolve("data/ich-opportunities.json");
 const outputPath = path.resolve("docs/ich/DS15-三日观察收口审计_V1.0.json");
 const start = JSON.parse(fs.readFileSync(ds15Path, "utf8")) as { observation_window_start: string; planned_observation_end: string; baseline: { formal_store_sha256: string } };
 type Ds6Run = { run_id: string; ran_at: string; gate: string; readonly: boolean; formal_store_write: boolean; formal_store_unchanged: boolean; steps: Array<{ exit_code: number }> };
-const ds6 = JSON.parse(fs.readFileSync(ds6Path, "utf8")) as { runs: Ds6Run[] };
 const checks: Check[] = [];
 const now = new Date();
 const observedEnd = new Date(start.planned_observation_end);
@@ -39,8 +37,10 @@ async function main(): Promise<void> {
     const evidence = JSON.parse(fs.readFileSync(path.resolve(ds6EvidencePath), "utf8")) as { runs?: Ds6Run[] } | Ds6Run[];
     evidenceRuns = Array.isArray(evidence) ? evidence : evidence.runs ?? [];
   }
-  const allRuns = [...ds6.runs, ...evidenceRuns];
-  const uniqueRuns = [...new Map(allRuns.map((run) => [run.run_id, run])).values()];
+  // The checked-in ledger contains historical dry-run records, including future-dated
+  // rehearsals. Only an explicitly supplied remote evidence file may satisfy the
+  // post-window scheduler check; never promote a local rehearsal to real evidence.
+  const uniqueRuns = [...new Map(evidenceRuns.map((run) => [run.run_id, run])).values()];
   const actualRuns = uniqueRuns.filter((run) => new Date(run.ran_at) <= now && new Date(run.ran_at) >= observedEnd && run.gate === "pass" && run.readonly === true && run.formal_store_write === false && run.formal_store_unchanged === true && Array.isArray(run.steps) && run.steps.every((step) => step.exit_code === 0));
   checks.push({ name: "real_DS6_run_after_observation_end", ok: actualRuns.length >= 1, detail: actualRuns.map((run) => run.run_id).join(",") || "none" });
   let timerEvidence = "";

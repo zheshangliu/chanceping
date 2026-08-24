@@ -1,7 +1,7 @@
 {
   "schema_version": "ich-ds15-observation-finalize.v1",
   "stage": "DS15",
-  "finalized_at": "2026-08-24T12:03:08.756Z",
+  "finalized_at": "2026-08-24T12:06:21.191Z",
   "base_url": "https://ich.chanceping.com",
   "observation_window_start": "2026-08-24T12:00:00.000Z",
   "planned_observation_end": "2026-08-27T12:00:00.000Z",
@@ -14,7 +14,7 @@
     {
       "name": "observation_end_reached",
       "ok": false,
-      "detail": "now=2026-08-24T12:03:08.756Z end=2026-08-27T12:00:00.000Z"
+      "detail": "now=2026-08-24T12:06:21.191Z end=2026-08-27T12:00:00.000Z"
     },
     {
       "name": "formal_store_hash_unchanged_since_DS15_baseline",
