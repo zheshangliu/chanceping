@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-07-24T08:00:00.000Z",
+  "updated_at": "2026-07-26T16:00:00.000Z",
   "entries": [
     {
       "id": "ich_2026_guangdong_design_competition_11",
@@ -430,7 +430,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -659,7 +659,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -964,7 +964,7 @@
       "classification_confidence": "high",
       "classification_reason": "依据列明的具体来源页、行动窗口和参与条件人工辅助核验并分类。",
       "classification_status": "confirmed",
-      "status": "active",
+      "status": "closing_soon",
       "status_reason": "核验日2026年7月24日仍在申请窗口内。",
       "is_featured": false,
       "is_published": true,
@@ -1123,7 +1123,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -1352,7 +1352,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -1584,7 +1584,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -1813,7 +1813,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -2274,7 +2274,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -2967,7 +2967,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -3196,7 +3196,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -3428,7 +3428,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -3660,7 +3660,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -4353,7 +4353,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -4582,7 +4582,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -4814,7 +4814,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -5046,7 +5046,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -5275,7 +5275,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -5501,7 +5501,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -6197,7 +6197,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -6426,7 +6426,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -6652,7 +6652,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
@@ -6878,7 +6878,7 @@
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
-        "source_import_batch": "ich-stage5-2026-07-24-review"
+        "source_import_batch": "ich-stage5-2026-07-27-automation"
       },
       "duplicate_status": "unique",
       "duplicate_of_id": null,
