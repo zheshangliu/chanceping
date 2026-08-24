@@ -1,37 +1,16 @@
 {
   "schema_version": "ich-planned-source-audit.v1",
   "stage": "SRC-R0",
-  "audited_at": "2026-08-24T09:36:17.294Z",
+  "audited_at": "2026-08-24T09:54:04.923Z",
   "formal_store_write": false,
-  "planned_total": 29,
+  "planned_total": 28,
   "recommendation_counts": {
-    "adapter_candidate": 23,
+    "adapter_candidate": 22,
     "manual_review": 4,
     "manual_or_allowed_fetch": 2
   },
   "follow_up_count": 6,
   "items": [
-    {
-      "source_id": "ichina",
-      "name": "中国非物质文化遗产网",
-      "canonical_url": "https://www.ihchina.cn/",
-      "categories": [
-        "competition",
-        "exhibition_market",
-        "policy_funding",
-        "international"
-      ],
-      "geography": [
-        "nationwide"
-      ],
-      "evidence_level": "L1",
-      "scan_frequency": "daily",
-      "http_status": 200,
-      "page_type": "listing",
-      "javascript_required": false,
-      "recommended_mode": "adapter_candidate",
-      "endpoint_error": null
-    },
     {
       "source_id": "gmfyg",
       "name": "中国工艺美术馆·中国非物质文化遗产馆",

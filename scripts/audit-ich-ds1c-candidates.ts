@@ -48,7 +48,7 @@ function normalize(value: string): string { return value.normalize("NFKC").toLow
 function isDetailUrl(url: string, discoveryUrl: string): boolean {
   try {
     const source = new URL(url); const discovery = new URL(discoveryUrl);
-    return source.pathname !== discovery.pathname && /(?:post_|t\d+_\d+|content\/|\/(?:guide_detail|work_notice_detail|normal_detail|fund_work_detail|policy_detail|newslncb_detail|single_detail)\/\d+\.html$)/u.test(source.pathname);
+    return source.pathname !== discovery.pathname && /(?:post_|t\d+_\d+|content\/|\/(?:guide_detail|work_notice_detail|normal_detail|fund_work_detail|policy_detail|newslncb_detail|news_2_details|single_detail)\/\d+\.html$)/u.test(source.pathname);
   } catch { return false; }
 }
 function dateFromText(value: string | null): Date | null {

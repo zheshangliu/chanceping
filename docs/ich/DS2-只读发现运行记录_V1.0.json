@@ -1,62 +1,62 @@
 {
   "schema_version": "ich-ds2-readonly-discovery.v1",
-  "run_id": "ich-ds2-20260824093613",
-  "started_at": "2026-08-24T09:36:13.694Z",
-  "finished_at": "2026-08-24T09:36:15.904Z",
+  "run_id": "ich-ds2-20260824095356",
+  "started_at": "2026-08-24T09:53:56.999Z",
+  "finished_at": "2026-08-24T09:54:03.521Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
   "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
-  "source_count": 5,
-  "candidate_count": 15,
+  "source_count": 6,
+  "candidate_count": 18,
   "source_runs": [
     {
       "source_id": "ccgp",
       "adapter_id": "ccgp-procurement-listing-v1",
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "access_mode": "search",
-      "started_at": "2026-08-24T09:36:13.694Z",
-      "finished_at": "2026-08-24T09:36:14.248Z",
+      "started_at": "2026-08-24T09:53:57.000Z",
+      "finished_at": "2026-08-24T09:53:57.936Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-      "raw_snapshot_hash": "993dd6191aa770d56cab817df8b8d1760447a80b8829ae70716ebbc00882817d",
+      "raw_snapshot_hash": "7ec89046475ba83796519e482deec21f7826b795d46013589dd79a8978d3d4b4",
       "candidate_count": 3,
       "candidates": [
         {
-          "candidate_id": "ds1b-ccgp-b6858a2104fc",
+          "candidate_id": "ds1b-ccgp-c7340886debe",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
-          "title": "内江市东兴区水利局内江市东兴区引沱入清工程环境影响评价报告编制服务竞争性磋商公告",
-          "organizer": "内江市东兴区水利局",
-          "deadline_text": "2026年09月08日 09时30分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
+          "title": "广西冠宁工程咨询有限公司关于广西壮族自治区崇左市2026年中央财政国土绿化项目（宁明县八角低产林改造N2标段）的公开招标公告",
+          "organizer": "崇左市林业局",
+          "deadline_text": "2026年09月15日 09:00",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:24",
-          "raw_snapshot_hash": "8e87de8572daf18f3207770698c3b9efe9a1c482fdcceedc4a594c8f5ee0f8ba",
+          "published_text": "2026年08月24日 17:41",
+          "raw_snapshot_hash": "e9a1ff91407b9fb89a76222a9068415a9c5d88054bc545e323289fee991baf19",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "内江市东兴区水利局内江市东兴区引沱入清工程环境影响评价报告编制服务竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "value": "广西冠宁工程咨询有限公司关于广西壮族自治区崇左市2026年中央财政国土绿化项目（宁明县八角低产林改造N2标段）的公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
               "method": "html_title",
-              "evidence_excerpt": "内江市东兴区水利局内江市东兴区引沱入清工程环境影响评价报告编制服务竞争性磋商公告",
+              "evidence_excerpt": "广西冠宁工程咨询有限公司关于广西壮族自治区崇左市2026年中央财政国土绿化项目（宁明县八角低产林改造N2标段）的公开招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "内江市东兴区水利局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "value": "崇左市林业局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 内江市东兴区水利局",
+              "evidence_excerpt": "采购单位 崇左市林业局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月08日 09时30分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "value": "2026年09月15日 09:00",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
               "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月08日 09时30分 （北京时间）前",
+              "evidence_excerpt": "开标时间 2026年09月15日 09:00",
               "confirmed": true
             },
             "geography": {
@@ -74,49 +74,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193270.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193617.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-0a769a60a469",
+          "candidate_id": "ds1b-ccgp-1d4067d681d6",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
-          "title": "2026东莞杯国际工业设计大赛策划及承办服务竞争性磋商公告",
-          "organizer": "东莞市工业和信息化局",
-          "deadline_text": "2026年09月04日 09时30分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
+          "title": "天龙山石窟博物馆景区保安服务项目公开招标结果公告",
+          "organizer": "太原市文物保护研究院",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:24",
-          "raw_snapshot_hash": "d9a493dc230f02f32d7091a483d2935c8e55422cd0d876d5780453d4bf26f4eb",
+          "published_text": "2026年08月24日 17:40",
+          "raw_snapshot_hash": "060bb741d35a66f6f316069a440d08010c2e3780567f5553cb61c9d99b9c74a1",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "2026东莞杯国际工业设计大赛策划及承办服务竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+              "value": "天龙山石窟博物馆景区保安服务项目公开招标结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
               "method": "html_title",
-              "evidence_excerpt": "2026东莞杯国际工业设计大赛策划及承办服务竞争性磋商公告",
+              "evidence_excerpt": "天龙山石窟博物馆景区保安服务项目公开招标结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "东莞市工业和信息化局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+              "value": "太原市文物保护研究院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 东莞市工业和信息化局",
+              "evidence_excerpt": "采购单位 太原市文物保护研究院",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月04日 09时30分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月04日 09时30分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -133,48 +133,48 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193269.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27193641.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-1ce77b7045af",
+          "candidate_id": "ds1b-ccgp-e4a9449ca1bc",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
-          "title": "紫阳县2026年“开麦吧茶乡”“夏亲水”“秋丰收”系列文旅活动保障服务项目竞争性磋商公告",
-          "organizer": "紫阳县文化和旅游广电局",
-          "deadline_text": "2026年09月09日 16时00分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
+          "title": "晋中市第一人民医院公开招标婴幼儿高频呼吸机、肺功能测试系统等医疗设备采购项目的公开招标公告",
+          "organizer": "晋中市第一人民医院",
+          "deadline_text": "2026年09月15日 09:00",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 17:24",
-          "raw_snapshot_hash": "3dab0b505303617b1870cd167985f9ca256348665280a656c5d7e66daa5ec75e",
+          "published_text": "2026年08月24日 17:40",
+          "raw_snapshot_hash": "16bd82cecc4df35bd6552b7d277e0f169b8808fb3b8b01237c3ffa69a136e1e4",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "紫阳县2026年“开麦吧茶乡”“夏亲水”“秋丰收”系列文旅活动保障服务项目竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "value": "晋中市第一人民医院公开招标婴幼儿高频呼吸机、肺功能测试系统等医疗设备采购项目的公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
               "method": "html_title",
-              "evidence_excerpt": "紫阳县2026年“开麦吧茶乡”“夏亲水”“秋丰收”系列文旅活动保障服务项目竞争性磋商公告",
+              "evidence_excerpt": "晋中市第一人民医院公开招标婴幼儿高频呼吸机、肺功能测试系统等医疗设备采购项目的公开招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "紫阳县文化和旅游广电局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "value": "晋中市第一人民医院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 紫阳县文化和旅游广电局",
+              "evidence_excerpt": "采购单位 晋中市第一人民医院",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月09日 16时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "value": "2026年09月15日 09:00",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
               "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月09日 16时00分 （北京时间）前",
+              "evidence_excerpt": "开标时间 2026年09月15日 09:00",
               "confirmed": true
             },
             "geography": {
@@ -192,10 +192,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27193265.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27193613.htm",
               "confirmed": true
             }
           }
@@ -208,8 +208,8 @@
       "adapter_id": "gd-culture-notices-v1",
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:36:14.248Z",
-      "finished_at": "2026-08-24T09:36:14.527Z",
+      "started_at": "2026-08-24T09:53:57.936Z",
+      "finished_at": "2026-08-24T09:53:58.474Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://whly.gd.gov.cn/open_newggl/index.html",
@@ -401,8 +401,8 @@
       "adapter_id": "yuexiu-notices-v1",
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:36:14.527Z",
-      "finished_at": "2026-08-24T09:36:14.847Z",
+      "started_at": "2026-08-24T09:53:58.474Z",
+      "finished_at": "2026-08-24T09:53:59.329Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
@@ -594,8 +594,8 @@
       "adapter_id": "mct-notices-listing-v1",
       "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:36:14.847Z",
-      "finished_at": "2026-08-24T09:36:15.562Z",
+      "started_at": "2026-08-24T09:53:59.329Z",
+      "finished_at": "2026-08-24T09:54:00.246Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
@@ -787,8 +787,8 @@
       "adapter_id": "cnaf-guides-listing-v1",
       "discovery_url": "https://www.cnaf.cn/guide.html",
       "access_mode": "listing",
-      "started_at": "2026-08-24T09:36:15.562Z",
-      "finished_at": "2026-08-24T09:36:15.904Z",
+      "started_at": "2026-08-24T09:54:00.246Z",
+      "finished_at": "2026-08-24T09:54:01.226Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.cnaf.cn/guide.html",
@@ -968,6 +968,199 @@
               "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
               "method": "listing_anchor",
               "evidence_excerpt": "https://www.cnaf.cn/guide_detail/5548.html",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_id": "ichina",
+      "adapter_id": "ichina-notices-listing-v1",
+      "discovery_url": "https://www.ihchina.cn/news_2",
+      "access_mode": "listing",
+      "started_at": "2026-08-24T09:54:01.226Z",
+      "finished_at": "2026-08-24T09:54:03.521Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://www.ihchina.cn/news_2",
+      "raw_snapshot_hash": "86bf5934aec2eff17039bb094e04d988721eff730adbcc857daef8a5fff313e8",
+      "candidate_count": 3,
+      "candidates": [
+        {
+          "candidate_id": "ds1b-ichina-b4bd9328ed5f",
+          "adapter_id": "ichina-notices-listing-v1",
+          "source_id": "ichina",
+          "discovery_url": "https://www.ihchina.cn/news_2",
+          "source_url": "https://www.ihchina.cn/news_2_details/31583.html",
+          "title": "文化和旅游部办公厅关于开展2026年“文化和自然遗产日”非遗主题宣传展示工作的通知 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+          "organizer": "文化和旅游部官网",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026-05-27 13:48:00",
+          "raw_snapshot_hash": "77aeac73c163ce94e8ce0f4d30e58f5cb0a3173b1beecc103764e7b308c266e1",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "文化和旅游部办公厅关于开展2026年“文化和自然遗产日”非遗主题宣传展示工作的通知 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+              "source_url": "https://www.ihchina.cn/news_2_details/31583.html",
+              "method": "html_title",
+              "evidence_excerpt": "文化和旅游部办公厅关于开展2026年“文化和自然遗产日”非遗主题宣传展示工作的通知 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "文化和旅游部官网",
+              "source_url": "https://www.ihchina.cn/news_2_details/31583.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：文化和旅游部官网",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.ihchina.cn/news_2_details/31583.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.ihchina.cn/news_2",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.ihchina.cn/news_2",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ihchina.cn/news_2_details/31583.html",
+              "source_url": "https://www.ihchina.cn/news_2_details/31583.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ihchina.cn/news_2_details/31583.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ichina-4924b900846a",
+          "adapter_id": "ichina-notices-listing-v1",
+          "source_id": "ichina",
+          "discovery_url": "https://www.ihchina.cn/news_2",
+          "source_url": "https://www.ihchina.cn/news_2_details/31579.html",
+          "title": "中国艺术研究院关于2025年度国家级非物质文化遗产代表性传承人传承活动评估结果的公示 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+          "organizer": "中国非物质文化遗产网",
+          "deadline_text": "2026年5月7日至13日",
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026-05-07 09:15:00",
+          "raw_snapshot_hash": "9c431700d669c8c059aec5775504eeca4e7389fd8c046c38e7e10a141e854887",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "中国艺术研究院关于2025年度国家级非物质文化遗产代表性传承人传承活动评估结果的公示 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+              "source_url": "https://www.ihchina.cn/news_2_details/31579.html",
+              "method": "html_title",
+              "evidence_excerpt": "中国艺术研究院关于2025年度国家级非物质文化遗产代表性传承人传承活动评估结果的公示 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "中国非物质文化遗产网",
+              "source_url": "https://www.ihchina.cn/news_2_details/31579.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：中国非物质文化遗产网",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年5月7日至13日",
+              "source_url": "https://www.ihchina.cn/news_2_details/31579.html",
+              "method": "structured_text",
+              "evidence_excerpt": "公示时间：2026年5月7日至13日",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.ihchina.cn/news_2",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.ihchina.cn/news_2",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ihchina.cn/news_2_details/31579.html",
+              "source_url": "https://www.ihchina.cn/news_2_details/31579.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ihchina.cn/news_2_details/31579.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ichina-cd6b4c3c3536",
+          "adapter_id": "ichina-notices-listing-v1",
+          "source_id": "ichina",
+          "discovery_url": "https://www.ihchina.cn/news_2",
+          "source_url": "https://www.ihchina.cn/news_2_details/31562.html",
+          "title": "中共中央宣传部等5部门联合印发《戏剧振兴三年行动计划（2026—2028年）》 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+          "organizer": "新华社",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026-04-13 09:24:00",
+          "raw_snapshot_hash": "40a5d6e1956d1709007bc1683b960cc244ae21034582e153d7d06b8a6d9286c3",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "中共中央宣传部等5部门联合印发《戏剧振兴三年行动计划（2026—2028年）》 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+              "source_url": "https://www.ihchina.cn/news_2_details/31562.html",
+              "method": "html_title",
+              "evidence_excerpt": "中共中央宣传部等5部门联合印发《戏剧振兴三年行动计划（2026—2028年）》 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "新华社",
+              "source_url": "https://www.ihchina.cn/news_2_details/31562.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：新华社",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.ihchina.cn/news_2_details/31562.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.ihchina.cn/news_2",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.ihchina.cn/news_2",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ihchina.cn/news_2_details/31562.html",
+              "source_url": "https://www.ihchina.cn/news_2_details/31562.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ihchina.cn/news_2_details/31562.html",
               "confirmed": true
             }
           }

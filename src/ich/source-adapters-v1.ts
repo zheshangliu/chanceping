@@ -158,6 +158,7 @@ const gdCulture = requiredSource("gd-culture");
 const yuexiu = requiredSource("yuexiu-notices");
 const mct = requiredSource("mct-notices");
 const cnaf = requiredSource("cnaf");
+const ichina = requiredSource("ichina");
 
 export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   {
@@ -228,6 +229,20 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       organizerPatterns: [/编辑\s*[:：]\s*([^\s]{2,30})/u, /(国家艺术基金管理中心)/u],
       deadlinePatterns: [/至\s*(\d{1,2}月\d{1,2}日)\s*截止申报/u, /申报材料应于\s*(\d{4}年\d{1,2}月\d{1,2}日)前/u, /申报时间[^。；]{0,80}?(\d{4}年\d{1,2}月\d{1,2}日)/u],
       publishedPatterns: [/时间\s*[:：]\s*(\d{4}\.\d{1,2}\.\d{1,2})/u, /时间\s*[:：]\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+    }),
+  },
+  {
+    adapter_id: "ichina-notices-listing-v1",
+    source_id: ichina.id,
+    discovery_url: "https://www.ihchina.cn/news_2",
+    category_hint: "policy_funding",
+    geography_hint: "全国",
+    selectDetailLinks: (html, url) => extractLinks(html, url, (href) => /ihchina\.cn\/news_2_details\/\d+\.html$/.test(href)),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl, listingTitle }) => buildCandidate({
+      adapterId: "ichina-notices-listing-v1", sourceId: ichina.id, categoryHint: "policy_funding", geographyHint: "全国", html, sourceUrl, discoveryUrl, listingTitle,
+      organizerPatterns: [/来源\s*[:：]\s*([^\s]{2,40})/u, /主办\s*[:：]\s*([^\n]{2,60})/u],
+      deadlinePatterns: [/公示时间\s*[:：]\s*(\d{4}年\d{1,2}月\d{1,2}日至\d{1,2}日)/u, /(?:申报|报名|提交)[^。；]{0,100}?(\d{4}年\d{1,2}月\d{1,2}日)/u, /截至\s*(\d{4}年\d{1,2}月\d{1,2}日)/u],
+      publishedPatterns: [/创建时间\s*[:：]\s*(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{2}:\d{2})/u],
     }),
   },
 ];
