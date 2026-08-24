@@ -168,6 +168,8 @@
     "verify:ich:ds14": "tsx scripts/verify-ich-ds14-controlled-import-audit.ts",
     "ich:ds15:observation-readiness": "tsx scripts/run-ich-ds15-observation-readiness.ts",
     "verify:ich:ds15": "tsx scripts/verify-ich-ds15-observation-readiness.ts",
+    "ich:ds15:observation-finalize": "tsx scripts/run-ich-ds15-observation-finalize.ts",
+    "verify:ich:ds15:finalize": "tsx scripts/verify-ich-ds15-observation-finalize.ts",
     "ich:src:planned-audit": "tsx scripts/run-ich-planned-source-audit.ts",
     "verify:ich:src:planned-audit": "tsx scripts/verify-ich-planned-source-audit.ts",
     "ich:ds9:admin-audit": "tsx scripts/run-ich-ds9-admin-audit.ts",

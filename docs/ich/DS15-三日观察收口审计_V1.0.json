@@ -1,0 +1,77 @@
+{
+  "schema_version": "ich-ds15-observation-finalize.v1",
+  "stage": "DS15",
+  "finalized_at": "2026-08-24T11:56:11.992Z",
+  "base_url": "https://ich.chanceping.com",
+  "observation_window_start": "2026-08-24T12:00:00.000Z",
+  "planned_observation_end": "2026-08-27T12:00:00.000Z",
+  "actual_DS6_runs": [],
+  "timer_evidence_path": null,
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
+  "formal_store_write": false,
+  "checks": [
+    {
+      "name": "observation_end_reached",
+      "ok": false,
+      "detail": "now=2026-08-24T11:56:11.992Z end=2026-08-27T12:00:00.000Z"
+    },
+    {
+      "name": "formal_store_hash_unchanged_since_DS15_baseline",
+      "ok": true,
+      "detail": "current=c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300 baseline=c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300"
+    },
+    {
+      "name": "real_DS6_run_after_observation_end",
+      "ok": false,
+      "detail": "none"
+    },
+    {
+      "name": "remote_timer_evidence_after_observation_end",
+      "ok": false,
+      "detail": "missing --timer-evidence"
+    },
+    {
+      "name": "public_home",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "guangzhou_filter",
+      "ok": true,
+      "detail": "status=200 total=2"
+    },
+    {
+      "name": "international_category_filter",
+      "ok": true,
+      "detail": "status=200 total=12"
+    },
+    {
+      "name": "closing_soon_status_filter",
+      "ok": true,
+      "detail": "status=200 total=7"
+    },
+    {
+      "name": "pagination",
+      "ok": true,
+      "detail": "page1=expansion-batch-01-019 page2=expansion-batch-01-028"
+    },
+    {
+      "name": "SSR_detail",
+      "ok": true,
+      "detail": "status=200 slug=expansion-batch-01-019"
+    },
+    {
+      "name": "admin_quality_metrics",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "internal_api_protected",
+      "ok": true,
+      "detail": "status=401"
+    }
+  ],
+  "gate": "observation_in_progress",
+  "half_automatic_update_decision": "pending_until_all_checks_pass"
+}
