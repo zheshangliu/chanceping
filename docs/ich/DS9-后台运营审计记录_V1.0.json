@@ -1,0 +1,115 @@
+{
+  "schema_version": "ich-ds9-admin-operations-audit.v1",
+  "stage": "DS9",
+  "audited_at": "2026-08-24T08:53:17.222Z",
+  "gate": "pass",
+  "formal_store_write": false,
+  "dashboard": {
+    "schema_version": "ich-operations-dashboard.v1",
+    "generated_at": "2026-08-24T08:53:17.222Z",
+    "formal_store": {
+      "total": 119,
+      "published": 112,
+      "current": 17,
+      "historical": 56,
+      "withdrawn": 7,
+      "status_counts": {
+        "expired": 56,
+        "pending_confirmation": 46,
+        "active": 9,
+        "closing_soon": 8
+      },
+      "stale_recheck": 114
+    },
+    "ds5_snapshot": {
+      "ran_at": "2026-08-24T08:00:00.000Z",
+      "snapshot_current": 61,
+      "snapshot_historical": 51,
+      "dynamic_current": 17,
+      "dynamic_historical": 56,
+      "current_drift": -44,
+      "historical_drift": 5
+    },
+    "source_registry": {
+      "total": 31,
+      "query_packs": 5,
+      "status_counts": {
+        "planned": 31,
+        "adapter_ready": 0,
+        "discovery_only": 0,
+        "disabled": 0
+      },
+      "primary_detail_page_required": true
+    },
+    "source_workflows": {
+      "total": 12,
+      "adapters": 3,
+      "manual": 9,
+      "greater_bay_area": 7,
+      "international": 2,
+      "category_coverage": {
+        "competition": 6,
+        "exhibition_market": 5,
+        "procurement_project": 8,
+        "channel_collaboration": 8,
+        "policy_funding": 5,
+        "international": 4
+      }
+    },
+    "ds6_schedule": {
+      "enabled": true,
+      "timezone": "Asia/Shanghai",
+      "interval_days": 3,
+      "run_mode": "readonly",
+      "formal_store_write": false,
+      "run_count": 3,
+      "latest_run": {
+        "run_id": "ich-ds6-20260830080000",
+        "ran_at": "2026-08-30T08:00:00.000Z",
+        "gate": "pass",
+        "readonly": true,
+        "formal_store_write": false,
+        "formal_store_unchanged": true
+      },
+      "recent_runs": [
+        {
+          "run_id": "ich-ds6-20260824080000",
+          "ran_at": "2026-08-24T08:00:00.000Z",
+          "gate": "pass",
+          "readonly": true,
+          "formal_store_write": false,
+          "formal_store_unchanged": true
+        },
+        {
+          "run_id": "ich-ds6-20260827080000",
+          "ran_at": "2026-08-27T08:00:00.000Z",
+          "gate": "pass",
+          "readonly": true,
+          "formal_store_write": false,
+          "formal_store_unchanged": true
+        },
+        {
+          "run_id": "ich-ds6-20260830080000",
+          "ran_at": "2026-08-30T08:00:00.000Z",
+          "gate": "pass",
+          "readonly": true,
+          "formal_store_write": false,
+          "formal_store_unchanged": true
+        }
+      ]
+    },
+    "ds8_lifecycle": {
+      "gate": "pass_with_followups",
+      "stale_recheck": 114,
+      "duplicate_groups": 0,
+      "max_batch_size": 10,
+      "formal_store_write": false
+    },
+    "safety": {
+      "formal_store_write_from_dashboard": false,
+      "secrets_in_response": false,
+      "note": "运营面板只读；候选晋级仍需经过人工审核和受控发布门禁。"
+    }
+  },
+  "errors": []
+}

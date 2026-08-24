@@ -138,6 +138,8 @@
     "verify:ich:ds7": "tsx scripts/verify-ich-ds7-source-coverage.ts",
     "ich:ds8:lifecycle-audit": "tsx scripts/run-ich-ds8-lifecycle-audit.ts",
     "verify:ich:ds8": "tsx scripts/verify-ich-ds8-lifecycle.ts",
+    "ich:ds9:admin-audit": "tsx scripts/run-ich-ds9-admin-audit.ts",
+    "verify:ich:ds9": "tsx scripts/verify-ich-ds9-admin-operations.ts",
     "ich:ds1d:controlled-import": "tsx scripts/import-ich-ds1d-approved-draft.ts",
     "verify:ich:ds1d:public-entry": "tsx scripts/verify-ich-ds1d-public-entry.ts",
     "verify:q7:ai-events-metadata": "tsx scripts/verify-q7k-ai-event-page-metadata.ts",
