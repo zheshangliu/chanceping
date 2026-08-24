@@ -1,6 +1,10 @@
 import crypto from "crypto";
+import fs from "fs";
 import { Hono, type Context } from "hono";
-import { defaultIchSubmissionStorePath } from "../../ich/submission-runtime";
+import {
+  defaultIchSubmissionStorePath,
+  legacyIchSubmissionStorePath,
+} from "../../ich/submission-runtime";
 import { IchSubmissionError, IchSubmissionService } from "../../ich/submission-service";
 import { IchSubmissionStore } from "../../ich/submission-store";
 
@@ -15,7 +19,14 @@ export interface IchSubmissionRouteOptions {
 }
 
 export function defaultIchSubmissionStore(): IchSubmissionStore {
-  return new IchSubmissionStore(defaultIchSubmissionStorePath());
+  const storePath = defaultIchSubmissionStorePath();
+  const store = new IchSubmissionStore(storePath);
+  const legacyPath = legacyIchSubmissionStorePath();
+  if (storePath !== legacyPath && !fs.existsSync(storePath) && fs.existsSync(legacyPath)) {
+    const legacy = new IchSubmissionStore(legacyPath).list();
+    if (legacy.length > 0) store.replaceAll(legacy);
+  }
+  return store;
 }
 
 function fixedResponse(c: Context, code: string, message: string, status: 400 | 413 | 429 | 503) {

@@ -3,7 +3,7 @@ import os from "os";
 import path from "path";
 import { Hono } from "hono";
 import { ichPagesRoutes } from "../src/api/routes/ich-pages";
-import { ichSubmissionRoutes } from "../src/api/routes/ich-submissions";
+import { defaultIchSubmissionStore, ichSubmissionRoutes } from "../src/api/routes/ich-submissions";
 import { internalIchSubmissionRoutes } from "../src/api/routes/internal-ich-submissions";
 import { publicIchRoutes } from "../src/api/routes/public-ich";
 import { IchPublicationService } from "../src/ich/publication-service";
@@ -11,6 +11,7 @@ import {
   defaultIchSubmissionRuntimeDir,
   defaultIchSubmissionStorePath,
   defaultIchSubmissionTransactionPath,
+  isChancePingProductionRuntime,
 } from "../src/ich/submission-runtime";
 import { IchSubmissionAcceptanceService } from "../src/ich/submission-service";
 import { IchSubmissionStore } from "../src/ich/submission-store";
@@ -95,6 +96,10 @@ async function main(): Promise<void> {
     defaultIchSubmissionRuntimeDir() === "/var/lib/chanceping/ich" &&
     defaultIchSubmissionStorePath() === "/var/lib/chanceping/ich/ich-source-submissions.json" &&
     defaultIchSubmissionTransactionPath() === "/var/lib/chanceping/ich/ich-submission-accept.transaction.json");
+  check("ChancePing release directories use persistent runtime storage without NODE_ENV",
+    isChancePingProductionRuntime("/opt/chanceping/current", "") &&
+    isChancePingProductionRuntime("/opt/chanceping/releases/20260824", "") &&
+    !isChancePingProductionRuntime(root, ""));
   process.env.CHANCEPING_ICH_RUNTIME_DIR = root;
   check("submission runtime directory remains configurable",
     defaultIchSubmissionStorePath() === path.join(root, "ich-source-submissions.json") &&
@@ -119,6 +124,22 @@ async function main(): Promise<void> {
     submissionStore.list()[0].source_url === "https://official.example.gov.cn/notice?a=1&b=2" &&
     opportunityStore.list().length === 0);
   check("submission write creates no opportunity file", !fs.existsSync(opportunityPath));
+
+  const migrationCwd = path.join(root, "migration-release");
+  const migrationLegacyPath = path.join(migrationCwd, "data", "ich-source-submissions.json");
+  const migrationRuntime = path.join(root, "migration-runtime");
+  new IchSubmissionStore(migrationLegacyPath).replaceAll(submissionStore.list());
+  const cwdBeforeMigration = process.cwd();
+  const runtimeBeforeMigration = process.env.CHANCEPING_ICH_RUNTIME_DIR;
+  process.chdir(migrationCwd);
+  process.env.CHANCEPING_ICH_RUNTIME_DIR = migrationRuntime;
+  const migratedStore = defaultIchSubmissionStore();
+  process.chdir(cwdBeforeMigration);
+  if (runtimeBeforeMigration === undefined) delete process.env.CHANCEPING_ICH_RUNTIME_DIR;
+  else process.env.CHANCEPING_ICH_RUNTIME_DIR = runtimeBeforeMigration;
+  check("legacy release queue migrates to persistent runtime once",
+    migratedStore.list().length === 1 &&
+    fs.existsSync(path.join(migrationRuntime, "ich-source-submissions.json")));
 
   const duplicate = await submit("https://OFFICIAL.example.gov.cn/notice?a=1&b=2");
   check("duplicate URL receives the same non-enumerating response", duplicate.status === 202 &&
