@@ -34,11 +34,20 @@ const root = fs.mkdtempSync(path.join(os.tmpdir(), "ich-stage4b-"));
 const submissionPath = path.join(root, "submissions.json");
 const opportunityPath = path.join(root, "opportunities.json");
 const transactionPath = path.join(root, "accept.transaction.json");
+const accessLogPath = path.join(root, "access.log");
 const submissionStore = new IchSubmissionStore(submissionPath);
 const opportunityStore = new IchOpportunityStore(opportunityPath);
 const fixedDate = new Date("2026-07-24T06:00:00.000Z");
 const now = () => fixedDate;
 const token = "stage4-test-token";
+fs.writeFileSync(accessLogPath, [
+  '203.0.113.10 - - [24/Jul/2026:13:58:00 +0800] "GET /ich HTTP/1.1" 200 1200 "-" "Mozilla/5.0 Chrome/126"',
+  '203.0.113.10 - - [24/Jul/2026:13:59:00 +0800] "GET /ich/opportunities/example HTTP/1.1" 200 900 "https://ich.chanceping.com/ich" "Mozilla/5.0 Chrome/126"',
+  '203.0.113.20 - - [23/Jul/2026:10:00:00 +0800] "GET /ich HTTP/1.1" 200 1200 "-" "Mozilla/5.0 iPhone Mobile"',
+  '203.0.113.30 - - [24/Jul/2026:10:00:00 +0800] "GET /ich HTTP/1.1" 200 1200 "-" "Googlebot"',
+  '203.0.113.40 - - [24/Jul/2026:10:00:00 +0800] "GET /ich/admin HTTP/1.1" 200 1200 "-" "Mozilla/5.0 Chrome/126"',
+  '203.0.113.50 - - [24/Jul/2026:10:00:00 +0800] "GET /ich/missing HTTP/1.1" 404 1200 "-" "Mozilla/5.0 Chrome/126"',
+].join("\n"));
 const publicApp = new Hono().route("/api/public/ich", ichSubmissionRoutes({
   store: submissionStore,
   hmacSecret: "stage4-hmac-secret",
@@ -50,6 +59,7 @@ const internalApp = new Hono().route("/api/internal/ich", internalIchSubmissionR
   transactionPath,
   adminToken: token,
   now,
+  accessLogPath,
 }));
 const auth = {
   Authorization: `Bearer ${token}`,
@@ -179,6 +189,23 @@ async function main(): Promise<void> {
   const list = await listResponse.json() as { items: Array<{ id: string; source_url: string }> };
   check("authenticated reviewer can read queue", listResponse.status === 200 && list.items.length === 4);
 
+  check("anonymous reviewer cannot read access analytics",
+    (await internalApp.request("/api/internal/ich/analytics")).status === 401);
+  const analyticsResponse = await internalApp.request("/api/internal/ich/analytics", { headers: auth });
+  const analyticsText = await analyticsResponse.text();
+  const analytics = JSON.parse(analyticsText) as {
+    source_available: boolean;
+    today: { page_views: number; visitors: number };
+    last_7_days: { page_views: number; visitors: number };
+    top_pages: Array<{ path: string; views: number }>;
+  };
+  check("analytics aggregates human ICH page views without exposing visitor identifiers",
+    analyticsResponse.status === 200 && analytics.source_available &&
+    analytics.today.page_views === 2 && analytics.today.visitors === 1 &&
+    analytics.last_7_days.page_views === 3 && analytics.last_7_days.visitors === 2 &&
+    analytics.top_pages[0]?.path === "/ich" && analytics.top_pages[0]?.views === 2 &&
+    !analyticsText.includes("203.0.113") && !analyticsText.includes("Chrome/126"));
+
   const rejectedId = list.items.find((item) => item.source_url.includes("/one"))?.id ?? "";
   const rejectedResponse = await internalApp.request(`/api/internal/ich/submissions/${rejectedId}/reject`, {
     method: "POST",
@@ -257,8 +284,11 @@ async function main(): Promise<void> {
 
   const adminPage = await (await new Hono().route("/ich/admin",
     (await import("../src/api/routes/ich-admin-pages")).ichAdminPagesRoutes()).request("/ich/admin")).text();
-  check("admin UI exposes submission review controls", adminPage.includes("来源提交队列") &&
-    adminPage.includes("接受并转草稿") && adminPage.includes("/submissions/"));
+  check("admin UI exposes analytics and complete submission review controls",
+    adminPage.includes("非遗机会运营台") && adminPage.includes("今日浏览") &&
+    adminPage.includes("近 7 天访问趋势") && adminPage.includes("游客提交来源") &&
+    adminPage.includes("标记重复") && adminPage.includes("垃圾信息") &&
+    adminPage.includes('api("/analytics")') && adminPage.includes("/submissions/"));
 
   const submitPage = await (await new Hono().route("/ich", ichPagesRoutes({ store: opportunityStore, now }))
     .request("/ich/submit")).text();

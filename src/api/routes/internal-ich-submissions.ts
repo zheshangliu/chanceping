@@ -12,6 +12,7 @@ import type { IchOpportunity } from "../../ich/types";
 import { defaultIchStore, type IchReadRouteOptions } from "./public-ich";
 import { defaultIchSubmissionStore } from "./ich-submissions";
 import type { IchSubmissionStore } from "../../ich/submission-store";
+import { defaultIchAccessLogPath, readIchAccessAnalytics } from "../../ich/access-analytics";
 
 const MAX_BODY_BYTES = 256 * 1024;
 
@@ -19,6 +20,7 @@ export interface IchInternalSubmissionRouteOptions extends IchReadRouteOptions {
   submissionStore?: IchSubmissionStore;
   transactionPath?: string;
   adminToken?: string;
+  accessLogPath?: string;
 }
 
 function secureEqual(actual: string, expected: string): boolean {
@@ -61,6 +63,7 @@ export function internalIchSubmissionRoutes(options: IchInternalSubmissionRouteO
   );
   const expectedToken = options.adminToken ?? process.env.CHANCEPING_ICH_ADMIN_TOKEN ?? "";
   const now = options.now ?? (() => new Date());
+  const accessLogPath = options.accessLogPath ?? defaultIchAccessLogPath();
 
   app.use("*", async (c, next) => {
     if (!expectedToken) return c.json({ error: { code: "ADMIN_DISABLED", message: "非遗管理接口尚未启用" } }, 503);
@@ -101,6 +104,8 @@ export function internalIchSubmissionRoutes(options: IchInternalSubmissionRouteO
   });
 
   app.get("/submissions/:id", (c) => c.json(service.get(c.req.param("id"))));
+
+  app.get("/analytics", (c) => c.json(readIchAccessAnalytics(accessLogPath, { now: now() })));
 
   for (const status of ["rejected", "duplicate", "spam"] as const satisfies ReadonlyArray<IchSourceSubmissionStatus>) {
     app.post(`/submissions/:id/${status === "rejected" ? "reject" : status}`, async (c) => {
