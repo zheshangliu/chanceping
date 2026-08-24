@@ -3,18 +3,18 @@
 - 阶段：**DS8-R2**
 - 队列输入：114 条（原始任务书口径至少 107 条）
 - 已逐条处理：114 条
-- 主来源可访问：84 条；不可访问：30 条
+- 主来源可访问：86 条；不可访问：28 条
 - 正式库写入：**false**
 - 正式库前后哈希一致：**true**
 - 门禁：**pass_with_followups**
 
 ## 处置分布
 
-- ready_for_manual_confirmation: 5
-- manual_field_review: 39
-- source_unavailable: 30
+- archive_review: 34
+- manual_field_review: 40
+- source_unavailable: 28
+- ready_for_manual_confirmation: 4
 - duplicate_review: 8
-- archive_review: 32
 
 ## 说明
 

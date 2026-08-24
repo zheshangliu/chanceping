@@ -1,0 +1,124 @@
+{
+  "schema_version": "ich-ds11a-manual-disposition.v1",
+  "stage": "DS11-A",
+  "batch_id": "ds11a-20260824-001",
+  "audited_at": "2026-08-24T11:02:15.599Z",
+  "readonly": true,
+  "batch_limit": 10,
+  "selected_count": 4,
+  "confirmed_count": 4,
+  "selection_rule": "DS8 disposition=ready_for_manual_confirmation, priority descending, max 10",
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_write": false,
+  "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_unchanged": true,
+  "publish_count": 0,
+  "gate": "pass_with_followups",
+  "resolutions": [
+    {
+      "id": "ich_auto_20260824_008",
+      "slug": "2026-heluo-feihua-digital-ich-showcase-procurement",
+      "title": "“河洛飞花·数说非遗”2026国家级文化生态保护（实验）区展示交流活动项目",
+      "queue": "urgent_deadline",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+        "accessible": true,
+        "title_match": true,
+        "response_bytes": 7181,
+        "snapshot_hash": "72b27ef3d9eac6ec1e4e33a4becbbbebd53d637901984032fda032de75334189",
+        "error": null
+      },
+      "store_state": {
+        "is_published": true,
+        "classification_status": "confirmed",
+        "workflow_state": "published",
+        "verification_status": "verified"
+      },
+      "inherited_missing_fields": [],
+      "inherited_reason_codes": [],
+      "resolution": "confirmed_existing_record_no_change",
+      "formal_publish_blocked": false,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_2026_guangdong_design_competition_11",
+      "slug": "2026-guangdong-ich-creative-design-competition",
+      "title": "“粤韵新彩 共创美好”2026年第十一届广东省非物质文化遗产创意设计大赛",
+      "queue": "current_recheck",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10839528.html",
+        "accessible": true,
+        "title_match": true,
+        "response_bytes": 39408,
+        "snapshot_hash": "d7083402b3a335cd4619442c42d95df84059e76a7ece671cb5926bcdf736f944",
+        "error": null
+      },
+      "store_state": {
+        "is_published": true,
+        "classification_status": "confirmed",
+        "workflow_state": "published",
+        "verification_status": "verified"
+      },
+      "inherited_missing_fields": [],
+      "inherited_reason_codes": [],
+      "resolution": "confirmed_existing_record_no_change",
+      "formal_publish_blocked": false,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_auto_20260824_001",
+      "slug": "2026-beijing-opera-week-ai-creative-call",
+      "title": "第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集",
+      "queue": "current_recheck",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+        "accessible": true,
+        "title_match": true,
+        "response_bytes": 47865,
+        "snapshot_hash": "1d8c204ce7b5ed64774dcc44b1b02df7a7d85a51216758badc1f7e23b0d10d73",
+        "error": null
+      },
+      "store_state": {
+        "is_published": true,
+        "classification_status": "confirmed",
+        "workflow_state": "published",
+        "verification_status": "verified"
+      },
+      "inherited_missing_fields": [],
+      "inherited_reason_codes": [],
+      "resolution": "confirmed_existing_record_no_change",
+      "formal_publish_blocked": false,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_auto_20260824_002",
+      "slug": "2026-fuzhou-intangible-cultural-heritage-craft-design-competition",
+      "title": "“闽都福韵·榕城有礼”福州非遗工美文创大赛",
+      "queue": "current_recheck",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+        "accessible": true,
+        "title_match": true,
+        "response_bytes": 130498,
+        "snapshot_hash": "510d48bd49795e4ded8a21aa6e9bae4cf9256f31a9337a3bc03d0fa4760e62ad",
+        "error": null
+      },
+      "store_state": {
+        "is_published": true,
+        "classification_status": "confirmed",
+        "workflow_state": "published",
+        "verification_status": "verified"
+      },
+      "inherited_missing_fields": [],
+      "inherited_reason_codes": [],
+      "resolution": "confirmed_existing_record_no_change",
+      "formal_publish_blocked": false,
+      "formal_store_write_required": false
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "ich-ds3-candidate-quality.v1",
-  "run_id": "ich-ds3-quality-20260824104458",
-  "ran_at": "2026-08-24T10:44:58.128Z",
+  "run_id": "ich-ds3-quality-20260824110832",
+  "ran_at": "2026-08-24T11:08:32.258Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
@@ -13,7 +13,7 @@
   "rejected_count": 1,
   "assessments": [
     {
-      "candidate_id": "ds1b-ccgp-c4ff0927ab2b",
+      "candidate_id": "ds1b-ccgp-aafa53c68203",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -42,10 +42,10 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-b2da201f7424",
+      "candidate_id": "ds1b-ccgp-72bd0ed6a088",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 62,
+      "band": "medium",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -58,23 +58,22 @@
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-c6a2c48f98b6",
+      "candidate_id": "ds1b-ccgp-48c6e681de48",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 62,
+      "band": "medium",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -87,13 +86,12 @@
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"

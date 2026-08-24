@@ -1,7 +1,7 @@
 {
   "schema_version": "ich-ds7-source-coverage.v1",
   "stage": "DS7",
-  "audited_at": "2026-08-24T10:34:40.204Z",
+  "audited_at": "2026-08-24T11:14:28.860Z",
   "gate": "pass",
   "workflow_count": 31,
   "adapter_count": 10,

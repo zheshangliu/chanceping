@@ -99,6 +99,10 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
       const checks = item.checks && typeof item.checks === "object" && !Array.isArray(item.checks) ? item.checks as JsonRecord : {};
       return ["organizer_confirmed", "deadline_confirmed", "geography_confirmed", "category_confirmed"].some((key) => checks[key] !== true);
     }).length;
+    const fieldRate = (key: string) => assessments.length > 0 ? Math.round(assessments.filter((item) => {
+      const checks = item.checks && typeof item.checks === "object" && !Array.isArray(item.checks) ? item.checks as JsonRecord : {};
+      return checks[key] !== true;
+    }).length / assessments.length * 10000) / 100 : null;
     const duplicateCount = candidates.filter((item) => typeof item.duplicate_of_candidate_id === "string" && item.duplicate_of_candidate_id.length > 0).length;
     const candidateCount = typeof run?.candidate_count === "number" ? run.candidate_count : candidates.length;
     return {
@@ -111,6 +115,10 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
       candidate_count: candidateCount,
       detail_page_accessibility_rate: candidates.length > 0 ? Math.round(detailAccessible / candidates.length * 10000) / 100 : null,
       field_missing_rate: assessments.length > 0 ? Math.round(fieldMissing / assessments.length * 10000) / 100 : null,
+      field_unconfirmed_rate: assessments.length > 0 ? Math.round(fieldMissing / assessments.length * 10000) / 100 : null,
+      deadline_unconfirmed_rate: fieldRate("deadline_confirmed"),
+      geography_unconfirmed_rate: fieldRate("geography_confirmed"),
+      category_unconfirmed_rate: fieldRate("category_confirmed"),
       duplicate_rate: candidates.length > 0 ? Math.round(duplicateCount / candidates.length * 10000) / 100 : null,
       sample_count: candidates.length,
       action_required: source.operational_status === "planned" ? "manual_or_promotion_review" : source.operational_status === "adapter_ready" && run?.status !== "completed" ? "collection_check" : "none",
@@ -124,6 +132,10 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
     const checks = item.checks && typeof item.checks === "object" && !Array.isArray(item.checks) ? item.checks as JsonRecord : {};
     return ["organizer_confirmed", "deadline_confirmed", "geography_confirmed", "category_confirmed"].some((key) => checks[key] !== true);
   }).length;
+  const fieldRate = (key: string) => totalAssessments > 0 ? Math.round(ds3Assessments.filter((item) => {
+    const checks = item.checks && typeof item.checks === "object" && !Array.isArray(item.checks) ? item.checks as JsonRecord : {};
+    return checks[key] !== true;
+  }).length / totalAssessments * 10000) / 100 : null;
   const totalDuplicates = ds1cItems.filter((item) => typeof item.duplicate_of_candidate_id === "string" && item.duplicate_of_candidate_id.length > 0).length;
 
   return {
@@ -171,7 +183,12 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
         candidate_total: totalCandidates,
         detail_page_accessibility_rate: totalCandidates > 0 ? Math.round(totalAccessible / totalCandidates * 10000) / 100 : null,
         field_missing_rate: totalAssessments > 0 ? Math.round(totalMissing / totalAssessments * 10000) / 100 : null,
+        field_unconfirmed_rate: totalAssessments > 0 ? Math.round(totalMissing / totalAssessments * 10000) / 100 : null,
+        deadline_unconfirmed_rate: fieldRate("deadline_confirmed"),
+        geography_unconfirmed_rate: fieldRate("geography_confirmed"),
+        category_unconfirmed_rate: fieldRate("category_confirmed"),
         duplicate_rate: ds1cItems.length > 0 ? Math.round(totalDuplicates / ds1cItems.length * 10000) / 100 : null,
+        quality_note: "字段未确认率基于 DS3 checks，不等同于详情页正文缺失率；未确认字段不得进入正式发布。",
         planned_sources: sourceStatus.planned,
         manual_workflow_sources: ICH_DS7_SOURCE_WORKFLOWS.filter((workflow) => workflow.mode === "manual").length,
         sources_needing_action: sourceHealthItems.filter((item) => item.action_required !== "none").length,

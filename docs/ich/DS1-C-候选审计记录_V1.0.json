@@ -1,6 +1,6 @@
 {
   "schema_version": "ich-ds1c-candidate-audit.v1",
-  "audited_at": "2026-08-24T10:38:23.664Z",
+  "audited_at": "2026-08-24T11:08:19.645Z",
   "readonly": true,
   "input": "docs/ich/DS1-B-候选样本运行记录_V1.0.json",
   "total_candidates": 30,
@@ -8,17 +8,17 @@
   "blocked_count": 0,
   "template_contamination_count": 0,
   "duplicate_count": 0,
-  "missing_deadline_count": 22,
+  "missing_deadline_count": 23,
   "unconfirmed_geography_count": 30,
   "unconfirmed_category_count": 30,
   "gate": "pass",
   "items": [
     {
-      "candidate_id": "ds1b-ccgp-eee8da08b2ea",
+      "candidate_id": "ds1b-ccgp-aafa53c68203",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
@@ -32,11 +32,11 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-5212fe65c7b4",
+      "candidate_id": "ds1b-ccgp-72bd0ed6a088",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
@@ -50,20 +50,21 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-052768671dd8",
+      "candidate_id": "ds1b-ccgp-48c6e681de48",
       "source_id": "ccgp",
       "source_level": "L1",
       "source_role": "primary",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
       "source_is_detail_page": true,
       "template_contamination": false,
       "duplicate_of_candidate_id": null,
-      "status_hint": "active",
+      "status_hint": "pending_confirmation",
       "admission": "candidate_review",
       "formal_publish_blocked": true,
       "flags": [
         "geography_unconfirmed",
-        "category_unconfirmed"
+        "category_unconfirmed",
+        "deadline_unconfirmed"
       ]
     },
     {

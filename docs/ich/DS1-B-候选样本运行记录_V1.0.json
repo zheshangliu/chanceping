@@ -1,6 +1,6 @@
 {
   "schema_version": "ich-ds1b-sample-run.v1",
-  "ran_at": "2026-08-24T10:32:36.721Z",
+  "ran_at": "2026-08-24T11:08:05.956Z",
   "readonly": true,
   "formal_store_write": false,
   "minimum_samples_per_adapter": 3,
@@ -14,43 +14,43 @@
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm"
+        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm"
       ],
       "samples": [
         {
-          "candidate_id": "ds1b-ccgp-eee8da08b2ea",
+          "candidate_id": "ds1b-ccgp-aafa53c68203",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
-          "title": "秦皇岛市公路养护服务中心秦皇岛市普通干线公路增设技术性监测预警系统项目施工竞争性磋商公告",
-          "organizer": "秦皇岛市公路养护服务中心",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+          "title": "盐池县公安局2026年道路交通安全隐患治理项目中标公告",
+          "organizer": "盐池县公安局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 18:24",
-          "raw_snapshot_hash": "72a202a3e3cc283e02e193172fe1b0b9ab88fdc380b7a4f75aa6b169307261f1",
+          "published_text": "2026年08月24日 19:00",
+          "raw_snapshot_hash": "62cc83521207c8b6ad54069655c04483acdd51fb9372d4f62741b5f26f909f4f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "秦皇岛市公路养护服务中心秦皇岛市普通干线公路增设技术性监测预警系统项目施工竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "value": "盐池县公安局2026年道路交通安全隐患治理项目中标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
               "method": "html_title",
-              "evidence_excerpt": "秦皇岛市公路养护服务中心秦皇岛市普通干线公路增设技术性监测预警系统项目施工竞争性磋商公告",
+              "evidence_excerpt": "盐池县公安局2026年道路交通安全隐患治理项目中标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "秦皇岛市公路养护服务中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "value": "盐池县公安局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 秦皇岛市公路养护服务中心",
+              "evidence_excerpt": "采购单位 盐池县公安局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -70,46 +70,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194242.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260824_27194538.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-5212fe65c7b4",
+          "candidate_id": "ds1b-ccgp-72bd0ed6a088",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
-          "title": "赞皇县供销合作社赞皇县2026年中央财政支持农业社会化服务第二批项目竞争性磋商公告",
-          "organizer": "赞皇县供销合作社",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+          "title": "广西北部湾宏亚建设管理有限公司关于无人机侦测及相关设备采购（QZZC2026-J1-990234-BBWH）采购结果更正公告",
+          "organizer": "钦州市公安局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 18:24",
-          "raw_snapshot_hash": "17e05cca7720e644dc04150c1df6119c2e9d24f9960a5056ca3f9516b5744e26",
+          "published_text": "2026年08月24日 19:00",
+          "raw_snapshot_hash": "dad41b0253acc69201ac85b42f366c1c1a878d36e6a5ce4fc04fce826099ca92",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "赞皇县供销合作社赞皇县2026年中央财政支持农业社会化服务第二批项目竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "value": "广西北部湾宏亚建设管理有限公司关于无人机侦测及相关设备采购（QZZC2026-J1-990234-BBWH）采购结果更正公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
               "method": "html_title",
-              "evidence_excerpt": "赞皇县供销合作社赞皇县2026年中央财政支持农业社会化服务第二批项目竞争性磋商公告",
+              "evidence_excerpt": "广西北部湾宏亚建设管理有限公司关于无人机侦测及相关设备采购（QZZC2026-J1-990234-BBWH）采购结果更正公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "赞皇县供销合作社",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "value": "钦州市公安局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 赞皇县供销合作社",
+              "evidence_excerpt": "采购单位 钦州市公安局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -129,49 +129,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194241.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194527.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-052768671dd8",
+          "candidate_id": "ds1b-ccgp-48c6e681de48",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
-          "title": "庆城县农机作业服务队建设项目（二次）招标公告",
-          "organizer": "庆城县农业机械化服务中心",
-          "deadline_text": "2026年09月14日 09时00分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+          "title": "吊塔(BBQ26A00250)采购更正公告",
+          "organizer": "广州中医药大学第一附属医院重庆医院（重庆市北碚区中医院）",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 18:22",
-          "raw_snapshot_hash": "bc53a4c1a0ca130d159b918c7e1adb01e6af961139f4224121888f1c9d0a31ee",
+          "published_text": "2026年08月24日 19:00",
+          "raw_snapshot_hash": "b31efebed840731a2dfe6691b1180724d8ab3d84cfb58625a4a9c7095251387b",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "庆城县农机作业服务队建设项目（二次）招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+              "value": "吊塔(BBQ26A00250)采购更正公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
               "method": "html_title",
-              "evidence_excerpt": "庆城县农机作业服务队建设项目（二次）招标公告",
+              "evidence_excerpt": "吊塔(BBQ26A00250)采购更正公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "庆城县农业机械化服务中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+              "value": "广州中医药大学第一附属医院重庆医院（重庆市北碚区中医院）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 庆城县农业机械化服务中心",
+              "evidence_excerpt": "采购单位 广州中医药大学第一附属医院重庆医院（重庆市北碚区中医院）",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月14日 09时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月14日 09时00分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -188,10 +188,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194231.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27194535.htm",
               "confirmed": true
             }
           }
@@ -986,7 +986,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-27 13:48:00",
-          "raw_snapshot_hash": "6a48fcdce56d0c2d8d2d20ce8a6b8783a1806e2a416e3d86a1f260a0b7bc306d",
+          "raw_snapshot_hash": "f440e915aceefcc0fa4e3883eea7fc494cca03d2e33f094fdcdd1cdf5109ce2e",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1045,7 +1045,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-07 09:15:00",
-          "raw_snapshot_hash": "5a460915f1883ac74996082308fac4a90931243e233fb7ba53b7d21380f11443",
+          "raw_snapshot_hash": "78b112624898247234d485561adba08e01f0c6db3650090a327f4bd67a83f73b",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1104,7 +1104,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-13 09:24:00",
-          "raw_snapshot_hash": "0facf3b45f16eb33d0cde444c9babab1bfb69defabba30da5a46f41eb7436aa3",
+          "raw_snapshot_hash": "b60434b3a1b3544ae35c650c90d6d98c9585da90d6981cbb1cc3c0c2f10a66d6",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1750,7 +1750,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年07月01日",
-          "raw_snapshot_hash": "c1ba50ef90986a2143dd9286686e1e777ca5ac5664c822ceb06a625cfbadadc0",
+          "raw_snapshot_hash": "f3a031b809aa83c7b15b99f4c9752af277b1ead47964a815fd0274028a9e7772",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1809,7 +1809,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月29日",
-          "raw_snapshot_hash": "8b8c5c423de8cc8e931205c71df353accb868be79c076d5bf2d1da4398562772",
+          "raw_snapshot_hash": "f82355795a9734d5b44ca583495a2020d0ce55d4e1edd691cd5d8064b94028ee",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1868,7 +1868,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月26日",
-          "raw_snapshot_hash": "16f70341c9f0a8a7209d9a44021e27375e3da867b76124961d29548ce63c2f31",
+          "raw_snapshot_hash": "761e60c0c34e9d64a39d4687175d4ad00686d85535eed4f149fef1d3b57c7a75",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {

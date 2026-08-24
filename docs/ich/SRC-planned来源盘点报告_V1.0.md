@@ -1,7 +1,7 @@
 # SRC-R0 planned 来源盘点报告 V1.0
 
-- planned 来源：27
-- 推荐分组：adapter_candidate=21，manual_review=4，manual_or_allowed_fetch=2
+- planned 来源：21
+- 推荐分组：adapter_candidate=15，manual_review=4，manual_or_allowed_fetch=2
 - 需人工跟进：6
 - 正式库写入：**false**
 

@@ -1,0 +1,225 @@
+{
+  "schema_version": "ich-ds11b-field-review.v1",
+  "stage": "DS11-B",
+  "batch_id": "ds11b-20260824-001",
+  "audited_at": "2026-08-24T11:05:47.834Z",
+  "readonly": true,
+  "batch_limit": 10,
+  "selected_count": 5,
+  "confirmed_no_change_count": 1,
+  "patch_ready_count": 2,
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_write": false,
+  "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_unchanged": true,
+  "publish_count": 0,
+  "gate": "pass_with_followups",
+  "reviews": [
+    {
+      "id": "ich_auto_20260824_006",
+      "slug": "2026-zibo-landmark-products-promotion-invitation",
+      "title": "2026“国货新字号·消费新趋势”地标名品推介会参展征集",
+      "queue": "urgent_deadline",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+        "accessible": true,
+        "title_match": false,
+        "signals": [
+          "截止",
+          "报名",
+          "参展",
+          "邮箱",
+          "采购"
+        ],
+        "snapshot_hash": "7f6ebfbbf47b85ed71637686095474f9f880873e9df187c68ac79a517b28dd68",
+        "response_bytes": 53240,
+        "error": null
+      },
+      "inherited_missing_fields": [],
+      "inherited_reason_codes": [
+        "title_not_found_in_snapshot"
+      ],
+      "existing_store_state": {
+        "is_published": true,
+        "workflow_state": "published",
+        "verification_status": "verified",
+        "source_conflict": false
+      },
+      "manual_decision": "confirmed_existing_record_no_change",
+      "reason": "官方详情页明确活动日期、参展企业范围、免费参展和2026-08-28报名截止；现有记录字段已覆盖可确认信息。",
+      "proposed_patch": null,
+      "formal_publish_blocked": false,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+      "slug": "2026-guangdong-cultural-tourism-subsidy-platform-selection",
+      "title": "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+      "queue": "urgent_deadline",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+        "accessible": true,
+        "title_match": true,
+        "signals": [
+          "截止",
+          "报名",
+          "申请",
+          "邮箱",
+          "采购"
+        ],
+        "snapshot_hash": "b3ec693c79d51b10e885dbfd5d96b4b6f6853b02e0c1ed0ef039dc6b532e0f79",
+        "response_bytes": 28917,
+        "error": null
+      },
+      "inherited_missing_fields": [
+        "location",
+        "eligibility"
+      ],
+      "inherited_reason_codes": [
+        "missing_fields:location,eligibility"
+      ],
+      "existing_store_state": {
+        "is_published": true,
+        "workflow_state": "published",
+        "verification_status": "partially_verified",
+        "source_conflict": false
+      },
+      "manual_decision": "field_patch_ready_hold_write",
+      "reason": "官方公告明确面向平台企业、广东省文旅消费券服务范围和资质条件；可补齐服务地域与资格确认状态，但需受控写入。",
+      "proposed_patch": {
+        "location.participation_scope": "province_only",
+        "location.eligible_regions": [
+          "guangdong"
+        ],
+        "location.location_status": "confirmed",
+        "eligibility.eligibility_status": "confirmed"
+      },
+      "formal_publish_blocked": true,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_expansion_batch_01_003",
+      "slug": "expansion-batch-01-003",
+      "title": "2026第九届金茶花国际文创设计大赛",
+      "queue": "urgent_deadline",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+        "accessible": true,
+        "title_match": true,
+        "signals": [
+          "报名",
+          "征集",
+          "参赛",
+          "邮箱"
+        ],
+        "snapshot_hash": "a4bf8e325811fa6be5ee2066b0008bd200b005d528d14a10b891bf2487dc3b40",
+        "response_bytes": 15244,
+        "error": null
+      },
+      "inherited_missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "inherited_reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "existing_store_state": {
+        "is_published": true,
+        "workflow_state": "published",
+        "verification_status": "partially_verified",
+        "source_conflict": true
+      },
+      "manual_decision": "hold_source_conflict",
+      "reason": "当前官方页面是启动报道，未提供可核对的报名截止与申请入口；现有记录已标记来源冲突，不放行。",
+      "proposed_patch": null,
+      "formal_publish_blocked": true,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_expansion_batch_03_013",
+      "slug": "expansion-batch-03-013",
+      "title": "2026北京国际设计周非遗设计单元征集",
+      "queue": "urgent_deadline",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://www.bjdw.org/",
+        "accessible": true,
+        "title_match": false,
+        "signals": [
+          "邮箱"
+        ],
+        "snapshot_hash": "e52985c3757ea788e96d286e8a69fefe29752370a1a066a0a4bd07c9a9df2042",
+        "response_bytes": 14701,
+        "error": null
+      },
+      "inherited_missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "inherited_reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "existing_store_state": {
+        "is_published": true,
+        "workflow_state": "published",
+        "verification_status": "partially_verified",
+        "source_conflict": true
+      },
+      "manual_decision": "hold_non_specific_source",
+      "reason": "当前链接为北京国际设计周首页，未找到2026非遗设计单元具体征集页；不得用首页替代详情页。",
+      "proposed_patch": null,
+      "formal_publish_blocked": true,
+      "formal_store_write_required": false
+    },
+    {
+      "id": "ich_stage5_006",
+      "slug": "2026-yaozhou-porcelain-creative-competition",
+      "title": "2026中国耀州瓷创意大赛",
+      "queue": "urgent_deadline",
+      "source_recheck": {
+        "status": 200,
+        "final_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+        "accessible": true,
+        "title_match": true,
+        "signals": [
+          "报名",
+          "征集",
+          "申请",
+          "参展",
+          "参赛",
+          "邮箱",
+          "采购"
+        ],
+        "snapshot_hash": "eb828e1b775c084f2c2045c134f8f926aee8afe208c796d8271e3101876d426e",
+        "response_bytes": 36706,
+        "error": null
+      },
+      "inherited_missing_fields": [
+        "location"
+      ],
+      "inherited_reason_codes": [
+        "missing_fields:location"
+      ],
+      "existing_store_state": {
+        "is_published": true,
+        "workflow_state": "published",
+        "verification_status": "verified",
+        "source_conflict": false
+      },
+      "manual_decision": "field_patch_ready_hold_write",
+      "reason": "官方报名要求页明确全国参赛对象、2026-08-31 18:00截止、报名邮箱和材料要求；可补齐申请邮箱并将地点确认状态提升，但需受控写入。",
+      "proposed_patch": {
+        "application.application_email": "ZGYZY0919@163.com",
+        "application.application_status": "confirmed",
+        "location.location_status": "confirmed"
+      },
+      "formal_publish_blocked": true,
+      "formal_store_write_required": false
+    }
+  ]
+}

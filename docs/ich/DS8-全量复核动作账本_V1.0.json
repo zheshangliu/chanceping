@@ -1,8 +1,8 @@
 {
   "schema_version": "ich-ds8-full-recheck-ledger.v1",
   "stage": "DS8-R2",
-  "audited_at": "2026-08-24T09:46:21.487Z",
-  "evaluated_at": "2026-08-24T08:00:00.000Z",
+  "audited_at": "2026-08-24T11:00:46.363Z",
+  "evaluated_at": "2026-08-24T11:00:23.706Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
@@ -18,16 +18,16 @@
     "history_cleanup": 51
   },
   "disposition_counts": {
-    "ready_for_manual_confirmation": 5,
-    "manual_field_review": 39,
-    "source_unavailable": 30,
-    "duplicate_review": 8,
-    "archive_review": 32
+    "archive_review": 34,
+    "manual_field_review": 40,
+    "source_unavailable": 28,
+    "ready_for_manual_confirmation": 4,
+    "duplicate_review": 8
   },
-  "accessible_count": 84,
-  "inaccessible_count": 30,
+  "accessible_count": 86,
+  "inaccessible_count": 28,
   "duplicate_count": 12,
-  "title_mismatch_count": 90,
+  "title_mismatch_count": 91,
   "formal_publish_blocked_count": 114,
   "gate": "pass_with_followups",
   "results": [
@@ -54,8 +54,8 @@
       },
       "missing_fields": [],
       "duplicate_slugs": [],
-      "deadline_state": "closing_soon",
-      "disposition": "ready_for_manual_confirmation",
+      "deadline_state": "expired",
+      "disposition": "archive_review",
       "reason_codes": [],
       "formal_publish_blocked": true
     },
@@ -142,7 +142,7 @@
         "accessible": true,
         "content_type": "text/html;charset=UTF-8",
         "response_bytes": 53240,
-        "snapshot_hash": "f7c14631cc19d25a152b4512eac0df6ae04d2802a4358709d9a1db8ebb5c5a14",
+        "snapshot_hash": "7f6ebfbbf47b85ed71637686095474f9f880873e9df187c68ac79a517b28dd68",
         "title_fragment": "2026“国货新字号・消费新趋势”公益性地标名品推介会暨双节消费促进主题活动 邀请函",
         "title_match": false,
         "error": null
@@ -172,7 +172,7 @@
         "accessible": false,
         "content_type": "text/html; charset=utf-8",
         "response_bytes": 16655,
-        "snapshot_hash": "f54eb265bcf762212e5c5395ac17bca29fba8473780ef095fc6ff32b3710965e",
+        "snapshot_hash": "4fa44f6394b4d70b336d2ba98122eb79c852f60fe18e864b5fc9d099b996ca8a",
         "title_fragment": "Access denied | British Council",
         "title_match": false,
         "error": null
@@ -207,7 +207,7 @@
         "accessible": true,
         "content_type": "text/html;charset=UTF-8",
         "response_bytes": 7181,
-        "snapshot_hash": "a1794f3ddc1fea8274311cdc35f2c55a73d49a18738b2db8c703aa4bcc032d8f",
+        "snapshot_hash": "2b17f0895d23de32fd6aa39f7138f041cd1c88ae1affc8d7d9faad2e0f72931f",
         "title_fragment": "河南省政府采购网",
         "title_match": true,
         "error": null
@@ -369,7 +369,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 4554,
-        "snapshot_hash": "ff65be5cc7e323afed01137b1229e964d9d9f50a2bba75d451343b160d423e2c",
+        "snapshot_hash": "91d7e74131246d828fd448d2c0e59e2f2a1652006302c5d4b025bfc57c502fb0",
         "title_fragment": "Attention Required! | Cloudflare",
         "title_match": false,
         "error": null
@@ -440,7 +440,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5768,
-        "snapshot_hash": "c980af1595c337fb75f7e41f5ff098a03d06d5be030fc43cddb63df3b31c0076",
+        "snapshot_hash": "4816e41d9ca4820cea71c3da9054008112dd94ab373f61a1bfcc96d1b4fd93d5",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -508,7 +508,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5780,
-        "snapshot_hash": "730f74874999bcee35d7e5d23280d0fa82053f381c8c96588c2a9e27ab11d091",
+        "snapshot_hash": "b63f188d4d7145cca61f0a2d953b6b864a224cf4c0f3e1a683f3b2c78e8f6850",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -706,7 +706,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5630,
-        "snapshot_hash": "805f3225f40fae1851d757d555ae5b82424add28a9ed39b8fdab989a4b44c51c",
+        "snapshot_hash": "2f8979334075449e320f84e39c03bf76058a6ed03f7ab1391c2a8d5db58d914b",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -741,7 +741,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5821,
-        "snapshot_hash": "04cf1b4a18678171c597cb7b757114662febcc687c1a141f3b49cc1bc181c4b2",
+        "snapshot_hash": "666d83b93414817e5035969ef3d30cc5db3d2f25bf28af5b8f47c8605a1b7312",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -776,7 +776,7 @@
         "accessible": true,
         "content_type": "text/html; charset=utf-8",
         "response_bytes": 64294,
-        "snapshot_hash": "377349c132906de751af233cd618358882bb9cadd0e006e1184fb937fe1bc1c4",
+        "snapshot_hash": "fcc3f1a650c59809a2401fa60b66473acb79daa392b14ca445f8a3e5c157cdf1",
         "title_fragment": "Culture Grants Small - Wakefield Council",
         "title_match": false,
         "error": null
@@ -1063,7 +1063,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5711,
-        "snapshot_hash": "ee466f22f87d741ef5e0e936586886a310ab8501ae2dfea82fc8abef7703f180",
+        "snapshot_hash": "0c4f08a7b4c8269541a1da3588bab08ee9425bb5011c8c52d0b8d9b8dfb1fb13",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -1131,7 +1131,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 4541,
-        "snapshot_hash": "6865dd4ed637ddac302242e4f19799a4d430df2b8f68a217844bc65b769aad25",
+        "snapshot_hash": "c9c83f6d27e4962e9792bd27a843efb3add70c2a83da34a0c69bb65a5992bf30",
         "title_fragment": "Attention Required! | Cloudflare",
         "title_match": false,
         "error": null
@@ -1198,8 +1198,8 @@
         "final_url": "https://www.waitaki.govt.nz/About-Waitaki/Living-here/Supporting-our-community/Community-Grants-and-Awards/Waitaki-Heritage-Fund",
         "accessible": false,
         "content_type": "text/html",
-        "response_bytes": 529,
-        "snapshot_hash": "67493ba1c9d7b121d7da2ae9961823186d910ab797233d16665de4b8af142900",
+        "response_bytes": 527,
+        "snapshot_hash": "b9128b5884b58e0ebe3f237bdf4bdf8b3233623fb56044bb3c607bbc3284259c",
         "title_fragment": "Access Denied",
         "title_match": false,
         "error": null
@@ -1302,7 +1302,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5653,
-        "snapshot_hash": "6db90a8d42a4e7403076edd4964b48d67c47c4e49524b82f7eee77aefe52be80",
+        "snapshot_hash": "396bc949cf9a9447c6371406e45cecb58d1e98585fdccb857666653a3916ce6d",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -1405,7 +1405,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5837,
-        "snapshot_hash": "3943d32fec0394d5d065c5cb10a9586e8c3c4e0d4f9a58e84e48c9a4ef7f0910",
+        "snapshot_hash": "26a6ec8c7e6c43605c7d4eef10d6438cab01afcc716c3b4927b365d96460ccec",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -1473,8 +1473,8 @@
         "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
         "accessible": true,
         "content_type": "text/html",
-        "response_bytes": 25469,
-        "snapshot_hash": "f92d302f92f4d70bc9b97e98169844700b5395ebfb79471415244ff8bb055a4c",
+        "response_bytes": 25817,
+        "snapshot_hash": "5f7ad0fadd22613c0366fb14a88178a5999e6fc013145a094e2a75346b4c5b5a",
         "title_fragment": "地方公告_中国政府采购网",
         "title_match": false,
         "error": null
@@ -1508,8 +1508,8 @@
         "final_url": "https://www.moa.gov.cn/gk/tzgg_1/",
         "accessible": true,
         "content_type": "text/html",
-        "response_bytes": 45899,
-        "snapshot_hash": "8e84e506571b830a201b3d1a4deffb6d23a1524008abf02f6f8ecdf022d113fe",
+        "response_bytes": 45885,
+        "snapshot_hash": "86d1084dbe281afd076cb326c0ac8e135582e7f254f4be24aa4e29e0c46c9713",
         "title_fragment": "通知公告",
         "title_match": false,
         "error": null
@@ -1544,7 +1544,7 @@
         "accessible": true,
         "content_type": "text/html; charset=utf-8",
         "response_bytes": 35243,
-        "snapshot_hash": "c074be9181f480958b8fd7ac0d632f6e31252de2af02dc0785e58a178bc87abd",
+        "snapshot_hash": "efb91253f16d087d2ceca35202cc69e4c040e67d19a89f45ceb53ad60578be10",
         "title_fragment": "政策 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
         "title_match": false,
         "error": null
@@ -1578,8 +1578,8 @@
         "final_url": "https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/",
         "accessible": true,
         "content_type": "text/html",
-        "response_bytes": 20778,
-        "snapshot_hash": "e94a8fb48d2b14c91d597caf722b9827e6a40f15a4abd6c7cb62ad6668c5626c",
+        "response_bytes": 20850,
+        "snapshot_hash": "1fc0b695b13515216d4f64e5e2b2e2e8ae7422caefc71dd024601e22ac6d131d",
         "title_fragment": "财政新闻",
         "title_match": false,
         "error": null
@@ -1786,7 +1786,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5499,
-        "snapshot_hash": "4dee35e3799d90f5ba0fd94cd6158332e3471c36bb0dec46aaf15339fb216123",
+        "snapshot_hash": "ef58f8a69ff97937b9b018ab6e0b440d7c9d619e01f3cfd9b713c93cbd2e1dd7",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -1851,15 +1851,15 @@
       "store_primary_url": "https://doylycartecharitabletrust.org/",
       "url_mismatch": false,
       "url_check": {
-        "status": null,
-        "final_url": null,
-        "accessible": false,
-        "content_type": null,
-        "response_bytes": 0,
-        "snapshot_hash": null,
-        "title_fragment": null,
-        "title_match": null,
-        "error": "TypeError: fetch failed"
+        "status": 200,
+        "final_url": "https://doylycartecharitabletrust.org/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 53239,
+        "snapshot_hash": "a9459f4d7b7f267080a492c9e2cd272ea08a0bfbeccad76b72bae1e91669a755",
+        "title_fragment": "The D&#8217;Oyly Carte Charitable Trust &#8211; The D&#8217;Oyly Carte Charitable Trust",
+        "title_match": true,
+        "error": null
       },
       "missing_fields": [
         "eligibility",
@@ -1867,9 +1867,8 @@
       ],
       "duplicate_slugs": [],
       "deadline_state": "current",
-      "disposition": "source_unavailable",
+      "disposition": "manual_field_review",
       "reason_codes": [
-        "primary_url_unavailable",
         "missing_fields:eligibility,application"
       ],
       "formal_publish_blocked": true
@@ -1991,8 +1990,8 @@
         "final_url": "https://craftprize.loewe.com/en/craftprize2027",
         "accessible": true,
         "content_type": "text/html;charset=UTF-8",
-        "response_bytes": 90370,
-        "snapshot_hash": "b08fbc5ec2ac7fdc1ac405ab4183f6a5c7e742d1c11b107dbbe7bf184a63c805",
+        "response_bytes": 90369,
+        "snapshot_hash": "2d5d9150c67ac40e516a3e8ff2a7fe31262bca94bdf613dfcc92e4db3db9740d",
         "title_fragment": null,
         "title_match": true,
         "error": null
@@ -2026,7 +2025,7 @@
         "accessible": true,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 75631,
-        "snapshot_hash": "518f7ad06f72724d69f67005e5a88bf9c3c2e0e4762222703c215fab09a4126f",
+        "snapshot_hash": "8c4bc0d1ee4ffbf73a0ab4ba53b8e811a906293dc1c7352486202b25577cca21",
         "title_fragment": "Endangered Crafts Fund - Heritage Crafts |",
         "title_match": false,
         "error": null
@@ -2060,7 +2059,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5696,
-        "snapshot_hash": "40b96c5a7e4410352efa775c52d01fe30c18d1d1f8dac5b77269c64cf92e2651",
+        "snapshot_hash": "55e9b53d890e11ab99ed8efa1c0c8ffbaae6309a83d26f51535083e204a408ce",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -2129,8 +2128,8 @@
         "final_url": "http://www.gzartware.com/",
         "accessible": true,
         "content_type": "text/html; charset=utf-8",
-        "response_bytes": 37296,
-        "snapshot_hash": "3b0f486add941e089a5f999c817ca1ad4fdd9af6180b96ec97e46ebf4bdb337e",
+        "response_bytes": 37325,
+        "snapshot_hash": "236650a167aae56ec4ddef9ba9e34d828e9d0b6bf5b9de5cecdd7f746360bdd2",
         "title_fragment": "广东省工艺美术协会",
         "title_match": false,
         "error": null
@@ -2269,7 +2268,7 @@
         "accessible": true,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 44162,
-        "snapshot_hash": "78b370db7ca63debbb80c50b327ad6c8a1518f22b4c0b9f7a30b1c54459b4fa2",
+        "snapshot_hash": "57a7c25d1f2f0ee473f7099440e37eb425bd0eaf24568d29de54dc80f936405b",
         "title_fragment": "广州市文化广电旅游局关于2026年征集“广州礼物”产品的通知",
         "title_match": false,
         "error": null
@@ -2618,7 +2617,7 @@
         "accessible": true,
         "content_type": "application/pdf",
         "response_bytes": 4073,
-        "snapshot_hash": "d6775ea240153ae6410951eec15cfbb7f7fb08229bf91d57400091c7ea91fdac",
+        "snapshot_hash": "64328cc545754093907c401269171bbc9384e16859a0b2875dd4b6f380cc4fb6",
         "title_fragment": null,
         "title_match": false,
         "error": null
@@ -2783,7 +2782,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5483,
-        "snapshot_hash": "b58db7d964496ed2f84cfd0a361ffa4b78c650320dedf48c1a9e3e1c93661b3f",
+        "snapshot_hash": "eb88f5e6d0da182d773e5b92e774820030397b23a7926c259cddde0858559194",
         "title_fragment": "Attention Required! | Cloudflare",
         "title_match": false,
         "error": null
@@ -3123,7 +3122,7 @@
         "accessible": true,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 214593,
-        "snapshot_hash": "7f012949857a6cdad0b3578fc9833336d4fb9c5d39dfefe6f47ebc979005715d",
+        "snapshot_hash": "57e466d90311bf4a2df1f961da5c1a23f380b39936d81eddac28b5c0f02f02fd",
         "title_fragment": "Heritage Preservation Grant | Austin Arts, Culture, Music and Entertainment | AustinTexas.gov",
         "title_match": false,
         "error": null
@@ -3156,8 +3155,8 @@
         "final_url": "https://capitalmuseum.org.cn/news/b20f254505ee41aa896b1a5c505124b7",
         "accessible": true,
         "content_type": "text/html;charset=utf-8",
-        "response_bytes": 39386,
-        "snapshot_hash": "37e61fdd50c3d8cc3631c9b37ef269e2b7af5376f8ad853be80ade3f22de15c4",
+        "response_bytes": 39392,
+        "snapshot_hash": "84c34dfbf87cc86c4687e591ba7599fa7d35121481bf0513f36eef88a1c6a0cd",
         "title_fragment": "关于中国长城博物馆文创产品研发及空间运营项目（二次）合作方的招募公告 - 首都博物馆",
         "title_match": false,
         "error": null
@@ -3466,7 +3465,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5584,
-        "snapshot_hash": "7b7c6b9a8ac56f80c9c172268244cae0dcbcb886ea38039a18268be2844afd06",
+        "snapshot_hash": "961be87cd8c51020e8abb42cf46217d4fe1724ee3723304652bfc1687fd35670",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -3502,7 +3501,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5720,
-        "snapshot_hash": "b24a0a7aeffb3b4d7b1d4114dd0278c76e2f4fbc3e291ea9714f52e54da7bd68",
+        "snapshot_hash": "7a22452da8bda532954cb649787a2e6602f25915a3aecb33c237eeac01664c5f",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -3538,7 +3537,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5653,
-        "snapshot_hash": "6e55240851abf30db2a0c2318616ee55f11f8741f71d6c02d1208e2c3f30792d",
+        "snapshot_hash": "3f72ef75ab2acb32f6b49027815907ab44e061d9b5c7b84a20619d9587a3771e",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -3572,7 +3571,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5696,
-        "snapshot_hash": "3d6b3260647ebb3f8c9ff84e7ffdf4e8188e2c6bd45d4144b8d0464db1d851b4",
+        "snapshot_hash": "7471b738cc7c5cabca3a4299aec51d95deda8fe10fc9b1be604128eedc88c935",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -3609,7 +3608,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5696,
-        "snapshot_hash": "d11fb1569f59cddebf55e28b539c602d66159a9df2c7e21d2fa23aa89e1e4f55",
+        "snapshot_hash": "8694c2ee8d02f4f67d4d220e4ee28afd583a993764e8e3937e99091034413a61",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -3680,7 +3679,7 @@
         "accessible": true,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 71052,
-        "snapshot_hash": "9b0730e4b1c759e0497da9f87dba4aba21c9ef0c9933c46661a84f351c63c562",
+        "snapshot_hash": "62573c7a3405931e06eebeb7a897e8c4343054cf13974f426e96d8814c61fbf2",
         "title_fragment": "Tennessee Craft",
         "title_match": true,
         "error": null
@@ -3713,7 +3712,7 @@
         "accessible": false,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 5696,
-        "snapshot_hash": "5728030116865829327b1501b6e58078ca7908aeba7f734a990e0bfcdaa838b1",
+        "snapshot_hash": "3a7d71b11319975eda978bf14f20b0048aa0c08cd914750c72704af250309859",
         "title_fragment": "Just a moment...",
         "title_match": false,
         "error": null
@@ -3811,15 +3810,15 @@
       "store_primary_url": "https://heritagecrafts.org.uk/opportunities/",
       "url_mismatch": false,
       "url_check": {
-        "status": null,
-        "final_url": null,
-        "accessible": false,
-        "content_type": null,
-        "response_bytes": 0,
-        "snapshot_hash": null,
-        "title_fragment": null,
-        "title_match": null,
-        "error": "AbortError: This operation was aborted"
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/opportunities/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 161751,
+        "snapshot_hash": "c4b0980ced9b94e49cd54946cd24a50ca460bc55966f8e26a9c42a802cd5dc2c",
+        "title_fragment": "Opportunities - Heritage Crafts |",
+        "title_match": false,
+        "error": null
       },
       "missing_fields": [
         "eligibility",
@@ -3827,10 +3826,10 @@
       ],
       "duplicate_slugs": [],
       "deadline_state": "expired",
-      "disposition": "source_unavailable",
+      "disposition": "archive_review",
       "reason_codes": [
-        "primary_url_unavailable",
-        "missing_fields:eligibility,application"
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
       ],
       "formal_publish_blocked": true
     },
@@ -3850,7 +3849,7 @@
         "accessible": true,
         "content_type": "text/html; charset=UTF-8",
         "response_bytes": 95637,
-        "snapshot_hash": "7facfbba9c256a623b0a23a272648b62921ebca19b47737451e5539c3b32faf8",
+        "snapshot_hash": "33d734ff60c982a39c3f573a4c7b8e730934fdd965568902a6eb30c0444e3192",
         "title_fragment": "Call For Artists - Artefactus",
         "title_match": false,
         "error": null
