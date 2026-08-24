@@ -8,6 +8,8 @@ Type=oneshot
 WorkingDirectory=/opt/chanceping/current
 EnvironmentFile=-/etc/chanceping/chanceping.env
 Environment=CHANCEPING_ICH_STORE_PATH=/opt/chanceping/current/data/ich-opportunities.json
+Environment=CHANCEPING_ICH_DS6_LEDGER_PATH=/var/lib/chanceping/ich-ds6/DS6-只读调度运行账本_V1.0.json
+ExecStartPre=/usr/bin/install -d -o root -g root -m 0750 /var/lib/chanceping/ich-ds6
 ExecStart=/usr/bin/npm run ich:ds6:run-once
 TimeoutStartSec=30min
 User=root

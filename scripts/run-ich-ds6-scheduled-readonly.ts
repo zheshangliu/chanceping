@@ -9,7 +9,10 @@ const now = new Date(nowRaw);
 if (Number.isNaN(now.getTime())) throw new Error(`Invalid --now value: ${nowRaw}`);
 const skipEndpoints = process.argv.includes("--skip-endpoints");
 const storePath = path.resolve("data/ich-opportunities.json");
-const ledgerPath = path.resolve("docs/ich/DS6-只读调度运行账本_V1.0.json");
+// Runtime ledgers must live outside release directories in production. Keep the
+// tracked path as a local/test fallback, while systemd supplies the persistent
+// path through CHANCEPING_ICH_DS6_LEDGER_PATH.
+const ledgerPath = path.resolve(process.env.CHANCEPING_ICH_DS6_LEDGER_PATH ?? "docs/ich/DS6-只读调度运行账本_V1.0.json");
 const beforeRaw = fs.readFileSync(storePath);
 const beforeHash = crypto.createHash("sha256").update(beforeRaw).digest("hex");
 const steps: Array<{ name: string; command: string[] }> = [];
@@ -47,6 +50,7 @@ const uniqueRuns = new Map<string, typeof run>();
 for (const item of ledger.runs) if (item.run_id) uniqueRuns.set(item.run_id, item as typeof run);
 uniqueRuns.set(run.run_id, run);
 ledger.runs = [...uniqueRuns.values()];
+fs.mkdirSync(path.dirname(ledgerPath), { recursive: true });
 fs.writeFileSync(ledgerPath, `${JSON.stringify(ledger, null, 2)}\n`, "utf8");
 console.log(JSON.stringify({ run_id: run.run_id, gate: run.gate, readonly: true, formal_store_write: false, formal_store_unchanged: run.formal_store_unchanged, steps: stepResults.map((step) => ({ name: step.name, exit_code: step.exit_code })), ledger: path.relative(process.cwd(), ledgerPath) }, null, 2));
 if (run.gate !== "pass") process.exitCode = 1;

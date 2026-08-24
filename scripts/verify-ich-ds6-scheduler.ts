@@ -13,7 +13,7 @@ assert.equal(schedule.run_mode, "readonly");
 assert.equal(schedule.formal_store_write, false);
 assert.equal(schedule.requires_manual_promotion, true);
 assert(timer.includes("OnUnitActiveSec=72h") && timer.includes("Persistent=true") && timer.includes("chanceping-ich-ds6.service"));
-assert(service.includes("npm run ich:ds6:run-once") && service.includes("CHANCEPING_ICH_STORE_PATH") && !service.includes("replaceAll"));
+assert(service.includes("npm run ich:ds6:run-once") && service.includes("CHANCEPING_ICH_STORE_PATH") && service.includes("CHANCEPING_ICH_DS6_LEDGER_PATH=/var/lib/chanceping/ich-ds6/") && service.includes("ExecStartPre=/usr/bin/install -d") && !service.includes("replaceAll"));
 assert(ledger.runs.length >= 3, "DS6 requires three consecutive runs before entering DS7");
 for (const run of ledger.runs.slice(-3)) {
   assert.equal(run.gate, "pass");
