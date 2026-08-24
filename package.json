@@ -143,6 +143,8 @@
     "verify:ich:ds8:recheck-queue": "tsx scripts/verify-ich-ds8-recheck-queue.ts",
     "ich:ds8:priority-recheck": "tsx scripts/run-ich-ds8-priority-recheck.ts",
     "verify:ich:ds8:priority-recheck": "tsx scripts/verify-ich-ds8-priority-recheck.ts",
+    "ich:src:planned-audit": "tsx scripts/run-ich-planned-source-audit.ts",
+    "verify:ich:src:planned-audit": "tsx scripts/verify-ich-planned-source-audit.ts",
     "ich:ds9:admin-audit": "tsx scripts/run-ich-ds9-admin-audit.ts",
     "verify:ich:ds9": "tsx scripts/verify-ich-ds9-admin-operations.ts",
     "ich:ds1d:controlled-import": "tsx scripts/import-ich-ds1d-approved-draft.ts",

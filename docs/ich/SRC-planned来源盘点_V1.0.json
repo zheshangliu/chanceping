@@ -1,0 +1,647 @@
+{
+  "schema_version": "ich-planned-source-audit.v1",
+  "stage": "SRC-R0",
+  "audited_at": "2026-08-24T09:21:57.616Z",
+  "formal_store_write": false,
+  "planned_total": 31,
+  "recommendation_counts": {
+    "adapter_candidate": 25,
+    "manual_review": 4,
+    "manual_or_allowed_fetch": 2
+  },
+  "follow_up_count": 6,
+  "items": [
+    {
+      "source_id": "mct-notices",
+      "name": "文化和旅游部公告通知",
+      "canonical_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "ichina",
+      "name": "中国非物质文化遗产网",
+      "canonical_url": "https://www.ihchina.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "cnaf",
+      "name": "国家艺术基金",
+      "canonical_url": "https://www.cnaf.cn/",
+      "categories": [
+        "policy_funding",
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gmfyg",
+      "name": "中国工艺美术馆·中国非物质文化遗产馆",
+      "canonical_url": "https://www.gmfyg.org.cn/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "competition"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gd-culture",
+      "name": "广东省文化和旅游厅",
+      "canonical_url": "https://whly.gd.gov.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "procurement_project",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gz-culture",
+      "name": "广州市文化广电旅游局",
+      "canonical_url": "https://wglj.gz.gov.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "procurement_project",
+        "channel_collaboration",
+        "policy_funding"
+      ],
+      "geography": [
+        "guangzhou",
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "yuexiu-notices",
+      "name": "广州市越秀区人民政府通知公告",
+      "canonical_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
+      "categories": [
+        "competition",
+        "procurement_project",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "guangzhou",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "ccgp",
+      "name": "中国政府采购网",
+      "canonical_url": "https://www.ccgp.gov.cn/cggg/",
+      "categories": [
+        "procurement_project",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "search",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "ggzy",
+      "name": "全国公共资源交易平台",
+      "canonical_url": "https://www.ggzy.gov.cn/",
+      "categories": [
+        "procurement_project"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "search",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gd-procurement",
+      "name": "广东政府采购智慧云平台",
+      "canonical_url": "https://gdgpo.czt.gd.gov.cn/",
+      "categories": [
+        "procurement_project",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "search",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gz-ggzy",
+      "name": "广州市公共资源交易平台",
+      "canonical_url": "https://ggzy.gz.gov.cn/",
+      "categories": [
+        "procurement_project",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "guangzhou",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": null,
+      "page_type": "error",
+      "javascript_required": null,
+      "recommended_mode": "manual_review",
+      "endpoint_error": "TypeError: fetch failed"
+    },
+    {
+      "source_id": "sz-ggzy",
+      "name": "深圳公共资源交易平台",
+      "canonical_url": "https://www.szggzy.com/",
+      "categories": [
+        "procurement_project",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": 200,
+      "page_type": "search",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "sz-culture",
+      "name": "深圳市文化广电旅游体育局",
+      "canonical_url": "https://wtl.sz.gov.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "greater_bay_area"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "daily",
+      "http_status": null,
+      "page_type": "error",
+      "javascript_required": null,
+      "recommended_mode": "manual_review",
+      "endpoint_error": "TypeError: fetch failed"
+    },
+    {
+      "source_id": "chinaich",
+      "name": "中国非物质文化遗产保护协会",
+      "canonical_url": "https://www.chinaich.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "policy_funding"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": null,
+      "page_type": "error",
+      "javascript_required": null,
+      "recommended_mode": "manual_review",
+      "endpoint_error": "TypeError: fetch failed"
+    },
+    {
+      "source_id": "cnacs",
+      "name": "中国工艺美术学会",
+      "canonical_url": "https://www.cnacs.net.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "nationwide",
+        "international"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "cnaca",
+      "name": "中国工艺美术协会",
+      "canonical_url": "https://www.cnaca.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "unknown",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gdmuseum",
+      "name": "广东省博物馆",
+      "canonical_url": "https://www.gdmuseum.org.cn/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "procurement_project"
+      ],
+      "geography": [
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gdmoa",
+      "name": "广东美术馆",
+      "canonical_url": "https://www.gdmoa.org/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "competition"
+      ],
+      "geography": [
+        "guangdong",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "gz-museum",
+      "name": "广州博物馆",
+      "canonical_url": "https://www.guangzhoumuseum.cn/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "procurement_project"
+      ],
+      "geography": [
+        "guangzhou",
+        "greater_bay_area"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "homepage_or_landing",
+      "javascript_required": true,
+      "recommended_mode": "manual_review",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "cnicif",
+      "name": "中国国际文化产业博览交易会",
+      "canonical_url": "https://www.cnicif.com/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "greater_bay_area",
+        "nationwide"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "weekly",
+      "http_status": 200,
+      "page_type": "homepage_or_landing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "unesco-ich",
+      "name": "UNESCO Intangible Cultural Heritage",
+      "canonical_url": "https://ich.unesco.org/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "crafts-council-uk",
+      "name": "Crafts Council UK Opportunities",
+      "canonical_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "daily",
+      "http_status": 403,
+      "page_type": "blocked",
+      "javascript_required": true,
+      "recommended_mode": "manual_or_allowed_fetch",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "heritage-crafts",
+      "name": "Heritage Crafts",
+      "canonical_url": "https://heritagecrafts.org.uk/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "asef-culture360",
+      "name": "ASEF culture360 Opportunities",
+      "canonical_url": "https://culture360.asef.org/opportunities/",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L3",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "japan-foundation",
+      "name": "Japan Foundation Programs",
+      "canonical_url": "https://www.jpf.go.jp/e/program/",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "kcdf",
+      "name": "Korea Craft & Design Foundation",
+      "canonical_url": "https://www.kcdf.or.kr/main",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "creative-europe",
+      "name": "Creative Europe Culture",
+      "canonical_url": "https://culture.ec.europa.eu/creative-europe",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "res-artis",
+      "name": "Res Artis Open Calls",
+      "canonical_url": "https://resartis.org/open-calls/",
+      "categories": [
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L3",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "transartists",
+      "name": "TransArtists Open Calls",
+      "canonical_url": "https://www.transartists.org/en/open-calls",
+      "categories": [
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L3",
+      "scan_frequency": "every_3_days",
+      "http_status": 403,
+      "page_type": "blocked",
+      "javascript_required": true,
+      "recommended_mode": "manual_or_allowed_fetch",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "center-for-craft",
+      "name": "Center for Craft",
+      "canonical_url": "https://www.centerforcraft.org/",
+      "categories": [
+        "competition",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L1",
+      "scan_frequency": "every_3_days",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    },
+    {
+      "source_id": "wcc-international",
+      "name": "World Crafts Council International",
+      "canonical_url": "https://www.wccinternational.org/",
+      "categories": [
+        "international",
+        "exhibition_market",
+        "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "evidence_level": "L2",
+      "scan_frequency": "weekly",
+      "http_status": 200,
+      "page_type": "listing",
+      "javascript_required": false,
+      "recommended_mode": "adapter_candidate",
+      "endpoint_error": null
+    }
+  ]
+}
