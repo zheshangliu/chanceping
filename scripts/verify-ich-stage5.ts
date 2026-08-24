@@ -62,6 +62,62 @@ try {
   assert.equal(fs.readFileSync(output, "utf8"), before, "blocked write must not modify output");
   assert.equal(new IchOpportunityStore(output).list().length, 1);
 
+  const incrementalOutput = path.join(tempDir, "incremental.json");
+  fs.writeFileSync(incrementalOutput, before);
+  const incremental = spawnSync(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      "scripts/import-ich-stage5.ts",
+      "--input",
+      singleton,
+      "--base",
+      singleton,
+      "--output",
+      incrementalOutput,
+      "--batch",
+      "test-incremental",
+      "--now",
+      "2026-07-24T00:00:00+08:00",
+      "--incremental",
+      "--write",
+    ],
+    { cwd: process.cwd(), encoding: "utf8" },
+  );
+  assert.equal(incremental.status, 0, incremental.stderr || incremental.stdout);
+  assert.equal(new IchOpportunityStore(incrementalOutput).list().length, 1, "incremental write must preserve its base");
+
+  const staleCandidate = path.join(tempDir, "stale-candidate.json");
+  const staleFile = structuredClone({ ...verifiedFile, entries: verifiedFile.entries.slice(0, 1) }) as any;
+  staleFile.entries[0].sources.find((source: any) => source.is_primary).last_checked_at = "2026-07-01T00:00:00+08:00";
+  fs.writeFileSync(staleCandidate, `${JSON.stringify(staleFile, null, 2)}\n`);
+  const staleOutput = path.join(tempDir, "stale-output.json");
+  fs.writeFileSync(staleOutput, before);
+  const staleIncremental = spawnSync(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      "scripts/import-ich-stage5.ts",
+      "--input",
+      staleCandidate,
+      "--base",
+      singleton,
+      "--output",
+      staleOutput,
+      "--batch",
+      "test-stale-incremental",
+      "--now",
+      "2026-07-24T00:00:00+08:00",
+      "--incremental",
+      "--write",
+    ],
+    { cwd: process.cwd(), encoding: "utf8" },
+  );
+  assert.notEqual(staleIncremental.status, 0, "incremental writes must reject stale source checks");
+  assert.equal(fs.readFileSync(staleOutput, "utf8"), before, "rejected incremental write must not modify output");
+
   const seedPreservationOutput = path.join(tempDir, "seed-preservation.json");
   fs.writeFileSync(seedPreservationOutput, before);
   const seedPreservation = spawnSync(
@@ -146,7 +202,7 @@ try {
   const preservedWithdrawal = new IchOpportunityStore(withdrawnOutput).getBySlug("expansion-batch-03-007");
   assert.equal(preservedWithdrawal?.workflow.state, "withdrawn", "a routine import must not republish a withdrawn opportunity");
   assert.equal(preservedWithdrawal?.is_published, false, "a routine import must keep a withdrawn opportunity private");
-  console.log("ICH stage 5 importer, registry and screening ledger: 22/22 checks passed");
+  console.log("ICH stage 5 importer, registry and screening ledger: all checks passed");
 } finally {
   fs.rmSync(tempDir, { recursive: true, force: true });
 }
