@@ -1,12 +1,12 @@
 {
   "schema_version": "ich-ds9-admin-operations-audit.v1",
   "stage": "DS9",
-  "audited_at": "2026-08-24T09:09:35.411Z",
+  "audited_at": "2026-08-24T09:46:39.048Z",
   "gate": "pass",
   "formal_store_write": false,
   "dashboard": {
     "schema_version": "ich-operations-dashboard.v1",
-    "generated_at": "2026-08-24T09:09:35.411Z",
+    "generated_at": "2026-08-24T09:46:39.048Z",
     "formal_store": {
       "total": 119,
       "published": 112,
@@ -34,26 +34,26 @@
       "total": 31,
       "query_packs": 5,
       "status_counts": {
-        "planned": 31,
-        "adapter_ready": 0,
+        "planned": 29,
+        "adapter_ready": 2,
         "discovery_only": 0,
         "disabled": 0
       },
       "primary_detail_page_required": true
     },
     "source_workflows": {
-      "total": 12,
-      "adapters": 3,
-      "manual": 9,
+      "total": 13,
+      "adapters": 5,
+      "manual": 8,
       "greater_bay_area": 7,
       "international": 2,
       "category_coverage": {
-        "competition": 6,
-        "exhibition_market": 5,
+        "competition": 7,
+        "exhibition_market": 6,
         "procurement_project": 8,
         "channel_collaboration": 8,
-        "policy_funding": 5,
-        "international": 4
+        "policy_funding": 6,
+        "international": 5
       }
     },
     "ds6_schedule": {
@@ -103,7 +103,24 @@
       "stale_recheck": 114,
       "duplicate_groups": 0,
       "max_batch_size": 10,
-      "formal_store_write": false
+      "formal_store_write": false,
+      "full_recheck": {
+        "stage": "DS8-R2",
+        "queue_total": 114,
+        "processed": 114,
+        "accessible": 84,
+        "inaccessible": 30,
+        "pending_actions": 114,
+        "disposition_counts": {
+          "ready_for_manual_confirmation": 5,
+          "manual_field_review": 39,
+          "source_unavailable": 30,
+          "duplicate_review": 8,
+          "archive_review": 32
+        },
+        "formal_store_unchanged": true,
+        "gate": "pass_with_followups"
+      }
     },
     "safety": {
       "formal_store_write_from_dashboard": false,

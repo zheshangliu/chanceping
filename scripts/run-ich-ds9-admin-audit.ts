@@ -9,6 +9,8 @@ if (dashboard.source_registry.total === 0) errors.push("source registry is empty
 if (dashboard.ds6_schedule.formal_store_write) errors.push("DS6 schedule enables formal store write");
 if (dashboard.ds8_lifecycle.duplicate_groups > 0) errors.push("published primary URL duplicates exist");
 if (dashboard.ds8_lifecycle.formal_store_write) errors.push("DS8 batch policy enables formal store write");
+if (dashboard.ds8_lifecycle.full_recheck.processed !== dashboard.ds8_lifecycle.full_recheck.queue_total) errors.push("DS8 full recheck ledger does not cover its queue");
+if (!dashboard.ds8_lifecycle.full_recheck.formal_store_unchanged) errors.push("DS8 full recheck did not prove formal store unchanged");
 const audit = {
   schema_version: "ich-ds9-admin-operations-audit.v1",
   stage: "DS9",
@@ -30,6 +32,7 @@ const report = [
   `- 来源注册：${dashboard.source_registry.total} 个；DS7 流程 ${dashboard.source_workflows.total} 条`,
   `- DS6：${dashboard.ds6_schedule.interval_days} 天周期，${dashboard.ds6_schedule.run_count} 次账本运行，正式库写入 **false**`,
   `- DS8：${dashboard.ds8_lifecycle.gate}；重复主来源 ${dashboard.ds8_lifecycle.duplicate_groups} 组；正式库写入 **false**`,
+  `- DS8-R2：动作账本 ${dashboard.ds8_lifecycle.full_recheck.processed}/${dashboard.ds8_lifecycle.full_recheck.queue_total} 条；可访问 ${dashboard.ds8_lifecycle.full_recheck.accessible}；不可访问 ${dashboard.ds8_lifecycle.full_recheck.inaccessible}；需人工处置 ${dashboard.ds8_lifecycle.full_recheck.pending_actions}`,
   "- 仪表盘正式库写入：**false**",
   "",
   "## 已实现",

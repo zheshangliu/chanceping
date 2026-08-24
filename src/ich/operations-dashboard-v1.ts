@@ -74,7 +74,10 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
   }));
   const latestRun = recentRuns.at(-1) ?? null;
   const ds8 = readJson<JsonRecord>(path.join(root, "docs/ich/DS8-生命周期审计记录_V1.0.json"));
+  const ds8Full = readJson<JsonRecord>(path.join(root, "docs/ich/DS8-全量复核动作账本_V1.0.json"));
   const duplicateGroups = Array.isArray(ds8?.published_primary_url_duplicate_groups) ? ds8.published_primary_url_duplicate_groups.length : 0;
+  const fullResults = Array.isArray(ds8Full?.results) ? ds8Full.results.filter((item): item is JsonRecord => Boolean(item && typeof item === "object" && !Array.isArray(item))) : [];
+  const fullDispositionCounts = ds8Full?.disposition_counts && typeof ds8Full.disposition_counts === "object" && !Array.isArray(ds8Full.disposition_counts) ? ds8Full.disposition_counts as JsonRecord : {};
   const ds5 = readJson<JsonRecord>(path.join(root, "docs/ich/DS5-规模化运营运行记录_V1.0.json"));
   const ds5Snapshot = (ds5?.formal_store_snapshot && typeof ds5.formal_store_snapshot === "object" ? ds5.formal_store_snapshot : {}) as JsonRecord;
   const dynamicHistorical = historical;
@@ -132,6 +135,17 @@ export function buildIchOperationsDashboard(options: IchOperationsDashboardOptio
       duplicate_groups: duplicateGroups,
       max_batch_size: typeof (ds8?.batch_policy as JsonRecord | undefined)?.max_batch_size === "number" ? (ds8?.batch_policy as JsonRecord).max_batch_size : 10,
       formal_store_write: (ds8?.batch_policy as JsonRecord | undefined)?.formal_store_write === true,
+      full_recheck: {
+        stage: typeof ds8Full?.stage === "string" ? ds8Full.stage : "not_available",
+        queue_total: typeof ds8Full?.queue_input_total === "number" ? ds8Full.queue_input_total : 0,
+        processed: typeof ds8Full?.processed_count === "number" ? ds8Full.processed_count : fullResults.length,
+        accessible: typeof ds8Full?.accessible_count === "number" ? ds8Full.accessible_count : 0,
+        inaccessible: typeof ds8Full?.inaccessible_count === "number" ? ds8Full.inaccessible_count : 0,
+        pending_actions: fullResults.filter((item) => item.formal_publish_blocked === true).length,
+        disposition_counts: fullDispositionCounts,
+        formal_store_unchanged: typeof ds8Full?.formal_store_before_sha256 === "string" && ds8Full.formal_store_before_sha256 === ds8Full.formal_store_after_sha256,
+        gate: typeof ds8Full?.gate === "string" ? ds8Full.gate : "not_available",
+      },
     },
     safety: {
       formal_store_write_from_dashboard: false,

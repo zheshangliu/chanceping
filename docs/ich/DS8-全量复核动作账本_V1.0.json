@@ -1,0 +1,3905 @@
+{
+  "schema_version": "ich-ds8-full-recheck-ledger.v1",
+  "stage": "DS8-R2",
+  "audited_at": "2026-08-24T09:46:21.487Z",
+  "evaluated_at": "2026-08-24T08:00:00.000Z",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_path": "data/ich-opportunities.json",
+  "formal_store_before_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "formal_store_after_sha256": "266980f4866b5a0275b3855bfe784c2f065fd75860fe35506e904048a9996bad",
+  "queue_input_total": 114,
+  "original_queue_input_total": 119,
+  "processed_count": 114,
+  "queue_counts": {
+    "urgent_deadline": 17,
+    "current_recheck": 15,
+    "field_confirmation": 31,
+    "history_cleanup": 51
+  },
+  "disposition_counts": {
+    "ready_for_manual_confirmation": 5,
+    "manual_field_review": 39,
+    "source_unavailable": 30,
+    "duplicate_review": 8,
+    "archive_review": 32
+  },
+  "accessible_count": 84,
+  "inaccessible_count": 30,
+  "duplicate_count": 12,
+  "title_mismatch_count": 90,
+  "formal_publish_blocked_count": 114,
+  "gate": "pass_with_followups",
+  "results": [
+    {
+      "id": "ich_auto_20260824_005",
+      "slug": "2026-lhasa-products-jiangsu-promotion-service-selection",
+      "title": "2026年苏拉产业对接暨拉萨产品江苏行活动服务采购比选（二次）",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+      "store_primary_url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://iib.lasa.gov.cn/jxj/tggs/202608/8806f6d824d7467e98f812e9ea4f5a7e.shtml",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 26294,
+        "snapshot_hash": "adb1367f278ffbad7426b4e2e1102758491974dfc58cdd1cdfa7f2ce42a2287b",
+        "title_fragment": "拉萨市经信局关于2026年苏拉产业对接暨拉萨产品江苏行活动服务采购项目的公开比选公告（二次）_通告公告_拉萨市经济和信息化局",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "ready_for_manual_confirmation",
+      "reason_codes": [],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_e22d46a41a3f48c7a0300a73b9aea86e",
+      "slug": "2026-guangdong-cultural-tourism-subsidy-platform-selection",
+      "title": "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+      "store_primary_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 28917,
+        "snapshot_hash": "b3ec693c79d51b10e885dbfd5d96b4b6f6853b02e0c1ed0ef039dc6b532e0f79",
+        "title_fragment": "关于征选2026年广东金秋文旅消费惠民补贴发放平台企业的公告_通知公告_广东省文化和旅游厅",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_001",
+      "slug": "2026-quanzhou-traditional-building-woodcarving-skills-competition",
+      "title": "2026年泉州市传统建筑木雕技能竞赛",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.quanzhou.gov.cn/zfb/xxgk/zfxxgkzl/ztzl/qzsczjtgylhs/xxgk/202607/t20260715_3309414.htm",
+      "store_primary_url": "https://www.quanzhou.gov.cn/zfb/xxgk/zfxxgkzl/ztzl/qzsczjtgylhs/xxgk/202607/t20260715_3309414.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 404,
+        "final_url": "https://www.quanzhou.gov.cn/zfb/xxgk/zfxxgkzl/ztzl/qzsczjtgylhs/xxgk/202607/t20260715_3309414.htm",
+        "accessible": false,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 2728,
+        "snapshot_hash": "4dbeb077b6f096d136c1e9a5c06048b947c152fb0635c4180b0730708be4b3f4",
+        "title_fragment": "404_中国泉州",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_006",
+      "slug": "2026-zibo-landmark-products-promotion-invitation",
+      "title": "2026“国货新字号·消费新趋势”地标名品推介会参展征集",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+      "store_primary_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://boftec.zibo.gov.cn/cec/news/detail?newsid=2160",
+        "accessible": true,
+        "content_type": "text/html;charset=UTF-8",
+        "response_bytes": 53240,
+        "snapshot_hash": "f7c14631cc19d25a152b4512eac0df6ae04d2802a4358709d9a1db8ebb5c5a14",
+        "title_fragment": "2026“国货新字号・消费新趋势”公益性地标名品推介会暨双节消费促进主题活动 邀请函",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_019",
+      "slug": "expansion-batch-01-019",
+      "title": "British Council Cultural Protection Fund 2026",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://cultural-protection-fund.britishcouncil.org/2026-funding-round",
+      "store_primary_url": "https://cultural-protection-fund.britishcouncil.org/2026-funding-round",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://cultural-protection-fund.britishcouncil.org/2026-funding-round",
+        "accessible": false,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 16655,
+        "snapshot_hash": "f54eb265bcf762212e5c5395ac17bca29fba8473780ef095fc6ff32b3710965e",
+        "title_fragment": "Access denied | British Council",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_008",
+      "slug": "2026-heluo-feihua-digital-ich-showcase-procurement",
+      "title": "“河洛飞花·数说非遗”2026国家级文化生态保护（实验）区展示交流活动项目",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+      "store_primary_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://sanmenxia.zfcg.henan.gov.cn/henan/content?channelCode=H640101&infoId=2004582",
+        "accessible": true,
+        "content_type": "text/html;charset=UTF-8",
+        "response_bytes": 7181,
+        "snapshot_hash": "a1794f3ddc1fea8274311cdc35f2c55a73d49a18738b2db8c703aa4bcc032d8f",
+        "title_fragment": "河南省政府采购网",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "ready_for_manual_confirmation",
+      "reason_codes": [],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_006",
+      "slug": "2026-yaozhou-porcelain-creative-competition",
+      "title": "2026中国耀州瓷创意大赛",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+      "store_primary_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://rs.tongchuan.gov.cn/157/index.jhtml",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 36706,
+        "snapshot_hash": "eb828e1b775c084f2c2045c134f8f926aee8afe208c796d8271e3101876d426e",
+        "title_fragment": "通知公告",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_003",
+      "slug": "expansion-batch-01-003",
+      "title": "2026第九届金茶花国际文创设计大赛",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+      "store_primary_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ynxc.gov.cn/html/2026/gongzuodongtai_0320/3032954.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 15244,
+        "snapshot_hash": "a4bf8e325811fa6be5ee2066b0008bd200b005d528d14a10b891bf2487dc3b40",
+        "title_fragment": "2026第九届金茶花国际文创设计大赛正式启动",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_013",
+      "slug": "expansion-batch-03-013",
+      "title": "2026北京国际设计周非遗设计单元征集",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.bjdw.org/",
+      "store_primary_url": "https://www.bjdw.org/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.bjdw.org/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 14701,
+        "snapshot_hash": "e52985c3757ea788e96d286e8a69fefe29752370a1a066a0a4bd07c9a9df2042",
+        "title_fragment": "中华设计-中华网",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_048",
+      "slug": "expansion-batch-03-048",
+      "title": "全国农业展览馆博物馆展厅服务采购意向",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=df834c3f-0cef-45f0-a436-efbaa09ee5bc",
+      "store_primary_url": "https://cgyx.ccgp.gov.cn/cgyx/pub/proJ/details?projId=df834c3f-0cef-45f0-a436-efbaa09ee5bc",
+      "url_mismatch": false,
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "content_type": null,
+        "response_bytes": 0,
+        "snapshot_hash": null,
+        "title_fragment": null,
+        "title_match": null,
+        "error": "TypeError: fetch failed"
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_unavailable",
+        "missing_fields:location,eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_068",
+      "slug": "expansion-batch-03-068",
+      "title": "Kāpiti Coast Heritage Fund 2026",
+      "queue": "urgent_deadline",
+      "priority": 110,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.kapiticoast.govt.nz/services/grants-and-funding/open-heritage-fund/",
+      "store_primary_url": "https://www.kapiticoast.govt.nz/services/grants-and-funding/open-heritage-fund/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.kapiticoast.govt.nz/services/grants-and-funding/open-heritage-fund/",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 4554,
+        "snapshot_hash": "ff65be5cc7e323afed01137b1229e964d9d9f50a2bba75d451343b160d423e2c",
+        "title_fragment": "Attention Required! | Cloudflare",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_026",
+      "slug": "2026-weaveup-wool-residency",
+      "title": "WeaveUp+ Wool Residency Open Call",
+      "queue": "urgent_deadline",
+      "priority": 105,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+      "store_primary_url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+        "accessible": true,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 148521,
+        "snapshot_hash": "a5be508ac645fdcbe0ffa1ecd8d44d36c7b316cbbeb963f5083fcd4ee8ac7ae1",
+        "title_fragment": "Open Call | WeaveUp+ Wool Residency Lottozero",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [
+        "expansion-batch-02-005"
+      ],
+      "deadline_state": "closing_soon",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_011",
+      "slug": "2026-london-textile-month-host-event",
+      "title": "London Textile Month 2026—Host an Event",
+      "queue": "urgent_deadline",
+      "priority": 105,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/london-textile-month-2026-host-an-event",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/london-textile-month-2026-host-an-event",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/london-textile-month-2026-host-an-event",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5768,
+        "snapshot_hash": "c980af1595c337fb75f7e41f5ff098a03d06d5be030fc43cddb63df3b31c0076",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_007",
+      "slug": "expansion-batch-01-007",
+      "title": "Craft Archive Fellowship 2026",
+      "queue": "urgent_deadline",
+      "priority": 105,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.centerforcraft.org/grants-and-fellowships/craft-archive-fellowship",
+      "store_primary_url": "https://www.centerforcraft.org/grants-and-fellowships/craft-archive-fellowship",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.centerforcraft.org/grants-and-fellowships/craft-archive-fellowship",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 164779,
+        "snapshot_hash": "2919077a4e979ad5df4e7f30b91849fc62d19d99d86cb57ed9aa55787d6eb0e5",
+        "title_fragment": "Craft Archive Fellowship",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_022",
+      "slug": "expansion-batch-01-022",
+      "title": "Spaces to rent in shared space for ceramics",
+      "queue": "urgent_deadline",
+      "priority": 105,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/spaces-to-rent-in-shared-space-for-ceramics",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/spaces-to-rent-in-shared-space-for-ceramics",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/spaces-to-rent-in-shared-space-for-ceramics",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5780,
+        "snapshot_hash": "730f74874999bcee35d7e5d23280d0fa82053f381c8c96588c2a9e27ab11d091",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_02_005",
+      "slug": "expansion-batch-02-005",
+      "title": "WeaveUp+ Wool Residency Lottozero 2026",
+      "queue": "urgent_deadline",
+      "priority": 105,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+      "store_primary_url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.lottozero.org/news/2026/7/2/open-call-weaveup-wool-residency",
+        "accessible": true,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 148521,
+        "snapshot_hash": "a5be508ac645fdcbe0ffa1ecd8d44d36c7b316cbbeb963f5083fcd4ee8ac7ae1",
+        "title_fragment": "Open Call | WeaveUp+ Wool Residency Lottozero",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [
+        "2026-weaveup-wool-residency"
+      ],
+      "deadline_state": "closing_soon",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_02_008",
+      "slug": "expansion-batch-02-008",
+      "title": "现代手工芸展 2026",
+      "queue": "urgent_deadline",
+      "priority": 105,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.gssk.jp/gendaisyukougeiten%202026%20entry.html",
+      "store_primary_url": "https://www.gssk.jp/gendaisyukougeiten%202026%20entry.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.gssk.jp/gendaisyukougeiten%202026%20entry.html",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 12995,
+        "snapshot_hash": "30111e873f479546af2039dda259c035f41185902c516a66802c0147ad0beb3b",
+        "title_fragment": "現代手工芸展&nbsp;-&nbsp;現代手工芸作家協会",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "closing_soon",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_004",
+      "slug": "2026-gansu-innovation-cup-traditional-craft-exhibition",
+      "title": "甘肃省第六届“创新杯”工业设计大赛工艺美术作品征集",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://gxj.pingliang.gov.cn/xwdt/tzgg/art/2026/art_f5d8db25f99d4828a1c2c393549e3474.html",
+      "store_primary_url": "https://gxj.pingliang.gov.cn/xwdt/tzgg/art/2026/art_f5d8db25f99d4828a1c2c393549e3474.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://gxj.pingliang.gov.cn/xwdt/tzgg/art/2026/art_f5d8db25f99d4828a1c2c393549e3474.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 53044,
+        "snapshot_hash": "0f32998344d65bcbee410317fa45dc526b44a473e711807fb676bcb7284b921b",
+        "title_fragment": "关于印发甘肃省第六届“创新杯”工业设计大赛方案的通知",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_02_006",
+      "slug": "expansion-batch-02-006",
+      "title": "International Folk Art Market Santa Fe 2027 Artist Application",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://folkartmarket.org/become-an-ifam-artist",
+      "store_primary_url": "https://folkartmarket.org/become-an-ifam-artist",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://folkartmarket.org/become-an-ifam-artist",
+        "accessible": true,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 405279,
+        "snapshot_hash": "ed0bc924959e389df22287624816f94b6da8288e50c040e7970163e2d689d77a",
+        "title_fragment": "Apply and Become and IFAM Folk Artist &mdash; International Folk Art Market",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_002",
+      "slug": "2026-fuzhou-intangible-cultural-heritage-craft-design-competition",
+      "title": "“闽都福韵·榕城有礼”福州非遗工美文创大赛",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+      "store_primary_url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202607/t20260727_5350577.htm",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 130498,
+        "snapshot_hash": "510d48bd49795e4ded8a21aa6e9bae4cf9256f31a9337a3bc03d0fa4760e62ad",
+        "title_fragment": "福州市工业和信息化局关于开展“闽都福韵·榕城有礼”福州非遗工美文创大赛的通知_通知公告_福州市工业和信息化局",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "ready_for_manual_confirmation",
+      "reason_codes": [],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_02_004",
+      "slug": "expansion-batch-02-004",
+      "title": "Historic England Grant Calls for Proposals 2026",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://historicengland.org.uk/advice/grants/what-we-fund/proposals/",
+      "store_primary_url": "https://historicengland.org.uk/advice/grants/what-we-fund/proposals/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://historicengland.org.uk/advice/grants/what-we-fund/proposals/",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5630,
+        "snapshot_hash": "805f3225f40fae1851d757d555ae5b82424add28a9ed39b8fdab989a4b44c51c",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_065",
+      "slug": "expansion-batch-03-065",
+      "title": "Auckland Regional Historic Heritage Grant 2026",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://ourauckland.aucklandcouncil.govt.nz/news/2026/07/regional-historic-heritage-grant-open-for-applications/",
+      "store_primary_url": "https://ourauckland.aucklandcouncil.govt.nz/news/2026/07/regional-historic-heritage-grant-open-for-applications/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://ourauckland.aucklandcouncil.govt.nz/news/2026/07/regional-historic-heritage-grant-open-for-applications/",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5821,
+        "snapshot_hash": "04cf1b4a18678171c597cb7b757114662febcc687c1a141f3b49cc1bc181c4b2",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_072",
+      "slug": "expansion-batch-03-072",
+      "title": "Wakefield Culture Grants Small Round 4 2026",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.wakefield.gov.uk/culture-and-heritage/culture-grants/culture-grants-small",
+      "store_primary_url": "https://www.wakefield.gov.uk/culture-and-heritage/culture-grants/culture-grants-small",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.wakefield.gov.uk/culture-and-heritage/culture-grants/culture-grants-small",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 64294,
+        "snapshot_hash": "377349c132906de751af233cd618358882bb9cadd0e006e1184fb937fe1bc1c4",
+        "title_fragment": "Culture Grants Small - Wakefield Council",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_001",
+      "slug": "2026-beijing-opera-week-ai-creative-call",
+      "title": "第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+      "store_primary_url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/202608/t20260818_4827290.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 47865,
+        "snapshot_hash": "1d8c204ce7b5ed64774dcc44b1b02df7a7d85a51216758badc1f7e23b0d10d73",
+        "title_fragment": "第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集公告_信息提示_首都之窗_北京市人民政府门户网站",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "ready_for_manual_confirmation",
+      "reason_codes": [],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_008",
+      "slug": "expansion-batch-03-008",
+      "title": "2026景德镇陶瓷创新设计大赛",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.jdz.gov.cn/",
+      "store_primary_url": "https://www.jdz.gov.cn/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.jdz.gov.cn/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 73775,
+        "snapshot_hash": "b6f9498d569bd9f82f936a958ed85eb7c2bf3c3c77c5c43e31f0e196da326713",
+        "title_fragment": "景德镇市人民政府",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_003",
+      "slug": "2026-jiulongpo-cultural-tourism-products-call",
+      "title": "九龙坡区2026年“一批文创”特色旅游商品征集评选",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://cqjlp.gov.cn/zwxx/qxdt/202608/t20260807_15903968_wap.html",
+      "store_primary_url": "https://cqjlp.gov.cn/zwxx/qxdt/202608/t20260807_15903968_wap.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://cqjlp.gov.cn/zwxx/qxdt/202608/t20260807_15903968_wap.html",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 19620,
+        "snapshot_hash": "8ce76fcdc3844197cbca3d0688e4cce150934b192d95cd698282ee45758434af",
+        "title_fragment": "最高奖金3000元！2026年“十个一”星光奖——“一批文创”特色旅游商品（文创产品）征集评选活动开始了",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_auto_20260824_007",
+      "slug": "2026-shanghai-feiyi-new-experience-design-contest",
+      "title": "第五届“非遗新体验”国潮文创设计大赛征集",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://whlyj.sh.gov.cn/wbzx/20260708/d64ae7225cca4bbbaf0c60b96c10e707.html",
+      "store_primary_url": "https://whlyj.sh.gov.cn/wbzx/20260708/d64ae7225cca4bbbaf0c60b96c10e707.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://whlyj.sh.gov.cn/wbzx/20260708/d64ae7225cca4bbbaf0c60b96c10e707.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 12195,
+        "snapshot_hash": "7debb08b8e92d93b05c3650e2679845083ad4f4017b78c730ca6877521a53643",
+        "title_fragment": "国潮出圈，非遗上新！第五届“非遗新体验”大赛征集公告_文博资讯_上海市文化和旅游局",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_002",
+      "slug": "2026-beijing-planetarium-juxing-cup-cultural-products",
+      "title": "北京天文馆“聚星杯”文化创意产品设计大赛",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.bjp.org.cn/xwzx/gndt/4028c1369e281c7a019e297970aa0005.shtml",
+      "store_primary_url": "https://www.bjp.org.cn/xwzx/gndt/4028c1369e281c7a019e297970aa0005.shtml",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.bjp.org.cn/xwzx/gndt/4028c1369e281c7a019e297970aa0005.shtml",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 20288,
+        "snapshot_hash": "c967914921668bb736e27be1f35a0e40cd111592341b6dfb84fd4589763494b0",
+        "title_fragment": "2026 第五届北京天文馆 &ldquo;聚星杯&rdquo; 天文创意产品征集活动通知-北京天文馆",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_2026_guangdong_design_competition_11",
+      "slug": "2026-guangdong-ich-creative-design-competition",
+      "title": "“粤韵新彩 共创美好”2026年第十一届广东省非物质文化遗产创意设计大赛",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10839528.html",
+      "store_primary_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10839528.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10839528.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 39408,
+        "snapshot_hash": "d7083402b3a335cd4619442c42d95df84059e76a7ece671cb5926bcdf736f944",
+        "title_fragment": "关于征集“粤韵新彩 共创美好”2026年第十一届广东省非物质文化遗产创意设计大赛参赛作品的通知",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "ready_for_manual_confirmation",
+      "reason_codes": [],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_019",
+      "slug": "2026-suzhou-museum-cultural-service-center-partner",
+      "title": "宿州市博物馆文化服务中心非遗项目合作招募",
+      "queue": "current_recheck",
+      "priority": 90,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ahsz.gov.cn/public/2655611/196422801.html",
+      "store_primary_url": "https://www.ahsz.gov.cn/public/2655611/196422801.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ahsz.gov.cn/public/2655611/196422801.html",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 55587,
+        "snapshot_hash": "c47e30980b55678cda7b71368f4f66396c88af6ff4f78dead716a994202815fd",
+        "title_fragment": "关于进一步招募“宿州市博物馆文创服务中心”合作伙伴的公告_宿州市人民政府",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_028",
+      "slug": "expansion-batch-01-028",
+      "title": "あったらいいな！こんな伝統工芸品 Design Contest 2026",
+      "queue": "current_recheck",
+      "priority": 85,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.dentoukougei.jp/topics/2026/design-contest.html",
+      "store_primary_url": "https://www.dentoukougei.jp/topics/2026/design-contest.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.dentoukougei.jp/topics/2026/design-contest.html",
+        "accessible": true,
+        "content_type": "text/html;charset=Shift_JIS",
+        "response_bytes": 16925,
+        "snapshot_hash": "ddb8ea02e60a3501d262fa25c154d12195ef89ec418eec8ecbb47d683ff03a53",
+        "title_fragment": "�u�������炢���ȁI����ȓ`���H�|�i�v�f�U�C���R���e�X�g2026�J�Â̂��ē� | ���m�点 | �����s�`���H�|�m��",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_010",
+      "slug": "2026-future-icons-selects-open-call",
+      "title": "Future Icons Selects 2026 Open Call",
+      "queue": "current_recheck",
+      "priority": 85,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/future-icons-selects-2026-5",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/future-icons-selects-2026-5",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/future-icons-selects-2026-5",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5711,
+        "snapshot_hash": "ee466f22f87d741ef5e0e936586886a310ab8501ae2dfea82fc8abef7703f180",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_02_003",
+      "slug": "expansion-batch-02-003",
+      "title": "Horizon Europe 2026 Cultural Heritage and Creative Industries",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://rea.ec.europa.eu/funding-and-grants/horizon-europe-cluster-2-culture-creativity-and-inclusive-society/european-cultural-heritage-and-cultural-and-creative-industries_en",
+      "store_primary_url": "https://rea.ec.europa.eu/funding-and-grants/horizon-europe-cluster-2-culture-creativity-and-inclusive-society/european-cultural-heritage-and-cultural-and-creative-industries_en",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://rea.ec.europa.eu/funding-and-grants/horizon-europe-cluster-2-culture-creativity-and-inclusive-society/european-cultural-heritage-and-cultural-and-creative-industries_en",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 104422,
+        "snapshot_hash": "80a26813f9de5819621c91ba8b43d054a4ef37637a0f743df467070381f9f6d9",
+        "title_fragment": "European Cultural Heritage and the Cultural and Creative Industries - European Research Executive Agency",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_062",
+      "slug": "expansion-batch-03-062",
+      "title": "Malta Arts Council Artistic Heritage Scheme 2026",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://artscouncilmalta.gov.mt/wp-content/uploads/2026/05/List-of-Schemes-EN.pdf",
+      "store_primary_url": "https://artscouncilmalta.gov.mt/wp-content/uploads/2026/05/List-of-Schemes-EN.pdf",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://artscouncilmalta.gov.mt/wp-content/uploads/2026/05/List-of-Schemes-EN.pdf",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 4541,
+        "snapshot_hash": "6865dd4ed637ddac302242e4f19799a4d430df2b8f68a217844bc65b769aad25",
+        "title_fragment": "Attention Required! | Cloudflare",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_006",
+      "slug": "expansion-batch-01-006",
+      "title": "第八届北京市大学生文化创意设计竞赛",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://jw.beijing.gov.cn/gjc/tzgg_15688/202605/t20260528_4669903.html",
+      "store_primary_url": "https://jw.beijing.gov.cn/gjc/tzgg_15688/202605/t20260528_4669903.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://jw.beijing.gov.cn/gjc/tzgg_15688/202605/t20260528_4669903.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 45072,
+        "snapshot_hash": "fb83de1ab50d92719f799202ec793fc79b470a2ab58bc4aa7f8239344d37d653",
+        "title_fragment": "关于举办2026年第八届北京市大学生文化创意设计竞赛的通知",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_069",
+      "slug": "expansion-batch-03-069",
+      "title": "Waitaki Heritage Fund 2026",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.waitaki.govt.nz/About-Waitaki/Living-here/Supporting-our-community/Community-Grants-and-Awards/Waitaki-Heritage-Fund",
+      "store_primary_url": "https://www.waitaki.govt.nz/About-Waitaki/Living-here/Supporting-our-community/Community-Grants-and-Awards/Waitaki-Heritage-Fund",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.waitaki.govt.nz/About-Waitaki/Living-here/Supporting-our-community/Community-Grants-and-Awards/Waitaki-Heritage-Fund",
+        "accessible": false,
+        "content_type": "text/html",
+        "response_bytes": 529,
+        "snapshot_hash": "67493ba1c9d7b121d7da2ae9961823186d910ab797233d16665de4b8af142900",
+        "title_fragment": "Access Denied",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_005",
+      "slug": "expansion-batch-01-005",
+      "title": "雪域赤橙 文创蓝焰第七届消防文创作品大赛",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://lasa.xzdw.gov.cn/fbt/gsgg/202605/t20260515_671077.html",
+      "store_primary_url": "https://lasa.xzdw.gov.cn/fbt/gsgg/202605/t20260515_671077.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://lasa.xzdw.gov.cn/fbt/gsgg/202605/t20260515_671077.html",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 30379,
+        "snapshot_hash": "47d4b01f419573c072708fb8beb5bdd3bf0ee35a45e02d5b02c010bbcaa671c6",
+        "title_fragment": "关于举办“雪域赤橙 文创蓝焰” 第七届消防文创作品大赛的公告_中国共产党拉萨市委员会",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_019",
+      "slug": "expansion-batch-03-019",
+      "title": "2026云南民族手工艺创新大赛",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.yn.gov.cn/",
+      "store_primary_url": "https://www.yn.gov.cn/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.yn.gov.cn/",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 145131,
+        "snapshot_hash": "90ce33f5bae8b57be5f8776b8a459bcd8f591ef5ced735ff284f80adea5c8266",
+        "title_fragment": "云南省人民政府门户网站",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_058",
+      "slug": "expansion-batch-03-058",
+      "title": "Collect 2026 Exhibitor Application",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/collect-fair/how-to-participate/exhibit-2026",
+      "store_primary_url": "https://www.craftscouncil.org.uk/collect-fair/how-to-participate/exhibit-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/collect-fair/how-to-participate/exhibit-2026",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5653,
+        "snapshot_hash": "6db90a8d42a4e7403076edd4964b48d67c47c4e49524b82f7eee77aefe52be80",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_070",
+      "slug": "expansion-batch-03-070",
+      "title": "Nordic Culture Point Residency B28 2026",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.nkk.org/en/residency-b28/",
+      "store_primary_url": "https://www.nkk.org/en/residency-b28/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.nkk.org/en/residency-b28/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 70482,
+        "snapshot_hash": "a298dead85b6fb417fdb622aaa40b75809b83e6624cade30735e0a5c24ccbc8d",
+        "title_fragment": "Residency B28 - Nordic Culture Point",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_071",
+      "slug": "expansion-batch-03-071",
+      "title": "L-AIR 2026 Artist Residency Season 4",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://l-air.or.jp/journal/2025/08/679/",
+      "store_primary_url": "https://l-air.or.jp/journal/2025/08/679/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://l-air.or.jp/journal/2025/08/679/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 24397,
+        "snapshot_hash": "b3a6f4c69f0c664566569812ab6f092ac07ea60311d6244e34bacec35c198bd7",
+        "title_fragment": "(EN)L-AIR 2026: Artist Residency S1–S4 Open Call (Apply Anytime)｜一般社団法人 L-A・I・R",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_066",
+      "slug": "expansion-batch-03-066",
+      "title": "Craft Makers Christmas Exhibition Opportunity 2026",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/open-call-craft-makers-christmas-exhibition-opportunity",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/open-call-craft-makers-christmas-exhibition-opportunity",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/open-call-craft-makers-christmas-exhibition-opportunity",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5837,
+        "snapshot_hash": "3943d32fec0394d5d065c5cb10a9586e8c3c4e0d4f9a58e84e48c9a4ef7f0910",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_020",
+      "slug": "expansion-batch-03-020",
+      "title": "2026苏州传统工艺美术展作品征集",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.suzhou.gov.cn/",
+      "store_primary_url": "https://www.suzhou.gov.cn/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.suzhou.gov.cn/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 150356,
+        "snapshot_hash": "bc5024b9872944f6fd432fcec1ad50c9a6e7c914310b99e5999721254690db15",
+        "title_fragment": "苏州市人民政府",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_028",
+      "slug": "expansion-batch-03-028",
+      "title": "2026博物馆非遗展陈项目采购",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+      "store_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 25469,
+        "snapshot_hash": "f92d302f92f4d70bc9b97e98169844700b5395ebfb79471415244ff8bb055a4c",
+        "title_fragment": "地方公告_中国政府采购网",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_022",
+      "slug": "expansion-batch-03-022",
+      "title": "2026传统工艺乡村振兴项目资金申报",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.moa.gov.cn/gk/tzgg_1/",
+      "store_primary_url": "https://www.moa.gov.cn/gk/tzgg_1/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.moa.gov.cn/gk/tzgg_1/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 45899,
+        "snapshot_hash": "8e84e506571b830a201b3d1a4deffb6d23a1524008abf02f6f8ecdf022d113fe",
+        "title_fragment": "通知公告",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_027",
+      "slug": "expansion-batch-03-027",
+      "title": "2026传统工艺主题巡展报名",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ihchina.cn/zhengce",
+      "store_primary_url": "https://www.ihchina.cn/zhengce",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ihchina.cn/zhengce",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 35243,
+        "snapshot_hash": "c074be9181f480958b8fd7ac0d632f6e31252de2af02dc0785e58a178bc87abd",
+        "title_fragment": "政策 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_031",
+      "slug": "expansion-batch-03-031",
+      "title": "2026地方非遗传承发展资金申报",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/",
+      "store_primary_url": "https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 20778,
+        "snapshot_hash": "e94a8fb48d2b14c91d597caf722b9827e6a40f15a4abd6c7cb62ad6668c5626c",
+        "title_fragment": "财政新闻",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_073",
+      "slug": "expansion-batch-03-073",
+      "title": "Kyoto Tradition for Tomorrow Craft & Design Competition 2026",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://kmtc.jp/tft/",
+      "store_primary_url": "https://kmtc.jp/tft/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://kmtc.jp/tft/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 189532,
+        "snapshot_hash": "90fe361e1e79ad37f007955ffe9657bd40bfa1acf90e4c535fbe2b28afb35311",
+        "title_fragment": "京都クラフト＆デザインコンペティション",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_030",
+      "slug": "expansion-batch-03-030",
+      "title": "2026传统工艺保护专项申报指南",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.gov.cn/zhengce/content/",
+      "store_primary_url": "https://www.gov.cn/zhengce/content/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.gov.cn/zhengce/content/",
+        "accessible": false,
+        "content_type": "text/html",
+        "response_bytes": 441,
+        "snapshot_hash": "0234f5d2a76d7dfc6bf1123b71a09a20bce5275d5ee005cf21200eb198766c39",
+        "title_fragment": "403 Forbidden",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_021",
+      "slug": "expansion-batch-03-021",
+      "title": "2026文创园区非遗工坊入驻招募",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.gov.cn/zhengce/zuixin.htm",
+      "store_primary_url": "https://www.gov.cn/zhengce/zuixin.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.gov.cn/zhengce/zuixin.htm",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 894,
+        "snapshot_hash": "bdcd9da9302536a675235ff90544457fce03d5f5ce0cba26b93220ff11852c5b",
+        "title_fragment": "中国政府网_中央人民政府门户网站",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_059",
+      "slug": "expansion-batch-03-059",
+      "title": "National Museum of the Philippines FY2026 Exhibition Fit-out Procurement",
+      "queue": "field_confirmation",
+      "priority": 65,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.nationalmuseum.gov.ph/bids-and-awards/small-value-procurement-fiscal-year-2026/",
+      "store_primary_url": "https://www.nationalmuseum.gov.ph/bids-and-awards/small-value-procurement-fiscal-year-2026/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.nationalmuseum.gov.ph/bids-and-awards/small-value-procurement-fiscal-year-2026/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 140499,
+        "snapshot_hash": "0e270f2af3b8c5255685ffb53c741bac12c23db1a6d7b013a3ce6f6b847647e0",
+        "title_fragment": "Small Value Procurement FY 2026 &#8211; National Museum",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_020",
+      "slug": "expansion-batch-01-020",
+      "title": "SAM Residencies Cycle 4 2027/2028",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://samresidencies.smapply.org/prog/cycle4/",
+      "store_primary_url": "https://samresidencies.smapply.org/prog/cycle4/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://samresidencies.smapply.org/prog/cycle4/",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 29140,
+        "snapshot_hash": "88b56e3be3e269cd3954c2aa281a45af6ad074faaf54a1512cd18a0e09dc2637",
+        "title_fragment": "Open Call Applications for Cycle 4 (2027/2028) - SAM Residencies",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_016",
+      "slug": "expansion-batch-03-016",
+      "title": "2026国际传统工艺驻地计划",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.transartists.org/en/calls",
+      "store_primary_url": "https://www.transartists.org/en/calls",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.transartists.org/en/calls",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5499,
+        "snapshot_hash": "4dee35e3799d90f5ba0fd94cd6158332e3471c36bb0dec46aaf15339fb216123",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_057",
+      "slug": "expansion-batch-03-057",
+      "title": "Contemporary Craft 2027 Exhibition Call",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://contemporarycraft.org/wp-content/uploads/2026/03/2027-RP-Prospectus-Final.pdf",
+      "store_primary_url": "https://contemporarycraft.org/wp-content/uploads/2026/03/2027-RP-Prospectus-Final.pdf",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://contemporarycraft.org/wp-content/uploads/2026/03/2027-RP-Prospectus-Final.pdf",
+        "accessible": true,
+        "content_type": "application/pdf",
+        "response_bytes": 236889,
+        "snapshot_hash": "dd4408648f65d2f7312f35d4eb9af02a0f4df9aae3a6c4569514a8a62248eadf",
+        "title_fragment": null,
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_061",
+      "slug": "expansion-batch-03-061",
+      "title": "D’Oyly Carte Charitable Trust Heritage Crafts Grants 2026",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://doylycartecharitabletrust.org/",
+      "store_primary_url": "https://doylycartecharitabletrust.org/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "content_type": null,
+        "response_bytes": 0,
+        "snapshot_hash": null,
+        "title_fragment": null,
+        "title_match": null,
+        "error": "TypeError: fetch failed"
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_unavailable",
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_077",
+      "slug": "expansion-batch-03-077",
+      "title": "Materials Hard + Soft International Craft Competition 2027",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://dentonarts.com/materials-hard-soft-call",
+      "store_primary_url": "https://dentonarts.com/materials-hard-soft-call",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://dentonarts.com/materials-hard-soft-call",
+        "accessible": true,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 1368143,
+        "snapshot_hash": "6dfcae6f88f28d78f556e13552a08131a8f7a8dbc6eb28af05d3dd6d1949843d",
+        "title_fragment": "Materials: Hard + Soft Call &mdash; Greater Denton Arts Council",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_052",
+      "slug": "expansion-batch-03-052",
+      "title": "The Workroom Artist Residency Programme 2026/27",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://theworkroom.org.uk/files/69ef804f44fa1-applicationguidanceartistresidencyprogramme2627.pdf",
+      "store_primary_url": "https://theworkroom.org.uk/files/69ef804f44fa1-applicationguidanceartistresidencyprogramme2627.pdf",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://theworkroom.org.uk/files/69ef804f44fa1-applicationguidanceartistresidencyprogramme2627.pdf",
+        "accessible": true,
+        "content_type": "application/pdf",
+        "response_bytes": 956521,
+        "snapshot_hash": "4a6dee7653613cc1bdc941d56806cf09e2c26e73a2128edcc5f054791c8ed083",
+        "title_fragment": null,
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_033",
+      "slug": "expansion-batch-03-033",
+      "title": "2026世界工艺理事会区域展征集",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://worldcraftscouncil.org/",
+      "store_primary_url": "https://worldcraftscouncil.org/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://worldcraftscouncil.org/",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 57271,
+        "snapshot_hash": "443bba751ca3660627a91d7a514f94bbd0b10009eb9240d683ff1d6442d5a0bd",
+        "title_fragment": "Crowngreen Casino Online Canada - Complete Guide 2026",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_046",
+      "slug": "expansion-batch-03-046",
+      "title": "LOEWE FOUNDATION Craft Prize 2026",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://craftprize.loewe.com/",
+      "store_primary_url": "https://craftprize.loewe.com/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://craftprize.loewe.com/en/craftprize2027",
+        "accessible": true,
+        "content_type": "text/html;charset=UTF-8",
+        "response_bytes": 90370,
+        "snapshot_hash": "b08fbc5ec2ac7fdc1ac405ab4183f6a5c7e742d1c11b107dbbe7bf184a63c805",
+        "title_fragment": null,
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_044",
+      "slug": "expansion-batch-03-044",
+      "title": "Endangered Crafts Fund 2026",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://heritagecrafts.org.uk/ecf/",
+      "store_primary_url": "https://heritagecrafts.org.uk/ecf/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/ecf/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 75631,
+        "snapshot_hash": "518f7ad06f72724d69f67005e5a88bf9c3c2e0e4762222703c215fab09a4126f",
+        "title_fragment": "Endangered Crafts Fund - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_040",
+      "slug": "expansion-batch-03-040",
+      "title": "2026国际传统工艺线上展报名",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/online-exhibition-2026",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/online-exhibition-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/online-exhibition-2026",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5696,
+        "snapshot_hash": "40b96c5a7e4410352efa775c52d01fe30c18d1d1f8dac5b77269c64cf92e2651",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_056",
+      "slug": "expansion-batch-03-056",
+      "title": "Contemporary Craft 2026-2027 Exhibition Open Call",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "https://contemporarycraft.org/wp-content/uploads/2025/08/CC-2026-2027-Zeve-Regional-Gallery-Exhibition-Open-Call-.pdf",
+      "store_primary_url": "https://contemporarycraft.org/wp-content/uploads/2025/08/CC-2026-2027-Zeve-Regional-Gallery-Exhibition-Open-Call-.pdf",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://contemporarycraft.org/wp-content/uploads/2025/08/CC-2026-2027-Zeve-Regional-Gallery-Exhibition-Open-Call-.pdf",
+        "accessible": true,
+        "content_type": "application/pdf",
+        "response_bytes": 821024,
+        "snapshot_hash": "b65e4522d65b93a4c5462c68b73c945cf6c7a7b7c31a3deb3ccc3440529a734a",
+        "title_fragment": null,
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "current",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_007",
+      "slug": "expansion-batch-03-007",
+      "title": "2026广东省工艺美术精品展作品征集",
+      "queue": "field_confirmation",
+      "priority": 60,
+      "primary_level": "L2",
+      "queue_primary_url": "http://www.gzartware.com/",
+      "store_primary_url": "http://www.gzartware.com/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "http://www.gzartware.com/",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 37296,
+        "snapshot_hash": "3b0f486add941e089a5f999c817ca1ad4fdd9af6180b96ec97e46ebf4bdb337e",
+        "title_fragment": "广东省工艺美术协会",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "deadline_at",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "unknown",
+      "disposition": "manual_field_review",
+      "reason_codes": [
+        "missing_fields:deadline_at,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_historical_roman_scotland_exhibition_fitout_2026",
+      "slug": "historical-roman-scotland-exhibition-fitout-2026",
+      "title": "Roman Scotland Exhibition Fit-out Tender（已截止）",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.find-tender.service.gov.uk/Notice/017149-2026",
+      "store_primary_url": "https://www.find-tender.service.gov.uk/Notice/017149-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.find-tender.service.gov.uk/Notice/017149-2026",
+        "accessible": false,
+        "content_type": "text/html",
+        "response_bytes": 118,
+        "snapshot_hash": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+        "title_fragment": "403 Forbidden",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_067",
+      "slug": "expansion-batch-03-067",
+      "title": "Tribal Heritage Grants 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.nps.gov/subjects/historicpreservationfund/tribal-heritage-grants.htm",
+      "store_primary_url": "https://www.nps.gov/subjects/historicpreservationfund/tribal-heritage-grants.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.nps.gov/subjects/historicpreservationfund/tribal-heritage-grants.htm",
+        "accessible": true,
+        "content_type": "text/html;charset=UTF-8",
+        "response_bytes": 54035,
+        "snapshot_hash": "ceef572fe6af3d9fbcb3174847b5c8fac0dba1f44f0018a652c6001e32466043",
+        "title_fragment": "Tribal Heritage Grants - Historic Preservation Fund (U.S. National Park Service)",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_050",
+      "slug": "expansion-batch-03-050",
+      "title": "江西省政府购买文化服务公益性演出采购公示",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/dylygg/202607/t20260722_26982596.htm",
+      "store_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/dylygg/202607/t20260722_26982596.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/dylygg/202607/t20260722_26982596.htm",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 14258,
+        "snapshot_hash": "6e2e399663e667fc35827d86925a780fb4ac6cbec85cd17fb8402ed32a259d7c",
+        "title_fragment": "中共江西省委宣传部 政府购买文化服务_艺术表演场所公益性演出采购实行单一来源采购方式的公示",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_020",
+      "slug": "2026-guangzhou-gift-product-collection",
+      "title": "2026“广州礼物”文创产品征集",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://wglj.gz.gov.cn/gkmlpt/content/10/10898/post_10898467.html",
+      "store_primary_url": "https://wglj.gz.gov.cn/gkmlpt/content/10/10898/post_10898467.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://wglj.gz.gov.cn/gkmlpt/content/10/10898/post_10898467.html",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 44162,
+        "snapshot_hash": "78b370db7ca63debbb80c50b327ad6c8a1518f22b4c0b9f7a30b1c54459b4fa2",
+        "title_fragment": "广州市文化广电旅游局关于2026年征集“广州礼物”产品的通知",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_055",
+      "slug": "expansion-batch-03-055",
+      "title": "安徽省非物质文化遗产展示馆专业设备采购（二次）",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260711_26917562.htm",
+      "store_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260711_26917562.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202607/t20260711_26917562.htm",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 19669,
+        "snapshot_hash": "1997ba01131ecb6339bc2356de4a991de58f94049d3b67c71abb3de6ff370f18",
+        "title_fragment": "安徽省文化馆新馆和安徽省非物质文化遗产展示馆摄影摄像器材、服务器及专业设备项目（二次）公开招标公告",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_027",
+      "slug": "2026-royal-museums-greenwich-creative-practitioner-residence",
+      "title": "Royal Museums Greenwich Creative Practitioner in Residence 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+      "store_primary_url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 97770,
+        "snapshot_hash": "5ef1a5f51cecc4e4613be87644dc909d460a57b501c081d6a8c1c54d06054ae5",
+        "title_fragment": "Creative Practitioner in Residence 2026 | Royal Museums Greenwich",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [
+        "expansion-batch-03-051"
+      ],
+      "deadline_state": "expired",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_051",
+      "slug": "expansion-batch-03-051",
+      "title": "Royal Museums Greenwich Creative Practitioner Residency 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+      "store_primary_url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.rmg.co.uk/creative-practitioner-residence-2026",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 97770,
+        "snapshot_hash": "5ef1a5f51cecc4e4613be87644dc909d460a57b501c081d6a8c1c54d06054ae5",
+        "title_fragment": "Creative Practitioner in Residence 2026 | Royal Museums Greenwich",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [
+        "2026-royal-museums-greenwich-creative-practitioner-residence"
+      ],
+      "deadline_state": "expired",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_049",
+      "slug": "expansion-batch-03-049",
+      "title": "中国科学技术馆科普资源荟服务采购",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ccgp.gov.cn/cggg/zygg/jzxcs/202607/t20260721_26973457.htm",
+      "store_primary_url": "https://www.ccgp.gov.cn/cggg/zygg/jzxcs/202607/t20260721_26973457.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ccgp.gov.cn/cggg/zygg/jzxcs/202607/t20260721_26973457.htm",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 19992,
+        "snapshot_hash": "272d1b9d74a911e8d50e61c1844438fcd579a41c3c074498a803bd7e61528a44",
+        "title_fragment": "中国科学技术馆2026世界公众科学素质促进大会科普资源荟服务采购项目（第二次）竞争性磋商",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_054",
+      "slug": "expansion-batch-03-054",
+      "title": "山东工艺美术学院学生公寓及配套设施提升项目补充采购",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202607/t20260724_27007154.htm",
+      "store_primary_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202607/t20260724_27007154.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202607/t20260724_27007154.htm",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 24585,
+        "snapshot_hash": "82015498475a627cec538f99b9b6f30b7c6bfe1b86ca6c980900c8f6c3d19328",
+        "title_fragment": "山东工艺美术学院学生公寓及配套设施提升项目补充项目竞争性磋商公告",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_013",
+      "slug": "2026-ali-cultural-creative-products-procurement",
+      "title": "阿里地区特色文旅文创产品公开征集采购",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://lyfz.al.gov.cn/info/1932/22841.htm",
+      "store_primary_url": "https://lyfz.al.gov.cn/info/1932/22841.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "content_type": null,
+        "response_bytes": 0,
+        "snapshot_hash": null,
+        "title_fragment": null,
+        "title_match": null,
+        "error": "TypeError: fetch failed"
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [
+        "expansion-batch-01-001"
+      ],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_unavailable",
+        "duplicate_primary_url",
+        "missing_fields:location"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_014",
+      "slug": "2026-caofeidian-ich-museum-decoration-project",
+      "title": "曹妃甸非遗馆装饰装修项目招标",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ggzy.gov.cn/information/deal/html/a/130000/0201/20260723/0013979914fd6a9642e0ad1ceb4975bbca93.html",
+      "store_primary_url": "https://www.ggzy.gov.cn/information/deal/html/a/130000/0201/20260723/0013979914fd6a9642e0ad1ceb4975bbca93.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ggzy.gov.cn/information/deal/html/a/130000/0201/20260723/0013979914fd6a9642e0ad1ceb4975bbca93.html",
+        "accessible": true,
+        "content_type": "text/plain;charset=UTF-8",
+        "response_bytes": 3433,
+        "snapshot_hash": "1489c69cc5dca45ac23397352ae62200376d2b2c033270e6cd440a9970c9b126",
+        "title_fragment": "曹妃甸非遗馆项目-装饰装修工程竞争性谈判公告_交易公开_国家公共资源交易平台",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_001",
+      "slug": "expansion-batch-01-001",
+      "title": "关于公开征集采购特色文旅文创产品的公告",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://lyfz.al.gov.cn/info/1932/22841.htm",
+      "store_primary_url": "https://lyfz.al.gov.cn/info/1932/22841.htm",
+      "url_mismatch": false,
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "content_type": null,
+        "response_bytes": 0,
+        "snapshot_hash": null,
+        "title_fragment": null,
+        "title_match": null,
+        "error": "TypeError: fetch failed"
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [
+        "2026-ali-cultural-creative-products-procurement"
+      ],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_unavailable",
+        "duplicate_primary_url",
+        "missing_fields:location,eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_023",
+      "slug": "2026-beijing-professional-title-craft-fine-arts",
+      "title": "北京市2026年度工艺美术等职称评价申报",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://rsj.beijing.gov.cn/xxgk/tzgg/202606/t20260625_4720639.html",
+      "store_primary_url": "https://rsj.beijing.gov.cn/xxgk/tzgg/202606/t20260625_4720639.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://rsj.beijing.gov.cn/xxgk/tzgg/202606/t20260625_4720639.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 177440,
+        "snapshot_hash": "ca9124d05d1cdbf3bc36719817c05c3a08c98637520a96d2d7ec72189fdab7e5",
+        "title_fragment": "关于开展2026年度北京市职称评价工作的通知_ 北京市人力资源和社会保障局_政务公开_公示公告",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_063",
+      "slug": "expansion-batch-03-063",
+      "title": "National Lottery Heritage Grant 2026 August Round",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.heritagefund.org.uk/print/pdf/node/110866",
+      "store_primary_url": "https://www.heritagefund.org.uk/print/pdf/node/110866",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.heritagefund.org.uk/print/pdf/node/110866",
+        "accessible": true,
+        "content_type": "application/pdf",
+        "response_bytes": 4073,
+        "snapshot_hash": "d6775ea240153ae6410951eec15cfbb7f7fb08229bf91d57400091c7ea91fdac",
+        "title_fragment": null,
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_015",
+      "slug": "2026-shandong-vocational-college-ich-kongming-lock-equipment",
+      "title": "山东职业学院非遗鲁班锁设备采购",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.ggzy.gov.cn/information/deal/html/a/370000/0201/20260717/0037d50adad34acc40b894ea6b2f326d00b3.html",
+      "store_primary_url": "https://www.ggzy.gov.cn/information/deal/html/a/370000/0201/20260717/0037d50adad34acc40b894ea6b2f326d00b3.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.ggzy.gov.cn/information/deal/html/a/370000/0201/20260717/0037d50adad34acc40b894ea6b2f326d00b3.html",
+        "accessible": true,
+        "content_type": "text/plain;charset=UTF-8",
+        "response_bytes": 4552,
+        "snapshot_hash": "e504f83a0f12c193d00c55bb3ee29d6092c39d3c469b28b919cd0aa4f0ba73e0",
+        "title_fragment": "山东科技职业学院非遗孔明锁新工艺全景设备采购项目公开招标招标公告_交易公开_国家公共资源交易平台",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_022",
+      "slug": "2026-suzhou-arts-crafts-professional-title",
+      "title": "苏州市2026年度工艺美术专业技术资格申报",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://gxj.suzhou.gov.cn/szeic/ggl/202606/7db2aa7fc3c744639d7feccfbc60769a.shtml",
+      "store_primary_url": "https://gxj.suzhou.gov.cn/szeic/ggl/202606/7db2aa7fc3c744639d7feccfbc60769a.shtml",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://gxj.suzhou.gov.cn/szeic/ggl/202606/7db2aa7fc3c744639d7feccfbc60769a.shtml",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 22959,
+        "snapshot_hash": "135b70af4014f37b0ff6fb507c0aefb06d3c9d6632e34c6d81049269ea4d40fa",
+        "title_fragment": "关于报送2026年度经济和工艺美术专业技术资格评审材料的通知 - 苏州市工业和信息化局",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_024",
+      "slug": "expansion-batch-01-024",
+      "title": "National Heritage Fellowships Events 2027",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.arts.gov/sites/default/files/National-Heritage-Fellowships-Events-2027.pdf",
+      "store_primary_url": "https://www.arts.gov/sites/default/files/National-Heritage-Fellowships-Events-2027.pdf",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.arts.gov/sites/default/files/National-Heritage-Fellowships-Events-2027.pdf",
+        "accessible": true,
+        "content_type": "application/pdf",
+        "response_bytes": 786219,
+        "snapshot_hash": "a09e4bdd60a8cbaddcfd384f07c86a3d2565749c002f1a83b7ce97cfe3a0c250",
+        "title_fragment": null,
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_004",
+      "slug": "2026-jincheng-cultural-creative-products-competition",
+      "title": "晋城市第八届文化创意产品展示大赛",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.jcgov.gov.cn/dtxx/gsgg/202606/t20260611_2359601.shtml",
+      "store_primary_url": "https://www.jcgov.gov.cn/dtxx/gsgg/202606/t20260611_2359601.shtml",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.jcgov.gov.cn/dtxx/gsgg/202606/t20260611_2359601.shtml",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 47847,
+        "snapshot_hash": "cbb4638ea213a3bf185e0cda9613d3747feb5a4a06c8fc7b386a2ede74579f97",
+        "title_fragment": "晋城市第八届文化创意产品展示大赛暨2026年度“清风晋韵”文创作品征集宣推活动方案 - 晋城市人民政府",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_008",
+      "slug": "2026-taiwan-five-star-market-evaluation",
+      "title": "2026臺灣五星集—優良市集暨樂活名攤評核",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.aoc.gov.tw/showPublic/674",
+      "store_primary_url": "https://www.aoc.gov.tw/showPublic/674",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.aoc.gov.tw/showPublic/674",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5483,
+        "snapshot_hash": "b58db7d964496ed2f84cfd0a361ffa4b78c650320dedf48c1a9e3e1c93661b3f",
+        "title_fragment": "Attention Required! | Cloudflare",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_064",
+      "slug": "expansion-batch-03-064",
+      "title": "Present Makers 2026 Craft Exhibition Maker Call",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.thelmahulbert.com/news/maker-call-out",
+      "store_primary_url": "https://www.thelmahulbert.com/news/maker-call-out",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.thelmahulbert.com/news/maker-call-out",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 143277,
+        "snapshot_hash": "fb9253d8a2f6a6d0d4d9ae48658eebbc21b558ea1f408c14b018893ff590df24",
+        "title_fragment": "Maker Call Out | Thelma Hulbert Gallery",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_016",
+      "slug": "2026-tianlin-ich-inheritance-practice-center-upgrade",
+      "title": "田林县非遗传承实践中心乡村文旅提升项目",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://ggzy.jgswj.gxzf.gov.cn/bsggzy/projectDetails.html?categorynum=001002005002&infoid=6e331861-cac7-4012-835f-9228aefcf7cf",
+      "store_primary_url": "https://ggzy.jgswj.gxzf.gov.cn/bsggzy/projectDetails.html?categorynum=001002005002&infoid=6e331861-cac7-4012-835f-9228aefcf7cf",
+      "url_mismatch": false,
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "content_type": null,
+        "response_bytes": 0,
+        "snapshot_hash": null,
+        "title_fragment": null,
+        "title_match": null,
+        "error": "TypeError: fetch failed"
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_unavailable",
+        "missing_fields:location"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_021",
+      "slug": "2026-jiangmen-cultural-tourism-industry-support-funding",
+      "title": "江门市2026年文化旅游产业发展扶持资金申报",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.jiangmen.gov.cn/bmpd/jmswhgdlytyj/zwgk/tzgg/content/post_3524872.html",
+      "store_primary_url": "https://www.jiangmen.gov.cn/bmpd/jmswhgdlytyj/zwgk/tzgg/content/post_3524872.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.jiangmen.gov.cn/bmpd/jmswhgdlytyj/zwgk/tzgg/content/post_3524872.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 21790,
+        "snapshot_hash": "e4dd639c4eacb1a44f13064556b68491c2da27403c5c86defe6c886de83b65e1",
+        "title_fragment": "江门市文化广电旅游体育局关于开展2026年度江门市文旅产业发展扶持资金申报工作的通知_通知公告_江门市文化广电旅游体育局",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_02_001",
+      "slug": "expansion-batch-02-001",
+      "title": "XIII Concurso Nacional Grandes Maestras y Maestros del Patrimonio Artesanal de México 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://convocatorias.cultura.gob.mx/vigentes/detalle/4081/xiii-edicion-del-concurso-nacional-grandes-maestras-y-maestros-del-patrimonio-artesanal-de-mexico-2026",
+      "store_primary_url": "https://convocatorias.cultura.gob.mx/vigentes/detalle/4081/xiii-edicion-del-concurso-nacional-grandes-maestras-y-maestros-del-patrimonio-artesanal-de-mexico-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://convocatorias.cultura.gob.mx/vigentes/detalle/4081/xiii-edicion-del-concurso-nacional-grandes-maestras-y-maestros-del-patrimonio-artesanal-de-mexico-2026",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 17498,
+        "snapshot_hash": "f965486c9bb07bbae4512f1fe528506efd2b177cb777baac05b94a5ff9724160",
+        "title_fragment": "Convocatorias | Convocatorias vencidas: XIII Edición del Concurso Nacional Grandes Maestras y Maestros del Patrimonio Artesanal de México 2026 | Secretaría de Cultura",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_003",
+      "slug": "2026-wuhu-gift-cultural-creative-design-competition",
+      "title": "第三届“芜湖有礼”文旅创意设计大赛",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://ct.wuhu.gov.cn/xwzx/tzgg/8935666.html",
+      "store_primary_url": "https://ct.wuhu.gov.cn/xwzx/tzgg/8935666.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://ct.wuhu.gov.cn/xwzx/tzgg/8935666.html",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 23487,
+        "snapshot_hash": "21805a5fdc7e7192734239634ddfa6e4c189e668ccea7bd30237b0724e4a3a4a",
+        "title_fragment": "关于举办第三届“芜湖有礼”文旅创意设计大赛的公告_芜湖市文化和旅游局",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_007",
+      "slug": "2026-xizang-ethnic-unity-calligraphy-photography-call",
+      "title": "西藏民族团结主题书法美术摄影作品征集",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://wlt.xizang.gov.cn/xwzx_69/tzgg/202607/t20260701_547926.html",
+      "store_primary_url": "https://wlt.xizang.gov.cn/xwzx_69/tzgg/202607/t20260701_547926.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://wlt.xizang.gov.cn/xwzx_69/tzgg/202607/t20260701_547926.html",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 48121,
+        "snapshot_hash": "b7fd24f0a50e4e07a8fb31d4d21d61f26932ebe13fe39109c533bffdb07ef7da",
+        "title_fragment": "第八届民族团结书法、摄影作品征集活动开始啦！_西藏自治区文化和旅游厅",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_060",
+      "slug": "expansion-batch-03-060",
+      "title": "National Museum of the American Latino Inaugural Exhibition Design RFP",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://sam.gov/workspace/contract/opp/993ebf3cc05a45858be25f0d199bc67a/view",
+      "store_primary_url": "https://sam.gov/workspace/contract/opp/993ebf3cc05a45858be25f0d199bc67a/view",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://sam.gov/workspace/contract/opp/993ebf3cc05a45858be25f0d199bc67a/view",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 41850,
+        "snapshot_hash": "ea22e436fc3c78fe775182b71ae7cd74985b7c36c32aa886f6b8b54ccf59a157",
+        "title_fragment": "Sam Acquisition 360",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_005",
+      "slug": "2026-chongming-cultural-tourism-badge-design",
+      "title": "“崇明·瀛洲徽光”文旅徽章设计大赛",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+      "store_primary_url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 14898,
+        "snapshot_hash": "e12600a7e80e59cb817127610e2d588a4420d31de90e49f35bed320ee5685310",
+        "title_fragment": "“徽”你莫属！崇明文旅徽章设计大赛今日开启- 上海市崇明区人民政府",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [
+        "expansion-batch-01-002"
+      ],
+      "deadline_state": "expired",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_002",
+      "slug": "expansion-batch-01-002",
+      "title": "崇明·瀛洲徽光文旅徽章设计大赛",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+      "store_primary_url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.shcm.gov.cn/zmhd/004014/20260519/37c6db94-3c39-4a65-95df-e11b4009b79d.html",
+        "accessible": true,
+        "content_type": "text/html; charset=utf-8",
+        "response_bytes": 14898,
+        "snapshot_hash": "e12600a7e80e59cb817127610e2d588a4420d31de90e49f35bed320ee5685310",
+        "title_fragment": "“徽”你莫属！崇明文旅徽章设计大赛今日开启- 上海市崇明区人民政府",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [
+        "2026-chongming-cultural-tourism-badge-design"
+      ],
+      "deadline_state": "expired",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_018",
+      "slug": "expansion-batch-01-018",
+      "title": "Austin FY27 Heritage Preservation Grant",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://www.austintexas.gov/arts-culture/heritage-preservation-grant",
+      "store_primary_url": "https://www.austintexas.gov/arts-culture/heritage-preservation-grant",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.austintexas.gov/arts-culture/heritage-preservation-grant",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 214593,
+        "snapshot_hash": "7f012949857a6cdad0b3578fc9833336d4fb9c5d39dfefe6f47ebc979005715d",
+        "title_fragment": "Heritage Preservation Grant | Austin Arts, Culture, Music and Entertainment | AustinTexas.gov",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_018",
+      "slug": "2026-china-great-wall-museum-cultural-products-partner",
+      "title": "中国长城博物馆文创产品及空间运营合作伙伴招募",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://capitalmuseum.org.cn/news/b20f254505ee41aa896b1a5c505124b7",
+      "store_primary_url": "https://capitalmuseum.org.cn/news/b20f254505ee41aa896b1a5c505124b7",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://capitalmuseum.org.cn/news/b20f254505ee41aa896b1a5c505124b7",
+        "accessible": true,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 39386,
+        "snapshot_hash": "37e61fdd50c3d8cc3631c9b37ef269e2b7af5376f8ad853be80ade3f22de15c4",
+        "title_fragment": "关于中国长城博物馆文创产品研发及空间运营项目（二次）合作方的招募公告 - 首都博物馆",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_047",
+      "slug": "expansion-batch-03-047",
+      "title": "Itami International Craft Exhibition 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://itami-im.jp/craftexhibition/entry/",
+      "store_primary_url": "https://itami-im.jp/craftexhibition/entry/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://itami-im.jp/craftexhibition/entry/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 49047,
+        "snapshot_hash": "85e7d17a0cda82d7d1a41134fd9ae05a333e51b375b05e33e90fa0997e8f29fa",
+        "title_fragment": "作品募集 | 伊丹国際クラフト展 | I/M 市立伊丹ミュージアム",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_029",
+      "slug": "2026-heritage-crafts-emerging-metalworker-award",
+      "title": "Heritage Crafts Emerging Metalworker of the Year Award 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 49189,
+        "snapshot_hash": "65d4d895a2b74a1854626d1a550f00c477533288572318e133c7522fb6d84f6f",
+        "title_fragment": "Emerging Metalworker of the Year Award - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [
+        "expansion-batch-03-079"
+      ],
+      "deadline_state": "expired",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_075",
+      "slug": "expansion-batch-03-075",
+      "title": "Heritage Crafts Precious Metalworker of the Year Award 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/precious-metalworker-of-the-year/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/precious-metalworker-of-the-year/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/precious-metalworker-of-the-year/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 49222,
+        "snapshot_hash": "d69fe3db2f85b546e37cdcdd79ce5673dc9f0b87d9e0ba34cfe0bdb2ff285e25",
+        "title_fragment": "Precious Metalworker of the Year Award - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_076",
+      "slug": "expansion-batch-03-076",
+      "title": "Heritage Crafts Trainer of the Year Award 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/trainer-of-the-year/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/trainer-of-the-year/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/trainer-of-the-year/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 48950,
+        "snapshot_hash": "49f204ae11445a722bd3070c7eb8fa8e9cd69626e5cd8341f5c99cb7bc322768",
+        "title_fragment": "Trainer of the Year Award - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_078",
+      "slug": "expansion-batch-03-078",
+      "title": "Heritage Crafts England Maker of the Year Award 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/england-maker-of-the-year-award/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/england-maker-of-the-year-award/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/england-maker-of-the-year-award/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 49155,
+        "snapshot_hash": "f8e2e49593d4d2e1c917464cdaacf103782cddb1fe1e2cf18afe6c3913669fd8",
+        "title_fragment": "England Maker of the Year Award - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_079",
+      "slug": "expansion-batch-03-079",
+      "title": "Heritage Crafts Emerging Metalworker of the Year Award 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/emerging-metalworker-of-the-year/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 49189,
+        "snapshot_hash": "65d4d895a2b74a1854626d1a550f00c477533288572318e133c7522fb6d84f6f",
+        "title_fragment": "Emerging Metalworker of the Year Award - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [
+        "2026-heritage-crafts-emerging-metalworker-award"
+      ],
+      "deadline_state": "expired",
+      "disposition": "duplicate_review",
+      "reason_codes": [
+        "duplicate_primary_url",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_080",
+      "slug": "expansion-batch-03-080",
+      "title": "Heritage Crafts Emerging Embroiderer of the Year Award 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/emerging-embroiderer-of-the-year/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/emerging-embroiderer-of-the-year/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/emerging-embroiderer-of-the-year/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 49043,
+        "snapshot_hash": "c7c73714f9ac8a0335f220a42f700b509521dd5fde7301c70324d1520d34f755",
+        "title_fragment": "Emerging Embroiderer of the Year Award - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_081",
+      "slug": "expansion-batch-03-081",
+      "title": "Heritage Crafts Patron's Award for Endangered Crafts 2026",
+      "queue": "history_cleanup",
+      "priority": 35,
+      "primary_level": "L1",
+      "queue_primary_url": "https://heritagecrafts.org.uk/our-awards/patrons-award-for-endangered-crafts/",
+      "store_primary_url": "https://heritagecrafts.org.uk/our-awards/patrons-award-for-endangered-crafts/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://heritagecrafts.org.uk/our-awards/patrons-award-for-endangered-crafts/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 55349,
+        "snapshot_hash": "ee600e2506f060c946aed365e9723fbabd65952d51add071091265e182341ab5",
+        "title_fragment": "Patron’s Award for Endangered Crafts - Heritage Crafts |",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_011",
+      "slug": "expansion-batch-01-011",
+      "title": "Shared Ceramics Studio Space Motley",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5584,
+        "snapshot_hash": "7b7c6b9a8ac56f80c9c172268244cae0dcbcb886ea38039a18268be2844afd06",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_026",
+      "slug": "expansion-batch-01-026",
+      "title": "Shared Ceramics Studio Space Peckham",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/shared-ceramics-studio-space-2",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/shared-ceramics-studio-space-2",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/shared-ceramics-studio-space-2",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5720,
+        "snapshot_hash": "b24a0a7aeffb3b4d7b1d4114dd0278c76e2f4fbc3e291ea9714f52e54da7bd68",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_024",
+      "slug": "2026-nomad-art-prize",
+      "title": "Nomad Art Prize 2026",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/nomad-art-prize",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/nomad-art-prize",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/nomad-art-prize",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5653,
+        "snapshot_hash": "6e55240851abf30db2a0c2318616ee55f11f8741f71d6c02d1208e2c3f30792d",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_025",
+      "slug": "2027-county-hall-pottery-potter-in-residence",
+      "title": "Potter in Residence 2027—County Hall Pottery",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5696,
+        "snapshot_hash": "3d6b3260647ebb3f8c9ff84e7ffdf4e8188e2c6bd45d4144b8d0464db1d851b4",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [
+        "expansion-batch-01-027"
+      ],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "duplicate_primary_url",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_027",
+      "slug": "expansion-batch-01-027",
+      "title": "Potter in Residence 2027 County Hall Pottery",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/potter-in-residence-21",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5696,
+        "snapshot_hash": "d11fb1569f59cddebf55e28b539c602d66159a9df2c7e21d2fa23aa89e1e4f55",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [
+        "2027-county-hall-pottery-potter-in-residence"
+      ],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "duplicate_primary_url",
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_009",
+      "slug": "2026-kyoto-youme-triennale-open-call",
+      "title": "Kyoto YouMe Triennale 2026 Open Call",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://you-me-kyoto.org/en",
+      "store_primary_url": "https://you-me-kyoto.org/en",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://you-me-kyoto.org/en",
+        "accessible": true,
+        "content_type": "text/html",
+        "response_bytes": 240359,
+        "snapshot_hash": "63aaada51b25678648a03338e49bfcbb4597cc4d4d5718338498e76abd30a35e",
+        "title_fragment": "Kyoto YouMe Triennale",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_045",
+      "slug": "expansion-batch-03-045",
+      "title": "Best of Tennessee Craft 2026",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://tennesseecraft.org/",
+      "store_primary_url": "https://tennesseecraft.org/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://tennesseecraft.org/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 71052,
+        "snapshot_hash": "9b0730e4b1c759e0497da9f87dba4aba21c9ef0c9933c46661a84f351c63c562",
+        "title_fragment": "Tennessee Craft",
+        "title_match": true,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_01_023",
+      "slug": "expansion-batch-01-023",
+      "title": "Studio space available East London",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/studio-space-available",
+      "store_primary_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/studio-space-available",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 403,
+        "final_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/studio-space-available",
+        "accessible": false,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 5696,
+        "snapshot_hash": "5728030116865829327b1501b6e58078ca7908aeba7f734a990e0bfcdaa838b1",
+        "title_fragment": "Just a moment...",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location",
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location,eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_028",
+      "slug": "2026-zero-material-artist-residency",
+      "title": "zero material Artist in Residence Open Call",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.kakilang.org.uk/2026-open-call-zero-material",
+      "store_primary_url": "https://www.kakilang.org.uk/2026-open-call-zero-material",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://www.kakilang.org.uk/2026-open-call-zero-material",
+        "accessible": true,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 809386,
+        "snapshot_hash": "58bf66ff537587c864b9a2c498d4f5ff34977788222e0fac756807805ff68eb4",
+        "title_fragment": "2026 Open Call: zero material &mdash; Kakilang",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_012",
+      "slug": "2026-mindful-making-with-textiles-open-call",
+      "title": "Mindful Making with Textiles Open Call",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://www.arton1st.org/mindful-making-textiles-call-2026",
+      "store_primary_url": "https://www.arton1st.org/mindful-making-textiles-call-2026",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 404,
+        "final_url": "https://www.arton1st.org/mindful-making-textiles-call-2026",
+        "accessible": false,
+        "content_type": "text/html;charset=utf-8",
+        "response_bytes": 791663,
+        "snapshot_hash": "21475c67b175c3ef449425d59f1c7a135bd657a8ca16441d39ef4d15cb273912",
+        "title_fragment": "Art On 1st",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_non_2xx",
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_053",
+      "slug": "expansion-batch-03-053",
+      "title": "Heritage Crafts Opportunities 2026",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://heritagecrafts.org.uk/opportunities/",
+      "store_primary_url": "https://heritagecrafts.org.uk/opportunities/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": null,
+        "final_url": null,
+        "accessible": false,
+        "content_type": null,
+        "response_bytes": 0,
+        "snapshot_hash": null,
+        "title_fragment": null,
+        "title_match": null,
+        "error": "AbortError: This operation was aborted"
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "source_unavailable",
+      "reason_codes": [
+        "primary_url_unavailable",
+        "missing_fields:eligibility,application"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_expansion_batch_03_074",
+      "slug": "expansion-batch-03-074",
+      "title": "Autumn Palette Miami 2026 International Visual Arts Competition",
+      "queue": "history_cleanup",
+      "priority": 30,
+      "primary_level": "L2",
+      "queue_primary_url": "https://artefactus.org/en/call-for-artists/",
+      "store_primary_url": "https://artefactus.org/en/call-for-artists/",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://artefactus.org/en/call-for-artists/",
+        "accessible": true,
+        "content_type": "text/html; charset=UTF-8",
+        "response_bytes": 95637,
+        "snapshot_hash": "7facfbba9c256a623b0a23a272648b62921ebca19b47737451e5539c3b32faf8",
+        "title_fragment": "Call For Artists - Artefactus",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "eligibility",
+        "application"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:eligibility,application",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    },
+    {
+      "id": "ich_stage5_017",
+      "slug": "2026-foshan-shiwan-pottery-training-service-procurement",
+      "title": "2026年石湾陶塑技艺专题培训班承办单位采购",
+      "queue": "history_cleanup",
+      "priority": 25,
+      "primary_level": "L3",
+      "queue_primary_url": "https://gd.qianlima.com/zbcontent-616089453.html",
+      "store_primary_url": "https://gd.qianlima.com/zbcontent-616089453.html",
+      "url_mismatch": false,
+      "url_check": {
+        "status": 200,
+        "final_url": "https://gd.qianlima.com/zbcontent-616089453.html",
+        "accessible": true,
+        "content_type": "text/html;charset=UTF-8",
+        "response_bytes": 118296,
+        "snapshot_hash": "cdc449bcd2f782a90d03e15179c4abc85594e8c5b0affc931c4251ced7d94c8f",
+        "title_fragment": "佛山市禅城区博物馆关于2026年石湾陶塑技艺专题培训班项目采购通告-千里马招标网",
+        "title_match": false,
+        "error": null
+      },
+      "missing_fields": [
+        "location"
+      ],
+      "duplicate_slugs": [],
+      "deadline_state": "expired",
+      "disposition": "archive_review",
+      "reason_codes": [
+        "missing_fields:location",
+        "title_not_found_in_snapshot"
+      ],
+      "formal_publish_blocked": true
+    }
+  ]
+}
