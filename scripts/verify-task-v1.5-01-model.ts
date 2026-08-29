@@ -199,7 +199,9 @@ function main(): void {
   assert(ALLOWED_PROVIDERS.includes("bocha"), "T9.2 白名单含 bocha");
   assert(ALLOWED_PROVIDERS.includes("exa"), "T9.3 白名单含 exa");
   assert(ALLOWED_PROVIDERS.includes("google_cse"), "T9.4 白名单含 google_cse");
-  assert(ALLOWED_PROVIDERS.length === 4, "T9.5 白名单含 4 个 provider");
+  assert(ALLOWED_PROVIDERS.includes("doubao_search"), "T9.5 白名单含 doubao_search");
+  assert(ALLOWED_PROVIDERS.includes("brave"), "T9.6 白名单含 brave");
+  assert(ALLOWED_PROVIDERS.length === 6, "T9.7 白名单含 6 个 provider");
 
   // ============================================================
   // 10. ID 生成函数

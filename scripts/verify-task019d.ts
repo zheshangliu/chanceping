@@ -606,8 +606,8 @@ async function main(): Promise<void> {
       },
     });
     const result = await orchestrator.search(spec);
-    // 注意：Task 026 后注册表含 4 个 Provider，需全部注销才能测试"无可用 provider"
-    const savedNames = ["serper", "bocha", "exa", "google_cse"];
+    // 当前注册表含全部已启用 Provider，需全部注销才能测试"无可用 provider"
+    const savedNames = ["serper", "bocha", "exa", "google_cse", "doubao_search", "brave"];
     const savedProviders = savedNames
       .map((n) => providerRegistry.get(n))
       .filter((p): p is NonNullable<typeof p> => p !== undefined);

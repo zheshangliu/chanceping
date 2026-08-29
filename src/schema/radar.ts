@@ -115,7 +115,7 @@ export interface RadarSchedule {
 // ============================================================
 
 /** 允许的 Provider 白名单 */
-export const ALLOWED_PROVIDERS = ["serper", "bocha", "exa", "google_cse"] as const;
+export const ALLOWED_PROVIDERS = ["serper", "bocha", "exa", "google_cse", "doubao_search", "brave"] as const;
 
 /**
  * Provider 路由配置。

@@ -249,7 +249,11 @@
     "verify:q4:health": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=mock tsx scripts/verify-q4-health.ts",
     "q4:live-server": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest LLM_MODE=live DATA_MODE=mock tsx scripts/start-q4-live-server.ts",
     "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:ich:stage3 && node --run verify:ich:stage4 && node --run verify:ich:stage5 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
-    "precheck": "tsx scripts/precheck.ts"
+    "precheck": "tsx scripts/precheck.ts",
+    "verify:doubao-provider": "tsx scripts/verify-doubao-search-provider.ts",
+    "verify:brave-provider": "tsx scripts/verify-brave-search-provider.ts",
+    "verify:search-benchmark": "tsx scripts/verify-doubao-search-provider.ts && tsx scripts/verify-brave-search-provider.ts && tsx scripts/verify-search-provider-benchmark.ts",
+    "benchmark:search-providers:live": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_SEARCH_PROVIDER_BENCHMARK=true tsx scripts/run-search-provider-benchmark.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.0",

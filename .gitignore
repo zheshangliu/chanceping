@@ -52,3 +52,7 @@ AccessKey.csv
 # TRAE IDE 元数据
 .trae/
 .task-e-backup/
+data/benchmarks/search-provider/*/raw/
+data/benchmarks/search-provider/*/search-cache/
+data/benchmarks/search-provider/*/benchmark-run.json
+data/benchmarks/search-provider/*/judgment-template.json

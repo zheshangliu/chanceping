@@ -23,6 +23,8 @@ import { SerperProvider } from "./providers/serper";
 import { BochaProvider } from "./providers/bocha";
 import { ExaProvider } from "./providers/exa";
 import { GoogleCseProvider } from "./providers/google-cse";
+import { DoubaoSearchProvider } from "./providers/doubao-search";
+import { BraveSearchProvider } from "./providers/brave";
 
 /** provider 可靠性评级（对接 Admiralty Code） */
 export type ReliabilityGrade = "A" | "B" | "C" | "D" | "F";
@@ -142,3 +144,5 @@ providerRegistry.register(new SerperProvider());
 providerRegistry.register(new BochaProvider());
 providerRegistry.register(new ExaProvider());
 providerRegistry.register(new GoogleCseProvider());
+providerRegistry.register(new DoubaoSearchProvider());
+providerRegistry.register(new BraveSearchProvider());
