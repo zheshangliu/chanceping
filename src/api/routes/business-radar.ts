@@ -13,7 +13,8 @@ import type { ApiResponse } from "../types";
 function isEditionRelevant(item: BusinessOpportunity, edition: BusinessEditionId): boolean {
   if (!item.editions.includes(edition)) return false;
   const text = `${item.title} ${item.organizer} ${item.regions.join(" ")}`;
-  if (/深圳|汕头|湛江|佛山|惠州|中山|东莞|阳江|梅州|清远|河源|肇庆|江门|茂名|揭阳|潮州/.test(text) && !/广州|天河|韶关/.test(text)) return false;
+  if (edition === "tianhe" && /深圳|汕头|湛江|佛山|惠州|中山|东莞|阳江|梅州|清远|河源|肇庆|江门|茂名|揭阳|潮州|韶关/.test(text) && !/广州|天河|广东|全省|全国/.test(text)) return false;
+  if (edition !== "tianhe" && /深圳|汕头|湛江|佛山|惠州|中山|东莞|阳江|梅州|清远|河源|肇庆|江门|茂名|揭阳|潮州/.test(text) && !/广州|天河|韶关/.test(text)) return false;
   if (edition === "shaoguan" && /广州|天河/.test(text) && !/广东|全省|全国/.test(item.regions.join(" "))) return false;
   return true;
 }
