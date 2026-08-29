@@ -5,22 +5,20 @@
   "production_store_write": false,
   "user_approval_required": false,
   "candidate": {
-    "id": "ich_dia_2026_additional_registration",
-    "slug": "2026-dia-design-intelligence-award-additional-registration",
-    "external_id": "dia-2026-additional-registration",
-    "title": "2026中国设计智造大奖（DIA）追加报名",
-    "title_original": "2026中国设计智造大奖（DIA）追加报名",
+    "id": "ich_cidip_2026",
+    "slug": "2026-china-design-award-permanent-track",
+    "external_id": "cidip-2026-permanent",
+    "title": "2026中华设计奖常设赛道",
+    "title_original": "2026中华设计奖常设赛道",
     "title_en": null,
-    "summary": "中国设计智造大奖官方规则确认追加报名通道截止2026年9月1日，文化创新类别面向企业、院校、机构和个人开放。",
-    "description": "DIA官方规则页列明2026年度产品组与概念组，并设有文化创新类别；追加报名截止时间为2026年9月1日24:00（北京时间）。",
+    "summary": "中华设计奖官方页面确认常设赛道网上报名，收件截止2026年9月30日。",
+    "description": "中华设计奖官方页面确认常设赛道网上报名，收件截止2026年9月30日。",
     "opportunity_value_text": "面向文化创新、文创产品和传统文化当代表达的国际设计奖项机会。",
     "primary_category": "competition",
     "secondary_tags": [
-      "DIA",
-      "文化创新",
-      "设计奖",
-      "文创",
-      "传统文化"
+      "中华设计奖",
+      "常设赛道",
+      "文创设计"
     ],
     "classification_confidence": "high",
     "classification_reason": "官方规则页明确列出文化创新类别、参赛主体和追加报名截止时间。",
@@ -31,11 +29,11 @@
     "is_published": false,
     "archive_reason": null,
     "organizer": {
-      "name": "中国设计智造大奖组委会",
-      "name_en": "Design Intelligence Award Committee",
+      "name": "中华设计奖组委会",
+      "name_en": null,
       "type": "design_organization",
-      "official_website": "https://www.di-award.org/",
-      "contact_text": "以DIA官方规则页为准"
+      "official_website": "https://www.cidip.cn",
+      "contact_text": "以官方详情页为准"
     },
     "location": {
       "country_code": "CN",
@@ -67,8 +65,8 @@
     "dates": {
       "published_at": "2026-03-01T00:00:00+08:00",
       "application_start_at": "2026-03-01T00:00:00+08:00",
-      "deadline_at": "2026-09-01T24:00:00+08:00",
-      "deadline_text": "2026年9月1日24:00（北京时间）",
+      "deadline_at": "2026-09-30T23:59:00+08:00",
+      "deadline_text": "2026年9月30日",
       "event_start_at": null,
       "event_end_at": null,
       "timezone": "Asia/Shanghai",
@@ -83,7 +81,7 @@
         "organization",
         "school"
       ],
-      "eligibility_text": "官方公告面向企业、院校、机构和个人；具体组别和作品要求以DIA官方规则为准。",
+      "eligibility_text": "中华设计奖组委会官方详情页列明参赛主体和申请资格，申请人须以当前规则为准。",
       "ich_status_required": null,
       "business_license_required": false,
       "local_registration_required": false,
@@ -106,11 +104,11 @@
       "procurement_currency": null,
       "sales_opportunity": null,
       "channel_opportunity": null,
-      "benefit_text": "官方规则列明大奖及产品组、概念组奖项，并提供设计展示与传播机会。"
+      "benefit_text": "中华设计奖组委会官方页面列明奖项、展示或传播权益，具体以赛事最终通知为准。"
     },
     "costs": {
-      "application_fee_amount": 3500,
-      "application_fee_currency": "CNY",
+      "application_fee_amount": null,
+      "application_fee_currency": null,
       "booth_fee_amount": null,
       "booth_fee_currency": null,
       "deposit_amount": null,
@@ -120,8 +118,8 @@
       "accommodation_self_funded": null,
       "materials_self_funded": null,
       "shipping_self_funded": null,
-      "cost_text": "追加报名费用按官方规则执行；具体金额和支付方式以报名系统显示为准。",
-      "cost_status": "confirmed"
+      "cost_text": "官方页面未列明报名费，其他成本以官方规则为准。",
+      "cost_status": "unknown"
     },
     "requirements": {
       "documents_required": [
@@ -134,13 +132,13 @@
       "invoice_required": null,
       "bidding_qualification_required": null,
       "production_capacity_text": null,
-      "requirements_text": "按DIA官方报名系统提交作品资料，并遵守产品组或概念组的作品要求。"
+      "requirements_text": "按照中华设计奖组委会官方详情页要求提交作品资料、类别信息和参赛说明。"
     },
     "application": {
-      "application_url": "https://www.di-award.org/",
+      "application_url": "https://www.cidip.cn/cda2026/permanent.html",
       "application_email": null,
       "application_phone": null,
-      "application_platform": "DIA官方报名系统",
+      "application_platform": "官方在线报名",
       "application_steps": [
         "阅读官方规则",
         "登录DIA报名系统",
@@ -152,15 +150,15 @@
     },
     "sources": [
       {
-        "url": "https://www.di-award.org/zh/rules.html",
-        "name": "中国设计智造大奖官方规则",
-        "type": "official_rules",
+        "url": "https://www.cidip.cn/cda2026/permanent.html",
+        "name": "中华设计奖组委会官方详情页",
+        "type": "official_detail",
         "level": "L1",
         "is_primary": true,
-        "published_at": "2026-03-01T00:00:00+08:00",
+        "published_at": "2026-08-01T00:00:00+08:00",
         "last_checked_at": "2026-08-29T00:00:00+08:00",
         "is_accessible": true,
-        "notes": "官方页面确认文化创新类别、参赛主体、追加报名截止时间和费用规则。"
+        "notes": "官方页面核验届次、报名入口和截止日期。"
       }
     ],
     "verification": {
@@ -183,7 +181,7 @@
       "published_at": "2026-07-25T12:00:00+08:00",
       "archived_at": null,
       "data_version": "1.0",
-      "source_import_batch": "ds14-dia-20260829"
+      "source_import_batch": "ds14-cidip-20260829"
     },
     "duplicate_status": "unique",
     "duplicate_of_id": null,
