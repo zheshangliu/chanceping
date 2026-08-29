@@ -340,7 +340,7 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
   },
   ...[
     ["loewe-craft-prize", "https://craftprize.loewe.com/zh/craftprize2027", "competition", "国际"],
-    ["if-design-award", "https://ifdesign.com/en/if-design-award-and-jury", "competition", "国际"],
+    ["if-design-award", "https://ifdesign.com/en/if-design-award-get-in-contact", "competition", "国际"],
     ["china-design-award", "https://cidip.cn/cda2026/permanent.html", "competition", "全国"],
     ["gba-design", "https://www.gbawcsjds.com/", "competition", "粤港澳大湾区"],
     ["gyeongnam-k-design", "https://viewapp.dsu.ac.kr/getAnnoPdfDownload/pWVtKSQI3cJ", "competition", "国际"],
