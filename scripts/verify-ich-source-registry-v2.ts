@@ -5,7 +5,7 @@ import { getIchSourceRegistryV2, listIchSourceRegistryV2ByCategory, listIchSourc
 const registry = getIchSourceRegistryV2();
 const errors = validateIchSourceRegistryV2(registry);
 assert.deepEqual(errors, [], errors.join("; "));
-assert.equal(registry.sources.length, 31, "DS1 core source registry must start with 31 entries");
+assert.equal(registry.sources.length, 39, "DS1 source registry must contain the expanded 39-source baseline");
 assert.ok(registry.sources.filter((source) => source.family === "procurement_platform").length >= 5, "procurement coverage must have at least five platform sources");
 assert.ok(registry.sources.filter((source) => source.geography.includes("guangzhou")).length >= 3, "Guangzhou coverage must have at least three sources");
 assert.ok(registry.sources.filter((source) => source.role === "discovery").length >= 3, "discovery layer must be represented");
