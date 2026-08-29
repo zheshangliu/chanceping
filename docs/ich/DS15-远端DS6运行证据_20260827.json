@@ -1,0 +1,24 @@
+{
+  "schema_version": "ich-ds15-remote-ds6-evidence.v1",
+  "captured_at": "2026-08-29T16:24:13+08:00",
+  "source": "remote persistent ledger /var/lib/chanceping/ich-ds6/DS6-只读调度运行账本_V1.0.json",
+  "runs": [
+    {
+      "run_id": "ich-ds6-20260827121646",
+      "ran_at": "2026-08-27T12:16:46.828Z",
+      "gate": "pass",
+      "readonly": true,
+      "formal_store_write": false,
+      "formal_store_unchanged": true,
+      "steps": [
+        { "name": "source-endpoints", "exit_code": 0 },
+        { "name": "ds2-readonly-discovery", "exit_code": 0 },
+        { "name": "ds3-candidate-quality", "exit_code": 0 },
+        { "name": "ds4-release-audit", "exit_code": 0 },
+        { "name": "ds5-operations-audit", "exit_code": 0 },
+        { "name": "ds5-consistency", "exit_code": 0 }
+      ]
+    }
+  ],
+  "formal_store_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300"
+}

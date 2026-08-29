@@ -1,20 +1,22 @@
 {
   "schema_version": "ich-ds15-observation-finalize.v1",
   "stage": "DS15",
-  "finalized_at": "2026-08-24T12:06:21.191Z",
+  "finalized_at": "2026-08-29T08:26:25.479Z",
   "base_url": "https://ich.chanceping.com",
   "observation_window_start": "2026-08-24T12:00:00.000Z",
   "planned_observation_end": "2026-08-27T12:00:00.000Z",
-  "actual_DS6_runs": [],
-  "timer_evidence_path": null,
+  "actual_DS6_runs": [
+    "ich-ds6-20260827121646"
+  ],
+  "timer_evidence_path": "docs/ich/DS15-远端定时器日志证据_20260827.txt",
   "formal_store_path": "data/ich-opportunities.json",
   "formal_store_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
   "formal_store_write": false,
   "checks": [
     {
       "name": "observation_end_reached",
-      "ok": false,
-      "detail": "now=2026-08-24T12:06:21.191Z end=2026-08-27T12:00:00.000Z"
+      "ok": true,
+      "detail": "now=2026-08-29T08:26:25.479Z end=2026-08-27T12:00:00.000Z"
     },
     {
       "name": "formal_store_hash_unchanged_since_DS15_baseline",
@@ -23,13 +25,13 @@
     },
     {
       "name": "real_DS6_run_after_observation_end",
-      "ok": false,
-      "detail": "none"
+      "ok": true,
+      "detail": "ich-ds6-20260827121646"
     },
     {
       "name": "remote_timer_evidence_after_observation_end",
-      "ok": false,
-      "detail": "missing --timer-evidence"
+      "ok": true,
+      "detail": "evidence_sha256=d6099ef2af38f33a05684fe5802585ccfd49a69d9114e5797ab20e71b801a8ed"
     },
     {
       "name": "public_home",
@@ -39,27 +41,27 @@
     {
       "name": "guangzhou_filter",
       "ok": true,
-      "detail": "status=200 total=2"
+      "detail": "status=200 total=1"
     },
     {
       "name": "international_category_filter",
       "ok": true,
-      "detail": "status=200 total=12"
+      "detail": "status=200 total=11"
     },
     {
       "name": "closing_soon_status_filter",
       "ok": true,
-      "detail": "status=200 total=7"
+      "detail": "status=200 total=5"
     },
     {
       "name": "pagination",
       "ok": true,
-      "detail": "page1=expansion-batch-01-019 page2=expansion-batch-01-028"
+      "detail": "page1=expansion-batch-01-003 page2=expansion-batch-02-006"
     },
     {
       "name": "SSR_detail",
       "ok": true,
-      "detail": "status=200 slug=expansion-batch-01-019"
+      "detail": "status=200 slug=expansion-batch-01-003"
     },
     {
       "name": "admin_quality_metrics",
@@ -72,6 +74,6 @@
       "detail": "status=401"
     }
   ],
-  "gate": "observation_in_progress",
-  "half_automatic_update_decision": "pending_until_all_checks_pass"
+  "gate": "complete",
+  "half_automatic_update_decision": "allow_readonly_candidate_refresh_keep_manual_formal_import"
 }
