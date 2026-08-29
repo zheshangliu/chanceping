@@ -343,7 +343,7 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
     ["if-design-award", "https://ifdesign.com/en/if-design-award-and-jury", "competition", "国际"],
     ["china-design-award", "https://cidip.cn/cda2026/permanent.html", "competition", "全国"],
     ["gba-design", "https://www.gbawcsjds.com/", "competition", "粤港澳大湾区"],
-    ["gyeongnam-k-design", "https://gnk-designaward.net/", "competition", "国际"],
+    ["gyeongnam-k-design", "https://viewapp.dsu.ac.kr/getAnnoPdfDownload/pWVtKSQI3cJ", "competition", "国际"],
     ["zhe-li-chengdu", "https://www.zlscd.com/", "exhibition_market", "全国"],
     ["zhuhai-gift", "https://www.zhuhai.gov.cn/", "procurement_project", "粤港澳大湾区"],
   ].map(([sourceId, discoveryUrl, categoryHint, geographyHint]) => ({
