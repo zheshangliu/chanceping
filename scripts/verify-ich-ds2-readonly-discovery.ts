@@ -3,6 +3,7 @@ import path from "node:path";
 import { sha256, type IchDs2ReadonlyDiscoveryRun } from "../src/ich/discovery-runtime-v1";
 
 const inputPath = path.resolve(process.argv.includes("--input") ? process.argv[process.argv.indexOf("--input") + 1] : "docs/ich/DS2-只读发现运行记录_V1.0.json");
+const maxDetails = Number(process.argv.includes("--max-details") ? process.argv[process.argv.indexOf("--max-details") + 1] : 10);
 const report = JSON.parse(fs.readFileSync(inputPath, "utf8")) as IchDs2ReadonlyDiscoveryRun;
 const errors: string[] = [];
 if (report.schema_version !== "ich-ds2-readonly-discovery.v1") errors.push("unsupported DS2 schema");
@@ -12,7 +13,7 @@ if (report.candidate_count !== report.source_runs.reduce((sum, sourceRun) => sum
 for (const sourceRun of report.source_runs) {
   if (!sourceRun.raw_snapshot_hash || !/^[a-f0-9]{64}$/u.test(sourceRun.raw_snapshot_hash)) errors.push(`${sourceRun.source_id}: listing snapshot hash missing`);
   if (sourceRun.candidate_count !== sourceRun.candidates.length) errors.push(`${sourceRun.source_id}: candidate count mismatch`);
-  if (sourceRun.candidate_count > 3) errors.push(`${sourceRun.source_id}: max sample limit exceeded`);
+  if (sourceRun.candidate_count > maxDetails) errors.push(`${sourceRun.source_id}: max sample limit exceeded (${sourceRun.candidate_count} > ${maxDetails})`);
   for (const candidate of sourceRun.candidates) {
     if (candidate.review_state !== "candidate_only") errors.push(`${candidate.candidate_id}: not candidate_only`);
     if (!candidate.source_url.startsWith("https://")) errors.push(`${candidate.candidate_id}: source URL must use HTTPS`);
