@@ -1,8 +1,8 @@
 {
   "schema_version": "ich-ds2-readonly-discovery.v1",
-  "run_id": "ich-ds2-20260829094124",
-  "started_at": "2026-08-29T09:41:24.832Z",
-  "finished_at": "2026-08-29T09:42:22.855Z",
+  "run_id": "ich-ds2-20260829094843",
+  "started_at": "2026-08-29T09:48:43.966Z",
+  "finished_at": "2026-08-29T09:49:51.511Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
@@ -15,46 +15,46 @@
       "adapter_id": "ccgp-procurement-listing-v1",
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "access_mode": "search",
-      "started_at": "2026-08-29T09:41:24.833Z",
-      "finished_at": "2026-08-29T09:41:25.928Z",
+      "started_at": "2026-08-29T09:48:43.967Z",
+      "finished_at": "2026-08-29T09:48:46.592Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-      "raw_snapshot_hash": "40b4e91c8f9186f4f8c5d2b0a8990d68bc2e0794ce59575241cfa78adddc5282",
+      "raw_snapshot_hash": "184cab1b2d0b7394ade4157a6782b28ce9bcedad9151688dcd5ff8b997cef65b",
       "candidate_count": 10,
       "candidates": [
         {
-          "candidate_id": "ds1b-ccgp-aaae276b7ccf",
+          "candidate_id": "ds1b-ccgp-508a3f6ebe44",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
-          "title": "桐城师范高等专科学校绿化养护服务采购项目竞争性磋商公告",
-          "organizer": "桐城师范高等专科学校",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
+          "title": "大武格桑滩甘德幼儿园基础设施改造项目中标(成交)结果公告",
+          "organizer": "甘德县教育局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:30",
-          "raw_snapshot_hash": "122b6f2552909e36bc1a3114c9727288eaaf3ebe6c5e4dc0603c0dadd7347013",
+          "published_text": "2026年08月29日 17:39",
+          "raw_snapshot_hash": "9dec685189758157b96464c1228cca03d96be3685a9b89db207a8d54499e138f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "桐城师范高等专科学校绿化养护服务采购项目竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
+              "value": "大武格桑滩甘德幼儿园基础设施改造项目中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
               "method": "html_title",
-              "evidence_excerpt": "桐城师范高等专科学校绿化养护服务采购项目竞争性磋商公告",
+              "evidence_excerpt": "大武格桑滩甘德幼儿园基础设施改造项目中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "桐城师范高等专科学校",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
+              "value": "甘德县教育局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 桐城师范高等专科学校",
+              "evidence_excerpt": "采购单位 甘德县教育局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -74,46 +74,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230988.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231026.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-1c9d47b2a475",
+          "candidate_id": "ds1b-ccgp-43fd3947711b",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
-          "title": "宣城市标准计量所计量标准设备更新项目第一包更正公告第（2）次",
-          "organizer": "宣城市标准计量所",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
+          "title": "浙江省成套招标代理有限公司关于浙江省农业农村厅中国农民丰收节浙江省乡村工匠展陈项目的竞争性磋商公告",
+          "organizer": "浙江省农业农村厅（本级）",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:30",
-          "raw_snapshot_hash": "2e69c5cc34a3497f6ee36458959aaa0a74515a70b01155ae102ac92cf16ae149",
+          "published_text": "2026年08月29日 17:38",
+          "raw_snapshot_hash": "b1771792cc8228ef4396fad5d37101a472c4b3470cf4ccb62d8afb80979c8ea9",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "宣城市标准计量所计量标准设备更新项目第一包更正公告第（2）次",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
+              "value": "浙江省成套招标代理有限公司关于浙江省农业农村厅中国农民丰收节浙江省乡村工匠展陈项目的竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
               "method": "html_title",
-              "evidence_excerpt": "宣城市标准计量所计量标准设备更新项目第一包更正公告第（2）次",
+              "evidence_excerpt": "浙江省成套招标代理有限公司关于浙江省农业农村厅中国农民丰收节浙江省乡村工匠展陈项目的竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "宣城市标准计量所",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
+              "value": "浙江省农业农村厅（本级）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 宣城市标准计量所",
+              "evidence_excerpt": "采购单位 浙江省农业农村厅（本级）",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -133,46 +133,164 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230986.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231019.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-bf5935b580f7",
+          "candidate_id": "ds1b-ccgp-d791bdf240d5",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
-          "title": "安庆市公安局特巡警支队所属食堂食材配送采购项目（二包）竞争性磋商公告",
-          "organizer": "安庆市公安局特警支队",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
+          "title": "丽水市中兴工程咨询有限公司关于莲都区小水电生态流量双监管改造项目的公开招标公告",
+          "organizer": "丽水市莲都区水利局",
+          "deadline_text": "2026年09月18日 09:30",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:30",
-          "raw_snapshot_hash": "1c97498ad50ae12184b4572c76ed9b8fe29dc5642c1f8b83a408a05cd56e97a0",
+          "published_text": "2026年08月29日 17:38",
+          "raw_snapshot_hash": "746ea93226a1c0c894e8d290ba4963e75a75f52961361c8db370b6558c207bd3",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "安庆市公安局特巡警支队所属食堂食材配送采购项目（二包）竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
+              "value": "丽水市中兴工程咨询有限公司关于莲都区小水电生态流量双监管改造项目的公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
               "method": "html_title",
-              "evidence_excerpt": "安庆市公安局特巡警支队所属食堂食材配送采购项目（二包）竞争性磋商公告",
+              "evidence_excerpt": "丽水市中兴工程咨询有限公司关于莲都区小水电生态流量双监管改造项目的公开招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "安庆市公安局特警支队",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
+              "value": "丽水市莲都区水利局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 安庆市公安局特警支队",
+              "evidence_excerpt": "采购单位 丽水市莲都区水利局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年09月18日 09:30",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "开标时间 2026年09月18日 09:30",
+              "confirmed": true
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231025.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-7aff32b89fa0",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+          "title": "嘉兴市银建工程咨询评估有限公司关于2026年嘉善县大气污染源排查与整治项目的公开招标公告",
+          "organizer": "嘉兴市生态环境局嘉善分局",
+          "deadline_text": "2026年09月18日 09:30",
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月29日 17:38",
+          "raw_snapshot_hash": "8ae96de4209fb04a9d70e1265c8923e06916cf40ae764667b03f787d66d06cdf",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "嘉兴市银建工程咨询评估有限公司关于2026年嘉善县大气污染源排查与整治项目的公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+              "method": "html_title",
+              "evidence_excerpt": "嘉兴市银建工程咨询评估有限公司关于2026年嘉善县大气污染源排查与整治项目的公开招标公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "嘉兴市生态环境局嘉善分局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 嘉兴市生态环境局嘉善分局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年09月18日 09:30",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "开标时间 2026年09月18日 09:30",
+              "confirmed": true
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231024.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-7e239a8366c6",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
+          "title": "布尔津县采购中心关于2026年布尔津县高级中学改造提升项目（设备）的更正公告",
+          "organizer": "布尔津县高级中学",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月29日 17:38",
+          "raw_snapshot_hash": "eb949e3b8d182db76bd9d0368c51e69ef087190cc0a71288edde180680c01218",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "布尔津县采购中心关于2026年布尔津县高级中学改造提升项目（设备）的更正公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
+              "method": "html_title",
+              "evidence_excerpt": "布尔津县采购中心关于2026年布尔津县高级中学改造提升项目（设备）的更正公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "布尔津县高级中学",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 布尔津县高级中学",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -192,46 +310,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230987.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27231018.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-c5592dc8895e",
+          "candidate_id": "ds1b-ccgp-907ffe66df02",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
-          "title": "安庆市公安局特巡警支队所属食堂食材配送采购项目（三包）竞争性磋商公告",
-          "organizer": "安庆市公安局特警支队",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
+          "title": "寿春中学实验室设备（五次）询价公告",
+          "organizer": "寿县寿春中学",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:30",
-          "raw_snapshot_hash": "bbaa65fa3a0ba2b0bca5ad206d9315a8e249184d39ab0da75dc4f8758bb01f87",
+          "published_text": "2026年08月29日 17:38",
+          "raw_snapshot_hash": "5cf0f22bf1ebb3169b2be034cf3a8ac9648b294401878ede80427ba5794078ab",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "安庆市公安局特巡警支队所属食堂食材配送采购项目（三包）竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
+              "value": "寿春中学实验室设备（五次）询价公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
               "method": "html_title",
-              "evidence_excerpt": "安庆市公安局特巡警支队所属食堂食材配送采购项目（三包）竞争性磋商公告",
+              "evidence_excerpt": "寿春中学实验室设备（五次）询价公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "安庆市公安局特警支队",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
+              "value": "寿县寿春中学",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 安庆市公安局特警支队",
+              "evidence_excerpt": "采购单位 寿县寿春中学",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -251,46 +369,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230985.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27231017.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-0ca1e1358aa5",
+          "candidate_id": "ds1b-ccgp-5a5433e21727",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
-          "title": "辽宁生态工程职业学院测绘类设备采购项目更正公告",
-          "organizer": "辽宁生态工程职业学院",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
+          "title": "浙江正大工程管理咨询有限公司关于海宁市民政局2026年度社立方托管运营项目（第二次）中标(成交)结果公告",
+          "organizer": "海宁市民政局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:30",
-          "raw_snapshot_hash": "f05184e11f55660ce7259f186ddb90e091d6275be2256def885c22860da086e4",
+          "published_text": "2026年08月29日 17:37",
+          "raw_snapshot_hash": "8128f15c824d96a6a58bac284be9058580ac43776bc5695df53cef018ddb7565",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "辽宁生态工程职业学院测绘类设备采购项目更正公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
+              "value": "浙江正大工程管理咨询有限公司关于海宁市民政局2026年度社立方托管运营项目（第二次）中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
               "method": "html_title",
-              "evidence_excerpt": "辽宁生态工程职业学院测绘类设备采购项目更正公告",
+              "evidence_excerpt": "浙江正大工程管理咨询有限公司关于海宁市民政局2026年度社立方托管运营项目（第二次）中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "辽宁生态工程职业学院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
+              "value": "海宁市民政局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 辽宁生态工程职业学院",
+              "evidence_excerpt": "采购单位 海宁市民政局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -310,46 +428,105 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230982.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27231023.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-5937068c434d",
+          "candidate_id": "ds1b-ccgp-c9348f32d64c",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
-          "title": "瓜州县2026年天津市东西部协作财政援助资金项目瓜州县西湖镇西湖村饮水安全工程提升改造项目采购更正公告（第一次）",
-          "organizer": "瓜州县西湖镇人民政府",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
+          "title": "浙江敬霖工程咨询有限公司关于省级政务系统和政务服务绩效评估分析的公开招标公告",
+          "organizer": "浙江省交通运输厅(本级)",
+          "deadline_text": "2026年09月21日 09:30",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:29",
-          "raw_snapshot_hash": "3566c3de1de2e795578379d69338669d6987ca4e98728600a0d84c57b6d5aaa2",
+          "published_text": "2026年08月29日 17:37",
+          "raw_snapshot_hash": "18be4309991d5ce0168b239473307a356e865e49b2b010efbadfef62a892f145",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "瓜州县2026年天津市东西部协作财政援助资金项目瓜州县西湖镇西湖村饮水安全工程提升改造项目采购更正公告（第一次）",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
+              "value": "浙江敬霖工程咨询有限公司关于省级政务系统和政务服务绩效评估分析的公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
               "method": "html_title",
-              "evidence_excerpt": "瓜州县2026年天津市东西部协作财政援助资金项目瓜州县西湖镇西湖村饮水安全工程提升改造项目采购更正公告（第一次）",
+              "evidence_excerpt": "浙江敬霖工程咨询有限公司关于省级政务系统和政务服务绩效评估分析的公开招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "瓜州县西湖镇人民政府",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
+              "value": "浙江省交通运输厅(本级)",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 瓜州县西湖镇人民政府",
+              "evidence_excerpt": "采购单位 浙江省交通运输厅(本级)",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年09月21日 09:30",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "开标时间 2026年09月21日 09:30",
+              "confirmed": true
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231016.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-e6495acd9ce1",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
+          "title": "丽水中承工程咨询有限公司关于龙泉市泉水安澜应用XC改造的竞争性磋商公告",
+          "organizer": "龙泉市水利局",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月29日 17:37",
+          "raw_snapshot_hash": "4f05736798f8480b5343c8d8bdb62283a1de58ac4e6390b4f81679dc31c72def",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "丽水中承工程咨询有限公司关于龙泉市泉水安澜应用XC改造的竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
+              "method": "html_title",
+              "evidence_excerpt": "丽水中承工程咨询有限公司关于龙泉市泉水安澜应用XC改造的竞争性磋商公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "龙泉市水利局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 龙泉市水利局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -369,48 +546,48 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230981.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27231022.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-c0f925dfb5a1",
+          "candidate_id": "ds1b-ccgp-1cb05322c3b8",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
-          "title": "浙江正大工程管理咨询有限公司关于海宁市动物疫病预防控制中心实验室改造提升项目的公开招标公告",
-          "organizer": "海宁市农业农村局",
-          "deadline_text": "2026年09月17日 14:30",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
+          "title": "民和县雪域牧源畜禽屠宰厂配套设施及冷库设备等购置项目的公开招标公告",
+          "organizer": "民和回族土族自治县川口镇人民政府",
+          "deadline_text": "2026年09月22日 09:00",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:28",
-          "raw_snapshot_hash": "c1969aca261aa4131f934cc280a638b637ee08df4f6341fb5e44ceaf4c27a9ee",
+          "published_text": "2026年08月29日 17:37",
+          "raw_snapshot_hash": "0cd0a1b8962f858aaa882f53c9537f65caf299b77df51dec863442c653431efc",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "浙江正大工程管理咨询有限公司关于海宁市动物疫病预防控制中心实验室改造提升项目的公开招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
+              "value": "民和县雪域牧源畜禽屠宰厂配套设施及冷库设备等购置项目的公开招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
               "method": "html_title",
-              "evidence_excerpt": "浙江正大工程管理咨询有限公司关于海宁市动物疫病预防控制中心实验室改造提升项目的公开招标公告",
+              "evidence_excerpt": "民和县雪域牧源畜禽屠宰厂配套设施及冷库设备等购置项目的公开招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "海宁市农业农村局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
+              "value": "民和回族土族自治县川口镇人民政府",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 海宁市农业农村局",
+              "evidence_excerpt": "采购单位 民和回族土族自治县川口镇人民政府",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月17日 14:30",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
+              "value": "2026年09月22日 09:00",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
               "method": "structured_text",
-              "evidence_excerpt": "开标时间 2026年09月17日 14:30",
+              "evidence_excerpt": "开标时间 2026年09月22日 09:00",
               "confirmed": true
             },
             "geography": {
@@ -428,187 +605,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230980.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-ff8516623abe",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-          "title": "舟山正大工程咨询有限公司关于舟山市“互联网+人社”一体化经办系统-业务功能新增项目的公开招标公告",
-          "organizer": "舟山市人力资源和社会保障局",
-          "deadline_text": "2026年09月20日 09:00",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:28",
-          "raw_snapshot_hash": "00880963562ce3e3473bc12c54ffe21a0cad36229a02923a8a198eec8528ffaa",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "舟山正大工程咨询有限公司关于舟山市“互联网+人社”一体化经办系统-业务功能新增项目的公开招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-              "method": "html_title",
-              "evidence_excerpt": "舟山正大工程咨询有限公司关于舟山市“互联网+人社”一体化经办系统-业务功能新增项目的公开招标公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "舟山市人力资源和社会保障局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 舟山市人力资源和社会保障局",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月20日 09:00",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "开标时间 2026年09月20日 09:00",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230973.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-16f0c9fc8751",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-          "title": "浙江省政府采购中心关于浙江东盾贸易有限公司生产物联采集硬件采购项目（非政府采购）公开招标公告",
-          "organizer": "浙江省东盾贸易有限公司",
-          "deadline_text": "2026年09月20日 09:30",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:28",
-          "raw_snapshot_hash": "92a07918336ffde4b1a3168d7ede43dd24bee31aca345db6fda01299f198e752",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "浙江省政府采购中心关于浙江东盾贸易有限公司生产物联采集硬件采购项目（非政府采购）公开招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-              "method": "html_title",
-              "evidence_excerpt": "浙江省政府采购中心关于浙江东盾贸易有限公司生产物联采集硬件采购项目（非政府采购）公开招标公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "浙江省东盾贸易有限公司",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 浙江省东盾贸易有限公司",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月20日 09:30",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "开标时间 2026年09月20日 09:30",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230979.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-001cbdbd85b1",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
-          "title": "鸡西市城子河区农业农村局城子河区2026年养护工程项目(二次)竞争性磋商公告",
-          "organizer": "鸡西市城子河区农业农村局",
-          "deadline_text": "2026年09月10日 09时00分",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 17:28",
-          "raw_snapshot_hash": "309a3cac682f34856eae6d0c08e40486c41174d34b2275ac75bc0b454e888bf3",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "鸡西市城子河区农业农村局城子河区2026年养护工程项目(二次)竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
-              "method": "html_title",
-              "evidence_excerpt": "鸡西市城子河区农业农村局城子河区2026年养护工程项目(二次)竞争性磋商公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "鸡西市城子河区农业农村局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 鸡西市城子河区农业农村局",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月10日 09时00分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月10日 09时00分 （北京时间）前",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230977.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27231021.htm",
               "confirmed": true
             }
           }
@@ -621,8 +621,8 @@
       "adapter_id": "gd-culture-notices-v1",
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:25.928Z",
-      "finished_at": "2026-08-29T09:41:26.532Z",
+      "started_at": "2026-08-29T09:48:46.592Z",
+      "finished_at": "2026-08-29T09:48:47.745Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://whly.gd.gov.cn/open_newggl/index.html",
@@ -1227,8 +1227,8 @@
       "adapter_id": "yuexiu-notices-v1",
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:26.532Z",
-      "finished_at": "2026-08-29T09:41:27.309Z",
+      "started_at": "2026-08-29T09:48:47.745Z",
+      "finished_at": "2026-08-29T09:48:48.486Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
@@ -1833,8 +1833,8 @@
       "adapter_id": "mct-notices-listing-v1",
       "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:27.309Z",
-      "finished_at": "2026-08-29T09:41:29.666Z",
+      "started_at": "2026-08-29T09:48:48.486Z",
+      "finished_at": "2026-08-29T09:48:50.851Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
@@ -2439,8 +2439,8 @@
       "adapter_id": "cnaf-guides-listing-v1",
       "discovery_url": "https://www.cnaf.cn/guide.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:29.666Z",
-      "finished_at": "2026-08-29T09:41:30.270Z",
+      "started_at": "2026-08-29T09:48:50.851Z",
+      "finished_at": "2026-08-29T09:48:51.548Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.cnaf.cn/guide.html",
@@ -2809,12 +2809,12 @@
       "adapter_id": "ichina-notices-listing-v1",
       "discovery_url": "https://www.ihchina.cn/news_2",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:30.270Z",
-      "finished_at": "2026-08-29T09:41:46.949Z",
+      "started_at": "2026-08-29T09:48:51.548Z",
+      "finished_at": "2026-08-29T09:49:07.659Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ihchina.cn/news_2",
-      "raw_snapshot_hash": "fb656def688f5f2e340ef6ebeccafc167dcce755aa632e01e85dcebb1c16a735",
+      "raw_snapshot_hash": "bcb218c07409c6812319fec1d6f61ef2d8d106902dc3733b526dd1257fdb67be",
       "candidate_count": 10,
       "candidates": [
         {
@@ -2829,7 +2829,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-27 13:48:00",
-          "raw_snapshot_hash": "90013191dfbeb53e8e9243cdd2aa737eaaf4f09c752bb1b0bc927f51d6fd4a17",
+          "raw_snapshot_hash": "cedfd14eb5c94fa4153de8e4ff72852cde8264b6a97ee3147bc1070286cdf3e7",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2888,7 +2888,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-07 09:15:00",
-          "raw_snapshot_hash": "fee7b47e43de4ffd9f4dc63b3b99bd6b2339dfccf5ec0dda2befbd616b317e1d",
+          "raw_snapshot_hash": "2388fab61bf4498fca83e45ce563083f13dcb200d6ba1fe1306aaa0c69c680aa",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2947,7 +2947,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-13 09:24:00",
-          "raw_snapshot_hash": "0315a7944b2c5eaff41e9094912a24d7f3ff51367eda2ddb3d656ee1d3f02ba5",
+          "raw_snapshot_hash": "c37f47a102d1f9f5391788f917c1bb75afbfc2dbf722d28c5c0908bcb7da6f0d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3006,7 +3006,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-03 17:39:00",
-          "raw_snapshot_hash": "b8474c1e5022cd9b53c6760f6fd7dd033b782825f140d88a3e4479658bc1aaa1",
+          "raw_snapshot_hash": "4fd589ebe90944427a2f311b4f9f84e3f8d28ada395489cc1d8b944025b60af2",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3065,7 +3065,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-29 14:57:00",
-          "raw_snapshot_hash": "ee4b6df387c733b9bf4a11d5933e1d8b3ec667fce3efb9a529342923b0028aeb",
+          "raw_snapshot_hash": "67648dd83c423909fa508d29c6cd5245238bb8c56ab3ec0d4a22eec8c942256c",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3124,7 +3124,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-22 09:39:00",
-          "raw_snapshot_hash": "cb2dfe5dde2b2d43350410221a5698c9f0926df76ba2dfeb147901398203ac7c",
+          "raw_snapshot_hash": "f9e898a0f1f45db0875d095593a11dbaef18819fc90574a8b1007710b4ca010c",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3183,7 +3183,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-15 14:36:00",
-          "raw_snapshot_hash": "3934382ceb3ed90fb320bb9f795476db904d328a8db4107627c39ef6724c1152",
+          "raw_snapshot_hash": "79227977fab13d9636b2dcbd285ff873c3663b16c90a3b6719802457baba5e79",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3242,7 +3242,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-07 14:19:00",
-          "raw_snapshot_hash": "d0c9ac0de26801b1ec6d74447e46203ec9ccfc14c95065cf1fe23ea31c3c1236",
+          "raw_snapshot_hash": "263fa09830b063632f00640ed150c9c8dc5cb6aa097db0a4e038a6a62df61ea9",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3301,7 +3301,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2025-12-29 11:10:00",
-          "raw_snapshot_hash": "83210479e87d7638785cf5fdf611fc58c8a9062a8e54f45098b7ce02dbf0e708",
+          "raw_snapshot_hash": "7772c9d30603ea6f3d96c413cb02291b5c3e469c574bc895a58ce493f9cf90b7",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3360,7 +3360,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2025-12-29 10:51:00",
-          "raw_snapshot_hash": "ff40bf205d2facc05dd3ef3cc25d5f193134b806cfc5888a6feffcf861940bec",
+          "raw_snapshot_hash": "1558c8892f016b01b88f85e5a4e23ec9fb5a34a77703dcc21f6d1f4f79d8ed6e",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3415,8 +3415,8 @@
       "adapter_id": "gmfyg-events-listing-v1",
       "discovery_url": "https://www.gmfyg.org.cn/event",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:46.950Z",
-      "finished_at": "2026-08-29T09:41:47.919Z",
+      "started_at": "2026-08-29T09:49:07.659Z",
+      "finished_at": "2026-08-29T09:49:08.612Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gmfyg.org.cn/event",
@@ -3667,8 +3667,8 @@
       "adapter_id": "gz-culture-notices-listing-v1",
       "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:47.919Z",
-      "finished_at": "2026-08-29T09:41:48.780Z",
+      "started_at": "2026-08-29T09:49:08.612Z",
+      "finished_at": "2026-08-29T09:49:09.247Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
@@ -4273,8 +4273,8 @@
       "adapter_id": "cnacs-competition-listing-v1",
       "discovery_url": "https://www.cnacs.net.cn/82/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:48.780Z",
-      "finished_at": "2026-08-29T09:41:49.550Z",
+      "started_at": "2026-08-29T09:49:09.247Z",
+      "finished_at": "2026-08-29T09:49:10.032Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.cnacs.net.cn/82/index.html",
@@ -4761,8 +4761,8 @@
       "adapter_id": "gdmuseum-announcements-listing-v1",
       "discovery_url": "https://www.gdmuseum.org.cn/col51/list",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:49.550Z",
-      "finished_at": "2026-08-29T09:41:57.859Z",
+      "started_at": "2026-08-29T09:49:10.032Z",
+      "finished_at": "2026-08-29T09:49:18.230Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gdmuseum.org.cn/col51/list",
@@ -4781,7 +4781,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年07月01日",
-          "raw_snapshot_hash": "e09f82f8a8ac39ff6f3fe7be8bc26c188612b9edec5b8722f914c13cf66675e5",
+          "raw_snapshot_hash": "6a81466f062a4c798bc8c4b3a6067c9e07de8512d9541f40d17b76503685e0a4",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -4840,7 +4840,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月29日",
-          "raw_snapshot_hash": "054c99a472ebe577afeb45fb58d4fc039c721015518acb8843f8aadc60ddb150",
+          "raw_snapshot_hash": "75c8be7fab863bf821984feda0fe92f2b30ad3bf97e7ddb131f97a1f5db50ce2",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -4899,7 +4899,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月26日",
-          "raw_snapshot_hash": "c453d5496a6d56154c97fb4cddd0860658498a02aeb1844ed49792b066924ae6",
+          "raw_snapshot_hash": "8a2137234976a727cb3c6ec2b9197a20aec2975faeb7b2d1dbfd7089dcedad2f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -4958,7 +4958,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月22日",
-          "raw_snapshot_hash": "3103d7980fd8517d9b32009ed8e0c0a0fe2f18895b3fad1247abeeaa9cfd5bb1",
+          "raw_snapshot_hash": "bc74390227c33bc354ea97df008e7810ac9811459abd225fcbf618a6fbc8d2ae",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5017,7 +5017,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月18日",
-          "raw_snapshot_hash": "0e9e3b3f2767ab0772ca4ad6dee16266e9a93c2a5709cba0e5a00ad97573316b",
+          "raw_snapshot_hash": "9292b0971cd30c7641378839e72a009b172c014fe7249ff4d97390136eebea6e",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5076,7 +5076,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月08日",
-          "raw_snapshot_hash": "ec771c9509feb41618b568d7fe25b039cc88b0354b116aa2226edf2212bd3444",
+          "raw_snapshot_hash": "68aeff665c3a5aed91295b34de110afcdb85e8bba8f4532724e7695713ced8d7",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5135,7 +5135,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年05月29日",
-          "raw_snapshot_hash": "a45671e321a2b11c5aebe31e7340ec387a9c560aa968acdc91889b07072a69f8",
+          "raw_snapshot_hash": "d6ab3282da1470266ba9970d4be2e10cea76ead029dc1bf06e04e678975ee30f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5190,8 +5190,8 @@
       "adapter_id": "gdmoa-exhibitions-listing-v1",
       "discovery_url": "https://www.gdmoa.org/Exhibition/",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:41:57.859Z",
-      "finished_at": "2026-08-29T09:42:00.871Z",
+      "started_at": "2026-08-29T09:49:18.230Z",
+      "finished_at": "2026-08-29T09:49:20.892Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gdmoa.org/Exhibition/",
@@ -5796,8 +5796,8 @@
       "adapter_id": "unesco-ich-news-listing-v1",
       "discovery_url": "https://ich.unesco.org/en/news",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:00.871Z",
-      "finished_at": "2026-08-29T09:42:07.597Z",
+      "started_at": "2026-08-29T09:49:20.892Z",
+      "finished_at": "2026-08-29T09:49:27.764Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://ich.unesco.org/en/news",
@@ -6402,12 +6402,12 @@
       "adapter_id": "loewe-craft-prize-generic-detail-v1",
       "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:07.597Z",
-      "finished_at": "2026-08-29T09:42:12.660Z",
+      "started_at": "2026-08-29T09:49:27.764Z",
+      "finished_at": "2026-08-29T09:49:32.207Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://craftprize.loewe.com/zh/craftprize2027",
-      "raw_snapshot_hash": "546c8eeb4190101a20cf9cb6c8b177a95f431494ae7daded1be0bbfb518a404a",
+      "raw_snapshot_hash": "31833f1e83cac563454f1876be43fc59a23e26f2fe0205936af20e7c4c3f10b3",
       "candidate_count": 10,
       "candidates": [
         {
@@ -6422,7 +6422,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": "2026年10月15日",
-          "raw_snapshot_hash": "6be3725778c2d831e63135ff1d855ff272397d2f2edabaabae2a37c9768de659",
+          "raw_snapshot_hash": "3c579c153f7580e1c50bfcbe9b5b516b723e63088ab43ee366223f88cebcde21",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6481,7 +6481,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "929cf93e05fcb1f7ba0d388a79cb2d266c81588969aea8667d38df3942ad709f",
+          "raw_snapshot_hash": "d22727f66541ff220f332990578ca5aeea7958db8d7f8acf2afc739301ce34e1",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6540,7 +6540,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "5594eda88d7cbee82fa6d068b658756a5df15d6721558ab6e5c0ba174a944b53",
+          "raw_snapshot_hash": "913215ee7a64f1aa2ce7c15e5ed332962f25e9ed226a6d430a946372da3b6729",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6599,7 +6599,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "d9f6f74a6085baf51fb8c170450f596eb0de5f285d32319e6c58c1f899073ce0",
+          "raw_snapshot_hash": "af29bec8803e448c0f133a0dbc49e26f5a89f0bb90c840be15794aeb12dda4b7",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6658,7 +6658,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "df957094ada045836f1b4acc7e5210a12f0504472551fb908841cb2a85c07977",
+          "raw_snapshot_hash": "ce2a9d3a315d029b5c908ee1524355ce71711fca8bd0912e137a25791a879b9c",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6717,7 +6717,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "82a915472744d2aec3d9182ff7358535fb138b829a73e8a3174b262b66685114",
+          "raw_snapshot_hash": "589a40422ac4b0807dbf31b4adbef1a810da472949b82af4ebbfaab9ac520373",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6776,7 +6776,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "5cd462386fa91df2f4080a3a0acbb0258d240771242270edfb74fda4a1d0970f",
+          "raw_snapshot_hash": "26a61d3ed7a593c2231538b4766e58f4162a735e3d1e1304a454a8d45a47dc0d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6835,7 +6835,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "508bf2ddf069318e548175bcc3ddd1ea22850d0437aae228d9409027b9151ae9",
+          "raw_snapshot_hash": "bce40ecea0873da066d36b890e8cd48e981de40b3d0dc4e2b10f3e9a805f7f10",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6894,7 +6894,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "a6633c1479a3380a7be333c63557d0efaea27e2a2f8ed31ced741170fa7bc4d0",
+          "raw_snapshot_hash": "de43b03193f02483bca46b91c1cc75f373572902060cda8cef7d53a8a0785f26",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6953,7 +6953,7 @@
           "geography": "国际",
           "category_hint": "competition",
           "published_text": "2018年5月4日",
-          "raw_snapshot_hash": "0cbf4afadc7e93f129d1728c098e8650dd1bfc624c51fc5873bdda45f2d783c4",
+          "raw_snapshot_hash": "280482f1ef6ae83869cd71dc1cbbb9314bb313fe3ff8b4b230aeb094609828c8",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -7006,10 +7006,10 @@
     {
       "source_id": "if-design-award",
       "adapter_id": "if-design-award-generic-detail-v1",
-      "discovery_url": "https://ifdesign.com/en/if-design-award-and-jury",
+      "discovery_url": "https://ifdesign.com/en/if-design-award-get-in-contact",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:12.660Z",
-      "finished_at": "2026-08-29T09:42:12.854Z",
+      "started_at": "2026-08-29T09:49:32.207Z",
+      "finished_at": "2026-08-29T09:49:42.746Z",
       "status": "failed",
       "http_status": null,
       "final_url": null,
@@ -7025,12 +7025,12 @@
       "adapter_id": "china-design-award-generic-detail-v1",
       "discovery_url": "https://cidip.cn/cda2026/permanent.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:12.854Z",
-      "finished_at": "2026-08-29T09:42:15.129Z",
+      "started_at": "2026-08-29T09:49:42.746Z",
+      "finished_at": "2026-08-29T09:49:45.097Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://cidip.cn/cda2026/permanent.html",
-      "raw_snapshot_hash": "3db1cde1294f0e5238dcd5a839f0426673a6e5ade443da24dde986a7147b9ef0",
+      "raw_snapshot_hash": "e3a73aa5c4cbbea831bb2c954c5092697e656311e935da531a6f746ef3a36475",
       "candidate_count": 10,
       "candidates": [
         {
@@ -7104,7 +7104,7 @@
           "geography": "全国",
           "category_hint": "competition",
           "published_text": null,
-          "raw_snapshot_hash": "93df1392febbf46290449e493344a4a538646cb343c598d29bff27d7586e277e",
+          "raw_snapshot_hash": "02601a73be34410106ad4ba98af7de8eb7bf81e7601772011c5ecfeda842b049",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -7163,7 +7163,7 @@
           "geography": "全国",
           "category_hint": "competition",
           "published_text": "2026-05-22",
-          "raw_snapshot_hash": "b05360abdb771cbd8aa04054a51ac8a058331d6eb4e2a6232bc8dc4c38220801",
+          "raw_snapshot_hash": "36b54be34d85e4abf9a179672a10547b7695e2d25cf7a4c7845f4fb44a305b74",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -7281,7 +7281,7 @@
           "geography": "全国",
           "category_hint": "competition",
           "published_text": "2026年9月30日",
-          "raw_snapshot_hash": "a11a8a86c2adb6f9afab8cd5cfd9187ab4df14ebf41be3bf849156a37f59674f",
+          "raw_snapshot_hash": "a6b6b3f02ef79c20e4242b4ff8a125e070b3a4ea4bb16b25e9a7df41dbd9d32e",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -7399,7 +7399,7 @@
           "geography": "全国",
           "category_hint": "competition",
           "published_text": "2016-07-01",
-          "raw_snapshot_hash": "59a60b2130f0905a847312826ed0e01c26b5db290c4c118568ad14f920348734",
+          "raw_snapshot_hash": "2b6b12233e76ae4a7187d6acbe68ab3f5d796cc8e03dd9e96452251128f70b8d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -7631,8 +7631,8 @@
       "adapter_id": "gba-design-generic-detail-v1",
       "discovery_url": "https://www.gbawcsjds.com/",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:15.129Z",
-      "finished_at": "2026-08-29T09:42:21.231Z",
+      "started_at": "2026-08-29T09:49:45.097Z",
+      "finished_at": "2026-08-29T09:49:48.993Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gbawcsjds.com/",
@@ -8235,27 +8235,25 @@
     {
       "source_id": "gyeongnam-k-design",
       "adapter_id": "gyeongnam-k-design-generic-detail-v1",
-      "discovery_url": "https://gnk-designaward.net/",
+      "discovery_url": "https://viewapp.dsu.ac.kr/getAnnoPdfDownload/pWVtKSQI3cJ",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:21.231Z",
-      "finished_at": "2026-08-29T09:42:21.392Z",
-      "status": "failed",
-      "http_status": null,
-      "final_url": null,
-      "raw_snapshot_hash": null,
+      "started_at": "2026-08-29T09:49:48.995Z",
+      "finished_at": "2026-08-29T09:49:50.362Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://viewapp.dsu.ac.kr/getAnnoPdfDownload/pWVtKSQI3cJ",
+      "raw_snapshot_hash": "c4c6ff8172f0b715b37bb947278d851e1000a5b3eb456e6892d06b68c070c2e7",
       "candidate_count": 0,
       "candidates": [],
-      "errors": [
-        "TypeError: fetch failed"
-      ]
+      "errors": []
     },
     {
       "source_id": "zhe-li-chengdu",
       "adapter_id": "zhe-li-chengdu-generic-detail-v1",
       "discovery_url": "https://www.zlscd.com/",
       "access_mode": "listing",
-      "started_at": "2026-08-29T09:42:21.392Z",
-      "finished_at": "2026-08-29T09:42:21.887Z",
+      "started_at": "2026-08-29T09:49:50.362Z",
+      "finished_at": "2026-08-29T09:49:50.669Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.zlscd.com/",
@@ -8269,8 +8267,8 @@
       "adapter_id": "zhuhai-gift-generic-detail-v1",
       "discovery_url": "https://www.zhuhai.gov.cn/",
       "access_mode": "manual",
-      "started_at": "2026-08-29T09:42:21.887Z",
-      "finished_at": "2026-08-29T09:42:22.855Z",
+      "started_at": "2026-08-29T09:49:50.669Z",
+      "finished_at": "2026-08-29T09:49:51.511Z",
       "status": "partial",
       "http_status": 200,
       "final_url": "https://www.zhuhai.gov.cn/",
@@ -8289,7 +8287,7 @@
           "geography": "粤港澳大湾区",
           "category_hint": "procurement_project",
           "published_text": null,
-          "raw_snapshot_hash": "797b791571cdb74e9d4c0ba1fba1f06e8ac0e8e17061955812fc6eaef74c7568",
+          "raw_snapshot_hash": "670619e948fe4316ef55c4e56a51917c861495922a4750b46d0187e9398306e7",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
