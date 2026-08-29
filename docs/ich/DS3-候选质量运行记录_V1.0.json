@@ -1,19 +1,47 @@
 {
   "schema_version": "ich-ds3-candidate-quality.v1",
-  "run_id": "ich-ds3-quality-20260829093604",
-  "ran_at": "2026-08-29T09:36:04.761Z",
+  "run_id": "ich-ds3-quality-20260829094232",
+  "ran_at": "2026-08-29T09:42:32.012Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
   "formal_store_before_sha256": "5603daf526a5af338db624d263b48ef105a944ee341888e328cc9f3de819ae32",
-  "input_candidate_count": 135,
-  "assessment_count": 135,
+  "input_candidate_count": 144,
+  "assessment_count": 144,
   "approved_count": 0,
   "review_required_count": 94,
-  "rejected_count": 41,
+  "rejected_count": 50,
   "assessments": [
     {
-      "candidate_id": "ds1b-ccgp-fcdc10ca1c7d",
+      "candidate_id": "ds1b-ccgp-aaae276b7ccf",
+      "source_id": "ccgp",
+      "score": 62,
+      "band": "medium",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": true,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-1c9d47b2a475",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -42,10 +70,10 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-2a55924d91aa",
+      "candidate_id": "ds1b-ccgp-bf5935b580f7",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 62,
+      "band": "medium",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -58,23 +86,22 @@
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-08dc5fa24627",
+      "candidate_id": "ds1b-ccgp-c5592dc8895e",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 62,
+      "band": "medium",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -87,23 +114,22 @@
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-bbc3ffe3dc89",
+      "candidate_id": "ds1b-ccgp-0ca1e1358aa5",
       "source_id": "ccgp",
-      "score": 48,
-      "band": "low",
+      "score": 62,
+      "band": "medium",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
@@ -115,20 +141,48 @@
         "category_confirmed": false,
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
-        "relevance_signal": true,
-        "action_signal": false,
+        "relevance_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
-        "标题可能是结果/更正或未体现当前行动窗口",
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-40a3b7e17c33",
+      "candidate_id": "ds1b-ccgp-5937068c434d",
+      "source_id": "ccgp",
+      "score": 62,
+      "band": "medium",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": true,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-c0f925dfb5a1",
       "source_id": "ccgp",
       "score": 77,
       "band": "high",
@@ -155,75 +209,71 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-5435cd5df65a",
+      "candidate_id": "ds1b-ccgp-ff8516623abe",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 77,
+      "band": "high",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
         "detail_page": true,
         "title_confirmed": true,
         "organizer_confirmed": true,
-        "deadline_confirmed": false,
+        "deadline_confirmed": true,
         "geography_confirmed": false,
         "category_confirmed": false,
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-ca16d29d37c2",
+      "candidate_id": "ds1b-ccgp-16f0c9fc8751",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 77,
+      "band": "high",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
         "detail_page": true,
         "title_confirmed": true,
         "organizer_confirmed": true,
-        "deadline_confirmed": false,
+        "deadline_confirmed": true,
         "geography_confirmed": false,
         "category_confirmed": false,
         "snapshot_hash": true,
         "primary_or_secondary_source": true,
         "relevance_signal": false,
-        "action_signal": false,
+        "action_signal": true,
         "known_template_marker_absent": true,
         "duplicate_url_absent": true
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-955bd3f15329",
+      "candidate_id": "ds1b-ccgp-001cbdbd85b1",
       "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
+      "score": 55,
+      "band": "medium",
       "decision": "review_required",
       "formal_publish_blocked": true,
       "checks": {
         "detail_page": true,
         "title_confirmed": true,
         "organizer_confirmed": true,
-        "deadline_confirmed": false,
+        "deadline_confirmed": true,
         "geography_confirmed": false,
         "category_confirmed": false,
         "snapshot_hash": true,
@@ -236,65 +286,6 @@
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
         "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-92b6893feec6",
-      "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": false,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-6090abd6c643",
-      "source_id": "ccgp",
-      "score": 40,
-      "band": "low",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": false,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
       ]
@@ -3841,6 +3832,267 @@
         "duplicate_url_absent": true
       },
       "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-627379b6d51e",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-aff91cfed7f0",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-4bdaf4f70fe5",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-efcefa82b224",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-924bfbf2e22a",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-bbc04c010012",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-0a226462347c",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-b9427da99fb1",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-zhuhai-gift-7ca36e00e0a7",
+      "source_id": "zhuhai-gift",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
         "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",

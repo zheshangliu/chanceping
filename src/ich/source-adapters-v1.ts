@@ -345,6 +345,7 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
     ["gba-design", "https://www.gbawcsjds.com/", "competition", "粤港澳大湾区"],
     ["gyeongnam-k-design", "https://gnk-designaward.net/", "competition", "国际"],
     ["zhe-li-chengdu", "https://www.zlscd.com/", "exhibition_market", "全国"],
+    ["zhuhai-gift", "https://www.zhuhai.gov.cn/", "procurement_project", "粤港澳大湾区"],
   ].map(([sourceId, discoveryUrl, categoryHint, geographyHint]) => ({
     adapter_id: `${sourceId}-generic-detail-v1`, source_id: sourceId, discovery_url: discoveryUrl,
     category_hint: categoryHint as IchPrimaryCategory, geography_hint: geographyHint,
