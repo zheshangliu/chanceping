@@ -1,12 +1,12 @@
 {
   "schema_version": "ich-ds1b-sample-run.v1",
-  "ran_at": "2026-08-24T11:28:55.917Z",
+  "ran_at": "2026-08-29T09:34:58.953Z",
   "readonly": true,
   "formal_store_write": false,
   "minimum_samples_per_adapter": 3,
-  "adapter_count": 12,
-  "total_samples": 36,
-  "gate": "pass",
+  "adapter_count": 18,
+  "total_samples": 45,
+  "gate": "fail",
   "runs": [
     {
       "adapter_id": "ccgp-procurement-listing-v1",
@@ -14,46 +14,46 @@
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
-        "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm"
+        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
+        "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm"
       ],
       "samples": [
         {
-          "candidate_id": "ds1b-ccgp-8371e56fcc78",
+          "candidate_id": "ds1b-ccgp-fcdc10ca1c7d",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
-          "title": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
-          "organizer": "陕西省自然资源信息中心（陕西省地质资料档案馆）",
-          "deadline_text": "2026年09月04日 09时30分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
+          "title": "浙江水利水电工程审价中心有限公司关于2026年中国水利报主题宣传服务中标(成交)结果公告",
+          "organizer": "浙江省水利厅（本级）",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 19:18",
-          "raw_snapshot_hash": "d99f19542d3e89055d5260ace276137869ba3619ac42eff399a809207dbf46da",
+          "published_text": "2026年08月29日 17:23",
+          "raw_snapshot_hash": "fd3b4af1ca131f901b20eb002f76511283a17fb87bc087a903bf0177a4f11347",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+              "value": "浙江水利水电工程审价中心有限公司关于2026年中国水利报主题宣传服务中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "html_title",
-              "evidence_excerpt": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
+              "evidence_excerpt": "浙江水利水电工程审价中心有限公司关于2026年中国水利报主题宣传服务中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "陕西省自然资源信息中心（陕西省地质资料档案馆）",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+              "value": "浙江省水利厅（本级）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 陕西省自然资源信息中心（陕西省地质资料档案馆）",
+              "evidence_excerpt": "采购单位 浙江省水利厅（本级）",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月04日 09时30分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月04日 09时30分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -70,49 +70,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-e898e0fd0db1",
+          "candidate_id": "ds1b-ccgp-2a55924d91aa",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
-          "title": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
-          "organizer": "塔河县市政建设服务中心",
-          "deadline_text": "2026年09月04日 09时15分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
+          "title": "浙江建亚工程咨询有限公司关于仙居县2026年森林草原湿地调查监测项目和林草图斑县级自查项目中标(成交)结果公告",
+          "organizer": "仙居县自然资源和规划局",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 19:16",
-          "raw_snapshot_hash": "e5926ee129518119af075d46df30af9cfbc3af0a8e18c474f04650a42bff15a9",
+          "published_text": "2026年08月29日 17:22",
+          "raw_snapshot_hash": "f9c8f45c0a8d2368e22b5e33c0811a7c10c8644633609537ff3e13b6ec289cbf",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+              "value": "浙江建亚工程咨询有限公司关于仙居县2026年森林草原湿地调查监测项目和林草图斑县级自查项目中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "html_title",
-              "evidence_excerpt": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
+              "evidence_excerpt": "浙江建亚工程咨询有限公司关于仙居县2026年森林草原湿地调查监测项目和林草图斑县级自查项目中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "塔河县市政建设服务中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+              "value": "仙居县自然资源和规划局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 塔河县市政建设服务中心",
+              "evidence_excerpt": "采购单位 仙居县自然资源和规划局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月04日 09时15分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月04日 09时15分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -129,49 +129,49 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-464365e14bb0",
+          "candidate_id": "ds1b-ccgp-08dc5fa24627",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
-          "title": "渭南市公路局超限检测站工作服装采购项目招标公告",
-          "organizer": "渭南市公路局",
-          "deadline_text": "2026年09月14日 09时30分",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
+          "title": "若羌县库力萨伊河小流域水土保持综合治理项目（设计）中标(成交)结果公告",
+          "organizer": "若羌县水利局",
+          "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月24日 19:15",
-          "raw_snapshot_hash": "f366bdc352d18b66ff5e407ea5331db6bb849f7a5ff404a351e29ae427f09624",
+          "published_text": "2026年08月29日 17:22",
+          "raw_snapshot_hash": "69eff032b3c5ba61731e40e3379eebe5cf8c3c6b7bc13cb1d2b52782110b41c8",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "渭南市公路局超限检测站工作服装采购项目招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+              "value": "若羌县库力萨伊河小流域水土保持综合治理项目（设计）中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "html_title",
-              "evidence_excerpt": "渭南市公路局超限检测站工作服装采购项目招标公告",
+              "evidence_excerpt": "若羌县库力萨伊河小流域水土保持综合治理项目（设计）中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "渭南市公路局",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+              "value": "若羌县水利局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 渭南市公路局",
+              "evidence_excerpt": "采购单位 若羌县水利局",
               "confirmed": true
             },
             "deadline_text": {
-              "value": "2026年09月14日 09时30分",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "于 2026年09月14日 09时30分 （北京时间）前",
-              "confirmed": true
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
             },
             "geography": {
               "value": null,
@@ -188,10 +188,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "confirmed": true
             }
           }
@@ -205,11 +205,129 @@
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
-        "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-        "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html"
+        "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+        "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+        "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html"
       ],
       "samples": [
+        {
+          "candidate_id": "ds1b-gd-culture-0739eb58e685",
+          "adapter_id": "gd-culture-notices-v1",
+          "source_id": "gd-culture",
+          "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
+          "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+          "title": "关于2026年广东金秋文旅消费惠民补贴拟入选发放平台企业的公示",
+          "organizer": "产业发展处",
+          "deadline_text": null,
+          "geography": "广东省",
+          "category_hint": "channel_collaboration",
+          "published_text": "2026-08-28 10:58",
+          "raw_snapshot_hash": "0bae8a2d103ab3b133b6674f62505c17cb8d60998d71e6788772479933e750c8",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "关于2026年广东金秋文旅消费惠民补贴拟入选发放平台企业的公示",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+              "method": "html_title",
+              "evidence_excerpt": "关于2026年广东金秋文旅消费惠民补贴拟入选发放平台企业的公示",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "产业发展处",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+              "method": "structured_text",
+              "evidence_excerpt": "作者 : 产业发展处",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "channel_collaboration",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://whly.gd.gov.cn/open_newggl/content/post_4948020.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gd-culture-c50cca1edde0",
+          "adapter_id": "gd-culture-notices-v1",
+          "source_id": "gd-culture",
+          "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
+          "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+          "title": "广东省文化和旅游厅关于《旅游民宿服务安全管理指南（送审稿）》征求意见结果的公告",
+          "organizer": "发展与保障中心",
+          "deadline_text": null,
+          "geography": "广东省",
+          "category_hint": "channel_collaboration",
+          "published_text": "2026-08-26 15:27",
+          "raw_snapshot_hash": "c4ef3e26a9278848a213f443d922776e4ec684017b10879b4aedb481c86972f9",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广东省文化和旅游厅关于《旅游民宿服务安全管理指南（送审稿）》征求意见结果的公告",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+              "method": "html_title",
+              "evidence_excerpt": "广东省文化和旅游厅关于《旅游民宿服务安全管理指南（送审稿）》征求意见结果的公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "发展与保障中心",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+              "method": "structured_text",
+              "evidence_excerpt": "作者 : 发展与保障中心",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广东省",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "channel_collaboration",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://whly.gd.gov.cn/open_newggl/content/post_4947163.html",
+              "confirmed": true
+            }
+          }
+        },
         {
           "candidate_id": "ds1b-gd-culture-f88f45cf525f",
           "adapter_id": "gd-culture-notices-v1",
@@ -268,124 +386,6 @@
               "confirmed": true
             }
           }
-        },
-        {
-          "candidate_id": "ds1b-gd-culture-b28dd4d3af8b",
-          "adapter_id": "gd-culture-notices-v1",
-          "source_id": "gd-culture",
-          "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
-          "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-          "title": "2026年广东“人工智能+文旅”应用场景“揭榜挂帅”项目榜单开始征集",
-          "organizer": "产业发展处",
-          "deadline_text": "2026年8月31日",
-          "geography": "广东省",
-          "category_hint": "channel_collaboration",
-          "published_text": "2026-08-19 16:57",
-          "raw_snapshot_hash": "bc4449d0109d225d535d57c2f777d5a1a7e095098f924974640e1d3c061a6abc",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "2026年广东“人工智能+文旅”应用场景“揭榜挂帅”项目榜单开始征集",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-              "method": "html_title",
-              "evidence_excerpt": "2026年广东“人工智能+文旅”应用场景“揭榜挂帅”项目榜单开始征集",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "产业发展处",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-              "method": "structured_text",
-              "evidence_excerpt": "作者 : 产业发展处",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年8月31日",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-              "method": "structured_text",
-              "evidence_excerpt": "截止时间：2026年8月31日",
-              "confirmed": true
-            },
-            "geography": {
-              "value": "广东省",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "channel_collaboration",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://whly.gd.gov.cn/open_newggl/content/post_4944441.html",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-gd-culture-2880a23b614a",
-          "adapter_id": "gd-culture-notices-v1",
-          "source_id": "gd-culture",
-          "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
-          "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-          "title": "2026广东国际旅游产业博览会广东主题形象馆、广东文旅消费新场景展区、广东文旅产业融合展区布展设计及搭建相关服务采购项目中选结果公告",
-          "organizer": "产业发展处",
-          "deadline_text": null,
-          "geography": "广东省",
-          "category_hint": "channel_collaboration",
-          "published_text": "2026-08-13 11:28",
-          "raw_snapshot_hash": "8acf8a3ce321445dc04edc42400c08cfb6faf2fbddaaf5f069b22bb8714e5e35",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "2026广东国际旅游产业博览会广东主题形象馆、广东文旅消费新场景展区、广东文旅产业融合展区布展设计及搭建相关服务采购项目中选结果公告",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-              "method": "html_title",
-              "evidence_excerpt": "2026广东国际旅游产业博览会广东主题形象馆、广东文旅消费新场景展区、广东文旅产业融合展区布展设计及搭建相关服务采购项目中选结果公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "产业发展处",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-              "method": "structured_text",
-              "evidence_excerpt": "作者 : 产业发展处",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": null,
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
-            },
-            "geography": {
-              "value": "广东省",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "channel_collaboration",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-              "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://whly.gd.gov.cn/open_newggl/content/post_4941990.html",
-              "confirmed": true
-            }
-          }
         }
       ],
       "error": null
@@ -396,43 +396,43 @@
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
-        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
-        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html"
+        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
+        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
+        "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html"
       ],
       "samples": [
         {
-          "candidate_id": "ds1b-yuexiu-notices-e716f02c5415",
+          "candidate_id": "ds1b-yuexiu-notices-2e15fa24ca01",
           "adapter_id": "yuexiu-notices-v1",
           "source_id": "yuexiu-notices",
           "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
-          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
-          "title": "广州市越秀区农林街道环境卫生管理站章程",
+          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
+          "title": "越秀区建设和水务局2026年9月领导干部接访工作安排",
           "organizer": null,
           "deadline_text": null,
           "geography": "广州市越秀区",
           "category_hint": "procurement_project",
           "published_text": null,
-          "raw_snapshot_hash": "cdb0fe68351f9baa47d6de8f97d9fc81fef15f53ef50ab41bed0b741ba6aa590",
+          "raw_snapshot_hash": "d4bc91906b9ed9d0ef7ea61ae8c7e7c4f51876a202a15168b34669863370648f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "广州市越秀区农林街道环境卫生管理站章程",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "value": "越秀区建设和水务局2026年9月领导干部接访工作安排",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
               "method": "html_title",
-              "evidence_excerpt": "广州市越秀区农林街道环境卫生管理站章程",
+              "evidence_excerpt": "越秀区建设和水务局2026年9月领导干部接访工作安排",
               "confirmed": true
             },
             "organizer": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -452,46 +452,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982972.html",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
+          "candidate_id": "ds1b-yuexiu-notices-26b602b4d536",
           "adapter_id": "yuexiu-notices-v1",
           "source_id": "yuexiu-notices",
           "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
-          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
-          "title": "关于确定2026年越秀区残疾人职业技能培训项目评价承接机构的结果公示",
+          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
+          "title": "2026年9月越秀区文化广电旅游体育局领导干部接访公告",
           "organizer": null,
           "deadline_text": null,
           "geography": "广州市越秀区",
           "category_hint": "procurement_project",
           "published_text": null,
-          "raw_snapshot_hash": "7cfd0e3ee89170850d225415f904edbd47a326d857af6884685dc109ff66fb85",
+          "raw_snapshot_hash": "ee209e596058b646cf5409ee02d9a44bf07e71bc62275d2029b00be7b0233087",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "关于确定2026年越秀区残疾人职业技能培训项目评价承接机构的结果公示",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
+              "value": "2026年9月越秀区文化广电旅游体育局领导干部接访公告",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
               "method": "html_title",
-              "evidence_excerpt": "关于确定2026年越秀区残疾人职业技能培训项目评价承接机构的结果公示",
+              "evidence_excerpt": "2026年9月越秀区文化广电旅游体育局领导干部接访公告",
               "confirmed": true
             },
             "organizer": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -511,46 +511,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
+              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975853.html",
+              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982704.html",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-yuexiu-notices-bafdbbc7e73f",
+          "candidate_id": "ds1b-yuexiu-notices-6d37cbea5f04",
           "adapter_id": "yuexiu-notices-v1",
           "source_id": "yuexiu-notices",
           "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
-          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
-          "title": "关于确定2026年越秀区残疾人职业技能培训项目承接机构的结果公示",
+          "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
+          "title": "关于配合做好2026年旅行社信用评价工作的通知",
           "organizer": null,
           "deadline_text": null,
           "geography": "广州市越秀区",
           "category_hint": "procurement_project",
           "published_text": null,
-          "raw_snapshot_hash": "f3f6542c178f19dbbe5ced350784348b904e8fad13fadf9474a10918f7ddcd9b",
+          "raw_snapshot_hash": "b9a54e70caff1a60c04baab9d5b35984182e26734749c60b117a2fd9ece37be0",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "关于确定2026年越秀区残疾人职业技能培训项目承接机构的结果公示",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
+              "value": "关于配合做好2026年旅行社信用评价工作的通知",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
               "method": "html_title",
-              "evidence_excerpt": "关于确定2026年越秀区残疾人职业技能培训项目承接机构的结果公示",
+              "evidence_excerpt": "关于配合做好2026年旅行社信用评价工作的通知",
               "confirmed": true
             },
             "organizer": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -570,10 +570,10 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
-              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
+              "value": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
+              "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10975843.html",
+              "evidence_excerpt": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10982526.html",
               "confirmed": true
             }
           }
@@ -587,11 +587,70 @@
       "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
       "listing_status": 200,
       "selected_detail_urls": [
+        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
         "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
-        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
-        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html"
+        "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html"
       ],
       "samples": [
+        {
+          "candidate_id": "ds1b-mct-notices-763980b2583f",
+          "adapter_id": "mct-notices-listing-v1",
+          "source_id": "mct-notices",
+          "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+          "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+          "title": "文化和旅游部办公厅关于公布第十一届<div>中国京剧艺术节入选名单的通知</div>",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "policy_funding",
+          "published_text": "2026年08月25日",
+          "raw_snapshot_hash": "b3a75d9144e94ee98170d05fff6ae1abc3843bf0c31b1b653e5ab2b56db2bb17",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "文化和旅游部办公厅关于公布第十一届<div>中国京剧艺术节入选名单的通知</div>",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+              "method": "html_title",
+              "evidence_excerpt": "文化和旅游部办公厅关于公布第十一届<div>中国京剧艺术节入选名单的通知</div>",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260825_966947.html",
+              "confirmed": true
+            }
+          }
+        },
         {
           "candidate_id": "ds1b-mct-notices-7c1624fc46bf",
           "adapter_id": "mct-notices-listing-v1",
@@ -706,65 +765,6 @@
               "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
               "method": "listing_anchor",
               "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-mct-notices-a46b14e963dc",
-          "adapter_id": "mct-notices-listing-v1",
-          "source_id": "mct-notices",
-          "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
-          "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
-          "title": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
-          "organizer": null,
-          "deadline_text": null,
-          "geography": "全国",
-          "category_hint": "policy_funding",
-          "published_text": "2026年07月17日",
-          "raw_snapshot_hash": "4005eb2dfc1e1132dc849b568f935865613b1fe1ee054b989ac45d0a6ab5b55a",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
-              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
-              "method": "html_title",
-              "evidence_excerpt": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": null,
-              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
-            },
-            "deadline_text": {
-              "value": null,
-              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
-            },
-            "geography": {
-              "value": "全国",
-              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "policy_funding",
-              "source_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
-              "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
               "confirmed": true
             }
           }
@@ -986,7 +986,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-27 13:48:00",
-          "raw_snapshot_hash": "c6e32205561aa8981f1b2ecca134ec58c1c30463922c69b3897f5720b3e06ba8",
+          "raw_snapshot_hash": "8f607441eacc4756cafced5445b171db018051611aa02f72bb200ece84ab6447",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1045,7 +1045,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-07 09:15:00",
-          "raw_snapshot_hash": "ac94963cf8a34806199637defb047bb84d8379fd9364b183b3e03c9e0c444dea",
+          "raw_snapshot_hash": "17a744d5ee3c7e0c8513c1766c7d8e45326500bc0198a689919011fc61f632fd",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1104,7 +1104,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-13 09:24:00",
-          "raw_snapshot_hash": "398287d8610d346342135040afaa36a8698a4e64565377cf2c37cf173ced7501",
+          "raw_snapshot_hash": "73f3ab818b4e19b222cea9f0202765634a1937751e5beedd7212971c31d6e8d3",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1351,11 +1351,129 @@
       "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
       "listing_status": 200,
       "selected_detail_urls": [
-        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
-        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html"
+        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+        "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html"
       ],
       "samples": [
+        {
+          "candidate_id": "ds1b-gz-culture-330cd3b1eb77",
+          "adapter_id": "gz-culture-notices-listing-v1",
+          "source_id": "gz-culture",
+          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+          "title": "广州市第三届“英雄花开英雄城”花城红色故事讲述大赛晋级半决赛名单揭晓！网络投票即将开启",
+          "organizer": "广州市文化广电旅游局",
+          "deadline_text": null,
+          "geography": "广州市",
+          "category_hint": "policy_funding",
+          "published_text": null,
+          "raw_snapshot_hash": "46ee71dd00d2c2dc70f28379395ec9614056a0c7ad98fe57e0133fe0ff577fd2",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广州市第三届“英雄花开英雄城”花城红色故事讲述大赛晋级半决赛名单揭晓！网络投票即将开启",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+              "method": "html_title",
+              "evidence_excerpt": "广州市第三届“英雄花开英雄城”花城红色故事讲述大赛晋级半决赛名单揭晓！网络投票即将开启",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广州市文化广电旅游局",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：广州市文化广电旅游局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "广州市",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10978934.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gz-culture-3c375964dadb",
+          "adapter_id": "gz-culture-notices-listing-v1",
+          "source_id": "gz-culture",
+          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+          "title": "广州市文化广电旅游局关于开展2026年广州市文化和旅游产业发展专项资金“优秀传统文化传承项目”申报工作的通知",
+          "organizer": "广州市文化广电旅游局",
+          "deadline_text": "2026年9月29日",
+          "geography": "广州市",
+          "category_hint": "policy_funding",
+          "published_text": null,
+          "raw_snapshot_hash": "9663600835e7f457ad7fcc0f468380a840145b438d7d23491e5cbccf74006042",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "广州市文化广电旅游局关于开展2026年广州市文化和旅游产业发展专项资金“优秀传统文化传承项目”申报工作的通知",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+              "method": "html_title",
+              "evidence_excerpt": "广州市文化广电旅游局关于开展2026年广州市文化和旅游产业发展专项资金“优秀传统文化传承项目”申报工作的通知",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广州市文化广电旅游局",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+              "method": "structured_text",
+              "evidence_excerpt": "来源：广州市文化广电旅游局",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年9月29日",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+              "method": "structured_text",
+              "evidence_excerpt": "申报主体无法开展线上申报的，可将纸质申报材料统一装订成册，于2026年9月29日前",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "广州市",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "policy_funding",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+              "confirmed": true
+            }
+          }
+        },
         {
           "candidate_id": "ds1b-gz-culture-4eed25d47ff7",
           "adapter_id": "gz-culture-notices-listing-v1",
@@ -1411,124 +1529,6 @@
               "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
               "method": "listing_anchor",
               "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-gz-culture-6ec0406440a0",
-          "adapter_id": "gz-culture-notices-listing-v1",
-          "source_id": "gz-culture",
-          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
-          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-          "title": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
-          "organizer": "广州市文化广电旅游局",
-          "deadline_text": null,
-          "geography": "广州市",
-          "category_hint": "policy_funding",
-          "published_text": null,
-          "raw_snapshot_hash": "4c25f9afb17449cbecc8703b5c8a7542d2592b0abf686c80741a5725473555ff",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-              "method": "html_title",
-              "evidence_excerpt": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "广州市文化广电旅游局",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-              "method": "structured_text",
-              "evidence_excerpt": "来源：广州市文化广电旅游局",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": null,
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-              "method": "not_found",
-              "evidence_excerpt": null,
-              "confirmed": false
-            },
-            "geography": {
-              "value": "广州市",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "policy_funding",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-gz-culture-bc0276853842",
-          "adapter_id": "gz-culture-notices-listing-v1",
-          "source_id": "gz-culture",
-          "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
-          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
-          "title": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
-          "organizer": "广州市文化广电旅游局",
-          "deadline_text": "2026年6月30日",
-          "geography": "广州市",
-          "category_hint": "policy_funding",
-          "published_text": null,
-          "raw_snapshot_hash": "82cb550ae7c2cada8c3ede2a4777aa7ea9ae6816a78e87138aa410d8ef5e1096",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
-              "method": "html_title",
-              "evidence_excerpt": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "广州市文化广电旅游局",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
-              "method": "structured_text",
-              "evidence_excerpt": "来源：广州市文化广电旅游局",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年6月30日",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
-              "method": "structured_text",
-              "evidence_excerpt": "申报项目须为2026年6月30日前",
-              "confirmed": true
-            },
-            "geography": {
-              "value": "广州市",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "policy_funding",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
-              "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
               "confirmed": true
             }
           }
@@ -1750,7 +1750,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年07月01日",
-          "raw_snapshot_hash": "98b3b06ca38df2ba8d7517f9f6de2996dd53b00989bcbceeaaddf9bee1a6fac0",
+          "raw_snapshot_hash": "e3641b4ee2bf56506e2471f88734c687a992d217477f51fa9854e3b18d13ca96",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1809,7 +1809,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月29日",
-          "raw_snapshot_hash": "c34aaeebedb1a50495edb68a32cd6725a9f353b72ce8855b424ed6abf7db600d",
+          "raw_snapshot_hash": "ee0deba6619ad92fab69ea9bce2e4de51179e55e54045ef24ad82b0c965b3842",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -1868,7 +1868,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月26日",
-          "raw_snapshot_hash": "e2f36d81c20979798213bba1acee56a13180f4efa62d237c9867382e6730e58f",
+          "raw_snapshot_hash": "757ea0a5f68b26f1ab02cb79b405d6cdd68d116fa753f7439d351ba29e6c149b",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2000,7 +2000,7 @@
           "geography": "广东省",
           "category_hint": "exhibition_market",
           "published_text": "2026年8月15日",
-          "raw_snapshot_hash": "9190825dc1f60241d332a03c7af66e5459f58e895a8d8deb41145ad4ab063d9d",
+          "raw_snapshot_hash": "19254ed3ca219755acfc529b6bbc96bc94f8b562e95f141278445c7fb8dc1632",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2132,7 +2132,7 @@
           "geography": "国际",
           "category_hint": "international",
           "published_text": null,
-          "raw_snapshot_hash": "39afd39c7e027a67f757b9bfe0782c001c98a4470c093a56889286a369ee1c23",
+          "raw_snapshot_hash": "1d04defc942ea31165bf18759674bedb1b834adbf7f401efa559f94d861fd469",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2191,7 +2191,7 @@
           "geography": "国际",
           "category_hint": "international",
           "published_text": "30 September 2026",
-          "raw_snapshot_hash": "da02870821b60a2b2d0eaf188edb68a73ad93551183ce63eb631bf838cb4710c",
+          "raw_snapshot_hash": "1fe5673fa42a2eaef54aa173fb77931f47d659492f41fc7ee611161c7f20134d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2250,7 +2250,7 @@
           "geography": "国际",
           "category_hint": "international",
           "published_text": null,
-          "raw_snapshot_hash": "0db9349396c2854e24780e7216e21621dee1e0872b6b05b9b16ec3f5b8136b35",
+          "raw_snapshot_hash": "53e368ea84d9471c825cab32e89918df3745cdc7cbb7d009262b69532b2a76b8",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2298,6 +2298,606 @@
           }
         }
       ],
+      "error": null
+    },
+    {
+      "adapter_id": "loewe-craft-prize-generic-detail-v1",
+      "source_id": "loewe-craft-prize",
+      "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://craftprize.loewe.com/zh/craftprize2027",
+        "https://craftprize.loewe.com/zh/conversation",
+        "https://craftprize.loewe.com/zh/craftprize2026"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-c30ce7c3d1f0",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "title": "How to participate",
+          "organizer": "LOEWE FOUNDATION",
+          "deadline_text": "2026年10月15日",
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": "2026年10月15日",
+          "raw_snapshot_hash": "d593d17baf884998cdc100c79933214475c19a481738fc1a5c1b4c72c16aa51a",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "How to participate",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "html_title",
+              "evidence_excerpt": "How to participate",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "LOEWE FOUNDATION",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "structured_text",
+              "evidence_excerpt": "LOEWE FOUNDATION",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年10月15日",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "structured_text",
+              "evidence_excerpt": "截止日期为2026年10月15日",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2027",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2027",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-7bc922255b4d",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/conversation",
+          "title": "对话工艺",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "0dd4becf1cbcb75e7b4dae625621dd9ea438a35d6becd53b156b2a8e5d35c54c",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "对话工艺",
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "html_title",
+              "evidence_excerpt": "对话工艺",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/conversation",
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/conversation",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-41aa6138d10a",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+          "title": "历届工艺奖",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "819979c9d49577472d9d15a3cece72984b139ddda0778023f13443420f2e4977",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "历届工艺奖",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "html_title",
+              "evidence_excerpt": "历届工艺奖",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2026",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2026",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "if-design-award-generic-detail-v1",
+      "source_id": "if-design-award",
+      "discovery_url": "https://ifdesign.com/en/if-design-award-and-jury",
+      "listing_status": null,
+      "selected_detail_urls": [],
+      "samples": [],
+      "error": "TypeError: fetch failed"
+    },
+    {
+      "adapter_id": "china-design-award-generic-detail-v1",
+      "source_id": "china-design-award",
+      "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://cidip.cn/index/index.html",
+        "https://cidip.cn/ipr/index.html",
+        "https://cidip.cn/news/index.html"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-china-design-award-8068adf18c38",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/index/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2026-05-22",
+          "raw_snapshot_hash": "04a17daae279f3b5dc1e0cdee1a0eb75201ae1c2e90f24b14750b2abdcc940dc",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/index/index.html",
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/index/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-7dc05de95f67",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/ipr/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "90ad7a30dae91f657ef28b7d031c04324a827f0f1242b5724ae21dff15f81331",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/ipr/index.html",
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/ipr/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-610683167da2",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/news/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2026-05-22",
+          "raw_snapshot_hash": "b05360abdb771cbd8aa04054a51ac8a058331d6eb4e2a6232bc8dc4c38220801",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/news/index.html",
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/news/index.html",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "gba-design-generic-detail-v1",
+      "source_id": "gba-design",
+      "discovery_url": "https://www.gbawcsjds.com/",
+      "listing_status": 200,
+      "selected_detail_urls": [
+        "https://www.gbawcsjds.com/",
+        "https://www.gbawcsjds.com/tcn/",
+        "https://www.gbawcsjds.com/col.jsp?id=103"
+      ],
+      "samples": [
+        {
+          "candidate_id": "ds1b-gba-design-25ad7137e669",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": "2026-08-26",
+          "raw_snapshot_hash": "0c513e6805abc3bf198550b6af500e7ae4ef2cbbc8425b2ba1184c77a06cfb46",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-852d6d92b1a7",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/tcn/",
+          "title": "第八屆粵港澳大灣區文化創意設計大賽",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": "2020年9月24日",
+          "raw_snapshot_hash": "2909a34d964215ae95c876ced73cb3b237ea75b968c10ebd80db56de8a48c095",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八屆粵港澳大灣區文化創意設計大賽",
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "html_title",
+              "evidence_excerpt": "第八屆粵港澳大灣區文化創意設計大賽",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/tcn/",
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/tcn/",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-1c4ccbb46555",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "539ef73b80fe084a8866f8e95370f65c5c55f6b7243351085733bc4755dba88d",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "adapter_id": "gyeongnam-k-design-generic-detail-v1",
+      "source_id": "gyeongnam-k-design",
+      "discovery_url": "https://gnk-designaward.net/",
+      "listing_status": null,
+      "selected_detail_urls": [],
+      "samples": [],
+      "error": "TypeError: fetch failed"
+    },
+    {
+      "adapter_id": "zhe-li-chengdu-generic-detail-v1",
+      "source_id": "zhe-li-chengdu",
+      "discovery_url": "https://www.zlscd.com/",
+      "listing_status": 200,
+      "selected_detail_urls": [],
+      "samples": [],
       "error": null
     }
   ]
