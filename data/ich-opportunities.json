@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-08-24T12:00:00.000Z",
+  "updated_at": "2026-08-24T08:00:00.000Z",
   "entries": [
     {
       "id": "ich_expansion_batch_01_001",
@@ -27391,6 +27391,238 @@
             "at": "2026-08-24T12:00:00.000Z",
             "reason": "DS13 已根据第一方详情页修复 gd_subsidy_scope_and_eligibility 字段。",
             "revision": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "ich_c57c0602b4814065af1f631b4c2b2748",
+      "slug": "2026-dia-design-intelligence-award-additional-registration",
+      "external_id": "dia-2026-additional-registration",
+      "title": "2026中国设计智造大奖（DIA）追加报名",
+      "title_original": "2026中国设计智造大奖（DIA）追加报名",
+      "title_en": null,
+      "summary": "中国设计智造大奖官方规则确认追加报名通道截止2026年9月1日，文化创新类别面向企业、院校、机构和个人开放。",
+      "description": "DIA官方规则页列明2026年度产品组与概念组，并设有文化创新类别；追加报名截止时间为2026年9月1日24:00（北京时间）。",
+      "opportunity_value_text": "面向文化创新、文创产品和传统文化当代表达的国际设计奖项机会。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "DIA",
+        "文化创新",
+        "设计奖",
+        "文创",
+        "传统文化"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "官方规则页明确列出文化创新类别、参赛主体和追加报名截止时间。",
+      "classification_status": "confirmed",
+      "status": "closing_soon",
+      "status_reason": "官方规则页确认追加报名截止2026年9月1日24:00（北京时间）。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "中国设计智造大奖组委会",
+        "name_en": "Design Intelligence Award Committee",
+        "type": "design_organization",
+        "official_website": "https://www.di-award.org/",
+        "contact_text": "以DIA官方规则页为准"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": null,
+        "city": null,
+        "district": null,
+        "venue_text": "线上报名；入围后按官方通知提交实物",
+        "region_groups": [
+          "nationwide",
+          "international",
+          "online_or_unrestricted"
+        ],
+        "participation_scope": "global",
+        "eligible_regions": [
+          "中国及海外"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "email",
+        "requires_on_site_presence": false,
+        "participation_notes": "参赛作品照片和报名表通过官方通知指定邮箱提交；获奖作品须参加优秀作品展览。"
+      },
+      "dates": {
+        "published_at": "2026-03-01T00:00:00+08:00",
+        "application_start_at": "2026-03-01T00:00:00+08:00",
+        "deadline_at": "2026-09-01T24:00:00+08:00",
+        "deadline_text": "2026年9月1日24:00（北京时间）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "enterprise",
+          "organization",
+          "school"
+        ],
+        "eligibility_text": "官方公告面向企业、院校、机构和个人；具体组别和作品要求以DIA官方规则为准。",
+        "ich_status_required": null,
+        "business_license_required": false,
+        "local_registration_required": false,
+        "recommendation_required": false,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "award",
+          "exposure"
+        ],
+        "prize_amount": 1000000,
+        "prize_currency": "CNY",
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": null,
+        "channel_opportunity": null,
+        "benefit_text": "官方规则列明大奖及产品组、概念组奖项，并提供设计展示与传播机会。"
+      },
+      "costs": {
+        "application_fee_amount": 3500,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "追加报名费用按官方规则执行；具体金额和支付方式以报名系统显示为准。",
+        "cost_status": "confirmed"
+      },
+      "requirements": {
+        "documents_required": [
+          "作品资料",
+          "作品说明"
+        ],
+        "portfolio_required": true,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": null,
+        "requirements_text": "按DIA官方报名系统提交作品资料，并遵守产品组或概念组的作品要求。"
+      },
+      "application": {
+        "application_url": "https://www.di-award.org/",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "DIA官方报名系统",
+        "application_steps": [
+          "阅读官方规则",
+          "登录DIA报名系统",
+          "选择组别和文化创新类别",
+          "在截止时间前提交作品资料并完成缴费"
+        ],
+        "contact_text": "以DIA官网和报名系统公告为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.di-award.org/zh/rules.html",
+          "name": "中国设计智造大奖官方规则",
+          "type": "official_rules",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-03-01T00:00:00+08:00",
+          "last_checked_at": "2026-08-29T00:00:00+08:00",
+          "is_accessible": true,
+          "notes": "官方页面确认文化创新类别、参赛主体、追加报名截止时间和费用规则。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "codex-manual-review",
+        "verified_at": "2026-08-29T00:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-08-31T09:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-08-24T08:00:00.000Z",
+        "updated_at": "2026-08-24T08:00:00.000Z",
+        "created_by": "ich-ds1d-editor",
+        "updated_by": "ich-ds1d-reviewer",
+        "first_discovered_at": "2026-07-24T12:50:00+08:00",
+        "last_checked_at": "2026-08-29T00:00:00+08:00",
+        "published_at": "2026-08-24T08:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-08-24T08:00:00.000Z",
+        "reviewed_at": "2026-08-24T08:00:00.000Z",
+        "reviewed_by": "ich-ds1d-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "ich-ds1d-editor",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "ich-ds1d-editor",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "DS1-D 受控导入：官方来源、字段、语义和去重门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "ich-ds1d-reviewer",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": "审核通过：单条导入范围已授权，未确认字段保持原样。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "ich-ds1d-reviewer",
+            "at": "2026-08-24T08:00:00.000Z",
+            "reason": null,
+            "revision": 4
           }
         ]
       }
