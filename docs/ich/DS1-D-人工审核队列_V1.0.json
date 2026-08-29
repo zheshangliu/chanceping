@@ -1,58 +1,23 @@
 {
   "schema_version": "ich-ds1d-review-queue.v1",
-  "generated_at": "2026-08-24T07:21:49.793Z",
+  "generated_at": "2026-08-29T08:40:48.880Z",
   "readonly": true,
   "production_store_write": false,
-  "total": 9,
-  "pending_manual_review": 9,
+  "total": 36,
+  "pending_manual_review": 36,
   "approved": 0,
   "items": [
     {
-      "review_id": "review-ds1b-ccgp-f69f4392b367",
-      "candidate_id": "ds1b-ccgp-f69f4392b367",
+      "review_id": "review-ds1b-ccgp-8371e56fcc78",
+      "candidate_id": "ds1b-ccgp-8371e56fcc78",
       "source_id": "ccgp",
-      "title": "石阡县中等职业学校关于石阡县中等职业学校（综合高级中学）学生食堂食材采购项目的更正公告",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190377.htm",
+      "title": "陕西省自然资源信息中心（陕西省地质资料档案馆）陕西省“多测合一”综合管理平台(二次)竞争性磋商公告",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194597.htm",
       "source_level": "L1",
       "source_role": "primary",
-      "status_hint": "pending_confirmation",
+      "status_hint": "closing_soon",
       "machine_precheck": {
-        "action_signal": "possible_action",
-        "relevance_signal": "unknown",
-        "official_detail_page": true,
-        "deadline_present": false,
-        "direct_application_signal": "unknown"
-      },
-      "review_fields": {
-        "relevant_to_ich": null,
-        "actionable_for_target_users": null,
-        "organizer_confirmed": null,
-        "geography_confirmed": null,
-        "deadline_confirmed": null,
-        "application_method_confirmed": null,
-        "eligibility_confirmed": null,
-        "decision": null
-      },
-      "review_state": "pending_manual_review",
-      "formal_publish_blocked": true,
-      "evidence_requirements": [
-        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
-        "确认主办方、地区、截止日期、申请方式和资格字段",
-        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
-        "保留详情页原文证据，不从标题或来源级提示补猜字段"
-      ]
-    },
-    {
-      "review_id": "review-ds1b-ccgp-dc637476c187",
-      "candidate_id": "ds1b-ccgp-dc637476c187",
-      "source_id": "ccgp",
-      "title": "贵州省2026年度农村生活污水治理成效评估项目（二次）公开招标公告",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27190383.htm",
-      "source_level": "L1",
-      "source_role": "primary",
-      "status_hint": "active",
-      "machine_precheck": {
-        "action_signal": "possible_action",
+        "action_signal": "unknown",
         "relevance_signal": "unknown",
         "official_detail_page": true,
         "deadline_present": true,
@@ -78,19 +43,54 @@
       ]
     },
     {
-      "review_id": "review-ds1b-ccgp-90e63fb45613",
-      "candidate_id": "ds1b-ccgp-90e63fb45613",
+      "review_id": "review-ds1b-ccgp-e898e0fd0db1",
+      "candidate_id": "ds1b-ccgp-e898e0fd0db1",
       "source_id": "ccgp",
-      "title": "宜宾市南溪区农业农村局2026年扩种油菜种子、农药、配方肥采购项目采购更正公告（第一次）",
-      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260824_27190376.htm",
+      "title": "塔河县市政建设服务中心黑龙江省大兴安岭地区塔河县医疗垃圾处理厂附属设施建设项目竞争性磋商公告",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260824_27194596.htm",
       "source_level": "L1",
       "source_role": "primary",
-      "status_hint": "pending_confirmation",
+      "status_hint": "closing_soon",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-ccgp-464365e14bb0",
+      "candidate_id": "ds1b-ccgp-464365e14bb0",
+      "source_id": "ccgp",
+      "title": "渭南市公路局超限检测站工作服装采购项目招标公告",
+      "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260824_27194595.htm",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "active",
       "machine_precheck": {
         "action_signal": "possible_action",
         "relevance_signal": "unknown",
         "official_detail_page": true,
-        "deadline_present": false,
+        "deadline_present": true,
         "direct_application_signal": "unknown"
       },
       "review_fields": {
@@ -218,6 +218,41 @@
       ]
     },
     {
+      "review_id": "review-ds1b-yuexiu-notices-e716f02c5415",
+      "candidate_id": "ds1b-yuexiu-notices-e716f02c5415",
+      "source_id": "yuexiu-notices",
+      "title": "广州市越秀区农林街道环境卫生管理站章程",
+      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10976482.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
       "review_id": "review-ds1b-yuexiu-notices-624b99268ca9",
       "candidate_id": "ds1b-yuexiu-notices-624b99268ca9",
       "source_id": "yuexiu-notices",
@@ -288,19 +323,929 @@
       ]
     },
     {
-      "review_id": "review-ds1b-yuexiu-notices-50346cb1a19c",
-      "candidate_id": "ds1b-yuexiu-notices-50346cb1a19c",
-      "source_id": "yuexiu-notices",
-      "title": "2026年越秀区科学质量管理方法推广项目采购公告",
-      "source_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/content/post_10974672.html",
+      "review_id": "review-ds1b-mct-notices-7c1624fc46bf",
+      "candidate_id": "ds1b-mct-notices-7c1624fc46bf",
+      "source_id": "mct-notices",
+      "title": "关于第十届中国戏曲文化周“精品大戏展”<div>拟入选名单的公示</div>",
+      "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966922.html",
       "source_level": "L1",
       "source_role": "primary",
-      "status_hint": "closing_soon",
+      "status_hint": "pending_confirmation",
       "machine_precheck": {
-        "action_signal": "possible_action",
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-mct-notices-128e7fa74fe8",
+      "candidate_id": "ds1b-mct-notices-128e7fa74fe8",
+      "source_id": "mct-notices",
+      "title": "文化和旅游部艺术司关于公布第十届全国<div>优秀儿童戏剧展演参演作品名单的函</div>",
+      "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260821_966921.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-mct-notices-a46b14e963dc",
+      "candidate_id": "ds1b-mct-notices-a46b14e963dc",
+      "source_id": "mct-notices",
+      "title": "文化和旅游部 中国作家协会关于印发<div>《第八届中国诗歌节总体方案》的通知</div>",
+      "source_url": "https://zwgk.mct.gov.cn/zfxxgkml/wysy/202608/t20260818_966888.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-cnaf-44a5cec5347d",
+      "candidate_id": "ds1b-cnaf-44a5cec5347d",
+      "source_id": "cnaf",
+      "title": "国家艺术基金（一般项目）2027年度舞台艺术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+      "source_url": "https://www.cnaf.cn/guide_detail/5546.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
         "relevance_signal": "unknown",
         "official_detail_page": true,
         "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-cnaf-b64ad3ec085d",
+      "candidate_id": "ds1b-cnaf-b64ad3ec085d",
+      "source_id": "cnaf",
+      "title": "国家艺术基金（一般项目）2027年度美术创作资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+      "source_url": "https://www.cnaf.cn/guide_detail/5547.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-cnaf-2090663f6af0",
+      "candidate_id": "ds1b-cnaf-2090663f6af0",
+      "source_id": "cnaf",
+      "title": "国家艺术基金（一般项目）2027年度传播交流推广资助项目申报指南_国家艺术基金_国家艺术基金，艺术，国家艺术基金管理中心",
+      "source_url": "https://www.cnaf.cn/guide_detail/5548.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-ichina-b4bd9328ed5f",
+      "candidate_id": "ds1b-ichina-b4bd9328ed5f",
+      "source_id": "ichina",
+      "title": "文化和旅游部办公厅关于开展2026年“文化和自然遗产日”非遗主题宣传展示工作的通知 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+      "source_url": "https://www.ihchina.cn/news_2_details/31583.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-ichina-4924b900846a",
+      "candidate_id": "ds1b-ichina-4924b900846a",
+      "source_id": "ichina",
+      "title": "中国艺术研究院关于2025年度国家级非物质文化遗产代表性传承人传承活动评估结果的公示 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+      "source_url": "https://www.ihchina.cn/news_2_details/31579.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "expired",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-ichina-cd6b4c3c3536",
+      "candidate_id": "ds1b-ichina-cd6b4c3c3536",
+      "source_id": "ichina",
+      "title": "中共中央宣传部等5部门联合印发《戏剧振兴三年行动计划（2026—2028年）》 - 中国非物质文化遗产网·中国非物质文化遗产数字博物馆 - 中国非物质文化遗产网非遗",
+      "source_url": "https://www.ihchina.cn/news_2_details/31562.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gmfyg-a090dff5eb38",
+      "candidate_id": "ds1b-gmfyg-a090dff5eb38",
+      "source_id": "gmfyg",
+      "title": "活动预告 | 非遗可以这样观！《可以观》非遗社教演艺活动，邀您入戏！",
+      "source_url": "https://www.gmfyg.org.cn/event/detail/1396",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gmfyg-5ca1024a9c71",
+      "candidate_id": "ds1b-gmfyg-5ca1024a9c71",
+      "source_id": "gmfyg",
+      "title": "活动预告 | “非遗正青春 泰美好未来”杭州非遗嘉年华活动",
+      "source_url": "https://www.gmfyg.org.cn/event/detail/1294",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gmfyg-8dbf82f2032f",
+      "candidate_id": "ds1b-gmfyg-8dbf82f2032f",
+      "source_id": "gmfyg",
+      "title": "社教活动 | “遇见非遗”（第40期）：晋韵流芳——山西非遗社教活动",
+      "source_url": "https://www.gmfyg.org.cn/event/detail/1263",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gz-culture-4eed25d47ff7",
+      "candidate_id": "ds1b-gz-culture-4eed25d47ff7",
+      "source_id": "gz-culture",
+      "title": "广州市文化广电旅游局关于2026年第二批督促旅行社补足旅游质保金及限制平台电子合同使用权限的通知",
+      "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10975777.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gz-culture-6ec0406440a0",
+      "candidate_id": "ds1b-gz-culture-6ec0406440a0",
+      "source_id": "gz-culture",
+      "title": "广州市文化广电旅游局关于符合2026年广州市扶持发展邮轮旅游奖励条件企业及金额的公示",
+      "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971228.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gz-culture-bc0276853842",
+      "candidate_id": "ds1b-gz-culture-bc0276853842",
+      "source_id": "gz-culture",
+      "title": "广州市文化广电旅游局关于申报2026年度广州市文化和旅游产业发展专项资金“数字文化产业项目”的通知",
+      "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10971037.html",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "expired",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-cnacs-b4903e7722a6",
+      "candidate_id": "ds1b-cnacs-b4903e7722a6",
+      "source_id": "cnacs",
+      "title": "赏析 | “神话・太行”全国彩色雕塑创作大赛——获奖作品赏析（第一期）_中国工艺美术学会",
+      "source_url": "https://www.cnacs.net.cn/82/202601/7856.html",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-cnacs-9492e30fdfd2",
+      "candidate_id": "ds1b-cnacs-9492e30fdfd2",
+      "source_id": "cnacs",
+      "title": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第五期）_中国工艺美术学会",
+      "source_url": "https://www.cnacs.net.cn/82/202507/7306.html",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-cnacs-7b1de94d920a",
+      "candidate_id": "ds1b-cnacs-7b1de94d920a",
+      "source_id": "cnacs",
+      "title": "赏析 | 2025“在太行山上”全国彩塑大赛——获奖作品赏析（第四期）_中国工艺美术学会",
+      "source_url": "https://www.cnacs.net.cn/82/202507/7297.html",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "possible_ich_context",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gdmuseum-d0d6cc97ad55",
+      "candidate_id": "ds1b-gdmuseum-d0d6cc97ad55",
+      "source_id": "gdmuseum",
+      "title": "01 2026-07 关于海洋馆、古生物馆暂停开放的公告",
+      "source_url": "https://www.gdmuseum.org.cn/cn/col51/18020",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gdmuseum-82d232d51513",
+      "candidate_id": "ds1b-gdmuseum-82d232d51513",
+      "source_id": "gdmuseum",
+      "title": "29 2026-06 入选啦！“用画笔定格可爱虫虫”获奖名单公布",
+      "source_url": "https://www.gdmuseum.org.cn/cn/col51/18015",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "result_or_closed",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gdmuseum-500d52696887",
+      "candidate_id": "ds1b-gdmuseum-500d52696887",
+      "source_id": "gdmuseum",
+      "title": "26 2026-06 关于2026年暑期延时开放的公告",
+      "source_url": "https://www.gdmuseum.org.cn/cn/col51/18013",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gdmoa-1dfc582f58c3",
+      "candidate_id": "ds1b-gdmoa-1dfc582f58c3",
+      "source_id": "gdmoa",
+      "title": "新馆 | “在希望的田野上”——2026年度许钦松创作奖全国总评选优秀作品展 - 广东美术馆",
+      "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260819_18413.shtml",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gdmoa-683af9e9aed8",
+      "candidate_id": "ds1b-gdmoa-683af9e9aed8",
+      "source_id": "gdmoa",
+      "title": "新馆 | 奥斯瓦尔多·维加斯回顾展——心外无物 - 广东美术馆",
+      "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202608/t20260810_18411.shtml",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-gdmoa-765e754d1ee8",
+      "candidate_id": "ds1b-gdmoa-765e754d1ee8",
+      "source_id": "gdmoa",
+      "title": "新馆 | 百变通才——广东美术馆藏汤集祥绘画作品展 - 广东美术馆",
+      "source_url": "https://www.gdmoa.org/Exhibition/Exhibitions/2026/202607/t20260728_18400.shtml",
+      "source_level": "L2",
+      "source_role": "secondary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-unesco-ich-c14a859a6e4e",
+      "candidate_id": "ds1b-unesco-ich-c14a859a6e4e",
+      "source_id": "unesco-ich",
+      "title": "Call for expressions of interest for the elaboration of a policy paper on the contribution of community-based approaches to... - UNESCO Intangible Cultural Heritage",
+      "source_url": "https://ich.unesco.org/en/news/call-for-expressions-of-interest-for-the-elaboration-of-a-policy-paper-on-the-contribution-of-community-based-approaches-to-safeguarding-intangible-cultural-heritage-to-sustainable-development-frameworks-in-africa-13602",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-unesco-ich-b970461625e2",
+      "candidate_id": "ds1b-unesco-ich-b970461625e2",
+      "source_id": "unesco-ich",
+      "title": "Single global submission system of periodic reporting: revised forms available - UNESCO Intangible Cultural Heritage",
+      "source_url": "https://ich.unesco.org/en/news/single-global-submission-system-of-periodic-reporting-revised-forms-available-13601",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": true,
+        "direct_application_signal": "unknown"
+      },
+      "review_fields": {
+        "relevant_to_ich": null,
+        "actionable_for_target_users": null,
+        "organizer_confirmed": null,
+        "geography_confirmed": null,
+        "deadline_confirmed": null,
+        "application_method_confirmed": null,
+        "eligibility_confirmed": null,
+        "decision": null
+      },
+      "review_state": "pending_manual_review",
+      "formal_publish_blocked": true,
+      "evidence_requirements": [
+        "确认详情页是否直接面向非遗手艺人、工作室、品牌或文创团队",
+        "确认主办方、地区、截止日期、申请方式和资格字段",
+        "确认机会仍处于可行动状态；结果公示不得作为当前机会",
+        "保留详情页原文证据，不从标题或来源级提示补猜字段"
+      ]
+    },
+    {
+      "review_id": "review-ds1b-unesco-ich-887e508b3d3a",
+      "candidate_id": "ds1b-unesco-ich-887e508b3d3a",
+      "source_id": "unesco-ich",
+      "title": "Eleventh session of the 2003 Convention’s General Assembly (17-18 June 2026) - UNESCO Intangible Cultural Heritage",
+      "source_url": "https://ich.unesco.org/en/news/eleventh-session-of-the-2003-convention-s-general-assembly-17-18-june-2026-13599",
+      "source_level": "L1",
+      "source_role": "primary",
+      "status_hint": "pending_confirmation",
+      "machine_precheck": {
+        "action_signal": "unknown",
+        "relevance_signal": "unknown",
+        "official_detail_page": true,
+        "deadline_present": false,
         "direct_application_signal": "unknown"
       },
       "review_fields": {

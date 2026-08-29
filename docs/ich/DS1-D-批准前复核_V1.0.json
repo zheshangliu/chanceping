@@ -13,8 +13,10 @@
   "deadline_in_future": true,
   "draft_validation": "pass",
   "semantic_issue_count": 0,
-  "already_in_store": false,
+  "already_in_store": true,
   "template_marker_detected": false,
-  "gate": "pass",
-  "errors": []
+  "gate": "fail",
+  "errors": [
+    "draft already exists in formal store"
+  ]
 }

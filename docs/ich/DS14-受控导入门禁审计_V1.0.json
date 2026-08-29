@@ -1,9 +1,9 @@
 {
   "schema_version": "ich-ds14-controlled-import.v1",
   "stage": "DS14",
-  "audited_at": "2026-08-24T11:48:47.924Z",
+  "audited_at": "2026-08-29T08:38:25.694Z",
   "batch_limit": 10,
-  "candidate_assessment_count": 36,
+  "candidate_assessment_count": 105,
   "approved_candidate_count": 0,
   "import_decision": "hold_no_approved_candidates",
   "selected_count": 0,
