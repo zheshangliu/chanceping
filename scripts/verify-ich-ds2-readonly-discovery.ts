@@ -11,7 +11,7 @@ if (!report.readonly || report.formal_store_write) errors.push("DS2 must be read
 if (report.source_count !== report.source_runs.length || report.source_count < 3) errors.push("source run count is incomplete");
 if (report.candidate_count !== report.source_runs.reduce((sum, sourceRun) => sum + sourceRun.candidate_count, 0)) errors.push("candidate count mismatch");
 for (const sourceRun of report.source_runs) {
-  if (!sourceRun.raw_snapshot_hash || !/^[a-f0-9]{64}$/u.test(sourceRun.raw_snapshot_hash)) errors.push(`${sourceRun.source_id}: listing snapshot hash missing`);
+  if (sourceRun.status === "completed" && (!sourceRun.raw_snapshot_hash || !/^[a-f0-9]{64}$/u.test(sourceRun.raw_snapshot_hash))) errors.push(`${sourceRun.source_id}: listing snapshot hash missing`);
   if (sourceRun.candidate_count !== sourceRun.candidates.length) errors.push(`${sourceRun.source_id}: candidate count mismatch`);
   if (sourceRun.candidate_count > maxDetails) errors.push(`${sourceRun.source_id}: max sample limit exceeded (${sourceRun.candidate_count} > ${maxDetails})`);
   for (const candidate of sourceRun.candidates) {

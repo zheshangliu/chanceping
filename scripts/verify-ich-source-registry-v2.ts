@@ -10,8 +10,8 @@ assert.ok(registry.sources.filter((source) => source.family === "procurement_pla
 assert.ok(registry.sources.filter((source) => source.geography.includes("guangzhou")).length >= 3, "Guangzhou coverage must have at least three sources");
 assert.ok(registry.sources.filter((source) => source.role === "discovery").length >= 3, "discovery layer must be represented");
 const adapterReady = registry.sources.filter((source) => source.operational_status === "adapter_ready");
-assert.ok(adapterReady.every((source) => ["mct-notices", "cnaf", "ichina", "gmfyg", "gz-culture", "cnacs", "gdmuseum", "ccgp", "gd-culture", "yuexiu-notices", "gdmoa", "unesco-ich"].includes(source.id)), "only audited adapters may be adapter_ready");
-assert.ok(adapterReady.length <= 12, "DS12 adapter-ready promotion must remain incremental");
+assert.ok(adapterReady.every((source) => ["mct-notices", "cnaf", "ichina", "gmfyg", "gz-culture", "cnacs", "gdmuseum", "ccgp", "gd-culture", "yuexiu-notices", "gdmoa", "unesco-ich", "loewe-craft-prize", "china-design-award", "gba-design"].includes(source.id)), "only audited adapters may be adapter_ready");
+assert.ok(adapterReady.length <= 15, "DS12 adapter-ready promotion must remain incremental");
 for (const category of ICH_PRIMARY_CATEGORIES) assert.ok(listIchSourceRegistryV2ByCategory(category).length > 0, `category ${category} must have a source`);
 assert.ok(listIchSourceRegistryV2ByGeography("greater_bay_area").length >= 5, "Greater Bay Area source pool must be represented");
 assert.ok(registry.query_packs.some((pack) => pack.id === "ich-cn-procurement"));

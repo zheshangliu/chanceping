@@ -338,6 +338,24 @@ export const ICH_DS1B_ADAPTERS: IchDs1bAdapter[] = [
       publishedPatterns: [/(?:published|date)[^\d]{0,20}(\d{1,2}\s+[A-Z][a-z]+\s+\d{4})/u, /(\d{4}-\d{2}-\d{2})/u],
     }),
   },
+  ...[
+    ["loewe-craft-prize", "https://craftprize.loewe.com/zh/craftprize2027", "competition", "国际"],
+    ["if-design-award", "https://ifdesign.com/en/if-design-award-and-jury", "competition", "国际"],
+    ["china-design-award", "https://cidip.cn/cda2026/permanent.html", "competition", "全国"],
+    ["gba-design", "https://www.gbawcsjds.com/", "competition", "粤港澳大湾区"],
+    ["gyeongnam-k-design", "https://gnk-designaward.net/", "competition", "国际"],
+    ["zhe-li-chengdu", "https://www.zlscd.com/", "exhibition_market", "全国"],
+  ].map(([sourceId, discoveryUrl, categoryHint, geographyHint]) => ({
+    adapter_id: `${sourceId}-generic-detail-v1`, source_id: sourceId, discovery_url: discoveryUrl,
+    category_hint: categoryHint as IchPrimaryCategory, geography_hint: geographyHint,
+    selectDetailLinks: (html: string, url: string) => extractLinks(html, url, (href) => { try { return new URL(href).hostname === new URL(url).hostname; } catch { return false; } }).slice(0, 10),
+    extractCandidate: ({ html, sourceUrl, discoveryUrl: detailDiscoveryUrl, listingTitle }: { html: string; sourceUrl: string; discoveryUrl: string; listingTitle: string }) => buildCandidate({
+      adapterId: `${sourceId}-generic-detail-v1`, sourceId, categoryHint: categoryHint as IchPrimaryCategory, geographyHint, html, sourceUrl, discoveryUrl: detailDiscoveryUrl, listingTitle,
+      organizerPatterns: [/主办单位\s*[:：]\s*([^。；;]{2,60})/u, /(LOEWE FOUNDATION|iF Design|Design Intelligence Award)/u],
+      deadlinePatterns: [/(?:截止|报名截止|registration deadline)[^。；.]{0,100}?(\d{4}年\d{1,2}月\d{1,2}日)/iu, /(?:deadline|submit your application by)[^.;]{0,100}?((?:\d{1,2}\s+)?[A-Z][a-z]+\s+\d{1,2},?\s+\d{4})/iu],
+      publishedPatterns: [/(\d{4}年\d{1,2}月\d{1,2}日)/u, /(\d{4}-\d{2}-\d{2})/u],
+    }),
+  } as IchDs1bAdapter)),
 ];
 
 export function getIchDs1bAdapter(adapterId: string): IchDs1bAdapter {

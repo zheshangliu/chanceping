@@ -1,19 +1,134 @@
 {
   "schema_version": "ich-ds3-candidate-quality.v1",
-  "run_id": "ich-ds3-quality-20260829083601",
-  "ran_at": "2026-08-29T08:36:01.959Z",
+  "run_id": "ich-ds3-quality-20260829093604",
+  "ran_at": "2026-08-29T09:36:04.761Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
-  "formal_store_before_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
-  "input_candidate_count": 105,
-  "assessment_count": 105,
+  "formal_store_before_sha256": "5603daf526a5af338db624d263b48ef105a944ee341888e328cc9f3de819ae32",
+  "input_candidate_count": 135,
+  "assessment_count": 135,
   "approved_count": 0,
   "review_required_count": 94,
-  "rejected_count": 11,
+  "rejected_count": 41,
   "assessments": [
     {
-      "candidate_id": "ds1b-ccgp-7a0d49eafd42",
+      "candidate_id": "ds1b-ccgp-fcdc10ca1c7d",
+      "source_id": "ccgp",
+      "score": 40,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-2a55924d91aa",
+      "source_id": "ccgp",
+      "score": 40,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-08dc5fa24627",
+      "source_id": "ccgp",
+      "score": 40,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-bbc3ffe3dc89",
+      "source_id": "ccgp",
+      "score": 48,
+      "band": "low",
+      "decision": "review_required",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": true,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-ccgp-40a3b7e17c33",
       "source_id": "ccgp",
       "score": 77,
       "band": "high",
@@ -40,7 +155,7 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-47e3dac987ab",
+      "candidate_id": "ds1b-ccgp-5435cd5df65a",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -69,7 +184,7 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-41f0d4b940e8",
+      "candidate_id": "ds1b-ccgp-ca16d29d37c2",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -98,7 +213,7 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-e83c643e3fb4",
+      "candidate_id": "ds1b-ccgp-955bd3f15329",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -127,7 +242,7 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-93444c7cc685",
+      "candidate_id": "ds1b-ccgp-92b6893feec6",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -156,35 +271,7 @@
       ]
     },
     {
-      "candidate_id": "ds1b-ccgp-9c50ac166526",
-      "source_id": "ccgp",
-      "score": 62,
-      "band": "medium",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": true,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "截止字段未被详情页确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-e487c746beae",
+      "candidate_id": "ds1b-ccgp-6090abd6c643",
       "source_id": "ccgp",
       "score": 40,
       "band": "low",
@@ -207,89 +294,6 @@
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
         "标题可能是结果/更正或未体现当前行动窗口",
-        "截止字段未被详情页确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-e73ebcd83f32",
-      "source_id": "ccgp",
-      "score": 77,
-      "band": "high",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": true,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": true,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-879fef272187",
-      "source_id": "ccgp",
-      "score": 62,
-      "band": "medium",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": true,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
-        "截止字段未被详情页确认",
-        "地区字段未被详情页确认",
-        "分类仍是适配器提示，未逐条确认"
-      ]
-    },
-    {
-      "candidate_id": "ds1b-ccgp-3629f590a50a",
-      "source_id": "ccgp",
-      "score": 62,
-      "band": "medium",
-      "decision": "review_required",
-      "formal_publish_blocked": true,
-      "checks": {
-        "detail_page": true,
-        "title_confirmed": true,
-        "organizer_confirmed": true,
-        "deadline_confirmed": false,
-        "geography_confirmed": false,
-        "category_confirmed": false,
-        "snapshot_hash": true,
-        "primary_or_secondary_source": true,
-        "relevance_signal": false,
-        "action_signal": true,
-        "known_template_marker_absent": true,
-        "duplicate_url_absent": true
-      },
-      "reasons": [
-        "标题未提供明确非遗/传统工艺相关性，需人工确认",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",
         "分类仍是适配器提示，未逐条确认"
@@ -2978,6 +2982,865 @@
       },
       "reasons": [
         "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-c30ce7c3d1f0",
+      "source_id": "loewe-craft-prize",
+      "score": 0,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": true,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": false
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认",
+        "候选详情 URL 重复"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-7bc922255b4d",
+      "source_id": "loewe-craft-prize",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-41aa6138d10a",
+      "source_id": "loewe-craft-prize",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-dab5c1147832",
+      "source_id": "loewe-craft-prize",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-c4910a214170",
+      "source_id": "loewe-craft-prize",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-29e0432f3cfe",
+      "source_id": "loewe-craft-prize",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-da76f59e10ef",
+      "source_id": "loewe-craft-prize",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-3fe1c9afc566",
+      "source_id": "loewe-craft-prize",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-026e831d6da2",
+      "source_id": "loewe-craft-prize",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-loewe-craft-prize-7127f35b6eb0",
+      "source_id": "loewe-craft-prize",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-8068adf18c38",
+      "source_id": "china-design-award",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-7dc05de95f67",
+      "source_id": "china-design-award",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-610683167da2",
+      "source_id": "china-design-award",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-5d23a904f838",
+      "source_id": "china-design-award",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-450fa3ba1bd2",
+      "source_id": "china-design-award",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": true,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-68c165b62c09",
+      "source_id": "china-design-award",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-97bcd0fb3187",
+      "source_id": "china-design-award",
+      "score": 5,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-80bb3b27c0d0",
+      "source_id": "china-design-award",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-6391cee1c79f",
+      "source_id": "china-design-award",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-china-design-award-b6cc0222d1e5",
+      "source_id": "china-design-award",
+      "score": 20,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": false,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题未提供明确非遗/传统工艺相关性，需人工确认",
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-25ad7137e669",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-852d6d92b1a7",
+      "source_id": "gba-design",
+      "score": 13,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": false,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-1c4ccbb46555",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-abb02be08a05",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-672000b26d2e",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-c1a7a926150f",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-57f9c754d1d4",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-65284a36b9c8",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-18acc49fbbbc",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
+        "标题可能是结果/更正或未体现当前行动窗口",
+        "截止字段未被详情页确认",
+        "地区字段未被详情页确认",
+        "分类仍是适配器提示，未逐条确认"
+      ]
+    },
+    {
+      "candidate_id": "ds1b-gba-design-225413bf19ac",
+      "source_id": "gba-design",
+      "score": 28,
+      "band": "low",
+      "decision": "reject",
+      "formal_publish_blocked": true,
+      "checks": {
+        "detail_page": false,
+        "title_confirmed": true,
+        "organizer_confirmed": true,
+        "deadline_confirmed": false,
+        "geography_confirmed": false,
+        "category_confirmed": false,
+        "snapshot_hash": true,
+        "primary_or_secondary_source": true,
+        "relevance_signal": true,
+        "action_signal": false,
+        "known_template_marker_absent": true,
+        "duplicate_url_absent": true
+      },
+      "reasons": [
         "标题可能是结果/更正或未体现当前行动窗口",
         "截止字段未被详情页确认",
         "地区字段未被详情页确认",

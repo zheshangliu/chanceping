@@ -1,119 +1,60 @@
 {
   "schema_version": "ich-ds2-readonly-discovery.v1",
-  "run_id": "ich-ds2-20260829083456",
-  "started_at": "2026-08-29T08:34:56.414Z",
-  "finished_at": "2026-08-29T08:35:41.507Z",
+  "run_id": "ich-ds2-20260829093458",
+  "started_at": "2026-08-29T09:34:58.565Z",
+  "finished_at": "2026-08-29T09:35:52.918Z",
   "readonly": true,
   "formal_store_write": false,
   "formal_store_path": "data/ich-opportunities.json",
-  "formal_store_before_sha256": "c7d870cd9b43d104b17ebac468cfb9970c61f883118f484f8915f7a9b09c8300",
-  "source_count": 12,
-  "candidate_count": 105,
+  "formal_store_before_sha256": "5603daf526a5af338db624d263b48ef105a944ee341888e328cc9f3de819ae32",
+  "source_count": 18,
+  "candidate_count": 135,
   "source_runs": [
     {
       "source_id": "ccgp",
       "adapter_id": "ccgp-procurement-listing-v1",
       "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
       "access_mode": "search",
-      "started_at": "2026-08-29T08:34:56.415Z",
-      "finished_at": "2026-08-29T08:34:58.804Z",
+      "started_at": "2026-08-29T09:34:58.566Z",
+      "finished_at": "2026-08-29T09:35:00.312Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-      "raw_snapshot_hash": "37b2e8d4ae2cde721bec066c7e56450a85b81352194f27d95603396d0a49d398",
+      "raw_snapshot_hash": "6e3efc59db02e6c63ed1a3cff1326ebf54b70e168d8d401cddb9ca6c353f7910",
       "candidate_count": 10,
       "candidates": [
         {
-          "candidate_id": "ds1b-ccgp-7a0d49eafd42",
+          "candidate_id": "ds1b-ccgp-fcdc10ca1c7d",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-          "title": "音乐放松系统 的公开招标公告",
-          "organizer": "上海市浦东新区南汇精神卫生中心",
-          "deadline_text": "2026年09月23日 10:00",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:22",
-          "raw_snapshot_hash": "fb3b7eed5bca75db394f086a6773b0c6abf1d03293d72e7923fe69be0fd43914",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "音乐放松系统 的公开招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-              "method": "html_title",
-              "evidence_excerpt": "音乐放松系统 的公开招标公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "上海市浦东新区南汇精神卫生中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 上海市浦东新区南汇精神卫生中心",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月23日 10:00",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "开标时间 2026年09月23日 10:00",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230699.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-47e3dac987ab",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
-          "title": "浙江信镧建设工程咨询有限公司关于浙江省人力资源和社会保障信息中心浙江省失业保险基金财务集中管理系统运维中标(成交)结果公告",
-          "organizer": "浙江省人力资源和社会保障信息中心",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
+          "title": "浙江水利水电工程审价中心有限公司关于2026年中国水利报主题宣传服务中标(成交)结果公告",
+          "organizer": "浙江省水利厅（本级）",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:21",
-          "raw_snapshot_hash": "dd40724756a2e6bc94cd2f44e36b5fbf8ec89cd7bdc88cb3545e92cd410f5c04",
+          "published_text": "2026年08月29日 17:23",
+          "raw_snapshot_hash": "fd3b4af1ca131f901b20eb002f76511283a17fb87bc087a903bf0177a4f11347",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "浙江信镧建设工程咨询有限公司关于浙江省人力资源和社会保障信息中心浙江省失业保险基金财务集中管理系统运维中标(成交)结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
+              "value": "浙江水利水电工程审价中心有限公司关于2026年中国水利报主题宣传服务中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "html_title",
-              "evidence_excerpt": "浙江信镧建设工程咨询有限公司关于浙江省人力资源和社会保障信息中心浙江省失业保险基金财务集中管理系统运维中标(成交)结果公告",
+              "evidence_excerpt": "浙江水利水电工程审价中心有限公司关于2026年中国水利报主题宣传服务中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "浙江省人力资源和社会保障信息中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
+              "value": "浙江省水利厅（本级）",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 浙江省人力资源和社会保障信息中心",
+              "evidence_excerpt": "采购单位 浙江省水利厅（本级）",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -133,46 +74,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230698.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230959.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-41f0d4b940e8",
+          "candidate_id": "ds1b-ccgp-2a55924d91aa",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
-          "title": "浙江省成套工程有限公司关于永丰镇等图斑外业举证协作服务中标(成交)结果公告",
-          "organizer": "浙江省测绘科学技术研究院",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
+          "title": "浙江建亚工程咨询有限公司关于仙居县2026年森林草原湿地调查监测项目和林草图斑县级自查项目中标(成交)结果公告",
+          "organizer": "仙居县自然资源和规划局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:21",
-          "raw_snapshot_hash": "8f0e8048450d024018e50bc0b17887797966d41e0a9806014d215fd00f153d42",
+          "published_text": "2026年08月29日 17:22",
+          "raw_snapshot_hash": "f9c8f45c0a8d2368e22b5e33c0811a7c10c8644633609537ff3e13b6ec289cbf",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "浙江省成套工程有限公司关于永丰镇等图斑外业举证协作服务中标(成交)结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
+              "value": "浙江建亚工程咨询有限公司关于仙居县2026年森林草原湿地调查监测项目和林草图斑县级自查项目中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "html_title",
-              "evidence_excerpt": "浙江省成套工程有限公司关于永丰镇等图斑外业举证协作服务中标(成交)结果公告",
+              "evidence_excerpt": "浙江建亚工程咨询有限公司关于仙居县2026年森林草原湿地调查监测项目和林草图斑县级自查项目中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "浙江省测绘科学技术研究院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
+              "value": "仙居县自然资源和规划局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 浙江省测绘科学技术研究院",
+              "evidence_excerpt": "采购单位 仙居县自然资源和规划局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -192,46 +133,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230695.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230957.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-e83c643e3fb4",
+          "candidate_id": "ds1b-ccgp-08dc5fa24627",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
-          "title": "新疆维吾尔自治区第三人民医院康复医学科设备采购项目中标(成交)结果公告",
-          "organizer": "新疆维吾尔自治区第三人民医院",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
+          "title": "若羌县库力萨伊河小流域水土保持综合治理项目（设计）中标(成交)结果公告",
+          "organizer": "若羌县水利局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:21",
-          "raw_snapshot_hash": "6781221eb24f0b56085733b14daf84dd8ef85438484d1cd543bd7feda28252cb",
+          "published_text": "2026年08月29日 17:22",
+          "raw_snapshot_hash": "69eff032b3c5ba61731e40e3379eebe5cf8c3c6b7bc13cb1d2b52782110b41c8",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "新疆维吾尔自治区第三人民医院康复医学科设备采购项目中标(成交)结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
+              "value": "若羌县库力萨伊河小流域水土保持综合治理项目（设计）中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "html_title",
-              "evidence_excerpt": "新疆维吾尔自治区第三人民医院康复医学科设备采购项目中标(成交)结果公告",
+              "evidence_excerpt": "若羌县库力萨伊河小流域水土保持综合治理项目（设计）中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "新疆维吾尔自治区第三人民医院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
+              "value": "若羌县水利局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 新疆维吾尔自治区第三人民医院",
+              "evidence_excerpt": "采购单位 若羌县水利局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -251,46 +192,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230697.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230953.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-93444c7cc685",
+          "candidate_id": "ds1b-ccgp-bbc3ffe3dc89",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
-          "title": "音响设备及辅助设施中标(成交)结果公告",
-          "organizer": "新疆人民会堂管理中心",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
+          "title": "库车市龟兹非遗特色集群建设项目二标段工程施工项目竞争性磋商公告",
+          "organizer": "库车市萨克萨克街道办事处",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:21",
-          "raw_snapshot_hash": "e738bed6611ab2bebb557d2f0aa995d402bacc42977793ba46143508fdb1a6b5",
+          "published_text": "2026年08月29日 17:22",
+          "raw_snapshot_hash": "ab17b9386a55e3295b9f7c09368eac466fa2260a81d75a8c5895613f062513d0",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "音响设备及辅助设施中标(成交)结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
+              "value": "库车市龟兹非遗特色集群建设项目二标段工程施工项目竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
               "method": "html_title",
-              "evidence_excerpt": "音响设备及辅助设施中标(成交)结果公告",
+              "evidence_excerpt": "库车市龟兹非遗特色集群建设项目二标段工程施工项目竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "新疆人民会堂管理中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
+              "value": "库车市萨克萨克街道办事处",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 新疆人民会堂管理中心",
+              "evidence_excerpt": "采购单位 库车市萨克萨克街道办事处",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -310,46 +251,105 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230696.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230956.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-9c50ac166526",
+          "candidate_id": "ds1b-ccgp-40a3b7e17c33",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
-          "title": "瑞安市公共资源交易中心关于2026年瑞安市人民医院台式、便携式计算机等设备采购的更正公告",
-          "organizer": "瑞安市人民医院",
-          "deadline_text": null,
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
+          "title": "检验科第三方质控品招标公告",
+          "organizer": "滁州市第一人民医院",
+          "deadline_text": "2026年09月17日 08:30",
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:20",
-          "raw_snapshot_hash": "59fff3c57203ef9bbbce4807e8364267512c785ec6f290f71c0d6a6cfa284b29",
+          "published_text": "2026年08月29日 17:21",
+          "raw_snapshot_hash": "7c4d7977845e11df266695d1284f707d245797141b3250e39e3a0fff3cc6f264",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "瑞安市公共资源交易中心关于2026年瑞安市人民医院台式、便携式计算机等设备采购的更正公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
+              "value": "检验科第三方质控品招标公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
               "method": "html_title",
-              "evidence_excerpt": "瑞安市公共资源交易中心关于2026年瑞安市人民医院台式、便携式计算机等设备采购的更正公告",
+              "evidence_excerpt": "检验科第三方质控品招标公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "瑞安市人民医院",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
+              "value": "滁州市第一人民医院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 瑞安市人民医院",
+              "evidence_excerpt": "采购单位 滁州市第一人民医院",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年09月17日 08:30",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "开标时间 2026年09月17日 08:30",
+              "confirmed": true
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230955.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-5435cd5df65a",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
+          "title": "鄂州市临空经济区新庙镇中心学校本级临空经济区第一小学教学楼改造安全提升项目第二次竞争性磋商公告",
+          "organizer": "鄂州市临空经济区新庙镇中心学校本级",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月29日 17:21",
+          "raw_snapshot_hash": "f5943b0524f0a8bd9ec1c9269b5de30d904c13f6ffbf3fe1e0cfe8edfa68bfa4",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "鄂州市临空经济区新庙镇中心学校本级临空经济区第一小学教学楼改造安全提升项目第二次竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
+              "method": "html_title",
+              "evidence_excerpt": "鄂州市临空经济区新庙镇中心学校本级临空经济区第一小学教学楼改造安全提升项目第二次竞争性磋商公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "鄂州市临空经济区新庙镇中心学校本级",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 鄂州市临空经济区新庙镇中心学校本级",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -369,46 +369,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230680.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230954.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-e487c746beae",
+          "candidate_id": "ds1b-ccgp-ca16d29d37c2",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
-          "title": "新疆维吾尔自治区科学技术馆VR头戴设备采购项目中标(成交)结果公告",
-          "organizer": "新疆维吾尔自治区科学技术馆",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
+          "title": "绍兴市嘉华项目管理有限公司关于绍兴市人民医院氧气管道改造项目（重招）的竞争性磋商公告",
+          "organizer": "绍兴市人民医院",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:20",
-          "raw_snapshot_hash": "48f510e9421d85c7751df14481ee7b59807dcb931c7c9b82807e6f07d1054124",
+          "published_text": "2026年08月29日 17:20",
+          "raw_snapshot_hash": "4ba0c6f36ed37376f97d063952ad6dc090e304e1780fa2498b3803dc5cfac616",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "新疆维吾尔自治区科学技术馆VR头戴设备采购项目中标(成交)结果公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
+              "value": "绍兴市嘉华项目管理有限公司关于绍兴市人民医院氧气管道改造项目（重招）的竞争性磋商公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
               "method": "html_title",
-              "evidence_excerpt": "新疆维吾尔自治区科学技术馆VR头戴设备采购项目中标(成交)结果公告",
+              "evidence_excerpt": "绍兴市嘉华项目管理有限公司关于绍兴市人民医院氧气管道改造项目（重招）的竞争性磋商公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "新疆维吾尔自治区科学技术馆",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
+              "value": "绍兴市人民医院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 新疆维吾尔自治区科学技术馆",
+              "evidence_excerpt": "采购单位 绍兴市人民医院",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -428,105 +428,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230679.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202608/t20260829_27230948.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-e73ebcd83f32",
+          "candidate_id": "ds1b-ccgp-955bd3f15329",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-          "title": "儿童注意力检测与治疗仪的公开招标公告",
-          "organizer": "上海市浦东新区南汇精神卫生中心",
-          "deadline_text": "2026年09月23日 10:00",
-          "geography": null,
-          "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:20",
-          "raw_snapshot_hash": "b0008bae99e446e3e66e0c3a0c5cbb3b95d9a410b220eddfd3dacf306cfbb634",
-          "review_state": "candidate_only",
-          "field_provenance": {
-            "title": {
-              "value": "儿童注意力检测与治疗仪的公开招标公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-              "method": "html_title",
-              "evidence_excerpt": "儿童注意力检测与治疗仪的公开招标公告",
-              "confirmed": true
-            },
-            "organizer": {
-              "value": "上海市浦东新区南汇精神卫生中心",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "采购单位 上海市浦东新区南汇精神卫生中心",
-              "confirmed": true
-            },
-            "deadline_text": {
-              "value": "2026年09月23日 10:00",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-              "method": "structured_text",
-              "evidence_excerpt": "开标时间 2026年09月23日 10:00",
-              "confirmed": true
-            },
-            "geography": {
-              "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
-              "confirmed": false
-            },
-            "category_hint": {
-              "value": "procurement_project",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-              "method": "registry_scope",
-              "evidence_excerpt": "适配器类别提示，需候选审核确认",
-              "confirmed": false
-            },
-            "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-              "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gkzb/202608/t20260829_27230691.htm",
-              "confirmed": true
-            }
-          }
-        },
-        {
-          "candidate_id": "ds1b-ccgp-879fef272187",
-          "adapter_id": "ccgp-procurement-listing-v1",
-          "source_id": "ccgp",
-          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
-          "title": "安徽机电工程学校2026-2027学年教材采购项目一标包（二次）询价公告",
-          "organizer": "安徽机电工程学校",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
+          "title": "金华市万全招标代理有限公司关于现代商贸流通体系试点城市建设第三方咨询项目中标(成交)结果公告",
+          "organizer": "金华市商务局",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:20",
-          "raw_snapshot_hash": "a6ad17796da6edabb4258aaaed17dc5163f313de3df47b06bd349b57762e7fa3",
+          "published_text": "2026年08月29日 17:20",
+          "raw_snapshot_hash": "5aaffd821013f51d3035f97c9411ae92402df1a8fc4667ed7895cf80cf28b7f4",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "安徽机电工程学校2026-2027学年教材采购项目一标包（二次）询价公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
+              "value": "金华市万全招标代理有限公司关于现代商贸流通体系试点城市建设第三方咨询项目中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
               "method": "html_title",
-              "evidence_excerpt": "安徽机电工程学校2026-2027学年教材采购项目一标包（二次）询价公告",
+              "evidence_excerpt": "金华市万全招标代理有限公司关于现代商贸流通体系试点城市建设第三方咨询项目中标(成交)结果公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "安徽机电工程学校",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
+              "value": "金华市商务局",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 安徽机电工程学校",
+              "evidence_excerpt": "采购单位 金华市商务局",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -546,46 +487,46 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230687.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230950.htm",
               "confirmed": true
             }
           }
         },
         {
-          "candidate_id": "ds1b-ccgp-3629f590a50a",
+          "candidate_id": "ds1b-ccgp-92b6893feec6",
           "adapter_id": "ccgp-procurement-listing-v1",
           "source_id": "ccgp",
           "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
-          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
-          "title": "安徽机电工程学校2026-2027学年教材采购项目二标包（二次）询价公告",
-          "organizer": "安徽机电工程学校",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
+          "title": "浙江五石中正工程咨询有限公司关于桥梁修缮-湖墅北路下穿道项目的更正公告",
+          "organizer": "杭州市拱墅区市政养护所",
           "deadline_text": null,
           "geography": null,
           "category_hint": "procurement_project",
-          "published_text": "2026年08月29日 16:20",
-          "raw_snapshot_hash": "4093ba494b99a4e0e2ecb74a6510f9ccfbf113340b711c864ee8f5238eb11584",
+          "published_text": "2026年08月29日 17:20",
+          "raw_snapshot_hash": "cce032ed88088d920c836acf010deacdccd03f47f82fc67e4e8cc8487c8a3e69",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
-              "value": "安徽机电工程学校2026-2027学年教材采购项目二标包（二次）询价公告",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
+              "value": "浙江五石中正工程咨询有限公司关于桥梁修缮-湖墅北路下穿道项目的更正公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
               "method": "html_title",
-              "evidence_excerpt": "安徽机电工程学校2026-2027学年教材采购项目二标包（二次）询价公告",
+              "evidence_excerpt": "浙江五石中正工程咨询有限公司关于桥梁修缮-湖墅北路下穿道项目的更正公告",
               "confirmed": true
             },
             "organizer": {
-              "value": "安徽机电工程学校",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
+              "value": "杭州市拱墅区市政养护所",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
               "method": "structured_text",
-              "evidence_excerpt": "采购单位 安徽机电工程学校",
+              "evidence_excerpt": "采购单位 杭州市拱墅区市政养护所",
               "confirmed": true
             },
             "deadline_text": {
               "value": null,
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
               "method": "not_found",
               "evidence_excerpt": null,
               "confirmed": false
@@ -605,10 +546,69 @@
               "confirmed": false
             },
             "source_url": {
-              "value": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
-              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
               "method": "listing_anchor",
-              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/xjgg/202608/t20260829_27230685.htm",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/gzgg/202608/t20260829_27230949.htm",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-ccgp-6090abd6c643",
+          "adapter_id": "ccgp-procurement-listing-v1",
+          "source_id": "ccgp",
+          "discovery_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
+          "title": "鄯善县人民医院康复科、放射科医疗设备采购项目中标(成交)结果公告",
+          "organizer": "鄯善县人民医院",
+          "deadline_text": null,
+          "geography": null,
+          "category_hint": "procurement_project",
+          "published_text": "2026年08月29日 17:20",
+          "raw_snapshot_hash": "9784ab6a13ed33f90869336197dbe46266618a7731d1b8266917fa138cc196a0",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "鄯善县人民医院康复科、放射科医疗设备采购项目中标(成交)结果公告",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
+              "method": "html_title",
+              "evidence_excerpt": "鄯善县人民医院康复科、放射科医疗设备采购项目中标(成交)结果公告",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "鄯善县人民医院",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
+              "method": "structured_text",
+              "evidence_excerpt": "采购单位 鄯善县人民医院",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": null,
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "procurement_project",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
+              "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.ccgp.gov.cn/cggg/dfgg/zbgg/202608/t20260829_27230947.htm",
               "confirmed": true
             }
           }
@@ -621,8 +621,8 @@
       "adapter_id": "gd-culture-notices-v1",
       "discovery_url": "https://whly.gd.gov.cn/open_newggl/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:34:58.804Z",
-      "finished_at": "2026-08-29T08:34:59.107Z",
+      "started_at": "2026-08-29T09:35:00.312Z",
+      "finished_at": "2026-08-29T09:35:00.810Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://whly.gd.gov.cn/open_newggl/index.html",
@@ -1227,8 +1227,8 @@
       "adapter_id": "yuexiu-notices-v1",
       "discovery_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:34:59.107Z",
-      "finished_at": "2026-08-29T08:34:59.822Z",
+      "started_at": "2026-08-29T09:35:00.810Z",
+      "finished_at": "2026-08-29T09:35:01.538Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.yuexiu.gov.cn/yxdt/tzgg/",
@@ -1833,8 +1833,8 @@
       "adapter_id": "mct-notices-listing-v1",
       "discovery_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:34:59.822Z",
-      "finished_at": "2026-08-29T08:35:01.544Z",
+      "started_at": "2026-08-29T09:35:01.538Z",
+      "finished_at": "2026-08-29T09:35:03.172Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.mct.gov.cn/whzx/ggtz/index.htm",
@@ -2439,8 +2439,8 @@
       "adapter_id": "cnaf-guides-listing-v1",
       "discovery_url": "https://www.cnaf.cn/guide.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:01.544Z",
-      "finished_at": "2026-08-29T08:35:02.613Z",
+      "started_at": "2026-08-29T09:35:03.172Z",
+      "finished_at": "2026-08-29T09:35:04.190Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.cnaf.cn/guide.html",
@@ -2809,12 +2809,12 @@
       "adapter_id": "ichina-notices-listing-v1",
       "discovery_url": "https://www.ihchina.cn/news_2",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:02.613Z",
-      "finished_at": "2026-08-29T08:35:18.588Z",
+      "started_at": "2026-08-29T09:35:04.190Z",
+      "finished_at": "2026-08-29T09:35:20.160Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.ihchina.cn/news_2",
-      "raw_snapshot_hash": "970b5af09d8f3c4ec853744eeb5c91381b38dfa2c4d954aa15081d18f9ca1b44",
+      "raw_snapshot_hash": "86156ef92806ad66c0de6627ecb0f33afb5e57fb97d2dba50d9dece83cd40ca2",
       "candidate_count": 10,
       "candidates": [
         {
@@ -2829,7 +2829,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-27 13:48:00",
-          "raw_snapshot_hash": "dbaf88b2fd3b0581626e7e54237b4c9d454fed18be150e31aee31d63705ad12c",
+          "raw_snapshot_hash": "280c44b10492253de9b21621db2fe8d24745ba21d0467bb7ac0d1451ac462af1",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2888,7 +2888,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-05-07 09:15:00",
-          "raw_snapshot_hash": "d3392b82ba4761d7f7ef3ff0a5cad58e09e669b62b7c5df3659e6a7e31d3a298",
+          "raw_snapshot_hash": "37387329b7b5501c0f792c597fd6dd05d7c3622f5578312edf3a31b32e2d9be8",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -2947,7 +2947,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-13 09:24:00",
-          "raw_snapshot_hash": "015fd713efc65671e829cb05c2004a185225529151df597d3c9627f4b242e554",
+          "raw_snapshot_hash": "e0781d1ee2e3c8567bd29f1fd7049100a26062c292e1d83a7767445dc1d1306f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3006,7 +3006,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-04-03 17:39:00",
-          "raw_snapshot_hash": "d36e6d9835ee269edce0b47e0413d224ecbddf0a182743bb168ae35f48594d1f",
+          "raw_snapshot_hash": "b469aa3b57070e8029abd06897d0d6361f37a37eeb0ccf0b2ae8841bad1d669d",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3065,7 +3065,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-29 14:57:00",
-          "raw_snapshot_hash": "298052fe0711417641d43e04215fd1724da946cae6d62eebe8929f0cf8eb71cf",
+          "raw_snapshot_hash": "c80cf65eeb45e221edb5b4937d29c9de5ebd20bed72a37a01fe66d2e63f62f23",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3124,7 +3124,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-22 09:39:00",
-          "raw_snapshot_hash": "d0154e2fe42a4f7e8810c47a69243603b2f8c6efd63f06f4351c1dd764d17ce2",
+          "raw_snapshot_hash": "dc4828e45b160488efd6c2147fdd729db88c3d144454b3f21c40613be343b1a3",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3183,7 +3183,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-15 14:36:00",
-          "raw_snapshot_hash": "d781319f41c243724f3c1f26ce64a47eff3f952a85a504a6ba6881d7adb5ce50",
+          "raw_snapshot_hash": "60896dea34cff470130f165ca8831cf84d307d4a2c1c446856577419e09dcb1f",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3242,7 +3242,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2026-01-07 14:19:00",
-          "raw_snapshot_hash": "5116e8460e272c79c663e34aa85ddb4fc46a5afeab7177676f2cc20269933e22",
+          "raw_snapshot_hash": "620e289efab4279fc3e739b860fe09a3b8c258a6a9597d509b999bae326641a6",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3301,7 +3301,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2025-12-29 11:10:00",
-          "raw_snapshot_hash": "c508ebf202caedeeab0631bbc40e18113ed78f221a56b9ad1a55a2a2a8e7b406",
+          "raw_snapshot_hash": "327474b5cb4ff4f0480ea7a14ebb92c03071e5eb68858d467b168148fbf56505",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3360,7 +3360,7 @@
           "geography": "全国",
           "category_hint": "policy_funding",
           "published_text": "2025-12-29 10:51:00",
-          "raw_snapshot_hash": "3a7c8c136954602a7080038fb68968707063eb8f8a3b3ae35eeb1be1bc9b8c5a",
+          "raw_snapshot_hash": "057c13e8c4acffb423f4cc8c988dc3c6ceb7cb78db0f8c00c0fb0e1689cf7539",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -3415,8 +3415,8 @@
       "adapter_id": "gmfyg-events-listing-v1",
       "discovery_url": "https://www.gmfyg.org.cn/event",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:18.588Z",
-      "finished_at": "2026-08-29T08:35:20.013Z",
+      "started_at": "2026-08-29T09:35:20.160Z",
+      "finished_at": "2026-08-29T09:35:22.603Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gmfyg.org.cn/event",
@@ -3667,8 +3667,8 @@
       "adapter_id": "gz-culture-notices-listing-v1",
       "discovery_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:20.013Z",
-      "finished_at": "2026-08-29T08:35:20.583Z",
+      "started_at": "2026-08-29T09:35:22.603Z",
+      "finished_at": "2026-08-29T09:35:23.303Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/index.html",
@@ -4273,8 +4273,8 @@
       "adapter_id": "cnacs-competition-listing-v1",
       "discovery_url": "https://www.cnacs.net.cn/82/index.html",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:20.583Z",
-      "finished_at": "2026-08-29T08:35:21.422Z",
+      "started_at": "2026-08-29T09:35:23.303Z",
+      "finished_at": "2026-08-29T09:35:24.108Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.cnacs.net.cn/82/index.html",
@@ -4761,8 +4761,8 @@
       "adapter_id": "gdmuseum-announcements-listing-v1",
       "discovery_url": "https://www.gdmuseum.org.cn/col51/list",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:21.422Z",
-      "finished_at": "2026-08-29T08:35:29.719Z",
+      "started_at": "2026-08-29T09:35:24.108Z",
+      "finished_at": "2026-08-29T09:35:32.245Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gdmuseum.org.cn/col51/list",
@@ -4781,7 +4781,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年07月01日",
-          "raw_snapshot_hash": "dcbe2b226102cd18ffefcddc1bc870b47e7e2504fb28938cce5f5259a4316286",
+          "raw_snapshot_hash": "7fd6408cd57fb81ebb9bab0bc084a185fec81ffff93d0797ad605c97cceec9a1",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -4840,7 +4840,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月29日",
-          "raw_snapshot_hash": "9b9a094966733a9b4472053408fd0dd795edb9989146b6ba4706ad23ce0f9d44",
+          "raw_snapshot_hash": "ce888d1bca426826cb57bb518fcfff5078316f1ae16942e67bc14dcd1a1cb142",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -4899,7 +4899,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月26日",
-          "raw_snapshot_hash": "e74e0dde8a330bcb2e0f33d4b1eaf7d308cfd8450488c7fa0225cb97f9c8e296",
+          "raw_snapshot_hash": "72fa2fbf5723f5415eb6c32af0b6756f6642cbb97fea17862266df41855b1493",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -4958,7 +4958,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月22日",
-          "raw_snapshot_hash": "6fee8a2706fed9dccb84e7337cc741aa2ad4b33f461b60380f898af25bf3de7d",
+          "raw_snapshot_hash": "b7b55418e06c22638c1c504eb39e7466f48f88c55f72366196db3225252d3333",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5017,7 +5017,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月18日",
-          "raw_snapshot_hash": "33f6ecda5fa4a4eae1fcba789d5c67b65d1fce8d1bba07a1fb4d11a89d701b40",
+          "raw_snapshot_hash": "0245a841b2cde2d7335f15708523ed4ac2e54f79027e0b9c28908753cb468549",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5076,7 +5076,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年06月08日",
-          "raw_snapshot_hash": "3261005c022682c5abe0e5a4647b24aaddfcc77952bae6baeef0728c7a112664",
+          "raw_snapshot_hash": "8b67573a8dfb9613c686d914b99c1f501f33689af14c4e2f7cc12b98e7996885",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5135,7 +5135,7 @@
           "geography": "广东省广州市",
           "category_hint": "exhibition_market",
           "published_text": "2026年05月29日",
-          "raw_snapshot_hash": "7e70536c4e925bdc4632c53018776f760f73d68d6bc6d49ee4a04370040a9b54",
+          "raw_snapshot_hash": "a7ff93f1ff44ffbddd3aa13972937090abdf23c0fc752bf7fcde7d6d3e82cc6c",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -5190,8 +5190,8 @@
       "adapter_id": "gdmoa-exhibitions-listing-v1",
       "discovery_url": "https://www.gdmoa.org/Exhibition/",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:29.719Z",
-      "finished_at": "2026-08-29T08:35:32.847Z",
+      "started_at": "2026-08-29T09:35:32.245Z",
+      "finished_at": "2026-08-29T09:35:35.406Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://www.gdmoa.org/Exhibition/",
@@ -5796,12 +5796,12 @@
       "adapter_id": "unesco-ich-news-listing-v1",
       "discovery_url": "https://ich.unesco.org/en/news",
       "access_mode": "listing",
-      "started_at": "2026-08-29T08:35:32.847Z",
-      "finished_at": "2026-08-29T08:35:41.507Z",
+      "started_at": "2026-08-29T09:35:35.406Z",
+      "finished_at": "2026-08-29T09:35:40.293Z",
       "status": "completed",
       "http_status": 200,
       "final_url": "https://ich.unesco.org/en/news",
-      "raw_snapshot_hash": "a5fd6e7bf70cba6cd6cdf460fe49a263d6f31f34adc78089912bd98c17a20c5e",
+      "raw_snapshot_hash": "3ab1b09876da0813a49cf738cb4a8ccc154fb7f875b95a602c208bce7d50bfd2",
       "candidate_count": 10,
       "candidates": [
         {
@@ -5816,7 +5816,7 @@
           "geography": "国际",
           "category_hint": "international",
           "published_text": null,
-          "raw_snapshot_hash": "f8d4dfb062e892ef497e0cafc2c9c7781be2e1846912f002005551a0546385aa",
+          "raw_snapshot_hash": "1d04defc942ea31165bf18759674bedb1b834adbf7f401efa559f94d861fd469",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6052,7 +6052,7 @@
           "geography": "国际",
           "category_hint": "international",
           "published_text": null,
-          "raw_snapshot_hash": "f9ec347435026610006a52ba1c47f11a2ce46a5b42c4041a39e8ebc498ac77a3",
+          "raw_snapshot_hash": "71eb3f041eace9ab11ac2428a5b4d096a51b0d73a647a01e0423f87dc87f04d9",
           "review_state": "candidate_only",
           "field_provenance": {
             "title": {
@@ -6396,7 +6396,1874 @@
         }
       ],
       "errors": []
+    },
+    {
+      "source_id": "loewe-craft-prize",
+      "adapter_id": "loewe-craft-prize-generic-detail-v1",
+      "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+      "access_mode": "listing",
+      "started_at": "2026-08-29T09:35:40.293Z",
+      "finished_at": "2026-08-29T09:35:43.788Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://craftprize.loewe.com/zh/craftprize2027",
+      "raw_snapshot_hash": "216f9dc5e54f7095c23b0280a7aa63972682ab700e2dbf81b3f04714ceb108d2",
+      "candidate_count": 10,
+      "candidates": [
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-c30ce7c3d1f0",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "title": "How to participate",
+          "organizer": "LOEWE FOUNDATION",
+          "deadline_text": "2026年10月15日",
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": "2026年10月15日",
+          "raw_snapshot_hash": "68ac0087d58ceeeb3dc0f694b22b2430796ed7da60f6240d092e151716aae157",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "How to participate",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "html_title",
+              "evidence_excerpt": "How to participate",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "LOEWE FOUNDATION",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "structured_text",
+              "evidence_excerpt": "LOEWE FOUNDATION",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": "2026年10月15日",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "structured_text",
+              "evidence_excerpt": "截止日期为2026年10月15日",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2027",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2027",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-7bc922255b4d",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/conversation",
+          "title": "对话工艺",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "8883b7260e257ff4c5093c5b2776159c64945fcf62c92bd169109fe72d24318c",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "对话工艺",
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "html_title",
+              "evidence_excerpt": "对话工艺",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/conversation",
+              "source_url": "https://craftprize.loewe.com/zh/conversation",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/conversation",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-41aa6138d10a",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+          "title": "历届工艺奖",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "127b61df2d47439a186e0e783be0536ed6ed29bd274394b7c9073d25244452a3",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "历届工艺奖",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "html_title",
+              "evidence_excerpt": "历届工艺奖",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2026",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2026",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2026",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-dab5c1147832",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2025",
+          "title": "Craft Prize 2025",
+          "organizer": "LOEWE FOUNDATION",
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "6a43b19da98250a0bf5aff875694947d6362bb4825f2d83487f4f67ea8c6cfdb",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "Craft Prize 2025",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2025",
+              "method": "html_title",
+              "evidence_excerpt": "Craft Prize 2025",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "LOEWE FOUNDATION",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2025",
+              "method": "structured_text",
+              "evidence_excerpt": "LOEWE FOUNDATION",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2025",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2025",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2025",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2025",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-c4910a214170",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2024",
+          "title": "Craft Prize 2024",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "39163b9ea7d644396fb44acebcd2bb494c6d0734c7bf1a6b08ec1ba569ea5732",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "Craft Prize 2024",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2024",
+              "method": "html_title",
+              "evidence_excerpt": "Craft Prize 2024",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2024",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2024",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2024",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2024",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2024",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-29e0432f3cfe",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2023",
+          "title": "罗意威工艺奖2023",
+          "organizer": "LOEWE FOUNDATION",
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "00fb21c37986fbefc3adb3968fd53969aa5a8fa4e9d54dfd4203b82dbf59de79",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "罗意威工艺奖2023",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2023",
+              "method": "html_title",
+              "evidence_excerpt": "罗意威工艺奖2023",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "LOEWE FOUNDATION",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2023",
+              "method": "structured_text",
+              "evidence_excerpt": "LOEWE FOUNDATION",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2023",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2023",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2023",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2023",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-da76f59e10ef",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2022",
+          "title": "罗意威工艺奖2022",
+          "organizer": "LOEWE FOUNDATION",
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "d5b3e67d6f9eeb649b9fc7e320bb3b6f95813905031f83ab2dece7631b4d0b29",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "罗意威工艺奖2022",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2022",
+              "method": "html_title",
+              "evidence_excerpt": "罗意威工艺奖2022",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "LOEWE FOUNDATION",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2022",
+              "method": "structured_text",
+              "evidence_excerpt": "LOEWE FOUNDATION",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2022",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2022",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2022",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2022",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-3fe1c9afc566",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2020",
+          "title": "罗意威工艺奖2021",
+          "organizer": "LOEWE FOUNDATION",
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "ab434db92281c07eadb78f902254b8e9d99b0f35499e023d342c4c59410ab4e1",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "罗意威工艺奖2021",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2020",
+              "method": "html_title",
+              "evidence_excerpt": "罗意威工艺奖2021",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "LOEWE FOUNDATION",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2020",
+              "method": "structured_text",
+              "evidence_excerpt": "LOEWE FOUNDATION",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2020",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2020",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2020",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2020",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-026e831d6da2",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2019",
+          "title": "罗意威工艺奖2019",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "eb1984bc660413bf0c0795fc3a973243c9a17c4aa6bb64096f21b0da053bd24e",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "罗意威工艺奖2019",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2019",
+              "method": "html_title",
+              "evidence_excerpt": "罗意威工艺奖2019",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2019",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2019",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2019",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2019",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2019",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-loewe-craft-prize-7127f35b6eb0",
+          "adapter_id": "loewe-craft-prize-generic-detail-v1",
+          "source_id": "loewe-craft-prize",
+          "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+          "source_url": "https://craftprize.loewe.com/zh/craftprize2018",
+          "title": "罗意威工艺奖2018",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "国际",
+          "category_hint": "competition",
+          "published_text": "2018年5月4日",
+          "raw_snapshot_hash": "27d2dbefed002cf73b78cd60a1ec89ab4791c27152690305ad8dc995083e0107",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "罗意威工艺奖2018",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2018",
+              "method": "html_title",
+              "evidence_excerpt": "罗意威工艺奖2018",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2018",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2018",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "国际",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2027",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://craftprize.loewe.com/zh/craftprize2018",
+              "source_url": "https://craftprize.loewe.com/zh/craftprize2018",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://craftprize.loewe.com/zh/craftprize2018",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_id": "if-design-award",
+      "adapter_id": "if-design-award-generic-detail-v1",
+      "discovery_url": "https://ifdesign.com/en/if-design-award-and-jury",
+      "access_mode": "listing",
+      "started_at": "2026-08-29T09:35:43.788Z",
+      "finished_at": "2026-08-29T09:35:43.914Z",
+      "status": "failed",
+      "http_status": null,
+      "final_url": null,
+      "raw_snapshot_hash": null,
+      "candidate_count": 0,
+      "candidates": [],
+      "errors": [
+        "TypeError: fetch failed"
+      ]
+    },
+    {
+      "source_id": "china-design-award",
+      "adapter_id": "china-design-award-generic-detail-v1",
+      "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+      "access_mode": "listing",
+      "started_at": "2026-08-29T09:35:43.914Z",
+      "finished_at": "2026-08-29T09:35:46.073Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://cidip.cn/cda2026/permanent.html",
+      "raw_snapshot_hash": "db8dd34eda4a7096368520b4758cfefac8a41d87f5e3c63b117841fe0d11379f",
+      "candidate_count": 10,
+      "candidates": [
+        {
+          "candidate_id": "ds1b-china-design-award-8068adf18c38",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/index/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2026-05-22",
+          "raw_snapshot_hash": "04a17daae279f3b5dc1e0cdee1a0eb75201ae1c2e90f24b14750b2abdcc940dc",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/index/index.html",
+              "source_url": "https://cidip.cn/index/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/index/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-7dc05de95f67",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/ipr/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "f5572a99e2a4445bc6dbd1b54824833a0ab7913274dc3f5c053f413e53b37caa",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/ipr/index.html",
+              "source_url": "https://cidip.cn/ipr/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/ipr/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-610683167da2",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/news/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2026-05-22",
+          "raw_snapshot_hash": "b05360abdb771cbd8aa04054a51ac8a058331d6eb4e2a6232bc8dc4c38220801",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/news/index.html",
+              "source_url": "https://cidip.cn/news/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/news/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-5d23a904f838",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/idea/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "bb6bae907351036aac98fd8e1f008bb1ddd813bb17115297eec13198fc32af9b",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/idea/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/idea/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/idea/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/idea/index.html",
+              "source_url": "https://cidip.cn/idea/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/idea/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-450fa3ba1bd2",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/cda2026/permanent.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": "2026年9月30日",
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2026年9月30日",
+          "raw_snapshot_hash": "68fea213dacf6a676689c47301922b4e6576434e45517dc5d9cb2f04edd049c5",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": "2026年9月30日",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "structured_text",
+              "evidence_excerpt": "截止日期：2026年9月30日",
+              "confirmed": true
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/cda2026/permanent.html",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/cda2026/permanent.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-68c165b62c09",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/graduations/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2018-05-25",
+          "raw_snapshot_hash": "0319afa4a956f0cc68f2b566cdf92056fa5ad5cbdbd4694926683d175713529e",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/graduations/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/graduations/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/graduations/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/graduations/index.html",
+              "source_url": "https://cidip.cn/graduations/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/graduations/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-97bcd0fb3187",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/graduation/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": "2016-07-01",
+          "raw_snapshot_hash": "55c166d7b12ae350d60e5852df31706632e1976b1c8579e6ccc7aa6af6be7ac1",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/graduation/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://cidip.cn/graduation/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/graduation/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/graduation/index.html",
+              "source_url": "https://cidip.cn/graduation/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/graduation/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-80bb3b27c0d0",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/taopin/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": "中国工业设计协会 中国工艺美术学会 承办单位：中国工业设计协会设计知识产权交易中心(知产中国) 杭州市良渚新城管委会 杭",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "5eac7df9ecf2fd8c1fe57ae5ca18572ca2fdce6013a933794b4702419dd17d3e",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/taopin/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "中国工业设计协会 中国工艺美术学会 承办单位：中国工业设计协会设计知识产权交易中心(知产中国) 杭州市良渚新城管委会 杭",
+              "source_url": "https://cidip.cn/taopin/index.html",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位：中国工业设计协会 中国工艺美术学会 承办单位：中国工业设计协会设计知识产权交易中心(知产中国) 杭州市良渚新城管委会 杭",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/taopin/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/taopin/index.html",
+              "source_url": "https://cidip.cn/taopin/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/taopin/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-6391cee1c79f",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/originaldesign/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": "余杭区人民政府 中国工业设计协会 杭州文化广播电视集团 承办单位： 中国工业设计协会设计知识产权交易中心 良渚新城管委会",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "279a9a30c25960b4f137be79bbaac5be25b15dd0614cb4a540e63138c11e4954",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/originaldesign/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "余杭区人民政府 中国工业设计协会 杭州文化广播电视集团 承办单位： 中国工业设计协会设计知识产权交易中心 良渚新城管委会",
+              "source_url": "https://cidip.cn/originaldesign/index.html",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位：余杭区人民政府 中国工业设计协会 杭州文化广播电视集团 承办单位： 中国工业设计协会设计知识产权交易中心 良渚新城管委会",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/originaldesign/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/originaldesign/index.html",
+              "source_url": "https://cidip.cn/originaldesign/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/originaldesign/index.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-china-design-award-b6cc0222d1e5",
+          "adapter_id": "china-design-award-generic-detail-v1",
+          "source_id": "china-design-award",
+          "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+          "source_url": "https://cidip.cn/competition/index.html",
+          "title": "知产中国CIDIP.cn",
+          "organizer": "中国工业设计协会 浙江省桐庐县人民政府 承办单位：中国工业设计协会知识产权交易中心（知产中国） 浙江省桐庐县制笔行业协会",
+          "deadline_text": null,
+          "geography": "全国",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "bb1de5805190b5dce4ef199917ff8dd7101a9cd87d2731ff57f4e269566c784a",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "知产中国CIDIP.cn",
+              "source_url": "https://cidip.cn/competition/index.html",
+              "method": "html_title",
+              "evidence_excerpt": "知产中国CIDIP.cn",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "中国工业设计协会 浙江省桐庐县人民政府 承办单位：中国工业设计协会知识产权交易中心（知产中国） 浙江省桐庐县制笔行业协会",
+              "source_url": "https://cidip.cn/competition/index.html",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位：中国工业设计协会 浙江省桐庐县人民政府 承办单位：中国工业设计协会知识产权交易中心（知产中国） 浙江省桐庐县制笔行业协会",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://cidip.cn/competition/index.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "全国",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://cidip.cn/cda2026/permanent.html",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://cidip.cn/competition/index.html",
+              "source_url": "https://cidip.cn/competition/index.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://cidip.cn/competition/index.html",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_id": "gba-design",
+      "adapter_id": "gba-design-generic-detail-v1",
+      "discovery_url": "https://www.gbawcsjds.com/",
+      "access_mode": "listing",
+      "started_at": "2026-08-29T09:35:46.073Z",
+      "finished_at": "2026-08-29T09:35:52.133Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://www.gbawcsjds.com/",
+      "raw_snapshot_hash": "0c513e6805abc3bf198550b6af500e7ae4ef2cbbc8425b2ba1184c77a06cfb46",
+      "candidate_count": 10,
+      "candidates": [
+        {
+          "candidate_id": "ds1b-gba-design-25ad7137e669",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": "2026-08-26",
+          "raw_snapshot_hash": "0c513e6805abc3bf198550b6af500e7ae4ef2cbbc8425b2ba1184c77a06cfb46",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-852d6d92b1a7",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/tcn/",
+          "title": "第八屆粵港澳大灣區文化創意設計大賽",
+          "organizer": null,
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": "2020年9月24日",
+          "raw_snapshot_hash": "2909a34d964215ae95c876ced73cb3b237ea75b968c10ebd80db56de8a48c095",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八屆粵港澳大灣區文化創意設計大賽",
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "html_title",
+              "evidence_excerpt": "第八屆粵港澳大灣區文化創意設計大賽",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/tcn/",
+              "source_url": "https://www.gbawcsjds.com/tcn/",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/tcn/",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-1c4ccbb46555",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "539ef73b80fe084a8866f8e95370f65c5c55f6b7243351085733bc4755dba88d",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=103",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-abb02be08a05",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/h-col-125.html",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "88520aad25bd693aa729241d860eba5fe315587f6949bd92fce420c9068c03c0",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/h-col-125.html",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/h-col-125.html",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/h-col-125.html",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/h-col-125.html",
+              "source_url": "https://www.gbawcsjds.com/h-col-125.html",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/h-col-125.html",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-672000b26d2e",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=132",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "1f4d85126f3745dcfbb75d8207352bb9b359e06759ad5ee3565f807f6c28b540",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=132",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=132",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=132",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=132",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=132",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=132",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-c1a7a926150f",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=131",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "c2ebfe3bc72b0a4a592e3c168c6593a3b88f133e736a453493b966ff62c8c782",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=131",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=131",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=131",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=131",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=131",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=131",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-57f9c754d1d4",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=133",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "575d295b7df1e1d41b378965ef746171f3f78b1ff4d375280209a354e290b24f",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=133",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=133",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=133",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=133",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=133",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=133",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-65284a36b9c8",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=171",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "fc46e515aacf7b34bdbb78b4abb7393fef09bde3a92223934e5e42188aaf48c1",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=171",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=171",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=171",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=171",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=171",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=171",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-18acc49fbbbc",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=175",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "广东省文化和旅游厅、珠海市人民政府 承办单位： 珠海市文化广电旅游体育局 、粤港澳大湾区（广东）文创联盟 协办单位： 各",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "d2b8c2fa16b980f1c51a22e9a32f5f335ce73a1e0ec39e33c6b18edcf818d9c4",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=175",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "广东省文化和旅游厅、珠海市人民政府 承办单位： 珠海市文化广电旅游体育局 、粤港澳大湾区（广东）文创联盟 协办单位： 各",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=175",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位：广东省文化和旅游厅、珠海市人民政府 承办单位： 珠海市文化广电旅游体育局 、粤港澳大湾区（广东）文创联盟 协办单位： 各",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=175",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=175",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=175",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=175",
+              "confirmed": true
+            }
+          }
+        },
+        {
+          "candidate_id": "ds1b-gba-design-225413bf19ac",
+          "adapter_id": "gba-design-generic-detail-v1",
+          "source_id": "gba-design",
+          "discovery_url": "https://www.gbawcsjds.com/",
+          "source_url": "https://www.gbawcsjds.com/col.jsp?id=125",
+          "title": "第八届粤港澳大湾区文化创意设计大赛",
+          "organizer": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+          "deadline_text": null,
+          "geography": "粤港澳大湾区",
+          "category_hint": "competition",
+          "published_text": null,
+          "raw_snapshot_hash": "1303335c77047fe82642e6739ac8e4688a38d27a5f8e0ad22cb58963a6a36d86",
+          "review_state": "candidate_only",
+          "field_provenance": {
+            "title": {
+              "value": "第八届粤港澳大湾区文化创意设计大赛",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=125",
+              "method": "html_title",
+              "evidence_excerpt": "第八届粤港澳大湾区文化创意设计大赛",
+              "confirmed": true
+            },
+            "organizer": {
+              "value": "珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=125",
+              "method": "structured_text",
+              "evidence_excerpt": "主办单位： 珠海市文化广电旅游体育局 协办单位： 粤港澳大湾区（广东）文创联盟、香港设计及创意产业总会、澳门设计师协会、珠海市文化产",
+              "confirmed": true
+            },
+            "deadline_text": {
+              "value": null,
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=125",
+              "method": "not_found",
+              "evidence_excerpt": null,
+              "confirmed": false
+            },
+            "geography": {
+              "value": "粤港澳大湾区",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)",
+              "confirmed": false
+            },
+            "category_hint": {
+              "value": "competition",
+              "source_url": "https://www.gbawcsjds.com/",
+              "method": "registry_scope",
+              "evidence_excerpt": "适配器类别提示，需候选审核确认",
+              "confirmed": false
+            },
+            "source_url": {
+              "value": "https://www.gbawcsjds.com/col.jsp?id=125",
+              "source_url": "https://www.gbawcsjds.com/col.jsp?id=125",
+              "method": "listing_anchor",
+              "evidence_excerpt": "https://www.gbawcsjds.com/col.jsp?id=125",
+              "confirmed": true
+            }
+          }
+        }
+      ],
+      "errors": []
+    },
+    {
+      "source_id": "gyeongnam-k-design",
+      "adapter_id": "gyeongnam-k-design-generic-detail-v1",
+      "discovery_url": "https://gnk-designaward.net/",
+      "access_mode": "listing",
+      "started_at": "2026-08-29T09:35:52.133Z",
+      "finished_at": "2026-08-29T09:35:52.801Z",
+      "status": "failed",
+      "http_status": null,
+      "final_url": null,
+      "raw_snapshot_hash": null,
+      "candidate_count": 0,
+      "candidates": [],
+      "errors": [
+        "TypeError: fetch failed"
+      ]
+    },
+    {
+      "source_id": "zhe-li-chengdu",
+      "adapter_id": "zhe-li-chengdu-generic-detail-v1",
+      "discovery_url": "https://www.zlscd.com/",
+      "access_mode": "listing",
+      "started_at": "2026-08-29T09:35:52.801Z",
+      "finished_at": "2026-08-29T09:35:52.918Z",
+      "status": "completed",
+      "http_status": 200,
+      "final_url": "https://www.zlscd.com/",
+      "raw_snapshot_hash": "a5a5bc03fdf0f5989c2d682b092d55d02042b150f5fda8e5282bbfdc3c2231ab",
+      "candidate_count": 0,
+      "candidates": [],
+      "errors": []
     }
   ],
-  "gate": "pass"
+  "gate": "pass_with_followups"
 }
