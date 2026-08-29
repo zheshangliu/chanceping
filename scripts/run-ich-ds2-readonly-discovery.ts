@@ -6,7 +6,9 @@ import { sha256, type IchDs2ReadonlyDiscoveryRun, type IchDs2SourceRun } from ".
 
 interface HtmlResponse { status: number; finalUrl: string; html: string }
 const outputPath = path.resolve(process.argv.includes("--output") ? process.argv[process.argv.indexOf("--output") + 1] : "docs/ich/DS2-只读发现运行记录_V1.0.json");
-const maxDetails = Number(process.argv.includes("--max-details") ? process.argv[process.argv.indexOf("--max-details") + 1] : 3);
+// Keep discovery bounded and readonly, while allowing enough depth to avoid
+// missing newly posted opportunities that are not among the first three links.
+const maxDetails = Number(process.argv.includes("--max-details") ? process.argv[process.argv.indexOf("--max-details") + 1] : 10);
 const timeoutMs = 20_000;
 const storePath = path.resolve("data/ich-opportunities.json");
 const registry = getIchSourceRegistryV2();
