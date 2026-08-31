@@ -4,7 +4,7 @@ import { loadCandidates } from "../src/business/candidate-store";
 import { toPublishableGuangdongProcurement, toPublishableOfficialOpportunity, type PublishableCandidate, type PublishableOfficialCandidate } from "../src/business/publishable-candidate";
 
 const output = path.resolve(process.argv[2] ?? "data/business/review/publishable-candidates.json");
-const now = new Date("2026-07-24T12:00:00+08:00");
+const now = new Date(process.env.CHANCEPING_NOW ?? new Date().toISOString());
 type PublishableRecord = PublishableCandidate | PublishableOfficialCandidate;
 const records: PublishableRecord[] = loadCandidates().flatMap<PublishableRecord>((candidate) => {
   const procurement = toPublishableGuangdongProcurement(candidate, now);

@@ -15058,9 +15058,9 @@
     "id": "opp-1e404144f4723b97a6d9",
     "slug": "guangdong-competition-1e404144f4723b97",
     "title": "关于天河区2026年度使用总量控制类指标引进紧缺急需人才入户（第二批）的申报通知",
-    "summary": "天河区人民政府通知公告发布的当前赛事征集通知，符合条件的企业可按官方要求办理。",
-    "category": "competition",
-    "subCategory": "official-competition",
+    "summary": "天河区人民政府通知公告发布的当前人才政策申报机会，符合条件的申报主体可按官方要求办理。",
+    "category": "policy",
+    "subCategory": "official-policy",
     "keywords": [
       "官方通知",
       "competition",
@@ -17514,7 +17514,7 @@
     "timezone": "Asia/Shanghai",
     "status": "open",
     "verificationStatus": "fully_verified",
-    "verifiedAt": "2026-07-24T04:00:00.000Z",
+    "verifiedAt": "2026-08-31T04:00:00.000Z",
     "verificationNotes": "人工复核：已回源天河区政府招标公告页面，核对项目名称、采购单位及2026-08-28至2026-09-04 17:00时间窗口。",
     "targetAudience": [
       "enterprise",
@@ -17541,16 +17541,16 @@
       "在截止时间前提交响应文件"
     ],
     "featured": false,
-    "sourceDiscoveredAt": "2026-07-24T04:00:00.000Z",
-    "createdAt": "2026-07-24T04:00:00.000Z",
-    "updatedAt": "2026-07-24T04:00:00.000Z",
+    "sourceDiscoveredAt": "2026-08-31T04:00:00.000Z",
+    "createdAt": "2026-08-31T04:00:00.000Z",
+    "updatedAt": "2026-08-31T04:00:00.000Z",
     "dataOwner": "chanceping-business-radar"
   },
   {
     "id": "opp-d7f92c8375b8abfdd243",
     "slug": "verified-procurement-d7f92c8375b8abfd",
     "title": "新塘街道环卫工作服采购项目的询价公告",
-    "summary": "广州市天河区新塘街道办事处发布的当前外贸机会，符合条件的主体可按官方原文办理。",
+    "summary": "广州市天河区新塘街道办事处发布的当前采购机会，符合条件的主体可按官方原文办理。",
     "category": "procurement",
     "subCategory": "verified-procurement",
     "keywords": [
@@ -17581,7 +17581,7 @@
     "timezone": "Asia/Shanghai",
     "status": "open",
     "verificationStatus": "fully_verified",
-    "verifiedAt": "2026-07-24T04:00:00.000Z",
+    "verifiedAt": "2026-08-31T04:00:00.000Z",
     "verificationNotes": "人工复核：已回源天河区政府招标公告页面，核对项目标题、发布主体和2026-08-31截止窗口。",
     "targetAudience": [
       "enterprise",
@@ -17607,16 +17607,16 @@
       "在截止时间前提交材料"
     ],
     "featured": false,
-    "sourceDiscoveredAt": "2026-07-24T04:00:00.000Z",
-    "createdAt": "2026-07-24T04:00:00.000Z",
-    "updatedAt": "2026-07-24T04:00:00.000Z",
+    "sourceDiscoveredAt": "2026-08-31T04:00:00.000Z",
+    "createdAt": "2026-08-31T04:00:00.000Z",
+    "updatedAt": "2026-08-31T04:00:00.000Z",
     "dataOwner": "chanceping-business-radar"
   },
   {
     "id": "opp-b072ea4fe6129c4b3696",
     "slug": "verified-procurement-b072ea4fe6129c4b",
     "title": "新塘街道垃圾分类桶及维修配件采购项目的询价公告",
-    "summary": "广州市天河区新塘街道办事处发布的当前外贸机会，符合条件的主体可按官方原文办理。",
+    "summary": "广州市天河区新塘街道办事处发布的当前采购机会，符合条件的主体可按官方原文办理。",
     "category": "procurement",
     "subCategory": "verified-procurement",
     "keywords": [
@@ -17647,7 +17647,7 @@
     "timezone": "Asia/Shanghai",
     "status": "open",
     "verificationStatus": "fully_verified",
-    "verifiedAt": "2026-07-24T04:00:00.000Z",
+    "verifiedAt": "2026-08-31T04:00:00.000Z",
     "verificationNotes": "人工复核：已回源天河区政府招标公告页面，核对项目标题、发布主体和2026-08-31截止窗口。",
     "targetAudience": [
       "enterprise",
@@ -17673,9 +17673,9 @@
       "在截止时间前提交材料"
     ],
     "featured": false,
-    "sourceDiscoveredAt": "2026-07-24T04:00:00.000Z",
-    "createdAt": "2026-07-24T04:00:00.000Z",
-    "updatedAt": "2026-07-24T04:00:00.000Z",
+    "sourceDiscoveredAt": "2026-08-31T04:00:00.000Z",
+    "createdAt": "2026-08-31T04:00:00.000Z",
+    "updatedAt": "2026-08-31T04:00:00.000Z",
     "dataOwner": "chanceping-business-radar"
   }
 ]

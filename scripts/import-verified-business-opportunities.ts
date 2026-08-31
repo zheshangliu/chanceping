@@ -8,7 +8,7 @@ type Input = Pick<BusinessOpportunity, "title" | "category" | "keywords" | "orga
 const inputPath = process.argv[2];
 const apply = process.argv.includes("--apply");
 if (!inputPath) throw new Error("Usage: tsx scripts/import-verified-business-opportunities.ts <input.json> [--apply]");
-const now = new Date("2026-07-24T12:00:00+08:00");
+const now = new Date(process.env.CHANCEPING_NOW ?? new Date().toISOString());
 const timestamp = now.toISOString();
 const inputs = JSON.parse(fs.readFileSync(path.resolve(inputPath), "utf8")) as Input[];
 
@@ -18,7 +18,7 @@ const additions: BusinessOpportunity[] = inputs.map((item) => {
   const hash = crypto.createHash("sha256").update(item.officialUrl).digest("hex");
   return {
     id: `opp-${hash.slice(0, 20)}`, slug: `verified-${item.category}-${hash.slice(0, 16)}`, title: item.title,
-    summary: `${item.organizer}发布的当前${item.category === "exhibition" ? "参展" : "外贸"}机会，符合条件的主体可按官方原文办理。`, category: item.category, subCategory: `verified-${item.category}`,
+    summary: `${item.organizer}发布的当前${({ procurement: "采购", policy: "政策申报", exhibition: "参展", competition: "赛事", channel: "渠道", international: "国际合作" } as Record<string, string>)[item.category] ?? "企业服务"}机会，符合条件的主体可按官方原文办理。`, category: item.category, subCategory: `verified-${item.category}`,
     keywords: [...new Set(["人工核验", "官方原文", ...item.keywords])], industries: ["business-services"], regions: ["guangdong"], editions: ["guangzhou", "tianhe", "shaoguan"], organizer: item.organizer, sourceName: item.sourceName, sourceType: item.sourceType,
     officialUrl: item.officialUrl, publishedAt: item.publishedAt, deadline: item.deadline, deadlineType, timezone: "Asia/Shanghai", status: "open", verificationStatus: "fully_verified", verifiedAt: timestamp,
     verificationNotes: `人工复核：${item.evidenceSummary}`, targetAudience: item.targetAudience, eligibilitySummary: item.eligibilitySummary, eligibilityRequirements: item.eligibilityRequirements, rewardSummary: item.rewardSummary,
