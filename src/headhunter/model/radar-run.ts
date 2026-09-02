@@ -22,6 +22,7 @@ export interface RadarRun {
   cost_summary: {
     known_cost: number;
     unknown_cost: boolean;
+    unknown_providers?: string[];
     currency: string;
   };
   company_count: number;

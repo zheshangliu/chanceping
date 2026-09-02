@@ -46,6 +46,14 @@ export interface WeeklyLeadSnapshot {
   manual_edit: boolean;
   manual_pool_override: LeadPool | null;
   opportunity_summary?: string;
+  cost_breakdown?: {
+    search_request_count: number;
+    provider_cost: number | null;
+    read_cost: number | null;
+    llm_cost: number | null;
+    enrichment_cost: number | null;
+    total_intelligence_cost: number | null;
+  };
   created_at: string;
   updated_at: string;
 }

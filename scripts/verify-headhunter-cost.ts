@@ -3,6 +3,7 @@ import { ProviderRegistry, type SearchProvider } from "../src/search/provider-re
 import { executeHeadhunterIntent } from "../src/headhunter/search/headhunter-search";
 import { resolveProviders } from "../src/headhunter/search/routing";
 import { planHeadhunterSearch } from "../src/headhunter/search/theme-planner";
+import { CostLedger } from "../src/headhunter/observability/cost-ledger";
 
 const provider = (name: string, results: number): SearchProvider => ({ name, display_name: name, source_type: "web", reliability: "B", enabled: true, radar_types: ["headhunter"], async search() { return Array.from({ length: results }, (_, index) => ({ title: `${name}-${index}`, url: `https://${name}.example/${index}`, snippet: "result", source_provider: name, source_type: "web" as const })); }, async healthCheck() { return true; } });
 const registry = new ProviderRegistry();
@@ -21,6 +22,12 @@ async function main(): Promise<void> {
   assert.equal(outcome.unknown_cost, true);
   const stopped = await executeHeadhunterIntent({ intent_type: "VERIFY_EVIDENCE", scope: "hk_global", query: "x", evidence_gate_passed: true }, registry);
   assert.equal(stopped.stopped_after_evidence_gate, true);
+  const ledger = new CostLedger();
+  ledger.record("serper", 0.01);
+  ledger.record("exa", null);
+  const summary = ledger.summarize();
+  assert.equal(summary.known_total, 0.01);
+  assert.deepEqual(summary.unknown_providers, ["exa"]);
   console.log("headhunter search routing and cost guard verification: PASS");
 }
 void main();
