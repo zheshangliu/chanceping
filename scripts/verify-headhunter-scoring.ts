@@ -1,0 +1,31 @@
+import assert from "node:assert/strict";
+import type { Company } from "../src/headhunter/model/company";
+import type { CompanySignal } from "../src/headhunter/model/signal";
+import { inferNeeds } from "../src/headhunter/need/need-inference";
+import { calculateBusinessScore } from "../src/headhunter/scoring/business-score";
+import { calculateFinalRankScore, calculateFreshnessScore } from "../src/headhunter/scoring/freshness-score";
+import { applyManualPoolOverride, evaluateLeadGate } from "../src/headhunter/scoring/lead-gate";
+import { rankWeeklyCandidates } from "../src/headhunter/scoring/lead-ranking";
+import { createTestWeeklyLeadSnapshot } from "../src/headhunter/model";
+
+const company: Company = { company_id: "c", canonical_name: "Factory Co", name_cn: null, name_en: "Factory Co", aliases: [], industry: "manufacturing", sub_industry: null, country: "China", region: "Guangdong", city: "Guangzhou", company_type: "operating", website: "https://factory.example", linkedin_company_url: null, official_domains: ["factory.example"], target_segment: "gba_company", parent_company_id: null, entity_scope: "operating_entity", created_at: "2026-09-01T00:00:00Z", updated_at: "2026-09-01T00:00:00Z", last_verified_at: "2026-09-01T00:00:00Z", status: "active" };
+const factorySignal: CompanySignal = { signal_id: "s-factory", company_id: "c", signal_type: "factory_build", event_date: "2026-09-01", first_seen_at: "2026-09-01T00:00:00Z", last_seen_at: "2026-09-01T00:00:00Z", title: "New factory", fact_summary: "Factory announced", inference_summary: null, impact_level: "high", primary_source_id: "e", evidence_ids: ["e"], source_confidence: 1, created_at: "2026-09-01T00:00:00Z", updated_at: "2026-09-01T00:00:00Z" };
+const inferred = inferNeeds(company, [factorySignal], []);
+assert.ok(inferred.some((need) => need.role_family === "Factory Manager" && need.basis === "high_confidence_business_inference"));
+const explicit = inferNeeds(company, [factorySignal], [{ job_id: "j", company_id: "c", canonical_title: "HR Director", original_titles: ["HR Director"], location: "Guangzhou", role_family: "HR", license_requirement: "not_mentioned", ra1_clarity: "not_mentioned", cantonese_clarity: "not_mentioned", employment_type: "full-time", first_seen_at: "2026-09-01T00:00:00Z", last_seen_at: "2026-09-02T00:00:00Z", current_status: "open", source_urls: [] }]);
+assert.ok(explicit.some((need) => need.basis === "explicit_hiring"));
+
+const score = calculateBusinessScore({ hr_need_basis: "high_confidence_business_inference", has_hr_contact: true, has_business_decision_maker: true, has_public_contact_entry: true, priority_segment: true, recent_trigger: true, deliverable_role: true, reliable_evidence: true });
+assert.equal(score.business_score, 92);
+assert.equal(evaluateLeadGate({ company_gate: true, trigger_gate: true, need_gate: true, evidence_gate: true, contact_gate: false, action_gate: true, business_score: 88 }).passed, false);
+assert.equal(evaluateLeadGate({ company_gate: true, trigger_gate: true, need_gate: true, evidence_gate: true, contact_gate: true, action_gate: true, business_score: 69 }).passed, false);
+assert.equal(evaluateLeadGate({ company_gate: true, trigger_gate: true, need_gate: true, evidence_gate: true, contact_gate: true, action_gate: true, business_score: 78 }).passed, true);
+assert.equal(calculateFreshnessScore("2026-09-01T00:00:00Z", new Date("2026-09-04T00:00:00Z")), 100);
+assert.equal(calculateFinalRankScore(70, 100), 76);
+const ranked = rankWeeklyCandidates(Array.from({ length: 10 }, (_, index) => ({ id: `lead-${index}`, business_score: 80, freshness_score: 80, hard_gate_passed: true })));
+assert.equal(ranked.filter((item) => item.lead_pool === "A_ACTIONABLE").length, 8);
+assert.equal(ranked[8]?.b_reasons[0], "outside_top8");
+const manual = applyManualPoolOverride({ ...createTestWeeklyLeadSnapshot(), lead_pool: "B_ENRICHMENT" }, "A_ACTIONABLE");
+assert.equal(manual.lead_pool, "A_ACTIONABLE");
+assert.equal(manual.manual_pool_override, "A_ACTIONABLE");
+console.log("headhunter need and scoring verification: PASS");
