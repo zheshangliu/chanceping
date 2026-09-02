@@ -24,10 +24,19 @@ Date: 2026-09-02 (Asia/Shanghai)
 | `npm run verify:search-benchmark` | NOT_RUN | Phase 3B scripts are not present in current HEAD. |
 | `npm run verify:tikhub-benchmark` | NOT_PRESENT_IN_CURRENT_HEAD | Phase 3C scripts are not present in current HEAD. |
 
-## Gate
+## Recovery and baseline
 
-Preflight is **BLOCKED_BY_DEPENDENCY_BOOTSTRAP**. No Phase 5 product code was changed in this worktree. Existing user worktree and untracked files were not copied, moved, or deleted.
+The incomplete worktree `node_modules` was moved aside (reversible) and the existing dependency tree from the source worktree was linked for local verification. With that environment recovery:
+
+- `npm run typecheck`: PASS
+- `npm run verify:v15:e2e`: PASS
+- `npm run verify:v15`: PASS
+- `npm run verify:v16`: PASS
+- `npm run verify:search-benchmark`: NOT_PRESENT_IN_CURRENT_HEAD (Phase 3B scripts are uncommitted in the source worktree)
+- `npm run verify:tikhub-benchmark`: NOT_PRESENT_IN_CURRENT_HEAD
+
+No Phase 5 product code was changed in this worktree. Existing user worktree and untracked files were not copied, moved, or deleted.
 
 ## Next action
 
-Restore/install dependencies in this worktree, then rerun the baseline commands before Task 1. Do not claim Phase 5 implementation or production readiness from this preflight.
+Restore/install dependencies in this worktree for a standalone checkout, then rerun the missing-provider baselines before Task 1. The core regression baseline is green; do not claim Phase 5 implementation or production readiness from this preflight.
