@@ -3,6 +3,7 @@
 ## Current audit
 
 - Existing ChancePing deployment materials describe an Aliyun ECS/SWAS style host, systemd service, Nginx reverse proxy and release symlink layout under `/opt/chanceping/releases` and `/opt/chanceping/current`.
+- The checked-in ECS and Workbench installers now include a dedicated `finance.chanceping.com` Nginx server block and the HTTPS helper includes the Finance hostname.
 - Persistent application data is kept outside the release under `/opt/chanceping/shared/data` (with reports/exports alongside it). Do not create a second cloud architecture for Finance.
 - The local audit on 2026-09-02 could not resolve `finance.chanceping.com`; DNS/TLS/remote smoke therefore remain unverified.
 

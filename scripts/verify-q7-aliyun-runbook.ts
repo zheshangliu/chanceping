@@ -49,10 +49,10 @@ const ecsBuildDeploy = existsSync(ecsBuildDeployPath) ? readFileSync(ecsBuildDep
   "--build-arg NODE_IMAGE",
   "compare:live-llm-profiles",
   "verify:q7:backend-i18n",
-  "Qwen 正在理解并生成雷达",
-  "Qwen 正在画雷达",
-  "Serper 正在搜索机会，Qwen 随后整理证据",
-  "Qwen 正在生成机会报告",
+  "盯机会正在理解并生成雷达",
+  "盯机会正在画雷达",
+  "盯机会正在搜索机会并整理证据",
+  "盯机会正在生成机会报告",
   "verify:all",
   "全球 AI 赛事导航",
   "/aievents",
@@ -66,6 +66,7 @@ const ecsBuildDeploy = existsSync(ecsBuildDeployPath) ? readFileSync(ecsBuildDep
   "CHANCEPING_NPM_REGISTRY",
   "https://registry.npmmirror.com",
   "aievents.chanceping.com",
+  "finance.chanceping.com",
 ].forEach((required) => {
   check(`runbook mentions ${required}`, text.includes(required));
 });
@@ -84,7 +85,7 @@ check("runbook documents ACR deploy command", /node --run deploy:aliyun-acr/.tes
 check("runbook documents ACR target variables", /CHANCEPING_ALIYUN_ACR_REGISTRY/.test(text) && /CHANCEPING_ALIYUN_IMAGE/.test(text));
 check("runbook documents safe ACR password stdin", /--password-stdin/.test(text) && /不打印密码/.test(text));
 check("runbook explains built-in radar quota bypass", /内置雷达不占用 3 个自定义额度/.test(text));
-check("runbook has backend Qwen wording step", /4\.5 后端页面 Qwen 文案复核/.test(text) && /不出现 DeepSeek 字样/.test(text));
+check("runbook has backend customer wording step", /4\.5 后端页面客户可见文案复核/.test(text) && /不出现 DeepSeek 字样/.test(text));
 check("runbook says api.env stays out of image", /`api\.env` 不进入镜像/.test(text));
 check("runbook documents post-deploy LLM comparison", /compare:live-llm-profiles/.test(text) && /不放进当前阿里云前置闸门/.test(text));
 check("runbook does not include obvious API key value", !/sk-[A-Za-z0-9_-]+|API_KEY=\S{8,}/.test(text));
@@ -100,6 +101,11 @@ check("runbook references Aliyun env example", text.includes("docs/deployment/al
   "CONTEST_LLM_BASE_URL=",
   "CONTEST_LLM_API_KEY=",
   "SERPER_API_KEY=",
+  "FINANCE_ADMIN_USERNAME=",
+  "FINANCE_ADMIN_PASSWORD_HASH=",
+  "FINANCE_SESSION_SECRET=",
+  "CHANCEPING_HEADHUNTER_DATA_DIR=data/headhunter",
+  "SCHEDULER_ENABLED=true",
   "CHANCEPING_LOAD_API_ENV=false",
   "CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false",
   "CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false",
@@ -120,7 +126,13 @@ check("Aliyun env example does not mention DeepSeek commercial profile", !/deeps
   "systemctl restart chanceping",
   "server_name chanceping.com www.chanceping.com",
   "server_name aievents.chanceping.com",
+  "server_name finance.chanceping.com",
   "CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json",
+  "FINANCE_ADMIN_USERNAME=",
+  "FINANCE_ADMIN_PASSWORD_HASH=",
+  "FINANCE_SESSION_SECRET=",
+  "CHANCEPING_HEADHUNTER_DATA_DIR=data/headhunter",
+  "SCHEDULER_ENABLED=true",
 ].forEach((required) => {
   check(`ECS BuildDeploy script includes ${required}`, ecsBuildDeploy.includes(required));
 });

@@ -309,6 +309,7 @@ bash scripts/deploy-ecs-builddeploy.sh
 - 配置 Nginx：
   - `chanceping.com` / `www.chanceping.com` -> 后端「盯机会」；
   - `aievents.chanceping.com` -> 公开「全球 AI 赛事导航」。
+  - `finance.chanceping.com` -> 受保护的「维优猎头 BD 雷达」Finance 工作台。
 
 ECS 构建部署任务建议配置：
 
@@ -357,6 +358,7 @@ bash /tmp/workbench-install.sh /tmp/chanceping-workbench-YYYYMMDD-HHMMSS.tar.gz
 - 创建 `chanceping.service` 并配置 Nginx：
   - `chanceping.com` / `www.chanceping.com` -> 后端「盯机会」；
   - `aievents.chanceping.com` -> 公开「全球 AI 赛事导航」。
+  - `finance.chanceping.com` -> 受保护的「维优猎头 BD 雷达」Finance 工作台。
 
 安装后在服务器上检查：
 
@@ -444,6 +446,7 @@ curl -I http://127.0.0.1:3000/aievents
 - `chanceping.com` -> ECS 公网 IP；
 - `www.chanceping.com` -> ECS 公网 IP；
 - `aievents.chanceping.com` -> ECS 公网 IP。
+- `finance.chanceping.com` -> ECS 公网 IP。
 
 DNS 生效且 HTTP 验证通过后，再通过 Workbench 运行 HTTPS helper：
 

@@ -55,17 +55,21 @@ async function main(): Promise<void> {
     registerHeadHunterWeeklySchedule(scheduler);
     console.log("[Scheduler] HeadHunter weekly radar registered: Monday 07:00 Asia/Shanghai");
   }
-  let isTicking = false;
-  setInterval(() => {
-    if (isTicking) return;
-    isTicking = true;
-    scheduler.tick().catch((err) => {
-      console.error("[Scheduler] tick 异常:", err);
-    }).finally(() => {
-      isTicking = false;
-    });
-  }, 60_000);
-  console.log(`[Scheduler] 已启动，间隔 60s`);
+  if (process.env.SCHEDULER_ENABLED !== "false") {
+    let isTicking = false;
+    setInterval(() => {
+      if (isTicking) return;
+      isTicking = true;
+      scheduler.tick().catch((err) => {
+        console.error("[Scheduler] tick 异常:", err);
+      }).finally(() => {
+        isTicking = false;
+      });
+    }, 60_000);
+    console.log(`[Scheduler] 已启动，间隔 60s`);
+  } else {
+    console.log(`[Scheduler] 已禁用（SCHEDULER_ENABLED=false）`);
+  }
 
   serve({ fetch: app.fetch, port });
   console.log(`[ChancePing API] 服务器已启动`);

@@ -99,10 +99,15 @@ CONTEST_LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 CONTEST_LLM_API_KEY=
 SERPER_API_KEY=
 
+FINANCE_ADMIN_USERNAME=
+FINANCE_ADMIN_PASSWORD_HASH=
+FINANCE_SESSION_SECRET=
+CHANCEPING_HEADHUNTER_DATA_DIR=data/headhunter
+
 CHANCEPING_LOAD_API_ENV=false
 CHANCEPING_ENABLE_LOCAL_LIVE_SEARCH=false
 CHANCEPING_ENABLE_LOCAL_LIVE_LLM=false
-SCHEDULER_ENABLED=false
+SCHEDULER_ENABLED=true
 NOTIFY_MOCK_MODE=true
 PDF_EXPORT_ENABLED=false
 CHANCEPING_RADAR_CHAT_STORE_PATH=data/radar-chat-windows.json
@@ -193,6 +198,22 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 80;
+    server_name finance.chanceping.com;
+
+    client_max_body_size 20m;
 
     location / {
         proxy_pass http://127.0.0.1:3000;
