@@ -94,7 +94,7 @@
     "verify:headhunter:pipeline": "tsx scripts/verify-headhunter-pipeline.ts",
     "verify:headhunter:api": "tsx scripts/verify-headhunter-api.ts",
     "verify:headhunter:ui": "tsx scripts/verify-headhunter-ui.ts",
-    "verify:headhunter:scheduler": "tsx scripts/verify-headhunter-scheduler.ts",
+    "verify:headhunter:scheduler": "tsx scripts/verify-headhunter-scheduler.ts && tsx scripts/verify-headhunter-scheduler-execution.ts",
     "verify:headhunter:auth": "tsx scripts/verify-headhunter-auth.ts",
     "verify:headhunter:markdown": "tsx scripts/verify-headhunter-markdown.ts",
     "verify:headhunter:cost": "tsx scripts/verify-headhunter-cost.ts",

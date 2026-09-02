@@ -12,6 +12,7 @@
  * （AppContext 中不存在这些字段，按 search/reports 路由的既定模式创建实例）。
  */
 
+import { randomUUID } from "node:crypto";
 import type { JobType } from "./types";
 import type { AppContext } from "../api/context";
 import { SearchOrchestrator } from "../search/orchestrator";
@@ -25,6 +26,11 @@ import type { NotifyChannel } from "../notify/channel-adapter";
 import { getDataMode } from "../demo/data-mode";
 import { computeNextRunAt } from "../api/routes/radars";
 import type { RadarType } from "../agents/opportunity-store";
+import { createHeadHunterStores } from "../headhunter/stores";
+import { runHeadhunterRadar } from "../headhunter/pipeline/radar-pipeline";
+import { buildWeeklySnapshot } from "../headhunter/reports/weekly-report";
+import { publishScheduledSnapshot } from "../headhunter/pipeline/weekly-publisher";
+import { computeWeekKey } from "../headhunter/model/weekly-snapshot";
 
 /**
  * 执行触发器。
@@ -303,6 +309,13 @@ async function executeReportTrigger(
   params: Record<string, unknown>,
   ctx: AppContext,
 ): Promise<Record<string, unknown>> {
+  // HeadHunter 的周报不是通用机会雷达报告：它必须先跑完整的
+  // Target → Evidence → Need → Score → Gate → A/B → Trend 流水线，
+  // 再以“成功运行”原子发布 WeeklySnapshot。保持在 report job type
+  // 下是为了兼容现有调度器的任务模型，但不能落回旧 report 生成器。
+  if (params.vertical === "headhunter") {
+    return executeHeadHunterWeeklyReport(ctx);
+  }
   const reportType = (params.report_type as string) ?? "weekly";
   const radarType = (params.radar_type as string) ?? "ai_competition";
 
@@ -334,6 +347,58 @@ async function executeReportTrigger(
     error: report.error,
     generated_at: report.generated_at,
   };
+}
+
+/**
+ * 执行维优猎头周报调度任务。
+ *
+ * 调度器本身只负责触发，HeadHunter stores 负责持久化；每次执行都从
+ * 当前规范化数据重新计算，失败时不覆盖上一次已发布快照。
+ */
+async function executeHeadHunterWeeklyReport(ctx: AppContext): Promise<Record<string, unknown>> {
+  const stores = createHeadHunterStores();
+  const startedAt = new Date().toISOString();
+  const runId = `headhunter-run-${startedAt.replace(/[^0-9]/g, "").slice(0, 14)}-${randomUUID().slice(0, 8)}`;
+  const weekKey = computeWeekKey(new Date(startedAt));
+  const run = {
+    radar_run_id: runId,
+    trigger_type: "scheduled" as const,
+    started_at: startedAt,
+    finished_at: null,
+    status: "running" as const,
+    queries: [],
+    provider_usage: [],
+    cost_summary: { known_cost: 0, unknown_cost: true, unknown_providers: ["headhunter-search"], currency: "USD" },
+    company_count: 0,
+    signal_count: 0,
+    lead_count: 0,
+  };
+  await stores.runs.upsert(run);
+
+  try {
+    const [companies, signals, jobs, people, contacts, trends] = await Promise.all([
+      stores.companies.list(),
+      stores.signals.list(),
+      stores.jobs.list(),
+      stores.people.list(),
+      stores.contacts.list(),
+      stores.trends.list(),
+    ]);
+    // The scheduler consumes normalized records already collected by the
+    // discovery adapters. It never invents raw evidence or silently calls a
+    // paid provider; live discovery remains an explicit benchmark/run step.
+    const result = await runHeadhunterRadar({ radar_run_id: runId, week_key: weekKey, companies, signals, jobs, people, contacts, trends });
+    for (const lead of result.leads) await stores.leads.upsertWeekly(lead);
+    const snapshot = buildWeeklySnapshot(result);
+    await publishScheduledSnapshot(snapshot, stores.weeklySnapshots, { run_status: "success", core_provider_available: true, lead_engine_complete: true, persistence_complete: true });
+    const finishedAt = new Date().toISOString();
+    await stores.runs.upsert({ ...run, status: "success", finished_at: finishedAt, company_count: companies.length, signal_count: signals.length, lead_count: result.leads.length });
+    return { vertical: "headhunter", run_id: runId, week_key: weekKey, status: "success", company_count: companies.length, lead_count: result.leads.length, published: true };
+  } catch (error) {
+    const finishedAt = new Date().toISOString();
+    await stores.runs.upsert({ ...run, status: "failed", finished_at: finishedAt });
+    throw error;
+  }
 }
 
 /**

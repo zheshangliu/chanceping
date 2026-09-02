@@ -29,11 +29,13 @@ export interface EvidenceStore {
 export interface SignalStore {
   upsert(signal: CompanySignal): Promise<void>;
   listByCompany(companyId: string): Promise<CompanySignal[]>;
+  list(): Promise<CompanySignal[]>;
 }
 
 export interface JobStore {
   upsert(job: Job): Promise<void>;
   listByCompany(companyId: string): Promise<Job[]>;
+  list(): Promise<Job[]>;
   insertObservation(observation: JobObservation): Promise<void>;
   listObservations(jobId: string): Promise<JobObservation[]>;
 }
@@ -47,6 +49,7 @@ export interface PersonStore {
 export interface ContactStore {
   upsert(contact: ContactEntry): Promise<void>;
   listByCompany(companyId: string): Promise<ContactEntry[]>;
+  list(): Promise<ContactEntry[]>;
 }
 
 export interface LeadStore {
@@ -107,6 +110,7 @@ export class JsonSignalStore implements SignalStore {
   constructor(dataDir = defaultHeadHunterDataDir()) { this.store = new JsonCollectionStore({ filePath: join(dataDir, "signals.json"), keyOf: (v) => v.signal_id }); }
   upsert(value: CompanySignal): Promise<void> { return this.store.upsert(value); }
   async listByCompany(companyId: string): Promise<CompanySignal[]> { return (await this.store.list()).filter((v) => v.company_id === companyId); }
+  list(): Promise<CompanySignal[]> { return this.store.list(); }
 }
 
 export class JsonJobStore implements JobStore {
@@ -115,6 +119,7 @@ export class JsonJobStore implements JobStore {
   constructor(dataDir = defaultHeadHunterDataDir()) { this.jobs = new JsonCollectionStore({ filePath: join(dataDir, "jobs.json"), keyOf: (v) => v.job_id }); this.observations = new JsonCollectionStore({ filePath: join(dataDir, "job-observations.json"), keyOf: (v) => v.observation_id }); }
   upsert(value: Job): Promise<void> { return this.jobs.upsert(value); }
   async listByCompany(companyId: string): Promise<Job[]> { return (await this.jobs.list()).filter((v) => v.company_id === companyId); }
+  list(): Promise<Job[]> { return this.jobs.list(); }
   insertObservation(value: JobObservation): Promise<void> { return this.observations.insert(value); }
   async listObservations(jobId: string): Promise<JobObservation[]> { return (await this.observations.list()).filter((v) => v.job_id === jobId); }
 }
@@ -132,6 +137,7 @@ export class JsonContactStore implements ContactStore {
   constructor(dataDir = defaultHeadHunterDataDir()) { this.store = new JsonCollectionStore({ filePath: join(dataDir, "contacts.json"), keyOf: (v) => v.contact_id }); }
   upsert(value: ContactEntry): Promise<void> { return this.store.upsert(value); }
   async listByCompany(companyId: string): Promise<ContactEntry[]> { return (await this.store.list()).filter((v) => v.company_id === companyId); }
+  list(): Promise<ContactEntry[]> { return this.store.list(); }
 }
 
 export class JsonLeadStore implements LeadStore {

@@ -67,5 +67,5 @@ function isFileNotFound(error: unknown): boolean {
 }
 
 export function defaultHeadHunterDataDir(): string {
-  return join(process.cwd(), "data", "headhunter");
+  return process.env.CHANCEPING_HEADHUNTER_DATA_DIR ?? join(process.cwd(), "data", "headhunter");
 }
