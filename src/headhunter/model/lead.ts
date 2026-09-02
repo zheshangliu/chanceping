@@ -45,6 +45,7 @@ export interface WeeklyLeadSnapshot {
   outreach_manually_edited: boolean;
   manual_edit: boolean;
   manual_pool_override: LeadPool | null;
+  opportunity_summary?: string;
   created_at: string;
   updated_at: string;
 }
