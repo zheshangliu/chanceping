@@ -10,6 +10,8 @@ export interface RawEvidence {
   published_at: string | null;
   observed_at: string;
   content_hash: string | null;
+  /** Optional publisher grouping used to collapse syndicated repost chains. */
+  source_group?: string;
   immutable: true;
 }
 
