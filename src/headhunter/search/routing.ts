@@ -13,8 +13,8 @@ export function resolveProviders(intent: HeadhunterSearchIntent): RoutingDecisio
       || intent.manual_contact_request === true;
     return exaAllowed ? { providers: ["serper", "exa"], exa_reason: exaReason(intent) } : { providers: ["serper"], exa_reason: null };
   }
-  if (intent.scope === "mainland") return { providers: ["doubao", "serper"], exa_reason: null };
-  return { providers: ["serper", "doubao"], exa_reason: null };
+  if (intent.scope === "mainland") return { providers: ["doubao_search", "serper"], exa_reason: null };
+  return { providers: ["serper", "doubao_search"], exa_reason: null };
 }
 
 function exaReason(intent: HeadhunterSearchIntent): string {

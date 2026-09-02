@@ -9,8 +9,8 @@ const provider = (name: string, results: number): SearchProvider => ({ name, dis
 const registry = new ProviderRegistry();
 registry.register(provider("serper", 0));
 registry.register(provider("exa", 1));
-registry.register(provider("doubao", 1));
-assert.deepEqual(resolveProviders({ intent_type: "DISCOVER_COMPANY", scope: "mainland", query: "x" }).providers, ["doubao", "serper"]);
+registry.register(provider("doubao_search", 1));
+assert.deepEqual(resolveProviders({ intent_type: "DISCOVER_COMPANY", scope: "mainland", query: "x" }).providers, ["doubao_search", "serper"]);
 assert.deepEqual(resolveProviders({ intent_type: "DISCOVER_PERSON", scope: "people", query: "x", serper_found_relevant_people: true }).providers, ["serper"]);
 assert.deepEqual(resolveProviders({ intent_type: "DISCOVER_PERSON", scope: "people", query: "x", serper_found_relevant_people: false }).providers, ["serper", "exa"]);
 const plan = planHeadhunterSearch({ scope: "hk_global", companyNames: Array.from({ length: 20 }, (_, index) => `Company ${index}`) });
