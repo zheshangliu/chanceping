@@ -50,6 +50,11 @@ async function main(): Promise<void> {
   console.log(`[ChancePing API] 健康检查: http://localhost:${port}/health`);
 
   const scheduler = new Scheduler(ctx);
+  if (process.env.FINANCE_ADMIN_USERNAME && process.env.FINANCE_ADMIN_PASSWORD_HASH && process.env.FINANCE_SESSION_SECRET) {
+    const { registerHeadHunterWeeklySchedule } = await import("../scheduler/headhunter-schedule");
+    registerHeadHunterWeeklySchedule(scheduler);
+    console.log("[Scheduler] HeadHunter weekly radar registered: Monday 07:00 Asia/Shanghai");
+  }
   let isTicking = false;
   setInterval(() => {
     if (isTicking) return;
