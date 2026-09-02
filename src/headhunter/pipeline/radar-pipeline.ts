@@ -11,6 +11,8 @@ import { calculateFreshnessScore, calculateFinalRankScore } from "../scoring/fre
 import { evaluateLeadGate } from "../scoring/lead-gate";
 import { rankWeeklyCandidates } from "../scoring/lead-ranking";
 import { isContactGateEligible } from "../model/contact";
+import { generateBdAction } from "../actions/bd-action-generator";
+import { generateOutreach } from "../actions/outreach-generator";
 
 export const RADAR_PIPELINE_STAGES = ["Target/Discovery Universe", "Search", "Evidence", "Company Resolver", "Signal", "Job", "Contact", "Need", "Score", "Gate", "Ranking", "A/B", "Trend"] as const;
 
@@ -49,7 +51,11 @@ export async function runHeadhunterRadar(input: HeadhunterRadarInput): Promise<H
     const gate = evaluateLeadGate({ company_gate: company.status === "active", trigger_gate: signals.length > 0, need_gate: needs.length > 0, evidence_gate: evidencePass, contact_gate: contactPass, action_gate: true, business_score: score.business_score });
     const latest = signals.map((signal) => signal.last_seen_at).sort().at(-1) ?? null;
     const freshness = calculateFreshnessScore(latest, now);
-    return { id: `lead-${company.company_id}-${input.week_key}`, company_id: company.company_id, week_key: input.week_key, radar_run_id: input.radar_run_id, source: "auto" as const, primary_trigger_id: signals[0]?.signal_id ?? null, supporting_signal_ids: signals.slice(1).map((signal) => signal.signal_id), need_inference_ids: needs.map((need) => need.need_inference_id), contact_gate_status: contactPass ? "pass" as const : "fail" as const, evidence_gate_status: evidencePass ? "pass" as const : "fail" as const, business_score: score.business_score, freshness_score: freshness, final_rank_score: calculateFinalRankScore(score.business_score, freshness), lead_pool: gate.passed ? "A_ACTIONABLE" as const : "B_ENRICHMENT" as const, b_reasons: gate.passed ? [] : gate.reasons.map((reason) => reason === "contact_gate=fail" ? "missing_contact" : reason), generated_action: null, manual_action: null, generated_outreach: null, manual_outreach: null, action_manually_edited: false, outreach_manually_edited: false, manual_edit: false, manual_pool_override: null, created_at: now.toISOString(), updated_at: now.toISOString(), hard_gate_passed: gate.passed };
+    const roleCategory = people[0]?.role_category ?? (contacts.length > 0 ? "official_entry" : "other");
+    const actionContext = { company_name: company.canonical_name, role_category: roleCategory, trigger_summary: signals[0]?.fact_summary ?? "近期经营变化", need_basis: hrNeed, contact_label: contacts[0]?.label };
+    const generatedAction = generateBdAction(actionContext);
+    const generatedOutreach = generateOutreach({ ...actionContext, recipient_name: people[0]?.name ?? null, capability_hint: needs[0]?.role_family ?? "相关岗位与团队搭建" });
+    return { id: `lead-${company.company_id}-${input.week_key}`, company_id: company.company_id, week_key: input.week_key, radar_run_id: input.radar_run_id, source: "auto" as const, primary_trigger_id: signals[0]?.signal_id ?? null, supporting_signal_ids: signals.slice(1).map((signal) => signal.signal_id), need_inference_ids: needs.map((need) => need.need_inference_id), contact_gate_status: contactPass ? "pass" as const : "fail" as const, evidence_gate_status: evidencePass ? "pass" as const : "fail" as const, business_score: score.business_score, freshness_score: freshness, final_rank_score: calculateFinalRankScore(score.business_score, freshness), lead_pool: gate.passed ? "A_ACTIONABLE" as const : "B_ENRICHMENT" as const, b_reasons: gate.passed ? [] : gate.reasons.map((reason) => reason === "contact_gate=fail" ? "missing_contact" : reason), generated_action: generatedAction.next_step, manual_action: null, generated_outreach: generatedOutreach.body, manual_outreach: null, action_manually_edited: false, outreach_manually_edited: false, manual_edit: false, manual_pool_override: null, created_at: now.toISOString(), updated_at: now.toISOString(), hard_gate_passed: gate.passed };
   });
   const candidateById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
   const ranked = rankWeeklyCandidates(candidates).map(({ hard_gate_passed: _ignored, ...lead }) => ({ ...candidateById.get(lead.id), ...lead }) as unknown as WeeklyLeadSnapshot);
