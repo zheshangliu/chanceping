@@ -100,6 +100,7 @@
     "verify:headhunter:cost": "tsx scripts/verify-headhunter-cost.ts",
     "verify:headhunter:golden": "tsx scripts/verify-headhunter-golden-gates.ts",
     "verify:headhunter:live": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_RUN_HEADHUNTER_LIVE=true DATA_MODE=live LLM_MODE=live tsx scripts/verify-headhunter-e2e-live.ts",
+    "verify:headhunter:production-smoke": "tsx scripts/verify-headhunter-production-smoke.ts",
     "verify:headhunter": "npm run verify:headhunter:model && npm run verify:headhunter:stores && npm run verify:headhunter:company && npm run verify:headhunter:signals && npm run verify:headhunter:jobs && npm run verify:headhunter:contacts && npm run verify:headhunter:scoring && npm run verify:headhunter:pipeline && npm run verify:headhunter:api && npm run verify:headhunter:ui && npm run verify:headhunter:scheduler && npm run verify:headhunter:auth && npm run verify:headhunter:markdown && npm run verify:headhunter:cost && npm run verify:headhunter:golden",
     "verify:q3": "tsx scripts/verify-q3-saveable-failed-run.ts",
     "verify:q5": "tsx scripts/verify-q5-live-candidate-admission.ts",
