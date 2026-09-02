@@ -4,9 +4,15 @@ import { createHeadHunterApi } from "../src/headhunter/api/headhunter-api";
 import { hashPassword } from "../src/headhunter/auth/admin-auth";
 import { createHeadHunterApiContext } from "../src/headhunter/api/context";
 import type { RawEvidence } from "../src/headhunter/model/evidence";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createHeadHunterStores } from "../src/headhunter/stores";
 
 async function main(): Promise<void> {
-  const context = createHeadHunterApiContext({ authConfig: { username: "admin", password_hash: hashPassword("correct"), session_secret: "secret" } });
+  const dataDir = await mkdtemp(join(tmpdir(), "chanceping-headhunter-api-"));
+  try {
+  const context = createHeadHunterApiContext({ stores: createHeadHunterStores(dataDir), authConfig: { username: "admin", password_hash: hashPassword("correct"), session_secret: "secret" } });
   const root = new Hono(); root.route("/api/finance", createHeadHunterApi({ context }));
   assert.equal((await root.request("http://localhost/api/finance/leads/a")).status, 401);
   const login = await root.request("http://localhost/api/finance/auth/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ username: "admin", password: "correct" }) });
@@ -26,5 +32,8 @@ async function main(): Promise<void> {
   assert.equal(override.status, 200);
   assert.equal((await context.stores.evidence.get("api-evidence"))?.excerpt, "raw");
   console.log("headhunter API contract verification: PASS");
+  } finally {
+    await rm(dataDir, { recursive: true, force: true });
+  }
 }
 void main();
