@@ -2,7 +2,7 @@
 
 日期：2026-09-02  
 分支：`feat/headhunter-finance-mvp-phase5`  
-最新提交：`c62eacd`
+最新提交：`06fcf86`
 
 ## 当前结论
 
@@ -66,4 +66,6 @@ HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、�
 - `docs/phase5/GOLDEN_ACCEPTANCE.md`
 - `docs/phase5/DEPLOYMENT.md`
 - `data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7ab0658a.json`
+- `artifacts/aliyun-workbench/chanceping-workbench-20260902-140806.tar.gz`（6.39 MB，已通过敏感文件排除检查）
+- `artifacts/aliyun-workbench/chanceping-workbench-20260902-140806.tar.gz.json`
 - `/tmp/chanceping-phase5-regression.log`（本机临时回归日志）
