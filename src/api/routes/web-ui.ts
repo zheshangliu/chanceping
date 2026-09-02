@@ -27,6 +27,7 @@ import type { Context } from "hono";
 import fs from "fs";
 import path from "path";
 import { BUSINESS_EDITION_IDS } from "../../business/edition-config";
+import { renderFinancePage } from "../../headhunter/ui/finance-page";
 
 /** 根据文件扩展名推断 Content-Type */
 function getContentType(filePath: string): string {
@@ -106,10 +107,14 @@ export function webUiRoutes(): Hono {
 
   const serveBusinessApp = serveFile("business.html", "text/html; charset=utf-8");
   const isBusinessHost = (c: Context) => (c.req.header("host") ?? "").split(":")[0].toLowerCase() === "business.chanceping.com";
+  const isFinanceHost = (c: Context) => (c.req.header("host") ?? "").split(":")[0].toLowerCase() === "finance.chanceping.com";
+
+  app.get("/login", (c) => isFinanceHost(c) ? c.html(renderFinancePage("/login")) : c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404));
+  for (const financePath of ["/weekly", "/leads/a", "/leads/b", "/trends", "/companies", "/runs"]) app.get(financePath, (c) => isFinanceHost(c) ? c.html(renderFinancePage(financePath)) : c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404));
 
   // The production Business subdomain shares this service. Its root is the
   // default Guangzhou edition; the main site root remains unchanged.
-  app.get("/", (c) => isBusinessHost(c) ? c.redirect("/guangzhou", 302) : serveFile("index.html", "text/html; charset=utf-8")(c));
+  app.get("/", (c) => isFinanceHost(c) ? c.redirect("/login", 302) : isBusinessHost(c) ? c.redirect("/guangzhou", 302) : serveFile("index.html", "text/html; charset=utf-8")(c));
   app.get("/aievents", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/fuli", serveFile("welfare.html", "text/html; charset=utf-8"));
