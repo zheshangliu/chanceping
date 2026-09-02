@@ -2,11 +2,11 @@
 
 日期：2026-09-02  
 分支：`feat/headhunter-finance-mvp-phase5`  
-最新提交：`d6e7218`
+最新提交：`c62eacd`
 
 ## 当前结论
 
-代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；真实搜索 E2E 已跑通，但结果仍是 B 池 enrichment，尚未达到生产采用门槛。`finance.chanceping.com` 的 DNS/TLS/远程烟测未通过，因此生产状态保持 `LOCKED`，没有修改生产默认路由、DNS 或云端部署。
+代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；真实搜索 E2E 已跑通，但结果仍是 B 池 enrichment，尚未达到生产采用门槛。ECS/Workbench 部署工件已补齐 Finance hostname、HTTPS 和 scheduler 配置；`finance.chanceping.com` 的 DNS/TLS/远程烟测仍未通过，因此生产状态保持 `LOCKED`，没有修改生产默认路由、DNS 或云端部署。
 
 ## Gate 状态
 
@@ -15,6 +15,7 @@
 | Task 1–20 代码实施 | PASS | `git log`：domain model 至 live E2E 提交链 |
 | HeadHunter golden acceptance | PASS | `npm run verify:headhunter`，含 8 gates + ranking/archive/markdown invariants |
 | Scheduler wiring | PASS | 周一 07:00 Asia/Shanghai；执行测试验证 run、lead、snapshot 持久化及发布 |
+| Deployment artifact wiring | PASS | ECS/Workbench Nginx、HTTPS helper、Finance secrets template、scheduler enablement；`verify:q7:aliyun-runbook` 99/99 |
 | Existing regression | PASS | `typecheck`、`verify:v15:e2e`、`verify:v15`、`verify:v16` |
 | Search provider benchmark script | NOT PRESENT / INCOMPLETE | package script 仍引用不存在的 `scripts/verify-*-search-provider.ts` |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
@@ -66,4 +67,3 @@ HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、�
 - `docs/phase5/DEPLOYMENT.md`
 - `data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7ab0658a.json`
 - `/tmp/chanceping-phase5-regression.log`（本机临时回归日志）
-
