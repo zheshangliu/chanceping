@@ -185,4 +185,4 @@ export function createHeadHunterStores(dataDir = defaultHeadHunterDataDir()): He
   };
 }
 
-export { defaultHeadHunterDataDir, StoreError } from "./json-store";
+export { defaultHeadHunterDataDir, JsonCollectionStore, StoreError } from "./json-store";
