@@ -20,7 +20,7 @@
 | Search provider benchmark script | NOT PRESENT / INCOMPLETE | package script 仍引用不存在的 `scripts/verify-*-search-provider.ts` |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
 | Real E2E | PARTIAL PASS | Serper 有结果；Doubao 请求成功但返回 0 条；全部候选进 B 池 |
-| Production DNS/TLS/smoke | BLOCKED | `finance.chanceping.com` 无法解析，远程 fetch 失败 |
+| Production DNS/TLS/smoke | BLOCKED | `finance.chanceping.com` 为 NXDOMAIN；强制指向现有 `8.218.11.71` 时 HTTP 为旧应用/404，TLS 证书不包含 Finance hostname |
 | Production routing adoption | NOT APPROVED | 需业务审核及真实信号质量证据 |
 
 ## Real E2E evidence
@@ -41,7 +41,7 @@ HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、�
 
 ### IMPACT
 
-当前可以在本地或已配置部署主机上进行受保护的 Finance MVP 验收，但不能宣称 `finance.chanceping.com` 已上线，也不能把 live E2E 的 15 条搜索结果视为已验证的公司级 BD 线索。Doubao/Serper 的价格仍需在实际账户或控制台确认，unknown 不按 0 元计算。
+当前可以在本地或已配置部署主机上进行受保护的 Finance MVP 验收，但不能宣称 `finance.chanceping.com` 已上线，也不能把 live E2E 的 15 条搜索结果视为已验证的公司级 BD 线索。当前 DNS 托管在 HiChina（`dns3.hichina.com` / `dns4.hichina.com`），应先创建 `finance` A 记录指向现有 ECS `8.218.11.71`，再在该主机部署新 release 并签发包含 Finance hostname 的 TLS 证书。Doubao/Serper 的价格仍需在实际账户或控制台确认，unknown 不按 0 元计算。
 
 ### OPTIONS
 
