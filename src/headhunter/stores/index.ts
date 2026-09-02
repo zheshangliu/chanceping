@@ -9,6 +9,7 @@ import type { RadarRun } from "../model/radar-run";
 import type { CompanySignal } from "../model/signal";
 import type { TrendIntelligence } from "../model/trend";
 import type { WeeklySnapshot } from "../model/weekly-snapshot";
+import type { HumanEvidenceOverride } from "../model/evidence";
 import { defaultHeadHunterDataDir, JsonCollectionStore, StoreError } from "./json-store";
 
 export interface CompanyStore {
@@ -22,6 +23,7 @@ export interface EvidenceStore {
   get(evidenceId: string): Promise<EvidenceRecord | RawEvidence | null>;
   list(): Promise<Array<EvidenceRecord | RawEvidence>>;
   replaceRaw(evidenceId: string, patch: Record<string, string>): Promise<never>;
+  applyOverride(evidenceId: string, override: HumanEvidenceOverride): Promise<EvidenceRecord>;
 }
 
 export interface SignalStore {
@@ -53,6 +55,7 @@ export interface LeadStore {
   listByCompany(companyId: string): Promise<WeeklyLeadSnapshot[]>;
   listByWeek(weekKey: string): Promise<WeeklyLeadSnapshot[]>;
   listByPool(pool: LeadPool): Promise<WeeklyLeadSnapshot[]>;
+  list(): Promise<WeeklyLeadSnapshot[]>;
 }
 
 export interface TrendStore {
@@ -89,6 +92,13 @@ export class JsonEvidenceStore implements EvidenceStore {
   async replaceRaw(evidenceId: string, _patch: Record<string, string>): Promise<never> {
     if (!await this.store.getByKey(evidenceId)) throw new StoreError(`Evidence not found: ${evidenceId}`);
     throw new StoreError("Raw evidence is immutable; write a human_override instead");
+  }
+  async applyOverride(evidenceId: string, override: HumanEvidenceOverride): Promise<EvidenceRecord> {
+    const evidence = await this.store.getByKey(evidenceId);
+    if (!evidence) throw new StoreError(`Evidence not found: ${evidenceId}`);
+    const updated: EvidenceRecord = { ...evidence, human_override: { ...override } };
+    await this.store.upsert(updated);
+    return updated;
   }
 }
 
@@ -132,6 +142,7 @@ export class JsonLeadStore implements LeadStore {
   async listByCompany(companyId: string): Promise<WeeklyLeadSnapshot[]> { return (await this.store.list()).filter((v) => v.company_id === companyId); }
   async listByWeek(weekKey: string): Promise<WeeklyLeadSnapshot[]> { return (await this.store.list()).filter((v) => v.week_key === weekKey); }
   async listByPool(pool: LeadPool): Promise<WeeklyLeadSnapshot[]> { return (await this.store.list()).filter((v) => v.lead_pool === pool); }
+  list(): Promise<WeeklyLeadSnapshot[]> { return this.store.list(); }
 }
 
 export class JsonTrendStore implements TrendStore {

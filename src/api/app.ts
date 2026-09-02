@@ -32,6 +32,7 @@ import { ichSubmissionRoutes } from "./routes/ich-submissions";
 import { internalIchSubmissionRoutes } from "./routes/internal-ich-submissions";
 import { internalIchOperationsRoutes } from "./routes/internal-ich-operations";
 import type { ApiResponse } from "./types";
+import { createHeadHunterApi } from "../headhunter/api/headhunter-api";
 
 /** 从 package.json 读取版本号（启动时一次性读取，避免每次请求读文件） */
 const APP_VERSION: string = (() => {
@@ -85,6 +86,10 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/internal/ich", internalIchRoutes());
   app.route("/api/internal/ich", internalIchSubmissionRoutes());
   app.route("/api/internal/ich", internalIchOperationsRoutes());
+  // Finance is mounted only once its admin/session secrets are configured.
+  if (process.env.FINANCE_ADMIN_USERNAME && process.env.FINANCE_ADMIN_PASSWORD_HASH && process.env.FINANCE_SESSION_SECRET) {
+    app.route("/api/finance", createHeadHunterApi());
+  }
   app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes());
 
