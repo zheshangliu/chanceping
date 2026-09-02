@@ -18,6 +18,7 @@ const contacts = discoverContactEntries({ company_id: "c1", person, provider: "o
   { type: "corporate_email", value: "hr@example.com", source_url: "https://example.com/careers", public_verified: true },
   { type: "linkedin_profile", value: "https://linkedin.com/in/alex", source_url: "https://linkedin.com/in/alex", public_verified: true },
   { type: "other", value: "private WeChat: abc", source_url: "https://example.com", public_verified: true },
+  { type: "phone", value: "private personal number", source_url: "https://example.com", public_verified: false },
 ] }, budget);
 assert.equal(contacts.length, 2);
 console.log("headhunter people and contact gate verification: PASS");

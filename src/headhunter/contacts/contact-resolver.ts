@@ -37,7 +37,8 @@ export function discoverContactEntries(input: ContactDiscoveryInput, budget: Con
 }
 
 function isSafePublicContact(entry: DiscoveredContact): boolean {
+  if (/(wechat|微信|private|personal|私人|home address|家庭住址)/i.test(entry.value)) return false;
   if (!entry.public_verified) return true;
   if (["linkedin_profile", "website", "official_website"].includes(entry.type)) return true;
-  return !/(wechat|微信|personal|私人|home address|家庭住址)/i.test(entry.value);
+  return true;
 }
