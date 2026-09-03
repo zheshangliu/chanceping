@@ -28,6 +28,10 @@ import fs from "fs";
 import path from "path";
 import { BUSINESS_EDITION_IDS } from "../../business/edition-config";
 import { renderFinancePage } from "../../headhunter/ui/finance-page";
+import type { HeadHunterApiContext } from "../../headhunter/api/context";
+import { createHeadHunterApiContext } from "../../headhunter/api/context";
+import { hydrateLeads } from "../../headhunter/api/presentation";
+import { renderWeeklyMarkdown } from "../../headhunter/reports/markdown-export";
 
 /** 根据文件扩展名推断 Content-Type */
 function getContentType(filePath: string): string {
@@ -49,7 +53,7 @@ function getContentType(filePath: string): string {
  *
  * @returns Hono 实例，挂载到根路径 /
  */
-export function webUiRoutes(): Hono {
+export function webUiRoutes(financeContext?: HeadHunterApiContext): Hono {
   const app = new Hono();
   const webDir = path.resolve(process.cwd(), "web");
 
@@ -110,11 +114,25 @@ export function webUiRoutes(): Hono {
   const isFinanceHost = (c: Context) => (c.req.header("host") ?? "").split(":")[0].toLowerCase() === "finance.chanceping.com";
 
   app.get("/login", (c) => isFinanceHost(c) ? c.html(renderFinancePage("/login")) : c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404));
-  for (const financePath of ["/weekly", "/leads/a", "/leads/b", "/trends", "/companies", "/runs"]) app.get(financePath, (c) => isFinanceHost(c) ? c.html(renderFinancePage(financePath)) : c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404));
+  for (const financePath of ["/weekly", "/leads/a", "/leads/b", "/trends", "/companies", "/runs"]) app.get(financePath, (c) => { if (!isFinanceHost(c)) return c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404); c.header("Cache-Control", "public, max-age=300, stale-while-revalidate=600"); return c.html(renderFinancePage(financePath)); });
+
+  const getFinanceContext = (): HeadHunterApiContext => financeContext ?? createHeadHunterApiContext();
+  const publishedWeekly = async () => {
+    const context = getFinanceContext();
+    const rows = await context.stores.weeklySnapshots.list();
+    const row = rows.filter((item) => item.published).sort((a, b) => b.week_key.localeCompare(a.week_key))[0];
+    return row ? { ...row, leads: await hydrateLeads(row.leads, context) } : null;
+  };
+  const escapeHtml = (value: string): string => value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char] ?? char));
+  const requirePublicFinance = (c: Context): Response | null => isFinanceHost(c) && process.env.FINANCE_PUBLIC_MODE === "true" ? null : c.json({ success: false, data: null, error: { code: "UNAUTHORIZED", message: "Finance weekly reader requires public mode" }, duration_ms: 0 }, 401);
+  app.get("/weekly.md", async (c) => { const denied = requirePublicFinance(c); if (denied) return denied; const snapshot = await publishedWeekly(); if (!snapshot) return c.text("暂无已发布周报\n", 404); c.header("Content-Type", "text/markdown; charset=utf-8"); c.header("Cache-Control", "public, max-age=300, stale-while-revalidate=600"); return c.body(renderWeeklyMarkdown(snapshot)); });
+  app.get("/weekly/plain", async (c) => { const denied = requirePublicFinance(c); if (denied) return denied; const snapshot = await publishedWeekly(); if (!snapshot) return c.html("<!doctype html><html lang=\"zh-CN\"><head><meta name=\"robots\" content=\"index,follow\"><link rel=\"canonical\" href=\"https://finance.chanceping.com/weekly\"></head><body><main><h1>暂无已发布周报</h1></main></body></html>", 404); const markdown = renderWeeklyMarkdown(snapshot); const html = `<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"robots\" content=\"index,follow\"><link rel=\"canonical\" href=\"https://finance.chanceping.com/weekly\"><title>维优 BD 情报周报｜${escapeHtml(snapshot.week_key)}</title></head><body><main><pre>${escapeHtml(markdown)}</pre></main></body></html>`; c.header("Cache-Control", "public, max-age=300, stale-while-revalidate=600"); return c.html(html); });
 
   // The production Business subdomain shares this service. Its root is the
   // default Guangzhou edition; the main site root remains unchanged.
   app.get("/", (c) => isFinanceHost(c) ? c.redirect(process.env.FINANCE_PUBLIC_MODE === "true" ? "/weekly" : "/login", 302) : isBusinessHost(c) ? c.redirect("/guangzhou", 302) : serveFile("index.html", "text/html; charset=utf-8")(c));
+  app.get("/robots.txt", (c) => { if (!isFinanceHost(c)) return c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "文件不存在" }, duration_ms: 0 }, 404); c.header("Content-Type", "text/plain; charset=utf-8"); c.header("Cache-Control", "public, max-age=3600"); return c.body("User-agent: *\nAllow: /\nSitemap: https://finance.chanceping.com/sitemap.xml\n"); });
+  app.get("/sitemap.xml", (c) => { if (!isFinanceHost(c)) return c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "文件不存在" }, duration_ms: 0 }, 404); c.header("Content-Type", "application/xml; charset=utf-8"); c.header("Cache-Control", "public, max-age=3600"); const urls = ["/", "/weekly", "/weekly/plain", "/weekly.md"].map((item) => `<url><loc>https://finance.chanceping.com${item}</loc></url>`).join(""); return c.body(`<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">${urls}</urlset>`); });
   app.get("/aievents", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/fuli", serveFile("welfare.html", "text/html; charset=utf-8"));

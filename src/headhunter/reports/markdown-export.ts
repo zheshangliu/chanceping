@@ -2,8 +2,11 @@ import type { WeeklySnapshot } from "../model/weekly-snapshot";
 
 export function renderWeeklyMarkdown(snapshot: WeeklySnapshot): string {
   const title = `# 维优 BD 情报周报｜${snapshot.week_key.replace("-W", " W")}`;
+  const generatedAt = snapshot.published_at ?? snapshot.updated_at ?? snapshot.created_at;
+  const runId = snapshot.radar_run_id ?? "unknown";
   const actionable = snapshot.leads.filter((lead) => lead.lead_pool === "A_ACTIONABLE");
   const highValue = snapshot.leads.filter((lead) => lead.business_score >= 70);
+  const bLeads = snapshot.leads.filter((lead) => lead.lead_pool === "B_ENRICHMENT" && lead.business_score < 70);
   const actions = snapshot.leads.filter((lead) => lead.generated_action || lead.manual_action);
   const funnel = snapshot.funnel_metrics;
   const funnelLines = funnel ? [
@@ -18,7 +21,7 @@ export function renderWeeklyMarkdown(snapshot: WeeklySnapshot): string {
     `- 机器 A 候选 / B 级情报：${funnel.a_count} / ${funnel.b_count}`,
   ] : ["- 本次运行未记录 Funnel Metrics。"];
   const blockerLines = funnel?.blocking_reasons && Object.keys(funnel.blocking_reasons).length ? ["", "### B 级阻塞原因", ...Object.entries(funnel.blocking_reasons).map(([reason, count]) => `- ${humanizeBlocker(reason)}：${count}`)] : [];
-  const lines = [title, "", "## 本周雷达结果解释", ...funnelLines, ...blockerLines, "", "## 一、本周必须联系", ...renderLeads(actionable), "", "## 二、高价值活动", ...renderLeads(highValue), "", "## 三、重要政策 / 市场变化", ...renderTrends(snapshot, ["policy", "market"]), "", "## 四、招聘市场变化", ...renderTrends(snapshot, ["industry", "hiring_market"]), "", "## 五、本周 BD Action", ...renderActions(actions)];
+  const lines = [title, `生成时间：${generatedAt}`, `正式 Run ID：${runId}`, "", "## 本周雷达结果解释", ...funnelLines, ...blockerLines, "", "## 一、本周必须联系", ...renderLeads(actionable), "", "## 二、高价值活动", ...renderLeads(highValue), "", "## B级情报池", ...renderLeads(bLeads), "", "## 三、重要政策 / 市场变化", ...renderTrends(snapshot, ["policy", "market"]), "", "## 四、招聘市场变化", ...renderTrends(snapshot, ["industry", "hiring_market"]), "", "## 五、本周 BD Action", ...renderActions(actions)];
   return `${lines.join("\n").trim()}\n`;
 }
 

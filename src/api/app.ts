@@ -33,6 +33,7 @@ import { internalIchSubmissionRoutes } from "./routes/internal-ich-submissions";
 import { internalIchOperationsRoutes } from "./routes/internal-ich-operations";
 import type { ApiResponse } from "./types";
 import { createHeadHunterApi } from "../headhunter/api/headhunter-api";
+import { createHeadHunterApiContext } from "../headhunter/api/context";
 
 /** 从 package.json 读取版本号（启动时一次性读取，避免每次请求读文件） */
 const APP_VERSION: string = (() => {
@@ -88,14 +89,16 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/internal/ich", internalIchOperationsRoutes());
   // Finance is mounted with admin auth, or explicitly as read-only public mode.
   const financePublicMode = process.env.FINANCE_PUBLIC_MODE === "true";
-  if (financePublicMode || (process.env.FINANCE_ADMIN_USERNAME && process.env.FINANCE_ADMIN_PASSWORD_HASH && process.env.FINANCE_SESSION_SECRET)) {
-    app.route("/api/finance", createHeadHunterApi());
+  const financeConfigured = financePublicMode || Boolean(process.env.FINANCE_ADMIN_USERNAME && process.env.FINANCE_ADMIN_PASSWORD_HASH && process.env.FINANCE_SESSION_SECRET);
+  const financeContext = financeConfigured ? createHeadHunterApiContext() : undefined;
+  if (financeConfigured) {
+    app.route("/api/finance", createHeadHunterApi({ context: financeContext }));
   }
   app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes());
 
   // Web UI 静态文件服务（根路径）
-  app.route("/", webUiRoutes());
+  app.route("/", webUiRoutes(financeContext));
 
   // 全局错误处理
   app.onError((err, c) => {
