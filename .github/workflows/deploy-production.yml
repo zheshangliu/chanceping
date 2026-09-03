@@ -30,10 +30,10 @@ jobs:
             main|rescue/mvp-codex|release-*) ;;
             *) echo "Unsupported production ref: $DEPLOY_REF" >&2; exit 2 ;;
           esac
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.git_ref }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -53,10 +53,10 @@ jobs:
       name: production
       url: https://www.chanceping.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: main
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
       - name: Install isolated Alibaba Cloud SDK
