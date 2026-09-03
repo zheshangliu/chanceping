@@ -1,12 +1,12 @@
 # 维优猎头 BD 雷达 Phase 5 交接报告
 
-日期：2026-09-02  
+日期：2026-09-03  
 分支：`feat/headhunter-finance-mvp-phase5`  
-最新提交：`06fcf86`
+最新提交：`f0b446d`
 
 ## 当前结论
 
-代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；真实搜索 E2E 已跑通，但结果仍是 B 池 enrichment，尚未达到生产采用门槛。ECS/Workbench 部署工件已补齐 Finance hostname、HTTPS 和 scheduler 配置；`finance.chanceping.com` 的 DNS/TLS/远程烟测仍未通过，因此生产状态保持 `LOCKED`，没有修改生产默认路由、DNS 或云端部署。
+代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；真实搜索 E2E 已跑通，但结果仍是 B 池 enrichment，尚未达到生产采用门槛。Finance 分支已通过 SWAS 部署，DNS/TLS 和只读生产 smoke 已通过；当前启用 `FINANCE_PUBLIC_MODE=true`，公开 GET 数据，写操作仍受保护。
 
 ## Gate 状态
 
@@ -21,7 +21,7 @@
 | Search provider benchmark script | NOT PRESENT / INCOMPLETE | package script 仍引用不存在的 `scripts/verify-*-search-provider.ts` |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
 | Real E2E | PARTIAL PASS | Serper 有结果；Doubao 请求成功但返回 0 条；全部候选进 B 池 |
-| Production DNS/TLS/smoke | BLOCKED | DNS 已传播到 `8.218.11.71`；云防火墙已放行 22/80/443，但 TCP 22、2222 仍 `Connection refused`，HTTP 仍是旧应用/404，TLS 证书不包含 Finance hostname |
+| Production DNS/TLS/smoke | PASS (read-only) | `finance.chanceping.com` → `8.218.11.71`；Let's Encrypt SAN 包含 Finance；`/login` 200、`/` 302、公开 weekly API 200 |
 | Production routing adoption | NOT APPROVED | 需业务审核及真实信号质量证据 |
 
 ## Real E2E evidence
@@ -42,7 +42,7 @@ HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、�
 
 ### IMPACT
 
-当前可以在本地或已配置部署主机上进行受保护的 Finance MVP 验收，但不能宣称 `finance.chanceping.com` 已上线，也不能把 live E2E 的 15 条搜索结果视为已验证的公司级 BD 线索。DNS 托管在 HiChina（`dns3.hichina.com` / `dns4.hichina.com`）且已指向 `8.218.11.71`；下一步必须先修复 TCP 22/Workbench 登录，再在该主机部署新 release 并签发包含 Finance hostname 的 TLS 证书。Doubao/Serper 的价格仍需在实际账户或控制台确认，unknown 不按 0 元计算。
+`finance.chanceping.com` 已上线为公开只读 Finance MVP；真实搜索结果仍不能视为已验证的公司级 BD 线索，生产默认 routing 仍未修改。管理员模式可在后续配置 Finance auth secrets 后恢复。Doubao/Serper 的价格仍需在实际账户或控制台确认，unknown 不按 0 元计算。
 
 ### OPTIONS
 

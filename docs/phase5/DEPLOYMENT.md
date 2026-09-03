@@ -5,8 +5,7 @@
 - Existing ChancePing deployment materials describe an Aliyun ECS/SWAS style host, systemd service, Nginx reverse proxy and release symlink layout under `/opt/chanceping/releases` and `/opt/chanceping/current`.
 - The checked-in ECS and Workbench installers now include a dedicated `finance.chanceping.com` Nginx server block and the HTTPS helper includes the Finance hostname.
 - Persistent application data is kept outside the release under `/opt/chanceping/shared/data` (with reports/exports alongside it). Do not create a second cloud architecture for Finance.
-- The 2026-09-02 audit found `chanceping.com` at `8.218.11.71`, but `finance.chanceping.com` returns DNS `NXDOMAIN`. Forcing the Finance Host header to that IP returns the existing app/404 over HTTP, and TLS has no certificate SAN for `finance.chanceping.com`; DNS, certificate, and remote smoke therefore remain blocked.
-- On 2026-09-03 the user enabled the Light Server firewall rules for TCP 22/80/443 (and 3000/2222) from `0.0.0.0/0`. The TRAE rescue repair report confirms the guest OS issue was two invalid `Port 222222` entries plus a missing `/run/sshd`; after cleanup, `sshd -t` passed, `systemctl restart ssh` succeeded, and IPv4/IPv6 TCP 22 was listening. A fresh external probe now sees `:22` open (while `:2222` remains closed, as expected). SSH/Workbench access is therefore restored, but production deployment and TLS remain pending.
+- On 2026-09-03 DNS resolved `finance.chanceping.com` to `8.218.11.71`; the Finance branch was deployed through SWAS, a Let's Encrypt certificate including the Finance SAN was installed, and the read-only production smoke passed (`/login` 200, `/` 302). The Finance host is currently in explicit public read-only mode (`FINANCE_PUBLIC_MODE=true`); GET pages/data are public while POST/PATCH actions remain protected.
 
 ## Required production path
 
@@ -15,7 +14,7 @@ finance.chanceping.com DNS
   → TLS certificate
   → existing Nginx reverse proxy
   → ChancePing app /api/finance and finance host UI
-  → Finance admin/session secrets
+  → public read-only mode or Finance admin/session secrets
   → persistent /opt/chanceping/shared data
   → Monday 07:00 Asia/Shanghai scheduler
 ```
@@ -37,11 +36,11 @@ Production must set `CHANCEPING_LOAD_API_ENV=false`; do not upload local `api.en
 ## Go-live gates
 
 1. DNS resolves to the existing host and TLS is valid.
-2. `/login` is reachable; unauthenticated `/` redirects to `/login`.
-3. Authenticated `/weekly`, `/leads/a`, `/leads/b`, `/companies`, `/runs` are usable.
+2. `/login` is reachable; public mode redirects `/` to `/weekly`.
+3. Public GET `/weekly`, `/leads/a`, `/leads/b`, `/companies`, `/runs` are usable; write routes remain protected.
 4. Manual B survives service restart and is then removed as test data.
 5. Scheduler is registered for Monday 07:00 Asia/Shanghai; use a safe trigger, not a wait for Monday.
 6. A safe FAILED run does not replace the current formal WeeklySnapshot.
 7. `npm run verify:headhunter`, existing regressions, real E2E and production smoke all pass.
 
-Until all gates have evidence, production status remains `LOCKED` and no `finance.chanceping.com` launch claim is allowed.
+Production status: **DEPLOYED — PUBLIC READ-ONLY**. Full authenticated-admin mode remains available by setting `FINANCE_PUBLIC_MODE=false` and configuring the three Finance auth secrets.
