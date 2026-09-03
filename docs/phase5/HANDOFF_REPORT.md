@@ -2,7 +2,7 @@
 
 日期：2026-09-03  
 分支：`feat/headhunter-finance-mvp-phase5`  
-最新提交：`08ce29b`（运行时代码变更基线：`3681e19`）
+最新提交：`36b8cad`
 
 ## 当前结论
 
@@ -20,7 +20,7 @@
 | Existing regression | PASS | `typecheck`、`verify:v15:e2e`、`verify:v15`、`verify:v16` |
 | Search provider benchmark script | NOT THE V1.2 gate | V1.2 Weekly Pipeline 已使用当前可用 Serper；独立 TikHub/Search Jobs 大规模 benchmark 维持 HOLD |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
-| Real Golden Weekly | PASS (pipeline/data gates) | W36/W37 各 115 candidate URLs、25 candidates、20 resolved companies、35 signals、51 jobs、49 people/contact entries；A=3/B=17；人工全量 precision/judgment 尚未完成 |
+| Real Golden Weekly | PASS (pipeline/data gates) | W36/W37 各 115 candidate URLs、25 candidates、20 resolved companies、31 signals、48 jobs、49 people/contact entries；A=2/B=18；人工全量 precision/judgment 尚未完成 |
 | Production DNS/TLS/smoke | PASS (read-only) | `finance.chanceping.com` → `8.218.11.71`；Let's Encrypt SAN 包含 Finance；`/login` 200、`/` 302、公开 weekly API 200 |
 | Production routing adoption | NOT APPROVED | 需业务审核及真实信号质量证据 |
 
@@ -31,7 +31,7 @@ Artifact：`data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7
 
 - Serper：99 requests / 99 successes / 0 failures / cost unknown（重复运行主要命中缓存）
 - Doubao：本地 `api.env` 有 Key，但生产 `/etc/chanceping/chanceping.env` 尚未配置，因此未进入本次生产 run
-- 每周：115 candidate URLs / 25 candidates / 20 verified companies / 35 signals / 51 jobs / 49 people / 49 contacts / 67 needs / A=3 / B=17
+- 每周：115 candidate URLs / 25 candidates / 20 verified companies / 31 signals / 48 jobs / 49 people / 49 contacts / 58 needs / A=2 / B=18
 - W36 与 W37 均 `published=true`，由同一个正式 Weekly Snapshot 生成链路发布
 
 ## FACT / IMPACT / OPTIONS / RECOMMENDATION / COST-RISK
