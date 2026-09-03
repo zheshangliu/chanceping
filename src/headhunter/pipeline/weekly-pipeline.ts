@@ -93,7 +93,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       try {
         const results = await provider.search(query, { max_results: 5, region });
         stat.successes += 1;
-        const usable = results.filter((result) => !isSyntheticResult(result));
+        const usable = results.filter((result) => !isSyntheticResult(result)).map((result) => ({ ...result, search_query: result.search_query ?? query, search_theme: result.search_theme ?? intentType }));
         if (usable.length > 0) return usable;
       } catch { stat.failures += 1; }
     }
@@ -266,11 +266,23 @@ function extractCompanyCandidate(result: SearchResult, segment: "hk_finance" | "
   const host = hostname(result.url);
   const domain = registrableDomain(host);
   if (!host || isNonCompanyHost(host) || GENERIC_TITLE.test(result.title) || host.includes(".example.") || host.endsWith(".local") || host === "example.com" || isGenericPortalHost(host) || !domain) return null;
-  const name = domain.split(".")[0].replace(/[-_]+/g, " ").trim();
+  const domainLabel = domain.split(".")[0].replace(/[-_]+/g, " ").trim();
+  const name = extractIdentityName(result.title, domainLabel) ?? domainLabel;
   if (name.length < 3) return null;
   const title = result.title.trim();
   const isLinkedInCompany = /linkedin\.com\/company\//i.test(result.url);
-  return { input_name: titleCase(name), name_en: titleCase(name), website: isLinkedInCompany ? null : `https://${domain}`, linkedin_company_url: isLinkedInCompany ? normalizeUrl(result.url) : null, entity_scope: "operating_entity", industry: null, country: segment === "hk_finance" ? "Hong Kong" : "China", region: segment === "hk_finance" ? "Hong Kong" : "GBA", city: segment === "gba_company" ? "Guangzhou" : null };
+  // Store only the origin as the website identity anchor; the result URL is
+  // retained separately in immutable Evidence and is never copied wholesale
+  // into Company.website.
+  const origin = isLinkedInCompany ? null : `https://${domain}`;
+  return { input_name: titleCase(name), name_en: titleCase(name), website: origin, linkedin_company_url: isLinkedInCompany ? normalizeUrl(result.url) : null, entity_scope: "operating_entity", industry: null, country: segment === "hk_finance" ? "Hong Kong" : "China", region: segment === "hk_finance" ? "Hong Kong" : "GBA", city: segment === "gba_company" ? "Guangzhou" : null };
+}
+
+function extractIdentityName(title: string, domainLabel: string): string | null {
+  const compactDomain = domainLabel.replace(/[^a-z0-9]/gi, "").toLowerCase();
+  const parts = title.split(/\s+[|｜–—-]\s+/).map((part) => part.replace(/\b(?:official website|careers?|jobs?|招聘|官网|招募)\b/gi, "").trim()).filter((part) => part.length >= 3);
+  const matching = parts.find((part) => part.replace(/[^a-z0-9]/gi, "").toLowerCase().includes(compactDomain));
+  return matching ? matching.slice(0, 120) : null;
 }
 
 function companyFromCandidate(candidate: CompanyCandidate, segment: "hk_finance" | "gba_company" | "outbound_manufacturing", now: Date): Company {

@@ -2,11 +2,11 @@
 
 日期：2026-09-03  
 分支：`feat/headhunter-finance-mvp-phase5`  
-最新提交：`f0b446d`
+最新提交：`3681e19`
 
 ## 当前结论
 
-代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；真实搜索 E2E 已跑通，但结果仍是 B 池 enrichment，尚未达到生产采用门槛。Finance 分支已通过 SWAS 部署，DNS/TLS 和只读生产 smoke 已通过；当前启用 `FINANCE_PUBLIC_MODE=true`，公开 GET 数据，写操作仍受保护。
+代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；V1.2 正式 Weekly Pipeline 已完成部署，并以同一最终版本重建了 W36/W37 两个连续周的真实快照。Finance 分支已通过 SWAS 部署，DNS/TLS、健康检查和只读生产 smoke 已通过；当前启用 `FINANCE_PUBLIC_MODE=true`，公开 GET 数据，写操作仍受保护。生产默认 routing 未修改，等待业务人工审核后再决定采用。
 
 ## Gate 状态
 
@@ -18,21 +18,21 @@
 | Deployment artifact wiring | PASS | ECS/Workbench Nginx、HTTPS helper、Finance secrets template、scheduler enablement；`verify:q7:aliyun-runbook` 99/99 |
 | SSH / Workbench access | PASS | TRAE rescue report: invalid `Port 222222` entries and missing `/run/sshd` repaired; `sshd -t` + TCP 22 listener verified |
 | Existing regression | PASS | `typecheck`、`verify:v15:e2e`、`verify:v15`、`verify:v16` |
-| Search provider benchmark script | NOT PRESENT / INCOMPLETE | package script 仍引用不存在的 `scripts/verify-*-search-provider.ts` |
+| Search provider benchmark script | NOT THE V1.2 gate | V1.2 Weekly Pipeline 已使用当前可用 Serper；独立 TikHub/Search Jobs 大规模 benchmark 维持 HOLD |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
-| Real E2E | PARTIAL PASS | Serper 有结果；Doubao 请求成功但返回 0 条；全部候选进 B 池 |
+| Real Golden Weekly | PASS (pipeline/data gates) | W36/W37 各 115 candidate URLs、25 candidates、20 resolved companies、35 signals、51 jobs、49 people/contact entries；A=3/B=17；人工全量 precision/judgment 尚未完成 |
 | Production DNS/TLS/smoke | PASS (read-only) | `finance.chanceping.com` → `8.218.11.71`；Let's Encrypt SAN 包含 Finance；`/login` 200、`/` 302、公开 weekly API 200 |
 | Production routing adoption | NOT APPROVED | 需业务审核及真实信号质量证据 |
 
 ## Real E2E evidence
 
-Run ID：`headhunter-live-2026-09-02T13-52-19-060Z-7ab0658a`  
+Run ID：`headhunter-golden-2026-W37`
 Artifact：`data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7ab0658a.json`
 
-- Serper：3 requests / 15 results / 0 failures / cost unknown
-- `doubao_search`：2 requests / 0 results / 0 failures / cost unknown
-- 候选公司：15；A 池：0；B 池：15；趋势：0
-- Weekly snapshot 在 live benchmark 中保持 `published=false`，没有被误发布
+- Serper：99 requests / 99 successes / 0 failures / cost unknown（重复运行主要命中缓存）
+- Doubao：本地 `api.env` 有 Key，但生产 `/etc/chanceping/chanceping.env` 尚未配置，因此未进入本次生产 run
+- 每周：115 candidate URLs / 25 candidates / 20 verified companies / 35 signals / 51 jobs / 49 people / 49 contacts / 67 needs / A=3 / B=17
+- W36 与 W37 均 `published=true`，由同一个正式 Weekly Snapshot 生成链路发布
 
 ## FACT / IMPACT / OPTIONS / RECOMMENDATION / COST-RISK
 
@@ -67,6 +67,7 @@ HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、�
 - `docs/phase5/GOLDEN_ACCEPTANCE.md`
 - `docs/phase5/DEPLOYMENT.md`
 - `data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7ab0658a.json`
+- `docs/phase5/V1.2_LIVE_GOLDEN_REPORT_2026-09-03.md`
 - `artifacts/aliyun-workbench/chanceping-workbench-20260902-140806.tar.gz`（6.39 MB，已通过敏感文件排除检查）
 - `artifacts/aliyun-workbench/chanceping-workbench-20260902-140806.tar.gz.json`
 - `/tmp/chanceping-phase5-regression.log`（本机临时回归日志）
