@@ -35,7 +35,7 @@ const NON_COMPANY_HOSTS = new Set([
   "harris-sliwoski.com", "woodburnglobal.com", "bridgepointgroup.com", "go-gba.com", "ourchinastory.com",
   "hktdc.com", "nih.gov", "uscc.gov", "gov.cn", "org.cn", "edu.cn", "com.my", "hotjob.cn", "iguopin.com", "seek.com", "naukri.com",
   "pageexecutive.com", "valueaddvc.com", "brunel.com.cn", "hiredchina.com", "chinajob.com", "vietchina.org",
-  "michaelpage.com.cn", "robertwalters.cn", "arc-group.com", "gba-group-pharma.com", "chinaglobalsouth.com"
+  "michaelpage.com.cn", "robertwalters.cn", "arc-group.com", "chinaglobalsouth.com"
 ]);
 const GENERIC_TITLE = /^(?:\d+\s+)?(?:finance|human resources|hr|recruiter|recruitment|jobs?|careers?|hiring|job openings?|search results?)(?:\s+(?:jobs?|in|hong kong|china|asia).*)?$/i;
 const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|重组|restructur/i;
