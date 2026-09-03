@@ -2,7 +2,7 @@
 
 日期：2026-09-03  
 分支：`feat/headhunter-finance-mvp-phase5`  
-最新提交：`36b8cad`
+最新生产提交：`8912c85`
 
 ## 当前结论
 
