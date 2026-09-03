@@ -14,7 +14,7 @@ import { createHeadHunterStores } from "../stores";
 import { resolveCompany, type CompanyCandidate } from "../company/company-resolver";
 import { resolvePersonCandidate } from "../contacts/person-resolver";
 import { ContactSearchBudget, type ContactSearchProvider } from "../contacts/contact-search-budget";
-import { discoverContactEntries } from "../contacts/contact-resolver";
+import { discoverContactEntries, type DiscoveredContact } from "../contacts/contact-resolver";
 import { classifyCantoneseClarity, classifyRa1Clarity } from "../jobs/literal-requirements";
 import { inferNeeds } from "../need/need-inference";
 import { planV12DiscoveryThemes, type DiscoveryTheme } from "../search/theme-planner";
@@ -182,7 +182,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   // Cross-week reuse must not turn stale events or bootstrap-era generic job
   // index pages into current intelligence. Keep recent signals only and
   // apply the same generic-page rejection used by fresh job discovery.
-  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id) && isRecentSignal(signal.event_date, now));
+  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id) && isRecentSignal(signal.event_date, now, signal.title));
   const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id) && !job.source_urls.some(isGenericJobSourceUrl));
   const people: Person[] = persistedPeople.filter((person) => person.current_company_id !== null && verifiedCompanyIds.has(person.current_company_id));
   const contacts: ContactEntry[] = persistedContacts.filter((contact) => verifiedCompanyIds.has(contact.company_id));
@@ -257,8 +257,8 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       const domain = companyDomain(company.website);
       if (domain) {
         const officialResults = await search(`site:${domain} careers contact recruitment HR`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_CONTACT", company.target_segment === "hk_finance" ? "hk" : "cn");
-        const entries = officialResults.filter((result) => isOfficialEntry(result.url, domain)).flatMap((result) => {
-          const extracted = extractOfficialContacts({ company, source_url: result.url, title: result.title, snippet: result.snippet, inline_content: typeof result.raw_data === "string" ? result.raw_data : null });
+        const entries: DiscoveredContact[] = officialResults.filter((result) => isOfficialEntry(result.url, domain)).flatMap((result): DiscoveredContact[] => {
+          const extracted = extractOfficialContacts({ company, source_url: result.url, title: result.title, snippet: result.snippet, inline_content: extractInlineContent(result.raw_data) });
           // Keep the URL entry even when a search adapter does not return page
           // text. The extractor remains the authority for emails/phones.
           return extracted.entries.length > 0 ? extracted.entries : [{ type: result.url.toLowerCase().includes("career") || result.url.toLowerCase().includes("job") ? "careers_entry" as const : "company_contact_form" as const, value: result.url, source_url: result.url, public_verified: true, professional: true, label: result.title }];
@@ -338,6 +338,12 @@ function isRecentResult(publishedAt: string | undefined, now: Date): boolean { i
 function isFirstPartyUrl(value: string, company: Company): boolean { const host = hostname(value); return Boolean(host && [companyDomain(company.website), ...company.official_domains].filter(Boolean).some((domain) => host === domain || host.endsWith(`.${domain}`))); }
 function isGenericJobPage(url: string): boolean { const host = hostname(url); return AGGREGATOR_HOSTS.has(host) || /\/jobs?(?:\/|$)/i.test(url) && /linkedin\.com/i.test(host); }
 function isOfficialEntry(url: string, domain: string): boolean { return hostname(url) === domain && /careers?|jobs?|contact|recruit|hr/i.test(url); }
+function extractInlineContent(raw: unknown): string | null {
+  if (typeof raw === "string") return raw;
+  if (!raw || typeof raw !== "object") return null;
+  const value = raw as Record<string, unknown>;
+  return [value.inline_content, value.inlineContent, value.content, value.body, value.text].find((item): item is string => typeof item === "string") ?? null;
+}
 function hashText(value: string): string { return createHash("sha256").update(value).digest("hex"); }
 function titleCase(value: string): string { return value.split(/\s+/).filter(Boolean).map((part) => part[0]?.toUpperCase() + part.slice(1)).join(" "); }
 function normalizeTitle(value: string): string { return value.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, ""); }

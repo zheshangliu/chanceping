@@ -10,6 +10,9 @@ export interface DiscoveredContact {
   professional?: boolean;
   person_id?: string | null;
   label?: string | null;
+  /** Optional semantic role from official-contact-extractor. */
+  contact_role?: "recruitment" | "business" | "general";
+  context?: string;
 }
 
 export interface ContactDiscoveryInput {
@@ -32,13 +35,25 @@ export function discoverContactEntries(input: ContactDiscoveryInput, budget: Con
     public_verified: entry.public_verified,
     professional: entry.professional ?? true,
     verified_at: entry.public_verified ? new Date().toISOString() : null,
-    notes: null,
+    notes: entry.contact_role ? `official contact role: ${entry.contact_role}` : null,
   }));
 }
 
 function isSafePublicContact(entry: DiscoveredContact): boolean {
   if (/(wechat|微信|private|personal|私人|home address|家庭住址)/i.test(entry.value)) return false;
-  if (!entry.public_verified) return true;
+  if (/(privacy|webmaster|technical support|media|press|新闻媒体)/i.test(`${entry.label ?? ""} ${entry.context ?? ""}`) && !entry.contact_role) return false;
   if (["linkedin_profile", "website", "official_website"].includes(entry.type)) return true;
+  if (!entry.public_verified) return false;
+  if (entry.professional === false) return false;
+  if (entry.type.includes("email") || entry.type === "email") {
+    const local = entry.value.split("@", 1)[0] ?? "";
+    if (/^(?:privacy|webmaster|support|no-?reply|noreply|donotreply|media|press|abuse|security)(?:[+._-].*)?$/i.test(local)) return false;
+    if (!/^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(entry.value.trim())) return false;
+  }
+  if (entry.type.includes("phone") || entry.type === "phone") {
+    if (entry.value.replace(/\D/g, "").length < 8) return false;
+  }
   return true;
 }
+
+export function isPrecisionSafePublicContact(entry: DiscoveredContact): boolean { return isSafePublicContact(entry); }
