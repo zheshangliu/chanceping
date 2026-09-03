@@ -38,6 +38,19 @@ export interface HeadHunterRadarResult {
   stage_order: readonly string[];
   leads: WeeklyLeadSnapshot[];
   trends: TrendIntelligence[];
+  funnel_metrics?: {
+    candidate_url_count: number;
+    company_candidate_count: number;
+    company_resolved_count: number;
+    signal_count: number;
+    job_count: number;
+    person_candidate_count: number;
+    contact_count: number;
+    need_count: number;
+    a_count: number;
+    b_count: number;
+    blocking_reasons?: Record<string, number>;
+  };
 }
 
 export async function runHeadhunterRadar(input: HeadhunterRadarInput): Promise<HeadHunterRadarResult> {

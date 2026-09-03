@@ -1,3 +1,8 @@
+/**
+ * Migration/demo bootstrap only. The production weekly scheduler and the
+ * `run:headhunter:weekly` command use weekly-pipeline.ts; this script is kept
+ * solely for seeding a first snapshot in an empty environment.
+ */
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir } from "node:fs/promises";
 import { resolveProviders } from "../src/headhunter/search/routing";

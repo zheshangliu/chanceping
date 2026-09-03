@@ -12,7 +12,6 @@
  * （AppContext 中不存在这些字段，按 search/reports 路由的既定模式创建实例）。
  */
 
-import { randomUUID } from "node:crypto";
 import type { JobType } from "./types";
 import type { AppContext } from "../api/context";
 import { SearchOrchestrator } from "../search/orchestrator";
@@ -26,11 +25,7 @@ import type { NotifyChannel } from "../notify/channel-adapter";
 import { getDataMode } from "../demo/data-mode";
 import { computeNextRunAt } from "../api/routes/radars";
 import type { RadarType } from "../agents/opportunity-store";
-import { createHeadHunterStores } from "../headhunter/stores";
-import { runHeadhunterRadar } from "../headhunter/pipeline/radar-pipeline";
-import { buildWeeklySnapshot } from "../headhunter/reports/weekly-report";
-import { publishScheduledSnapshot } from "../headhunter/pipeline/weekly-publisher";
-import { computeWeekKey } from "../headhunter/model/weekly-snapshot";
+import { runHeadHunterWeeklyPipeline } from "../headhunter/pipeline/weekly-pipeline";
 
 /**
  * 执行触发器。
@@ -356,49 +351,17 @@ async function executeReportTrigger(
  * 当前规范化数据重新计算，失败时不覆盖上一次已发布快照。
  */
 async function executeHeadHunterWeeklyReport(ctx: AppContext): Promise<Record<string, unknown>> {
-  const stores = createHeadHunterStores();
-  const startedAt = new Date().toISOString();
-  const runId = `headhunter-run-${startedAt.replace(/[^0-9]/g, "").slice(0, 14)}-${randomUUID().slice(0, 8)}`;
-  const weekKey = computeWeekKey(new Date(startedAt));
-  const run = {
-    radar_run_id: runId,
-    trigger_type: "scheduled" as const,
-    started_at: startedAt,
-    finished_at: null,
-    status: "running" as const,
-    queries: [],
-    provider_usage: [],
-    cost_summary: { known_cost: 0, unknown_cost: true, unknown_providers: ["headhunter-search"], currency: "USD" },
-    company_count: 0,
-    signal_count: 0,
-    lead_count: 0,
+  const result = await runHeadHunterWeeklyPipeline({ publish: true });
+  return {
+    vertical: "headhunter",
+    run_id: result.run.radar_run_id,
+    week_key: result.snapshot.week_key,
+    status: result.run.status,
+    company_count: result.run.company_count,
+    lead_count: result.run.lead_count,
+    funnel: result.stage_metrics,
+    published: true,
   };
-  await stores.runs.upsert(run);
-
-  try {
-    const [companies, signals, jobs, people, contacts, trends] = await Promise.all([
-      stores.companies.list(),
-      stores.signals.list(),
-      stores.jobs.list(),
-      stores.people.list(),
-      stores.contacts.list(),
-      stores.trends.list(),
-    ]);
-    // The scheduler consumes normalized records already collected by the
-    // discovery adapters. It never invents raw evidence or silently calls a
-    // paid provider; live discovery remains an explicit benchmark/run step.
-    const result = await runHeadhunterRadar({ radar_run_id: runId, week_key: weekKey, companies, signals, jobs, people, contacts, trends });
-    for (const lead of result.leads) await stores.leads.upsertWeekly(lead);
-    const snapshot = buildWeeklySnapshot(result);
-    await publishScheduledSnapshot(snapshot, stores.weeklySnapshots, { run_status: "success", core_provider_available: true, lead_engine_complete: true, persistence_complete: true });
-    const finishedAt = new Date().toISOString();
-    await stores.runs.upsert({ ...run, status: "success", finished_at: finishedAt, company_count: companies.length, signal_count: signals.length, lead_count: result.leads.length });
-    return { vertical: "headhunter", run_id: runId, week_key: weekKey, status: "success", company_count: companies.length, lead_count: result.leads.length, published: true };
-  } catch (error) {
-    const finishedAt = new Date().toISOString();
-    await stores.runs.upsert({ ...run, status: "failed", finished_at: finishedAt });
-    throw error;
-  }
 }
 
 /**

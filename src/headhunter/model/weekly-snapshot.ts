@@ -14,6 +14,20 @@ export interface WeeklySnapshot {
   markdown: string | null;
   created_at: string;
   updated_at: string;
+  /** V1.2 funnel explains both positive and zero-A runs. */
+  funnel_metrics?: {
+    candidate_url_count: number;
+    company_candidate_count: number;
+    company_resolved_count: number;
+    signal_count: number;
+    job_count: number;
+    person_candidate_count: number;
+    contact_count: number;
+    need_count: number;
+    a_count: number;
+    b_count: number;
+    blocking_reasons?: Record<string, number>;
+  };
 }
 
 /** Returns the ISO-8601 week in Asia/Shanghai, formatted as YYYY-Www. */
