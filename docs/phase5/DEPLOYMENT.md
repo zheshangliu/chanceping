@@ -6,7 +6,7 @@
 - The checked-in ECS and Workbench installers now include a dedicated `finance.chanceping.com` Nginx server block and the HTTPS helper includes the Finance hostname.
 - Persistent application data is kept outside the release under `/opt/chanceping/shared/data` (with reports/exports alongside it). Do not create a second cloud architecture for Finance.
 - The 2026-09-02 audit found `chanceping.com` at `8.218.11.71`, but `finance.chanceping.com` returns DNS `NXDOMAIN`. Forcing the Finance Host header to that IP returns the existing app/404 over HTTP, and TLS has no certificate SAN for `finance.chanceping.com`; DNS, certificate, and remote smoke therefore remain blocked.
-- On 2026-09-03 the user enabled the Light Server firewall rules for TCP 22/80/443 (and 3000/2222) from `0.0.0.0/0`; an external TCP probe still returns `8.218.11.71:22 Connection refused` and `:2222 Connection refused` while 80/443/3000 are reachable. The cloud firewall gate is therefore PASS, but the guest OS `sshd` listener/configuration gate remains BLOCKED and must be repaired through rescue VNC before Workbench deployment.
+- On 2026-09-03 the user enabled the Light Server firewall rules for TCP 22/80/443 (and 3000/2222) from `0.0.0.0/0`. The TRAE rescue repair report confirms the guest OS issue was two invalid `Port 222222` entries plus a missing `/run/sshd`; after cleanup, `sshd -t` passed, `systemctl restart ssh` succeeded, and IPv4/IPv6 TCP 22 was listening. A fresh external probe now sees `:22` open (while `:2222` remains closed, as expected). SSH/Workbench access is therefore restored, but production deployment and TLS remain pending.
 
 ## Required production path
 

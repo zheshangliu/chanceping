@@ -16,6 +16,7 @@
 | HeadHunter golden acceptance | PASS | `npm run verify:headhunter`，含 8 gates + ranking/archive/markdown invariants |
 | Scheduler wiring | PASS | 周一 07:00 Asia/Shanghai；执行测试验证 run、lead、snapshot 持久化及发布 |
 | Deployment artifact wiring | PASS | ECS/Workbench Nginx、HTTPS helper、Finance secrets template、scheduler enablement；`verify:q7:aliyun-runbook` 99/99 |
+| SSH / Workbench access | PASS | TRAE rescue report: invalid `Port 222222` entries and missing `/run/sshd` repaired; `sshd -t` + TCP 22 listener verified |
 | Existing regression | PASS | `typecheck`、`verify:v15:e2e`、`verify:v15`、`verify:v16` |
 | Search provider benchmark script | NOT PRESENT / INCOMPLETE | package script 仍引用不存在的 `scripts/verify-*-search-provider.ts` |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
