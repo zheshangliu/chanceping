@@ -114,7 +114,7 @@ export function webUiRoutes(): Hono {
 
   // The production Business subdomain shares this service. Its root is the
   // default Guangzhou edition; the main site root remains unchanged.
-  app.get("/", (c) => isFinanceHost(c) ? c.redirect("/login", 302) : isBusinessHost(c) ? c.redirect("/guangzhou", 302) : serveFile("index.html", "text/html; charset=utf-8")(c));
+  app.get("/", (c) => isFinanceHost(c) ? c.redirect(process.env.FINANCE_PUBLIC_MODE === "true" ? "/weekly" : "/login", 302) : isBusinessHost(c) ? c.redirect("/guangzhou", 302) : serveFile("index.html", "text/html; charset=utf-8")(c));
   app.get("/aievents", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/ai-events", serveFile("ai-events.html", "text/html; charset=utf-8"));
   app.get("/fuli", serveFile("welfare.html", "text/html; charset=utf-8"));

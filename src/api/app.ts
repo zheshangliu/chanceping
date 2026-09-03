@@ -86,8 +86,9 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/internal/ich", internalIchRoutes());
   app.route("/api/internal/ich", internalIchSubmissionRoutes());
   app.route("/api/internal/ich", internalIchOperationsRoutes());
-  // Finance is mounted only once its admin/session secrets are configured.
-  if (process.env.FINANCE_ADMIN_USERNAME && process.env.FINANCE_ADMIN_PASSWORD_HASH && process.env.FINANCE_SESSION_SECRET) {
+  // Finance is mounted with admin auth, or explicitly as read-only public mode.
+  const financePublicMode = process.env.FINANCE_PUBLIC_MODE === "true";
+  if (financePublicMode || (process.env.FINANCE_ADMIN_USERNAME && process.env.FINANCE_ADMIN_PASSWORD_HASH && process.env.FINANCE_SESSION_SECRET)) {
     app.route("/api/finance", createHeadHunterApi());
   }
   app.route("/ich/admin", ichAdminPagesRoutes());

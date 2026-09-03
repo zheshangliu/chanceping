@@ -37,7 +37,11 @@ export function createAuthRoutes(options: AuthRoutesOptions = {}): Hono {
     return c.json({ authenticated: true });
   });
   app.post("/logout", (c) => { sessions.revoke(getCookie(c, SESSION_COOKIE)); deleteCookie(c, SESSION_COOKIE, { path: "/" }); return c.json({ authenticated: false }); });
-  app.get("/session", (c) => { const session = sessions.get(getCookie(c, SESSION_COOKIE)); return session ? c.json({ authenticated: true, username: session.username }) : c.json({ authenticated: false }, 401); });
+  app.get("/session", (c) => {
+    if (process.env.FINANCE_PUBLIC_MODE === "true") return c.json({ authenticated: true, public: true });
+    const session = sessions.get(getCookie(c, SESSION_COOKIE));
+    return session ? c.json({ authenticated: true, username: session.username }) : c.json({ authenticated: false }, 401);
+  });
   return app;
 }
 

@@ -9,5 +9,8 @@ export interface HeadHunterApiContext {
 }
 
 export function createHeadHunterApiContext(options: Partial<Pick<HeadHunterApiContext, "stores" | "sessions" | "authConfig">> = {}): HeadHunterApiContext {
-  return { stores: options.stores ?? createHeadHunterStores(), sessions: options.sessions ?? new SessionStore(), authConfig: options.authConfig ?? loadAdminAuthConfig() };
+  const authConfig = options.authConfig ?? (process.env.FINANCE_PUBLIC_MODE === "true"
+    ? { username: "", password_hash: "", session_secret: "public-finance-mode" }
+    : loadAdminAuthConfig());
+  return { stores: options.stores ?? createHeadHunterStores(), sessions: options.sessions ?? new SessionStore(), authConfig };
 }
