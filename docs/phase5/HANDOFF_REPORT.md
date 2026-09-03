@@ -20,7 +20,7 @@
 | Search provider benchmark script | NOT PRESENT / INCOMPLETE | package script 仍引用不存在的 `scripts/verify-*-search-provider.ts` |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
 | Real E2E | PARTIAL PASS | Serper 有结果；Doubao 请求成功但返回 0 条；全部候选进 B 池 |
-| Production DNS/TLS/smoke | BLOCKED | DNS 已传播到 `8.218.11.71`，但现有 IP 的 TCP 22 返回 `Connection refused`；HTTP 仍是旧应用/404，TLS 证书不包含 Finance hostname |
+| Production DNS/TLS/smoke | BLOCKED | DNS 已传播到 `8.218.11.71`；云防火墙已放行 22/80/443，但 TCP 22、2222 仍 `Connection refused`，HTTP 仍是旧应用/404，TLS 证书不包含 Finance hostname |
 | Production routing adoption | NOT APPROVED | 需业务审核及真实信号质量证据 |
 
 ## Real E2E evidence
