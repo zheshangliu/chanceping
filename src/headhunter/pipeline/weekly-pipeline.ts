@@ -23,6 +23,7 @@ import { runHeadhunterRadar, type HeadHunterRadarResult } from "./radar-pipeline
 import { buildWeeklySnapshot } from "../reports/weekly-report";
 import { publishScheduledSnapshot } from "./weekly-publisher";
 import { computeWeekKey } from "../model/weekly-snapshot";
+import { isRecentSignal, isGenericJobSourceUrl } from "./quality-filters";
 
 const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk", "efinancialcareers.hk", "ambition.com.hk", "hongkongbusiness.hk"]);
 // Search discovery frequently returns articles, social profiles, public
@@ -176,8 +177,8 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   // Cross-week reuse must not turn stale events or bootstrap-era generic job
   // index pages into current intelligence. Keep recent signals only and
   // apply the same generic-page rejection used by fresh job discovery.
-  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id) && isRecentResult(signal.event_date ?? undefined, now));
-  const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id) && !job.source_urls.some((url) => isGenericJobPage(url)));
+  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id) && isRecentSignal(signal.event_date, now));
+  const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id) && !job.source_urls.some(isGenericJobSourceUrl));
   const people: Person[] = persistedPeople.filter((person) => person.current_company_id !== null && verifiedCompanyIds.has(person.current_company_id));
   const contacts: ContactEntry[] = persistedContacts.filter((contact) => verifiedCompanyIds.has(contact.company_id));
 
