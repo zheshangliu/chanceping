@@ -1,0 +1,36 @@
+name: ChancePing CI
+
+on:
+  pull_request:
+    branches: [main, rescue/mvp-codex]
+  push:
+    branches: [main, rescue/mvp-codex]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mvp-regression:
+    name: MVP regression gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: bash -n scripts/deploy-release.sh
+      - run: bash scripts/verify-deploy-release.sh
+      - run: node --check scripts/invoke-aliyun-swas-deploy.cjs
+      - run: npm run typecheck
+      - run: npm run verify:v15:e2e
+      - run: npm run verify:v15
+      - run: npm run verify:v16
+      - run: npm run verify:all
