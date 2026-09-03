@@ -6,6 +6,7 @@
 - The checked-in ECS and Workbench installers now include a dedicated `finance.chanceping.com` Nginx server block and the HTTPS helper includes the Finance hostname.
 - Persistent application data is kept outside the release under `/opt/chanceping/shared/data` (with reports/exports alongside it). Do not create a second cloud architecture for Finance.
 - The 2026-09-02 audit found `chanceping.com` at `8.218.11.71`, but `finance.chanceping.com` returns DNS `NXDOMAIN`. Forcing the Finance Host header to that IP returns the existing app/404 over HTTP, and TLS has no certificate SAN for `finance.chanceping.com`; DNS, certificate, and remote smoke therefore remain blocked.
+- On 2026-09-03 an external TCP probe to `8.218.11.71:22` returned `Connection refused` while ports 80/443 were reachable. This is consistent with SSH not listening or an instance/security-group rule actively rejecting the connection; it must be repaired through ECS console/VNC before Workbench deployment.
 
 ## Required production path
 
