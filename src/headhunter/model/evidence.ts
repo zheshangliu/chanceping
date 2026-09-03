@@ -13,6 +13,11 @@ export interface RawEvidence {
   /** Optional publisher grouping used to collapse syndicated repost chains. */
   source_group?: string;
   immutable: true;
+  /** Stable aliases used by the V1.1 display contract. */
+  raw_title?: string;
+  raw_excerpt?: string;
+  first_seen_at?: string;
+  fetched_at?: string;
 }
 
 export interface HumanEvidenceOverride {

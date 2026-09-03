@@ -50,7 +50,8 @@ export async function runHeadhunterRadar(input: HeadhunterRadarInput): Promise<H
     const needs = inferNeeds(company, signals, jobs);
     const hrNeed = needs[0]?.basis ?? null;
     const score = calculateBusinessScore({ hr_need_basis: hrNeed, has_hr_contact: people.some((person) => ["ta", "recruiter", "hrbp", "hrd"].includes(person.role_category) && person.employment_status === "verified_current"), has_business_decision_maker: people.some((person) => ["business_leader", "ceo", "coo", "country_manager"].includes(person.role_category)), has_public_contact_entry: contacts.some(isContactGateEligible), priority_segment: company.target_segment !== "other", recent_trigger: signals.length > 0, deliverable_role: needs.length > 0, reliable_evidence: signals.some((signal) => signal.evidence_ids.length > 0) });
-    const evidenceForCompany = (input.evidences ?? []).filter((evidence) => signals.some((signal) => signal.evidence_ids.includes(evidence.evidence_id)) || evidence.source_url === company.website);
+    const jobSourceUrls = new Set(jobs.flatMap((job) => job.source_urls));
+    const evidenceForCompany = (input.evidences ?? []).filter((evidence) => signals.some((signal) => signal.evidence_ids.includes(evidence.evidence_id)) || evidence.source_url === company.website || jobSourceUrls.has(evidence.source_url));
     const evidencePass = evidenceForCompany.length > 0 && evaluateEvidenceGate(evidenceForCompany).passed;
     const contactPass = contacts.some(isContactGateEligible);
     const gate = evaluateLeadGate({ company_gate: company.status === "active", trigger_gate: signals.length > 0, need_gate: needs.length > 0, evidence_gate: evidencePass, contact_gate: contactPass, action_gate: true, business_score: score.business_score });

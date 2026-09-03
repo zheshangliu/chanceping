@@ -12,7 +12,7 @@ export async function hydrateLead(lead: WeeklyLeadSnapshot, context: HeadHunterA
     context.stores.contacts.listByCompany(company.company_id),
     context.stores.evidence.list(),
   ]);
-  const linkedEvidenceIds = new Set(lead.evidence_ids ?? []);
+  const linkedEvidenceIds = new Set([...(lead.evidence_ids ?? []), ...signals.flatMap((signal) => signal.evidence_ids)]);
   const presented = buildLeadPresentation({ lead, company, signals, jobs, people: people.filter((person) => person.current_company_id === company.company_id), contacts, evidences: evidences.filter((evidence) => linkedEvidenceIds.has(evidence.evidence_id) || evidence.source_url === company.website) });
   if (presented.lead_pool === "A_ACTIONABLE" && (presented.evidence_gate_status !== "pass" || presented.contact_gate_status !== "pass")) {
     return { ...presented, lead_pool: "B_ENRICHMENT", b_reasons: [...new Set([...(presented.b_reasons ?? []), "evidence_or_contact_gate_fail"])], manual_pool_override: null };

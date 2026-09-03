@@ -85,7 +85,7 @@ async function main(): Promise<void> {
     const evidenceId = `search-${createHash("sha256").update(result.url).digest("hex").slice(0, 20)}`;
     const existing = await stores.evidence.get(evidenceId);
     if (existing) continue;
-    const evidence: EvidenceRecord = { evidence_id: evidenceId, source_url: result.url, source_name: result.source_provider, source_type: "search", title: result.title, excerpt: result.snippet, published_at: result.published_at ?? null, observed_at: now.toISOString(), content_hash: null, immutable: true, human_override: null };
+    const evidence: EvidenceRecord = { evidence_id: evidenceId, source_url: result.url, source_name: result.source_provider, source_type: "search", title: result.title, excerpt: result.snippet, raw_title: result.title, raw_excerpt: result.snippet, first_seen_at: now.toISOString(), fetched_at: now.toISOString(), published_at: result.published_at ?? null, observed_at: now.toISOString(), content_hash: null, immutable: true, human_override: null };
     await stores.evidence.insert(evidence);
   }
 

@@ -87,7 +87,7 @@ function choosePrimarySignal(signals: CompanySignal[]): CompanySignal | null {
 }
 
 function toEvidenceView(item: RawEvidence | EvidenceRecord): LeadEvidenceView {
-  const isFirstParty = item.source_type === "official" || item.source_type === "regulator";
+  const isFirstParty = isFirstPartyEvidence(item);
   return { evidence_id: item.evidence_id, title: item.title, summary: item.excerpt, source_name: item.source_name, source_type: item.source_type, source_url: item.source_url, published_at: item.published_at, evidence_level: isFirstParty ? "first_party" : item.source_type === "reliable_media" ? "reliable_secondary" : "discovery", is_first_party: isFirstParty, cross_verified: false };
 }
 
@@ -100,7 +100,8 @@ function toContactView(entry: ContactEntry, people: Person[], companyName: strin
 
 function isOfficialEntry(entry: ContactEntry): boolean { return ["corporate_email", "corporate_phone", "company_contact_form", "careers_form", "careers_entry", "email", "phone", "contact_form"].includes(entry.kind) && entry.public_verified && entry.professional; }
 function toOfficialEntry(entry: ContactEntry): OfficialContactEntryView { const base = { type: entry.kind, label: entry.label ?? entry.kind }; if (entry.kind.includes("email")) return { ...base, email: normalizeContactValue(entry.kind, entry.value) }; if (entry.kind.includes("phone")) return { ...base, phone: normalizeContactValue(entry.kind, entry.value) }; return { ...base, url: normalizeContactValue(entry.kind, entry.value) }; }
-function normalizeContactValue(kind: string, value: string): string { if (kind.includes("email")) return value.trim().toLowerCase(); if (kind.includes("phone")) return value.trim().replace(/[^+\d]/g, ""); try { return new URL(value).toString(); } catch { return value.trim(); } }
+export function normalizeContactValue(kind: string, value: string): string { if (kind.includes("email")) return value.trim().toLowerCase(); if (kind.includes("phone")) return value.trim().replace(/[^+\d]/g, ""); try { return new URL(value).toString(); } catch { return value.trim(); } }
+export function isFirstPartyEvidence(item: RawEvidence | EvidenceRecord): boolean { return item.source_type === "official" || item.source_type === "regulator"; }
 function sourceGroup(url: string, name: string): string { try { return new URL(url).hostname.replace(/^www\./, "").toLowerCase(); } catch { return name.trim().toLowerCase(); } }
 function unique(values: string[]): string[] { return [...new Set(values.map((value) => value.trim()).filter(Boolean))]; }
 function signalLabelZh(type: CompanySignal["signal_type"]): string { return ({ hiring: "招聘扩张", funding: "融资变化", ipo: "上市进展", ma: "并购变化", new_license: "牌照/业务变化", new_business: "新业务", new_market: "新市场布局", factory_build: "新工厂建设", factory_expand: "工厂扩产", capacity_transfer: "产能转移", large_order: "重大订单", regional_hq: "区域总部变化", treasury_center: "资金中心变化", leadership_change: "管理层变化", restructuring: "组织调整", layoff: "裁员/重组", closure: "业务收缩", government_agreement: "政府合作", contact_enrichment: "联系人变化", other: "经营变化" } as Record<string, string>)[type] ?? "经营变化"; }
