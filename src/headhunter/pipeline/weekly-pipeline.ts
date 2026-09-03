@@ -173,8 +173,11 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     stores.people.list(),
     stores.contacts.list(),
   ]);
-  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id));
-  const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id));
+  // Cross-week reuse must not turn stale events or bootstrap-era generic job
+  // index pages into current intelligence. Keep recent signals only and
+  // apply the same generic-page rejection used by fresh job discovery.
+  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id) && isRecentResult(signal.event_date ?? undefined, now));
+  const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id) && !job.source_urls.some((url) => isGenericJobPage(url)));
   const people: Person[] = persistedPeople.filter((person) => person.current_company_id !== null && verifiedCompanyIds.has(person.current_company_id));
   const contacts: ContactEntry[] = persistedContacts.filter((contact) => verifiedCompanyIds.has(contact.company_id));
 
