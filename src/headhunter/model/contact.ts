@@ -19,5 +19,5 @@ export function isContactKind(value: string): value is ContactKind {
 }
 
 export function isContactGateEligible(entry: ContactEntry): boolean {
-  return entry.public_verified && entry.professional && ["email", "phone", "corporate_email", "corporate_phone", "contact_form", "company_contact_form", "careers_form", "careers_entry"].includes(entry.kind);
+  return entry.public_verified && entry.professional && ["email", "phone", "corporate_email", "corporate_phone", "contact_form", "company_contact_form", "careers_form", "careers_entry", "linkedin_profile"].includes(entry.kind);
 }

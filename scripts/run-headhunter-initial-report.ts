@@ -89,7 +89,7 @@ async function main(): Promise<void> {
     await stores.evidence.insert(evidence);
   }
 
-  const radar = await runHeadhunterRadar({ radar_run_id: runId, week_key: weekKey, companies, signals: [], jobs: [], people: [], contacts: [], trends: [], now });
+  const radar = await runHeadhunterRadar({ radar_run_id: runId, week_key: weekKey, companies, signals: [], jobs: [], people: [], contacts: [], evidences: await stores.evidence.list(), trends: [], now });
   for (const lead of radar.leads) await stores.leads.upsertWeekly(lead);
   const snapshot = buildWeeklySnapshot(radar);
   await publishScheduledSnapshot(snapshot, stores.weeklySnapshots, { run_status: "success", core_provider_available: true, lead_engine_complete: true, persistence_complete: true });

@@ -8,6 +8,39 @@ export type NeedBasis = "explicit_hiring" | "high_confidence_business_inference"
 
 export type GateStatus = "pass" | "fail";
 
+export interface LeadEvidenceView {
+  evidence_id: string;
+  title: string;
+  summary: string;
+  source_name: string;
+  source_type: string;
+  source_url: string;
+  published_at: string | null;
+  evidence_level: string;
+  is_first_party: boolean;
+  cross_verified: boolean;
+}
+
+export interface LeadContactView {
+  contact_id: string;
+  name: string | null;
+  title: string | null;
+  organization: string | null;
+  contact_type: string;
+  url: string | null;
+  email: string | null;
+  phone: string | null;
+  verification_status: string;
+}
+
+export interface OfficialContactEntryView {
+  type: string;
+  label: string;
+  url?: string;
+  email?: string;
+  phone?: string;
+}
+
 export interface NeedInference {
   need_inference_id: string;
   company_id: string;
@@ -46,6 +79,24 @@ export interface WeeklyLeadSnapshot {
   manual_edit: boolean;
   manual_pool_override: LeadPool | null;
   opportunity_summary?: string;
+  /** Company and business interpretation fields are persisted at run time. */
+  company_name?: string;
+  industry?: string | null;
+  region?: string | null;
+  primary_trigger?: { title: string; summary: string; event_date: string | null; source_name: string | null; source_url: string | null } | null;
+  trigger_summary_zh?: string | null;
+  why_now_zh?: string | null;
+  talent_need_zh?: string | null;
+  service_wedge_zh?: string | null;
+  bd_action_zh?: string | null;
+  first_touch_script_zh?: string | null;
+  fact_summary_zh?: string | null;
+  inference_summary_zh?: string | null;
+  evidence_count?: number;
+  evidence_ids?: string[];
+  evidences?: LeadEvidenceView[];
+  contacts?: LeadContactView[];
+  official_contact_entries?: OfficialContactEntryView[];
   cost_breakdown?: {
     search_request_count: number;
     provider_cost: number | null;
