@@ -1,0 +1,5 @@
+# Production and release governance must be reviewed by the repository owner.
+/.github/ @zheshangliu
+/scripts/deploy-release.sh @zheshangliu
+/scripts/invoke-aliyun-swas-deploy.cjs @zheshangliu
+/docs/deployment/ @zheshangliu

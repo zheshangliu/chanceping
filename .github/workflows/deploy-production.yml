@@ -1,0 +1,77 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: Branch or tag to deploy after all regression gates pass
+        required: true
+        default: rescue/mvp-codex
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chanceping-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify release candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Allow only governed production refs
+        env:
+          DEPLOY_REF: ${{ inputs.git_ref }}
+        run: |
+          case "$DEPLOY_REF" in
+            main|rescue/mvp-codex|release-*) ;;
+            *) echo "Unsupported production ref: $DEPLOY_REF" >&2; exit 2 ;;
+          esac
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run verify:v15:e2e
+      - run: npm run verify:v15
+      - run: npm run verify:v16
+      - run: npm run verify:all
+
+  deploy:
+    name: Atomic SWAS release
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment:
+      name: production
+      url: https://www.chanceping.com
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install isolated Alibaba Cloud SDK
+        run: npm install --prefix "$RUNNER_TEMP/chanceping-swas-sdk" --no-audit --no-fund @alicloud/swas-open20200601 @alicloud/openapi-client @alicloud/tea-util
+      - name: Deploy exact ref through SWAS Cloud Assistant
+        env:
+          NODE_PATH: ${{ runner.temp }}/chanceping-swas-sdk/node_modules
+          ALIBABA_CLOUD_ACCESS_KEY_ID: ${{ secrets.ALIBABA_CLOUD_ACCESS_KEY_ID }}
+          ALIBABA_CLOUD_ACCESS_KEY_SECRET: ${{ secrets.ALIBABA_CLOUD_ACCESS_KEY_SECRET }}
+          CHANCEPING_SWAS_INSTANCE: ${{ secrets.CHANCEPING_SWAS_INSTANCE }}
+          CHANCEPING_SWAS_REGION: ${{ vars.CHANCEPING_SWAS_REGION }}
+          CHANCEPING_DEPLOY_REF: ${{ inputs.git_ref }}
+        run: node scripts/invoke-aliyun-swas-deploy.cjs
+      - name: Verify public production paths
+        env:
+          CHANCEPING_DEPLOY_BASE_URL: https://www.chanceping.com
+          NODE_OPTIONS: --tls-max-v1.2
+        run: npm ci --no-audit --no-fund && npm run verify:q7:aliyun-remote-smoke

@@ -1,5 +1,10 @@
 # ChancePing 阿里云 MVP 部署清单
 
+> 日常发布治理、GitHub Actions、版本化 release 和自动回滚见
+> [`docs/deployment/release-governance.md`](./release-governance.md)。本文件中的
+> ECS/Workbench 路径主要用于首次安装和故障恢复；日常生产发布应使用受保护的
+> `Deploy production` 工作流或相同的 `scripts/deploy-release.sh`。
+
 本清单用于把当前本地 MVP 迁移到阿里云测试站。目标是先部署可演示版本：每个用户默认可进入内置「全球 AI 赛事导航」雷达，另可创建 3 个自定义雷达窗口；公开页 `/aievents` 只读取已入库赛事数据，不在访客访问时触发 live search 或 live LLM。
 
 ## 部署边界
