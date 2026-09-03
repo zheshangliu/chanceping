@@ -73,12 +73,16 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     for (const providerName of route.providers) {
       const provider = providers.get(providerName);
       if (!provider?.enabled) continue;
+      // A missing optional key puts some adapters in mock/demo mode. Never
+      // let that synthetic payload short-circuit a real fallback provider.
+      if ((provider as SearchProvider & { mockMode?: boolean }).mockMode === true) continue;
       const stat = usage.get(providerName) ?? { requests: 0, successes: 0, failures: 0, knownCost: null, unknownCost: true };
       stat.requests += 1; usage.set(providerName, stat);
       try {
         const results = await provider.search(query, { max_results: 5, region });
         stat.successes += 1;
-        if (results.length > 0) return results;
+        const usable = results.filter((result) => !isSyntheticResult(result));
+        if (usable.length > 0) return usable;
       } catch { stat.failures += 1; }
     }
     return [];
@@ -262,6 +266,7 @@ function registrableDomain(host: string): string {
   return labels.slice(-2).join(".");
 }
 function isGenericPortalHost(host: string): boolean { return /^(?:info|about|news|careers?|jobs?|search|portal)\./i.test(host) || /(?:\.hku\.hk|\.edu\.hk)$/i.test(host); }
+function isSyntheticResult(result: SearchResult): boolean { return /(?:^|\.)example\.(?:com|org|net|cn|edu)|mock\.chanceping\.local/i.test(`${result.url} ${result.title} ${result.snippet}`); }
 function isLikelyAggregatorCompany(company: Company): boolean { const host = companyDomain(company.website); return Boolean(host && (AGGREGATOR_HOSTS.has(host) || isGenericPortalHost(host) || host.includes(".example.") || host.endsWith(".local"))); }
 function isRecentResult(publishedAt: string | undefined, now: Date): boolean { if (!publishedAt) return true; const parsed = Date.parse(publishedAt); return Number.isNaN(parsed) || parsed >= now.getTime() - 60 * 86400000; }
 function isFirstPartyUrl(value: string, company: Company): boolean { const host = hostname(value); return Boolean(host && [companyDomain(company.website), ...company.official_domains].filter(Boolean).some((domain) => host === domain || host.endsWith(`.${domain}`))); }
