@@ -3,6 +3,8 @@ import { runHeadHunterWeeklyPipeline } from "../src/headhunter/pipeline/weekly-p
 
 async function main(): Promise<void> {
   const result = await runHeadHunterWeeklyPipeline({
+    weekKey: process.env.CHANCEPING_WEEK_KEY,
+    radarRunId: process.env.CHANCEPING_RADAR_RUN_ID,
     maxThemes: Number(process.env.CHANCEPING_WEEKLY_MAX_THEMES ?? 18),
     maxCompanies: Number(process.env.CHANCEPING_WEEKLY_MAX_COMPANIES ?? 30),
     publish: process.env.CHANCEPING_WEEKLY_PUBLISH !== "false",
