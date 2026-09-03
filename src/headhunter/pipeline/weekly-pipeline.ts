@@ -142,7 +142,17 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     resolutions.push(resolution);
     if (resolution.status === "MATCHED" && resolution.company_id) {
       const matched = [...existingCompanies, ...companies].find((company) => company.company_id === resolution.company_id);
-      if (matched && !companies.some((company) => company.company_id === matched.company_id)) companies.push(matched);
+      if (matched && !companies.some((company) => company.company_id === matched.company_id)) {
+        // A previously unknown record may become eligible again when the new
+        // evidence has both an exact identity and first-party domain match.
+        // This is deliberately stricter than HTTP success and never revives a
+        // portal/social host (those are filtered before resolution).
+        const reverified = matched.status === "unknown" && resolution.name_match === true && resolution.official_website_match === true && resolution.region_match !== false
+          ? { ...matched, status: "active" as const, updated_at: now.toISOString(), last_verified_at: now.toISOString() }
+          : matched;
+        companies.push(reverified);
+        if (reverified.status !== matched.status) await stores.companies.upsert(reverified);
+      }
       continue;
     }
     if (resolution.status !== "NEW_COMPANY" || !candidate.website) continue;
