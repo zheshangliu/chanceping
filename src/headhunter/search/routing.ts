@@ -1,4 +1,5 @@
 import type { HeadhunterSearchIntent } from "./intents";
+import { HEADHUNTER_PROVIDER_CONTRACT } from "./provider-contract";
 
 export interface RoutingDecision {
   providers: string[];
@@ -11,10 +12,10 @@ export function resolveProviders(intent: HeadhunterSearchIntent): RoutingDecisio
       || (intent.relationship_confidence ?? 1) < 0.6
       || (intent.lead_value === "high" && intent.has_public_contact === false)
       || intent.manual_contact_request === true;
-    return exaAllowed ? { providers: ["serper", "exa"], exa_reason: exaReason(intent) } : { providers: ["serper"], exa_reason: null };
+    return exaAllowed ? { providers: [...HEADHUNTER_PROVIDER_CONTRACT.people_discovery], exa_reason: exaReason(intent) } : { providers: ["serper"], exa_reason: null };
   }
-  if (intent.scope === "mainland") return { providers: ["doubao_search", "serper"], exa_reason: null };
-  return { providers: ["serper", "doubao_search"], exa_reason: null };
+  if (intent.scope === "mainland") return { providers: [...HEADHUNTER_PROVIDER_CONTRACT.mainland_discovery], exa_reason: null };
+  return { providers: [...HEADHUNTER_PROVIDER_CONTRACT.hk_global_discovery], exa_reason: null };
 }
 
 function exaReason(intent: HeadhunterSearchIntent): string {

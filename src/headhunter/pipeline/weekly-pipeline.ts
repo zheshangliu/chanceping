@@ -19,11 +19,15 @@ import { classifyCantoneseClarity, classifyRa1Clarity } from "../jobs/literal-re
 import { inferNeeds } from "../need/need-inference";
 import { planV12DiscoveryThemes, type DiscoveryTheme } from "../search/theme-planner";
 import { resolveProviders } from "../search/routing";
+import { assertHeadHunterProviderAllowed } from "../search/provider-contract";
 import { runHeadhunterRadar, type HeadHunterRadarResult } from "./radar-pipeline";
 import { buildWeeklySnapshot } from "../reports/weekly-report";
 import { publishScheduledSnapshot } from "./weekly-publisher";
 import { computeWeekKey } from "../model/weekly-snapshot";
 import { isRecentSignal, isGenericJobSourceUrl } from "./quality-filters";
+import { evaluateTriggerQuality } from "./trigger-quality";
+import { evaluateEntityRelation, extractCandidateLocation } from "./entity-relation-filter";
+import { extractOfficialContacts } from "./official-contact-extractor";
 
 const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk", "efinancialcareers.hk", "ambition.com.hk", "hongkongbusiness.hk"]);
 // Search discovery frequently returns articles, social profiles, public
@@ -84,6 +88,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   const search = async (query: string, scope: "mainland" | "hk_global" | "people", intentType: "DISCOVER_COMPANY" | "VERIFY_TRIGGER" | "DISCOVER_JOBS" | "DISCOVER_PERSON" | "DISCOVER_CONTACT", region?: string): Promise<SearchResult[]> => {
     const route = resolveProviders({ intent_type: intentType, scope, query, serper_found_relevant_people: false, relationship_confidence: 0.5, lead_value: "high", has_public_contact: false });
     for (const providerName of route.providers) {
+      assertHeadHunterProviderAllowed(providerName);
       const provider = providers.get(providerName);
       if (!provider?.enabled) continue;
       // A missing optional key puts some adapters in mock/demo mode. Never
@@ -188,9 +193,16 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     const results = await search(query, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "VERIFY_TRIGGER", company.target_segment === "hk_finance" ? "hk" : "cn");
     for (const result of results) {
       const evidence = await saveEvidence(result, company);
-      if (!SIGNAL_WORDS.test(`${result.title} ${result.snippet}`) || !isRecentResult(result.published_at, now)) continue;
+      const triggerQuality = evaluateTriggerQuality(result, {
+        now,
+        target_company_name: company.canonical_name,
+        target_company_aliases: [company.name_en, company.name_cn, ...company.aliases].filter((value): value is string => Boolean(value)),
+        target_region: company.city ?? company.region ?? company.country,
+        target_website: company.website,
+      });
+      if (!triggerQuality.valid_for_a_gate || !SIGNAL_WORDS.test(`${result.title} ${result.snippet}`) || !isRecentResult(result.published_at, now)) continue;
       const signalId = `signal-${createHash("sha1").update(`${company.company_id}|${normalizeUrl(result.url)}`).digest("hex").slice(0, 20)}`;
-      const signal: CompanySignal = { signal_id: signalId, company_id: company.company_id, signal_type: classifySignal(`${result.title} ${result.snippet}`), event_date: result.published_at ?? null, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), title: result.title, fact_summary: result.snippet || result.title, inference_summary: null, impact_level: "medium", primary_source_id: evidence.evidence_id, evidence_ids: [evidence.evidence_id], source_confidence: result.source_provider === "doubao_search" ? 0.65 : 0.6, created_at: now.toISOString(), updated_at: now.toISOString() };
+      const signal: CompanySignal = { signal_id: signalId, company_id: company.company_id, signal_type: classifySignal(`${result.title} ${result.snippet}`), event_date: triggerQuality.event_date, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), title: result.title, fact_summary: result.snippet || result.title, inference_summary: null, impact_level: "medium", primary_source_id: evidence.evidence_id, evidence_ids: [evidence.evidence_id], source_confidence: result.source_provider === "doubao_search" ? 0.65 : 0.6, created_at: now.toISOString(), updated_at: now.toISOString() };
       if (!signals.some((item) => item.signal_id === signal.signal_id)) { signals.push(signal); await stores.signals.upsert(signal); }
     }
   }
@@ -201,10 +213,16 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     for (const result of results) {
       const text = `${result.title} ${result.snippet}`;
       if (!ROLE_WORDS.test(text) || isGenericJobPage(result.url)) continue;
+      const relation = evaluateEntityRelation({
+        target_company: company,
+        candidate: { title: result.title, snippet: result.snippet, url: result.url, location: extractCandidateLocation(result.title, result.snippet) },
+        candidate_type: "job",
+      });
+      if (!relation.accepted) continue;
       const title = result.title.trim().slice(0, 160);
       const jobId = `job-${createHash("sha1").update(`${company.company_id}|${normalizeTitle(title)}`).digest("hex").slice(0, 20)}`;
       const evidence = await saveEvidence(result, company);
-      const job: Job = { job_id: jobId, company_id: company.company_id, canonical_title: title, original_titles: [title], location: company.city ?? company.region, role_family: roleFamily(text), license_requirement: classifyRa1Clarity(text), ra1_clarity: classifyRa1Clarity(text), cantonese_clarity: classifyCantoneseClarity(text), employment_type: null, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), current_status: "open", source_urls: [evidence.source_url] };
+      const job: Job = { job_id: jobId, company_id: company.company_id, canonical_title: title, original_titles: [title], location: extractCandidateLocation(result.title, result.snippet) ?? company.city ?? company.region, role_family: roleFamily(text), license_requirement: classifyRa1Clarity(text), ra1_clarity: classifyRa1Clarity(text), cantonese_clarity: classifyCantoneseClarity(text), employment_type: null, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), current_status: "open", source_urls: [evidence.source_url] };
       if (!jobs.some((item) => item.job_id === job.job_id)) { jobs.push(job); await stores.jobs.upsert(job); }
       const observation: JobObservation = { observation_id: `job-observation-${jobId}-${now.toISOString().slice(0, 10)}`, job_id: jobId, observed_at: now.toISOString(), source: result.source_provider, source_url: evidence.source_url, title_raw: title, location_raw: company.city ?? company.region, description_excerpt: result.snippet || null, is_open: true, salary: null, headcount_signal: null, content_hash: hashText(`${title}|${result.snippet}`), observation_status: "NEW_JOB" };
       try { await stores.jobs.insertObservation(observation); } catch { /* idempotent reruns */ }
@@ -239,7 +257,12 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       const domain = companyDomain(company.website);
       if (domain) {
         const officialResults = await search(`site:${domain} careers contact recruitment HR`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_CONTACT", company.target_segment === "hk_finance" ? "hk" : "cn");
-        const entries = officialResults.filter((result) => isOfficialEntry(result.url, domain)).map((result) => ({ type: result.url.toLowerCase().includes("career") || result.url.toLowerCase().includes("job") ? "careers_entry" as const : "company_contact_form" as const, value: result.url, source_url: result.url, public_verified: true, professional: true, label: result.title }));
+        const entries = officialResults.filter((result) => isOfficialEntry(result.url, domain)).flatMap((result) => {
+          const extracted = extractOfficialContacts({ company, source_url: result.url, title: result.title, snippet: result.snippet, inline_content: typeof result.raw_data === "string" ? result.raw_data : null });
+          // Keep the URL entry even when a search adapter does not return page
+          // text. The extractor remains the authority for emails/phones.
+          return extracted.entries.length > 0 ? extracted.entries : [{ type: result.url.toLowerCase().includes("career") || result.url.toLowerCase().includes("job") ? "careers_entry" as const : "company_contact_form" as const, value: result.url, source_url: result.url, public_verified: true, professional: true, label: result.title }];
+        });
         contacts.push(...discoverContactEntries({ company_id: company.company_id, provider: "official_site", entries }, budget));
       }
     }
