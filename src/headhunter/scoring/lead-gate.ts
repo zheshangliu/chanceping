@@ -23,5 +23,12 @@ export function evaluateLeadGate(context: LeadGateContext): LeadGateResult {
 }
 
 export function applyManualPoolOverride(snapshot: WeeklyLeadSnapshot, pool: LeadPool): WeeklyLeadSnapshot {
-  return { ...snapshot, lead_pool: pool, manual_pool_override: pool, manual_edit: true, updated_at: new Date().toISOString() };
+  return {
+    ...snapshot,
+    lead_pool: pool,
+    manual_pool_override: pool,
+    business_review_status: pool === "A_ACTIONABLE" ? "human_approved" : "human_downgraded",
+    manual_edit: true,
+    updated_at: new Date().toISOString(),
+  };
 }

@@ -1,5 +1,11 @@
 export type LeadPool = "A_ACTIONABLE" | "B_ENRICHMENT" | "ARCHIVED";
 
+export type BusinessReviewStatus =
+  | "machine_candidate"
+  | "human_conditionally_approved"
+  | "human_approved"
+  | "human_downgraded";
+
 export type RequirementClarity = "explicit_required" | "explicit_preferred" | "not_mentioned";
 
 export type EmploymentStatus = "verified_current" | "likely_current" | "stale" | "unknown";
@@ -78,6 +84,8 @@ export interface WeeklyLeadSnapshot {
   outreach_manually_edited: boolean;
   manual_edit: boolean;
   manual_pool_override: LeadPool | null;
+  /** Debug-stage label: automatic A/B output is not human approval. */
+  business_review_status?: BusinessReviewStatus | null;
   opportunity_summary?: string;
   /** Company and business interpretation fields are persisted at run time. */
   company_name?: string;

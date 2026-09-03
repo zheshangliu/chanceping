@@ -44,6 +44,7 @@ export function buildLeadPresentation(input: LeadPresentationInput): WeeklyLeadS
   const interpretation = buildInterpretation(company, triggerLabel, eventDate, roleText, contactText, primary?.fact_summary ?? null, input.jobs.length > 0);
   return {
     ...lead,
+    business_review_status: lead.business_review_status ?? (lead.source === "auto" ? "machine_candidate" : null),
     company_name: company.canonical_name,
     industry: company.industry ?? company.sub_industry,
     region: company.region ?? company.city ?? company.country,

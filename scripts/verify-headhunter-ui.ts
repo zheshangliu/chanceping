@@ -12,7 +12,7 @@ async function main(): Promise<void> {
   assert.ok(loginHtml.includes("管理员登录"));
   const weekly = await app.request("http://finance.chanceping.com/weekly", { headers: { host: "finance.chanceping.com" } });
   const weeklyHtml = await weekly.text();
-  for (const label of ["本周", "A级机会", "B级情报池", "趋势", "公司库", "雷达运行"]) assert.ok(weeklyHtml.includes(label));
+  for (const label of ["本周", "机器 A 候选", "B级情报池", "趋势", "公司库", "雷达运行"]) assert.ok(weeklyHtml.includes(label));
   assert.ok(weeklyHtml.includes("data-finance-logout"));
   assert.ok(weeklyHtml.includes("@media (max-width: 720px)"));
   assert.equal((await app.request("http://localhost/weekly", { headers: { host: "chanceping.com" } })).status, 404);

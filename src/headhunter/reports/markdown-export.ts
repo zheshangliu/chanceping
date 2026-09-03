@@ -10,14 +10,14 @@ export function renderWeeklyMarkdown(snapshot: WeeklySnapshot): string {
     `- 候选网页：${funnel.candidate_url_count}`,
     `- 企业候选：${funnel.company_candidate_count}`,
     `- 确认企业：${funnel.company_resolved_count}`,
-    `- 有效 Trigger：${funnel.signal_count}`,
+    `- Trigger 候选：${funnel.signal_count}`,
     `- 岗位：${funnel.job_count}`,
     `- 人员候选：${funnel.person_candidate_count}`,
-    `- 公开联系入口：${funnel.contact_count}`,
+    `- 联系资料：${funnel.contact_count}`,
     `- 人才需求：${funnel.need_count}`,
-    `- A / B：${funnel.a_count} / ${funnel.b_count}`,
+    `- 机器 A 候选 / B 级情报：${funnel.a_count} / ${funnel.b_count}`,
   ] : ["- 本次运行未记录 Funnel Metrics。"];
-  const blockerLines = funnel?.blocking_reasons && Object.keys(funnel.blocking_reasons).length ? ["", "### B 级阻塞原因", ...Object.entries(funnel.blocking_reasons).map(([reason, count]) => `- ${reason}：${count}`)] : [];
+  const blockerLines = funnel?.blocking_reasons && Object.keys(funnel.blocking_reasons).length ? ["", "### B 级阻塞原因", ...Object.entries(funnel.blocking_reasons).map(([reason, count]) => `- ${humanizeBlocker(reason)}：${count}`)] : [];
   const lines = [title, "", "## 本周雷达结果解释", ...funnelLines, ...blockerLines, "", "## 一、本周必须联系", ...renderLeads(actionable), "", "## 二、高价值活动", ...renderLeads(highValue), "", "## 三、重要政策 / 市场变化", ...renderTrends(snapshot, ["policy", "market"]), "", "## 四、招聘市场变化", ...renderTrends(snapshot, ["industry", "hiring_market"]), "", "## 五、本周 BD Action", ...renderActions(actions)];
   return `${lines.join("\n").trim()}\n`;
 }
@@ -33,7 +33,7 @@ function renderLeads(leads: WeeklySnapshot["leads"]): string[] {
     lines.push(`- 维优切入点：${lead.service_wedge_zh ?? "待补充"}`);
     lines.push(`- 本周行动：${lead.manual_action ?? lead.bd_action_zh ?? lead.generated_action ?? "待补充"}`);
     lines.push(`- 首触话术：${lead.manual_outreach ?? lead.first_touch_script_zh ?? lead.generated_outreach ?? "待补充"}`);
-    if (lead.lead_pool === "B_ENRICHMENT" && lead.b_reasons.length) lines.push(`- 尚未进入 A 的原因：${lead.b_reasons.join("、")}`);
+    if (lead.lead_pool === "B_ENRICHMENT" && lead.b_reasons.length) lines.push(`- 尚未进入 A 的原因：${lead.b_reasons.map(humanizeBlocker).join("、")}`);
     const evidenceLines = (lead.evidences ?? []).filter((item) => item.source_url).map((item) => `  - [${item.title}](${item.source_url})｜${item.source_name}${item.published_at ? `｜${item.published_at}` : ""}`);
     if (evidenceLines.length) lines.push("- 证据：", ...evidenceLines);
     const contactLines = [...(lead.contacts ?? []).filter((item) => item.url || item.email || item.phone).map((item) => `  - ${item.name ?? item.title ?? item.contact_type}：${item.url ?? item.email ?? item.phone}`), ...(lead.official_contact_entries ?? []).map((item) => `  - ${item.label}：${item.url ?? item.email ?? item.phone ?? ""}`)];
@@ -41,6 +41,11 @@ function renderLeads(leads: WeeklySnapshot["leads"]): string[] {
     lines.push(`- 辅助评分：BusinessScore ${lead.business_score} · Freshness ${lead.freshness_score} · Final ${lead.final_rank_score}`);
     return lines;
   });
+}
+
+function humanizeBlocker(reason: string): string {
+  const normalized = String(reason || "").replace(/=fail$/, "");
+  return ({ business_score_below_70: "商业评分不足 70", score_below_70: "商业评分不足 70", missing_contact: "缺少有效联系入口", evidence_gate: "核心证据不足", trigger_gate: "缺少近期有效触发事件", need_gate: "人才需求证据不足", action_gate: "行动方案未完成", evidence_or_contact_gate_fail: "证据或联系入口未通过", outside_top8: "已通过基础条件，但未进入本周 Top 8" } as Record<string, string>)[normalized] ?? "待人工复核";
 }
 
 function renderTrends(snapshot: WeeklySnapshot, types: string[]): string[] {
