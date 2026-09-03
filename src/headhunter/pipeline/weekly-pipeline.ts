@@ -25,6 +25,18 @@ import { publishScheduledSnapshot } from "./weekly-publisher";
 import { computeWeekKey } from "../model/weekly-snapshot";
 
 const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk", "efinancialcareers.hk", "ambition.com.hk", "hongkongbusiness.hk"]);
+// Search discovery frequently returns articles, social profiles, public
+// agencies and recruiting portals. They are useful evidence, but are not
+// operating-company identity anchors. Keep relevant finance authorities such
+// as HKMA/FSTB/SFC/HKIB eligible and reject only known non-company hosts.
+const NON_COMPANY_HOSTS = new Set([
+  "facebook.com", "instagram.com", "youtube.com", "scmp.com", "chinadaily.com.cn", "chinadailyhk.com",
+  "newsgd.com", "globaltimes.cn", "nytimes.com", "substack.com", "china-briefing.com", "vietnam-briefing.com",
+  "harris-sliwoski.com", "woodburnglobal.com", "bridgepointgroup.com", "go-gba.com", "ourchinastory.com",
+  "hktdc.com", "nih.gov", "uscc.gov", "hotjob.cn", "iguopin.com", "seek.com", "naukri.com",
+  "pageexecutive.com", "valueaddvc.com", "brunel.com.cn", "hiredchina.com", "chinajob.com", "vietchina.org",
+  "michaelpage.com.cn", "robertwalters.cn", "arc-group.com", "gba-group-pharma.com"
+]);
 const GENERIC_TITLE = /^(?:\d+\s+)?(?:finance|human resources|hr|recruiter|recruitment|jobs?|careers?|hiring|job openings?|search results?)(?:\s+(?:jobs?|in|hong kong|china|asia).*)?$/i;
 const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|重组|restructur/i;
 const ROLE_WORDS = /manager|director|head|lead|engineer|finance|hr|human resources|recruit|analyst|compliance|risk|supply chain|country manager|岗位|招聘|人才/i;
@@ -243,7 +255,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
 function extractCompanyCandidate(result: SearchResult, segment: "hk_finance" | "gba_company" | "outbound_manufacturing"): CompanyCandidate | null {
   const host = hostname(result.url);
   const domain = registrableDomain(host);
-  if (!host || AGGREGATOR_HOSTS.has(host) || GENERIC_TITLE.test(result.title) || host.includes(".example.") || host.endsWith(".local") || host === "example.com" || isGenericPortalHost(host) || !domain) return null;
+  if (!host || isNonCompanyHost(host) || GENERIC_TITLE.test(result.title) || host.includes(".example.") || host.endsWith(".local") || host === "example.com" || isGenericPortalHost(host) || !domain) return null;
   const name = domain.split(".")[0].replace(/[-_]+/g, " ").trim();
   if (name.length < 3) return null;
   const title = result.title.trim();
@@ -267,7 +279,12 @@ function registrableDomain(host: string): string {
 }
 function isGenericPortalHost(host: string): boolean { return /^(?:info|about|news|careers?|jobs?|search|portal)\./i.test(host) || /(?:\.hku\.hk|\.edu\.hk)$/i.test(host); }
 function isSyntheticResult(result: SearchResult): boolean { return /(?:^|\.)example\.(?:com|org|net|cn|edu)|mock\.chanceping\.local/i.test(`${result.url} ${result.title} ${result.snippet}`); }
-function isLikelyAggregatorCompany(company: Company): boolean { const host = companyDomain(company.website); return Boolean(host && (AGGREGATOR_HOSTS.has(host) || isGenericPortalHost(host) || host.includes(".example.") || host.endsWith(".local"))); }
+function isNonCompanyHost(host: string): boolean {
+  const normalized = host.replace(/^www\./, "");
+  const isKnownHost = (known: string): boolean => normalized === known || normalized.endsWith(`.${known}`);
+  return [...AGGREGATOR_HOSTS, ...NON_COMPANY_HOSTS].some(isKnownHost) || normalized.endsWith(".example.com") || normalized.endsWith(".example.org");
+}
+function isLikelyAggregatorCompany(company: Company): boolean { const host = companyDomain(company.website); return Boolean(host && (isNonCompanyHost(host) || isGenericPortalHost(host) || host.includes(".example.") || host.endsWith(".local"))); }
 function isRecentResult(publishedAt: string | undefined, now: Date): boolean { if (!publishedAt) return true; const parsed = Date.parse(publishedAt); return Number.isNaN(parsed) || parsed >= now.getTime() - 60 * 86400000; }
 function isFirstPartyUrl(value: string, company: Company): boolean { const host = hostname(value); return Boolean(host && [companyDomain(company.website), ...company.official_domains].filter(Boolean).some((domain) => host === domain || host.endsWith(`.${domain}`))); }
 function isGenericJobPage(url: string): boolean { const host = hostname(url); return AGGREGATOR_HOSTS.has(host) || /\/jobs?(?:\/|$)/i.test(url) && /linkedin\.com/i.test(host); }
