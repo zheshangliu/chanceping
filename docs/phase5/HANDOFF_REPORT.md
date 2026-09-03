@@ -6,7 +6,7 @@
 
 ## 当前结论
 
-代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；V1.2 正式 Weekly Pipeline 已完成部署，并以同一最终版本重建了 W36/W37 两个连续周的真实快照。Finance 分支已通过 SWAS 部署，DNS/TLS、健康检查和只读生产 smoke 已通过；当前启用 `FINANCE_PUBLIC_MODE=true`，公开 GET 数据，写操作仍受保护。生产默认 routing 未修改，等待业务人工审核后再决定采用。
+代码实施、静态检查、HeadHunter 金丝雀验收和既有 v1.5/v1.6 回归均通过；V1.2 正式 Weekly Pipeline 已完成部署，并以同一最终版本重建了 W36/W37 两个连续周的真实快照。Finance 分支已通过 SWAS 部署，DNS/TLS、健康检查和只读生产 smoke 已通过；当前启用 `FINANCE_PUBLIC_MODE=true`，公开 GET 数据，写操作仍受保护。生产默认 routing 未修改，逐条人工审核已完成，等待业务审核后再决定采用。
 
 ## Gate 状态
 
@@ -20,7 +20,7 @@
 | Existing regression | PASS | `typecheck`、`verify:v15:e2e`、`verify:v15`、`verify:v16` |
 | Search provider benchmark script | NOT THE V1.2 gate | V1.2 Weekly Pipeline 已使用当前可用 Serper；独立 TikHub/Search Jobs 大规模 benchmark 维持 HOLD |
 | TikHub benchmark script | NOT PRESENT | `verify:tikhub-benchmark` 不在当前 HEAD |
-| Real Golden Weekly | PASS (pipeline/data gates) | W36/W37 各 115 candidate URLs、25 candidates、20 resolved companies、31 signals、48 jobs、49 people/contact entries；A=2/B=18；人工全量 precision/judgment 尚未完成 |
+| Real Golden Weekly | PASS (pipeline/data gates) | W36/W37 各 115 candidate URLs、25 candidates、20 resolved companies、31 signals、48 jobs、49 people/contact entries；A=2/B=18；逐条人工 precision/judgment 已完成，结果见人工审核报告 |
 | Production DNS/TLS/smoke | PASS (read-only) | `finance.chanceping.com` → `8.218.11.71`；Let's Encrypt SAN 包含 Finance；`/login` 200、`/` 302、公开 weekly API 200 |
 | Production routing adoption | NOT APPROVED | 需业务审核及真实信号质量证据 |
 
@@ -30,7 +30,7 @@ Run ID：`headhunter-golden-2026-W37`
 Artifact：`data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7ab0658a.json`
 
 - Serper：99 requests / 99 successes / 0 failures / cost unknown（重复运行主要命中缓存）
-- Doubao：本地 `api.env` 有 Key，但生产 `/etc/chanceping/chanceping.env` 尚未配置，因此未进入本次生产 run
+- Doubao：已从本地 `api.env` 安全写入生产 `/etc/chanceping/chanceping.env`，服务重启后健康检查通过；生产实时搜索开关仍未开启，因此未进入本次生产 run
 - 每周：115 candidate URLs / 25 candidates / 20 verified companies / 31 signals / 48 jobs / 49 people / 49 contacts / 58 needs / A=2 / B=18
 - W36 与 W37 均 `published=true`，由同一个正式 Weekly Snapshot 生成链路发布
 
@@ -38,7 +38,7 @@ Artifact：`data/headhunter/live-runs/headhunter-live-2026-09-02T13-52-19-060Z-7
 
 ### FACT
 
-HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、证据 override、周报 Markdown、成本 unknown 标记、Company Profile 缓存、搜索路由和周一调度代码均已落地。调度任务现在会从规范化 stores 运行完整评分流水线，并在成功时原子发布周快照；失败不会覆盖旧正式快照。
+HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、证据 override、周报 Markdown、成本 unknown 标记、Company Profile 缓存、搜索路由和周一调度代码均已落地。调度任务现在会从规范化 stores 运行完整评分流水线，并在成功时原子发布周快照；失败不会覆盖旧正式快照。20 家 × 2 周逐条人工 precision/judgment 已记录在 `V1.2_HUMAN_PRECISION_AUDIT_2026-09-03.md`。
 
 ### IMPACT
 
@@ -58,7 +58,7 @@ HeadHunter Finance UI、受保护 API、管理员会话、人工 B 池写入、�
 
 - 本轮新增代码不触发外部 provider 大规模调用；live E2E 已产生的 provider 成本以原始 artifact 为准，当前报告中的 cost 字段保持 unknown。
 - Scheduler 不会静默调用付费 provider；它消费已规范化数据。显式 live benchmark 才会调用搜索 provider。
-- 最大剩余风险是远程部署状态未知、DNS/TLS 未配置，以及搜索结果尚未通过人工 precision/identity 审核；因此禁止自动合并 `main` 或修改生产默认 routing。
+- 最大剩余风险是 Signal、实体/地域和岗位后过滤的业务 precision 仍不足，且生产实时 Doubao 尚未启用；人工审核还发现 HKIB 与 GBA Pharma 官方联系入口漏提取。因此禁止自动合并 `main` 或修改生产默认 routing。
 
 ## 交接文件
 
