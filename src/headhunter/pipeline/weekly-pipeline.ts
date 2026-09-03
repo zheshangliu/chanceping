@@ -24,7 +24,7 @@ import { buildWeeklySnapshot } from "../reports/weekly-report";
 import { publishScheduledSnapshot } from "./weekly-publisher";
 import { computeWeekKey } from "../model/weekly-snapshot";
 
-const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk"]);
+const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk", "efinancialcareers.hk", "ambition.com.hk", "hongkongbusiness.hk"]);
 const GENERIC_TITLE = /^(?:\d+\s+)?(?:finance|human resources|hr|recruiter|recruitment|jobs?|careers?|hiring|job openings?|search results?)(?:\s+(?:jobs?|in|hong kong|china|asia).*)?$/i;
 const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|重组|restructur/i;
 const ROLE_WORDS = /manager|director|head|lead|engineer|finance|hr|human resources|recruit|analyst|compliance|risk|supply chain|country manager|岗位|招聘|人才/i;
@@ -107,9 +107,18 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
 
   // Step 2: extract identity candidates and resolve against the store.
   const existingCompanies = await stores.companies.list();
+  // Keep bootstrap-era search portals out of the verified universe. They are
+  // evidence sources, not employer entities; downgrade them without deleting
+  // history so later human review can recover an intended company.
+  for (const existing of existingCompanies) {
+    if (existing.status === "active" && isLikelyAggregatorCompany(existing)) {
+      await stores.companies.upsert({ ...existing, status: "unknown", updated_at: now.toISOString() });
+    }
+  }
+  const activeExistingCompanies = existingCompanies.filter((company) => company.status === "active" && !isLikelyAggregatorCompany(company));
   // Existing active companies remain in the weekly universe for cross-week
   // enrichment; new entities are added only after identity extraction.
-  const companies: Company[] = existingCompanies.filter((company) => company.status === "active");
+  const companies: Company[] = activeExistingCompanies;
   for (const item of uniqueCandidates) {
     const candidate = extractCompanyCandidate(item.result, item.theme.segment);
     if (!candidate) continue;
@@ -138,7 +147,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     const results = await search(query, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "VERIFY_TRIGGER", company.target_segment === "hk_finance" ? "hk" : "cn");
     for (const result of results) {
       const evidence = await saveEvidence(result, company);
-      if (!SIGNAL_WORDS.test(`${result.title} ${result.snippet}`)) continue;
+      if (!SIGNAL_WORDS.test(`${result.title} ${result.snippet}`) || !isRecentResult(result.published_at, now)) continue;
       const signalId = `signal-${createHash("sha1").update(`${company.company_id}|${normalizeUrl(result.url)}`).digest("hex").slice(0, 20)}`;
       const signal: CompanySignal = { signal_id: signalId, company_id: company.company_id, signal_type: classifySignal(`${result.title} ${result.snippet}`), event_date: result.published_at ?? null, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), title: result.title, fact_summary: result.snippet || result.title, inference_summary: null, impact_level: "medium", primary_source_id: evidence.evidence_id, evidence_ids: [evidence.evidence_id], source_confidence: result.source_provider === "doubao_search" ? 0.65 : 0.6, created_at: now.toISOString(), updated_at: now.toISOString() };
       if (!signals.some((item) => item.signal_id === signal.signal_id)) { signals.push(signal); await stores.signals.upsert(signal); }
@@ -215,8 +224,8 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
 
 function extractCompanyCandidate(result: SearchResult, segment: "hk_finance" | "gba_company" | "outbound_manufacturing"): CompanyCandidate | null {
   const host = hostname(result.url);
-  if (!host || AGGREGATOR_HOSTS.has(host) || GENERIC_TITLE.test(result.title) || host.includes(".example.") || host.endsWith(".local") || host === "example.com") return null;
-  const domain = host.replace(/^www\./, "");
+  const domain = registrableDomain(host);
+  if (!host || AGGREGATOR_HOSTS.has(host) || GENERIC_TITLE.test(result.title) || host.includes(".example.") || host.endsWith(".local") || host === "example.com" || isGenericPortalHost(host) || !domain) return null;
   const name = domain.split(".")[0].replace(/[-_]+/g, " ").trim();
   if (name.length < 3) return null;
   const title = result.title.trim();
@@ -233,6 +242,14 @@ function companyFromCandidate(candidate: CompanyCandidate, segment: "hk_finance"
 function normalizeUrl(value: string): string { try { const url = new URL(value); url.hash = ""; return url.toString().replace(/\/$/, "").toLowerCase(); } catch { return value.trim().toLowerCase().replace(/\/$/, ""); } }
 function hostname(value: string): string { try { return new URL(value).hostname.toLowerCase().replace(/^www\./, ""); } catch { return ""; } }
 function companyDomain(value: string | null): string | null { return value ? hostname(value) : null; }
+function registrableDomain(host: string): string {
+  const labels = host.replace(/^www\./, "").split(".");
+  if (labels.length >= 3 && ["com.hk", "org.hk", "gov.hk", "com.cn", "com.sg", "co.uk"].includes(labels.slice(-2).join("."))) return labels.slice(-3).join(".");
+  return labels.slice(-2).join(".");
+}
+function isGenericPortalHost(host: string): boolean { return /^(?:info|about|news|careers?|jobs?|search|portal)\./i.test(host) || /(?:\.hku\.hk|\.edu\.hk)$/i.test(host); }
+function isLikelyAggregatorCompany(company: Company): boolean { const host = companyDomain(company.website); return Boolean(host && (AGGREGATOR_HOSTS.has(host) || isGenericPortalHost(host) || host.includes(".example.") || host.endsWith(".local"))); }
+function isRecentResult(publishedAt: string | undefined, now: Date): boolean { if (!publishedAt) return true; const parsed = Date.parse(publishedAt); return Number.isNaN(parsed) || parsed >= now.getTime() - 60 * 86400000; }
 function isFirstPartyUrl(value: string, company: Company): boolean { const host = hostname(value); return Boolean(host && [companyDomain(company.website), ...company.official_domains].filter(Boolean).some((domain) => host === domain || host.endsWith(`.${domain}`))); }
 function isGenericJobPage(url: string): boolean { const host = hostname(url); return AGGREGATOR_HOSTS.has(host) || /\/jobs?(?:\/|$)/i.test(url) && /linkedin\.com/i.test(host); }
 function isOfficialEntry(url: string, domain: string): boolean { return hostname(url) === domain && /careers?|jobs?|contact|recruit|hr/i.test(url); }
