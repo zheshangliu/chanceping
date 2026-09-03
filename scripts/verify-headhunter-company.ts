@@ -25,7 +25,7 @@ async function main(): Promise<void> {
   const dataDir = await mkdtemp(join(tmpdir(), "chanceping-headhunter-company-"));
   try {
     let calls = 0;
-    const provider = { provider: "tikhub" as const, async getCompanyProfile(): Promise<{ raw: unknown; canonical_name: string }> { calls += 1; return { canonical_name: "Kingfa Guangzhou", raw: { ok: true } }; } };
+    const provider = { provider: "official_website" as const, async getCompanyProfile(): Promise<{ raw: unknown; canonical_name: string }> { calls += 1; return { canonical_name: "Kingfa Guangzhou", raw: { ok: true } }; } };
     const first = await enrichCompany(base, provider, { dataDir, now: new Date(now) });
     assert.equal(first.status, "enriched");
     assert.equal(calls, 1);
@@ -35,7 +35,7 @@ async function main(): Promise<void> {
     const expired = await enrichCompany(base, provider, { dataDir, now: new Date("2026-11-02T00:00:01Z") });
     assert.equal(expired.status, "enriched");
     assert.equal(calls, 2);
-    const failed = await enrichCompany(base, { provider: "tikhub", async getCompanyProfile(): Promise<never> { throw new Error("429"); } }, { dataDir, now: new Date("2027-01-02T00:00:00Z") });
+    const failed = await enrichCompany(base, { provider: "search_index", async getCompanyProfile(): Promise<never> { throw new Error("provider unavailable"); } }, { dataDir, now: new Date("2027-01-02T00:00:00Z") });
     assert.equal(failed.status, "unavailable");
     assert.equal(failed.cost, null);
     console.log("headhunter company resolver/enrichment verification: PASS");
