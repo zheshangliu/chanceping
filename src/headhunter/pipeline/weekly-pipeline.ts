@@ -136,10 +136,21 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   }
   const verifiedCompanies = companies.filter((company) => company.status === "active").slice(0, maxCompanies);
 
-  const signals: CompanySignal[] = [];
-  const jobs: Job[] = [];
-  const people: Person[] = [];
-  const contacts: ContactEntry[] = [];
+  // Cross-week enrichment is part of the production contract: a transient
+  // provider empty response must not erase previously verified intelligence.
+  // Seed each stage with persisted records for the current verified universe;
+  // the bounded discovery loops below then append only genuinely new items.
+  const verifiedCompanyIds = new Set(verifiedCompanies.map((company) => company.company_id));
+  const [persistedSignals, persistedJobs, persistedPeople, persistedContacts] = await Promise.all([
+    stores.signals.list(),
+    stores.jobs.list(),
+    stores.people.list(),
+    stores.contacts.list(),
+  ]);
+  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id));
+  const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id));
+  const people: Person[] = persistedPeople.filter((person) => person.current_company_id !== null && verifiedCompanyIds.has(person.current_company_id));
+  const contacts: ContactEntry[] = persistedContacts.filter((contact) => verifiedCompanyIds.has(contact.company_id));
 
   // Step 3: company secondary trigger discovery.
   for (const company of verifiedCompanies) {
