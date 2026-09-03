@@ -61,7 +61,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   const runId = options.radarRunId ?? `headhunter-weekly-${now.toISOString().replace(/[:.]/g, "-")}-${createHash("sha1").update(String(now.getTime())).digest("hex").slice(0, 8)}`;
   const stores = options.stores ?? createHeadHunterStores();
   const providers = options.providers ?? defaultProviders;
-  const maxThemes = Math.max(1, Math.min(options.maxThemes ?? 18, 24));
+  const maxThemes = Math.max(1, Math.min(options.maxThemes ?? 18, 30));
   const maxCompanies = Math.max(1, Math.min(options.maxCompanies ?? 30, 30));
   const usage = new Map<string, UsageCounter>();
   const resolutions: CompanyResolution[] = [];
