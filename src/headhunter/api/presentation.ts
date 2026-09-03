@@ -13,7 +13,7 @@ export async function hydrateLead(lead: WeeklyLeadSnapshot, context: HeadHunterA
     context.stores.contacts.listByCompany(company.company_id),
     context.stores.evidence.list(),
   ]);
-  const signals = allSignals.filter((signal) => isRecentSignal(signal.event_date, new Date()));
+  const signals = allSignals.filter((signal) => isRecentSignal(signal.event_date, new Date(), signal.title));
   const jobs = allJobs.filter((job) => !job.source_urls.some(isGenericJobSourceUrl));
   const linkedEvidenceIds = new Set([...(lead.evidence_ids ?? []), ...signals.flatMap((signal) => signal.evidence_ids)]);
   const presented = buildLeadPresentation({ lead, company, signals, jobs, people: people.filter((person) => person.current_company_id === company.company_id), contacts, evidences: evidences.filter((evidence) => linkedEvidenceIds.has(evidence.evidence_id) || evidence.source_url === company.website) });
