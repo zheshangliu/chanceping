@@ -228,19 +228,27 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     const discoveryName = discoveryCompanyName(company);
     const scope = company.target_segment === "hk_finance" ? "hk_global" : "mainland";
     const region = company.target_segment === "hk_finance" ? "hk" : "cn";
+    const queryName = discoveryName.toLowerCase() === company.canonical_name.toLowerCase() ? discoveryName : `${discoveryName} ${company.canonical_name}`;
     const triggerQueries = [
-      `${discoveryName} hiring expansion funding license factory overseas headquarters recruitment`,
-      `${discoveryName} latest announcement 2026 hiring expansion appointment investment`,
+      `${queryName} hiring expansion funding license factory overseas headquarters recruitment`,
+      `${queryName} latest announcement 2026 hiring expansion appointment investment`,
     ];
     for (const query of triggerQueries) {
       const before = allSignals.length;
       const results = await search(query, scope, "VERIFY_TRIGGER", region);
       for (const result of results) {
       const evidence = await saveEvidence(result, company);
-      const triggerQuality = evaluateTriggerQuality(result, {
+      const triggerQuality = evaluateTriggerQuality({
+        ...result,
+        // Search adapters label every result as `web`; preserve first-party
+        // ownership at the quality gate so an official page can establish
+        // the target subject even when its title uses an acronym or omits the
+        // company name (for example HKMA career announcements).
+        source_type: isFirstPartyUrl(result.url, company) ? "official" : result.source_type,
+      }, {
         now,
         target_company_name: company.canonical_name,
-        target_company_aliases: [company.name_en, company.name_cn, ...company.aliases].filter((value): value is string => Boolean(value)),
+        target_company_aliases: [company.name_en, company.name_cn, ...company.aliases, discoveryName].filter((value): value is string => Boolean(value)),
         target_region: company.city ?? company.region ?? company.country,
         target_website: company.website,
       });

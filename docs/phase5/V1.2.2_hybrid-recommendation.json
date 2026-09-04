@@ -1,35 +1,35 @@
 {
   "version": "1.2.2",
-  "run_id": "headhunter-v122-production-style-20260904-frozen-v6",
+  "run_id": "headhunter-v122-production-style-20260904-frozen-v9",
   "publish": false,
   "recommendation": "HOLD",
   "production_routing_change": false,
   "phase4": "LOCKED",
   "metrics": {
     "company_resolved": 20,
-    "all_signals": 1,
-    "eligible_signals": 1,
-    "all_jobs": 17,
-    "eligible_jobs": 13,
-    "all_people": 126,
-    "eligible_people": 33,
-    "all_contacts": 43,
-    "eligible_contacts": 43,
-    "filtered_pollution": 97,
+    "all_signals": 3,
+    "eligible_signals": 3,
+    "all_jobs": 16,
+    "eligible_jobs": 12,
+    "all_people": 96,
+    "eligible_people": 36,
+    "all_contacts": 45,
+    "eligible_contacts": 45,
+    "filtered_pollution": 64,
     "need_count": 11,
     "lead_count": 20,
     "a_count": 0,
     "b_count": 20
   },
   "provider_usage": {
-    "serper": { "requests": 138, "failures": 0, "cost_status": "unknown" },
-    "doubao_search": { "requests": 30, "failures": 0, "cost_status": "unknown" },
-    "exa": { "requests": 8, "failures": 0, "cost_status": "unknown" },
+    "serper": { "requests": 130, "failures": 0, "cost_status": "unknown" },
+    "doubao_search": { "requests": 29, "failures": 0, "cost_status": "unknown" },
+    "exa": { "requests": 4, "failures": 0, "cost_status": "unknown" },
     "tikhub": { "requests": 0, "cost_status": "not_called" }
   },
   "ineligible_by_reason": {
     "stale": 0,
-    "entity_mismatch": 93,
+    "entity_mismatch": 60,
     "employer_mismatch": 4,
     "region_mismatch": 0,
     "generic_reference": 0,
@@ -37,5 +37,5 @@
     "invalid_relation": 0,
     "unknown": 0
   },
-  "next_gate": "STOP/ESCALATE business quality gate: do not change production routing. Signal and Job/Need thresholds remain unmet; reaching them would require changing frozen data, providers, budget, or eligibility rules."
+  "next_gate": "STOP/ESCALATE business quality gate: do not change production routing. Signal and Job/Need thresholds remain unmet after first-party and brand-alias repairs; reaching them would require changing frozen data, providers, budget, or eligibility rules."
 }
