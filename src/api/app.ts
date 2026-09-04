@@ -53,6 +53,26 @@ export function createApp(context?: AppContext): Hono {
   app.use("*", logger());
   app.use("*", cors());
 
+  // Finance is intentionally public read-only in the current production
+  // profile. Keep the legacy/custom-radar APIs available on the main ChancePing
+  // host, but do not let an anonymous Finance visitor spend provider budget or
+  // mutate shared stores by calling those global endpoints directly.
+  app.use("/api/*", async (c, next) => {
+    const host = (c.req.header("host") ?? "").split(":")[0].toLowerCase();
+    const isFinancePublic = host === "finance.chanceping.com" && process.env.FINANCE_PUBLIC_MODE === "true";
+    const isSafeMethod = ["GET", "HEAD", "OPTIONS"].includes(c.req.method);
+    const isFinanceApi = c.req.path.startsWith("/api/finance/");
+    if (isFinancePublic && !isSafeMethod && !isFinanceApi) {
+      return c.json({
+        success: false,
+        data: null,
+        error: { code: "FINANCE_PUBLIC_READ_ONLY", message: "Finance public mode only permits read operations" },
+        duration_ms: 0,
+      }, 401);
+    }
+    await next();
+  });
+
   // 健康检查
   app.get("/health", (c) => {
     return c.json({
