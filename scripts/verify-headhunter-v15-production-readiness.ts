@@ -82,6 +82,12 @@ async function main(): Promise<void> {
         const response = await fetch(`${base}${path}`);
         assert.equal(response.status, 200, `remote ${path}`);
       }
+      // Use malformed JSON so the probe cannot create data or spend provider
+      // budget on an older release that has not received the Finance boundary.
+      for (const path of ["/api/radars", "/api/search", "/api/reports/generate"]) {
+        const response = await fetch(`${base}${path}`, { method: "POST", headers: { "content-type": "application/json" }, body: "not-json" });
+        assert.equal(response.status, 401, `remote ${path} must be read-only`);
+      }
     }
     console.log(JSON.stringify({ status: "PASS", gates: { public_read_only: "PASS", finance_mutation_boundary: "PASS", persistence_restart: "PASS", weekly_scheduler: "PASS", failed_snapshot_isolated: "PASS", remote_smoke: remoteBase ? "PASS" : "NOT_RUN" } }));
   } finally {
@@ -95,4 +101,3 @@ void main().catch((error: unknown) => {
   console.error(JSON.stringify({ status: "FAIL", error: error instanceof Error ? error.message : String(error) }));
   process.exitCode = 1;
 });
-
