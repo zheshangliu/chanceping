@@ -1,0 +1,56 @@
+{
+  "run_id": "headhunter-v13-1788497304633",
+  "production_routing": "HOLD",
+  "publish": false,
+  "provider_contract": {
+    "mainland": [
+      "doubao_search",
+      "serper"
+    ],
+    "hk_global": [
+      "serper",
+      "doubao_search"
+    ],
+    "people": [
+      "serper",
+      "exa"
+    ],
+    "tikhub": 0
+  },
+  "counts": {
+    "queries": 12,
+    "event_candidates": 93,
+    "generated_opportunities": 93,
+    "candidate_opportunities": 0,
+    "eligible_opportunities": 0,
+    "rejected_opportunities": 93,
+    "eligible_signals": 0,
+    "verified_companies": 0,
+    "deep_dive_companies": 0,
+    "jobs": 0,
+    "people": 0,
+    "contacts": 0,
+    "machine_a": 0,
+    "b": 0
+  },
+  "cost": {
+    "known_cost": null,
+    "unknown_cost": true,
+    "unknown_providers": [
+      "serper",
+      "doubao_search"
+    ],
+    "cost_per_event_candidate": null,
+    "cost_per_eligible_signal": null,
+    "cost_per_contactable_lead": null,
+    "cost_per_human_approved_a": null
+  },
+  "regression": {
+    "checked": 0,
+    "contamination": 0,
+    "freshness_failures": 0,
+    "tikhub_calls": 0,
+    "passed": true,
+    "notes": []
+  }
+}

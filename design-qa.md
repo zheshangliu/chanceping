@@ -9,7 +9,8 @@ final result: blocked
 - `npm run verify:headhunter:ui`: PASS
 - `npm run typecheck`: PASS
 - Responsive CSS includes desktop layout and mobile breakpoint at 720px.
-- Finance shell renders the new sidebar/topbar, weekly hero, stat row, lead feed, insight rail, compact B cards, evidence disclosure, tables, and empty/loading states.
+- Finance shell renders the new sidebar/topbar, weekly hero, recommendation/pending-validation/recent-run/actionable-contact stat row, lead feed, insight rail, compact B cards, evidence disclosure, tables, and empty/loading states.
+- Business home keeps provider/run/cost detail out of the workbench; the recent-run card safely falls back to the published snapshot timestamp in public mode.
 - Presentation code does not render internal `company_id` values.
 
 ## Browser check

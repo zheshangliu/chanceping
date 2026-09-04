@@ -1,0 +1,1704 @@
+[
+  {
+    "event_id": "event-de447581777f71bfd5a6",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Hong Kong's Virtual Assets Licensing Regime: What lies ...",
+    "snippet": "comprehensive licensing and regulation of virtual asset (VA) is expected to be introduced into the Legislative Council in 2026, efficient ...",
+    "url": "https://www.kingandwood.com/hk/en/insights/latest-thinking/hong-kong-virtual-assets-licensing-regime-what-lies-ahead-in-2026.html",
+    "source": "serper",
+    "published_at": "20 Jan 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2026-01-19",
+    "company_id": null,
+    "evidence_id": "evidence-4cdefd352967b005d32aedef",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-e89bacb9c085b74a7d4a",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Licensing Handbook - Hong Kong",
+    "snippet": "an application fee of $200 is payable for the grant of a new licence or certificate of registration. The application fee is $1,000.",
+    "url": "https://www.sfc.hk/en/rules-and-standards/codes-and-guidelines/guidelines/licensing-handbook",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-081151f39f9ef0fffebb383e",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-544e70cde88a9e4a7493",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Hong Kong to License VA Advisory & Asset Management ...",
+    "snippet": "The regulators intend to introduce the necessary amending legislation into the Legislative Council in 2026. Together, the new licensing regimes ...",
+    "url": "https://www.charltonslaw.com/hong-kong-to-license-virtual-asset-advisory-asset-management-services",
+    "source": "serper",
+    "published_at": "3 Jun 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2026-06-02",
+    "company_id": null,
+    "evidence_id": "evidence-2aa43bad326146d1310b4a70",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-2f713f5910c1efd0b1c9",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Granting of stablecoin issuer licences",
+    "snippet": "Monetary Authority has granted stablecoin issuer licences. The licences take effect today.",
+    "url": "https://www.hkma.gov.hk/eng/news-and-media/press-releases/2026/04/20260410-4",
+    "source": "serper",
+    "published_at": "10 Apr 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2026-04-09",
+    "company_id": null,
+    "evidence_id": "evidence-586492c0cb8083534ac2d849",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-9c77f459313e5bf3e130",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Hong Kong Doubles Down on Digital Assets with New ...",
+    "snippet": "Hong Kong Doubles Down on Digital Assets with New Licensing Proposals. The change aligns the new licensing regimes with other VA-related ...",
+    "url": "https://www.eversheds-sutherland.com/en/asia/insights/hong-kong-doubles-down-on-digital-assets-with-new-licensing-proposals",
+    "source": "serper",
+    "published_at": "16 Jul 2025",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2025-07-15",
+    "company_id": null,
+    "evidence_id": "evidence-4a90d147c9b2dfa8a06d2345",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-f5fba110f4858869a3c0",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Regulated Businesses in Hong Kong",
+    "snippet": "Explore licensing requirements and banking essentials for regulated businesses in Hong Kong in 2026,",
+    "url": "https://hongkong.acclime.com/news/business-licensing-banking-2026",
+    "source": "serper",
+    "published_at": "5 Mar 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2026-03-04",
+    "company_id": null,
+    "evidence_id": "evidence-21377e033f72035804a0ca8c",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-3d0756f564ab78755f2e",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Budget Speech by the Financial Secretary (4)",
+    "snippet": "Hong Kong has implemented the licensing regime for issuers. The first batch of licences will be issued next month. The Government and financial ...",
+    "url": "https://www.info.gov.hk/gia/general/202602/25/p2026022500167.htm",
+    "source": "serper",
+    "published_at": "25 Feb 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2026-02-24",
+    "company_id": null,
+    "evidence_id": "evidence-e402973be65098313e6fb282",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-6597a1fd756ce0a701d2",
+    "query": "Hong Kong financial company new licence license approval September 2026",
+    "title": "Hong Kong SFC License 2026 — Type 1, 4, 9 Guide",
+    "snippet": "HKD $5,000,000 paid-up share capital and HKD $3,000,000 liquid capital are required. The SFC Type 9 license — from HKD $100,000 liquid capital ...",
+    "url": "https://www.zitadelleag.com/services/investment-licensing/hong-kong-sfc",
+    "source": "serper",
+    "published_at": "10 Jun 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "generic_page",
+    "event_date": "2026-06-09",
+    "company_id": null,
+    "evidence_id": "evidence-ac9ea1cf9b05bd957f85cc59",
+    "reasons": [
+      "generic reference/service page; no event relation"
+    ]
+  },
+  {
+    "event_id": "event-1fa0ab2a36ad8296934c",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "A quarter of connecting, innovating and diversifying Hong ...",
+    "snippet": "With product expansion in September, Swap Connect –– a Mainland-Hong Kong derivatives market connect scheme –– saw its trading volume grow 56% ...",
+    "url": "https://apps.sfc.hk/edistributionweb/gateway/en/news-and-announcements/news/doc?refno=25pr207",
+    "source": "serper",
+    "published_at": "17 Dec 2025",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2025-12-16",
+    "company_id": null,
+    "evidence_id": "evidence-7d59f9a10fe8398427f1480d",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-a1302dd1c3046f65ca40",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "HUBBIS INVESTMENT FORUM - HONG KONG 2026",
+    "snippet": "We are delighted to welcome you to the Hubbis Investment Forum - Hong Kong 2026, taking place on Tuesday 15 September at the Hopewell Hotel, ...",
+    "url": "https://www.hubbis.com/event/hubbis-investment-forum-hong-kong-2026-2026-9-15",
+    "source": "serper",
+    "published_at": "15 Sept 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": "2026-09-14",
+    "company_id": null,
+    "evidence_id": "evidence-1907175d136eb675e671a67a",
+    "reasons": [
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-89debaafcccde0f08bd4",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "Hong Kong OFCs – a rough guide | Global law firm",
+    "snippet": "OFCs are investment funds established in corporate form with limited liability and variable share capital in Hong Kong.",
+    "url": "https://www.nortonrosefulbright.com/en/knowledge/publications/8bc42e14/hong-kong-ofcs-a-rough-guide",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-2a74753a436150e4467da4ed",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-2ce4befc18ace0544f5d",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "Competitive International Financial Platform",
+    "snippet": "Hong Kong is a major regional fund management centre with a large concentration of international fund managers, advisory businesses and private banks.",
+    "url": "https://www.hkma.gov.hk/eng/key-functions/international-financial-centre/hong-kong-as-an-international-financial-centre/competitive-international-financial-platform",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-0b8f1a7b2c0db99cbd7aa7ee",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-652471435bdd3c09e4e5",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "Eastspring Investments: Hong Kong Asset Management",
+    "snippet": "The Fund aims to generate long-term capital growth through a concentrated portfolio of equities, equity-related securities, bonds, and currencies. The Fund will ...",
+    "url": "https://www.eastspring.com/hk",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-0f2c7997c93bc7236a6a3d5f",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-ccaef085aaa17b88cb99",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "Hong Kong Investment Corporation Limited announces the ...",
+    "snippet": "The relevant investment work will commence in the first quarter of 2026. The HKIC will closely monitor the operations of the CIES IP and make ...",
+    "url": "https://www.hkic.org.hk/latest-updates/announces-the-appointment-of-fund-managers-and-service-provider-dec-2025",
+    "source": "serper",
+    "published_at": "2 Dec 2025",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2025-12-01",
+    "company_id": null,
+    "evidence_id": "evidence-4accf7247a2dae627e7e1788",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-ef996e2fed1ffbff18f7",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "Navigating Global Investment Trend Strengthening Hong ...",
+    "snippet": "Hong Kong's asset management market expanded rapidly in recent years, 77% of Hong Kong's investment funds were allocated to overseas assets, an ...",
+    "url": "https://research.hktdc.com/en/article/mtgzmtk4mtmxoq",
+    "source": "serper",
+    "published_at": "22 Oct 2024",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2024-10-21",
+    "company_id": null,
+    "evidence_id": "evidence-db131ad4e747f74943cacac8",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-6caf554e720aa4494de3",
+    "query": "Hong Kong asset manager new fund product expansion September 2026",
+    "title": "SFC expands listed fund universe to leveraged and inverse ...",
+    "snippet": "On June 05, 2026, the SFC expanded listed fund universe to include Single Stock L&I Products referencing Hong Kong-listed mega-cap stocks ...",
+    "url": "https://www.timothyloh.com/insights/latest-news/sfc-expands-listed-fund-universe-to-leveraged-and-inverse-products-referencing-hong-kong-listed-single-stocks-with-enhanced-safeguards-20260605",
+    "source": "serper",
+    "published_at": "5 Jun 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2026-06-04",
+    "company_id": null,
+    "evidence_id": "evidence-93cb4dae0f9f9efb562468ca",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-46a8e05bccc2c70e47a4",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Sep 2026 | Jobsdb - Jobs in Hong Kong",
+    "snippet": "33,005 jobs in Hong Kong · ABA Practitioner · Business Development Executive · Responsible Officer / RO 9 - Asset Management · Senior Talent Acquisition Director.",
+    "url": "https://hk.jobsdb.com/jobs",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "evergreen_reference",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-50d1e4f117600123bf6a2d8f",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  },
+  {
+    "event_id": "event-56b591502c47035932da",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Careers in Hong Kong | HSBC Holdings plc",
+    "snippet": "Find out more information about the wide range of careers, job opportunities and why work for HSBC in Hong Kong.",
+    "url": "https://www.hsbc.com/careers/where-we-hire/hong-kong",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "evergreen_reference",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-b631cf250fcdda1ba5c24ca9",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  },
+  {
+    "event_id": "event-b9df993dcd98117fb4b1",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "2026 Campus Recruitment Job Openings",
+    "snippet": "2026 Campus Recruitment Job Openings · Seniority level. Not Applicable · Employment type. Full-time · Job function. Human Resources · Industries. Banking, Capital ...",
+    "url": "https://hk.linkedin.com/jobs/view/2026-campus-recruitment-job-openings-at-bank-of-china-hong-kong-4382877679",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "evergreen_reference",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-04c207080f3eed0caa2a753f",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  },
+  {
+    "event_id": "event-e986d191afd6727c69b2",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Recruitment Day in Hong Kong - Sep 2026",
+    "snippet": "Recruitment day jobs in Hong Kong · CMHHK Nursing Division Recruitment Day, 3 Sep 2026 · Personal Banking - Recruitment Day (12 September 2026).",
+    "url": "https://jobs.ctgoodjobs.hk/jobs/recruitment-day-jobs",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "evergreen_reference",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-372b34ba066db4eeaff00fd0",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  },
+  {
+    "event_id": "event-9a1eb71a3a5467b5fd32",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Job Opportunities - Careers",
+    "snippet": "Job Opportunities. The Bank of East Asia, Limited offers customers a comprehensive range of corporate and commercial banking, personal banking, wealth ...",
+    "url": "https://www.hkbea.com/html/en/bea-career-job-opportunities.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "evergreen_reference",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-301e5b4546a80c37f1c66aad",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  },
+  {
+    "event_id": "event-7c88a4597ed800b6cb1e",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Jobs in Hong Kong",
+    "snippet": "Browse through all Bank of America jobs available in Hong Kong. You can apply for any of the Hong Kong positions right from the Bank of ...",
+    "url": "https://careers.bankofamerica.com/en-us/job-search/hong-kong",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-192659abb719c787ce99fda3",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-47b1a9ff907434851189",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Personal Banking - Recruitment Day (25 July 2026)",
+    "snippet": "Position Summary Branch Positions - Recruitment Day (25 July 2026) Date: 25 July 2026 (Saturday) Time: 9:30a.m. – 5:00p.m.",
+    "url": "https://bebee.com/hk/jobs/personal-banking-recruitment-day-25-july-2026-the-bank-of-east-asia-limited--t7xk-757228953",
+    "source": "serper",
+    "published_at": "25 Jul 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2026-07-24",
+    "company_id": null,
+    "evidence_id": "evidence-c14622697f9ba5778c002584",
+    "reasons": [
+      "target subject, action and recent event date are present"
+    ]
+  },
+  {
+    "event_id": "event-a1ae0bfeaaf33c72f638",
+    "query": "Hong Kong bank recruitment day senior appointment 2026",
+    "title": "Banking recruitment day jobs",
+    "snippet": "57 Banking Recruitment Day jobs available on Indeed.com. Apply to Product Analyst, Campus Manager, Customer Service Representative and more!",
+    "url": "https://hk.indeed.com/q-banking-recruitment-day-jobs.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-7a014ecfae898446d3a2c87f",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-1079bddac41eadf4d38e",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "Eddie Yue on Hong Kong's Wealth Management Market",
+    "snippet": "Some private banks have expanded their office spaces, increasing their floor area by some 35% to over 50%. range from 10% to 100% in the next ...",
+    "url": "https://www.hkma.gov.hk/eng/news-and-media/insight/2025/08/20250804",
+    "source": "serper",
+    "published_at": "4 Aug 2025",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2025-08-03",
+    "company_id": null,
+    "evidence_id": "evidence-94a19541ffa229b2c741ba4d",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-d8e87a1221247eb8de09",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "Endowus Deepens Its Commitment to Hong Kong ...",
+    "snippet": "Endowus has announced the relocation of its Hong Kong office to a 4,290-square-foot full floor at Chinachem Tower in Central — doubling the ...",
+    "url": "https://www.hubbis.com/news/endowus-deepens-its-commitment-to-hong-kong-doubling-its-office-footprint-in-central-as-the-city-becomes-the-world-s-largest-cross-border-wealth-hub",
+    "source": "serper",
+    "published_at": "24 Jun 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "stale",
+    "event_date": "2026-06-23",
+    "company_id": null,
+    "evidence_id": "evidence-c144fa5e285cc28f8aee79a5",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-88f97fc6c69be0ec9b06",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "Hong Kong doubles down on strengthening global ...",
+    "snippet": "Hong Kong saw a 25% increase in single-family offices since 2023, reaching 3,384 by end of 2025, reinforcing its role as Asia's wealth hub.",
+    "url": "https://www.linkedin.com/pulse/hong-kong-doubles-down-strengthening-sfbmc",
+    "source": "serper",
+    "published_at": "5 months ago",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2026-04-07",
+    "company_id": null,
+    "evidence_id": "evidence-d94f0f642bb0dca62d71124f",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-3c6d0a48b527885ae59d",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "Hong Kong's single-family offices total surpasses 3 380 ...",
+    "snippet": "Hong Kong's single-family offices total surpasses 3 380, injecting over $10 billion annually into local economy",
+    "url": "https://www.investhk.gov.hk/en/news/hong-kongs-single-family-offices-total-surpasses-3-380-injecting-over-10-billion-annually-into-local-economy",
+    "source": "serper",
+    "published_at": "10 Feb 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2026-02-09",
+    "company_id": null,
+    "evidence_id": "evidence-594cb90a54d5b61ac3e723c1",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-21887d3b4a1f1a52e9d2",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "Wealth for Good in Hong Kong: Of the World, For the World",
+    "snippet": "To date, our dedicated team has assisted over 160 family offices in establishing or expanding their operations in Hong Kong, and we are ...",
+    "url": "https://www.fstb.gov.hk/en/blog/blog120325.htm",
+    "source": "serper",
+    "published_at": "12 Mar 2025",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2025-03-11",
+    "company_id": null,
+    "evidence_id": "evidence-594d737019eb8150baf22612",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-a35da19594e30d953baf",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "Hong Kong tops cross-boundary wealth management centre ...",
+    "snippet": "Hong Kong is now the world's largest cross-boundary wealth management centre. As of end-April 2026, Invest Hong Kong has received nearly 3 600 ...",
+    "url": "https://www.info.gov.hk/gia/general/202605/27/p2026052700809.htm",
+    "source": "serper",
+    "published_at": "27 May 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "aggregator_only",
+    "event_date": "2026-05-26",
+    "company_id": null,
+    "evidence_id": "evidence-e14b632aa4f85ae990dbd91c",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-27d5deee15a7e6a43e6d",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "The 16th Asia-Pacific Family Office & Investment Forum",
+    "snippet": "Join us at the Hong Kong Family Office & Investment Forum, 25–26 June 2026. families and private investors embed values into investment strategies, balancing ...",
+    "url": "https://www.campdenwealth.com/apac-fif2026",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-ed285d3c81eba25e486c8640",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-cd86ac13cc5518b573c4",
+    "query": "Hong Kong brokerage wealth institutional expansion office 2026",
+    "title": "The 2026 Family Office Summit",
+    "snippet": "Join 100+ family offices & family office professionals at The 2025 Family Office Summit in April, October & November 2025 in Hong Kong & Singapore.",
+    "url": "https://my.caproasia.com/the-2026-family-office-summit",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "hk_finance",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-cf80914f8546572b98370d44",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-1ca4cdea445dc5760c56",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "年产值超15亿，重磅央地合作项目再度落地黄埔",
+    "snippet": "8月21日，广州黄埔迎来又一重磅央企产业项目签约——高性能橡塑密封研发制造基地项目落地中新广州知识城。 ... 项目预计2027年投产。项目投产规模运营后，预计 ...",
+    "url": "https://www.hp.gov.cn/zwgk/zdxm/content/post_10978419.html",
+    "source": "serper",
+    "published_at": "Aug 21, 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": "2026-08-20",
+    "company_id": null,
+    "evidence_id": "evidence-707343eb73518cada1cf988e",
+    "reasons": [
+      "target subject, action and recent event date are present"
+    ]
+  },
+  {
+    "event_id": "event-808d3e3b541f766c2e39",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "广州开发区管委会广州市黄埔区人民政府修订关于打造“三城一岛”产业 ...",
+    "snippet": "现将修订后的《关于打造“三城一岛”产业增长极加快发展新质生产力若干举措》印发给你们，请认真遵照执行。执行过程中如遇问题，请径向区政研室反映。",
+    "url": "https://www.gz.gov.cn/gfxwj/qjgfxwj/hpq/qf/content/post_10685684.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-c12e191296f8bc9fd888fd93",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-f92f38efe22ae14e2b8f",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "黄埔兑现通一政策兑现综合服务平台",
+    "snippet": "广州市黄埔区文化广电旅游局关于组织开展“文化体育娱乐业企业首次规下转规上成长扶持”申报工作的通知 2026-09-01 · 广州开发区经济和信息化局广州市黄埔区工业和信息化局 ...",
+    "url": "https://zcdx.gdd.gov.cn",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": "2026-09-01",
+    "company_id": null,
+    "evidence_id": "evidence-18bf36584d32360bd7273305",
+    "reasons": [
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-db6267ac765c5b1ac98f",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "广州开发区管委会广州市黄埔区人民政府关于修订广州开发区 ... - 查策网",
+    "snippet": "广州开发区管委会广州市黄埔区人民政府关于修订广州开发区（黄埔区）深化生产性服务业与先进制造业“两业融合”加快培育新质生产力若干举措的通知.",
+    "url": "https://www.chacewang.com/newsdetail/news931812.html",
+    "source": "serper",
+    "published_at": "Feb 9, 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "stale",
+    "event_date": "2026-02-08",
+    "company_id": null,
+    "evidence_id": "evidence-babaa8383852ac5d13a02be6",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-81c3bb66939b3e411410",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "广州开发区黄埔区推动人工智能赋能千行百业专项行动方案：开展“双 ...",
+    "snippet": "2026年2月，广州开发区、黄埔区发布《广州开发区、黄埔区推动人工智能赋能千行百业专项行动方案》（以下简称《行动方案》），以超常规力度、前瞻性 ...",
+    "url": "https://www.smartcity.team/policies/%e5%a4%a7%e6%a8%a1%e5%9e%8b%e6%94%bf%e7%ad%96%e5%ba%93/guangzhouhuangpuai",
+    "source": "serper",
+    "published_at": "Mar 9, 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "stale",
+    "event_date": "2026-03-08",
+    "company_id": null,
+    "evidence_id": "evidence-432e2c230dd4d91d30f06d76",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-62c7fe0c6249a84cd192",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "（转发）广州市工业和信息化局关于发布2026年市促进工业和信息化 ...",
+    "snippet": "现将《广州市工业和信息化局关于发布2026年市促进工业和信息化产业高质量发展专项资金集中申报指南（第二批）的通知》转发给你们，请符合条件的企业积极 ...",
+    "url": "https://www.hp.gov.cn/xwzx/zqgg/content/post_10990157.html",
+    "source": "serper",
+    "published_at": "22小时前",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-10b9273c6ce990cf21e918e2",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-b9722d21a4216cb274c6",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "广州市黄埔区22个项目集中投试产",
+    "snippet": "黄埔区22个项目集中投试产今天是:2026年8月24 ・ 迎来了重点项目集中投试产活动・ 这些项目涵盖新一代信息技术、人工智能、生物医药",
+    "url": "https://gxj.gz.gov.cn/fw/gzzxqyzhfwpt/zhxw/rdxw/content/post_2615046.html",
+    "source": "serper",
+    "published_at": "Jan 22, 2019",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": "2019-01-21",
+    "company_id": null,
+    "evidence_id": "evidence-a7dd6da26945344bde47ac56",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-62a82616e41f7d6bef49",
+    "query": "广州 黄埔 企业 扩产 新项目 2026 9月",
+    "title": "黄埔：以AI赋能激活两业融合新动能 - 央广网",
+    "snippet": "据悉，2025年黄埔已实现规上工业总产值8300亿元，工业投资超500亿元，储备亿元以上增资扩产项目110个，投资规模和项目数量均稳居全市首位，两业融合已结出 ...",
+    "url": "https://www.cnr.cn/gd/fxgz/20260226/t20260226_527536983.shtml",
+    "source": "serper",
+    "published_at": "Feb 26, 2026",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "stale",
+    "event_date": "2026-02-25",
+    "company_id": null,
+    "evidence_id": "evidence-499408efec0072973eb8db19",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-1cec02aaaff6a963ce97",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "广州市工业和信息化局关于发布2026年市促进工业和信息化产业高 ...",
+    "snippet": "广州市工业和信息化局关于发布2026年市促进工业和信息化产业高质量发展专项资金集中申报指南（第二批）的通知 · 1.企业申报流程. （1）注册。 · 2.申报时间 ...",
+    "url": "https://gxj.gz.gov.cn/gkmlpt/content/10/10984/post_10984954.html",
+    "source": "serper",
+    "published_at": "4天前",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": "2026-08-31",
+    "company_id": null,
+    "evidence_id": "evidence-ca5c10c6c20f9b5bc351baff",
+    "reasons": [
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-763c172fd77ddc573808",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "广州市人民政府办公厅关于印发广州市促进专精特新中小企业发展 ...",
+    "snippet": "一、强化梯度培育. （一）健全培育体系。 · 二、激发创新活力. （四）支持技术创新。 · 三、强化金融支持. （九）拓宽直接融资渠道。 · 四、深化数智化改造.",
+    "url": "https://www.conghua.gov.cn/tzch/gznqzc/content/post_10493365.html",
+    "source": "serper",
+    "published_at": "2025年8月29日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-e7ed6aec4a79d41f3578619f",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-c32c87868e748ddb012b",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "广州市南沙区工业和信息化局关于印发广州市南沙区推动工业企业 ...",
+    "snippet": "重点鼓励电力、钢铁、建材、石化、化工、纺织印染、造纸、粮油等领域开展节能降碳改造，支持企业开展工业固体废物资源综合利用改造，以及自建的分布式光伏 ...",
+    "url": "https://www.gzns.gov.cn/zwgk/zcwjjjd/zcwj/content/post_10099225.html",
+    "source": "serper",
+    "published_at": "2025年1月26日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-4e37adcc414ddde8b90f828b",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-82ab770a54a842ae716a",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "广州市2026年省级制造业当家重点任务保障专项资金（新一代信息 ...",
+    "snippet": "广州市现将2026年省级制造业当家重点任务保障专项资金（新一代信息技术和产业发展）支持电子信息产业方向资金安排计划予以公示。",
+    "url": "https://www.gdktzx.com/detail/21709.html",
+    "source": "serper",
+    "published_at": "2026年3月17日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-8330936e1c2be769f45ab4ae",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-e456afabcebf82ddeb28",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "广州市工业和信息化局关于2026年专精特新“小巨人”企业省级奖补 ...",
+    "snippet": "广州市工业和信息化局关于2026年专精特新“小巨人”企业省级奖补资金计划的公示 ... 现予以公示，公示期为2026年8月21日至2026年8月27日。",
+    "url": "https://gxj.gz.gov.cn/yw/tzgg/content/post_10973077.html",
+    "source": "serper",
+    "published_at": "2026年8月20日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-6658322ea8bebfde9409459a",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-5d7f4248e2c52eee3e8c",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "广州市人民政府办公厅关于印发广州市“专精特新”中小企业培育三年 ...",
+    "snippet": "《广州市“专精特新”中小企业培育三年行动方案（2022—2024）》已经市人民政府同意，现印发给你们，请认真贯彻执行。执行中遇到问题，请径向市工业和信息化 ...",
+    "url": "https://www.yuexiu.gov.cn/ggfw/ztfw/zsyz/zcfg/content/post_8210864.html",
+    "source": "serper",
+    "published_at": "2022年4月25日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-011f5f8cecd251aff3d6f3e9",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-567b58bbd2841571c808",
+    "query": "广州 企业 新工厂 新生产线 融资 2026",
+    "title": "政府当“天使投资人”，广州试点“先投后股” - 新闻- 科学网",
+    "snippet": "据介绍，“先投后股”试点项目实施期为2年，允许最长延期1年。单个项目总支持金额分为100万元、200万元和400万元三档。项目实施期结束后，如项目未达预期 ...",
+    "url": "https://news.sciencenet.cn/htmlnews/2026/6/566550.shtm",
+    "source": "serper",
+    "published_at": "2026年6月15日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-8d18f76602649166825db336",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-8e56052f0b75e5b314c3",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "科学城（广州）投资集团有限公司公开招聘公告",
+    "snippet": "科学城（广州）投资集团有限公司公开招聘公告. 信息来源：广州市黄埔区人民政府 发布时间：2018-05-16 01:22:26 浏览量：-. 【打印】 字体【 大 中 小 】 ...",
+    "url": "https://www.hp.gov.cn/xwzx/tzgg/content/post_3624470.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": "2018-05-16",
+    "company_id": null,
+    "evidence_id": "evidence-c013274573851dccf68e6d85",
+    "reasons": [
+      "event date is older than 60 days"
+    ]
+  },
+  {
+    "event_id": "event-df563ab62a243b56122b",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "科学城（广州）建筑工程有限公司 - 智联招聘",
+    "snippet": "科学城（广州）建筑工程有限公司成立于2018年1月，位于广州市黄埔区连云路，是广州市黄埔区（开发区）龙头国有企业科学城（广州）投资集团有限公司下属二级子公司， ...",
+    "url": "https://www.zhaopin.com/companydetail/9144877sdussix67pe.htm",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-32f7e65636fb6c80ac797ed4",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-8545c58888eb8d61646e",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "招聘| 科学城创投①",
+    "snippet": "岗位招聘 · 1、专注品牌消费、文化科技、生物医药等赛道的行业研究及项目开发与筛选 · 2、负责项目尽调调查与评估、分析投资可行性 · 3、负责投资项目执行与跟进 · 4、负责项目 ...",
+    "url": "https://www.gzscvc.com/news/39.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-ad42e68b3a4e288a7ca03bba",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-0fe6552506c559f67fa6",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "科学城（广州）投资集团有限公司",
+    "snippet": "在“高精尖”的招商引资领域充分发挥龙头项目的磁吸效应，投资粤芯半导体、高云半导体、华星光电等项目，深度切入半导体与集成电路、数字经济等产业链，占据“微笑曲线”顶端。",
+    "url": "https://www.sci-gz.com",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-4dbbc93d82992860af178a3f",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-d63cb607279d1395773c",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "科学城数科集团招聘 - 猎聘",
+    "snippet": "热门招聘官 · 行政实习生 学生职位. 100-150元/天 · 出纳. 5-7k · 财务主管. 9-10k · 智慧城市事业部注册消防工程师. 10-11k · 事务助理 学生职位. 100-150元/天 · 项目管理实习 ...",
+    "url": "https://m.liepin.com/company/12501997",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-120c58c302c8dab0409bea84",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-5608866974669fc3dfc6",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "【科学城（广州）投资集团有限公司-招聘信息】-才聚羊城",
+    "snippet": "科学城集团凭借一流的专业水平和完备的管理体系，以专业的服务赢得了政府部门及合作伙伴的信任与认可，荣获“全国重合同守信用企业“称号。 公司地址. 广州市黄埔区开达路101 ...",
+    "url": "https://global.job168.com/comdetail/e54080e950d2e92ce97deaf142b124d1",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-acc3f02d94df2dbbe8ef43b7",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-c73823dedeb09bbfc158",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "科学城(广州)投资集团有限公司 - 知乎专栏",
+    "snippet": "1.招聘对象：2021届高校本科毕业生；. 2.招聘岗位：建筑工程专业项目管理人员；. 3.工作地点：广东省广州市黄埔区。 【招聘标准】. 1.建筑工程相关专业 ...",
+    "url": "https://zhuanlan.zhihu.com/p/410024835",
+    "source": "serper",
+    "published_at": "2021年6月30日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-b3f4bb8c9fb6346485ce6bd9",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-29df294388e366e24588",
+    "query": "黄埔 科学城 企业 投资 项目 招聘 官网",
+    "title": "科学城（广州）投资集团有限公司招聘 - BOSS直聘",
+    "snippet": "在营（开业）企业. 注册地址：: 广州市黄埔区开达路101号2栋6-8楼. 统一社会信用代码：: 914401011906700395. 经营范围：: 工程管理服务；信息技术咨询服务；日用百货销售 ...",
+    "url": "https://m.zhipin.com/companys/d46d5560382aa8c70hd82t25eq~~.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-6b5a6627e1bd4d24e0fe28a5",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-2ebb730585191529c553",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "Deepening Regional Integration: The GBA in China's 15th Five-Year ...",
+    "snippet": "The vision for the GBA in China's 15th Five-Year Plan signals a more accessible regional economy and new opportunities for foreign businesses ...",
+    "url": "https://www.china-briefing.com/news/the-gba-in-chinas-15th-five-year-plan",
+    "source": "serper",
+    "published_at": "2026年3月20日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-8127a656203d08be644fc5f1",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-e71dd177875805f33275",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "What makes the Greater Bay Area (GBA) a powerhouse ... - Facebook",
+    "snippet": "GBA is the future.” With its strengths in advanced manufacturing, digital infrastructure, talent and global connectivity, the GBA continues to ...",
+    "url": "https://www.facebook.com/cuhkbschool/videos/what-makes-the-greater-bay-area-gba-a-powerhouse-of-innovationat-the-greater-bay/834686332789574",
+    "source": "serper",
+    "published_at": "2026年6月14日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-19bf1faa537044f88e1649fc",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-efa24d478818454331b9",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "Synergize GBA Program 2026 - InvestHK",
+    "snippet": "The sixth Synergize GBA Program will be held in Shenzhen on 14 August 2026. Themed “Accelerating global growth through GBA connectivity”, the ...",
+    "url": "https://www.investhk.gov.hk/en/events/synergize-gba-program-2026",
+    "source": "serper",
+    "published_at": "2026年7月13日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-1e20b974b9b961f4a76af1fe",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-6cc6bc25deb4873b16d6",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "The GBA Global Business Expansion Summit - JSM",
+    "snippet": "The summit offered a rich platform for knowledge sharing, high-level networking and substantive discussion on what it truly takes to grow a ...",
+    "url": "https://www.jsm.com/events/2026/07/the-gba-global-business-expansion-summit",
+    "source": "serper",
+    "published_at": "2026年7月14日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-04fb007a3754c17ecee5194f",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-5d7a3b5721ebda7a1d5d",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "2026 GBA-ASEAN Conference on Energy Transition and Integration",
+    "snippet": "... group of leaders from government, business, finance, academia, and international organizations ... global leader in sustainable development.",
+    "url": "https://www.linkedin.com/posts/jeffrey-d-sachs_2026-gba-asean-conference-on-energy-transition-activity-7488272246528954368-rdfi",
+    "source": "serper",
+    "published_at": "2026年7月29日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-20dd6b4a959576503e7b30f0",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-f04d1aff37f80531eeaa",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "Leveraging Strengths and Connectivity The “GBA iForum cum ...",
+    "snippet": "The “GBA iForum cum Dinner 2026”, as a premier annual business event co-organised by Federation of Hong Kong Industries (FHKI), alongside the Pearl River Delta ...",
+    "url": "https://www.industryhk.org/en/info/press-releases/gba-iforum-2026",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-6471a7b3e9d30bf57a982d8d",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-620c3e24ce275db0a918",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "7 Tasks of GBA｜Path of modern industries development in Greater ...",
+    "snippet": "The Development Plan proposes to build a number of emerging industry clusters with complete industrial chains, strong radiation driving force, ...",
+    "url": "https://www.ourchinastory.com/en/11841/7-tasks-of-gba%ef%bd%9cpath-of-modern-industries-development-in-greater-bay-area-(part-i)",
+    "source": "serper",
+    "published_at": "2024年5月31日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-e3fa1934341506f093d4b64a",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-652f69b9d54df236693c",
+    "query": "GBA company international business expansion new project 2026",
+    "title": "GBA Business Confidence Index: Foreseeable Growth & Potential ...",
+    "snippet": "A key finding reveals that nearly 55% of GBA companies are exploring business expansion in the Middle East, particularly in the UAE and Saudi ...",
+    "url": "https://sourcing.hktdc.com/newsbites/markets/gba-confidence",
+    "source": "serper",
+    "published_at": "2026年3月9日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "gba_company",
+    "status": "generic_page",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-514bffc96867c17b33ecee5f",
+    "reasons": [
+      "generic reference/service page; no event relation"
+    ]
+  },
+  {
+    "event_id": "event-edfcfd1b5d5c096c427b",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "中国制造业为什么加速转移东南亚：2025–2026 关键驱动力分析",
+    "snippet": "文章摘要： 中国制造业加速转移东南亚，不是单一因素，而是关税与地缘政治、生产成本结构性上升、贸易协定红利、供应链韧性需求四股力量叠加的结果。",
+    "url": "https://www.manhattansez.com/china-manufacturing-shift-2",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-24c72e592f672f34708d0958",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-eda81cbda75681411abb",
+    "query": "中国 制造企业 泰国 越南 新工厂 投产 2026",
+    "title": "那些搬到越南的工厂，正在重新回到中国 - 观察者",
+    "snippet": "这家公司大约70%的业务来自美国，特朗普第一任期时便开始在越南和泰国寻找供应商，后来又扩展到印度和印度尼西亚。 但到2026年，它500家供应商中仍然有75% ...",
+    "url": "https://www.guancha.cn/gongsi/2026_08_10_826809.shtml",
+    "source": "serper",
+    "published_at": "2026年8月10日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-c0a1b5ae3584dc6b422c2a81",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-bf588197878336bd4f09",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "睿见出海2026 | 中企出海东南亚：四大制造赛道的机遇与暗礁",
+    "snippet": "作为深耕亚太区工业物流地产的全球服务商，仲量联行已成功协助多家中国企业在泰国、马来西亚、印尼高效落地，提供产业集群评估、水电基础设施验证、定制化 ...",
+    "url": "https://www.joneslanglasalle.com.cn/zh-cn/insights/chinese-manufacturers-go-global",
+    "source": "serper",
+    "published_at": "2026年5月20日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-10f67444a6ef68a6f840b396",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-fe682382eb7e00d2a9f7",
+    "query": "中国 制造企业 泰国 越南 新工厂 投产 2026",
+    "title": "中国制造业在越南的战略布局：关键地区分析与未来发展趋势",
+    "snippet": "众多中国企业正在越南设立工厂，旨在拓展业务规模、优化供应链管理，并进一步深化对东南亚市场的准入与影响力。本文拟对中国企业在越南的投资规模及其 ...",
+    "url": "https://www.vietnam-briefing.com/news/china-manufacturing-presence-vietnam-locations-future-growth-cn.html",
+    "source": "serper",
+    "published_at": "2025年4月3日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-b2575dbccb0ef5e07de32921",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-04af72c036505d3cadbd",
+    "query": "中国 制造企业 泰国 越南 新工厂 投产 2026",
+    "title": "“中国+1” 战略：全球制造业多元化布局新趋势 - 凯晋",
+    "snippet": "在实施“中国+ 1” 战略时，企业可重点考虑以下国家作为多元化布局的备选地：越南、印度、柬埔寨、孟加拉国、泰国、印度尼西亚、马来西亚、菲律宾。 以越南 ...",
+    "url": "https://cn.acclime.com/news-insights/china-plus-one-strategy",
+    "source": "serper",
+    "published_at": "2026年1月29日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-cc4cfa3fca9010c338235c61",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-6a4a05bb0194424c3a6f",
+    "query": "中国 制造企业 泰国 越南 新工厂 投产 2026",
+    "title": "中国企业加速开拓东南亚市场 - 新华网",
+    "snippet": "泰国是重要的空调生产国，中国制造商自2021年起在泰国兴建大型工厂。由于零部件及其他配件均从中国进口，中国企业的产品价格比竞品低20%至30%。泰国 ...",
+    "url": "https://www.news.cn/liangzi/20260317/23c55325c02d4314aff1e827f6448825/c.html",
+    "source": "serper",
+    "published_at": "2026年3月17日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-d631120d167cd5eabbf498de",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-a19aee8bb93c5b80d8db",
+    "query": "中国 制造企业 泰国 越南 新工厂 投产 2026",
+    "title": "卡倍亿拟2.5亿越南设厂汽配企业密集落子东南亚|速读公告 - 财联社",
+    "snippet": "①卡倍亿拟投资不超过3600万美元（约2.5亿元）在越南设立全资孙公司，建设生产基地； ②今年以来，国内汽车零部件企业密集布局东南亚，广东鸿图、信质集团 ...",
+    "url": "https://www.cls.cn/detail/2314716",
+    "source": "serper",
+    "published_at": "2026年3月16日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-23bc4719ecd61d6aa23478f8",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-de140d6fdb4d219a3b31",
+    "query": "中国 制造企业 泰国 越南 新工厂 投产 2026",
+    "title": "东南亚工业园建设潮,吸引中国工厂转移 - 日经中文网",
+    "snippet": "“中国不得不消除对美欧等国的贸易顺差，从中国转移的趋势将进一步加强”，安美德以泰国和越南为中心，运营和开发12个100平方公里以上的工业园区。",
+    "url": "https://cn.nikkei.com/industry/management-strategy/60585-2025-12-04-05-00-29.html",
+    "source": "serper",
+    "published_at": "2025年12月4日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-5b37181b95381755a9bc54ca",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-1b8a1a16e9fcea3d126d",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "2026 年外贸增长行业观察：工业机器人出口增长背后的中国企业机会",
+    "snippet": "对中国外贸企业来说，工业机器人出口的机会不只在“卖一台机器人”，而是在帮助海外工厂解决缺人、提效、降本、稳定质量和产线升级的问题。",
+    "url": "https://www.alinegpt.com/zh/news/industrial-robot-export-opportunities-2026-06-04",
+    "source": "serper",
+    "published_at": "2026年6月4日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-e9ffe0b72bc4ad76ec78f46c",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-fd3fe2fbc1a77cabc9bc",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "【阳光评论】“世界工厂”转型“去世界开工厂” 中国产能如何扎根全球 ...",
+    "snippet": "过去，中国被称为“世界工厂”，“走出去”的是产品。现在，随着越来越多中国企业“去世界开工厂”，中国产业“走出去”的还有全链条的先进产能。",
+    "url": "https://www.china.com.cn/zhuanti2005/txt/2026-04/29/content_118469417.shtml",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-2ba1c1421533335a9f8f5930",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-cfef38fdd4b3cf5a242d",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "出海企业必读：海外工厂从选址到投产的全流程指南 - Kingdee",
+    "snippet": "海外工厂的运营需要本地化团队的支撑。团队组建包括管理层招聘、技术人员培训、一线员工招募等环节，是确保工厂顺利运营的基础。 管理层方面 ...",
+    "url": "https://www.kingdee.com/article/2028448318346063874.html",
+    "source": "serper",
+    "published_at": "2026年3月2日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-61332fcdc8b2f7e7aab79dd1",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-df1e811abef72aadb525",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "从“走出去”到“迈上去”：中企“灯塔”出海进阶之路 - 麦肯锡",
+    "snippet": "中企海外“灯塔”在目标市场的业务本土化仍处于初期阶段，主要体现在：新品上市数量不如国内“多”，供应链响应速度不如国内“快”，产能柔性不如国内“好”， 物料采购成本不如 ...",
+    "url": "https://www.mckinsey.com.cn/%e4%bb%8e%e8%b5%b0%e5%87%ba%e5%8e%bb%e5%88%b0%e8%bf%88%e4%b8%8a%e5%8e%bb%ef%bc%9a%e4%b8%ad%e4%bc%81%e7%81%af%e5%a1%94%e5%87%ba%e6%b5%b7%e8%bf%9b",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-41c4df687289313afc2b2f6f",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-d4e76b9dc6c86bf1fbdd",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "50 个中国海外职位，2026年8月30日的就业机会 - Indeed 中国",
+    "snippet": "Indeed.com 上提供56 个中国海外职位。申请Sales Representative, 法务, 嵌入式软件开发工程师以及更多职位！",
+    "url": "https://cn.indeed.com/q-%e4%b8%ad%e5%9b%bd%e6%b5%b7%e5%a4%96-%e8%81%8c%e4%bd%8d.html",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-9bf95820dd5eba3c90dddc3f",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-0dd48a7b7869355164b9",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "通威股份2026 校园招聘简章 - 研究生院- 四川农业大学",
+    "snippet": "一、招聘对象. 全职岗位： 2025 、2026 届毕业生； · 二、校招流程及评估 · 三、岗位类型及要求. 岗位类型：研发岗、商务营销岗、供应链岗、产品管理岗、 ...",
+    "url": "https://yan.sicau.edu.cn/info/1038/12439.htm",
+    "source": "serper",
+    "published_at": "2025年12月9日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-c183406ba801b585330dd26b",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-20108dbf158c3afbcc61",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "对外投资新规下新能源制造业企业“技术出海”的管制重构 - 君合",
+    "snippet": "本文从实操角度聚焦中国新能源制造企业产能出海过程中“支撑海外工厂跑起来的技术、服务、数据与人员”能否合法、可批、且可控地出海（注：本文不讨论 ...",
+    "url": "https://www.junhe.com/legal-updates/3032",
+    "source": "serper",
+    "published_at": "2026年6月9日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-1c3dc9aa77139a559748d41e",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-1bfcdc4a032593f10723",
+    "query": "中国 企业 海外 工厂 扩产 招聘 2026",
+    "title": "出海！中资锂电企业海外建厂提速-产业 - InfoLink Consulting",
+    "snippet": "产能方面，InfoLink 预计中资锂电企业海外实际投运电芯产能在未来三年将大幅提升，至2026 年，预计将投运超过250 GWh 电芯产能。海外产能的持续提升 ...",
+    "url": "https://www.infolink-group.com/energy-article/cn/energy-storage-topic-chinese-lithium-ion-battery-makers-accelerate-overseas-expansions",
+    "source": "serper",
+    "published_at": "2024年2月5日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-0eb4603388758b41045a9645",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-a7918e5ee4b32f381173",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "中国车企“全链条”出海受到世界市场欢迎 - 国务院新闻办公室",
+    "snippet": "从长城汽车巴西工厂竣工投产，到比亚迪宣布在马来西亚建设整车组装工厂，再到上汽通用五菱全球第300万辆新能源车在印尼工厂下线…… ... 制造工厂、拥有各类 ...",
+    "url": "https://www.scio.gov.cn/gxzl/ydyl_26587/zxtj_26590/zxtj_26591/202606/t20260618_995455.html",
+    "source": "serper",
+    "published_at": "2026年6月17日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-cf0da788d1f87ea63c34cc0b",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-2bdcfe766ef6a54d2ded",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "[PDF] 东莞市外资外贸参阅",
+    "snippet": "据了解，墨西哥经济部和财政部正评估具体方案，墨西. 哥经济部正与企业开展类似2025-2026 年针对亚洲进口关税. 设计的磋商，但目前没有具体提案。 值得 ...",
+    "url": "https://www.dg.gov.cn/dgsmch/gkmlpt/content/4/4579/post_4579178.html",
+    "source": "serper",
+    "published_at": "2026年8月21日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-555e08a26165d47348aec11a",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-6a2924d77b4fb9419ee3",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "中国资本崛起：对东盟制造业格局的影响 - ASEAN Briefing",
+    "snippet": "多家中国汽车制造商已在印度尼西亚、马来西亚、泰国和越南等国设立了生产工厂，同时也对当地的新能源汽车和汽车企业进行了投资。 2022年，中国电池巨头 ...",
+    "url": "https://www.aseanbriefing.com/news/the-rise-of-chinese-capital-impact-on-aseans-manufacturing-landscape-cn",
+    "source": "serper",
+    "published_at": "2025年1月13日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-512218cb0440bcd4f705cc04",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-259bae3e0d8dcbe40dcb",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "[PDF] 赛轮集团股份有限公司印尼生产基地项目可行性研究报告",
+    "snippet": "其他工厂派遣。 1.1.3.3 赛轮印尼原项目建设情况. 公司已在中国青岛、东营、沈阳、潍坊及海外越南、柬埔寨、墨西哥、印尼建. Page 8. 4. 有轮胎生产基地，埃及生产基地已 ...",
+    "url": "https://dataclouds.cninfo.com.cn/shgonggao/hsomarket/2026/20260126/5acff35f09474d1e8a39788a62fc261c.pdf",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-7d4adacbe0606d6dee3a38b6",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-7f4ebffc21f7967ce2b6",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "中国车企密集宣布海外投资建厂吉利：正评估印尼市场 - 新华网",
+    "snippet": "9月11日，越南电动汽车公司VinFast表示，其计划在印尼长期投资约12亿美元，其中包括一座计划于2026年投产的工厂。 ... 不仅如此，上汽集团还在印尼建立首家 ...",
+    "url": "https://www.news.cn/2023-09/19/c_1212270138.htm",
+    "source": "serper",
+    "published_at": "2023年9月19日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-7ca1510390d5170b725b2b1d",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-7e2027f766a953fd436c",
+    "query": "中国 制造企业 墨西哥 印尼 马来西亚 工厂 项目 2026",
+    "title": "印尼打造对华合作新工业园承接中国制造业集群落地",
+    "snippet": "根据合作规划，园区将重点承接来自中国的巧克力、床垫、纺织、纱线以及劳动密集型制造业等多个产业集群。印尼政府将加快项目审批进程，推动投资项目尽快 ...",
+    "url": "https://www.shangbaoindonesia.com/read/2026/08/06/economy-1785998048",
+    "source": "serper",
+    "published_at": "2026年8月6日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-12bf795d7c1e85392dba7c5e",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-e9cbedb294da8aa987da",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "China's Next-Generation Industrial Policy - Rhodium Group",
+    "snippet": "China's industrial strategy now touches almost every major sector in the economy and their underlying supply chains.",
+    "url": "https://rhg.com/research/chinas-next-generation-industrial-policy",
+    "source": "serper",
+    "published_at": "2026年5月11日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-54aafad68350c1a9cf1640b3",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-6c13d2337c4f6c3fa293",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "China's Position on the So-called Excess Capacity Issue - 商务部",
+    "snippet": "In 2025, foreign-invested companies accounted for 27% of China's exports and 16% of its surplus, reporting higher growth in both surplus and ...",
+    "url": "https://wto.mofcom.gov.cn/newsupdates/art/2026/art_dc5afc2e7f704431b095ef9afc0817ce.html",
+    "source": "serper",
+    "published_at": "2026年7月28日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-949a5d2ee168f8d7f15b8f4d",
+    "reasons": [
+      "no confirmed event/posted date"
+    ]
+  },
+  {
+    "event_id": "event-3b8075feeffe235e3324",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "Plant Manager jobs in China | Michael Page",
+    "snippet": "Search for Plant Manager jobs in China at some of the world's top companies using China's leading recruitment consultancy - Michael Page.",
+    "url": "https://www.michaelpage.com.cn/en/jobs/plant-manager/china",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "generic_page",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-c3540ecce8d3da68c1ebea1a",
+    "reasons": [
+      "generic reference/service page; no event relation"
+    ]
+  },
+  {
+    "event_id": "event-8336af9f29ba70ec3ad8",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "China Belt and Road Initiative (BRI) Investment Report 2025",
+    "snippet": "Technology and manufacturing remain key growth sectors, with Chinese engagement in BRI countries growing by about 27% compared to 2024 to USD ...",
+    "url": "https://greenfdc.org/china-belt-and-road-initiative-bri-investment-report-2025",
+    "source": "serper",
+    "published_at": "2026年1月18日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-eff3cc639a665375da3a2904",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-bc6f687f505295eeab70",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "Manufacturing Relocation and China+1 Strategy Trends - CKGSB",
+    "snippet": "Manufacturers are increasingly grappling with a new operating environment in China, one defined by rising labor costs, heightened regulatory ...",
+    "url": "https://english.ckgsb.edu.cn/knowledge/article/manufacturing-relocation-and-china-strategy-trends",
+    "source": "serper",
+    "published_at": "2025年7月31日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-7968de6a40b378f26e51ae77",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-59ae0a60e23b2cd2b50f",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "Made in China 2025: Evaluating China's Performance",
+    "snippet": "China's manufacturing capacity is particularly notable in sectors where technical advances are often driven by “process innovation” on the ...",
+    "url": "https://www.uscc.gov/research/made-china-2025-evaluating-chinas-performance",
+    "source": "serper",
+    "published_at": "2025年11月14日",
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "insufficient_event_evidence",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-76cae2f352cab2aa1fcf5596",
+    "reasons": [
+      "no confirmed event/posted date",
+      "no concrete event action"
+    ]
+  },
+  {
+    "event_id": "event-d9d23a208a935d7da59e",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "971 country manager Jobs in China, August 2026 | Glassdoor",
+    "snippet": "Search Country manager jobs in China with company ratings & salaries. 971 open jobs for Country manager in China.",
+    "url": "https://www.glassdoor.com/job/china-country-manager-jobs-srch_il.0,5_in48_ko6,21.htm",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "aggregator_only",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-ba2fabaffa15a0a6346c61a5",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  },
+  {
+    "event_id": "event-f0a4fa340a3711e3495d",
+    "query": "China manufacturer overseas capacity expansion country manager 2026",
+    "title": "Country Manager - China (Shanghai) for Small but expanding ...",
+    "snippet": "COUNTRY MANAGER - CHINASmall but expanding international trading and manufacturing business is looking for a hands-on, detail-oriented individual to replace ...",
+    "url": "https://www.georjob.com/jobs/country-manager-china-shanghai-fevjppjigquttcyupeblyaklejxryc",
+    "source": "serper",
+    "published_at": null,
+    "discovered_at": "2026-09-04T04:48:23.191Z",
+    "target_segment": "outbound_manufacturing",
+    "status": "evergreen_reference",
+    "event_date": null,
+    "company_id": null,
+    "evidence_id": "evidence-6e15acead32ac1bfffc055b6",
+    "reasons": [
+      "careers/jobs page is useful background but has no dated requisition"
+    ]
+  }
+]
