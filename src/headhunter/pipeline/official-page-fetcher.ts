@@ -20,6 +20,9 @@ export async function fetchFirstPartyPage(url: string, options: OfficialPageFetc
   const fetchImpl = options.fetchImpl ?? fetch;
   let currentUrl = url;
   try {
+    const original = new URL(url);
+    if (!/^https?:$/.test(original.protocol)) return { url, content: null, warning: "unsupported_protocol" };
+    const originalHost = original.hostname.toLowerCase();
     for (let redirect = 0; redirect <= maxRedirects; redirect += 1) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -30,7 +33,9 @@ export async function fetchFirstPartyPage(url: string, options: OfficialPageFetc
       if (response.status >= 300 && response.status < 400) {
         const location = response.headers.get("location");
         if (!location || redirect === maxRedirects) return { url: currentUrl, content: null, warning: "redirect_limit_or_missing_location", status: response.status };
-        currentUrl = new URL(location, currentUrl).toString();
+        const redirected = new URL(location, currentUrl);
+        if (!/^https?:$/.test(redirected.protocol) || redirected.hostname.toLowerCase() !== originalHost) return { url: currentUrl, content: null, warning: "cross_origin_redirect", status: response.status };
+        currentUrl = redirected.toString();
         continue;
       }
       if (!response.ok) return { url: currentUrl, content: null, warning: `http_${response.status}`, status: response.status };
