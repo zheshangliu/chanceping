@@ -3,6 +3,7 @@ import { buildEligibilityCollections } from "../src/headhunter/pipeline/eligibil
 import { fetchFirstPartyPage } from "../src/headhunter/pipeline/official-page-fetcher";
 import { extractOfficialContacts } from "../src/headhunter/pipeline/official-contact-extractor";
 import { calculateFreshnessScore } from "../src/headhunter/scoring/freshness-score";
+import { evaluateEntityRelation } from "../src/headhunter/pipeline/entity-relation-filter";
 import type { Company } from "../src/headhunter/model/company";
 import type { RawEvidence } from "../src/headhunter/model/evidence";
 import type { CompanySignal } from "../src/headhunter/model/signal";
@@ -55,6 +56,14 @@ assert.match(fetched.content ?? "", /recruit@hkib\.org/);
 const hkib = extractOfficialContacts({ company: { website: "https://www.hkib.org", official_domains: [] }, source_url: "https://www.hkib.org/careers", inline_content: fetched.content });
 assert.ok(hkib.entries.some((entry) => entry.value === "recruit@hkib.org"));
 console.log("PASS first-party fetch and HKIB recruitment extraction");
+const bdoDomainCheck = evaluateEntityRelation({
+  target_company: { canonical_name: "BDO", name_en: "BDO", name_cn: null, aliases: [], website: "https://www.bdo.com.hk", official_domains: ["bdo.com.hk"], region: "Hong Kong", country: "Hong Kong", city: null },
+  candidate: { title: "News and Advisories", snippet: "BDO Network Bank branches in the Philippines", url: "https://www.bdo.com.ph/bdonetworkbank/about-us/news-and-advisories" },
+  candidate_type: "signal",
+  expected_region: "Hong Kong",
+});
+assert.equal(bdoDomainCheck.company_match, false);
+console.log("PASS same-brand corporate domain conflict is rejected");
 console.log(JSON.stringify({ status: "PASS", all_signals: collections.allSignals.length, eligible_signals: collections.eligibleSignals.length, all_jobs: collections.allJobs.length, eligible_jobs: collections.eligibleJobs.length, all_people: collections.allPeople.length, eligible_people: collections.eligiblePeople.length, all_contacts: collections.allContacts.length, eligible_contacts: collections.eligibleContacts.length, filtered_pollution: Object.values(collections.ineligibleByReason).reduce((sum, value) => sum + value, 0) }));
 }
 
