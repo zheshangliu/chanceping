@@ -1,4 +1,4 @@
-# Finance UI V1.0 Design QA
+# Finance UI V1.4 Design QA
 
 ## Result
 
@@ -7,9 +7,11 @@ final result: blocked
 ## Static checks
 
 - `npm run verify:headhunter:ui`: PASS
+- `npm run verify:headhunter:v14`: PASS
 - `npm run typecheck`: PASS
 - Responsive CSS includes desktop layout and mobile breakpoint at 720px.
-- Finance shell renders the new sidebar/topbar, weekly hero, recommendation/pending-validation/recent-run/actionable-contact stat row, lead feed, insight rail, compact B cards, evidence disclosure, tables, and empty/loading states.
+- Finance shell now renders the selected Pacific Executive Brief treatment: charcoal/gold brief header, signal ribbon, opportunity feed, insight rail, evidence disclosure, and responsive mobile layout.
+- Opportunities and Watchlist have dedicated public read-only pages; workflow status mutation remains protected.
 - Business home keeps provider/run/cost detail out of the workbench; the recent-run card safely falls back to the published snapshot timestamp in public mode.
 - Presentation code does not render internal `company_id` values.
 
@@ -21,4 +23,4 @@ The local API started successfully on port 3133 and the static route contract pa
 
 ## Follow-up
 
-Run the three viewport captures in a desktop browser/Chrome session, inspect the primary weekly interaction and console, then change this file to `final result: passed` only after visual review.
+Run the three viewport captures in a desktop browser/Chrome session, inspect the primary weekly interaction and console, then change this file to `final result: passed` only after visual review. The current design remains intentionally data-driven: no screenshot sample company or number is seeded.
