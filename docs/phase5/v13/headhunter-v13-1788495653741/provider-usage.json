@@ -1,0 +1,18 @@
+[
+  {
+    "provider": "serper",
+    "request_count": 12,
+    "success_count": 12,
+    "failure_count": 0,
+    "known_cost": null,
+    "unknown_cost": true
+  },
+  {
+    "provider": "doubao_search",
+    "request_count": 8,
+    "success_count": 8,
+    "failure_count": 0,
+    "known_cost": null,
+    "unknown_cost": true
+  }
+]

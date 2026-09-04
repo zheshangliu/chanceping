@@ -134,7 +134,10 @@ function normalizeEventDate(value: string | null | undefined, now = new Date()):
   const relative = value.trim().match(/^(\d+)\s*(day|days|week|weeks|month|months)\s*ago$/i) ?? value.trim().match(/^(\d+)\s*(?:天|日|周|星期|个月)前$/i);
   if (!relative) return null;
   const amount = Number(relative[1]);
-  const unit = relative[2].toLowerCase();
+  // The Chinese relative-date branch has only one capture group; use the
+  // original expression as a safe fallback instead of throwing during a
+  // signal-first discovery run.
+  const unit = (relative[2] ?? value).toLowerCase();
   const days = /week|周|星期/.test(unit) ? amount * 7 : /month|个月/.test(unit) ? amount * 30 : amount;
   return new Date(now.getTime() - days * 86400000).toISOString().slice(0, 10);
 }

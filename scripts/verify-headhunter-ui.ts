@@ -14,7 +14,9 @@ async function main(): Promise<void> {
   const weeklyHtml = await weekly.text();
   for (const label of ["本周", "机器 A 候选", "B级情报池", "趋势", "公司库", "雷达运行"]) assert.ok(weeklyHtml.includes(label));
   assert.ok(weeklyHtml.includes("data-finance-logout"));
-  assert.ok(weeklyHtml.includes("@media (max-width: 720px)"));
+  assert.ok(weeklyHtml.includes("@media (max-width:720px)"));
+  for (const marker of ["finance-hero", "finance-insight", "finance-stat-row", "本周 Lead Feed", "details class=\"finance-evidence\""]) assert.ok(weeklyHtml.includes(marker), `missing UI marker: ${marker}`);
+  assert.ok(!weeklyHtml.includes("company_id"), "internal company IDs must not be rendered in the UI shell");
   assert.equal((await app.request("http://localhost/weekly", { headers: { host: "chanceping.com" } })).status, 404);
   console.log("headhunter finance UI verification: PASS");
 }

@@ -1,0 +1,88 @@
+{
+  "run_id": "headhunter-v13-1788495653741",
+  "instructions": "人工逐条判断；不得用机器标签替代正式 Precision。",
+  "eligible_signals": [],
+  "rejected_event_sample": [
+    {
+      "event_id": "event-de447581777f71bfd5a6",
+      "title": "Hong Kong's Virtual Assets Licensing Regime: What lies ...",
+      "url": "https://www.kingandwood.com/hk/en/insights/latest-thinking/hong-kong-virtual-assets-licensing-regime-what-lies-ahead-in-2026.html",
+      "machine_status": "stale",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-e89bacb9c085b74a7d4a",
+      "title": "Licensing Handbook - Hong Kong",
+      "url": "https://www.sfc.hk/en/rules-and-standards/codes-and-guidelines/guidelines/licensing-handbook",
+      "machine_status": "insufficient_event_evidence",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-544e70cde88a9e4a7493",
+      "title": "Hong Kong to License VA Advisory & Asset Management ...",
+      "url": "https://www.charltonslaw.com/hong-kong-to-license-virtual-asset-advisory-asset-management-services",
+      "machine_status": "stale",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-2f713f5910c1efd0b1c9",
+      "title": "Granting of stablecoin issuer licences",
+      "url": "https://www.hkma.gov.hk/eng/news-and-media/press-releases/2026/04/20260410-4",
+      "machine_status": "aggregator_only",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-9c77f459313e5bf3e130",
+      "title": "Hong Kong Doubles Down on Digital Assets with New ...",
+      "url": "https://www.eversheds-sutherland.com/en/asia/insights/hong-kong-doubles-down-on-digital-assets-with-new-licensing-proposals",
+      "machine_status": "stale",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-f5fba110f4858869a3c0",
+      "title": "Regulated Businesses in Hong Kong",
+      "url": "https://hongkong.acclime.com/news/business-licensing-banking-2026",
+      "machine_status": "stale",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-3d0756f564ab78755f2e",
+      "title": "Budget Speech by the Financial Secretary (4)",
+      "url": "https://www.info.gov.hk/gia/general/202602/25/p2026022500167.htm",
+      "machine_status": "aggregator_only",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-6597a1fd756ce0a701d2",
+      "title": "Hong Kong SFC License 2026 — Type 1, 4, 9 Guide",
+      "url": "https://www.zitadelleag.com/services/investment-licensing/hong-kong-sfc",
+      "machine_status": "generic_page",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-1fa0ab2a36ad8296934c",
+      "title": "A quarter of connecting, innovating and diversifying Hong ...",
+      "url": "https://apps.sfc.hk/edistributionweb/gateway/en/news-and-announcements/news/doc?refno=25pr207",
+      "machine_status": "stale",
+      "judgment": null,
+      "notes": ""
+    },
+    {
+      "event_id": "event-a1302dd1c3046f65ca40",
+      "title": "HUBBIS INVESTMENT FORUM - HONG KONG 2026",
+      "url": "https://www.hubbis.com/event/hubbis-investment-forum-hong-kong-2026-2026-9-15",
+      "machine_status": "insufficient_event_evidence",
+      "judgment": null,
+      "notes": ""
+    }
+  ],
+  "human_approved_a": []
+}
