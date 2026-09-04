@@ -9,6 +9,8 @@
     "company_resolved": 20,
     "all_signals": 4,
     "eligible_signals": 4,
+    "signal_companies": 3,
+    "definite_signal_pass_companies": 1,
     "all_jobs": 15,
     "eligible_jobs": 15,
     "all_people": 104,
@@ -37,5 +39,5 @@
     "invalid_relation": 0,
     "unknown": 0
   },
-  "next_gate": "STOP/ESCALATE business quality gate: do not change production routing. Signal 4/20 and Need 12/20 remain below 14/20 after first-party, brand-alias, action-pattern and BOCHK legal-entity repairs; reaching them would require changing frozen data, providers, budget, or eligibility rules."
+  "next_gate": "STOP/ESCALATE business quality gate: do not change production routing. Eligible Signal records cover 3/20 companies and human definite Signal PASS is 1/20; Need is 12/20. These remain below 14/20 after first-party, brand-alias, action-pattern and BOCHK legal-entity repairs; reaching them would require changing frozen data, providers, budget, or eligibility rules."
 }
