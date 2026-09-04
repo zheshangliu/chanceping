@@ -37,9 +37,10 @@ export function evaluateEntityRelation(input: EntityRelationInput): EntityRelati
   const names = [target.canonical_name, target.name_en, target.name_cn, ...target.aliases].filter((v): v is string => Boolean(v));
   const explicitEmployer = candidate.employer_name ?? candidate.company_name;
   const officialDomain = urlMatchesCompany(candidate.url, target);
+  const conflictingCorporateDomain = corporateDomainConflicts(candidate.url, target, names);
   const nameInText = names.some((name) => containsEntityName(text, name));
   const explicitNameMatch = explicitEmployer ? names.some((name) => namesEqual(explicitEmployer, name)) : null;
-  const companyMatch = explicitEmployer ? Boolean(explicitNameMatch || officialDomain) : Boolean(officialDomain || nameInText);
+  const companyMatch = !conflictingCorporateDomain && (explicitEmployer ? Boolean(explicitNameMatch || officialDomain) : Boolean(officialDomain || nameInText));
 
   const candidateRegion = canonicalRegion(candidate.location ?? candidate.region) ?? inferRegion(text);
   const expectedRegion = canonicalRegion(input.expected_region ?? target.city ?? target.region);
@@ -47,7 +48,7 @@ export function evaluateEntityRelation(input: EntityRelationInput): EntityRelati
   const employerMatch = input.candidate_type === "job" ? Boolean(explicitNameMatch || officialDomain) : null;
   const reasons: string[] = [];
   if (companyMatch) reasons.push(officialDomain ? "official company domain matches" : "company/entity name matches");
-  else reasons.push("company/entity name or official domain does not match");
+  else reasons.push(conflictingCorporateDomain ? "corporate domain identifies a different same-brand entity" : "company/entity name or official domain does not match");
   if (regionMatch === false) reasons.push(`geography mismatch: expected ${expectedRegion}, found ${candidateRegion}`);
   else if (regionMatch === true) reasons.push("geography matches target scope");
   else reasons.push("geography not stated; retained as unknown");
@@ -84,6 +85,25 @@ function urlMatchesCompany(url: string | null | undefined, company: Pick<Company
     });
     return domains.some((domain) => candidateHost === domain || candidateHost.endsWith(`.${domain}`));
   } catch { return false; }
+}
+
+/**
+ * Reject a same-brand corporate site (for example bdo.com.ph for the frozen
+ * BDO Hong Kong entity) when the hostname itself contains the target brand.
+ * Aggregators, social sites and news hosts are intentionally left to the
+ * normal name/region checks because their hostnames do not identify the
+ * employer entity.
+ */
+function corporateDomainConflicts(url: string | null | undefined, company: Pick<Company, "website" | "official_domains">, names: string[]): boolean {
+  if (!url || urlMatchesCompany(url, company)) return false;
+  let host = "";
+  try { host = new URL(url).hostname.replace(/^www\./, "").toLowerCase(); } catch { return false; }
+  if (!host || /(?:linkedin|jobsdb|indeed|glassdoor|michaelpage|robertwalters|efinancialcareers|facebook|instagram|youtube|google|bing|baidu)\./i.test(host)) return false;
+  const normalizedHost = normalizeName(host.split(".")[0] ?? host);
+  return names.some((name) => {
+    const normalized = normalizeName(name);
+    return normalized.length >= 3 && (normalizedHost === normalized || normalizedHost.startsWith(normalized));
+  });
 }
 
 function containsEntityName(text: string, name: string): boolean {

@@ -44,7 +44,7 @@ const NON_COMPANY_HOSTS = new Set([
   "michaelpage.com.cn", "robertwalters.cn", "arc-group.com", "chinaglobalsouth.com"
 ]);
 const GENERIC_TITLE = /^(?:\d+\s+)?(?:finance|human resources|hr|recruiter|recruitment|jobs?|careers?|hiring|job openings?|search results?)(?:\s+(?:jobs?|in|hong kong|china|asia).*)?$/i;
-const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|appoint(?:ment|ed)?|重组|restructur/i;
+const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|appoint(?:ment|ed)?|launch(?:es|ed)?|open(?:s|ed)?|establish(?:es|ed)?|重组|restructur/i;
 const ROLE_WORDS = /manager|director|head|lead|engineer|finance|hr|human resources|recruit|analyst|compliance|risk|supply chain|country manager|岗位|招聘|人才/i;
 const PEOPLE_ROLE_WORDS: Array<[RoleCategory, RegExp]> = [["ta", /talent acquisition|recruiting|招聘|recruiter/i], ["hrd", /chief human resources|hr director|人力资源总监/i], ["hrbp", /hrbp/i], ["business_leader", /business development|general manager|业务负责人|总经理/i], ["country_manager", /country manager|国家经理/i], ["finance_leader", /cfo|finance director|财务总监/i], ["ceo", /chief executive|ceo|首席执行/i], ["coo", /chief operating|coo|运营总监/i]];
 
@@ -266,6 +266,42 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       }
       if (allSignals.length > before) break;
     }
+  }
+
+  // Recover one qualifying current event per company from already-persisted
+  // first-party evidence. Search results can surface an official page during
+  // a contact/job pass without presenting it in the bounded trigger query;
+  // re-evaluate that raw evidence here rather than issuing another paid
+  // request. The same subject/action/date/region gate applies, and a company
+  // with an existing current Signal is not expanded.
+  const currentEvidences = await stores.evidence.list();
+  for (const company of verifiedCompanies) {
+    if (allSignals.some((signal) => signal.company_id === company.company_id)) continue;
+    const discoveryName = discoveryCompanyName(company);
+    const candidate = currentEvidences.find((evidence) => {
+      if (evidence.source_type !== "official" || !isFirstPartyUrl(evidence.source_url, company)) return false;
+      const quality = evaluateTriggerQuality({ title: evidence.title, excerpt: evidence.excerpt, url: evidence.source_url, published_at: evidence.published_at, source_type: "official" }, {
+        now,
+        target_company_name: company.canonical_name,
+        target_company_aliases: [company.name_en, company.name_cn, ...company.aliases, discoveryName].filter((value): value is string => Boolean(value)),
+        target_region: company.city ?? company.region ?? company.country,
+        target_website: company.website,
+      });
+      return quality.valid_for_a_gate && SIGNAL_WORDS.test(`${evidence.title} ${evidence.excerpt}`) && isRecentResult(evidence.published_at ?? undefined, now);
+    });
+    if (!candidate) continue;
+    const quality = evaluateTriggerQuality({ title: candidate.title, excerpt: candidate.excerpt, url: candidate.source_url, published_at: candidate.published_at, source_type: "official" }, {
+      now,
+      target_company_name: company.canonical_name,
+      target_company_aliases: [company.name_en, company.name_cn, ...company.aliases, discoveryName].filter((value): value is string => Boolean(value)),
+      target_region: company.city ?? company.region ?? company.country,
+      target_website: company.website,
+    });
+    const signalId = `signal-${createHash("sha1").update(`${company.company_id}|${normalizeUrl(candidate.source_url)}`).digest("hex").slice(0, 20)}`;
+    const signal: CompanySignal = { signal_id: signalId, company_id: company.company_id, signal_type: classifySignal(`${candidate.title} ${candidate.excerpt}`), event_date: quality.event_date, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), title: candidate.title, fact_summary: candidate.excerpt || candidate.title, inference_summary: null, impact_level: "medium", primary_source_id: candidate.evidence_id, evidence_ids: [candidate.evidence_id], source_confidence: 0.65, created_at: now.toISOString(), updated_at: now.toISOString() };
+    allSignals.push(signal);
+    signals.push(signal);
+    await stores.signals.upsert(signal);
   }
 
   // Step 4: bounded job discovery and history observations.
