@@ -9,6 +9,8 @@ import { leadRoutes } from "./lead-routes";
 import { runRoutes } from "./run-routes";
 import { trendRoutes } from "./trend-routes";
 import { weeklyRoutes } from "./weekly-routes";
+import { opportunityRoutes } from "./opportunity-routes";
+import { watchlistRoutes } from "./watchlist-routes";
 
 export interface HeadHunterApiOptions extends AuthRoutesOptions { context?: HeadHunterApiContext; }
 
@@ -22,5 +24,7 @@ export function createHeadHunterApi(options: HeadHunterApiOptions = {}): Hono {
   app.route("/evidence", evidenceRoutes(context));
   app.route("/trends", trendRoutes(context));
   app.route("/runs", runRoutes(context));
+  app.route("/opportunities", opportunityRoutes(context));
+  app.route("/watchlist", watchlistRoutes(context));
   return app;
 }

@@ -114,7 +114,7 @@ export function webUiRoutes(financeContext?: HeadHunterApiContext): Hono {
   const isFinanceHost = (c: Context) => (c.req.header("host") ?? "").split(":")[0].toLowerCase() === "finance.chanceping.com";
 
   app.get("/login", (c) => isFinanceHost(c) ? c.html(renderFinancePage("/login")) : c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404));
-  for (const financePath of ["/weekly", "/leads/a", "/leads/b", "/trends", "/companies", "/runs"]) app.get(financePath, (c) => { if (!isFinanceHost(c)) return c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404); c.header("Cache-Control", "public, max-age=300, stale-while-revalidate=600"); return c.html(renderFinancePage(financePath)); });
+  for (const financePath of ["/weekly", "/leads/a", "/leads/b", "/trends", "/companies", "/runs", "/opportunities", "/watchlist"]) app.get(financePath, (c) => { if (!isFinanceHost(c)) return c.json({ success: false, data: null, error: { code: "NOT_FOUND", message: "页面不存在" }, duration_ms: 0 }, 404); c.header("Cache-Control", "public, max-age=300, stale-while-revalidate=600"); return c.html(renderFinancePage(financePath)); });
 
   const getFinanceContext = (): HeadHunterApiContext => financeContext ?? createHeadHunterApiContext();
   const publishedWeekly = async () => {

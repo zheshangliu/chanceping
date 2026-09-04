@@ -1,7 +1,11 @@
 import { mkdir } from "node:fs/promises";
-import { runHeadHunterWeeklyPipeline } from "../src/headhunter/pipeline/weekly-pipeline";
+import { join } from "node:path";
+import { loadLocalApiEnv } from "../src/config/local-env";
 
 async function main(): Promise<void> {
+  const envFile = process.env.CHANCEPING_API_ENV_FILE ?? join(process.env.HOME ?? ".", "Projects/Codex/chanceping/api.env");
+  loadLocalApiEnv({ enabled: process.env.CHANCEPING_LOAD_API_ENV === "true", envFile });
+  const { runHeadHunterWeeklyPipeline } = await import("../src/headhunter/pipeline/weekly-pipeline");
   const result = await runHeadHunterWeeklyPipeline({
     weekKey: process.env.CHANCEPING_WEEK_KEY,
     radarRunId: process.env.CHANCEPING_RADAR_RUN_ID,

@@ -8,3 +8,5 @@ export * from "./lead";
 export * from "./trend";
 export * from "./radar-run";
 export * from "./weekly-snapshot";
+export * from "./opportunity";
+export * from "./watchlist";

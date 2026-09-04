@@ -29,6 +29,7 @@ import { evaluateEntityRelation, extractCandidateLocation } from "./entity-relat
 import { extractOfficialContacts } from "./official-contact-extractor";
 import { fetchFirstPartyPage } from "./official-page-fetcher";
 import { buildEligibilityCollections, type EligibilityCollections } from "./eligibility";
+import type { OpportunityRecord, OpportunitySignalType } from "../model/opportunity";
 
 const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk", "efinancialcareers.hk", "ambition.com.hk", "hongkongbusiness.hk"]);
 // Search discovery frequently returns articles, social profiles, public
@@ -401,11 +402,52 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   const enrichedRadar = { ...radar, funnel_metrics: { candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, signal_count: stageMetrics.signal_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, contact_count: stageMetrics.contact_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, all_signal_count: stageMetrics.all_signal_count, eligible_signal_count: stageMetrics.eligible_signal_count, all_job_count: stageMetrics.all_job_count, eligible_job_count: stageMetrics.eligible_job_count, all_person_count: stageMetrics.all_person_count, eligible_person_count: stageMetrics.eligible_person_count, all_contact_count: stageMetrics.all_contact_count, eligible_contact_count: stageMetrics.eligible_contact_count, filtered_pollution_count: stageMetrics.filtered_pollution_count, ineligible_by_reason: eligibility.ineligibleByReason, blocking_reasons: blockingReasons } };
   for (const lead of enrichedRadar.leads) await stores.leads.upsertWeekly(lead);
   const snapshot = buildWeeklySnapshot(enrichedRadar);
+  // V1.4: materialize only gated Lead records as workflow Opportunities.
+  // This keeps raw news/evidence out of the BD queue and preserves history.
+  for (const lead of enrichedRadar.leads) {
+    if (!lead.primary_trigger || !lead.company_id) continue;
+    const signal = signals.find((item) => item.signal_id === lead.primary_trigger_id) ?? signals.find((item) => item.company_id === lead.company_id);
+    const opportunity: OpportunityRecord = {
+      opportunity_id: `opportunity-${lead.company_id}-${weekKey}`,
+      company_id: lead.company_id,
+      weekly_snapshot_id: snapshot.weekly_snapshot_id,
+      signal_ids: [...new Set([...(lead.supporting_signal_ids ?? []), ...(signal ? [signal.signal_id] : [])])],
+      primary_signal_id: signal?.signal_id ?? lead.primary_trigger_id,
+      signal_type: signalType(signal?.signal_type),
+      title: lead.opportunity_summary ?? lead.primary_trigger.title,
+      why_now: lead.why_now_zh ?? lead.opportunity_summary ?? lead.primary_trigger.summary,
+      business_driver: lead.primary_trigger.summary,
+      talent_need: lead.talent_need_zh ?? "待复核人才需求",
+      recommended_contact_id: lead.contacts?.find((item) => item.url || item.email || item.phone)?.contact_id ?? null,
+      next_action: lead.manual_action ?? lead.bd_action_zh ?? lead.generated_action ?? "复核证据与联系人后安排首触",
+      evidence_ids: [...new Set([...(lead.evidence_ids ?? []), ...(lead.primary_trigger_id ? [lead.primary_trigger_id] : [])])],
+      status: lead.lead_pool === "A_ACTIONABLE" && lead.contact_gate_status === "pass" ? "ready_to_contact" : lead.evidence_gate_status === "pass" ? "verified" : "discovered",
+      score: lead.final_rank_score,
+      contactable: lead.contact_gate_status === "pass",
+      human_review_status: lead.business_review_status === "human_approved" ? "approved" : "pending",
+      created_at: now.toISOString(),
+      updated_at: now.toISOString(),
+    };
+    await stores.opportunities.upsert(opportunity);
+  }
+  const watched = await stores.watchlist.list();
+  for (const item of watched) {
+    if (item.status === "archived") continue;
+    await stores.watchlist.upsert({ ...item, last_snapshot_week: weekKey, updated_at: now.toISOString() });
+  }
   if (options.publish !== false) await publishScheduledSnapshot(snapshot, stores.weeklySnapshots, { run_status: "success", core_provider_available: true, lead_engine_complete: true, persistence_complete: true });
   const providerUsage: ProviderUsage[] = [...usage.entries()].map(([provider, stat]) => ({ provider, request_count: stat.requests, success_count: stat.successes, failure_count: stat.failures, known_cost: stat.knownCost, unknown_cost: stat.unknownCost }));
   const run: RadarRun = { radar_run_id: runId, trigger_type: "scheduled", started_at: now.toISOString(), finished_at: new Date().toISOString(), status: "success", queries: planV12DiscoveryThemes().slice(0, maxThemes).map((item) => item.query), provider_usage: providerUsage, cost_summary: { known_cost: 0, unknown_cost: true, unknown_providers: providerUsage.filter((item) => item.unknown_cost).map((item) => item.provider), currency: "USD" }, company_count: verifiedCompanies.length, signal_count: signals.length, lead_count: radar.leads.length, candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, company_review_count: stageMetrics.company_review_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, verified_person_count: stageMetrics.verified_person_count, contact_count: contacts.length, contact_gate_pass_count: stageMetrics.contact_gate_pass_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, all_signal_count: stageMetrics.all_signal_count, eligible_signal_count: stageMetrics.eligible_signal_count, all_job_count: stageMetrics.all_job_count, eligible_job_count: stageMetrics.eligible_job_count, all_person_count: stageMetrics.all_person_count, eligible_person_count: stageMetrics.eligible_person_count, all_contact_count: stageMetrics.all_contact_count, eligible_contact_count: stageMetrics.eligible_contact_count, filtered_pollution_count: stageMetrics.filtered_pollution_count, ineligible_by_reason: eligibility.ineligibleByReason, stage_metrics: stageMetrics, provider_cost_known: null, provider_cost_unknown: true };
   await stores.runs.upsert(run);
   return { radar: enrichedRadar, snapshot, run, resolutions, stage_metrics: stageMetrics };
+}
+
+function signalType(type: string | undefined): OpportunitySignalType {
+  if (type === "hiring") return "hiring";
+  if (type === "leadership_change") return "leadership";
+  if (type === "funding" || type === "ipo" || type === "ma") return "investment";
+  if (type === "new_license" || type === "government_agreement") return "regulatory";
+  return "expansion";
 }
 
 function extractCompanyCandidate(result: SearchResult, segment: "hk_finance" | "gba_company" | "outbound_manufacturing"): CompanyCandidate | null {

@@ -10,6 +10,8 @@ import type { CompanySignal } from "../model/signal";
 import type { TrendIntelligence } from "../model/trend";
 import type { WeeklySnapshot } from "../model/weekly-snapshot";
 import type { HumanEvidenceOverride } from "../model/evidence";
+import type { OpportunityRecord } from "../model/opportunity";
+import type { WatchlistCompany } from "../model/watchlist";
 import { defaultHeadHunterDataDir, JsonCollectionStore, StoreError } from "./json-store";
 
 export interface CompanyStore {
@@ -76,6 +78,36 @@ export interface HeadHunterRunStore {
   upsert(run: RadarRun): Promise<void>;
   get(runId: string): Promise<RadarRun | null>;
   list(): Promise<RadarRun[]>;
+}
+
+export interface OpportunityStore {
+  upsert(opportunity: OpportunityRecord): Promise<void>;
+  get(opportunityId: string): Promise<OpportunityRecord | null>;
+  list(): Promise<OpportunityRecord[]>;
+  listByStatus(status: OpportunityRecord["status"]): Promise<OpportunityRecord[]>;
+}
+
+export interface WatchlistStore {
+  upsert(item: WatchlistCompany): Promise<void>;
+  get(watchlistId: string): Promise<WatchlistCompany | null>;
+  list(): Promise<WatchlistCompany[]>;
+}
+
+export class JsonOpportunityStore implements OpportunityStore {
+  private readonly store: JsonCollectionStore<OpportunityRecord>;
+  constructor(dataDir = defaultHeadHunterDataDir()) { this.store = new JsonCollectionStore({ filePath: join(dataDir, "opportunities.json"), keyOf: (v) => v.opportunity_id }); }
+  upsert(value: OpportunityRecord): Promise<void> { return this.store.upsert(value); }
+  get(id: string): Promise<OpportunityRecord | null> { return this.store.getByKey(id); }
+  list(): Promise<OpportunityRecord[]> { return this.store.list(); }
+  async listByStatus(status: OpportunityRecord["status"]): Promise<OpportunityRecord[]> { return (await this.store.list()).filter((item) => item.status === status); }
+}
+
+export class JsonWatchlistStore implements WatchlistStore {
+  private readonly store: JsonCollectionStore<WatchlistCompany>;
+  constructor(dataDir = defaultHeadHunterDataDir()) { this.store = new JsonCollectionStore({ filePath: join(dataDir, "watchlist.json"), keyOf: (v) => v.watchlist_id }); }
+  upsert(value: WatchlistCompany): Promise<void> { return this.store.upsert(value); }
+  get(id: string): Promise<WatchlistCompany | null> { return this.store.getByKey(id); }
+  list(): Promise<WatchlistCompany[]> { return this.store.list(); }
 }
 
 export class JsonCompanyStore implements CompanyStore {
@@ -185,6 +217,8 @@ export interface HeadHunterStores {
   trends: TrendStore;
   weeklySnapshots: WeeklySnapshotStore;
   runs: HeadHunterRunStore;
+  opportunities: OpportunityStore;
+  watchlist: WatchlistStore;
 }
 
 export function createHeadHunterStores(dataDir = defaultHeadHunterDataDir()): HeadHunterStores {
@@ -199,6 +233,8 @@ export function createHeadHunterStores(dataDir = defaultHeadHunterDataDir()): He
     trends: new JsonTrendStore(dataDir),
     weeklySnapshots: new JsonWeeklySnapshotStore(dataDir),
     runs: new JsonHeadHunterRunStore(dataDir),
+    opportunities: new JsonOpportunityStore(dataDir),
+    watchlist: new JsonWatchlistStore(dataDir),
   };
 }
 
