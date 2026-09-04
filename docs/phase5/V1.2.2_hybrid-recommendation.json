@@ -19,7 +19,7 @@
     "need_count": 11,
     "lead_count": 20,
     "a_count": 0,
-    "b_count": 19
+    "b_count": 20
   },
   "provider_usage": {
     "serper": { "requests": 138, "failures": 0, "cost_status": "unknown" },
