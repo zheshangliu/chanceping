@@ -48,6 +48,32 @@ const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产�
 const ROLE_WORDS = /manager|director|head|lead|engineer|finance|hr|human resources|recruit|analyst|compliance|risk|supply chain|country manager|岗位|招聘|人才/i;
 const PEOPLE_ROLE_WORDS: Array<[RoleCategory, RegExp]> = [["ta", /talent acquisition|recruiting|招聘|recruiter/i], ["hrd", /chief human resources|hr director|人力资源总监/i], ["hrbp", /hrbp/i], ["business_leader", /business development|general manager|业务负责人|总经理/i], ["country_manager", /country manager|国家经理/i], ["finance_leader", /cfo|finance director|财务总监/i], ["ceo", /chief executive|ceo|首席执行/i], ["coo", /chief operating|coo|运营总监/i]];
 
+// The frozen production audit contains several abbreviated canonical labels
+// (for example `Hkma` and `Bankcomm`). Keep the stored identity untouched,
+// but use the known public brand name for provider discovery so a query does
+// not silently search the abbreviation as if it were the legal entity.
+const DISCOVERY_NAME_OVERRIDES: Record<string, string> = {
+  hkma: "Hong Kong Monetary Authority",
+  sfc: "Securities and Futures Commission Hong Kong",
+  fstb: "Financial Services and the Treasury Bureau Hong Kong",
+  bankcomm: "Bank of Communications Hong Kong",
+  hkib: "Hong Kong Institute of Bankers",
+  geg: "Galaxy Entertainment Group",
+  gdg: "Guangdong Development Group",
+  gbpglobal: "GBP Global",
+  bny: "BNY",
+  hkex: "Hong Kong Exchanges and Clearing",
+  hsbc: "HSBC Hong Kong China",
+  bochk: "Bank of China Hong Kong",
+  hkexgroup: "HKEX Group",
+  cmbwinglungbank: "CMB Wing Lung Bank",
+  epowercorp: "E-Power Corporation",
+  advancedmarkets: "Advanced Markets",
+  michaelpage: "Michael Page Hong Kong",
+  gbagrouppharma: "GBA Group Pharma",
+  bakermckenzie: "Baker McKenzie",
+};
+
 export interface WeeklyPipelineOptions {
   now?: Date;
   weekKey?: string;
@@ -199,9 +225,17 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
 
   // Step 3: company secondary trigger discovery.
   for (const company of verifiedCompanies) {
-    const query = `${company.canonical_name} hiring expansion funding license factory overseas headquarters recruitment`;
-    const results = await search(query, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "VERIFY_TRIGGER", company.target_segment === "hk_finance" ? "hk" : "cn");
-    for (const result of results) {
+    const discoveryName = discoveryCompanyName(company);
+    const scope = company.target_segment === "hk_finance" ? "hk_global" : "mainland";
+    const region = company.target_segment === "hk_finance" ? "hk" : "cn";
+    const triggerQueries = [
+      `${discoveryName} hiring expansion funding license factory overseas headquarters recruitment`,
+      `${discoveryName} latest announcement 2026 hiring expansion appointment investment`,
+    ];
+    for (const query of triggerQueries) {
+      const before = allSignals.length;
+      const results = await search(query, scope, "VERIFY_TRIGGER", region);
+      for (const result of results) {
       const evidence = await saveEvidence(result, company);
       const triggerQuality = evaluateTriggerQuality(result, {
         now,
@@ -214,12 +248,14 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       const signalId = `signal-${createHash("sha1").update(`${company.company_id}|${normalizeUrl(result.url)}`).digest("hex").slice(0, 20)}`;
       const signal: CompanySignal = { signal_id: signalId, company_id: company.company_id, signal_type: classifySignal(`${result.title} ${result.snippet}`), event_date: triggerQuality.event_date, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), title: result.title, fact_summary: result.snippet || result.title, inference_summary: null, impact_level: "medium", primary_source_id: evidence.evidence_id, evidence_ids: [evidence.evidence_id], source_confidence: result.source_provider === "doubao_search" ? 0.65 : 0.6, created_at: now.toISOString(), updated_at: now.toISOString() };
       if (!allSignals.some((item) => item.signal_id === signal.signal_id)) { allSignals.push(signal); signals.push(signal); await stores.signals.upsert(signal); }
+      }
+      if (allSignals.length > before) break;
     }
   }
 
   // Step 4: bounded job discovery and history observations.
   for (const company of verifiedCompanies) {
-    const results = await search(`${company.canonical_name} careers jobs hiring ${company.target_segment === "outbound_manufacturing" ? "factory HR finance supply chain" : "HR talent acquisition"}`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_JOBS", company.target_segment === "hk_finance" ? "hk" : "cn");
+    const results = await search(`${discoveryCompanyName(company)} careers jobs hiring ${company.target_segment === "outbound_manufacturing" ? "factory HR finance supply chain" : "HR talent acquisition"}`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_JOBS", company.target_segment === "hk_finance" ? "hk" : "cn");
     for (const result of results) {
       const text = `${result.title} ${result.snippet}`;
       if (!ROLE_WORDS.test(text) || isGenericJobPage(result.url)) continue;
@@ -241,24 +277,37 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
 
   // Step 5-6: Serper-first people and official contact entry discovery.
   for (const company of verifiedCompanies) {
-    const peopleResults = await search(`${company.canonical_name} LinkedIn Talent Acquisition Recruiter HR Director HRBP business leader`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_PERSON", company.target_segment === "hk_finance" ? "hk" : "cn");
-    let profileFound = false;
-    for (const result of peopleResults) {
-      const linkedinUrl = extractLinkedInProfile(result.url);
-      if (!linkedinUrl) continue;
-      profileFound = true;
-      const text = `${result.title} ${result.snippet}`;
-      const person = resolvePersonCandidate({ name: extractPersonName(result.title), linkedin_url: linkedinUrl, current_company_id: text.toLowerCase().includes(company.canonical_name.toLowerCase()) ? company.company_id : null, current_title: result.title, role_category: classifyRole(text), source_urls: [result.url] }, company.company_id);
-      if (!allPeople.some((item) => item.person_id === person.person_id)) { allPeople.push(person); people.push(person); await stores.people.upsert(person); }
-      if (person.employment_status === "verified_current") { const contact = { contact_id: `contact-${person.person_id}`, company_id: company.company_id, person_id: person.person_id, kind: "linkedin_profile" as const, value: linkedinUrl, label: person.current_title, source_url: result.url, public_verified: true, professional: true, verified_at: now.toISOString(), notes: "公开 LinkedIn 资料，当前任职由搜索证据匹配" }; if (!allContacts.some((item) => item.contact_id === contact.contact_id)) { allContacts.push(contact); contacts.push(contact); } }
+    const discoveryName = discoveryCompanyName(company);
+    const peopleQueries = [
+      `${discoveryName} LinkedIn Talent Acquisition Recruiter HR Director HRBP business leader`,
+      `site:linkedin.com/in "${discoveryName}" Talent Acquisition Recruiter`,
+      `site:linkedin.com/in "${discoveryName}" HR Director HRBP business leader`,
+    ];
+    for (const query of peopleQueries) {
+      const peopleResults = await search(query, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_PERSON", company.target_segment === "hk_finance" ? "hk" : "cn");
+      for (const result of peopleResults) {
+        const linkedinUrl = extractLinkedInProfile(result.url);
+        if (!linkedinUrl) continue;
+        const text = `${result.title} ${result.snippet}`;
+        const relation = evaluateEntityRelation({ target_company: company, candidate: { title: result.title, snippet: result.snippet, url: result.url, location: extractCandidateLocation(result.title, result.snippet) }, candidate_type: "person" });
+        const resolvedPerson = resolvePersonCandidate({ name: extractPersonName(result.title), linkedin_url: linkedinUrl, current_company_id: relation.company_match ? company.company_id : null, current_title: result.title, role_category: classifyRole(text), source_urls: [result.url] }, company.company_id);
+        const person = resolvedPerson.employment_status === "verified_current" ? { ...resolvedPerson, employment_verified_at: now.toISOString() } : resolvedPerson;
+        if (!allPeople.some((item) => item.person_id === person.person_id)) { allPeople.push(person); people.push(person); await stores.people.upsert(person); }
+        if (person.employment_status === "verified_current") { const contact = { contact_id: `contact-${person.person_id}`, company_id: company.company_id, person_id: person.person_id, kind: "linkedin_profile" as const, value: linkedinUrl, label: person.current_title, source_url: result.url, public_verified: true, professional: true, verified_at: now.toISOString(), notes: "公开 LinkedIn 资料，当前任职由搜索证据匹配" }; if (!allContacts.some((item) => item.contact_id === contact.contact_id)) { allContacts.push(contact); contacts.push(contact); } }
+      }
+      if (people.some((person) => person.current_company_id === company.company_id && person.employment_status === "verified_current")) break;
     }
-    // Exa is only reached if Serper did not produce a profile candidate.
-    if (!profileFound) {
-      const exaResults = await search(`${company.canonical_name} LinkedIn Talent Acquisition Recruiter`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_PERSON", company.target_segment === "hk_finance" ? "hk" : "cn");
+    // Exa remains a bounded fallback when Serper did not yield a verified
+    // current employer, while still avoiding an unbounded second crawl.
+    if (!people.some((person) => person.current_company_id === company.company_id && person.employment_status === "verified_current")) {
+      const exaResults = await search(`${discoveryName} LinkedIn Talent Acquisition Recruiter`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_PERSON", company.target_segment === "hk_finance" ? "hk" : "cn");
       for (const result of exaResults) {
         const linkedinUrl = extractLinkedInProfile(result.url);
         if (!linkedinUrl) continue;
-        const person = resolvePersonCandidate({ name: extractPersonName(result.title), linkedin_url: linkedinUrl, current_company_id: null, current_title: result.title, role_category: classifyRole(`${result.title} ${result.snippet}`), source_urls: [result.url] }, company.company_id);
+        const text = `${result.title} ${result.snippet}`;
+        const relation = evaluateEntityRelation({ target_company: company, candidate: { title: result.title, snippet: result.snippet, url: result.url, location: extractCandidateLocation(result.title, result.snippet) }, candidate_type: "person" });
+        const resolvedPerson = resolvePersonCandidate({ name: extractPersonName(result.title), linkedin_url: linkedinUrl, current_company_id: relation.company_match ? company.company_id : null, current_title: result.title, role_category: classifyRole(text), source_urls: [result.url] }, company.company_id);
+        const person = resolvedPerson.employment_status === "verified_current" ? { ...resolvedPerson, employment_verified_at: now.toISOString() } : resolvedPerson;
         if (!allPeople.some((item) => item.person_id === person.person_id)) { allPeople.push(person); people.push(person); await stores.people.upsert(person); }
       }
     }
@@ -376,6 +425,10 @@ function titleCase(value: string): string { return value.split(/\s+/).filter(Boo
 function normalizeTitle(value: string): string { return value.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, ""); }
 function roleFamily(text: string): string { const match = text.match(/(?:senior|junior|chief|head|manager|director|lead|engineer|analyst|officer|specialist)[\w\s-]{0,50}/i); return match?.[0]?.trim() ?? "Human Resources"; }
 function classifySignal(text: string): CompanySignal["signal_type"] { if (/license|牌照/i.test(text)) return "new_license"; if (/factory|plant|产线|capacity/i.test(text)) return "factory_expand"; if (/funding|融资|ipo/i.test(text)) return "funding"; if (/acquisition|并购/i.test(text)) return "ma"; if (/hiring|招聘|recruit/i.test(text)) return "hiring"; if (/overseas|海外|新市场/i.test(text)) return "new_market"; return "new_business"; }
+function discoveryCompanyName(company: Company): string {
+  const normalized = company.canonical_name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  return DISCOVERY_NAME_OVERRIDES[normalized] ?? company.name_en ?? company.canonical_name;
+}
 function extractLinkedInProfile(url: string): string | null { try { const parsed = new URL(url); if (!/linkedin\.com$/i.test(parsed.hostname) && !/linkedin\.com$/i.test(parsed.hostname.replace(/^www\./, ""))) return null; const match = parsed.pathname.match(/^\/in\/[^/]+/i); return match ? `https://www.linkedin.com${match[0]}` : null; } catch { return null; } }
 function extractPersonName(title: string): string { return title.split(/\s[-|–—]\s|\|/)[0]?.trim().replace(/\s*\(.*\)$/, "") || "Unknown LinkedIn profile"; }
 function classifyRole(text: string): RoleCategory { return PEOPLE_ROLE_WORDS.find(([, pattern]) => pattern.test(text))?.[0] ?? "other"; }
