@@ -44,7 +44,7 @@ const NON_COMPANY_HOSTS = new Set([
   "michaelpage.com.cn", "robertwalters.cn", "arc-group.com", "chinaglobalsouth.com"
 ]);
 const GENERIC_TITLE = /^(?:\d+\s+)?(?:finance|human resources|hr|recruiter|recruitment|jobs?|careers?|hiring|job openings?|search results?)(?:\s+(?:jobs?|in|hong kong|china|asia).*)?$/i;
-const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|重组|restructur/i;
+const SIGNAL_WORDS = /hiring|recruit|招聘|扩张|expansion|factory|plant|产线|融资|funding|ipo|acquisition|并购|license|牌照|treasury|总部|headquarters|海外|overseas|capacity|订单|order|management hire|appoint(?:ment|ed)?|重组|restructur/i;
 const ROLE_WORDS = /manager|director|head|lead|engineer|finance|hr|human resources|recruit|analyst|compliance|risk|supply chain|country manager|岗位|招聘|人才/i;
 const PEOPLE_ROLE_WORDS: Array<[RoleCategory, RegExp]> = [["ta", /talent acquisition|recruiting|招聘|recruiter/i], ["hrd", /chief human resources|hr director|人力资源总监/i], ["hrbp", /hrbp/i], ["business_leader", /business development|general manager|业务负责人|总经理/i], ["country_manager", /country manager|国家经理/i], ["finance_leader", /cfo|finance director|财务总监/i], ["ceo", /chief executive|ceo|首席执行/i], ["coo", /chief operating|coo|运营总监/i]];
 
@@ -167,7 +167,10 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     companies.push(company);
     await stores.companies.upsert(company);
   }
-  const verifiedCompanies = companies.filter((company) => company.status === "active").slice(0, maxCompanies);
+  // An active historical row is not automatically a current-run identity.
+  // Require a fresh candidate with either the official domain or an explicit
+  // entity match before it enters this week's decision universe.
+  const verifiedCompanies = companies.filter((company) => company.status === "active" && isCurrentRunIdentityVerified(company, uniqueCandidates, now)).slice(0, maxCompanies);
 
   // Cross-week enrichment is part of the production contract: a transient
   // provider empty response must not erase previously verified intelligence.
@@ -294,7 +297,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   // pipeline reuses verified cross-week entities. Reflect that reuse in the
   // funnel instead of publishing a misleading zero-company stage.
   const filteredPollutionCount = Object.values(eligibility.ineligibleByReason).reduce((sum, value) => sum + value, 0);
-  const stageMetrics: Record<string, number> = { candidate_url_count: Math.max(uniqueCandidates.length, verifiedCompanies.length), company_candidate_count: Math.max(resolutions.length, verifiedCompanies.length), company_resolved_count: verifiedCompanies.length, company_review_count: resolutions.filter((item) => item.status === "NEEDS_REVIEW" || item.status === "CONFLICT").length, signal_count: signals.length, job_count: jobs.length, person_candidate_count: people.length, verified_person_count: people.filter((item) => item.employment_status === "verified_current").length, contact_count: contacts.length, contact_gate_pass_count: contacts.filter((item) => item.public_verified && item.professional).length, need_count: needCount, lead_count: radar.leads.length, a_count: radar.leads.filter((item) => item.lead_pool === "A_ACTIONABLE").length, b_count: radar.leads.filter((item) => item.lead_pool === "B_ENRICHMENT").length, all_signal_count: eligibility.allSignals.length, eligible_signal_count: eligibility.eligibleSignals.length, all_job_count: eligibility.allJobs.length, eligible_job_count: eligibility.eligibleJobs.length, all_person_count: eligibility.allPeople.length, eligible_person_count: eligibility.eligiblePeople.length, all_contact_count: eligibility.allContacts.length, eligible_contact_count: eligibility.eligibleContacts.length, filtered_pollution_count: filteredPollutionCount };
+  const stageMetrics: Record<string, number> = { candidate_url_count: Math.max(uniqueCandidates.length, verifiedCompanies.length), company_candidate_count: Math.max(resolutions.length, verifiedCompanies.length), company_resolved_count: verifiedCompanies.length, company_review_count: resolutions.filter((item) => item.status === "NEEDS_REVIEW" || item.status === "CONFLICT").length, signal_count: signals.length, job_count: jobs.length, person_candidate_count: allPeople.length, verified_person_count: people.filter((item) => item.employment_status === "verified_current").length, contact_count: contacts.length, contact_gate_pass_count: contacts.filter((item) => item.public_verified && item.professional).length, need_count: needCount, lead_count: radar.leads.length, a_count: radar.leads.filter((item) => item.lead_pool === "A_ACTIONABLE").length, b_count: radar.leads.filter((item) => item.lead_pool === "B_ENRICHMENT").length, all_signal_count: eligibility.allSignals.length, eligible_signal_count: eligibility.eligibleSignals.length, all_job_count: eligibility.allJobs.length, eligible_job_count: eligibility.eligibleJobs.length, all_person_count: eligibility.allPeople.length, eligible_person_count: eligibility.eligiblePeople.length, all_contact_count: eligibility.allContacts.length, eligible_contact_count: eligibility.eligibleContacts.length, filtered_pollution_count: filteredPollutionCount };
   const enrichedRadar = { ...radar, funnel_metrics: { candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, signal_count: stageMetrics.signal_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, contact_count: stageMetrics.contact_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, all_signal_count: stageMetrics.all_signal_count, eligible_signal_count: stageMetrics.eligible_signal_count, all_job_count: stageMetrics.all_job_count, eligible_job_count: stageMetrics.eligible_job_count, all_person_count: stageMetrics.all_person_count, eligible_person_count: stageMetrics.eligible_person_count, all_contact_count: stageMetrics.all_contact_count, eligible_contact_count: stageMetrics.eligible_contact_count, filtered_pollution_count: stageMetrics.filtered_pollution_count, ineligible_by_reason: eligibility.ineligibleByReason, blocking_reasons: blockingReasons } };
   for (const lead of enrichedRadar.leads) await stores.leads.upsertWeekly(lead);
   const snapshot = buildWeeklySnapshot(enrichedRadar);
@@ -350,6 +353,14 @@ function isNonCompanyHost(host: string): boolean {
   return [...AGGREGATOR_HOSTS, ...NON_COMPANY_HOSTS].some(isKnownHost) || normalized.endsWith(".example.com") || normalized.endsWith(".example.org");
 }
 function isLikelyAggregatorCompany(company: Company): boolean { const host = companyDomain(company.website); return Boolean(host && (isNonCompanyHost(host) || isGenericPortalHost(host) || host.includes(".example.") || host.endsWith(".local"))); }
+function isCurrentRunIdentityVerified(company: Company, candidates: Array<{ result: SearchResult; theme: DiscoveryTheme }>, now: Date): boolean {
+  const createdAt = Date.parse(company.created_at);
+  if (Number.isFinite(createdAt) && Math.abs(now.getTime() - createdAt) <= 5 * 60 * 1000) return true;
+  return candidates.some(({ result }) => {
+    const relation = evaluateEntityRelation({ target_company: company, candidate: { title: result.title, snippet: result.snippet, url: result.url }, candidate_type: "company" });
+    return relation.company_match && relation.region_match !== false && !isNonCompanyHost(hostname(result.url));
+  });
+}
 function isRecentResult(publishedAt: string | undefined, now: Date): boolean { if (!publishedAt) return true; const parsed = Date.parse(publishedAt); return Number.isNaN(parsed) || parsed >= now.getTime() - 60 * 86400000; }
 function isFirstPartyUrl(value: string, company: Company): boolean { const host = hostname(value); return Boolean(host && [companyDomain(company.website), ...company.official_domains].filter(Boolean).some((domain) => host === domain || host.endsWith(`.${domain}`))); }
 function isGenericJobPage(url: string): boolean { const host = hostname(url); return AGGREGATOR_HOSTS.has(host) || /\/jobs?(?:\/|$)/i.test(url) && /linkedin\.com/i.test(host); }

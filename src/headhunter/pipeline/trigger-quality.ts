@@ -62,7 +62,7 @@ export function evaluateTriggerQuality(input: TriggerQualityInput | SearchResult
   const maxAgeDays = options.max_age_days ?? 60;
   const title = String(candidate.title ?? "").trim();
   const body = [title, candidate.snippet, candidate.excerpt, candidate.inline_content].filter(Boolean).join(" ");
-  const eventDate = normalizeEventDate(candidate.event_date ?? candidate.published_at ?? extractDate(body));
+  const eventDate = normalizeEventDate(candidate.event_date ?? candidate.published_at ?? extractDate(body, now), now);
   const reasons: string[] = [];
 
   // The URL/title taxonomy is intentionally evaluated before keyword/action
@@ -127,16 +127,21 @@ function result(status: TriggerQualityStatus, eventDate: string | null, reasons:
   return { status, valid_for_a_gate: status === "valid_recent_trigger", event_date: eventDate, reasons };
 }
 
-function normalizeEventDate(value: string | null | undefined): string | null {
+function normalizeEventDate(value: string | null | undefined, now = new Date()): string | null {
   if (!value) return null;
   const timestamp = Date.parse(value);
-  if (Number.isNaN(timestamp)) return null;
-  return new Date(timestamp).toISOString().slice(0, 10);
+  if (!Number.isNaN(timestamp)) return new Date(timestamp).toISOString().slice(0, 10);
+  const relative = value.trim().match(/^(\d+)\s*(day|days|week|weeks|month|months)\s*ago$/i) ?? value.trim().match(/^(\d+)\s*(?:天|日|周|星期|个月)前$/i);
+  if (!relative) return null;
+  const amount = Number(relative[1]);
+  const unit = relative[2].toLowerCase();
+  const days = /week|周|星期/.test(unit) ? amount * 7 : /month|个月/.test(unit) ? amount * 30 : amount;
+  return new Date(now.getTime() - days * 86400000).toISOString().slice(0, 10);
 }
 
-function extractDate(text: string): string | null {
+function extractDate(text: string, now = new Date()): string | null {
   const match = text.match(DATE_PATTERN)?.[0];
-  return match ? normalizeEventDate(match) : null;
+  return match ? normalizeEventDate(match, now) : null;
 }
 
 function isStale(value: string, now: Date, maxAgeDays: number): boolean {
