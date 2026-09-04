@@ -26,6 +26,16 @@ export interface WeeklySnapshot {
     need_count: number;
     a_count: number;
     b_count: number;
+    all_signal_count?: number;
+    eligible_signal_count?: number;
+    all_job_count?: number;
+    eligible_job_count?: number;
+    all_person_count?: number;
+    eligible_person_count?: number;
+    all_contact_count?: number;
+    eligible_contact_count?: number;
+    filtered_pollution_count?: number;
+    ineligible_by_reason?: Record<string, number>;
     blocking_reasons?: Record<string, number>;
   };
 }

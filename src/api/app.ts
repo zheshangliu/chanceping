@@ -97,7 +97,8 @@ export function createApp(context?: AppContext): Hono {
   app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes());
 
-  // Web UI 静态文件服务（根路径）
+  // Web UI 静态文件服务（根路径）。financeContext is optional; this
+  // preserves the legacy `app.route("/", webUiRoutes())` contract.
   app.route("/", webUiRoutes(financeContext));
 
   // 全局错误处理

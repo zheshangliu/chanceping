@@ -24,10 +24,11 @@ import { runHeadhunterRadar, type HeadHunterRadarResult } from "./radar-pipeline
 import { buildWeeklySnapshot } from "../reports/weekly-report";
 import { publishScheduledSnapshot } from "./weekly-publisher";
 import { computeWeekKey } from "../model/weekly-snapshot";
-import { isRecentSignal, isGenericJobSourceUrl } from "./quality-filters";
 import { evaluateTriggerQuality } from "./trigger-quality";
 import { evaluateEntityRelation, extractCandidateLocation } from "./entity-relation-filter";
 import { extractOfficialContacts } from "./official-contact-extractor";
+import { fetchFirstPartyPage } from "./official-page-fetcher";
+import { buildEligibilityCollections, type EligibilityCollections } from "./eligibility";
 
 const AGGREGATOR_HOSTS = new Set(["linkedin.com", "linkedin.com.hk", "jobsdb.com", "indeed.com", "glassdoor.com", "michaelpage.com", "robertwalters.com.hk", "randstad.com.hk", "jobstreet.com", "jobs.gov.hk", "efinancialcareers.hk", "ambition.com.hk", "hongkongbusiness.hk"]);
 // Search discovery frequently returns articles, social profiles, public
@@ -173,19 +174,25 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   // Seed each stage with persisted records for the current verified universe;
   // the bounded discovery loops below then append only genuinely new items.
   const verifiedCompanyIds = new Set(verifiedCompanies.map((company) => company.company_id));
-  const [persistedSignals, persistedJobs, persistedPeople, persistedContacts] = await Promise.all([
+  const [persistedSignals, persistedJobs, persistedPeople, persistedContacts, persistedEvidences] = await Promise.all([
     stores.signals.list(),
     stores.jobs.list(),
     stores.people.list(),
     stores.contacts.list(),
+    stores.evidence.list(),
   ]);
-  // Cross-week reuse must not turn stale events or bootstrap-era generic job
-  // index pages into current intelligence. Keep recent signals only and
-  // apply the same generic-page rejection used by fresh job discovery.
-  const signals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id) && isRecentSignal(signal.event_date, now, signal.title));
-  const jobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id) && !job.source_urls.some(isGenericJobSourceUrl));
-  const people: Person[] = persistedPeople.filter((person) => person.current_company_id !== null && verifiedCompanyIds.has(person.current_company_id));
-  const contacts: ContactEntry[] = persistedContacts.filter((contact) => verifiedCompanyIds.has(contact.company_id));
+  // Preserve raw history, then derive the current eligible read model. The
+  // same derivation is repeated after discovery so newly written records are
+  // subject to exactly the same gates as persisted records.
+  let allSignals: CompanySignal[] = persistedSignals.filter((signal) => verifiedCompanyIds.has(signal.company_id));
+  let allJobs: Job[] = persistedJobs.filter((job) => verifiedCompanyIds.has(job.company_id));
+  let allPeople: Person[] = persistedPeople.filter((person) => person.current_company_id !== null && verifiedCompanyIds.has(person.current_company_id));
+  let allContacts: ContactEntry[] = persistedContacts.filter((contact) => verifiedCompanyIds.has(contact.company_id));
+  let eligibility: EligibilityCollections = buildEligibilityCollections({ signals: allSignals, jobs: allJobs, people: allPeople, contacts: allContacts, companies: verifiedCompanies, evidences: persistedEvidences, now });
+  let signals: CompanySignal[] = eligibility.eligibleSignals;
+  let jobs: Job[] = eligibility.eligibleJobs;
+  let people: Person[] = eligibility.eligiblePeople;
+  let contacts: ContactEntry[] = eligibility.eligibleContacts;
 
   // Step 3: company secondary trigger discovery.
   for (const company of verifiedCompanies) {
@@ -203,7 +210,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       if (!triggerQuality.valid_for_a_gate || !SIGNAL_WORDS.test(`${result.title} ${result.snippet}`) || !isRecentResult(result.published_at, now)) continue;
       const signalId = `signal-${createHash("sha1").update(`${company.company_id}|${normalizeUrl(result.url)}`).digest("hex").slice(0, 20)}`;
       const signal: CompanySignal = { signal_id: signalId, company_id: company.company_id, signal_type: classifySignal(`${result.title} ${result.snippet}`), event_date: triggerQuality.event_date, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), title: result.title, fact_summary: result.snippet || result.title, inference_summary: null, impact_level: "medium", primary_source_id: evidence.evidence_id, evidence_ids: [evidence.evidence_id], source_confidence: result.source_provider === "doubao_search" ? 0.65 : 0.6, created_at: now.toISOString(), updated_at: now.toISOString() };
-      if (!signals.some((item) => item.signal_id === signal.signal_id)) { signals.push(signal); await stores.signals.upsert(signal); }
+      if (!allSignals.some((item) => item.signal_id === signal.signal_id)) { allSignals.push(signal); signals.push(signal); await stores.signals.upsert(signal); }
     }
   }
 
@@ -223,7 +230,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       const jobId = `job-${createHash("sha1").update(`${company.company_id}|${normalizeTitle(title)}`).digest("hex").slice(0, 20)}`;
       const evidence = await saveEvidence(result, company);
       const job: Job = { job_id: jobId, company_id: company.company_id, canonical_title: title, original_titles: [title], location: extractCandidateLocation(result.title, result.snippet) ?? company.city ?? company.region, role_family: roleFamily(text), license_requirement: classifyRa1Clarity(text), ra1_clarity: classifyRa1Clarity(text), cantonese_clarity: classifyCantoneseClarity(text), employment_type: null, first_seen_at: now.toISOString(), last_seen_at: now.toISOString(), current_status: "open", source_urls: [evidence.source_url] };
-      if (!jobs.some((item) => item.job_id === job.job_id)) { jobs.push(job); await stores.jobs.upsert(job); }
+      if (!allJobs.some((item) => item.job_id === job.job_id)) { allJobs.push(job); jobs.push(job); await stores.jobs.upsert(job); }
       const observation: JobObservation = { observation_id: `job-observation-${jobId}-${now.toISOString().slice(0, 10)}`, job_id: jobId, observed_at: now.toISOString(), source: result.source_provider, source_url: evidence.source_url, title_raw: title, location_raw: company.city ?? company.region, description_excerpt: result.snippet || null, is_open: true, salary: null, headcount_signal: null, content_hash: hashText(`${title}|${result.snippet}`), observation_status: "NEW_JOB" };
       try { await stores.jobs.insertObservation(observation); } catch { /* idempotent reruns */ }
     }
@@ -239,8 +246,8 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       profileFound = true;
       const text = `${result.title} ${result.snippet}`;
       const person = resolvePersonCandidate({ name: extractPersonName(result.title), linkedin_url: linkedinUrl, current_company_id: text.toLowerCase().includes(company.canonical_name.toLowerCase()) ? company.company_id : null, current_title: result.title, role_category: classifyRole(text), source_urls: [result.url] }, company.company_id);
-      if (!people.some((item) => item.person_id === person.person_id)) { people.push(person); await stores.people.upsert(person); }
-      if (person.employment_status === "verified_current") contacts.push({ contact_id: `contact-${person.person_id}`, company_id: company.company_id, person_id: person.person_id, kind: "linkedin_profile", value: linkedinUrl, label: person.current_title, source_url: result.url, public_verified: true, professional: true, verified_at: now.toISOString(), notes: "公开 LinkedIn 资料，当前任职由搜索证据匹配" });
+      if (!allPeople.some((item) => item.person_id === person.person_id)) { allPeople.push(person); people.push(person); await stores.people.upsert(person); }
+      if (person.employment_status === "verified_current") { const contact = { contact_id: `contact-${person.person_id}`, company_id: company.company_id, person_id: person.person_id, kind: "linkedin_profile" as const, value: linkedinUrl, label: person.current_title, source_url: result.url, public_verified: true, professional: true, verified_at: now.toISOString(), notes: "公开 LinkedIn 资料，当前任职由搜索证据匹配" }; if (!allContacts.some((item) => item.contact_id === contact.contact_id)) { allContacts.push(contact); contacts.push(contact); } }
     }
     // Exa is only reached if Serper did not produce a profile candidate.
     if (!profileFound) {
@@ -249,7 +256,7 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
         const linkedinUrl = extractLinkedInProfile(result.url);
         if (!linkedinUrl) continue;
         const person = resolvePersonCandidate({ name: extractPersonName(result.title), linkedin_url: linkedinUrl, current_company_id: null, current_title: result.title, role_category: classifyRole(`${result.title} ${result.snippet}`), source_urls: [result.url] }, company.company_id);
-        if (!people.some((item) => item.person_id === person.person_id)) { people.push(person); await stores.people.upsert(person); }
+        if (!allPeople.some((item) => item.person_id === person.person_id)) { allPeople.push(person); people.push(person); await stores.people.upsert(person); }
       }
     }
     const budget = new ContactSearchBudget({ serper: 1, exa: 0, official_site: 1 });
@@ -257,20 +264,28 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
       const domain = companyDomain(company.website);
       if (domain) {
         const officialResults = await search(`site:${domain} careers contact recruitment HR`, company.target_segment === "hk_finance" ? "hk_global" : "mainland", "DISCOVER_CONTACT", company.target_segment === "hk_finance" ? "hk" : "cn");
-        const entries: DiscoveredContact[] = officialResults.filter((result) => isOfficialEntry(result.url, domain)).flatMap((result): DiscoveredContact[] => {
-          const extracted = extractOfficialContacts({ company, source_url: result.url, title: result.title, snippet: result.snippet, inline_content: extractInlineContent(result.raw_data) });
+        const entries: DiscoveredContact[] = [];
+        for (const result of officialResults.filter((item) => isOfficialEntry(item.url, domain)).slice(0, 3)) {
+          const fetched = await fetchFirstPartyPage(result.url);
+          const extracted = extractOfficialContacts({ company, source_url: result.url, title: result.title, snippet: result.snippet, inline_content: fetched.content ?? extractInlineContent(result.raw_data) });
           // Keep the URL entry even when a search adapter does not return page
           // text. The extractor remains the authority for emails/phones.
-          return extracted.entries.length > 0 ? extracted.entries : [{ type: result.url.toLowerCase().includes("career") || result.url.toLowerCase().includes("job") ? "careers_entry" as const : "company_contact_form" as const, value: result.url, source_url: result.url, public_verified: true, professional: true, label: result.title }];
-        });
-        contacts.push(...discoverContactEntries({ company_id: company.company_id, provider: "official_site", entries }, budget));
+          entries.push(...(extracted.entries.length > 0 ? extracted.entries : [{ type: result.url.toLowerCase().includes("career") || result.url.toLowerCase().includes("job") ? "careers_entry" as const : "company_contact_form" as const, value: result.url, source_url: result.url, public_verified: true, professional: true, label: result.title }]));
+        }
+        const discoveredContacts = discoverContactEntries({ company_id: company.company_id, provider: "official_site", entries }, budget);
+        for (const contact of discoveredContacts) { if (!allContacts.some((item) => item.contact_id === contact.contact_id)) { allContacts.push(contact); contacts.push(contact); } }
       }
     }
   }
-  for (const contact of contacts) await stores.contacts.upsert(contact);
+  for (const contact of allContacts) await stores.contacts.upsert(contact);
 
   // Step 6-8: Lead Engine receives all discovered collections, never bootstrap arrays.
   const evidences = await stores.evidence.list();
+  eligibility = buildEligibilityCollections({ signals: allSignals, jobs: allJobs, people: allPeople, contacts: allContacts, companies: verifiedCompanies, evidences, now });
+  signals = eligibility.eligibleSignals;
+  jobs = eligibility.eligibleJobs;
+  people = eligibility.eligiblePeople;
+  contacts = eligibility.eligibleContacts;
   const radar = await runHeadhunterRadar({ radar_run_id: runId, week_key: weekKey, companies: verifiedCompanies, signals, jobs, people, contacts, evidences, trends: [], now });
   const needCount = verifiedCompanies.reduce((sum, company) => sum + inferNeeds(company, signals, jobs).length, 0);
   const blockingReasons: Record<string, number> = {};
@@ -278,13 +293,14 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   // A quiet provider response still represents a real weekly run when the
   // pipeline reuses verified cross-week entities. Reflect that reuse in the
   // funnel instead of publishing a misleading zero-company stage.
-  const stageMetrics: Record<string, number> = { candidate_url_count: Math.max(uniqueCandidates.length, verifiedCompanies.length), company_candidate_count: Math.max(resolutions.length, verifiedCompanies.length), company_resolved_count: verifiedCompanies.length, company_review_count: resolutions.filter((item) => item.status === "NEEDS_REVIEW" || item.status === "CONFLICT").length, signal_count: signals.length, job_count: jobs.length, person_candidate_count: people.length, verified_person_count: people.filter((item) => item.employment_status === "verified_current").length, contact_count: contacts.length, contact_gate_pass_count: contacts.filter((item) => item.public_verified && item.professional).length, need_count: needCount, lead_count: radar.leads.length, a_count: radar.leads.filter((item) => item.lead_pool === "A_ACTIONABLE").length, b_count: radar.leads.filter((item) => item.lead_pool === "B_ENRICHMENT").length };
-  const enrichedRadar = { ...radar, funnel_metrics: { candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, signal_count: stageMetrics.signal_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, contact_count: stageMetrics.contact_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, blocking_reasons: blockingReasons } };
+  const filteredPollutionCount = Object.values(eligibility.ineligibleByReason).reduce((sum, value) => sum + value, 0);
+  const stageMetrics: Record<string, number> = { candidate_url_count: Math.max(uniqueCandidates.length, verifiedCompanies.length), company_candidate_count: Math.max(resolutions.length, verifiedCompanies.length), company_resolved_count: verifiedCompanies.length, company_review_count: resolutions.filter((item) => item.status === "NEEDS_REVIEW" || item.status === "CONFLICT").length, signal_count: signals.length, job_count: jobs.length, person_candidate_count: people.length, verified_person_count: people.filter((item) => item.employment_status === "verified_current").length, contact_count: contacts.length, contact_gate_pass_count: contacts.filter((item) => item.public_verified && item.professional).length, need_count: needCount, lead_count: radar.leads.length, a_count: radar.leads.filter((item) => item.lead_pool === "A_ACTIONABLE").length, b_count: radar.leads.filter((item) => item.lead_pool === "B_ENRICHMENT").length, all_signal_count: eligibility.allSignals.length, eligible_signal_count: eligibility.eligibleSignals.length, all_job_count: eligibility.allJobs.length, eligible_job_count: eligibility.eligibleJobs.length, all_person_count: eligibility.allPeople.length, eligible_person_count: eligibility.eligiblePeople.length, all_contact_count: eligibility.allContacts.length, eligible_contact_count: eligibility.eligibleContacts.length, filtered_pollution_count: filteredPollutionCount };
+  const enrichedRadar = { ...radar, funnel_metrics: { candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, signal_count: stageMetrics.signal_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, contact_count: stageMetrics.contact_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, all_signal_count: stageMetrics.all_signal_count, eligible_signal_count: stageMetrics.eligible_signal_count, all_job_count: stageMetrics.all_job_count, eligible_job_count: stageMetrics.eligible_job_count, all_person_count: stageMetrics.all_person_count, eligible_person_count: stageMetrics.eligible_person_count, all_contact_count: stageMetrics.all_contact_count, eligible_contact_count: stageMetrics.eligible_contact_count, filtered_pollution_count: stageMetrics.filtered_pollution_count, ineligible_by_reason: eligibility.ineligibleByReason, blocking_reasons: blockingReasons } };
   for (const lead of enrichedRadar.leads) await stores.leads.upsertWeekly(lead);
   const snapshot = buildWeeklySnapshot(enrichedRadar);
   if (options.publish !== false) await publishScheduledSnapshot(snapshot, stores.weeklySnapshots, { run_status: "success", core_provider_available: true, lead_engine_complete: true, persistence_complete: true });
   const providerUsage: ProviderUsage[] = [...usage.entries()].map(([provider, stat]) => ({ provider, request_count: stat.requests, success_count: stat.successes, failure_count: stat.failures, known_cost: stat.knownCost, unknown_cost: stat.unknownCost }));
-  const run: RadarRun = { radar_run_id: runId, trigger_type: "scheduled", started_at: now.toISOString(), finished_at: new Date().toISOString(), status: "success", queries: planV12DiscoveryThemes().slice(0, maxThemes).map((item) => item.query), provider_usage: providerUsage, cost_summary: { known_cost: 0, unknown_cost: true, unknown_providers: providerUsage.filter((item) => item.unknown_cost).map((item) => item.provider), currency: "USD" }, company_count: verifiedCompanies.length, signal_count: signals.length, lead_count: radar.leads.length, candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, company_review_count: stageMetrics.company_review_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, verified_person_count: stageMetrics.verified_person_count, contact_count: stageMetrics.contact_count, contact_gate_pass_count: stageMetrics.contact_gate_pass_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, stage_metrics: stageMetrics, provider_cost_known: null, provider_cost_unknown: true };
+  const run: RadarRun = { radar_run_id: runId, trigger_type: "scheduled", started_at: now.toISOString(), finished_at: new Date().toISOString(), status: "success", queries: planV12DiscoveryThemes().slice(0, maxThemes).map((item) => item.query), provider_usage: providerUsage, cost_summary: { known_cost: 0, unknown_cost: true, unknown_providers: providerUsage.filter((item) => item.unknown_cost).map((item) => item.provider), currency: "USD" }, company_count: verifiedCompanies.length, signal_count: signals.length, lead_count: radar.leads.length, candidate_url_count: stageMetrics.candidate_url_count, company_candidate_count: stageMetrics.company_candidate_count, company_resolved_count: stageMetrics.company_resolved_count, company_review_count: stageMetrics.company_review_count, job_count: stageMetrics.job_count, person_candidate_count: stageMetrics.person_candidate_count, verified_person_count: stageMetrics.verified_person_count, contact_count: contacts.length, contact_gate_pass_count: stageMetrics.contact_gate_pass_count, need_count: stageMetrics.need_count, a_count: stageMetrics.a_count, b_count: stageMetrics.b_count, all_signal_count: stageMetrics.all_signal_count, eligible_signal_count: stageMetrics.eligible_signal_count, all_job_count: stageMetrics.all_job_count, eligible_job_count: stageMetrics.eligible_job_count, all_person_count: stageMetrics.all_person_count, eligible_person_count: stageMetrics.eligible_person_count, all_contact_count: stageMetrics.all_contact_count, eligible_contact_count: stageMetrics.eligible_contact_count, filtered_pollution_count: stageMetrics.filtered_pollution_count, ineligible_by_reason: eligibility.ineligibleByReason, stage_metrics: stageMetrics, provider_cost_known: null, provider_cost_unknown: true };
   await stores.runs.upsert(run);
   return { radar: enrichedRadar, snapshot, run, resolutions, stage_metrics: stageMetrics };
 }

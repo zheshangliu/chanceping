@@ -36,7 +36,7 @@ export function buildLeadPresentation(input: LeadPresentationInput): WeeklyLeadS
   ]);
   const roleText = roleNames.length ? roleNames.slice(0, 4).join("、") : "招聘负责人、业务负责人及相关职能岗位";
   const triggerLabel = primary ? signalLabelZh(primary.signal_type) : input.jobs.length ? "招聘变化" : "近期经营变化";
-  const eventDate = primary?.event_date ?? input.jobs.map((job) => job.last_seen_at).sort().at(-1)?.slice(0, 10) ?? null;
+  const eventDate = primary?.event_date ?? null;
   const evidenceSource = primary ? input.evidences.find((item) => item.evidence_id === primary.primary_source_id) ?? input.evidences[0] : input.evidences[0];
   const evidenceGatePassed = evidenceViews.some((item) => item.is_first_party) || evidenceViews.filter((item) => item.source_type === "reliable_media" || item.source_type === "regulator").map((item) => sourceGroup(item.source_url, item.source_name)).filter((v, i, a) => a.indexOf(v) === i).length >= 2;
   const hasContact = contactViews.length > 0;
@@ -84,7 +84,7 @@ function buildInterpretation(company: Company, trigger: string, date: string | n
 }
 
 function choosePrimarySignal(signals: CompanySignal[]): CompanySignal | null {
-  return [...signals].sort((a, b) => `${b.impact_level}|${b.last_seen_at}`.localeCompare(`${a.impact_level}|${a.last_seen_at}`))[0] ?? null;
+  return [...signals].sort((a, b) => `${b.impact_level}|${b.event_date ?? ""}`.localeCompare(`${a.impact_level}|${a.event_date ?? ""}`))[0] ?? null;
 }
 
 function toEvidenceView(item: RawEvidence | EvidenceRecord): LeadEvidenceView {

@@ -1,0 +1,40 @@
+{
+  "version": "1.2.2",
+  "run_id": "headhunter-v122-production-style-20260904-frozen",
+  "publish": false,
+  "recommendation": "HOLD",
+  "production_routing_change": false,
+  "phase4": "LOCKED",
+  "metrics": {
+    "company_resolved": 20,
+    "all_signals": 0,
+    "eligible_signals": 0,
+    "all_jobs": 16,
+    "eligible_jobs": 16,
+    "all_people": 51,
+    "eligible_people": 0,
+    "all_contacts": 68,
+    "eligible_contacts": 56,
+    "filtered_pollution": 63,
+    "need_count": 13,
+    "lead_count": 20,
+    "a_count": 0,
+    "b_count": 20
+  },
+  "provider_usage": {
+    "serper": { "requests": 96, "failures": 0, "cost_status": "unknown" },
+    "doubao_search": { "requests": 31, "failures": 0, "cost_status": "unknown" },
+    "tikhub": { "requests": 0, "cost_status": "not_called" }
+  },
+  "ineligible_by_reason": {
+    "stale": 7,
+    "entity_mismatch": 43,
+    "employer_mismatch": 10,
+    "region_mismatch": 0,
+    "generic_reference": 0,
+    "insufficient_date": 0,
+    "invalid_relation": 0,
+    "unknown": 0
+  },
+  "next_gate": "Do not change production routing until eligible Signal/Person evidence exists and human judgment starts."
+}

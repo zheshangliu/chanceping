@@ -49,6 +49,16 @@ export interface HeadHunterRadarResult {
     need_count: number;
     a_count: number;
     b_count: number;
+    all_signal_count?: number;
+    eligible_signal_count?: number;
+    all_job_count?: number;
+    eligible_job_count?: number;
+    all_person_count?: number;
+    eligible_person_count?: number;
+    all_contact_count?: number;
+    eligible_contact_count?: number;
+    filtered_pollution_count?: number;
+    ineligible_by_reason?: Record<string, number>;
     blocking_reasons?: Record<string, number>;
   };
 }
@@ -68,7 +78,7 @@ export async function runHeadhunterRadar(input: HeadhunterRadarInput): Promise<H
     const evidencePass = evidenceForCompany.length > 0 && evaluateEvidenceGate(evidenceForCompany).passed;
     const contactPass = contacts.some(isContactGateEligible);
     const gate = evaluateLeadGate({ company_gate: company.status === "active", trigger_gate: signals.length > 0, need_gate: needs.length > 0, evidence_gate: evidencePass, contact_gate: contactPass, action_gate: true, business_score: score.business_score });
-    const latest = signals.map((signal) => signal.last_seen_at).sort().at(-1) ?? null;
+    const latest = signals.map((signal) => signal.event_date).filter((value): value is string => Boolean(value)).sort().at(-1) ?? null;
     const freshness = calculateFreshnessScore(latest, now);
     const roleCategory = people[0]?.role_category ?? (contacts.length > 0 ? "official_entry" : "other");
     const actionContext = { company_name: company.canonical_name, role_category: roleCategory, trigger_summary: signals[0]?.fact_summary ?? "近期经营变化", need_basis: hrNeed, contact_label: contacts[0]?.label };
