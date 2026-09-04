@@ -7,6 +7,7 @@ async function main(): Promise<void> {
     radarRunId: process.env.CHANCEPING_RADAR_RUN_ID,
     maxThemes: Number(process.env.CHANCEPING_WEEKLY_MAX_THEMES ?? 18),
     maxCompanies: Number(process.env.CHANCEPING_WEEKLY_MAX_COMPANIES ?? 30),
+    companyIds: process.env.CHANCEPING_WEEKLY_COMPANY_IDS?.split(",").map((value) => value.trim()).filter(Boolean),
     publish: process.env.CHANCEPING_WEEKLY_PUBLISH !== "false",
   });
   await mkdir(process.env.CHANCEPING_HEADHUNTER_DATA_DIR ?? "data/headhunter", { recursive: true });

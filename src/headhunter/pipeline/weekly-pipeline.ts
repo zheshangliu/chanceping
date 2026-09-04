@@ -82,6 +82,8 @@ export interface WeeklyPipelineOptions {
   providers?: ProviderRegistry;
   maxThemes?: number;
   maxCompanies?: number;
+  /** Optional audit-only universe restriction; production leaves this unset. */
+  companyIds?: string[];
   publish?: boolean;
 }
 
@@ -196,7 +198,10 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
   // An active historical row is not automatically a current-run identity.
   // Require a fresh candidate with either the official domain or an explicit
   // entity match before it enters this week's decision universe.
-  const verifiedCompanies = companies.filter((company) => company.status === "active" && isCurrentRunIdentityVerified(company, uniqueCandidates, now)).slice(0, maxCompanies);
+  const companyIdFilter = options.companyIds?.length ? new Set(options.companyIds) : null;
+  const verifiedCompanies = companies
+    .filter((company) => company.status === "active" && (!companyIdFilter || companyIdFilter.has(company.company_id)) && isCurrentRunIdentityVerified(company, uniqueCandidates, now))
+    .slice(0, maxCompanies);
 
   // Cross-week enrichment is part of the production contract: a transient
   // provider empty response must not erase previously verified intelligence.
@@ -229,9 +234,11 @@ export async function runHeadHunterWeeklyPipeline(options: WeeklyPipelineOptions
     const scope = company.target_segment === "hk_finance" ? "hk_global" : "mainland";
     const region = company.target_segment === "hk_finance" ? "hk" : "cn";
     const queryName = discoveryName.toLowerCase() === company.canonical_name.toLowerCase() ? discoveryName : `${discoveryName} ${company.canonical_name}`;
+    const domain = companyDomain(company.website);
     const triggerQueries = [
       `${queryName} hiring expansion funding license factory overseas headquarters recruitment`,
       `${queryName} latest announcement 2026 hiring expansion appointment investment`,
+      ...(domain ? [`${discoveryName} site:${domain} 2026 hiring appointment expansion investment`] : []),
     ];
     for (const query of triggerQueries) {
       const before = allSignals.length;

@@ -185,6 +185,11 @@ function explicitEmployerMatch(title: string, company: Company): boolean { retur
 function hasConflictingEmployer(title: string, company: Company): boolean {
   const text = title.toLowerCase();
   const target = company.canonical_name.toLowerCase();
+  // BOCHK is the public operating-brand abbreviation for Bank of China
+  // (Hong Kong) Limited. Official BOCHK career pages commonly use the legal
+  // name in their titles, so this pairing must not be treated as a different
+  // employer during revalidation.
+  if (target.includes("bochk") && text.includes("bank of china (hong kong)")) return false;
   const conflicts = ["hk express", "bank of china (hong kong)", "bochk", "protiviti india", "india", "naukri", "powerchina"];
   return conflicts.some((value) => text.includes(value) && !target.includes(value));
 }
