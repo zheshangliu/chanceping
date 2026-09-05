@@ -126,6 +126,14 @@ export function isPublicIchOpportunity(entry: IchOpportunity): boolean {
 
 function regionMatches(entry: IchOpportunity, region: IchRegionFilter): boolean {
   if (region === "all") return true;
+  if (region === "overseas") {
+    // "international" describes eligibility, not geography. A global call
+    // hosted in China must not appear in the Overseas facet. Prefer the
+    // normalized country code; retain an explicit overseas group for records
+    // whose country is genuinely unavailable.
+    if (entry.location.country_code) return entry.location.country_code.toUpperCase() !== "CN";
+    return entry.location.region_groups.some((group) => ["overseas", "overseas_only", "海外"].includes(normalize(group)));
+  }
   const fields = [
     entry.location.city,
     entry.location.province_state,
@@ -140,7 +148,7 @@ function regionMatches(entry: IchOpportunity, region: IchRegionFilter): boolean 
     greater_bay_area: ["greater_bay_area", "greater bay area", "大湾区", "粤港澳"],
     nationwide: ["nationwide", "全国"],
     hong_kong_macao_taiwan: ["hong_kong_macao_taiwan", "港澳台", "香港", "澳门", "台湾"],
-    overseas: ["overseas", "海外", "international", "国际"],
+    overseas: ["overseas", "海外"],
   };
   return fields.some((field) => aliases[region].some((alias) => field.includes(normalize(alias))));
 }

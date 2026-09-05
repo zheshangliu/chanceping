@@ -7,6 +7,17 @@ export interface IchDuplicateResult {
   reason: string;
 }
 
+/** Return duplicate primary URLs for the supplied publication set. */
+export function findDuplicatePrimaryUrls(entries: ReadonlyArray<IchOpportunity>, publishedOnly = true): string[] {
+  const counts = new Map<string, number>();
+  for (const entry of entries) {
+    if (publishedOnly && (!entry.is_published || entry.workflow.state !== "published")) continue;
+    const url = primaryUrl(entry);
+    if (url) counts.set(url, (counts.get(url) ?? 0) + 1);
+  }
+  return [...counts.entries()].filter(([, count]) => count > 1).map(([url]) => url).sort();
+}
+
 function normalizeText(value: string | null | undefined): string {
   return String(value ?? "")
     .normalize("NFKC")

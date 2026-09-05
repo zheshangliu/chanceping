@@ -24,7 +24,7 @@ interface QualityRun {
 
 const inputPath = path.resolve(process.argv.includes("--input") ? process.argv[process.argv.indexOf("--input") + 1] : "docs/ich/DS2-只读发现运行记录_V1.0.json");
 const outputPath = path.resolve(process.argv.includes("--output") ? process.argv[process.argv.indexOf("--output") + 1] : "docs/ich/DS3-候选质量运行记录_V1.0.json");
-const storePath = path.resolve("data/ich-opportunities.json");
+const storePath = path.resolve(process.env.CHANCEPING_ICH_STORE_PATH ?? "data/ich-opportunities.json");
 const discovery = JSON.parse(fs.readFileSync(inputPath, "utf8")) as DiscoveryFile;
 const samples = discovery.source_runs.flatMap((sourceRun) => sourceRun.candidates);
 const existingUrls = new Set((JSON.parse(fs.readFileSync(storePath, "utf8")) as { entries: Array<{ sources: Array<{ url: string }> }> }).entries.flatMap((entry) => entry.sources.map((source) => source.url.replace(/#.*$/, "").replace(/\/$/, ""))));

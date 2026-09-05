@@ -11,7 +11,7 @@ import { getIchSourceRegistryV2, validateIchSourceRegistryV2 } from "../src/ich/
 const nowRaw = process.argv.includes("--now") ? process.argv[process.argv.indexOf("--now") + 1] : "2026-08-24T16:00:00+08:00";
 const now = new Date(nowRaw);
 if (Number.isNaN(now.getTime())) throw new Error(`Invalid --now value: ${nowRaw}`);
-const storePath = path.resolve(process.argv.includes("--input") ? process.argv[process.argv.indexOf("--input") + 1] : "data/ich-opportunities.json");
+const storePath = path.resolve(process.argv.includes("--input") ? process.argv[process.argv.indexOf("--input") + 1] : (process.env.CHANCEPING_ICH_STORE_PATH ?? "data/ich-opportunities.json"));
 const outputPath = path.resolve(process.argv.includes("--output") ? process.argv[process.argv.indexOf("--output") + 1] : "docs/ich/DS4-发布候选审计记录_V1.0.json");
 const reportPath = path.resolve(process.argv.includes("--report") ? process.argv[process.argv.indexOf("--report") + 1] : "docs/ich/DS4-发布候选审计报告_V1.0.md");
 

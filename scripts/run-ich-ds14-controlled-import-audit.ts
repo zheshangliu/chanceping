@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-const storePath = path.resolve("data/ich-opportunities.json");
+const storePath = path.resolve(process.env.CHANCEPING_ICH_STORE_PATH ?? "data/ich-opportunities.json");
 const ds3Path = path.resolve("docs/ich/DS3-候选质量运行记录_V1.0.json");
 const outputPath = path.resolve("docs/ich/DS14-受控导入门禁审计_V1.0.json");
 const raw = fs.readFileSync(storePath, "utf8");
@@ -18,7 +18,7 @@ const audit = {
   approved_candidate_count: approved,
   import_decision: approved > 0 ? "requires_explicit_batch_review" : "hold_no_approved_candidates",
   selected_count: 0,
-  formal_store_path: "data/ich-opportunities.json",
+  formal_store_path: path.relative(process.cwd(), storePath),
   formal_store_write: false,
   formal_store_before_sha256: storeHash,
   formal_store_after_sha256: storeHash,

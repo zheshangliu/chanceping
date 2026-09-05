@@ -10,7 +10,7 @@ const outputPath = path.resolve(process.argv.includes("--output") ? process.argv
 // missing newly posted opportunities that are not among the first three links.
 const maxDetails = Number(process.argv.includes("--max-details") ? process.argv[process.argv.indexOf("--max-details") + 1] : 10);
 const timeoutMs = 20_000;
-const storePath = path.resolve("data/ich-opportunities.json");
+const storePath = path.resolve(process.env.CHANCEPING_ICH_STORE_PATH ?? "data/ich-opportunities.json");
 const registry = getIchSourceRegistryV2();
 
 async function fetchHtml(url: string): Promise<HtmlResponse> {

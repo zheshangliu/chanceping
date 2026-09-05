@@ -115,6 +115,8 @@
     "repair:ich:integrity": "tsx scripts/audit-ich-data-integrity.ts data/ich-opportunities.json --repair",
     "verify:ich:integrity": "tsx scripts/verify-ich-data-integrity.ts",
     "verify:ich:source-registry:v2": "tsx scripts/verify-ich-source-registry-v2.ts",
+    "verify:ich:filter-integrity": "tsx scripts/verify-ich-filter-integrity.ts",
+    "verify:ich:radar-engine": "tsx scripts/verify-ich-radar-engine.ts",
     "verify:ich:source-endpoints": "tsx scripts/verify-ich-source-endpoints.ts",
     "ich:ds1b:sample-adapters": "tsx scripts/run-ich-ds1b-sample-adapters.ts",
     "ich:ds1c:audit-candidates": "tsx scripts/audit-ich-ds1c-candidates.ts",

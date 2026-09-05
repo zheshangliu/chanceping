@@ -8,7 +8,7 @@ const nowRaw = process.argv.includes("--now") ? process.argv[process.argv.indexO
 const now = new Date(nowRaw);
 if (Number.isNaN(now.getTime())) throw new Error(`Invalid --now value: ${nowRaw}`);
 const skipEndpoints = process.argv.includes("--skip-endpoints");
-const storePath = path.resolve("data/ich-opportunities.json");
+const storePath = path.resolve(process.env.CHANCEPING_ICH_STORE_PATH ?? "data/ich-opportunities.json");
 // Runtime ledgers must live outside release directories in production. Keep the
 // tracked path as a local/test fallback, while systemd supplies the persistent
 // path through CHANCEPING_ICH_DS6_LEDGER_PATH.

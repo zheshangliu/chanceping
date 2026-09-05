@@ -43,6 +43,18 @@ export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [
   make("adapter-gdmuseum-announcements", "gdmuseum", "adapter"),
   make("adapter-gdmoa-exhibitions", "gdmoa", "adapter"),
   make("adapter-unesco-ich-news", "unesco-ich", "adapter"),
+  // The registered ICH expansion sources are intentionally explicit here.
+  // Keeping one workflow per registered source prevents DS7 from drifting
+  // away from Source Registry v2 as the profile grows.
+  make("adapter-gba-design", "gba-design", "adapter"),
+  make("adapter-china-design-award", "china-design-award", "adapter"),
+  make("adapter-dia-award", "dia-award", "adapter"),
+  make("adapter-loewe-craft-prize", "loewe-craft-prize", "adapter"),
+  make("adapter-if-design-award", "if-design-award", "adapter"),
+  make("adapter-gyeongnam-k-design", "gyeongnam-k-design", "adapter"),
+  make("manual-zhe-li-chengdu", "zhe-li-chengdu", "manual"),
+  make("manual-zhuhai-gift", "zhuhai-gift", "manual"),
+  make("manual-cd-museum", "cd-museum", "manual"),
   make("manual-gd-procurement", "gd-procurement", "manual"),
   make("manual-ggzy", "ggzy", "manual"),
   make("manual-gz-public-resources", "gz-ggzy", "manual"),

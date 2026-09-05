@@ -9,3 +9,8 @@ export * from "./submission-types";
 export * from "./submission-validation";
 export * from "./submission-store";
 export * from "./submission-service";
+export * from "./profile";
+export * from "./source-policy";
+export * from "./normalizer";
+export * from "./scoring";
+export * from "./radar-engine";
