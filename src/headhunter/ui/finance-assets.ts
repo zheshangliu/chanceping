@@ -113,7 +113,12 @@ export const FINANCE_CSS = `
 .finance-executive-shell .finance-detail-accordion .finance-evidence-layers { width:100%; grid-template-columns:repeat(4,minmax(0,1fr)); }
 .finance-executive-shell .finance-lead-field dd,.finance-executive-shell .finance-evidence-layer span { overflow-wrap:anywhere; }
 .finance-executive-shell .finance-lead-field ul { margin:0; padding-left:18px; }
-@media (max-width:650px) { .finance-executive-shell .finance-lead-details { grid-template-columns:1fr; } .finance-executive-shell .finance-lead-field:nth-child(n) { grid-column:auto; grid-row:auto; } .finance-executive-shell .finance-detail-accordion .finance-evidence-layers { grid-template-columns:1fr; } }
+.finance-executive-shell .finance-lead-details { display:flex; flex-wrap:wrap; align-items:flex-start; gap:18px; }
+.finance-executive-shell .finance-lead-field:nth-child(1),.finance-executive-shell .finance-lead-field:nth-child(2),.finance-executive-shell .finance-lead-field:nth-child(3) { flex:1 1 0; grid-column:auto; grid-row:auto; }
+.finance-executive-shell .finance-lead-field:nth-child(4) { flex:0 0 100%; grid-column:auto; grid-row:auto; }
+.finance-executive-shell .finance-detail-accordion .finance-evidence-layer { background:transparent; border:0; border-left:1px solid #d8d0c0; border-radius:0; min-height:0; }
+.finance-executive-shell .finance-detail-accordion .finance-evidence-layer:first-child { border-left:0; }
+@media (max-width:650px) { .finance-executive-shell .finance-lead-details { display:flex; flex-direction:column; gap:12px; } .finance-executive-shell .finance-lead-field:nth-child(n) { grid-column:auto; grid-row:auto; flex:1 1 auto; width:100%; } .finance-executive-shell .finance-detail-accordion .finance-evidence-layers { grid-template-columns:1fr; } .finance-executive-shell .finance-detail-accordion .finance-evidence-layer { border-left:0; border-top:1px solid #d8d0c0; padding-top:10px; } .finance-executive-shell .finance-detail-accordion .finance-evidence-layer:first-child { border-top:0; padding-top:0; } }
 `;
 
 /** Executive Brief interaction layer: action center, progressive disclosure and opportunity detail. */
