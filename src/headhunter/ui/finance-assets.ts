@@ -103,6 +103,17 @@ export const FINANCE_CSS = `
 @media (max-width:650px) { .finance-executive-shell .finance-main { padding:0 14px 32px; } .finance-executive-shell .finance-topbar { width:calc(100% + 28px); margin:0 -14px; padding:0 14px; } .finance-executive-shell .finance-brand-inline { margin-right:12px; } .finance-executive-shell .finance-brand-inline strong { font-size:15px; } .finance-executive-shell .finance-executive-nav { display:none; } .finance-executive-shell .finance-hero { margin:0 -14px; padding:30px 24px; display:block; } .finance-hero-callout { width:auto; margin-top:25px; } .finance-signal-ribbon { margin:14px 0 18px; } .finance-signal-ribbon span { display:none; } .finance-executive-shell .finance-lead-card { display:block; padding:18px 5px; } .finance-executive-shell .finance-lead-details { display:grid; grid-template-columns:90px 1fr; margin-top:14px; } .finance-executive-shell .finance-lead-field:nth-child(n) { grid-column:auto; } .finance-executive-shell .finance-lead-details dt:nth-of-type(n+5),.finance-executive-shell .finance-lead-details dd:nth-of-type(n+5) { display:none; } }
 @media (max-width:900px) { .finance-evidence-layers { grid-template-columns:repeat(2,minmax(0,1fr)); } .finance-action-grid,.finance-detail-grid { grid-template-columns:1fr; } }
 @media (max-width:720px) { .finance-evidence-layers { grid-template-columns:1fr; } }
+.finance-executive-shell .finance-lead-details { width:100%; min-width:0; grid-template-columns:repeat(3,minmax(0,1fr)); }
+.finance-executive-shell .finance-lead-field { display:flex; flex-direction:column; min-width:0; }
+.finance-executive-shell .finance-lead-field:nth-child(1) { grid-column:1; grid-row:1; }
+.finance-executive-shell .finance-lead-field:nth-child(2) { grid-column:2; grid-row:1; }
+.finance-executive-shell .finance-lead-field:nth-child(3) { grid-column:3; grid-row:1; }
+.finance-executive-shell .finance-lead-field:nth-child(4) { grid-column:1 / -1; grid-row:2; margin-top:3px; }
+.finance-executive-shell .finance-detail-accordion { grid-column:1 / -1; width:100%; min-width:0; }
+.finance-executive-shell .finance-detail-accordion .finance-evidence-layers { width:100%; grid-template-columns:repeat(4,minmax(0,1fr)); }
+.finance-executive-shell .finance-lead-field dd,.finance-executive-shell .finance-evidence-layer span { overflow-wrap:anywhere; }
+.finance-executive-shell .finance-lead-field ul { margin:0; padding-left:18px; }
+@media (max-width:650px) { .finance-executive-shell .finance-lead-details { grid-template-columns:1fr; } .finance-executive-shell .finance-lead-field:nth-child(n) { grid-column:auto; grid-row:auto; } .finance-executive-shell .finance-detail-accordion .finance-evidence-layers { grid-template-columns:1fr; } }
 `;
 
 /** Executive Brief interaction layer: action center, progressive disclosure and opportunity detail. */
