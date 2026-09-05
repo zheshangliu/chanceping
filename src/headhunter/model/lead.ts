@@ -94,6 +94,7 @@ export interface WeeklyLeadSnapshot {
   primary_trigger?: { title: string; summary: string; event_date: string | null; source_name: string | null; source_url: string | null } | null;
   trigger_summary_zh?: string | null;
   why_now_zh?: string | null;
+  business_driver_zh?: string | null;
   talent_need_zh?: string | null;
   service_wedge_zh?: string | null;
   bd_action_zh?: string | null;

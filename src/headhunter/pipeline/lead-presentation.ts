@@ -51,6 +51,7 @@ export function buildLeadPresentation(input: LeadPresentationInput): WeeklyLeadS
     primary_trigger: primary ? { title: primary.title, summary: primary.fact_summary, event_date: primary.event_date, source_name: evidenceSource?.source_name ?? null, source_url: evidenceSource?.source_url ?? null } : null,
     trigger_summary_zh: interpretation.trigger_summary_zh,
     why_now_zh: interpretation.why_now_zh,
+    business_driver_zh: interpretation.business_driver_zh,
     talent_need_zh: interpretation.talent_need_zh,
     service_wedge_zh: interpretation.service_wedge_zh,
     bd_action_zh: interpretation.bd_action_zh,
@@ -80,7 +81,7 @@ function buildInterpretation(company: Company, trigger: string, date: string | n
       : "可从近期业务变化对应的关键岗位切入，先提供针对性的候选人市场反馈，再确认是否需要外部交付。";
   const action = `本周联系${contactText}，围绕${trigger}确认${roleText}的优先级，并提出一次低摩擦的人才市场反馈。`;
   const script = `${contactText.includes("官方") ? "招聘负责人" : contactText}您好，我们留意到${company.canonical_name}近期出现${trigger}。这类变化可能带来${roleText}的人才补充需求；维优可以先提供相关市场的候选人反馈。方便的话，想在本周了解贵司当前最优先的岗位方向。`;
-  return { trigger_summary_zh: `${dateText}${trigger}${factText}。`, why_now_zh: why, talent_need_zh: hasJobs ? `潜在需求：${roleText}，优先核实岗位数量、地点和招聘时限。` : `潜在需求：${roleText}，目前属于基于经营变化的推断，需进一步核实。`, service_wedge_zh: wedge, bd_action_zh: action, first_touch_script_zh: script };
+  return { trigger_summary_zh: `${dateText}${trigger}${factText}。`, why_now_zh: why, business_driver_zh: rawFact ? `公开事实：${rawFact}` : `${company.canonical_name}近期出现${trigger}，业务驱动因素仍待官方来源确认。`, talent_need_zh: hasJobs ? `潜在需求：${roleText}，优先核实岗位数量、地点和招聘时限。` : `潜在需求：${roleText}，目前属于基于经营变化的推断，需进一步核实。`, service_wedge_zh: wedge, bd_action_zh: action, first_touch_script_zh: script };
 }
 
 function choosePrimarySignal(signals: CompanySignal[]): CompanySignal | null {
