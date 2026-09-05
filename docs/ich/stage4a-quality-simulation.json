@@ -1,0 +1,20 @@
+{
+  "stage": "4A",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "audit_now": "2026-09-05T04:00:00.000Z",
+  "input_count": 47,
+  "previous": {
+    "review_required": 33,
+    "rejected": 14
+  },
+  "optimized": {
+    "review_required": 33,
+    "rejected": 14,
+    "high_band": 1,
+    "medium_band": 0,
+    "low_band": 46
+  },
+  "current_active": 13
+}

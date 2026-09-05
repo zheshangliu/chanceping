@@ -1,5 +1,6 @@
 import { getIchSourceRegistryV2 } from "./source-registry-v2";
 import type { IchCandidateSample } from "./source-adapters-v1";
+import { inferIchApplicantFit } from "./applicant-fit";
 
 export type IchCandidateQualityDecision = "review_required" | "reject";
 export type IchCandidateQualityBand = "high" | "medium" | "low";
@@ -30,7 +31,11 @@ function qualityBand(score: number): IchCandidateQualityBand {
 }
 
 function relevanceSignal(title: string): boolean {
-  return /非遗|传统工艺|工艺美术|文创|文旅|博物|文化|手工|民俗|展陈|展览|消费券|揭榜/u.test(title);
+  return /非遗|非物质文化遗产|传统工艺|传统技艺|工艺美术|文创|文旅|博物|文化遗产|手工艺|手工|民俗|展陈|展览|消费券|揭榜|heritage craft|traditional craft|artisan|craftsmanship/iu.test(title);
+}
+
+function negativeSignal(title: string): boolean {
+  return /论文|征文|摄影比赛|普通广告设计|平面设计|学生作业|毕业设计|UI设计|软件设计|程序设计|结果公示|结果公告|中选结果|获奖名单|获奖作品|活动预告|圆满收官|招聘|职称评审|停车场|施工单位|中标|更正公告|通告|评估结果|已结束|closed|past deadline/iu.test(title);
 }
 
 function actionSignal(title: string): boolean {
@@ -49,14 +54,17 @@ export function assessIchCandidateQuality(sample: IchCandidateSample, existingUr
     snapshot_hash: /^[a-f0-9]{64}$/u.test(sample.raw_snapshot_hash),
     primary_or_secondary_source: source?.role === "primary" || source?.role === "secondary",
     relevance_signal: relevanceSignal(sample.title),
+    negative_signal_absent: !negativeSignal(sample.title),
+    applicant_fit_signal: inferIchApplicantFit(`${sample.title} ${sample.organizer ?? ""}`).matched_profiles.length > 0,
     action_signal: actionSignal(sample.title),
     known_template_marker_absent: !["第十一届广东省非遗创意设计大赛", "gdsfycyds@qq.com"].some((marker) => JSON.stringify(sample).includes(marker)),
     duplicate_url_absent: !existingUrls.has(sample.source_url.replace(/#.*$/, "").replace(/\/$/, "")),
   };
-  const weights: Record<string, number> = { detail_page: 20, title_confirmed: 15, organizer_confirmed: 15, deadline_confirmed: 15, geography_confirmed: 10, category_confirmed: 5, snapshot_hash: 10, primary_or_secondary_source: 5, relevance_signal: 3, action_signal: 2 };
+  const weights: Record<string, number> = { detail_page: 20, title_confirmed: 12, organizer_confirmed: 12, deadline_confirmed: 15, geography_confirmed: 10, category_confirmed: 5, snapshot_hash: 10, primary_or_secondary_source: 5, relevance_signal: 5, applicant_fit_signal: 4, action_signal: 2 };
   let score = Object.entries(weights).reduce((sum, [key, weight]) => sum + (checks[key as keyof typeof checks] ? weight : 0), 0);
   if (!checks.action_signal) score = Math.max(0, score - 20);
   if (!checks.relevance_signal) score = Math.max(0, score - 5);
+  if (!checks.negative_signal_absent) score = Math.max(0, score - 25);
   if (!checks.known_template_marker_absent || !checks.duplicate_url_absent) score = 0;
   const reasons: string[] = [];
   if (!checks.relevance_signal) reasons.push("标题未提供明确非遗/传统工艺相关性，需人工确认");
@@ -64,6 +72,8 @@ export function assessIchCandidateQuality(sample: IchCandidateSample, existingUr
   if (!checks.deadline_confirmed) reasons.push("截止字段未被详情页确认");
   if (!checks.geography_confirmed) reasons.push("地区字段未被详情页确认");
   if (!checks.category_confirmed) reasons.push("分类仍是适配器提示，未逐条确认");
+  if (!checks.negative_signal_absent) reasons.push("命中低质量负向词，仅降权，不自动发布");
+  if (!checks.applicant_fit_signal) reasons.push("未命中明确申请主体，需人工确认 Applicant Fit");
   if (!checks.known_template_marker_absent) reasons.push("检测到 DS0 已知模板标记");
   if (!checks.duplicate_url_absent) reasons.push("候选详情 URL 重复");
   const hardBlock = !checks.detail_page || !checks.snapshot_hash || !checks.known_template_marker_absent || !checks.duplicate_url_absent;

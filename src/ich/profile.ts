@@ -52,6 +52,8 @@ const QUERY_PACK_IDS = [
   "ich-commercial-v2",
   "ich-residency-v2",
   "ich-education-brand-v2",
+  "ich-cn-quality-v3",
+  "ich-intl-quality-v3",
 ] as const;
 
 const LANE_QUERIES: Array<{
@@ -62,11 +64,11 @@ const LANE_QUERIES: Array<{
   whyThisFamily: string;
   resultBucket: RadarVersionQueryFamily["resultBucket"];
 }> = [
-  { familyName: "非遗赛事与征集", intentType: "direct_opportunity", sourceArchetype: "official_event_site", queries: ["非遗 传统工艺 文创 设计大赛 报名 官方", "非物质文化遗产 作品征集 截止 官方"], whyThisFamily: "寻找可直接报名、投稿或申报的官方赛事与征集。", resultBucket: "direct_opportunity" },
-  { familyName: "文化采购与项目承接", intentType: "business_lead", sourceArchetype: "procurement_or_supplier_portal", queries: ["非遗 传统工艺 文创 产品采购 招标 官方", "博物馆 文化馆 文创 展陈 采购 比选"], whyThisFamily: "寻找采购、比选、项目承接及供应商入库线索。", resultBucket: "business_lead" },
-  { familyName: "湾区在地合作", intentType: "channel_partner_lead", sourceArchetype: "business_matching_platform", queries: ["广州 广东 非遗 传统工艺 文创 合作 入驻 联名", "粤港澳大湾区 非遗 展销 市集 采购"], whyThisFamily: "覆盖广州、广东及大湾区的展销、入驻、联名与研学机会。", resultBucket: "channel_partner_lead" },
-  { familyName: "国际工艺开放机会", intentType: "direct_opportunity", sourceArchetype: "open_call_submission_page", queries: ["craft heritage craft open call residency award official", "international craft design competition application official"], whyThisFamily: "寻找国际工艺奖项、驻地、展览与开放征集。", resultBucket: "direct_opportunity" },
-  { familyName: "文化遗产资助与交流", intentType: "direct_opportunity", sourceArchetype: "government_grant_page", queries: ["intangible cultural heritage craft grant fellowship official", "cultural heritage cultural exchange funding call for proposals"], whyThisFamily: "寻找文化遗产、创意产业和国际交流的资助与 fellowship。", resultBucket: "direct_opportunity" },
+  { familyName: "非遗强相关赛事与征集", intentType: "direct_opportunity", sourceArchetype: "official_event_site", queries: ["非物质文化遗产 非遗 传统工艺 传承人 报名 征集 官方", "手工艺 工艺美术 非遗文创 作品征集 截止 官方"], whyThisFamily: "优先寻找明确指向非遗、传统工艺、手工艺或传承人的行动型赛事。", resultBucket: "direct_opportunity" },
+  { familyName: "传统工艺采购与项目承接", intentType: "business_lead", sourceArchetype: "procurement_or_supplier_portal", queries: ["非遗 传统工艺 文创产品 采购 供应商 招标 官方", "博物馆 文化馆 非遗文创 展陈 采购 比选 官方"], whyThisFamily: "减少泛采购噪声，优先保留非遗文创、博物馆供应和传统工艺项目。", resultBucket: "business_lead" },
+  { familyName: "湾区非遗合作与渠道", intentType: "channel_partner_lead", sourceArchetype: "business_matching_platform", queries: ["广州 广东 非遗 传统工艺 手工艺 合作 入驻 联名 官方", "粤港澳大湾区 非遗文创 展销 市集 采购 合作"], whyThisFamily: "覆盖具有非遗/手工艺语义的展销、入驻、联名和渠道合作。", resultBucket: "channel_partner_lead" },
+  { familyName: "国际传统工艺开放机会", intentType: "direct_opportunity", sourceArchetype: "open_call_submission_page", queries: ["intangible cultural heritage heritage craft artisan open call official", "traditional craft craftsmanship award residency application official"], whyThisFamily: "国际查询必须包含 heritage craft、artisan 或 craftsmanship 强相关信号。", resultBucket: "direct_opportunity" },
+  { familyName: "文化遗产资助与交流", intentType: "direct_opportunity", sourceArchetype: "government_grant_page", queries: ["intangible cultural heritage craft maker grant fellowship official", "heritage craft cultural exchange funding call for proposals"], whyThisFamily: "优先面向非遗保护、传统工艺从业者和机构的资助与交流。", resultBucket: "direct_opportunity" },
 ];
 
 function buildQueryFamilies(): RadarVersionQueryFamily[] {
@@ -77,12 +79,12 @@ function buildQueryFamilies(): RadarVersionQueryFamily[] {
 }
 
 const scoringDimensions = [
-  { key: "heritage_relevance", label: "非遗/传统工艺相关性", weight: 25 },
   { key: "evidence_authority", label: "来源权威与证据完整度", weight: 25 },
-  { key: "timeliness", label: "时效与截止临近度", weight: 15 },
-  { key: "eligibility_fit", label: "申请主体匹配度", weight: 15 },
-  { key: "actionability", label: "行动入口可执行性", weight: 15 },
-  { key: "source_risk", label: "来源风险扣分", weight: 5 },
+  { key: "heritage_relevance", label: "非遗/传统工艺相关性", weight: 25 },
+  { key: "actionability", label: "行动入口可执行性", weight: 20 },
+  { key: "applicant_fit", label: "申请主体匹配度", weight: 15 },
+  { key: "commercial_value", label: "商业与合作价值", weight: 10 },
+  { key: "freshness", label: "时效与新鲜度", weight: 5 },
 ];
 
 export const ICH_RADAR_PROFILE: IchRadarProfile = {
@@ -145,11 +147,11 @@ export function createIchRadarSpec(): RadarRequirementSpec {
   };
   spec.region_scope = { primary_regions: ["广州", "广东", "中国"], secondary_regions: ["全球", "海外"], excluded_regions: [], global_allowed: true, overseas_allowed: true };
   spec.keyword_strategy = {
-    core_keywords_zh: ["非遗", "非物质文化遗产", "传统工艺", "工艺美术", "文创", "文化创意", "设计大赛", "采购", "合作", "资助"],
-    core_keywords_en: ["intangible cultural heritage", "heritage craft", "traditional craft", "craft prize", "open call", "residency", "procurement", "cultural exchange"],
-    expanded_keywords_zh: ["征集", "招募", "申报", "入驻", "联名", "展销", "研学", "驻地", "基金", "fellowship"],
-    expanded_keywords_en: ["competition", "exhibition", "market", "commission", "studio", "grant", "funding", "fellowship"],
-    negative_keywords: ["结果公告", "获奖名单", "招聘", "已结束", "closed", "past deadline"],
+    core_keywords_zh: ["非遗", "非物质文化遗产", "传统工艺", "传统技艺", "手工艺", "工艺美术", "传承人", "非遗文创", "文化遗产", "采购", "合作", "资助"],
+    core_keywords_en: ["intangible cultural heritage", "heritage craft", "traditional craft", "craftsmanship", "artisan", "heritage design", "open call", "residency", "procurement", "cultural exchange"],
+    expanded_keywords_zh: ["征集", "招募", "申报", "入驻", "联名", "展销", "研学", "驻地", "基金", "非遗产品开发", "传统文化创新"],
+    expanded_keywords_en: ["competition", "exhibition", "commission", "studio", "grant", "funding", "fellowship", "craft maker", "museum partnership"],
+    negative_keywords: ["论文", "征文", "摄影比赛", "普通广告设计", "平面设计", "学生作业", "毕业设计", "UI设计", "软件设计", "程序设计", "结果公告", "结果公示", "中选结果", "获奖名单", "获奖作品", "活动预告", "招聘", "已结束", "closed", "past deadline"],
   };
   spec.source_strategy = {
     official_sites: sourceUrls(), platforms: ["政府采购平台", "官方赛事平台"], search_engines: [...ICH_PROVIDER_ROUTING.primary, ...ICH_PROVIDER_ROUTING.fallback], social_media: [], rss_sources: [], manual_sources: [],
@@ -157,6 +159,8 @@ export function createIchRadarSpec(): RadarRequirementSpec {
   };
   spec.filter_rules = {
     must_include: ["报名", "申请", "申报", "采购", "合作", "征集", "招募", "open call", "apply", "deadline"],
+    // Negative keywords are scored as penalties in the candidate gate; keep the
+    // hard exclusion list narrow for backward compatibility with the profile contract.
     must_exclude: ["结果公示", "获奖名单", "招聘", "closed", "past deadline"],
     low_priority_signals: ["主页", "聚合列表", "无截止日期", "仅新闻"],
     high_priority_signals: ["官方详情页", "报名入口", "截止日期", "申请资格", "采购公告"],

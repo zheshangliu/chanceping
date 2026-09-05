@@ -39,7 +39,7 @@ export function normalizeIchRadarEngineResult(raw: SearchOrchestratorResult): Ic
       return !source || source.url === opportunity.search_result.url;
     });
     const candidate = normalizeSearchResultToIchCandidate({ result: opportunity.search_result as SearchResult, content: opportunity.cleaned_content, evidenceItems: matching });
-    return { candidate, score: scoreIchSearchOpportunity(opportunity, matching, candidate.source_policy) };
+    return { candidate, score: scoreIchSearchOpportunity(opportunity, matching, candidate.source_policy, candidate.applicant_fit) };
   });
   return { profileId: "ich-radar-profile", profileVersion: "V1.0", searchPlan: raw.searchPlan ?? buildIchSearchIntentPlan(), candidates, raw };
 }

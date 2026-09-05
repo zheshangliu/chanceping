@@ -97,6 +97,22 @@
       "terms": ["非遗研学合作", "传统工艺课程", "博物馆教育项目", "craft education partnership", "museum learning program", "heritage brand collaboration"],
       "negative_terms": ["普通培训招生", "招聘", "课程广告", "结果公告"],
       "categories": ["channel_collaboration", "exhibition_market", "international"]
+    },
+    {
+      "id": "ich-cn-quality-v3",
+      "language": "zh-CN",
+      "purpose": "高相关非遗与传统工艺机会发现，降低普通设计和学生赛事污染",
+      "terms": ["非物质文化遗产 报名", "非遗 传统工艺 征集", "传统技艺 传承人 申报", "手工艺 工艺美术 大赛", "非遗文创 产品开发", "文化遗产 创新设计", "传统工艺 合作", "博物馆 文创 供应商"],
+      "negative_terms": ["论文", "征文", "摄影比赛", "普通广告设计", "平面设计", "学生作业", "毕业设计", "UI设计", "软件设计", "程序设计", "招聘", "获奖名单", "获奖作品", "活动预告", "结果公告", "结果公示", "已结束"],
+      "categories": ["competition", "exhibition_market", "procurement_project", "channel_collaboration", "policy_funding"]
+    },
+    {
+      "id": "ich-intl-quality-v3",
+      "language": "en",
+      "purpose": "高相关国际传统工艺、非遗和手工艺机会发现",
+      "terms": ["intangible cultural heritage open call", "heritage craft competition", "traditional craft award", "craftsmanship fellowship", "artisan residency", "heritage design commission", "museum craft partnership", "craft maker grant"],
+      "negative_terms": ["student essay", "photography contest", "graphic design only", "UI design", "software design", "job vacancy", "winners", "past deadline", "closed call", "annual report"],
+      "categories": ["competition", "exhibition_market", "channel_collaboration", "policy_funding", "international"]
     }
   ],
   "sources": [

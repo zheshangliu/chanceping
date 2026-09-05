@@ -4,6 +4,7 @@ import { generateEvidenceId, shouldReviewEvidence } from "../schema/evidence-ite
 import type { CleanedContent, SearchResult } from "../search/types";
 import type { IchFieldProvenance } from "./source-adapters-v1";
 import { evaluateIchSourcePolicy, type IchSourcePolicyResult } from "./source-policy";
+import { inferIchApplicantFit, type IchApplicantFit } from "./applicant-fit";
 
 export interface IchNormalizedCandidate {
   candidate_id: string;
@@ -21,6 +22,8 @@ export interface IchNormalizedCandidate {
   };
   evidence_items: EvidenceItem[];
   source_policy: IchSourcePolicyResult;
+  eligible_profiles: IchApplicantFit["eligible_profiles"];
+  applicant_fit: IchApplicantFit;
   raw_snapshot_hash: string;
 }
 
@@ -87,5 +90,6 @@ export function normalizeSearchResultToIchCandidate(args: {
   const provenance = mapEvidenceToIchProvenance(sourceUrl, evidenceItems, title);
   const rawText = `${args.content?.title ?? result.title}\n${args.content?.main_text ?? result.snippet}`;
   const sourceId = args.sourceId ?? candidateId(sourceUrl);
-  return { candidate_id: candidateId(sourceUrl), title, summary: args.content?.main_text?.slice(0, 500) || result.snippet, source_url: sourceUrl, source_id: sourceId, field_provenance: provenance, evidence_items: evidenceItems, source_policy: policy, raw_snapshot_hash: crypto.createHash("sha256").update(rawText).digest("hex") };
+  const applicant_fit = inferIchApplicantFit(rawText);
+  return { candidate_id: candidateId(sourceUrl), title, summary: args.content?.main_text?.slice(0, 500) || result.snippet, source_url: sourceUrl, source_id: sourceId, field_provenance: provenance, evidence_items: evidenceItems, source_policy: policy, eligible_profiles: applicant_fit.eligible_profiles, applicant_fit, raw_snapshot_hash: crypto.createHash("sha256").update(rawText).digest("hex") };
 }
