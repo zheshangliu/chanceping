@@ -4,10 +4,12 @@ import { ICH_PRIMARY_CATEGORIES, type IchPrimaryCategory } from "./types";
 export const ICH_SOURCE_REGISTRY_V2_SCHEMA = "2.0" as const;
 export const ICH_SOURCE_REGISTRY_V2_STATUSES = ["planned", "discovery_only", "adapter_ready", "disabled"] as const;
 export const ICH_SOURCE_REGISTRY_V2_ROLES = ["primary", "secondary", "discovery"] as const;
+export const ICH_SOURCE_REGISTRY_V2_SOURCE_ROLES = ["opportunity_source", "information_source", "discovery_source"] as const;
 export const ICH_SOURCE_REGISTRY_V2_ACCESS_MODES = ["listing", "search", "rss", "sitemap", "manual"] as const;
 
 export type IchSourceRegistryV2Status = typeof ICH_SOURCE_REGISTRY_V2_STATUSES[number];
 export type IchSourceRegistryV2Role = typeof ICH_SOURCE_REGISTRY_V2_ROLES[number];
+export type IchSourceRegistryV2SourceRole = typeof ICH_SOURCE_REGISTRY_V2_SOURCE_ROLES[number];
 export type IchSourceRegistryV2AccessMode = typeof ICH_SOURCE_REGISTRY_V2_ACCESS_MODES[number];
 
 export interface IchSourceRegistryV2Entry {
@@ -16,6 +18,7 @@ export interface IchSourceRegistryV2Entry {
   canonical_url: string;
   family: string;
   role: IchSourceRegistryV2Role;
+  source_role: IchSourceRegistryV2SourceRole;
   evidence_level: "L1" | "L2" | "L3";
   geography: string[];
   categories: IchPrimaryCategory[];
@@ -80,9 +83,12 @@ export function validateIchSourceRegistryV2(value: IchSourceRegistryV2File): str
   const queryPackIds = new Set(value.query_packs.map((pack) => pack.id));
   for (const source of value.sources) {
     if (!/^https:\/\//.test(source.canonical_url)) errors.push(`${source.id}: canonical_url must use https`);
+    if (!ICH_SOURCE_REGISTRY_V2_SOURCE_ROLES.includes(source.source_role)) errors.push(`${source.id}: invalid source_role`);
     if (!source.categories.every((category) => ICH_PRIMARY_CATEGORIES.includes(category))) errors.push(`${source.id}: invalid category`);
     if (!source.query_packs.every((id) => queryPackIds.has(id))) errors.push(`${source.id}: unknown query pack`);
     if (source.role === "discovery" && source.evidence_level !== "L3") errors.push(`${source.id}: discovery role must be L3`);
+    if (source.role === "discovery" && source.source_role !== "discovery_source") errors.push(`${source.id}: discovery role must use discovery_source`);
+    if (source.source_role === "discovery_source" && source.role !== "discovery") errors.push(`${source.id}: discovery_source must use registry discovery role`);
     if (source.url_verification === "blocked" && source.operational_status !== "disabled") errors.push(`${source.id}: blocked source must be disabled`);
   }
   for (const category of ICH_PRIMARY_CATEGORIES) {

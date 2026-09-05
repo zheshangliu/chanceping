@@ -1,0 +1,15 @@
+{
+  "stage": "4C-A",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "input_candidate_count": 193,
+  "reclassified_count": 193,
+  "qualified_count": 12,
+  "high_quality_count": 0,
+  "conversion_rate": 0.0622,
+  "target_qualified_count": 20,
+  "target_high_quality_count": 10,
+  "meets_qualified_target": false,
+  "meets_high_quality_target": false
+}
