@@ -1,0 +1,22 @@
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { getIchSourceRegistryV2 } from "../src/ich/source-registry-v2";
+
+const root = process.cwd();
+const summary = JSON.parse(fs.readFileSync(path.resolve(root, "docs/stage4e-summary.json"), "utf8"));
+const storeHash = crypto.createHash("sha256").update(fs.readFileSync(path.resolve(root, "data/ich-opportunities.json"))).digest("hex");
+assert.equal(summary.stage, "4E");
+assert.equal(summary.readonly, true);
+assert.equal(summary.formal_store_write, false);
+assert.equal(summary.formal_store_sha256, storeHash);
+assert.equal(getIchSourceRegistryV2().sources.length, 100);
+assert.equal(summary.global_radar_count, 2);
+assert.equal(summary.global_related_records, 26);
+assert.equal(summary.ai_seed_count, 5);
+assert.equal(summary.ai_culture_candidates, 0);
+assert.equal(summary.ai_bridge_cards, 3);
+assert.equal(summary.missing_user_sources, 7);
+for (const file of ["radar-cross-reference.md", "cross-radar-source-audit-report.md", "cross-radar-opportunity-audit-report.md", "missing-source-report.md"]) assert(fs.existsSync(path.resolve(root, "docs", file)), `${file} missing`);
+console.log(JSON.stringify({ gate: "pass_with_followups", readonly: true, formal_store_write: false, global_ich_candidates: summary.global_ich_candidates, global_already_in_ich: summary.global_already_in_ich, ai_culture_candidates: summary.ai_culture_candidates, bridge_cards_not_publishable: summary.ai_bridge_cards, missing_user_sources: summary.missing_user_sources }, null, 2));

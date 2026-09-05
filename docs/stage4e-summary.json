@@ -1,0 +1,17 @@
+{
+  "stage": "4E",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "ich_source_count": 100,
+  "ai_event_source_count": 60,
+  "global_radar_count": 2,
+  "global_related_records": 26,
+  "global_ich_candidates": 7,
+  "global_already_in_ich": 0,
+  "ai_seed_count": 5,
+  "ai_culture_candidates": 0,
+  "ai_bridge_cards": 3,
+  "missing_user_sources": 7,
+  "recommended_next_stage": "先做跨雷达只读索引与官方回溯，再决定 Universal Opportunity Pool"
+}
