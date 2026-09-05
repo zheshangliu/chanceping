@@ -1,0 +1,23 @@
+{
+  "schema_version": "ich-ds14-stage3-import.v1",
+  "run_at": "2026-09-05T04:00:00.000Z",
+  "mode": "write",
+  "batch_limit": 10,
+  "input_count": 1,
+  "eligible_count": 1,
+  "imported": [
+    {
+      "source_id": "stage3-gba-cultural-creative-design-award-2026",
+      "id": "ich_c29c44ceb2a140689f052821ce1e21ec",
+      "slug": "eighth-gba-cultural-creative-design-competition-2026",
+      "workflow": "published",
+      "is_published": true
+    }
+  ],
+  "errors": [],
+  "formal_store_before_sha256": "5603daf526a5af338db624d263b48ef105a944ee341888e328cc9f3de819ae32",
+  "formal_store_after_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "formal_store_unchanged": false,
+  "current_count": 13,
+  "gate": "pass"
+}

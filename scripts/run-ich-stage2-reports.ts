@@ -42,7 +42,7 @@ candidateLines.push("", "## 候选样本（全部 candidate_only）", "", "| 来
 candidateLines.push("", "## 处置规则", "", "候选不会自动写入正式机会库。缺少截止日期、地区、资格或可执行入口的记录标记为未确认；必须回溯官方详情页并经过 DS3/DS14 后才能发布。", "", `失败或部分成功来源：${failedRuns.length ? failedRuns.map((run) => `\`${run.source_id}\``).join("、") : "无"}。`);
 fs.writeFileSync(path.resolve(root, "docs/ich/candidate-report.md"), `${candidateLines.join("\n")}\n`);
 
-const currentStatuses = ["current", "closing_soon", "long_term"];
+const currentStatuses = ["active", "closing_soon", "long_term"];
 const currentCount = currentStatuses.reduce((sum, status) => sum + (statusCounts.get(status) ?? 0), 0);
 const growthLines = ["# ICH Stage 2 机会增长报告", "", `- 运行时间：${new Date().toISOString()}`, `- 正式库总记录：${store.entries.length}`, `- 当前有效机会（current/closing_soon/long_term）：**${currentCount}**`, `- 只读扫描候选：**${discovery.candidate_count}**`, "- 本阶段正式导入：**0**（符合只读与受控导入边界）", "", "## 当前有效机会按类别", "", "| 类别 | 数量 |", "| --- | ---: |", ...[...categoryCounts.entries()].sort((a, b) => b[1] - a[1]).map(([category, count]) => `| ${category} | ${count} |`), "", "## 差距与下一阶段", "", `当前有效机会距离 80 条目标仍有 **${Math.max(0, 80 - currentCount)}** 条差距。Stage 2 只完成来源扩容与只读发现，不以候选数量替代官方核验；下一阶段应对候选执行 DS3 字段质量门禁、去重和 DS14 分批受控导入。`];
 fs.writeFileSync(path.resolve(root, "docs/ich/ich-opportunity-growth-report.md"), `${growthLines.join("\n")}\n`);

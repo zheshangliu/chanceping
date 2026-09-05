@@ -1,0 +1,221 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-09-05T12:00:00+08:00",
+  "entries": [
+    {
+      "id": "stage3-gba-cultural-creative-design-award-2026",
+      "slug": "eighth-gba-cultural-creative-design-competition-2026",
+      "external_id": null,
+      "title": "第八届粤港澳大湾区文化创意设计大赛",
+      "title_original": "第八届粤港澳大湾区文化创意设计大赛",
+      "title_en": "8th Guangdong-Hong Kong-Macao Greater Bay Area Cultural and Creative Design Competition",
+      "summary": "官方征集页显示，本届大赛征集时间为2026年6月19日至9月30日18:00，面向围绕粤港澳大湾区文化和旅游元素的文化创意设计作品，统一通过官方网站注册报名。",
+      "description": "官方详情页要求参赛作品紧扣大赛主题和征集方向，突出粤港澳大湾区文化和旅游元素，贴近生活并具有实用与可生产性。",
+      "opportunity_value_text": "文化创意设计作品征集、评审与展示机会。",
+      "primary_category": "competition",
+      "secondary_tags": [
+        "非遗",
+        "传统工艺",
+        "文创设计",
+        "粤港澳大湾区",
+        "珠海"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "依据主办方官方征集详情页的赛事名称、征集时间、主题与统一报名要求确认。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "核验时间为2026年9月5日，官方详情页给出的截止时间为2026年9月30日18:00（Asia/Shanghai）。",
+      "is_featured": false,
+      "is_published": false,
+      "archive_reason": null,
+      "organizer": {
+        "name": "珠海市文化广电旅游体育局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.zhuhai.gov.cn/",
+        "contact_text": "咨询电话：18128129181（以官方详情页最新信息为准）"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "广东省",
+        "city": "珠海市",
+        "district": null,
+        "venue_text": "粤港澳大湾区；相关赛事及活动在珠海开展",
+        "region_groups": [
+          "greater_bay_area",
+          "guangdong",
+          "nationwide"
+        ],
+        "participation_scope": "regional",
+        "eligible_regions": [
+          "greater_bay_area",
+          "guangdong",
+          "nationwide"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": true,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "official_platform",
+        "requires_on_site_presence": null,
+        "participation_notes": "统一通过官方网站注册报名；后续赛事及活动安排以主办方通知为准。"
+      },
+      "dates": {
+        "published_at": null,
+        "application_start_at": "2026-06-19",
+        "deadline_at": "2026-09-30T18:00:00+08:00",
+        "deadline_text": "2026年9月30日18:00",
+        "event_start_at": "2026-05-01",
+        "event_end_at": "2026-12-31",
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "designer",
+          "team",
+          "organization"
+        ],
+        "eligibility_text": "官方详情页列明作品征集主题、方向及内容要求；具体参赛主体和组别以官方网站注册页面及主办方规则为准。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": null,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "partial"
+      },
+      "benefits": {
+        "value_types": [
+          "opportunity",
+          "exhibition"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": null,
+        "channel_opportunity": true,
+        "benefit_text": "获得文化创意设计赛事评审与展示机会；奖项及后续安排以官方规则和通知为准。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方详情页未确认报名费用；提交前请以官方网站注册页面和赛事规则为准。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "按官方网站注册页面要求提交作品与报名信息"
+        ],
+        "portfolio_required": true,
+        "sample_required": null,
+        "proposal_required": null,
+        "invoice_required": null,
+        "bidding_qualification_required": null,
+        "production_capacity_text": "作品应贴近生活，并具有实用与可生产性。",
+        "requirements_text": "参赛作品应紧扣大赛主题和征集方向，突出粤港澳大湾区文化和旅游元素，具有文化内涵、实用性和可生产性。"
+      },
+      "application": {
+        "application_url": "https://www.gbawcsjds.com/",
+        "application_email": null,
+        "application_phone": "18128129181",
+        "application_platform": "大赛官方网站",
+        "application_steps": [
+          "打开官方详情页核对主题、方向和规则",
+          "进入大赛官方网站注册",
+          "按注册页面要求提交作品与报名信息"
+        ],
+        "contact_text": "咨询电话：18128129181（以官方详情页最新信息为准）",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.gbawcsjds.com/col.jsp?id=127",
+          "name": "第八届粤港澳大湾区文化创意设计大赛官方征集详情页",
+          "type": "specific_opportunity_page",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": null,
+          "last_checked_at": "2026-09-05T12:00:00+08:00",
+          "is_accessible": true,
+          "notes": "官方页面明确征集时间为2026年6月19日至9月30日18:00，并指向官方网站注册报名。页面快照哈希见 Stage 3 审核报告。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-05T12:00:00+08:00",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-08T12:00:00+08:00"
+      },
+      "seo": {
+        "meta_title": "第八届粤港澳大湾区文化创意设计大赛｜非遗机会雷达",
+        "meta_description": "2026年粤港澳大湾区文化创意设计大赛官方征集机会。",
+        "canonical_url": "https://www.gbawcsjds.com/col.jsp?id=127",
+        "og_title": "第八届粤港澳大湾区文化创意设计大赛",
+        "og_description": "官方详情页核验的文化创意设计赛事机会。",
+        "og_image": null,
+        "noindex": false
+      },
+      "metadata": {
+        "created_at": "2026-09-05T12:00:00+08:00",
+        "updated_at": "2026-09-05T12:00:00+08:00",
+        "created_by": "stage3-verifier",
+        "updated_by": "stage3-verifier",
+        "first_discovered_at": "2026-09-05T12:00:00+08:00",
+        "last_checked_at": "2026-09-05T12:00:00+08:00",
+        "published_at": null,
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": "ich-stage3-batch-01"
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "approved",
+        "revision": 1,
+        "review_reason": "Stage 3 官方详情页核验通过，待 DS14 单批导入。",
+        "submitted_at": "2026-09-05T12:00:00+08:00",
+        "reviewed_at": "2026-09-05T12:00:00+08:00",
+        "reviewed_by": "stage3-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "approved",
+            "actor": "stage3-reviewer",
+            "at": "2026-09-05T12:00:00+08:00",
+            "reason": "Stage 3 审核包：官方详情页、时效、主办方和报名入口已核验。",
+            "revision": 1
+          }
+        ]
+      }
+    }
+  ]
+}
