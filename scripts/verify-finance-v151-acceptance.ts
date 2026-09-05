@@ -8,9 +8,11 @@ async function main(): Promise<void> {
   try {
     const weekly = renderFinancePage("/weekly");
     const visible = weekly.split("<script")[0];
-    for (const label of ["周报", "机会池", "关注公司", "公司库", "管理", "今天联系谁？", "今日行动", "Top 3 推荐行动"]) assert.match(visible, new RegExp(label));
+    for (const label of ["周报", "机会池", "关注公司", "公司库", "管理", "今天联系谁？", "今日行动", "Top 3 推荐行动", "关于维优 BD 雷达"]) assert.match(visible, new RegExp(label));
     for (const label of ["Candidate URLs", "联系人资料", "机器 A 候选", "Provider", "Funnel"]) assert.doesNotMatch(visible, new RegExp(label));
-    for (const label of ["业务动因", "事实依据", "系统判断", "业务建议", "查看并执行"]) assert.match(weekly, new RegExp(label));
+    for (const label of ["业务动因", "事实依据", "系统判断", "业务建议", "查看并执行", "每页", "value=\"5\"", "value=\"10\"", "value=\"30\""]) assert.match(weekly, new RegExp(label));
+    for (const path of ["/opportunities", "/watchlist", "/companies", "/runs"]) assert.match(renderFinancePage(path), /finance-executive-shell/);
+    assert.match(weekly, /维优BD雷达｜ChancePing Finance/);
     const detail = renderFinancePage("/opportunities/acceptance-opportunity");
     assert.match(detail, /机会详情/);
     assert.match(detail, /data-opportunity-form/);
