@@ -1,0 +1,39 @@
+{
+  "stage": "4E",
+  "report_date": "2026-08-31",
+  "sources": [
+    "/Users/1sunflower/Downloads/全球高含金量赛事自动化监控系统_执行报告_2026W36_20260831.md",
+    "/Users/1sunflower/Downloads/AI创作赛事雷达Agent_本周雷达_2026-08-31.md"
+  ],
+  "formal_store_entries_at_audit": 124,
+  "global_report": {
+    "current_or_observation_items": 10,
+    "matched_in_ich": 6,
+    "not_found_in_ich": 4,
+    "expired_or_excluded": 6,
+    "not_found_titles": [
+      "重庆好礼·重庆中国三峡博物馆第二届‘渝礼相遇’文化创意设计大赛",
+      "2026 Gyeongnam K-Design Award",
+      "2026北京文博创意设计大赛",
+      "Red Dot Product Design 2027"
+    ]
+  },
+  "ai_report": {
+    "ich_candidate_count": 2,
+    "ich_candidate_titles": [
+      "第八届‘讲好中国故事’创意传播国际大赛·AI创作主题赛",
+      "两岸（青岛）青年 AI 作品创作大赛"
+    ],
+    "kept_in_ai_events_count": 8
+  },
+  "data_quality_blockers": [
+    "LOEWE 2027 eligibility/prize/timezone/application steps conflict with official report",
+    "iF 2027 and 中华设计奖 application steps appear copied from DIA",
+    "formal records must preserve 未确认 instead of inferring report estimates"
+  ],
+  "mutations": {
+    "formal_ich_store_changed": false,
+    "ai_events_changed": false,
+    "deployment_performed": false
+  }
+}
