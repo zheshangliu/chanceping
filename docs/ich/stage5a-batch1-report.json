@@ -1,0 +1,25 @@
+{
+  "batch": "stage5a-batch-01",
+  "mode": "write",
+  "input": 10,
+  "eligible": 10,
+  "imported": 10,
+  "before_count": 127,
+  "after_count": 137,
+  "active_after": 26,
+  "before_sha256": "e0be18539f29fd6b882073e8e647f3af2766c1bfa6d3df6d9839fda6c3625d66",
+  "after_sha256": "83cb11e435a406bfaaf31a7ad3d0e585a6df22d7c4e16d09b70905eda73b9427",
+  "titles": [
+    "2026年度第二批北京市传统工艺美术保护发展资金项目",
+    "2026年自博文创·手办模型系列项目合作",
+    "2026年广州市优秀传统文化传承项目申报",
+    "Premios Artesanía de Galicia 2026",
+    "2026“华夏奖”文化艺术设计大赛（秋季）",
+    "第27回宝塚市手工芸公募展",
+    "Hunt Museum Open Submission Exhibition 2026",
+    "Analog: An Antidote to AI Art 2026",
+    "2026 National Peanut Festival Craft & Hobby Exhibits",
+    "Indigenous Reconciliation Initiative – Cultural Stream 2026–2027"
+  ],
+  "gate": "pass"
+}
