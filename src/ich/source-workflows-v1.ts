@@ -30,7 +30,7 @@ const make = (workflowId: string, sourceId: string, mode: IchDs7WorkflowMode): I
   return { workflow_id: workflowId, source_id: item.id, mode, discovery_url: item.canonical_url, categories: [...item.categories], geography: [...item.geography], scan_frequency: item.scan_frequency, status: "ready", candidate_contract: contract, collection_steps: mode === "manual" ? manualSteps : ["运行来源适配器", "保存原始快照和哈希", "输出候选及字段 provenance", "提交 DS3 质量分层"] };
 };
 
-export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [
+const explicitWorkflows: IchDs7SourceWorkflow[] = [
   make("adapter-ccgp-procurement", "ccgp", "adapter"),
   make("adapter-gd-culture-notices", "gd-culture", "adapter"),
   make("adapter-yuexiu-notices", "yuexiu-notices", "adapter"),
@@ -75,3 +75,14 @@ export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [
   make("manual-center-for-craft", "center-for-craft", "manual"),
   make("manual-wcc-international", "wcc-international", "manual"),
 ];
+
+/**
+ * Keep DS7 total by construction: every newly registered source gets a
+ * conservative manual workflow until a tested adapter is explicitly added.
+ */
+const explicitSourceIds = new Set(explicitWorkflows.map((workflow) => workflow.source_id));
+const generatedWorkflows = registry.sources
+  .filter((item) => !explicitSourceIds.has(item.id))
+  .map((item) => make(`${item.operational_status === "adapter_ready" ? "adapter" : "manual"}-${item.id}`, item.id, item.operational_status === "adapter_ready" ? "adapter" : "manual"));
+
+export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [...explicitWorkflows, ...generatedWorkflows];

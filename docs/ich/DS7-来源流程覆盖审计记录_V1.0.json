@@ -1,20 +1,20 @@
 {
   "schema_version": "ich-ds7-source-coverage.v1",
   "stage": "DS7",
-  "audited_at": "2026-08-24T11:32:59.941Z",
+  "audited_at": "2026-09-05T03:56:06.797Z",
   "gate": "pass",
-  "workflow_count": 31,
-  "adapter_count": 12,
-  "manual_workflow_count": 19,
-  "gba_workflow_count": 11,
-  "international_workflow_count": 12,
+  "workflow_count": 100,
+  "adapter_count": 18,
+  "manual_workflow_count": 82,
+  "gba_workflow_count": 14,
+  "international_workflow_count": 73,
   "category_coverage": {
-    "competition": 17,
-    "exhibition_market": 16,
-    "procurement_project": 10,
-    "channel_collaboration": 20,
-    "policy_funding": 14,
-    "international": 17
+    "competition": 64,
+    "exhibition_market": 64,
+    "procurement_project": 16,
+    "channel_collaboration": 47,
+    "policy_funding": 28,
+    "international": 67
   },
   "formal_store_write": false,
   "errors": [],
@@ -426,6 +426,303 @@
         "保存原始快照和哈希",
         "输出候选及字段 provenance",
         "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-gba-design",
+      "source_id": "gba-design",
+      "mode": "adapter",
+      "discovery_url": "https://www.gbawcsjds.com/",
+      "categories": [
+        "competition",
+        "exhibition_market"
+      ],
+      "geography": [
+        "greater_bay_area",
+        "nationwide"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-china-design-award",
+      "source_id": "china-design-award",
+      "mode": "adapter",
+      "discovery_url": "https://cidip.cn/cda2026/permanent.html",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "nationwide",
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-dia-award",
+      "source_id": "dia-award",
+      "mode": "adapter",
+      "discovery_url": "https://www.di-award.org/zh/rules.html",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "nationwide",
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-loewe-craft-prize",
+      "source_id": "loewe-craft-prize",
+      "mode": "adapter",
+      "discovery_url": "https://craftprize.loewe.com/zh/craftprize2027",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-if-design-award",
+      "source_id": "if-design-award",
+      "mode": "adapter",
+      "discovery_url": "https://ifdesign.com/en/if-design-award-get-in-contact",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "adapter-gyeongnam-k-design",
+      "source_id": "gyeongnam-k-design",
+      "mode": "adapter",
+      "discovery_url": "https://viewapp.dsu.ac.kr/getAnnoPdfDownload/pWVtKSQI3cJ",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "运行来源适配器",
+        "保存原始快照和哈希",
+        "输出候选及字段 provenance",
+        "提交 DS3 质量分层"
+      ]
+    },
+    {
+      "workflow_id": "manual-zhe-li-chengdu",
+      "source_id": "zhe-li-chengdu",
+      "mode": "manual",
+      "discovery_url": "https://www.zlscd.com/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "procurement_project"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-zhuhai-gift",
+      "source_id": "zhuhai-gift",
+      "mode": "manual",
+      "discovery_url": "https://www.zhuhai.gov.cn/",
+      "categories": [
+        "exhibition_market",
+        "procurement_project",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "greater_bay_area"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-cd-museum",
+      "source_id": "cd-museum",
+      "mode": "manual",
+      "discovery_url": "https://www.cdmuseum.com/xinwen/202607/4450.html",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "procurement_project"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
       ]
     },
     {
@@ -1048,6 +1345,2038 @@
         "international",
         "exhibition_market",
         "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-ncha",
+      "source_id": "ncha",
+      "mode": "manual",
+      "discovery_url": "https://www.ncha.gov.cn/",
+      "categories": [
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-chnmuseum",
+      "source_id": "chnmuseum",
+      "mode": "manual",
+      "discovery_url": "https://www.chnmuseum.cn/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "procurement_project"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-beijing-culture",
+      "source_id": "beijing-culture",
+      "mode": "manual",
+      "discovery_url": "https://whlyj.beijing.gov.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "procurement_project",
+        "policy_funding"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-shanghai-culture",
+      "source_id": "shanghai-culture",
+      "mode": "manual",
+      "discovery_url": "https://whlyj.sh.gov.cn/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "procurement_project",
+        "policy_funding"
+      ],
+      "geography": [
+        "nationwide"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-japan-bunka",
+      "source_id": "japan-bunka",
+      "mode": "manual",
+      "discovery_url": "https://www.bunka.go.jp/english/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-arts-council-england",
+      "source_id": "arts-council-england",
+      "mode": "manual",
+      "discovery_url": "https://www.artscouncil.org.uk/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-american-craft-council",
+      "source_id": "american-craft-council",
+      "mode": "manual",
+      "discovery_url": "https://craftcouncil.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-michelangelo-foundation",
+      "source_id": "michelangelo-foundation",
+      "mode": "manual",
+      "discovery_url": "https://www.michelangelofoundation.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-european-crafts-alliance",
+      "source_id": "european-crafts-alliance",
+      "mode": "manual",
+      "discovery_url": "https://europeancraftsalliance.org/",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-design-crafts-council-ireland",
+      "source_id": "design-crafts-council-ireland",
+      "mode": "manual",
+      "discovery_url": "https://www.dcci.ie/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-craft-scotland",
+      "source_id": "craft-scotland",
+      "mode": "manual",
+      "discovery_url": "https://www.craftscotland.org/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-ornamo",
+      "source_id": "ornamo",
+      "mode": "manual",
+      "discovery_url": "https://www.ornamo.fi/en/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-norwegian-crafts",
+      "source_id": "norwegian-crafts",
+      "mode": "manual",
+      "discovery_url": "https://www.norwegiancrafts.no/",
+      "categories": [
+        "exhibition_market",
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-crafts-council-nederland",
+      "source_id": "crafts-council-nederland",
+      "mode": "manual",
+      "discovery_url": "https://craftscouncil.nl/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-bundesverband-kunsthandwerk",
+      "source_id": "bundesverband-kunsthandwerk",
+      "mode": "manual",
+      "discovery_url": "https://www.bundesverband-kunsthandwerk.de/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-institut-savoir-faire-francais",
+      "source_id": "institut-savoir-faire-francais",
+      "mode": "manual",
+      "discovery_url": "https://www.institut-savoirfaire.fr/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-mad-in-europe",
+      "source_id": "mad-in-europe",
+      "mode": "manual",
+      "discovery_url": "https://www.madineurope.eu/",
+      "categories": [
+        "channel_collaboration",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-taiwan-craft-institute",
+      "source_id": "taiwan-craft-institute",
+      "mode": "manual",
+      "discovery_url": "https://www.ntcri.gov.tw/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-hk-design-centre",
+      "source_id": "hk-design-centre",
+      "mode": "manual",
+      "discovery_url": "https://www.hkdesigncentre.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "greater_bay_area",
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-american-alliance-museums",
+      "source_id": "american-alliance-museums",
+      "mode": "manual",
+      "discovery_url": "https://www.aam-us.org/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-museums-association-uk",
+      "source_id": "museums-association-uk",
+      "mode": "manual",
+      "discovery_url": "https://www.museumsassociation.org/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-icom",
+      "source_id": "icom",
+      "mode": "manual",
+      "discovery_url": "https://icom.museum/",
+      "categories": [
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-icom-cc",
+      "source_id": "icom-cc",
+      "mode": "manual",
+      "discovery_url": "https://www.icom-cc.org/",
+      "categories": [
+        "exhibition_market",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-european-museum-forum",
+      "source_id": "european-museum-forum",
+      "mode": "manual",
+      "discovery_url": "https://europeanmuseumforum.eu/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-red-dot",
+      "source_id": "red-dot",
+      "mode": "manual",
+      "discovery_url": "https://www.red-dot.org/",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-good-design-japan",
+      "source_id": "good-design-japan",
+      "mode": "manual",
+      "discovery_url": "https://www.g-mark.org/en/",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-core77-design-awards",
+      "source_id": "core77-design-awards",
+      "mode": "manual",
+      "discovery_url": "https://designawards.core77.com/",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-a-design-award",
+      "source_id": "a-design-award",
+      "mode": "manual",
+      "discovery_url": "https://competition.adesignaward.com/",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-asia-design-prize",
+      "source_id": "asia-design-prize",
+      "mode": "manual",
+      "discovery_url": "https://asiadesignprize.com/",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-seoul-design-award",
+      "source_id": "seoul-design-award",
+      "mode": "manual",
+      "discovery_url": "https://seouldesignaward.or.kr/",
+      "categories": [
+        "competition",
+        "international",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artconnect-opportunities",
+      "source_id": "artconnect-opportunities",
+      "mode": "manual",
+      "discovery_url": "https://www.artconnect.com/opportunities",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-curatorspace-opportunities",
+      "source_id": "curatorspace-opportunities",
+      "mode": "manual",
+      "discovery_url": "https://www.curatorspace.com/opportunities",
+      "categories": [
+        "exhibition_market",
+        "competition",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-designboom-competitions",
+      "source_id": "designboom-competitions",
+      "mode": "manual",
+      "discovery_url": "https://www.designboom.com/competitions/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-bustler-competitions",
+      "source_id": "bustler-competitions",
+      "mode": "manual",
+      "discovery_url": "https://bustler.net/competitions",
+      "categories": [
+        "competition",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-competitionline",
+      "source_id": "competitionline",
+      "mode": "manual",
+      "discovery_url": "https://www.competitionline.com/en/",
+      "categories": [
+        "competition",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-opencall-io",
+      "source_id": "opencall-io",
+      "mode": "manual",
+      "discovery_url": "https://opencall.io/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artdeadline",
+      "source_id": "artdeadline",
+      "mode": "manual",
+      "discovery_url": "https://www.artdeadline.com/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-on-the-move",
+      "source_id": "on-the-move",
+      "mode": "manual",
+      "discovery_url": "https://on-the-move.org/",
+      "categories": [
+        "international",
+        "policy_funding",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "every_3_days",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artist-communities",
+      "source_id": "artist-communities",
+      "mode": "manual",
+      "discovery_url": "https://artistcommunities.org/",
+      "categories": [
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-call-for-sites",
+      "source_id": "call-for-sites",
+      "mode": "manual",
+      "discovery_url": "https://callforsites.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-open-call-for-artists",
+      "source_id": "open-call-for-artists",
+      "mode": "manual",
+      "discovery_url": "https://opencallforartists.com/",
+      "categories": [
+        "competition",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-nyfa-opportunities",
+      "source_id": "nyfa-opportunities",
+      "mode": "manual",
+      "discovery_url": "https://www.nyfa.org/awards-grants/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artjobs",
+      "source_id": "artjobs",
+      "mode": "manual",
+      "discovery_url": "https://www.artjobs.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artquest-opportunities",
+      "source_id": "artquest-opportunities",
+      "mode": "manual",
+      "discovery_url": "https://www.artquest.org.uk/opportunities/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "policy_funding"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artsthread-competitions",
+      "source_id": "artsthread-competitions",
+      "mode": "manual",
+      "discovery_url": "https://www.artsthread.com/competitions/",
+      "categories": [
+        "competition",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-archdaily-competitions",
+      "source_id": "archdaily-competitions",
+      "mode": "manual",
+      "discovery_url": "https://www.archdaily.com/competitions",
+      "categories": [
+        "competition",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-dezeen-awards",
+      "source_id": "dezeen-awards",
+      "mode": "manual",
+      "discovery_url": "https://www.dezeen.com/awards/",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-art-rabbit",
+      "source_id": "art-rabbit",
+      "mode": "manual",
+      "discovery_url": "https://www.artrabbit.com/",
+      "categories": [
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-the-art-guide",
+      "source_id": "the-art-guide",
+      "mode": "manual",
+      "discovery_url": "https://www.theartguide.com/",
+      "categories": [
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-callforentries",
+      "source_id": "callforentries",
+      "mode": "manual",
+      "discovery_url": "https://www.callforentries.com/",
+      "categories": [
+        "competition",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-artshow-juried",
+      "source_id": "artshow-juried",
+      "mode": "manual",
+      "discovery_url": "https://www.artshow.com/juried-art-shows.html",
+      "categories": [
+        "competition",
+        "exhibition_market"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-dexigner-competitions",
+      "source_id": "dexigner-competitions",
+      "mode": "manual",
+      "discovery_url": "https://www.dexigner.com/competitions",
+      "categories": [
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-e-flux-announcements",
+      "source_id": "e-flux-announcements",
+      "mode": "manual",
+      "discovery_url": "https://www.e-flux.com/announcements/",
+      "categories": [
+        "exhibition_market",
+        "competition",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "daily",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-european-heritage-awards",
+      "source_id": "european-heritage-awards",
+      "mode": "manual",
+      "discovery_url": "https://www.europeanheritageawards.eu/",
+      "categories": [
+        "competition",
+        "policy_funding",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-europa-nostra",
+      "source_id": "europa-nostra",
+      "mode": "manual",
+      "discovery_url": "https://www.europanostra.org/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "competition"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-culture-action-europe",
+      "source_id": "culture-action-europe",
+      "mode": "manual",
+      "discovery_url": "https://cultureactioneurope.org/",
+      "categories": [
+        "policy_funding",
+        "international",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-arts-opportunities",
+      "source_id": "arts-opportunities",
+      "mode": "manual",
+      "discovery_url": "https://www.artopportunities.com/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-crafts-council-australia",
+      "source_id": "crafts-council-australia",
+      "mode": "manual",
+      "discovery_url": "https://www.craftsaustralia.org.au/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-crafts-council-new-zealand",
+      "source_id": "crafts-council-new-zealand",
+      "mode": "manual",
+      "discovery_url": "https://www.objectspace.org.nz/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration"
+      ],
+      "geography": [
+        "international"
+      ],
+      "scan_frequency": "weekly",
+      "status": "ready",
+      "candidate_contract": [
+        "具体详情页 URL",
+        "标题",
+        "主办方",
+        "截止或长期有效证据",
+        "地区",
+        "参与资格",
+        "行动方式",
+        "字段 provenance",
+        "原始快照哈希"
+      ],
+      "collection_steps": [
+        "打开来源入口",
+        "定位当前公告/机会详情页",
+        "保存原始 URL 与页面快照",
+        "逐字段填写候选表",
+        "回到第一方页面复核后提交 DS3"
+      ]
+    },
+    {
+      "workflow_id": "manual-crafts-council-canada",
+      "source_id": "crafts-council-canada",
+      "mode": "manual",
+      "discovery_url": "https://canadiancrafts.org/",
+      "categories": [
+        "competition",
+        "exhibition_market",
+        "channel_collaboration",
+        "international"
       ],
       "geography": [
         "international"

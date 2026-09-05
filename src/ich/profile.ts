@@ -46,6 +46,12 @@ const QUERY_PACK_IDS = [
   "ich-gba-local",
   "ich-crafts-intl",
   "ich-grants-intl",
+  "ich-cn-competition-v2",
+  "ich-intl-competition-v2",
+  "ich-exhibition-v2",
+  "ich-commercial-v2",
+  "ich-residency-v2",
+  "ich-education-brand-v2",
 ] as const;
 
 const LANE_QUERIES: Array<{
