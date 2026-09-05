@@ -1,0 +1,16 @@
+{
+  "schema_version": "ich-ds14-stage4g-import.v1",
+  "run_at": "2026-09-06T04:00:00.000Z",
+  "mode": "write",
+  "batch_limit": 10,
+  "input_count": 3,
+  "eligible_count": 3,
+  "imported_count": 3,
+  "observed_count": 3,
+  "formal_store_before_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "formal_store_after_sha256": "e0be18539f29fd6b882073e8e647f3af2766c1bfa6d3df6d9839fda6c3625d66",
+  "formal_store_before_count": 124,
+  "formal_store_after_count": 127,
+  "active_opportunities_after": 16,
+  "gate": "pass_with_followups"
+}
