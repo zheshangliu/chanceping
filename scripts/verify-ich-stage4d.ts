@@ -1,0 +1,21 @@
+import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { getIchSourceRegistryV2, validateIchSourceRegistryV2 } from "../src/ich/source-registry-v2";
+import { ICH_OPPORTUNITY_VALUE_TYPES } from "../src/ich/opportunity-intelligence";
+
+const root = process.cwd();
+const summary = JSON.parse(fs.readFileSync(path.resolve(root, "docs/ich/stage4d-summary.json"), "utf8"));
+const registry = getIchSourceRegistryV2();
+const storeHash = crypto.createHash("sha256").update(fs.readFileSync(path.resolve(root, "data/ich-opportunities.json"))).digest("hex");
+assert.equal(summary.stage, "4D-A");
+assert.equal(summary.readonly, true);
+assert.equal(summary.formal_store_write, false);
+assert.equal(summary.formal_store_sha256, storeHash);
+assert.equal(registry.sources.length, 100);
+assert.equal(validateIchSourceRegistryV2(registry).length, 0);
+assert(registry.sources.every((source) => source.value_orientation.length > 0 && source.value_orientation.every((value) => ICH_OPPORTUNITY_VALUE_TYPES.includes(value))));
+assert.equal(summary.input_candidate_count, 193);
+for (const file of ["stage4d-source-expansion-report.md", "stage4d-commercial-candidate-report.md"]) assert(fs.existsSync(path.resolve(root, "docs/ich", file)), `${file} missing`);
+console.log(JSON.stringify({ gate: "pass_with_followups", readonly: true, formal_store_write: false, candidates: summary.input_candidate_count, qualified: summary.qualified_count, high_quality: summary.high_quality_count, shortfalls: summary.shortfalls }, null, 2));

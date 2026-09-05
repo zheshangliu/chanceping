@@ -5,12 +5,12 @@ import type { IchSourcePolicyResult } from "./source-policy";
 import type { IchApplicantFit } from "./applicant-fit";
 
 export const ICH_SCORING_WEIGHTS = {
-  evidence_authority: 25,
+  evidence_authority: 20,
   heritage_relevance: 25,
-  actionability: 20,
-  applicant_fit: 15,
-  commercial_value: 10,
-  freshness: 5,
+  actionability: 25,
+  applicant_fit: 0,
+  commercial_value: 20,
+  freshness: 10,
 } as const;
 
 /** Legacy aliases remain outside the weighted total for report compatibility. */

@@ -1,0 +1,24 @@
+{
+  "stage": "4D-A",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "registered_source_count": 100,
+  "new_sources_added": 0,
+  "input_candidate_count": 193,
+  "qualified_count": 6,
+  "high_quality_count": 0,
+  "actionability_gte_70_count": 6,
+  "target_candidate_count": 300,
+  "target_qualified_count": 40,
+  "target_high_quality_count": 10,
+  "target_actionability_gte_70_count": 0,
+  "meets_candidate_target": false,
+  "meets_qualified_target": false,
+  "meets_high_quality_target": false,
+  "shortfalls": {
+    "candidates": 107,
+    "qualified": 34,
+    "high_quality": 10
+  }
+}

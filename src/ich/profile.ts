@@ -60,6 +60,11 @@ const QUERY_PACK_IDS = [
   "ich-commercial-channel-v4",
   "ich-craft-market-v4",
   "ich-residency-v4",
+  "ich-museum-commercial-v5",
+  "ich-market-v5",
+  "ich-brand-partnership-v5",
+  "ich-gift-procurement-v5",
+  "ich-international-craft-v5",
 ] as const;
 
 const LANE_QUERIES: Array<{
@@ -85,12 +90,12 @@ function buildQueryFamilies(): RadarVersionQueryFamily[] {
 }
 
 const scoringDimensions = [
-  { key: "evidence_authority", label: "来源权威与证据完整度", weight: 25 },
+  { key: "evidence_authority", label: "来源权威与证据完整度", weight: 20 },
   { key: "heritage_relevance", label: "非遗/传统工艺相关性", weight: 25 },
-  { key: "actionability", label: "行动入口可执行性", weight: 20 },
-  { key: "applicant_fit", label: "申请主体匹配度", weight: 15 },
-  { key: "commercial_value", label: "商业与合作价值", weight: 10 },
-  { key: "freshness", label: "时效与新鲜度", weight: 5 },
+  { key: "actionability", label: "行动入口可执行性", weight: 25 },
+  { key: "applicant_fit", label: "申请主体匹配度（辅助维度）", weight: 0 },
+  { key: "commercial_value", label: "商业与合作价值", weight: 20 },
+  { key: "freshness", label: "时效与新鲜度", weight: 10 },
 ];
 
 export const ICH_RADAR_PROFILE: IchRadarProfile = {

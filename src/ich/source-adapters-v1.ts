@@ -24,6 +24,10 @@ export interface IchCandidateSample {
   geography: string | null;
   category_hint: IchPrimaryCategory | null;
   published_text: string | null;
+  application_url: string | null;
+  eligibility_text: string | null;
+  contact_text: string | null;
+  opportunity_value_type: string[];
   raw_snapshot_hash: string;
   review_state: "candidate_only";
   field_provenance: {
@@ -33,6 +37,9 @@ export interface IchCandidateSample {
     geography: IchFieldProvenance;
     category_hint: IchFieldProvenance;
     source_url: IchFieldProvenance;
+    application_url: IchFieldProvenance;
+    eligibility_text: IchFieldProvenance;
+    contact_text: IchFieldProvenance;
   };
 }
 
@@ -100,6 +107,15 @@ function extractLinks(html: string, baseUrl: string, predicate: (url: string) =>
   return links;
 }
 
+function actionLink(html: string, baseUrl: string): { value: string; excerpt: string } | null {
+  for (const match of html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)) {
+    const label = htmlToText(match[2]);
+    if (!/(报名|申请|申报|招募|征集|提交|apply|register|submit|submission|open call)/i.test(label)) continue;
+    try { return { value: normalizeUrl(match[1], baseUrl), excerpt: label.slice(0, 220) }; } catch { return null; }
+  }
+  return null;
+}
+
 function candidateId(sourceId: string, sourceUrl: string): string {
   return `ds1b-${sourceId}-${crypto.createHash("sha256").update(sourceUrl).digest("hex").slice(0, 12)}`;
 }
@@ -122,6 +138,9 @@ function buildCandidate(args: {
   const organizerMatch = firstMatch(text, args.organizerPatterns);
   const deadlineMatch = firstMatch(text, args.deadlinePatterns);
   const publishedMatch = firstMatch(text, args.publishedPatterns);
+  const applicationMatch = actionLink(args.html, args.sourceUrl);
+  const eligibilityMatch = firstMatch(text, [/(?:申请对象|参赛对象|申请资格|适用对象|eligibility|applicants?)\s*[:：]?\s*([^。；;]{4,180})/iu]);
+  const contactMatch = firstMatch(text, [/(?:联系(?:人|方式)?|咨询电话|邮箱|email|contact)\s*[:：]?\s*([^。；;]{4,120})/iu, /([\w.+-]+@[\w.-]+\.[A-Za-z]{2,})/u]);
   const field = (value: string | null, sourceUrl: string, method: IchFieldProvenance["method"], excerpt: string | null, confirmed: boolean): IchFieldProvenance => ({ value, source_url: sourceUrl, method, evidence_excerpt: excerpt, confirmed });
   const scopeNote = "来源登记范围提示；不是详情页逐字段确认 (INFERENCE)";
   return {
@@ -136,6 +155,10 @@ function buildCandidate(args: {
     geography: args.geographyHint || null,
     category_hint: args.categoryHint,
     published_text: publishedMatch?.value ?? null,
+    application_url: applicationMatch?.value ?? null,
+    eligibility_text: eligibilityMatch?.value ?? null,
+    contact_text: contactMatch?.value ?? null,
+    opportunity_value_type: [],
     raw_snapshot_hash: crypto.createHash("sha256").update(args.html).digest("hex"),
     review_state: "candidate_only",
     field_provenance: {
@@ -145,6 +168,9 @@ function buildCandidate(args: {
       geography: field(args.geographyHint || null, args.discoveryUrl, "registry_scope", scopeNote, false),
       category_hint: field(args.categoryHint, args.discoveryUrl, "registry_scope", "适配器类别提示，需候选审核确认", false),
       source_url: field(args.sourceUrl, args.sourceUrl, "listing_anchor", args.sourceUrl, true),
+      application_url: field(applicationMatch?.value ?? null, args.sourceUrl, applicationMatch ? "listing_anchor" : "not_found", applicationMatch?.excerpt ?? null, Boolean(applicationMatch)),
+      eligibility_text: field(eligibilityMatch?.value ?? null, args.sourceUrl, eligibilityMatch ? "structured_text" : "not_found", eligibilityMatch?.excerpt ?? null, Boolean(eligibilityMatch)),
+      contact_text: field(contactMatch?.value ?? null, args.sourceUrl, contactMatch ? "structured_text" : "not_found", contactMatch?.excerpt ?? null, Boolean(contactMatch)),
     },
   };
 }

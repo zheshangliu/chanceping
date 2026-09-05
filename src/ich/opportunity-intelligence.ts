@@ -13,8 +13,20 @@ export const ICH_OPPORTUNITY_STAGES = [
 
 export type IchOpportunityStage = typeof ICH_OPPORTUNITY_STAGES[number];
 
+export const ICH_OPPORTUNITY_VALUE_TYPES = [
+  "revenue",
+  "exposure",
+  "award",
+  "funding",
+  "network",
+  "education",
+] as const;
+
+export type IchOpportunityValueType = typeof ICH_OPPORTUNITY_VALUE_TYPES[number];
+
 export interface IchOpportunityIntelligence {
   opportunity_stage: IchOpportunityStage;
+  opportunity_value_type: IchOpportunityValueType[];
   actionability_score: number;
   actionability_reasons: string[];
   qualified_candidate: boolean;
@@ -31,6 +43,17 @@ const HISTORICAL_RE = /往届|历届|202[0-4]|历史|回顾|past|archive|histori
 const BENEFIT_RE = /奖金|奖项|资助|基金|采购|供应商|展销|销售|渠道|合作|补贴|prize|award|grant|funding|supplier|market|commission|benefit/i;
 const HERITAGE_RE = /非遗|非物质文化遗产|传统工艺|传统技艺|工艺美术|手工艺|传承人|文化遗产|heritage craft|traditional craft|artisan|craftsmanship/i;
 const IRRELEVANT_PROCUREMENT_RE = /设备|服务器|机柜|医疗|交通|道路|桥梁|装修|工程施工|软件开发|信息系统|网络安全|保洁|物业|车辆|食堂|制服|IDC|IT|hardware|software|healthcare|traffic|construction|property/i;
+
+export function inferIchOpportunityValueTypes(text: string, source?: IchSourceRegistryV2Entry): IchOpportunityValueType[] {
+  const values = new Set<IchOpportunityValueType>(source?.value_orientation ?? []);
+  if (/采购|招标|供应商|文创产品|礼品|联名|渠道|销售|commission|supplier|procurement|partnership|collaboration/i.test(text)) values.add("revenue");
+  if (/展览|展示|市集|展销|参展|exhibition|market|showcase/i.test(text)) values.add("exposure");
+  if (/比赛|竞赛|奖项|大奖|award|prize|competition/i.test(text)) values.add("award");
+  if (/资助|基金|补贴|扶持|grant|funding|fellowship/i.test(text)) values.add("funding");
+  if (/驻地|交流|合作|network|residency|exchange|collaboration/i.test(text)) values.add("network");
+  if (/培训|研学|课程|教育|workshop|education|training/i.test(text)) values.add("education");
+  return ICH_OPPORTUNITY_VALUE_TYPES.filter((value) => values.has(value));
+}
 
 export function classifyIchOpportunityStage(candidate: IchCandidateSample): IchOpportunityStage {
   const text = `${candidate.title} ${candidate.organizer ?? ""}`;
@@ -50,12 +73,14 @@ export function scoreIchCandidateActionability(
 ): IchOpportunityIntelligence {
   const text = `${candidate.title} ${candidate.organizer ?? ""}`;
   const stage = classifyIchOpportunityStage(candidate);
+  const opportunity_value_type = inferIchOpportunityValueTypes(text, source);
   const reasons: string[] = [];
   let score = 0;
   if (APPLICATION_RE.test(text)) { score += 20; reasons.push("有申请/报名/开放入口信号"); }
   if (candidate.deadline_text) { score += 15; reasons.push("详情页提取到截止字段"); }
   if (applicantFit.matched_profiles.length > 0) { score += 15; reasons.push("标题或主办方出现明确申请主体信号"); }
   if (BENEFIT_RE.test(text)) { score += 15; reasons.push("出现收益、采购、资助或合作价值信号"); }
+  if (opportunity_value_type.length > 0) reasons.push(`价值方向：${opportunity_value_type.join(", ")}`);
   if (source?.source_role === "opportunity_source" && ["L1", "L2"].includes(source.evidence_level)) { score += 20; reasons.push("来源登记为机会源且为 L1/L2"); }
   if (HERITAGE_RE.test(text)) { score += 15; reasons.push("出现非遗/传统工艺强相关信号"); }
   if (!ACTION_RE.test(text)) reasons.push("未发现明确行动动词");
@@ -68,5 +93,5 @@ export function scoreIchCandidateActionability(
   const actionability_score = Math.min(100, Math.max(0, score));
   const qualified_candidate = source?.source_role === "opportunity_source" && ["open_application", "open_call", "project_invitation", "policy_program"].includes(stage) && actionability_score >= 50;
   const high_quality_candidate = qualified_candidate && actionability_score >= 75;
-  return { opportunity_stage: stage, actionability_score, actionability_reasons: reasons, qualified_candidate, high_quality_candidate };
+  return { opportunity_stage: stage, opportunity_value_type, actionability_score, actionability_reasons: reasons, qualified_candidate, high_quality_candidate };
 }
