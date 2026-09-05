@@ -108,6 +108,7 @@
     "verify:headhunter:v121:golden": "tsx scripts/verify-headhunter-v121-golden.ts",
     "verify:headhunter:v121": "npm run verify:headhunter:v121:no-tikhub && npm run verify:headhunter:v121:trigger && npm run verify:headhunter:v121:entity && npm run verify:headhunter:v121:contact && npm run verify:headhunter:v121:golden",
     "verify:finance:chatgpt-accessibility": "tsx scripts/verify-finance-chatgpt-accessibility.ts",
+    "verify:finance:v151": "tsx scripts/verify-finance-v151-acceptance.ts",
     "verify:headhunter:v121:no-tikhub": "tsx scripts/verify-headhunter-v121-no-tikhub.ts",
     "verify:headhunter:v122:freshness": "tsx scripts/verify-headhunter-v122.ts",
     "verify:headhunter:v122:eligibility": "tsx scripts/verify-headhunter-v122.ts",

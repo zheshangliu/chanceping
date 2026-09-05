@@ -20,6 +20,7 @@ export interface OpportunityRecord {
   score: number;
   contactable: boolean;
   human_review_status: "pending" | "approved" | "rejected";
+  follow_up_notes?: Array<{ text: string; created_at: string }>;
   created_at: string;
   updated_at: string;
 }
