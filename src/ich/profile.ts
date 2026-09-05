@@ -20,6 +20,7 @@ export type IchOpportunityLane =
   | "channel"
   | "funding"
   | "international"
+  | "heritage_program"
   | "residency"
   | "education"
   | "brand_collaboration";
@@ -54,6 +55,11 @@ const QUERY_PACK_IDS = [
   "ich-education-brand-v2",
   "ich-cn-quality-v3",
   "ich-intl-quality-v3",
+  "ich-heritage-program-v4",
+  "ich-museum-collaboration-v4",
+  "ich-commercial-channel-v4",
+  "ich-craft-market-v4",
+  "ich-residency-v4",
 ] as const;
 
 const LANE_QUERIES: Array<{
@@ -68,7 +74,7 @@ const LANE_QUERIES: Array<{
   { familyName: "传统工艺采购与项目承接", intentType: "business_lead", sourceArchetype: "procurement_or_supplier_portal", queries: ["非遗 传统工艺 文创产品 采购 供应商 招标 官方", "博物馆 文化馆 非遗文创 展陈 采购 比选 官方"], whyThisFamily: "减少泛采购噪声，优先保留非遗文创、博物馆供应和传统工艺项目。", resultBucket: "business_lead" },
   { familyName: "湾区非遗合作与渠道", intentType: "channel_partner_lead", sourceArchetype: "business_matching_platform", queries: ["广州 广东 非遗 传统工艺 手工艺 合作 入驻 联名 官方", "粤港澳大湾区 非遗文创 展销 市集 采购 合作"], whyThisFamily: "覆盖具有非遗/手工艺语义的展销、入驻、联名和渠道合作。", resultBucket: "channel_partner_lead" },
   { familyName: "国际传统工艺开放机会", intentType: "direct_opportunity", sourceArchetype: "open_call_submission_page", queries: ["intangible cultural heritage heritage craft artisan open call official", "traditional craft craftsmanship award residency application official"], whyThisFamily: "国际查询必须包含 heritage craft、artisan 或 craftsmanship 强相关信号。", resultBucket: "direct_opportunity" },
-  { familyName: "文化遗产资助与交流", intentType: "direct_opportunity", sourceArchetype: "government_grant_page", queries: ["intangible cultural heritage craft maker grant fellowship official", "heritage craft cultural exchange funding call for proposals"], whyThisFamily: "优先面向非遗保护、传统工艺从业者和机构的资助与交流。", resultBucket: "direct_opportunity" },
+  { familyName: "非遗项目与扶持计划", intentType: "direct_opportunity", sourceArchetype: "government_grant_page", queries: ["非遗 项目申报 保护项目 传统工艺振兴 官方", "非遗人才培养 传承人计划 文化产业项目 官方"], whyThisFamily: "将非遗保护、传统工艺振兴和传承人培养从泛资助中单独识别。", resultBucket: "direct_opportunity" },
 ];
 
 function buildQueryFamilies(): RadarVersionQueryFamily[] {
@@ -93,7 +99,7 @@ export const ICH_RADAR_PROFILE: IchRadarProfile = {
   purpose: "为非遗手艺人、工作室、品牌与文创团队发现可参与的项目、赛事、采购与合作机会。",
   audience: ["非遗手艺人", "工作室", "文创品牌", "文化创意团队"],
   queryPackIds: [...QUERY_PACK_IDS],
-  lanes: ["competition", "exhibition", "market", "procurement", "channel", "funding", "international", "residency", "education", "brand_collaboration"],
+  lanes: ["competition", "exhibition", "market", "procurement", "channel", "funding", "international", "heritage_program", "residency", "education", "brand_collaboration"],
   sourcePolicy: { detailPageRequiredForFormalPublish: true, discoveryPagesRemainCandidates: true, unconfirmedFieldsRemainUnknown: true },
   scoringDimensions,
   requiredFields: ["title", "organizer", "deadline_text", "geography", "category_hint", "source_url"],

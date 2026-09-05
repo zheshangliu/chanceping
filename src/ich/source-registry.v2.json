@@ -113,6 +113,46 @@
       "terms": ["intangible cultural heritage open call", "heritage craft competition", "traditional craft award", "craftsmanship fellowship", "artisan residency", "heritage design commission", "museum craft partnership", "craft maker grant"],
       "negative_terms": ["student essay", "photography contest", "graphic design only", "UI design", "software design", "job vacancy", "winners", "past deadline", "closed call", "annual report"],
       "categories": ["competition", "exhibition_market", "channel_collaboration", "policy_funding", "international"]
+    },
+    {
+      "id": "ich-heritage-program-v4",
+      "language": "zh-CN",
+      "purpose": "发现非遗保护、传统工艺振兴、传承人培养与地方文化扶持项目",
+      "terms": ["非遗 项目申报", "非遗 保护项目", "传统工艺振兴", "非遗人才培养", "传承人计划", "文化产业项目"],
+      "negative_terms": ["结果公示", "获奖名单", "已结束", "招聘", "论文", "纯新闻"],
+      "categories": ["policy_funding", "channel_collaboration", "international"]
+    },
+    {
+      "id": "ich-museum-collaboration-v4",
+      "language": "zh-CN",
+      "purpose": "发现博物馆、文化馆的文创开发、供应商、展览与IP合作",
+      "terms": ["博物馆 文创合作", "文创产品征集", "供应商招募 博物馆", "IP授权合作", "museum shop supplier", "museum collaboration"],
+      "negative_terms": ["活动回顾", "展览回顾", "招聘", "已结束", "结果公告"],
+      "categories": ["procurement_project", "channel_collaboration", "exhibition_market"]
+    },
+    {
+      "id": "ich-commercial-channel-v4",
+      "language": "zh-CN",
+      "purpose": "发现非遗品牌联名、渠道入驻、供应商和商业合作",
+      "terms": ["非遗 联名", "文化IP合作", "传统工艺 品牌合作", "非遗 供应商招募", "craft collaboration", "heritage brand partnership"],
+      "negative_terms": ["招商广告", "招聘", "案例展示", "已结束", "结果公告"],
+      "categories": ["channel_collaboration", "procurement_project", "exhibition_market"]
+    },
+    {
+      "id": "ich-craft-market-v4",
+      "language": "zh-CN",
+      "purpose": "发现非遗市集、手工艺展销、文旅消费季与参展申请",
+      "terms": ["非遗市集", "手工艺市集", "传统工艺展", "非遗展销", "craft fair open call", "artisan market application"],
+      "negative_terms": ["活动回顾", "展览回顾", "已结束", "获奖名单", "招聘"],
+      "categories": ["exhibition_market", "channel_collaboration", "international"]
+    },
+    {
+      "id": "ich-residency-v4",
+      "language": "en",
+      "purpose": "发现国际工艺驻地、交流、展览与传统工艺开放征集",
+      "terms": ["craft residency", "heritage residency", "international craft exhibition", "artist open call", "artisan fellowship", "traditional craft exchange"],
+      "negative_terms": ["winners", "past exhibition", "job vacancy", "closed call", "annual report"],
+      "categories": ["international", "exhibition_market", "channel_collaboration"]
     }
   ],
   "sources": [

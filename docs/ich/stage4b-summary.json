@@ -1,0 +1,117 @@
+{
+  "stage": "4B",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_sha256": "8f194c1b4ccb7a32d1205761c81edc00ceafaa98244c78adf133ec8932556fdf",
+  "source_count": 19,
+  "candidate_count": 193,
+  "unique_candidate_count": 193,
+  "duplicate_url_count": 0,
+  "target_candidate_count": 300,
+  "shortfall_to_target": 107,
+  "strong_heritage_count": 23,
+  "high_quality_count": 1,
+  "target_high_quality_count": 50,
+  "quality_band": {
+    "high": 4,
+    "medium": 3,
+    "low": 186
+  },
+  "source_statuses": {
+    "ccgp": {
+      "status": "completed",
+      "candidates": 18,
+      "errors": 0
+    },
+    "gd-culture": {
+      "status": "completed",
+      "candidates": 20,
+      "errors": 0
+    },
+    "yuexiu-notices": {
+      "status": "completed",
+      "candidates": 20,
+      "errors": 0
+    },
+    "mct-notices": {
+      "status": "completed",
+      "candidates": 20,
+      "errors": 0
+    },
+    "cnaf": {
+      "status": "completed",
+      "candidates": 6,
+      "errors": 0
+    },
+    "ichina": {
+      "status": "completed",
+      "candidates": 10,
+      "errors": 0
+    },
+    "gmfyg": {
+      "status": "completed",
+      "candidates": 4,
+      "errors": 0
+    },
+    "gz-culture": {
+      "status": "completed",
+      "candidates": 19,
+      "errors": 0
+    },
+    "cnacs": {
+      "status": "completed",
+      "candidates": 8,
+      "errors": 0
+    },
+    "gdmuseum": {
+      "status": "completed",
+      "candidates": 7,
+      "errors": 0
+    },
+    "gdmoa": {
+      "status": "completed",
+      "candidates": 11,
+      "errors": 0
+    },
+    "unesco-ich": {
+      "status": "completed",
+      "candidates": 12,
+      "errors": 0
+    },
+    "loewe-craft-prize": {
+      "status": "completed",
+      "candidates": 10,
+      "errors": 0
+    },
+    "if-design-award": {
+      "status": "failed",
+      "candidates": 0,
+      "errors": 1
+    },
+    "china-design-award": {
+      "status": "completed",
+      "candidates": 10,
+      "errors": 0
+    },
+    "gba-design": {
+      "status": "completed",
+      "candidates": 10,
+      "errors": 0
+    },
+    "gyeongnam-k-design": {
+      "status": "completed",
+      "candidates": 0,
+      "errors": 0
+    },
+    "zhe-li-chengdu": {
+      "status": "completed",
+      "candidates": 0,
+      "errors": 0
+    },
+    "zhuhai-gift": {
+      "status": "partial",
+      "candidates": 8,
+      "errors": 2
+    }
+  }
+}
