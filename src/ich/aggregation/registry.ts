@@ -3,6 +3,7 @@ import type { AggregationSourceDefinition } from "./types";
 
 export const AGGREGATION_SOURCE_IDS = [
   "shejijingsai-list",
+  "chuangsaiyun-competition-list",
   "contest-watchers-open",
   "crafts-council-opportunities",
   "artconnect-opportunities",
@@ -18,10 +19,10 @@ export function getAggregationRegistry(): AggregationSourceDefinition[] {
       source_id: sourceId,
       name: entry.name,
       canonical_url: entry.canonical_url,
-      discovery_url: entry.canonical_url,
+      discovery_url: sourceId === "chuangsaiyun-competition-list" ? "https://www.xiacansai.com/mrjs.html" : entry.canonical_url,
       adapter_id: entry.adapter_id ?? `${sourceId}-v1`,
       tier: sourceId === "artconnect-opportunities" || sourceId === "competitions-archi" ? "P1" : "P0",
-      region: sourceId === "shejijingsai-list" ? "CN" : "GLOBAL",
+      region: sourceId === "shejijingsai-list" || sourceId === "chuangsaiyun-competition-list" ? "CN" : "GLOBAL",
       source_type: entry.access_mode === "rss" ? "rss" : "listing",
       priority: sourceId === "artconnect-opportunities" || sourceId === "competitions-archi" ? "P1" : "P0",
       source_role: "discovery_source",

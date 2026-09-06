@@ -6,9 +6,15 @@ export function normalizeOfficialUrl(url: string | null): string {
   try { const value = new URL(url); value.hash = ""; return value.toString().replace(/\/$/, "").toLowerCase(); } catch { return url.trim().toLowerCase(); }
 }
 
-export function aggregationIdentity(item: Pick<AggregationItem, "detail_url" | "title" | "deadline_at" | "source_id">): string {
+export function aggregationIdentity(item: Pick<AggregationItem, "detail_url" | "title" | "deadline_at" | "source_id" | "organizer">): string {
   const url = normalizeOfficialUrl(item.detail_url);
-  return url || identityHash(item.title, item.deadline_at ?? "", item.source_id);
+  // Aggregation sites use different detail URLs for the same competition. For
+  // these discovery-only sources, title + deadline (+ organizer when present)
+  // is the cross-source identity; this lets discovered_by_sources merge safely.
+  if (/shejijingsai|chuangsaiyun|xiacansaiyun/iu.test(url) || /shejijingsai|chuangsaiyun/iu.test(item.source_id)) {
+    return identityHash(item.title, item.deadline_at ?? "", item.organizer ?? "");
+  }
+  return url || identityHash(item.title, item.deadline_at ?? "", item.organizer ?? "");
 }
 
 export function deduplicateAggregationItems(items: AggregationItem[]): { items: AggregationItem[]; duplicateCount: number } {

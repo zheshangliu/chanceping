@@ -3,6 +3,7 @@ import { parseCraftsCouncilListing, enrichCraftsCouncilItem } from "./crafts-cou
 import { parseArtConnectListing, enrichArtConnectItem } from "./artconnect";
 import { parseCompetitionsArchiListing, enrichCompetitionsArchiItem } from "./competitions-archi";
 import { parseShejijingsaiListing } from "./shejijingsai";
+import { parseChuangsaiyunListing } from "./chuangsaiyun";
 import type { ParsedAggregationItem } from "./common";
 
 export interface AggregationAdapter {
@@ -14,6 +15,7 @@ export interface AggregationAdapter {
 
 export const AGGREGATION_ADAPTERS: AggregationAdapter[] = [
   { adapter_id: "shejijingsai-list-v1", source_id: "shejijingsai-list", parseListing: parseShejijingsaiListing },
+  { adapter_id: "chuangsaiyun-competition-list-v1", source_id: "chuangsaiyun-competition-list", parseListing: parseChuangsaiyunListing },
   { adapter_id: "contest-watchers-rss-v1", source_id: "contest-watchers-open", parseListing: parseContestWatchersFeed },
   {
     adapter_id: "crafts-council-opportunities-v1", source_id: "crafts-council-opportunities",

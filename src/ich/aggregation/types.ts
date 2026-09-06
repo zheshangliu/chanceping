@@ -31,6 +31,8 @@ export interface AggregationItem {
   source_item_id: string;
   title: string;
   source_category: string | null;
+  /** Status supplied by the discovery source (for example 报名中). */
+  source_status?: string | null;
   discovery_url: string;
   detail_url: string;
   source_url: string;
@@ -60,6 +62,7 @@ export interface AggregationLedgerEntry {
   item_id: string;
   title: string;
   source_category: string | null;
+  source_status?: string | null;
   discovery_url: string;
   detail_url: string;
   deadline_at: string | null;

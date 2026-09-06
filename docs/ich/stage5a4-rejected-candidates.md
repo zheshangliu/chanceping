@@ -3,19 +3,19 @@
 聚合源仅用于发现；以下记录未达到 L1/DS3，不进入正式机会库。
 
 - 2026第十四届国际大学生时尚设计盛典赛事-常规赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/01/1488828.html
-- 2026第六届“这礼是成都”文创产品设计大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/07/1610583.html
+- 2026第六届“这礼是成都”文创产品设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1610583.html
 - 2026-2027年度意大利 A' Design Award — GENERAL_CREATIVE; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1536941.html
-- 2026“大儒亭林”第九届海峡两岸（昆山）青年文化创意设计大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/08/1619214.html
+- 2026“大儒亭林”第九届海峡两岸（昆山）青年文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1619214.html
 - 2026“科技映时代 诗画绘龙江”首届黑龙江省手机摄影大展 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1540389.html
 - 2026 华为天生会画数字创作大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1616172.html
 - 2026青年大学生手绘艺术与创意设计作品大展征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627541.html
-- 2026第三届自然资源文化创意大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/07/1612981.html
+- 2026第三届自然资源文化创意大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1612981.html
 - 2026华笔奖 • 第二届“励致杯”民用家居设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1527747.html
 - 2026华笔奖·第三届“冠美杯”适老家具设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1554387.html
 - 2026第五届广西版权公益海报设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1570152.html
 - 2027 中国生肖【羊】动态图形设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1573199.html
-- 海南州“清清黄河新海南”文旅形象标识（LOGO）征集公告 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/08/1621596.html
-- 2026“在地铁遇见南汉二陵博物馆” 创意海报设计征集活动 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/09/1628647.html
+- 海南州“清清黄河新海南”文旅形象标识（LOGO）征集公告 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1621596.html
+- 2026“在地铁遇见南汉二陵博物馆” 创意海报设计征集活动 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/09/1628647.html
 - OPPO 2026 影像大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1530477.html
 - 2026“美丽中国｜黄河奔流·时代留影”主题图片征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1527386.html
 - 2026第七届“大美渔村平安渔业”中国渔业摄影展 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1612498.html
@@ -46,8 +46,8 @@
 - 2026首届“老人头杯”全国通勤鞋设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/09/1633144.html
 - 2026“江西风景独好”国际风光摄影展征稿 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627242.html
 - 2026 第三届巴绣（巫溪嫁花）创意设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1555175.html
-- 未蓝奖・全国数字文创大赛（2026・5S）作品征集公告 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/05/1555202.html
-- 2026第二届“五台万象·艺术造境”文旅设计大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/08/1627294.html
+- 未蓝奖・全国数字文创大赛（2026・5S）作品征集公告 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1555202.html
+- 2026第二届“五台万象·艺术造境”文旅设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627294.html
 - 2026嘉善城乡更新创意设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1626482.html
 - 2027 德国 iF 设计奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1530079.html
 - 2026“郴州好礼”旅游商品大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1591033.html
@@ -108,7 +108,7 @@
 - 2026亚洲青年大学生设计创新奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1578723.html
 - 2026首届“海图杯”文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1603810.html
 - 2026第五届全球大学生虚拟策展大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1622463.html
-- 2025西安市首届文物IP授权文创大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/08/1623300.html
+- 2025西安市首届文物IP授权文创大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1623300.html
 - 2026第二届长城文创大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1626607.html
 - 2026 聚力公益，创意吉林|第十一届吉林省公益广告大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1572236.html
 - 万象入镜丨2026北京大学生短视频创作大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1600663.html
@@ -122,6 +122,161 @@
 - 2026第三届“粤影”短片短剧大赛暨第一届“飞霞杯”短片短视频大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1603354.html
 - 2026第三届“中国储运”杯摄影与短视频大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613869.html
 - 广东省高等教育学会摄影教育专业委员会2026年广东省大学生摄影大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1601039.html
+- 2026第十八届山东省大学生科技节赛事活动——山东省大学生文化创意科创大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1535134.html
+- 2026第二届岭南“好房子”设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1577435.html
+- 2026 紫金奖书店设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1625116.html
+- 2026第十二届“濮院杯”PH Value针织设计师大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1577412.html
+- 2026重庆中国三峡博物馆第二届文创设计大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/06/1599120.html
+- 2026美国 LIT 照明设计奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2025/12/1468841.html
+- 2026第六届“越窑杯”陶瓷创意设计展征集公告 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1555260.html
+- 2026第二届“善美溢彩·链动未来”设计赛- 汕尾市金银首饰设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1603822.html
+- 2026 第20届中国好创意丨第二届 “岁岁鸭和 TA 的朋友们”专项赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1559467.html
+- 2026第六届中国（山东）标识文化节主题IP形象与LOGO设计方案征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1620957.html
+- 2026第二届大学生人工智能时尚创新设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1602121.html
+- 2026“智博杯·我们的大学”山东省大学生摄影大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1555268.html
+- 首届“未来之光”——2026粤港澳AI影视创意大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1618193.html
+- 中国美术家协会2026中轴线文化青年数字艺术展览征稿通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1623347.html
+- 2026 「AI与爱」绿网计划 AIGC 公益广告创作大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1624968.html
+- 想象链接未来｜2026 科幻影视工业大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1624974.html
+- 2026年第六届FUTURE FOOD国际食物设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2025/12/1465633.html
+- 2026 首届【船政杯】青年文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1615007.html
+- 2026 巾帼巧思，创艺蜀韵｜四川巾帼文创大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1620753.html
+- 国誉设计大奖2027 KOKUYO DESIGN AWARD — GENERAL_CREATIVE; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1612604.html
+- 2026“智塑新造”——河北省数字雕刻创新创意设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627321.html
+- 陕西交警品牌形象网络征集大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627518.html
+- 2026“创意赋能·壮美定西”|定西市首届文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/09/1633130.html
+- 2026年中国风能摄影大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613948.html
+- 榆林市科技馆IP形象设计征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1622348.html
+- 2026“东方美学”艺术设计作品征集通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1574724.html
+- 红棉设计奖 | 2026设计概念奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1527346.html
+- 2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1551048.html
+- 2026第九届中华设计奖职教赛道竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1549691.html
+- 2026第九届中华设计奖“常设赛道”竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1549683.html
+- 2026第14届未来设计师·全国高校数字艺术设计大赛之「屈」动未来·「氏」界新生——屈臣氏集团185周年高校AIGC创意大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1552872.html
+- 2026第四届全国大学生科技美术设计创新作品大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1573886.html
+- 2026第一师阿拉尔市文创产品设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1573805.html
+- 2026年未来设计师·全国艺术设计教师教学创新大赛(NDTC) — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1579925.html
+- “河湟福谷·圣域湟中”青海艺河湟2980非遗及农土产品文创设计大赛 — CORE_ICH; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/06/1579867.html
+- 2026“双滦承礼”文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1602794.html
+- 2026第三届“南湖文旅”杯文创设计大赛 — ICH_ADJACENT; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/07/1605525.html
+- 2026第八届粤港澳大湾区文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1605005.html
+- 2026“雪域赤橙 文创蓝焰”西藏消防文创作品大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1604574.html
+- “正青春·创未来”2026新文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1612452.html
+- 2026 第七届航天文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1616412.html
+- 2026第八届粤港澳大湾区文化创意设计大赛AI赛道 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1618702.html
+- 文脉同源・创意同心｜拓跋鲜卑北魏南迁“融合之路”文创作品设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1618049.html
+- 2026国际列车设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/03/1515287.html
+- 2026第五届“星熠奖”胜芳家具创意设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1537494.html
+- 2027（第七届）中国国际消费品博览会「京润珍珠杯」珍珠珠宝设计大奖赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1543847.html
+- 2026第六届隈研吾&東川町家具设计竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1616499.html
+- 2026第三届《南海年鉴》封面设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1528283.html
+- 2026年“永悦智能杯”中国长三角无人机创新设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1576041.html
+- 2026“大美四川·诗酒射洪”全国漫画插画作品展征稿通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613763.html
+- “Global AI ”全球人工智能艺术 IP----全球AI艺术形象设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1626475.html
+- 中国台球协会新标识（LOGO）设计方案征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627215.html
+- 红棉设计奖 | 2026室内设计奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1526142.html
+- 红棉设计奖 | 2026最美奢居空间设计奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1525936.html
+- 红棉设计奖 | 2026最美时尚空间设计奖 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1535279.html
+- 2026立邦“未来之星”青年设计师大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/04/1528129.html
+- 2026广西勘察设计协会“老屋新生”好房子项目征集活动 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/09/1633221.html
+- 2026年雄安新区建筑设计大赛(好房子) — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/09/1628803.html
+- 2026年安徽省黄山杯优秀公益广告作品征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/09/1630725.html
+- 2026“尼康杯”全国青年摄影大展征稿 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/01/1493597.html
+- 2026第二届“何以山西 ·晋见系列” 主题微影视征集展示活动 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/02/1505093.html
+- 2026首届AI赋能国际传播大赛暨第二届中华文化多语种创意短视频大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/03/1518012.html
+- 2026第14届全国大学生新媒体创意大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/03/1516630.html
+- 智创美好 点亮未来——2026年第二届大学生AI数字广告创新征集活动 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1554556.html
+- “印象中国”2026短视频征集展示活动作品征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1600758.html
+- 2026“一老一小”AI公益视频大赛作品征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1615743.html
+- 2026第三届海峡两岸青年微视听“海融竞逐” 展播季作品征集通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1614391.html
+- “文藏徽州”公共品牌VI设计征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1627059.html
+- 2026第六届蓝色烟台艺术设计大赛暨第三届一带一路国际艺术设计邀请展 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1538267.html
+- “一张可带走的温江城市名片”2026“温江礼物”创意设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1611544.html
+- 2026乐瓜睡觉抱枕第一届全国征稿比赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/08/1618353.html
+- 2026年第八届北京市大学生文化创意设计竞赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/05/1565676.html
+- “丝路双生 山海造物”晋江&敦煌2026国际文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/06/1597252.html
+- 2026第五届“非遗新体验”国潮文创设计大赛 — CORE_ICH; backtrace=MULTIPLE_CONFLICTING; https://www.shejijingsai.com/2026/07/1605273.html
+- 2026第二十七届白金创意国际大学生平面设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613780.html
+- 第十五届（2026）中国金点工业设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613617.html
+- 第十五届（2026）中国金点工业设计大赛第一赛道：智能农机 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613521.html
+- 第十五届（2026）中国金点工业设计大赛第二赛道：智能家居 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613689.html
+- 第十五届（2026）中国金点工业设计大赛第三赛道：智能出行 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613741.html
+- 第十五届（2026）中国金点工业设计大赛第四赛道：历史经典产业特色文创产品 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.shejijingsai.com/2026/07/1613833.html
+- 2026“大儒亭林”第九届海峡两岸（昆山）青年文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2718
+- 2026青年大学生手绘艺术与创意设计作品大展征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2777
+- 2026中山市工业设计大赛火炬高新区“湾区光谷”光电专项赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2750
+- 2026“阳光下的红十字”河北省首届公益AI创作大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2711
+- 2026年第十九届“认证杯”数学中国数学建模网络挑战赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2421
+- 2026 华笔奖·第二届 "励致杯" 民用家居设计大赛（截止时间12 月 31 日） — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2472
+- 2026OPPO 2026影像大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2418
+- 2026华笔奖·第三届“冠美杯”适老家具设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2508
+- ACM-ICPC国际大学生程序设计竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2752
+- 2026年第八届大学生语言文字能力大赛写作专项赛报名通知！ — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2710
+- 第八届全国高校计算机能力挑战赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2716
+- 2026年批改网杯全国大学生英语写作大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2477
+- 第十八届全国大学生数学竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2590
+- 2026 第三届巴绣（巫溪嫁花）创意设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2528
+- 2026“和氏璧杯”成语之都大学生创意奖暨第十六届邯郸市青年创新创业大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2787
+- 2026第十四届国际大学生时尚设计盛典 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2430
+- 2026“郴州好礼”旅游商品大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2582
+- 绘你所想 织你所创｜2026恒强杯制版创意大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2786
+- 第十二届“中金所杯”全国大学生金融知识大赛启动报名 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2758
+- 2026 “万家灯火”第四届上海夜景影像作品暨 AI创意微视频征集活动 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2684
+- 2026立德尔杯第三届中国日用搪瓷产品设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2400
+- 2026辽宁省第三届“强省杯”工业设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2566
+- 2026莆田鞋全国短视频及创意视觉设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2652
+- 2026东方创意之星大湾区旅游文创主题赛暨第七届国际大学生旅游文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2579
+- 关于举办第八届AIC算法大赛算法主题赛（AI+开源）的通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2754
+- 2026年赢在南京青年大学生创业大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2396
+- 2026年“振兴杯”云南省青年职业技能大赛邀你来战 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2772
+- 2026年度公益广告创新创意大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2728
+- 2026第五届北京天文馆 “聚星杯”天文创意产品征集活动 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2507
+- 2026“大美四川·诗酒射洪”全国漫画插画作品展征稿通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2677
+- “工行杯”全国大学生金融科技创新大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2714
+- “印象中国”2026短视频征集展示活动作品征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2609
+- “正青春·创未来”2026新文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2650
+- 2026立邦未来之星青年设计师大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2389
+- 2026第一师阿拉尔市文创产品设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2548
+- 中国国际大学生创新大赛（2026） — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2706
+- 全国大学生嵌入式芯片与系统设计竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2771
+- 2026 首届“天工开物杯”工业设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2753
+- 2026“拥抱文博·青春造物节”国潮文创设计活动 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2517
+- 2026第六届重庆市大学生乡村振兴创意大赛 — GENERAL_CREATIVE; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2639
+- 2026首届“裘韵 · 饰界 ”毛皮饰品产业文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2780
+- 2026 非遗新生 茶香无界——第四届“焕新茶生活”非遗联创大赛 — CORE_ICH; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2751
+- 福建师范大学120周年校庆主题标识征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2733
+- 2026韩信文化AIGC视频作品征集大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2782
+- 2026第25届安德鲁世界国际设计大赛 特别版：制造未来 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2692
+- 数字人民币吉祥物与文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2681
+- 2026东方创意之星陶瓷创新设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2770
+- 2026第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2725
+- 2026“花YOUNG陈村・花绘世界”陈村文旅主题插画大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2736
+- 安庆市宜秀区形象标识（LOGO）征集公告 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2777
+- 2026中国美术家协会“为中国而设计”第十二届环境艺术设计展览征稿通知 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2685
+- 2026年河南省工业设计大赛“浩德杯”钢制家具专项赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2696
+- 2026 画里画外 · 遇见乌鲁木齐 首届乌鲁木齐插画大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2756
+- 2026“湾区源创·硅芯商会杯” AI+IP潮玩设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2709
+- 2026小榄镇首届菊花纤维服装设计比赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2723
+- 2026“文物遇上‘东北超’——国宝创意人”活动 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2651
+- 山西运城“关公颂”短视频大赛征集启事 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2773
+- Aniwow! 2026 第21届中国（北京）国际大学生动画节作品征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2745
+- 2026“闽都福韵·榕城有礼”福州非遗工美文创大赛 — CORE_ICH; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2690
+- 2026高教社杯全国大学生数学建模竞赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2432
+- 2026长三角（嘉兴）文创设计暨“红船起航地 嘉兴醉江南”文化创意大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2689
+- 2026第17届建筑照明设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2732
+- 聚焦新大众文艺，书写时代烟火与青春力量——青年作家网首届“新大众文艺”征文大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2747
+- 2026“光阴里的构作”山东文物建筑主题摄影展作品征集 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2734
+- 南航文创吉祥物暨文创设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2679
+- 2026第六届印记太原文化创意设计大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2583
+- “美在匠心”全国非遗传承与创新大赛暨2026当代工艺美术交流展征稿通知 — CORE_ICH; backtrace=PENDING_PROVIDER; https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2775
+- 2026“数智赋能·面向未来”兰州数智牛肉拉面品牌创意暨短视频大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2776
+- “学创杯” 全国大学生创业综合模拟大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2712
+- 2026“看见香港”短视频大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2612
+- 2026常熟杯时尚设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2411
+- 2026微笑泾县·“纸”等你来——泾县文旅创意产品大赛 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2559
+- 东方设计奖·全国高校创新设计大赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2435
+- 第17届蓝桥杯视觉艺术设计赛 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2405
+- 2026首届科学家精神文创作品交流展示活动征集公告 — ICH_ADJACENT; backtrace=PENDING_PROVIDER; https://www.chuangsaiyun.com/#/article/details?id=2602
 - PHOTOLAR 18th – Photography Contest — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.contestwatchers.com/photolar-18th-photography-contest
 - The 18th JEJU International PHOTO Contest — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.contestwatchers.com/the-18th-jeju-international-photo-contest
 - Revelation Perth International Film Festival 2027 — IRRELEVANT; backtrace=PENDING_PROVIDER; https://www.contestwatchers.com/revelation-perth-international-film-festival-2027

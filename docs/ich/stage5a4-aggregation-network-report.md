@@ -1,6 +1,6 @@
 # Stage5-A.4 聚合机会源自动发现网络运行报告
 
-运行时间：2026-09-06T05:57:39.313Z
+运行时间：2026-09-06T06:23:13.178Z
 只读：是；正式库写入：否
 正式库哈希保持不变：是
 
@@ -8,7 +8,8 @@
 
 | source_id | items_seen | new | relevant | official_backtrace_success | adapter_status |
 | --- | ---: | ---: | ---: | ---: | --- |
-| shejijingsai-list | 120 | 0 | 23 | 0 | PASS |
+| shejijingsai-list | 200 | 0 | 44 | 0 | PASS |
+| chuangsaiyun-competition-list | 107 | 0 | 19 | 0 | PASS |
 | contest-watchers-open | 10 | 0 | 0 | 0 | PASS |
 | crafts-council-opportunities | 0 | 0 | 0 | 0 | BLOCKED |
 | artconnect-opportunities | 52 | 0 | 1 | 0 | PASS |
@@ -18,17 +19,17 @@
 
 ```json
 {
-  "raw_items_seen": 182,
+  "raw_items_seen": 369,
   "new_items": 0,
   "updated_items": 0,
-  "unchanged_items": 182,
+  "unchanged_items": 337,
   "removed_items": 0,
-  "rule_relevant": 39,
-  "semantic_relevant": 24,
+  "rule_relevant": 81,
+  "semantic_relevant": 64,
   "official_backtrace_attempted": 10,
   "official_backtrace_success": 0,
   "qualified_candidates": 0,
-  "rejected_candidates": 143,
+  "rejected_candidates": 256,
   "ds3_pass": 0,
   "ds14_imported": 0
 }
@@ -36,10 +37,10 @@
 
 ## Baseline
 
-- baseline_total: 182
-- currently_open: 182
-- already_expired: 0
-- likely_relevant: 24
+- baseline_total: 337
+- currently_open: 336
+- already_expired: 1
+- likely_relevant: 64
 - incremental_simulation.new_items: 0
 - incremental_simulation.updated_items: 0
 

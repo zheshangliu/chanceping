@@ -71,6 +71,7 @@ export interface ParsedAggregationItem {
   source_item_id: string;
   title: string;
   source_category: string | null;
+  source_status?: string | null;
   detail_url: string;
   source_url: string;
   published_at: string | null;

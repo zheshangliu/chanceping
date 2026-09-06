@@ -31,7 +31,7 @@ export function compareToLedger(items: AggregationItem[], previous: AggregationL
   // exposing them as current candidates until the source is observed again.
   const preservedFromUnavailableSources = previous.entries.filter((entry) => !seen.has(entry.item_id) && !observedSourceIds.has(entry.source_id));
   const entries = [...nextItems.map((item) => ({
-    source_id: item.source_id, source_item_id: item.source_item_id, item_id: item.item_id, title: item.title, source_category: item.source_category,
+    source_id: item.source_id, source_item_id: item.source_item_id, item_id: item.item_id, title: item.title, source_category: item.source_category, source_status: item.source_status ?? null,
     discovery_url: item.discovery_url, detail_url: item.detail_url, deadline_at: item.deadline_at, first_seen_at: item.first_seen_at,
     last_seen_at: item.last_seen_at, content_hash: item.content_hash, last_content_hash: item.last_content_hash, status: item.status,
     official_backtrace_status: item.official_backtrace_status, candidate_status: item.relevance === "IRRELEVANT" ? "rejected" as const : "pending" as const,
