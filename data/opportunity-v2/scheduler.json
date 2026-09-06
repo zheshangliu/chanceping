@@ -2,6 +2,6 @@
   "schema_version": "chanceping-opportunity-v2.scheduler.v1",
   "timezone": "Asia/Shanghai",
   "interval_hours": 72,
-  "last_run_at": "2026-09-06T15:20:04.086Z",
-  "next_run_at": "2026-09-09T15:20:04.086Z"
+  "last_run_at": "2026-09-06T15:24:50.744Z",
+  "next_run_at": "2026-09-09T15:24:50.744Z"
 }
