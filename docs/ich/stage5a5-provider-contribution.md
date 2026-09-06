@@ -10,5 +10,6 @@
 | doubao_search | LIVE_CONFIRMED | 1 | 0 | 0 |
 
 - provider_search_attempted: 5
-- provider_queries: 10
+- provider_queries: 13
+- provider_backtrace_queries: 10
 - provider_raw_results: 36
