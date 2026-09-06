@@ -21,5 +21,7 @@
     "2026 National Peanut Festival Craft & Hobby Exhibits",
     "Indigenous Reconciliation Initiative – Cultural Stream 2026–2027"
   ],
-  "gate": "pass"
+  "gate": "pass",
+  "semantic_repaired_sha256": "6d9e534d25b50139e62001c53ea64a817419bc04c26b80ae171fa4a1e8cbad15",
+  "semantic_repaired_at": "2026-09-06T05:00:00.000Z"
 }

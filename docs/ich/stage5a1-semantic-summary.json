@@ -1,0 +1,16 @@
+{
+  "records_reviewed": 10,
+  "fields_reviewed": 210,
+  "fields_repaired": 113,
+  "fields_set_unknown": 32,
+  "semantic_conflicts_before": 10,
+  "semantic_conflicts_after": 0,
+  "active_before": 26,
+  "active_after": 24,
+  "computed_active_after": 24,
+  "before_count": 137,
+  "after_count": 137,
+  "before_sha256": "83cb11e435a406bfaaf31a7ad3d0e585a6df22d7c4e16d09b70905eda73b9427",
+  "after_sha256": "6d9e534d25b50139e62001c53ea64a817419bc04c26b80ae171fa4a1e8cbad15",
+  "gate": "pass"
+}

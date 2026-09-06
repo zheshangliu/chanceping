@@ -29300,12 +29300,12 @@
         "district": null,
         "venue_text": "线上申报/报名",
         "region_groups": [
-          "nationwide",
+          "province_only",
           "online_or_unrestricted"
         ],
-        "participation_scope": "nationwide",
+        "participation_scope": "local_only",
         "eligible_regions": [
-          "中国"
+          "北京市"
         ],
         "is_online": true,
         "is_hybrid": false,
@@ -29319,8 +29319,8 @@
         "participation_notes": "以官方详情页及附件要求为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-08-24T00:00:00+08:00",
+        "application_start_at": "2026-08-24T00:00:00+08:00",
         "deadline_at": "2026-09-28T17:30:00+08:00",
         "deadline_text": "2026年9月28日17:30（北京时间）",
         "event_start_at": null,
@@ -29338,8 +29338,8 @@
         ],
         "eligibility_text": "在北京地区登记注册且从事工艺美术行业研发、设计、生产或服务的单位；具体方向以官方申报说明为准。",
         "ich_status_required": null,
-        "business_license_required": false,
-        "local_registration_required": false,
+        "business_license_required": true,
+        "local_registration_required": true,
         "recommendation_required": false,
         "age_requirement_text": null,
         "language_requirement_text": null,
@@ -29362,8 +29362,8 @@
         "benefit_text": "覆盖传统工艺保护、工作室能力提升、产品创新研发和服务平台建设等方向。"
       },
       "costs": {
-        "application_fee_amount": 0,
-        "application_fee_currency": "CNY",
+        "application_fee_amount": null,
+        "application_fee_currency": null,
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -29373,21 +29373,23 @@
         "accommodation_self_funded": null,
         "materials_self_funded": true,
         "shipping_self_funded": null,
-        "cost_text": "官方通知未列报名费；按申报系统和项目要求准备材料。",
-        "cost_status": "confirmed"
+        "cost_text": "官方通知未说明报名费；项目投入及材料成本按申报说明执行。",
+        "cost_status": "not_disclosed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "项目申报说明",
+          "项目实施方案及总结报告",
+          "项目投入明细表",
+          "承诺书"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
+        "portfolio_required": null,
+        "sample_required": null,
         "proposal_required": true,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
-        "requirements_text": "需具备独立法人资格、独立知识产权和相应项目实施能力，不得重复获得同类财政资金支持。"
+        "requirements_text": "需为北京登记注册的独立法人单位，具备相关知识产权和项目实施能力；申报材料以官方附件为准。"
       },
       "application": {
         "application_url": "https://jxj.beijing.gov.cn",
@@ -29411,7 +29413,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方通知确认申报主体、支持方向、额度与截止时间。"
         }
@@ -29431,11 +29433,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -29494,7 +29496,34 @@
         "ICH",
         "Craft",
         "Business"
-      ]
+      ],
+      "field_provenance": {
+        "deadline_at": {
+          "source_url": "https://www.beijing.gov.cn/zhengce/zhengcefagui/202608/t20260824_4834475.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "2026年第二批申报截止2026-09-28 17:30。"
+        },
+        "application_start_at": {
+          "source_url": "https://www.beijing.gov.cn/zhengce/zhengcefagui/202608/t20260824_4834475.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "自通知发布之日起申报。"
+        },
+        "eligible_regions": {
+          "source_url": "https://www.beijing.gov.cn/zhengce/zhengcefagui/202608/t20260824_4834475.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "北京地区登记注册。"
+        },
+        "fee": {
+          "source_url": "https://www.beijing.gov.cn/zhengce/zhengcefagui/202608/t20260824_4834475.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "未说明报名费，设置为unknown/not_disclosed。"
+        },
+        "requirements": {
+          "source_url": "https://www.beijing.gov.cn/zhengce/zhengcefagui/202608/t20260824_4834475.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "官方附件1-4。"
+        }
+      }
     },
     {
       "id": "ich_3cadf0a08f4540fea165f7e52813f7eb",
@@ -29548,12 +29577,12 @@
       "participation_mode": {
         "mode": "online",
         "submission_method": "official_platform",
-        "requires_on_site_presence": false,
-        "participation_notes": "以官方详情页及附件要求为准。"
+        "requires_on_site_presence": true,
+        "participation_notes": "合作涉及馆内设备、驻场服务、仓储、生产运输及知识产权安排，具体以磋商文件为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-04T00:00:00+08:00",
+        "application_start_at": "2026-09-04T00:00:00+08:00",
         "deadline_at": "2026-09-11T17:00:00+08:00",
         "deadline_text": "2026年9月11日工作日17:00（北京时间）",
         "event_start_at": null,
@@ -29570,7 +29599,7 @@
         ],
         "eligibility_text": "中华人民共和国境内依法登记的法人或其他组织，具备文创产品设计开发、开模打样、生产制造和质量管控能力。",
         "ich_status_required": null,
-        "business_license_required": false,
+        "business_license_required": true,
         "local_registration_required": false,
         "recommendation_required": false,
         "age_requirement_text": null,
@@ -29594,8 +29623,8 @@
         "benefit_text": "参与国家自然博物馆文创手办模型系列项目创意策划、设计及销售，合作期2年。"
       },
       "costs": {
-        "application_fee_amount": 0,
-        "application_fee_currency": "CNY",
+        "application_fee_amount": null,
+        "application_fee_currency": null,
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -29604,17 +29633,20 @@
         "travel_self_funded": null,
         "accommodation_self_funded": null,
         "materials_self_funded": true,
-        "shipping_self_funded": null,
-        "cost_text": "官方公告未列报名费；合作条件、报价和知识产权以磋商文件为准。",
-        "cost_status": "confirmed"
+        "shipping_self_funded": true,
+        "cost_text": "官方公告未说明报名费；合作企业承担设计开发、生产运输和仓储等前期投入。",
+        "cost_status": "not_disclosed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "盖章报名表",
+          "营业执照复印件",
+          "法定代表人身份证复印件",
+          "授权委托书（如适用）",
+          "信用中国及中国政府采购网信用证明"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
+        "portfolio_required": null,
+        "sample_required": null,
         "proposal_required": true,
         "invoice_required": false,
         "bidding_qualification_required": false,
@@ -29643,7 +29675,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方公告确认合作内容、企业资质和报名窗口。"
         }
@@ -29663,11 +29695,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -29726,7 +29758,39 @@
         "ICH",
         "Culture",
         "Business"
-      ]
+      ],
+      "field_provenance": {
+        "published_at": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "官方页面发布时间2026-09-04。"
+        },
+        "deadline_at": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "报名截止2026-09-11工作日17:00。"
+        },
+        "eligibility": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "法人/其他组织及资质要求。"
+        },
+        "fee": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "报名费未说明。"
+        },
+        "requirements": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "报名材料清单。"
+        },
+        "requires_on_site_presence": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "驻场工作人员要求。"
+        }
+      }
     },
     {
       "id": "ich_d6183f543154406c97af9451f544114f",
@@ -29765,12 +29829,12 @@
         "district": null,
         "venue_text": "线上申报/报名",
         "region_groups": [
-          "nationwide",
+          "regional",
           "online_or_unrestricted"
         ],
-        "participation_scope": "nationwide",
+        "participation_scope": "local_only",
         "eligible_regions": [
-          "中国"
+          "广州市"
         ],
         "is_online": true,
         "is_hybrid": false,
@@ -29784,8 +29848,8 @@
         "participation_notes": "以官方详情页及附件要求为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-08-25T00:00:00+08:00",
+        "application_start_at": "2026-09-17T00:00:00+08:00",
         "deadline_at": "2026-09-30",
         "deadline_text": "2026年9月30日系统关闭（北京时间）",
         "event_start_at": null,
@@ -29802,10 +29866,10 @@
           "organization"
         ],
         "eligibility_text": "市级及以上非遗代表性项目保护单位、永庆坊非遗街区工作室（协议期内）或市级非遗代表性传承人。",
-        "ich_status_required": null,
-        "business_license_required": false,
+        "ich_status_required": true,
+        "business_license_required": null,
         "local_registration_required": false,
-        "recommendation_required": false,
+        "recommendation_required": true,
         "age_requirement_text": null,
         "language_requirement_text": null,
         "eligibility_status": "confirmed"
@@ -29827,8 +29891,8 @@
         "benefit_text": "优秀传统文化传承项目非遗保护资金支持。"
       },
       "costs": {
-        "application_fee_amount": 0,
-        "application_fee_currency": "CNY",
+        "application_fee_amount": null,
+        "application_fee_currency": null,
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -29836,23 +29900,25 @@
         "commission_rate": null,
         "travel_self_funded": null,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
+        "materials_self_funded": null,
         "shipping_self_funded": null,
         "cost_text": "官方通知未列报名费。",
-        "cost_status": "confirmed"
+        "cost_status": "not_disclosed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "申报表",
+          "诚信承诺书",
+          "单位相关材料（单位申报时）",
+          "盖章PDF申报材料"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
+        "portfolio_required": null,
+        "sample_required": null,
         "proposal_required": true,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
-        "requirements_text": "需提交申报表、诚信承诺书及单位/传承人相关材料，并通过推荐审核。"
+        "requirements_text": "仅限官方通知列明的非遗项目保护单位、永庆坊协议期工作室或市级代表性传承人；需先经受理部门审核推荐。"
       },
       "application": {
         "application_url": "https://qyfw.gzonline.gov.cn/qyfw/policyService/index/subsidyProject?tab=6",
@@ -29876,7 +29942,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方通知确认申报主体、推荐流程、系统入口和截止日。"
         }
@@ -29896,11 +29962,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -29959,7 +30025,34 @@
         "ICH",
         "Culture",
         "Funding"
-      ]
+      ],
+      "field_provenance": {
+        "published_at": {
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "官方页面发布时间2026-08-25。"
+        },
+        "deadline_at": {
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "推荐主体线上申报9月17-29日，9月30日系统关闭。"
+        },
+        "eligible_regions": {
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "广州市专项资金。"
+        },
+        "recommendation_required": {
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "区文旅部门/市非遗保护中心审核推荐。"
+        },
+        "ich_status_required": {
+          "source_url": "https://wglj.gz.gov.cn/xxgk/gzdt/tzgsgg/content/post_10977749.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "市级及以上非遗项目或市级传承人条件。"
+        }
+      }
     },
     {
       "id": "ich_c009b7db280447419b329b81bab2f339",
@@ -29992,19 +30085,19 @@
         "contact_text": "以官方电子申报入口为准"
       },
       "location": {
-        "country_code": null,
-        "country_name": null,
-        "province_state": null,
+        "country_code": "ES",
+        "country_name": "Spain",
+        "province_state": "Galicia",
         "city": null,
         "district": null,
         "venue_text": "在线申报",
         "region_groups": [
-          "international",
+          "regional",
           "online_or_unrestricted"
         ],
-        "participation_scope": "global",
+        "participation_scope": "regional",
         "eligible_regions": [
-          "全球"
+          "Galicia, Spain"
         ],
         "is_online": true,
         "is_hybrid": false,
@@ -30018,8 +30111,8 @@
         "participation_notes": "以官方详情页及附件要求为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": null,
+        "application_start_at": "2026-09-21T00:00:00+02:00",
         "deadline_at": "2026-10-01",
         "deadline_text": "2026年10月1日（申报期：9月21日至10月1日）",
         "event_start_at": null,
@@ -30063,8 +30156,8 @@
         "benefit_text": "年度手工艺奖9000欧元；Eloy Gesto奖学金3项、每项4000欧元；另设终身成就荣誉奖。"
       },
       "costs": {
-        "application_fee_amount": 0,
-        "application_fee_currency": "EUR",
+        "application_fee_amount": null,
+        "application_fee_currency": null,
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -30072,19 +30165,19 @@
         "commission_rate": null,
         "travel_self_funded": null,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
+        "materials_self_funded": null,
         "shipping_self_funded": null,
         "cost_text": "官方公告未列报名费。",
-        "cost_status": "confirmed"
+        "cost_status": "not_disclosed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "电子申报表",
+          "Bases规定的职业/作品材料"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
-        "proposal_required": true,
+        "portfolio_required": null,
+        "sample_required": null,
+        "proposal_required": null,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
@@ -30112,7 +30205,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方公告确认2026奖项类别、奖金及申报时间。"
         }
@@ -30132,11 +30225,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -30192,11 +30285,33 @@
         ]
       },
       "radar_tags": [
-        "ICH",
         "Craft",
+        "Culture",
         "International",
         "Funding"
-      ]
+      ],
+      "field_provenance": {
+        "application_start_at": {
+          "source_url": "https://artesaniadegalicia.xunta.gal/es/convocatorias/convocatoria-premios-artesania-de-galicia-2026",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "申报期2026-09-21至10-01。"
+        },
+        "eligible_regions": {
+          "source_url": "https://artesaniadegalicia.xunta.gal/es/convocatorias/convocatoria-premios-artesania-de-galicia-2026",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Galicia工艺领域。"
+        },
+        "fee": {
+          "source_url": "https://artesaniadegalicia.xunta.gal/es/convocatorias/convocatoria-premios-artesania-de-galicia-2026",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "费用未披露。"
+        },
+        "benefits": {
+          "source_url": "https://artesaniadegalicia.xunta.gal/es/convocatorias/convocatoria-premios-artesania-de-galicia-2026",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "9000欧元奖项与4000欧元奖学金。"
+        }
+      }
     },
     {
       "id": "ich_61031f4a44644ce2b8c0b873217a615c",
@@ -30255,8 +30370,8 @@
         "participation_notes": "以官方详情页及附件要求为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": null,
+        "application_start_at": "2026-07-10T00:00:00+08:00",
         "deadline_at": "2026-10-31",
         "deadline_text": "2026年10月31日（秋季作品征集截止）",
         "event_start_at": null,
@@ -30309,19 +30424,20 @@
         "commission_rate": null,
         "travel_self_funded": null,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
+        "materials_self_funded": null,
         "shipping_self_funded": null,
         "cost_text": "官网当前未在摘要中明确统一报名费，以报名页面为准。",
         "cost_status": "partial"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "线上报名信息",
+          "原创作品文件",
+          "组别要求的作品说明"
         ],
         "portfolio_required": true,
-        "sample_required": false,
-        "proposal_required": true,
+        "sample_required": null,
+        "proposal_required": null,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
@@ -30349,7 +30465,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官网列明秋季征集时间、文化创意/非遗创意与AI创意类别。"
         }
@@ -30369,11 +30485,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -30433,7 +30549,29 @@
         "Culture",
         "Design",
         "AI"
-      ]
+      ],
+      "field_provenance": {
+        "application_start_at": {
+          "source_url": "https://www.huaxiajiang.com/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "秋季作品征集起止信息。"
+        },
+        "application_url": {
+          "source_url": "https://www.huaxiajiang.com/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "官网提供报名、学生组、专业组、团体参赛入口。"
+        },
+        "requirements": {
+          "source_url": "https://www.huaxiajiang.com/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "官网列出作品类别和参赛入口。"
+        },
+        "fee": {
+          "source_url": "https://www.huaxiajiang.com/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "统一报名费未确认。"
+        }
+      }
     },
     {
       "id": "ich_1b07b8100a424594b554c1c01351aaa5",
@@ -30475,9 +30613,9 @@
         "region_groups": [
           "international"
         ],
-        "participation_scope": "international",
+        "participation_scope": "unrestricted",
         "eligible_regions": [
-          "日本及符合要项的申请人"
+          "不限宝塚市民的符合要项申请人"
         ],
         "is_online": false,
         "is_hybrid": false,
@@ -30485,18 +30623,18 @@
         "location_status": "confirmed"
       },
       "participation_mode": {
-        "mode": "online",
-        "submission_method": "official_platform",
-        "requires_on_site_presence": false,
-        "participation_notes": "以官方详情页及附件要求为准。"
+        "mode": "offline",
+        "submission_method": "postal_mail",
+        "requires_on_site_presence": true,
+        "participation_notes": "需按官方日期将实物搬入宝塚市立文化设施Solio Hall，撤展取回要求以公募要项为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": null,
+        "application_start_at": "2026-08-17T00:00:00+09:00",
         "deadline_at": "2026-09-11",
         "deadline_text": "2026年9月11日（报名截止）",
-        "event_start_at": null,
-        "event_end_at": null,
+        "event_start_at": "2026-10-15T00:00:00+09:00",
+        "event_end_at": "2026-10-18T00:00:00+09:00",
         "timezone": "Asia/Tokyo",
         "is_deadline_all_day": true,
         "is_long_term": false,
@@ -30535,27 +30673,27 @@
       },
       "costs": {
         "application_fee_amount": null,
-        "application_fee_currency": null,
+        "application_fee_currency": "JPY",
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
         "deposit_currency": null,
         "commission_rate": null,
-        "travel_self_funded": null,
+        "travel_self_funded": true,
         "accommodation_self_funded": null,
         "materials_self_funded": true,
-        "shipping_self_funded": null,
-        "cost_text": "报名费与搬入要求以官方公募要项为准。",
+        "shipping_self_funded": true,
+        "cost_text": "一般部門A/B规格每件或每套3500日元，C规格5000日元；学生部門1000日元，另有实物搬入要求。",
         "cost_status": "partial"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "出品申込書",
+          "符合规格的原创实物作品"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
-        "proposal_required": true,
+        "portfolio_required": false,
+        "sample_required": true,
+        "proposal_required": false,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
@@ -30583,7 +30721,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方页面确认报名期、展期、主办方及展览宗旨。"
         }
@@ -30603,11 +30741,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -30663,11 +30801,32 @@
         ]
       },
       "radar_tags": [
-        "ICH",
         "Craft",
         "Culture",
         "International"
-      ]
+      ],
+      "field_provenance": {
+        "application_start_at": {
+          "source_url": "https://takarazukahandicraft.jp/koubo.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "报名期8月17日至9月11日。"
+        },
+        "event_dates": {
+          "source_url": "https://takarazukahandicraft.jp/koubo.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "展期10月15日至18日。"
+        },
+        "fee": {
+          "source_url": "https://takarazukahandicraft.jp/koubo.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "按规格/年龄分档。"
+        },
+        "requires_on_site_presence": {
+          "source_url": "https://takarazukahandicraft.jp/koubo.html",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "10月11日直接搬入作品。"
+        }
+      }
     },
     {
       "id": "ich_672c86647f574f68a6d7ea93c4b2f5ce",
@@ -30722,16 +30881,16 @@
       "participation_mode": {
         "mode": "online",
         "submission_method": "official_platform",
-        "requires_on_site_presence": false,
-        "participation_notes": "以官方详情页及附件要求为准。"
+        "requires_on_site_presence": true,
+        "participation_notes": "申请在线完成，但入选作品需按官方日期递送，展后按指定日期取回；国际运输责任需向主办方确认。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": null,
+        "application_start_at": "2026-06-10T00:00:00+01:00",
         "deadline_at": "2026-09-07T12:00:00+01:00",
         "deadline_text": "2026年9月7日12:00（爱尔兰时间）",
-        "event_start_at": null,
-        "event_end_at": null,
+        "event_start_at": "2026-12-05T00:00:00+00:00",
+        "event_end_at": "2027-02-21T00:00:00+00:00",
         "timezone": "Europe/Dublin",
         "is_deadline_all_day": false,
         "is_long_term": false,
@@ -30775,21 +30934,22 @@
         "deposit_amount": null,
         "deposit_currency": null,
         "commission_rate": null,
-        "travel_self_funded": null,
+        "travel_self_funded": true,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
-        "shipping_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": true,
         "cost_text": "首件或单件投稿费15 EUR，每增加一件15 EUR，最多3件。",
         "cost_status": "confirmed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "在线申请信息",
+          "最多3件作品的图像/资料",
+          "作品递送与展览可用性确认"
         ],
         "portfolio_required": true,
-        "sample_required": false,
-        "proposal_required": true,
+        "sample_required": true,
+        "proposal_required": null,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
@@ -30817,7 +30977,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方页面确认投稿媒介、件数、费用和截止时间。"
         }
@@ -30837,11 +30997,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -30900,7 +31060,29 @@
         "Craft",
         "Culture",
         "International"
-      ]
+      ],
+      "field_provenance": {
+        "application_start_at": {
+          "source_url": "https://www.huntmuseum.com/whats-on/hunt-museum-open-submission-exhibition-2026/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Open for Entry 2026-06-10。"
+        },
+        "deadline_at": {
+          "source_url": "https://www.huntmuseum.com/whats-on/hunt-museum-open-submission-exhibition-2026/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Entry deadline 2026-09-07 12pm。"
+        },
+        "event_dates": {
+          "source_url": "https://www.huntmuseum.com/whats-on/hunt-museum-open-submission-exhibition-2026/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "展览开幕与闭展日期。"
+        },
+        "delivery": {
+          "source_url": "https://www.huntmuseum.com/whats-on/hunt-museum-open-submission-exhibition-2026/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Artwork Delivery 29-31 October 2026。"
+        }
+      }
     },
     {
       "id": "ich_58d3751370a64fda957285530263ca14",
@@ -30955,16 +31137,16 @@
       "participation_mode": {
         "mode": "online",
         "submission_method": "official_platform",
-        "requires_on_site_presence": false,
+        "requires_on_site_presence": null,
         "participation_notes": "以官方详情页及附件要求为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": null,
+        "application_start_at": null,
         "deadline_at": "2026-09-24T23:59:00-04:00",
         "deadline_text": "2026年9月24日（美国东部时间）",
-        "event_start_at": null,
-        "event_end_at": null,
+        "event_start_at": "2026-12-10T00:00:00-05:00",
+        "event_end_at": "2027-03-21T00:00:00-04:00",
         "timezone": "America/New_York",
         "is_deadline_all_day": false,
         "is_long_term": false,
@@ -31001,8 +31183,8 @@
         "benefit_text": "展览机会；一等奖1,000美元，二等奖500美元。"
       },
       "costs": {
-        "application_fee_amount": null,
-        "application_fee_currency": null,
+        "application_fee_amount": 40,
+        "application_fee_currency": "USD",
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -31010,19 +31192,20 @@
         "commission_rate": null,
         "travel_self_funded": null,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
+        "materials_self_funded": null,
         "shipping_self_funded": null,
-        "cost_text": "按官方CaFÉ投稿平台费用规则执行。",
-        "cost_status": "partial"
+        "cost_text": "官方页面列明5张图像投稿费40美元；运输责任未在摘要页确认。",
+        "cost_status": "confirmed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "CaFÉ申请信息",
+          "最多5张作品图像",
+          "作品说明/艺术家信息"
         ],
         "portfolio_required": true,
-        "sample_required": false,
-        "proposal_required": true,
+        "sample_required": true,
+        "proposal_required": null,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
@@ -31050,7 +31233,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方页面确认截止时间、媒介范围、奖项和不得使用生成式AI。"
         }
@@ -31070,11 +31253,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -31133,7 +31316,29 @@
         "Craft",
         "Culture",
         "International"
-      ]
+      ],
+      "field_provenance": {
+        "deadline_at": {
+          "source_url": "https://newbedfordart.org/analog-call/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Entry deadline 2026-09-24。"
+        },
+        "fee": {
+          "source_url": "https://newbedfordart.org/analog-call/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "$40 for 5 images。"
+        },
+        "benefits": {
+          "source_url": "https://newbedfordart.org/analog-call/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "$1000/$500 cash prizes and exhibition。"
+        },
+        "event_dates": {
+          "source_url": "https://newbedfordart.org/analog-call/",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "2026-12-10至2027-03-21。"
+        }
+      }
     },
     {
       "id": "ich_9464c48c91444c049608ac692e0c0d26",
@@ -31175,9 +31380,9 @@
         "region_groups": [
           "international"
         ],
-        "participation_scope": "international",
+        "participation_scope": "unrestricted",
         "eligible_regions": [
-          "符合赛事规则的申请人"
+          "按官方Craft & Hobby Exhibits规则"
         ],
         "is_online": false,
         "is_hybrid": false,
@@ -31185,14 +31390,14 @@
         "location_status": "confirmed"
       },
       "participation_mode": {
-        "mode": "online",
+        "mode": "hybrid",
         "submission_method": "official_platform",
-        "requires_on_site_presence": false,
-        "participation_notes": "以官方详情页及附件要求为准。"
+        "requires_on_site_presence": true,
+        "participation_notes": "需按官方日期将作品送达Premium Exhibit Building并在节日期间保持展出，之后按日期取回。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
+        "published_at": null,
+        "application_start_at": null,
         "deadline_at": "2026-10-23",
         "deadline_text": "2026年10月23日（预登记截止）",
         "event_start_at": null,
@@ -31241,21 +31446,22 @@
         "deposit_amount": null,
         "deposit_currency": null,
         "commission_rate": null,
-        "travel_self_funded": null,
+        "travel_self_funded": true,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
-        "shipping_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": true,
         "cost_text": "参赛与作品交件规则以官方Craft & Hobby Exhibits Rules为准。",
-        "cost_status": "partial"
+        "cost_status": "not_disclosed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "线上预登记",
+          "按组别提交的手工作品",
+          "Craft & Hobby Exhibits Rules/Entry Form"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
-        "proposal_required": true,
+        "portfolio_required": false,
+        "sample_required": true,
+        "proposal_required": false,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
@@ -31283,7 +31489,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方页面确认类别、预登记截止日、交件与奖项。"
         }
@@ -31303,11 +31509,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -31363,11 +31569,32 @@
         ]
       },
       "radar_tags": [
-        "ICH",
         "Craft",
         "Culture",
         "International"
-      ]
+      ],
+      "field_provenance": {
+        "deadline_at": {
+          "source_url": "https://www.nationalpeanutfestival.com/p/getinvolved/premium-exhibits/arts--crafts",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "预登记截止2026-10-23。"
+        },
+        "delivery": {
+          "source_url": "https://www.nationalpeanutfestival.com/p/getinvolved/premium-exhibits/arts--crafts",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "10月29日送达、11月16日取回。"
+        },
+        "fee": {
+          "source_url": "https://www.nationalpeanutfestival.com/p/getinvolved/premium-exhibits/arts--crafts",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "报名费未披露。"
+        },
+        "relevance": {
+          "source_url": "https://www.nationalpeanutfestival.com/p/getinvolved/premium-exhibits/arts--crafts",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "涵盖陶瓷、针线、木金工等craft类别，但不是ICH专门项目。"
+        }
+      }
     },
     {
       "id": "ich_78bb49f39c4240d794c8c33dfa25042c",
@@ -31407,12 +31634,12 @@
         "district": null,
         "venue_text": "线上申请",
         "region_groups": [
-          "international",
+          "province_only",
           "online_or_unrestricted"
         ],
-        "participation_scope": "global",
+        "participation_scope": "province_only",
         "eligible_regions": [
-          "Alberta及符合条件的原住民组织"
+          "Alberta省内符合条件的原住民社区和组织"
         ],
         "is_online": true,
         "is_hybrid": false,
@@ -31426,10 +31653,10 @@
         "participation_notes": "以官方详情页及附件要求为准。"
       },
       "dates": {
-        "published_at": "2026-09-06T04:00:00.000Z",
-        "application_start_at": "2026-09-06T04:00:00.000Z",
-        "deadline_at": "2026-09-15",
-        "deadline_text": "2026年9月15日（2026-2027申请期）",
+        "published_at": null,
+        "application_start_at": "2026-05-15T00:00:00-06:00",
+        "deadline_at": "2026-09-15T23:59:00-06:00",
+        "deadline_text": "2026年9月15日23:59（阿尔伯塔时间）",
         "event_start_at": null,
         "event_end_at": null,
         "timezone": "America/Edmonton",
@@ -31444,9 +31671,9 @@
         ],
         "eligibility_text": "支持原住民主导、增强保护或复兴原住民语言、遗产、文化与艺术的项目；具体资格以官方申请指南为准。",
         "ich_status_required": null,
-        "business_license_required": false,
-        "local_registration_required": false,
-        "recommendation_required": false,
+        "business_license_required": null,
+        "local_registration_required": true,
+        "recommendation_required": null,
         "age_requirement_text": null,
         "language_requirement_text": null,
         "eligibility_status": "confirmed"
@@ -31468,8 +31695,8 @@
         "benefit_text": "文化流项目资助，支持遗产、文化和艺术传承与复兴。"
       },
       "costs": {
-        "application_fee_amount": 0,
-        "application_fee_currency": "CAD",
+        "application_fee_amount": null,
+        "application_fee_currency": null,
         "booth_fee_amount": null,
         "booth_fee_currency": null,
         "deposit_amount": null,
@@ -31477,23 +31704,25 @@
         "commission_rate": null,
         "travel_self_funded": null,
         "accommodation_self_funded": null,
-        "materials_self_funded": true,
+        "materials_self_funded": null,
         "shipping_self_funded": null,
         "cost_text": "官方页面未列报名费。",
-        "cost_status": "confirmed"
+        "cost_status": "not_disclosed"
       },
       "requirements": {
         "documents_required": [
-          "报名表/申请表",
-          "项目说明或作品材料"
+          "IRI-CS Grant Application",
+          "社区支持证明/决议",
+          "电子付款申请及银行文件",
+          "项目计划和预算"
         ],
-        "portfolio_required": true,
-        "sample_required": false,
+        "portfolio_required": false,
+        "sample_required": null,
         "proposal_required": true,
         "invoice_required": false,
         "bidding_qualification_required": false,
         "production_capacity_text": null,
-        "requirements_text": "需证明项目符合原住民主导及文化、遗产或艺术复兴方向，具体材料以官方指南为准。"
+        "requirements_text": "仅面向位于Alberta的原住民社区和组织；项目须由原住民主导并增强、保护或复兴语言、遗产、文化或艺术，需提交社区支持证明。"
       },
       "application": {
         "application_url": "https://www.alberta.ca/indigenous-reconciliation-initiative-cultural-stream",
@@ -31517,7 +31746,7 @@
           "level": "L1",
           "is_primary": true,
           "published_at": null,
-          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "last_checked_at": "2026-09-06T05:00:00.000Z",
           "is_accessible": true,
           "notes": "官方页面确认资助方向、申请窗口和截止日期。"
         }
@@ -31537,11 +31766,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T05:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a-reviewer",
+        "updated_by": "stage5a1-semantic-reviewer",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T05:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -31601,7 +31830,34 @@
         "Culture",
         "Funding",
         "International"
-      ]
+      ],
+      "field_provenance": {
+        "application_start_at": {
+          "source_url": "https://www.alberta.ca/indigenous-reconciliation-initiative-cultural-stream",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "2026-05-15 intake opens。"
+        },
+        "deadline_at": {
+          "source_url": "https://www.alberta.ca/indigenous-reconciliation-initiative-cultural-stream",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "2026-09-15 11:59 p.m.截止。"
+        },
+        "eligible_regions": {
+          "source_url": "https://www.alberta.ca/indigenous-reconciliation-initiative-cultural-stream",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Alberta Indigenous communities and organizations。"
+        },
+        "requirements": {
+          "source_url": "https://www.alberta.ca/indigenous-reconciliation-initiative-cultural-stream",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "Grant application, community support and budget package。"
+        },
+        "fee": {
+          "source_url": "https://www.alberta.ca/indigenous-reconciliation-initiative-cultural-stream",
+          "checked_at": "2026-09-06T05:00:00.000Z",
+          "note": "费用未披露。"
+        }
+      }
     }
   ]
 }
