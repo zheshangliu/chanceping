@@ -8,6 +8,8 @@ import type { IchOpportunity, IchOpportunityFile } from "../src/ich/types";
 const root = process.cwd();
 const now = new Date("2026-09-06T12:00:00+08:00");
 const report = JSON.parse(fs.readFileSync(path.join(root, "docs/ich/stage5a-batch3-report.json"), "utf8")) as any;
+const directionSummaryPath = path.join(root, "docs/ich/stage5a2-direction-summary.json");
+const directionSummary = fs.existsSync(directionSummaryPath) ? JSON.parse(fs.readFileSync(directionSummaryPath, "utf8")) as { after_sha256?: string } : null;
 const bytes = fs.readFileSync(path.join(root, "data/ich-opportunities.json"));
 const file = JSON.parse(bytes.toString("utf8")) as IchOpportunityFile;
 const hash = crypto.createHash("sha256").update(bytes).digest("hex");
@@ -22,7 +24,7 @@ if (report.gate !== "pass") errors.push("batch report gate is not pass");
 if (report.candidate_count !== 10 || report.official_backtrace_success !== 10 || report.ds3_pass !== 10 || report.ds14_imported !== 10) errors.push("batch counts do not equal 10/10/10/10");
 if (report.before_count !== 147 || report.after_count !== 157) errors.push(`unexpected counts ${report.before_count}/${report.after_count}`);
 if (file.entries.length !== 157) errors.push(`store count ${file.entries.length} != 157`);
-if (hash !== report.after_sha256) errors.push(`store hash ${hash} != report hash ${report.after_sha256}`);
+if (hash !== report.after_sha256 && hash !== directionSummary?.after_sha256) errors.push(`store hash ${hash} != Batch3 report hash ${report.after_sha256} or Stage5-A.2 hash ${directionSummary?.after_sha256 ?? "missing"}`);
 
 const imported = slugs.map((slug) => file.entries.find((entry) => entry.slug === slug));
 if (imported.some((entry) => !entry)) errors.push("one or more imported slugs are missing");

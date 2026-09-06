@@ -1,0 +1,122 @@
+{
+  "stage": "stage5a2",
+  "gate": "pass",
+  "reviewed_batch3": 10,
+  "total_channel_records": 19,
+  "decisions": {
+    "KEEP": 6,
+    "RECLASSIFY": 1,
+    "ICH_EXCLUDE": 0,
+    "UNIVERSAL_POOL_ONLY": 3
+  },
+  "before_sha256": "1bd114f982818a5c55feafe422c1ade252fb177b10908d8485f575eaf1aba644",
+  "after_sha256": "8cc10b7ab24aac19e52764b77842ac6866a62c17a933b83e35d76304e6ab6ce9",
+  "formal_total": 157,
+  "lifecycle_before": {
+    "expired": 68,
+    "pending_confirmation": 36,
+    "active": 23,
+    "closing_soon": 14,
+    "opening_soon": 3,
+    "long_term": 6
+  },
+  "lifecycle_after": {
+    "expired": 68,
+    "pending_confirmation": 36,
+    "active": 23,
+    "closing_soon": 14,
+    "opening_soon": 3,
+    "long_term": 6
+  },
+  "actionable_pool_before": 43,
+  "actionable_pool_after_raw": 43,
+  "actionable_pool_after_direction_aware": 40,
+  "channel_actionable_before": 8,
+  "channel_actionable_after": 8,
+  "supplier_channel_coverage": 4,
+  "procurement_actionable": 2,
+  "changes": 2,
+  "batch3": [
+    {
+      "slug": "nmaahc-museum-store-vendor-artisan-application",
+      "direction": "supplier_to_institution",
+      "decision": "KEEP",
+      "ichActionable": true,
+      "note": "官方接受artisan/vendor/supplier提交自己的产品供Museum Store考虑销售。",
+      "source_url": "https://nmaahc.si.edu/museum-store-vendors"
+    },
+    {
+      "slug": "museumshops-uk-sell-with-us-partnership",
+      "direction": "marketplace_for_institution",
+      "decision": "RECLASSIFY",
+      "ichActionable": true,
+      "note": "平台服务对象是博物馆、历史建筑、图书馆、美术馆和科学中心，不是普通工艺供应商。",
+      "source_url": "https://museumshops.uk/sell-with-us/"
+    },
+    {
+      "slug": "national-museum-australia-museum-shop-wholesale-registration",
+      "direction": "institution_to_retailer",
+      "decision": "UNIVERSAL_POOL_ONLY",
+      "ichActionable": false,
+      "note": "gift shops/gallery shops/retailers注册后采购博物馆自有商品。",
+      "source_url": "https://shop.nma.gov.au/pages/wholesale"
+    },
+    {
+      "slug": "met-store-wholesale-retail-institution-inquiry",
+      "direction": "institution_to_retailer",
+      "decision": "UNIVERSAL_POOL_ONLY",
+      "ichActionable": false,
+      "note": "museum store/gallery/gift shop/retail institution采购The Met商品。",
+      "source_url": "https://store.metmuseum.org/met-wholesale"
+    },
+    {
+      "slug": "van-gogh-museum-shop-new-retailer-wholesale",
+      "direction": "institution_to_retailer",
+      "decision": "UNIVERSAL_POOL_ONLY",
+      "ichActionable": false,
+      "note": "官方文案是Interested in retailing our products，属于博物馆向零售商批发。",
+      "source_url": "https://www.vangogh.shop/en/wholesale-login-page"
+    },
+    {
+      "slug": "sunshine-makers-market-vendor-application-september-2026",
+      "direction": "marketplace_for_supplier",
+      "decision": "KEEP",
+      "ichActionable": true,
+      "note": "市集向makers/artists/creators开放展商申请，属于供应方进入市场。",
+      "source_url": "https://www.sunshinemakersmarket.com/apply-as-a-vendor"
+    },
+    {
+      "slug": "west-coast-craft-fort-mason-night-market-2026",
+      "direction": "marketplace_for_supplier",
+      "decision": "KEEP",
+      "ichActionable": true,
+      "note": "手工艺夜市接受artist/designer/craftsperson展商申请。",
+      "source_url": "https://www.westcoastcraft.com/fort-mason-night-market-apply"
+    },
+    {
+      "slug": "lattin-farms-crafters-fair-vendor-2026",
+      "direction": "marketplace_for_supplier",
+      "decision": "KEEP",
+      "ichActionable": true,
+      "note": "市场面向local crafters and artisans提供展位销售机会。",
+      "source_url": "https://www.lattinfarms.com/vendors"
+    },
+    {
+      "slug": "yuanmingyuan-national-day-ich-event-procurement-2026",
+      "direction": "buyer_to_vendor",
+      "decision": "KEEP",
+      "ichActionable": true,
+      "note": "圆明园管理处作为采购方采购非遗主题活动执行服务。",
+      "source_url": "https://ggzyfw.beijing.gov.cn/jyxxcggg/20260827/5686999.html"
+    },
+    {
+      "slug": "xian-museum-collection-resources-partner-call-2026",
+      "direction": "supplier_to_institution",
+      "decision": "KEEP",
+      "ichActionable": true,
+      "note": "合作机构向试点博物馆提供IP授权运营、文创开发、生产和销售能力。",
+      "source_url": "https://www.xawhcq.com/index/notice/detail/id/3607/cate_id/12.html"
+    }
+  ],
+  "batch4_factory_gate": "pass"
+}

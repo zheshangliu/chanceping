@@ -1553,11 +1553,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -1621,6 +1621,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "共享陶艺工作室提供空间，交易方向是空间方服务创作者。"
+        }
       }
     },
     {
@@ -2469,11 +2478,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -2537,6 +2546,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/spaces-to-rent-in-shared-space-for-ceramics",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "共享空间出租给陶艺创作者，不是机构采购工艺品。"
+        }
       }
     },
     {
@@ -2698,11 +2716,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -2766,6 +2784,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/studio-space-available",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "East London工作室空间出租给创作者。"
+        }
       }
     },
     {
@@ -3156,11 +3183,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -3224,6 +3251,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/shared-ceramics-studio-space-2",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "共享陶艺工作室提供空间给工艺创作者。"
+        }
       }
     },
     {
@@ -6610,11 +6646,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -6678,6 +6714,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "unknown",
+      "supplier_channel_eligible": false,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.gov.cn/zhengce/zuixin.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "历史记录仅有入驻招募线索，官方交易对象未确认。"
+        }
       }
     },
     {
@@ -12573,11 +12618,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -12641,6 +12686,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "grant_to_applicant",
+      "supplier_channel_eligible": false,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://artscouncilmalta.gov.mt/wp-content/uploads/2026/05/List-of-Schemes-EN.pdf",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "文化遗产资助计划是资助方到申请人，不是渠道采购。"
+        }
       }
     },
     {
@@ -13489,11 +13543,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -13557,6 +13611,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "open_call_to_creator",
+      "supplier_channel_eligible": false,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.craftscouncil.org.uk/sector-support/opportunities/open-call-craft-makers-christmas-exhibition-opportunity",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "展览机会是向创作者公开征集作品。"
+        }
       }
     },
     {
@@ -14863,11 +14926,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-25T12:00:00+08:00",
-        "updated_at": "2026-08-24T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-editor",
-        "updated_by": "ich-ds0-integrity-repair",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-24T12:50:00+08:00",
-        "last_checked_at": "2026-08-24T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-25T12:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -14931,6 +14994,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "grant_to_applicant",
+      "supplier_channel_eligible": false,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.wakefield.gov.uk/culture-and-heritage/culture-grants/culture-grants-small",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "文化资助计划是资助方到申请人。"
+        }
       }
     },
     {
@@ -22730,11 +22802,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-24T16:00:00+08:00",
-        "updated_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-stage5-curation",
-        "updated_by": "chanceping-stage5-curation",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-06-20",
-        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -22789,6 +22861,15 @@
             "revision": 4
           }
         ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://capitalmuseum.org.cn/news/b20f254505ee41aa896b1a5c505124b7",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "文创产品开发、供货或空间运营能力提交给博物馆。"
+        }
       }
     },
     {
@@ -22959,11 +23040,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-24T16:00:00+08:00",
-        "updated_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-stage5-curation",
-        "updated_by": "chanceping-stage5-curation",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-06-01",
-        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -23018,6 +23099,15 @@
             "revision": 4
           }
         ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://www.ahsz.gov.cn/public/2655611/196422801.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "团队或传承人向博物馆文化服务中心提供展示、体验或经营合作。"
+        }
       }
     },
     {
@@ -23191,11 +23281,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-07-24T16:00:00+08:00",
-        "updated_at": "2026-07-24T16:00:00+08:00",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "chanceping-stage5-curation",
-        "updated_by": "chanceping-stage5-curation",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-07-01",
-        "last_checked_at": "2026-07-24T16:00:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-07-24T16:00:00+08:00",
         "archived_at": null,
         "data_version": "1.0",
@@ -23250,6 +23340,15 @@
             "revision": 4
           }
         ]
+      },
+      "opportunity_direction": "open_call_to_creator",
+      "supplier_channel_eligible": false,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://wglj.gz.gov.cn/gkmlpt/content/10/10898/post_10898467.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "广州礼物是向企业、机构及创作者征集产品。"
+        }
       }
     },
     {
@@ -27325,11 +27424,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-08-24T08:00:00.000Z",
-        "updated_at": "2026-08-24T12:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "ich-ds1d-editor",
-        "updated_by": "ich-ds13-quality-fix",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-08-24T16:00:00+08:00",
-        "last_checked_at": "2026-08-24T12:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "published_at": "2026-08-24T08:00:00.000Z",
         "archived_at": null,
         "data_version": "1.0",
@@ -27393,6 +27492,15 @@
             "revision": 5
           }
         ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "supplier_channel_eligible": true,
+      "field_provenance": {
+        "opportunity_direction": {
+          "source_url": "https://whly.gd.gov.cn/open_newggl/content/post_4944921.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "平台企业向文旅主管部门提供消费券发放和活动服务。"
+        }
       }
     },
     {
@@ -29695,11 +29803,11 @@
       "seo": null,
       "metadata": {
         "created_at": "2026-09-06T04:00:00.000Z",
-        "updated_at": "2026-09-06T05:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-curation",
-        "updated_by": "stage5a1-semantic-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
-        "last_checked_at": "2026-09-06T05:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
         "source_import_batch": null,
         "published_at": "2026-09-06T04:00:00.000Z",
@@ -29789,8 +29897,15 @@
           "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
           "checked_at": "2026-09-06T05:00:00.000Z",
           "note": "驻场工作人员要求。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://www.nnhm.org.cn/xw/zbgg/4028c108a00c331701a06b007a1b01a0.shtml",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "企业或组织向国家自然博物馆提供文创产品设计开发、生产和运营能力。"
         }
-      }
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "supplier_channel_eligible": true
     },
     {
       "id": "ich_d6183f543154406c97af9451f544114f",
@@ -34576,7 +34691,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -34655,8 +34770,16 @@
           "source_url": "https://nmaahc.si.edu/museum-store-vendors",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面提供邮件提交方式及申请说明。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://nmaahc.si.edu/museum-store-vendors",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方接受artisan/vendor/supplier提交自己的产品供Museum Store考虑销售。"
         }
-      }
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true
     },
     {
       "id": "ich_d2ea91a8595c4e4399b56b672f8b78e4",
@@ -34729,11 +34852,9 @@
       },
       "eligibility": {
         "eligible_applicant_types": [
-          "organization",
-          "enterprise",
-          "studio"
+          "organization"
         ],
-        "eligibility_text": "公开条款限定英国或王室属地的博物馆、历史建筑、图书馆、美术馆和科学中心；个人及与博物馆/画廊无关联的商业公司不得直接销售。申请者需有至少10件可上架产品并具备三工作日内发货能力。",
+        "eligibility_text": "仅限英国或王室属地的博物馆、历史建筑、图书馆、美术馆和科学中心及其关联组织；个人及与博物馆/画廊无关联的商业公司不得直接销售。申请者需有至少10件可上架产品并具备三工作日内发货能力。",
         "ich_status_required": null,
         "business_license_required": true,
         "local_registration_required": true,
@@ -34830,7 +34951,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -34909,8 +35030,16 @@
           "source_url": "https://museumshops.uk/sell-with-us/",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面说明不收前期/月费，按销售收取10%佣金。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://museumshops.uk/sell-with-us/",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "平台服务对象是博物馆、历史建筑、图书馆、美术馆和科学中心，不是普通工艺供应商。"
         }
-      }
+      },
+      "opportunity_direction": "marketplace_for_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": false
     },
     {
       "id": "ich_8132dc503ccd40f3a6812e716953d6fe",
@@ -35083,7 +35212,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -35161,8 +35290,16 @@
           "source_url": "https://shop.nma.gov.au/pages/wholesale",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面说明Museum Shop产品为文化、艺术和社区产品。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://shop.nma.gov.au/pages/wholesale",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "gift shops/gallery shops/retailers注册后采购博物馆自有商品。"
         }
-      }
+      },
+      "opportunity_direction": "institution_to_retailer",
+      "ich_actionable": false,
+      "supplier_channel_eligible": false
     },
     {
       "id": "ich_10029c7c4e8e43839ec896b2f2b6558b",
@@ -35334,7 +35471,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -35412,8 +35549,16 @@
           "source_url": "https://store.metmuseum.org/met-wholesale",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方条款列明首单最低300美元、补单最低150美元。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://store.metmuseum.org/met-wholesale",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "museum store/gallery/gift shop/retail institution采购The Met商品。"
         }
-      }
+      },
+      "opportunity_direction": "institution_to_retailer",
+      "ich_actionable": false,
+      "supplier_channel_eligible": false
     },
     {
       "id": "ich_38c127164ec44ac3859022db549d78e1",
@@ -35585,7 +35730,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -35663,8 +35808,16 @@
           "source_url": "https://www.vangogh.shop/en/wholesale-login-page",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面要求填写New retailer资料并等待联系。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://www.vangogh.shop/en/wholesale-login-page",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方文案是Interested in retailing our products，属于博物馆向零售商批发。"
         }
-      }
+      },
+      "opportunity_direction": "institution_to_retailer",
+      "ich_actionable": false,
+      "supplier_channel_eligible": false
     },
     {
       "id": "ich_642983b677da43f29a0cb3868a8de3b4",
@@ -35839,7 +35992,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -35918,8 +36071,16 @@
           "source_url": "https://www.sunshinemakersmarket.com/apply-as-a-vendor",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面面向makers、artists、creators、designers和entrepreneurs。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://www.sunshinemakersmarket.com/apply-as-a-vendor",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "市集向makers/artists/creators开放展商申请，属于供应方进入市场。"
         }
-      }
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true
     },
     {
       "id": "ich_7b49b2b0035541a1a7d1fdb627234be5",
@@ -36094,7 +36255,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -36173,8 +36334,16 @@
           "source_url": "https://www.westcoastcraft.com/fort-mason-night-market-apply",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面说明未支付申请费的申请不会被考虑。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://www.westcoastcraft.com/fort-mason-night-market-apply",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "手工艺夜市接受artist/designer/craftsperson展商申请。"
         }
-      }
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true
     },
     {
       "id": "ich_4513e3fb509f450da035097b7a49b3d6",
@@ -36349,7 +36518,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-09-06T04:00:00.000Z",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -36427,8 +36596,16 @@
           "source_url": "https://www.lattinfarms.com/vendors",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方页面列明每周摊位费10美元，5个以上周末有季节费率。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://www.lattinfarms.com/vendors",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "市场面向local crafters and artisans提供展位销售机会。"
         }
-      }
+      },
+      "opportunity_direction": "marketplace_for_supplier",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true
     },
     {
       "id": "ich_e13a5dac592747c3978017c443bd0354",
@@ -36600,7 +36777,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-08-27",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -36678,8 +36855,16 @@
           "source_url": "https://ggzyfw.beijing.gov.cn/jyxxcggg/20260827/5686999.html",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方公告列明预算金额和最高限价均为24.3万元。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://ggzyfw.beijing.gov.cn/jyxxcggg/20260827/5686999.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "圆明园管理处作为采购方采购非遗主题活动执行服务。"
         }
-      }
+      },
+      "opportunity_direction": "buyer_to_vendor",
+      "ich_actionable": true,
+      "supplier_channel_eligible": false
     },
     {
       "id": "ich_e33de306cf3647e2b346238d8a545eca",
@@ -36853,7 +37038,7 @@
         "created_at": "2026-09-06T04:00:00.000Z",
         "updated_at": "2026-09-06T04:00:00.000Z",
         "created_by": "stage5a-b3-curation",
-        "updated_by": "stage5a-b3-reviewer",
+        "updated_by": "stage5a2-direction-review",
         "first_discovered_at": "2026-03-12",
         "last_checked_at": "2026-09-06T04:00:00.000Z",
         "data_version": "1.0",
@@ -36931,8 +37116,16 @@
           "source_url": "https://www.xawhcq.com/index/notice/detail/id/3607/cate_id/12.html",
           "checked_at": "2026-09-06T04:00:00.000Z",
           "note": "官方公告明确面向全国公开征集优质合作机构。"
+        },
+        "opportunity_direction": {
+          "source_url": "https://www.xawhcq.com/index/notice/detail/id/3607/cate_id/12.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "合作机构向试点博物馆提供IP授权运营、文创开发、生产和销售能力。"
         }
-      }
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true
     }
   ]
 }
