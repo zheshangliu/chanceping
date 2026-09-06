@@ -1,0 +1,40 @@
+{
+  "batch": "stage5a-batch-03-preflight",
+  "mode": "write",
+  "before_sha256": "070039a90e13420146af3c68bc4a8269b2b76af251d0a2c7a8d401bf0dd92c67",
+  "after_sha256": "fc7a27e3531441f08d1f7e0dda4e1746bc83fa300822dc8b9599482ae74c34ea",
+  "changed_records": [
+    {
+      "slug": "fuzhou-heritage-craft-gift-procurement-2026",
+      "fields": [
+        "costs.deposit_amount",
+        "costs.deposit_currency",
+        "field_provenance.deposit"
+      ],
+      "values": {
+        "deposit_amount": 3000,
+        "deposit_currency": "CNY"
+      }
+    },
+    {
+      "slug": "guam-micronesia-island-fair-vendor-2026",
+      "fields": [
+        "costs.application_fee_amount",
+        "costs.application_fee_currency",
+        "costs.cost_status",
+        "costs.deposit_amount",
+        "costs.deposit_currency",
+        "field_provenance.fee",
+        "field_provenance.deposit"
+      ],
+      "values": {
+        "application_fee_amount": null,
+        "application_fee_currency": "USD",
+        "cost_status": "partial",
+        "deposit_amount": 100,
+        "deposit_currency": "USD"
+      }
+    }
+  ],
+  "checked_at": "2026-09-06T04:00:00.000Z"
+}

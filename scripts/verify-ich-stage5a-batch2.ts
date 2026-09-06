@@ -21,9 +21,9 @@ const errors: string[] = [];
 const before = 137;
 if (report.gate !== "pass") errors.push("batch report gate is not pass");
 if (report.candidate_count !== 10 || report.ds3_pass !== 10 || report.ds14_imported !== 10) errors.push("batch counts do not equal 10/10/10");
-if (report.before_count !== before || report.after_count !== 147) errors.push(`unexpected counts ${report.before_count}/${report.after_count}`);
-if (file.entries.length !== 147) errors.push(`store count ${file.entries.length} != 147`);
-if (hash !== report.after_sha256) errors.push(`store hash ${hash} != report hash ${report.after_sha256}`);
+if (report.before_count !== before || report.after_count !== 147) errors.push(`unexpected Batch2 report counts ${report.before_count}/${report.after_count}`);
+if (file.entries.length < 147) errors.push(`store count ${file.entries.length} is below Batch2 after-count 147`);
+if (file.entries.length === 147 && hash !== report.after_sha256) errors.push(`store hash ${hash} != Batch2 report hash ${report.after_sha256}`);
 const primary = new Map<string, string>();
 for (const entry of file.entries) {
   const valid = validateIchOpportunity(entry);
@@ -57,8 +57,10 @@ for (const entry of file.entries.filter((item) => item.is_published)) {
   counts[status] = (counts[status] ?? 0) + 1;
 }
 const actionable = ["active", "closing_soon", "long_term"].reduce((sum, status) => sum + (counts[status] ?? 0), 0);
-if (actionable !== 33) errors.push(`actionable pool ${actionable} != 33`);
-if ((counts.opening_soon ?? 0) !== 3) errors.push(`opening_soon ${counts.opening_soon ?? 0} != 3`);
-if ((counts.active ?? 0) !== 20) errors.push(`exact active ${counts.active ?? 0} != 20`);
+if (file.entries.length === 147) {
+  if (actionable !== 33) errors.push(`actionable pool ${actionable} != Batch2 baseline 33`);
+  if ((counts.opening_soon ?? 0) !== 3) errors.push(`opening_soon ${counts.opening_soon ?? 0} != Batch2 baseline 3`);
+  if ((counts.active ?? 0) !== 20) errors.push(`exact active ${counts.active ?? 0} != Batch2 baseline 20`);
+}
 if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
 console.log(JSON.stringify({ pass: true, before_count: before, after_count: file.entries.length, imported: imported.length, status_counts: counts, actionable_pool: actionable, hash }, null, 2));

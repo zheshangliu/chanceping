@@ -1,0 +1,77 @@
+{
+  "batch": "stage5a-batch-03",
+  "mode": "write",
+  "candidate_count": 10,
+  "official_backtrace_success": 10,
+  "ds3_pass": 10,
+  "ds14_imported": 10,
+  "before_count": 147,
+  "after_count": 157,
+  "before_sha256": "fc7a27e3531441f08d1f7e0dda4e1746bc83fa300822dc8b9599482ae74c34ea",
+  "after_sha256": "1bd114f982818a5c55feafe422c1ade252fb177b10908d8485f575eaf1aba644",
+  "lifecycle_before": {
+    "formal_total": 147,
+    "exact_active": 20,
+    "closing_soon": 13,
+    "opening_soon": 3,
+    "long_term": 0,
+    "actionable_pool": 33,
+    "expired": 68,
+    "pending_confirmation": 36
+  },
+  "lifecycle_after": {
+    "formal_total": 157,
+    "exact_active": 23,
+    "closing_soon": 14,
+    "opening_soon": 3,
+    "long_term": 6,
+    "actionable_pool": 43,
+    "expired": 68,
+    "pending_confirmation": 36
+  },
+  "status_counts": {
+    "expired": 68,
+    "pending_confirmation": 36,
+    "active": 23,
+    "closing_soon": 14,
+    "opening_soon": 3,
+    "long_term": 6
+  },
+  "titles": [
+    "National Museum of African American History and Culture Museum Store Vendor / Artisan Submission",
+    "MuseumShops UK Sell With Us 商店合作申请",
+    "National Museum of Australia Museum Shop Wholesale 注册",
+    "The Met Store Wholesale 零售机构合作咨询",
+    "Van Gogh Museum Shop New Retailer Wholesale 申请",
+    "Sunshine Makers Market 2026年9月创作者市集展商申请",
+    "West Coast Craft Fort Mason Night Market 2026 展商申请",
+    "Lattin Farms Crafters Fair 2026 手工艺展商申请",
+    "2026年圆明园迎国庆系列非遗主题活动采购",
+    "西安市博物馆馆藏资源合作机构征集"
+  ],
+  "slugs": [
+    "nmaahc-museum-store-vendor-artisan-application",
+    "museumshops-uk-sell-with-us-partnership",
+    "national-museum-australia-museum-shop-wholesale-registration",
+    "met-store-wholesale-retail-institution-inquiry",
+    "van-gogh-museum-shop-new-retailer-wholesale",
+    "sunshine-makers-market-vendor-application-september-2026",
+    "west-coast-craft-fort-mason-night-market-2026",
+    "lattin-farms-crafters-fair-vendor-2026",
+    "yuanmingyuan-national-day-ich-event-procurement-2026",
+    "xian-museum-collection-resources-partner-call-2026"
+  ],
+  "gate": "pass",
+  "sources": [
+    "https://nmaahc.si.edu/museum-store-vendors",
+    "https://museumshops.uk/sell-with-us/",
+    "https://shop.nma.gov.au/pages/wholesale",
+    "https://store.metmuseum.org/met-wholesale",
+    "https://www.vangogh.shop/en/wholesale-login-page",
+    "https://www.sunshinemakersmarket.com/apply-as-a-vendor",
+    "https://www.westcoastcraft.com/fort-mason-night-market-apply",
+    "https://www.lattinfarms.com/vendors",
+    "https://ggzyfw.beijing.gov.cn/jyxxcggg/20260827/5686999.html",
+    "https://www.xawhcq.com/index/notice/detail/id/3607/cate_id/12.html"
+  ]
+}
