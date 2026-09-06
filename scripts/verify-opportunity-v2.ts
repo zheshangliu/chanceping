@@ -96,12 +96,34 @@ async function main(): Promise<void> {
   assert.equal(scheduled.fetched_sources, 1);
   assert.equal(scheduled.successful_sources, 1);
 
+  const retrySourcesPath = path.join(temp, "retry-sources.json");
+  const retryPoolPath = path.join(temp, "retry-pool.json");
+  writeOpportunityV2Sources([
+    { ...initialSources[0], status: "FAILED" },
+    { ...initialSources[1], status: "PENDING" },
+    { ...initialSources[2], status: "PAUSED", enabled: false },
+    { ...initialSources[3], status: "NEEDS_ADAPTER" },
+  ], retrySourcesPath);
+  fs.writeFileSync(retryPoolPath, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date(0).toISOString(), opportunities: [] }));
+  const retry = await runOpportunityV2({ sourcesPath: retrySourcesPath, poolPath: retryPoolPath, healthPath: path.join(temp, "retry-health.json"), fetcher });
+  assert.equal(retry.fetched_sources, 2, "scheduler retries FAILED and PENDING but excludes PAUSED and NEEDS_ADAPTER");
+  assert.equal(retry.successful_sources, 2);
+  assert.ok(retry.sources.filter((source) => source.status === "ACTIVE").length >= 2);
+
   const currentRadar = new Map(filterOpportunityV2Radar(readOpportunityV2Pool(poolPath).opportunities, readOpportunityV2Sources(sourcesPath)).map((item) => [item.id, JSON.stringify(item)]));
   for (const [id, serialized] of baselineRadar) assert.equal(currentRadar.get(id), serialized, `existing V2 radar item changed: ${id}`);
   const oldEnv = { sources: process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH, pool: process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH };
   process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH = sourcesPath;
   process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH = poolPath;
   const app = createApp();
+  assert.equal((await app.request("http://localhost/ich")).status, 200);
+  const ichPage = await (await app.request("http://localhost/ich")).text();
+  const radarResponse = await app.request("http://localhost/api/opportunity-v2/radar");
+  const radarApi = await radarResponse.json() as { total: number };
+  const displayedTotal = Number(ichPage.match(/(\d+) 条当前机会/u)?.[1] ?? -1);
+  assert.equal(displayedTotal, radarApi.total, "public /ich total must match the V2 radar API");
+  assert.match(ichPage, /来源：/);
+  assert.doesNotMatch(ichPage, /纯摄影比赛/);
   assert.equal((await app.request("http://localhost/opportunity-v2/admin/sources")).status, 200);
   const page = await (await app.request("http://localhost/opportunity-v2/admin/sources")).text();
   assert.match(page, /Source Manager/);

@@ -103,7 +103,7 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   const sources = readOpportunityV2Sources(options.sourcesPath);
   const selectedSources = options.sourceId
     ? sources.filter((source) => source.id === options.sourceId && source.enabled)
-    : sources.filter((source) => source.enabled && source.status === "ACTIVE");
+    : sources.filter((source) => source.enabled && source.status !== "PAUSED" && source.status !== "NEEDS_ADAPTER");
   if (options.sourceId && !selectedSources.length) throw new Error(`Source not found or paused: ${options.sourceId}`);
   const pool = readOpportunityV2Pool(options.poolPath);
   const fetched: ReturnType<typeof normalizeOpportunityV2>[] = [];
