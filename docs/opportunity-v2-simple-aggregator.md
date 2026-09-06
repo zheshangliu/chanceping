@@ -1,5 +1,11 @@
 # ICH Radar V2｜Simple Aggregator
 
+## Source Manager
+
+V2 的六个来源是默认 Seed Sources，不再是新增来源的 ID 白名单。后台页面 `/opportunity-v2/admin/sources` 和对应的 `/api/opportunity-v2/sources` 管理接口允许保存合法的小写 slug 来源 ID。
+
+新来源保存后会立即执行一次测试；解析顺序为已有专用 Adapter、RSS、Generic HTML Listing。通用解析成功后会自动进行首次抓取并进入现有 72 小时 Scheduler。URL 可访问但没有识别出机会条目时，来源仍会保留并标记为 `NEEDS_ADAPTER`；网络或 HTTP 失败标记为 `FAILED`，单个来源不会阻断其他来源。
+
 V2 将非遗机会雷达拆成三个独立层：
 
 ```text

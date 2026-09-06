@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { identityHash } from "../ich/aggregation/adapters/common";
 import type { OpportunityV2Source } from "./types";
 
 export const OPPORTUNITY_V2_SOURCE_IDS = [
@@ -48,9 +49,73 @@ export function validateOpportunityV2Sources(sources: OpportunityV2Source[]): st
   if (new Set(sources.map((source) => source.id)).size !== sources.length) errors.push("source ids must be unique");
   for (const source of sources) {
     if (!source.id || !source.name || !/^https?:\/\//u.test(source.url)) errors.push(`${source.id || "unknown"}: id/name/url are required`);
-    if (!OPPORTUNITY_V2_SOURCE_IDS.includes(source.id as typeof OPPORTUNITY_V2_SOURCE_IDS[number])) errors.push(`${source.id}: not in V2 first source pool`);
+    if (!/^[a-z0-9][a-z0-9-]{0,79}$/u.test(source.id)) errors.push(`${source.id || "unknown"}: id must be a lowercase slug`);
+    if (source.region !== "CN" && source.region !== "GLOBAL") errors.push(`${source.id}: region must be CN or GLOBAL`);
     if (source.priority !== "P0" && source.priority !== "P1") errors.push(`${source.id}: priority must be P0 or P1`);
     if (source.radars.length === 0) errors.push(`${source.id}: at least one radar is required`);
   }
   return errors;
+}
+
+export interface OpportunityV2SourceInput {
+  id?: string;
+  name: string;
+  url: string;
+  region: "CN" | "GLOBAL";
+  priority: "P0" | "P1";
+  types: string[];
+  radars: string[];
+}
+
+function sourceIdFor(input: OpportunityV2SourceInput): string {
+  const slug = input.id?.trim().toLowerCase() || input.name.trim().toLowerCase()
+    .replace(/[^a-z0-9]+/gu, "-")
+    .replace(/^-+|-+$/gu, "")
+    .slice(0, 64);
+  return slug || `source-${identityHash(input.url)}`;
+}
+
+function normalizeInput(input: OpportunityV2SourceInput): OpportunityV2SourceInput {
+  return {
+    ...input,
+    id: sourceIdFor(input),
+    name: input.name.trim(),
+    url: input.url.trim(),
+    types: [...new Set(input.types.map((value) => value.trim()).filter(Boolean))],
+    radars: [...new Set(input.radars.map((value) => value.trim()).filter(Boolean))],
+  };
+}
+
+export function createOpportunityV2Source(input: OpportunityV2SourceInput): OpportunityV2Source {
+  const normalized = normalizeInput(input);
+  const source = {
+    ...normalized,
+    id: normalized.id as string,
+    enabled: true,
+    status: "PENDING" as const,
+    last_fetch_at: null,
+  };
+  const errors = validateOpportunityV2Sources([source]);
+  if (errors.length) throw new Error(errors.join("; "));
+  return source;
+}
+
+export function findOpportunityV2Source(sourceId: string, filePath?: string): OpportunityV2Source | undefined {
+  return readOpportunityV2Sources(filePath).find((source) => source.id === sourceId);
+}
+
+export function updateOpportunityV2Source(sourceId: string, patch: Partial<OpportunityV2Source>, filePath?: string): OpportunityV2Source {
+  const sources = readOpportunityV2Sources(filePath);
+  const index = sources.findIndex((source) => source.id === sourceId);
+  if (index < 0) throw new Error(`Source not found: ${sourceId}`);
+  const next = { ...sources[index], ...patch, id: sourceId };
+  const errors = validateOpportunityV2Sources([next]);
+  if (errors.length) throw new Error(errors.join("; "));
+  sources[index] = next;
+  writeOpportunityV2Sources(sources, filePath);
+  return next;
+}
+
+export function setOpportunityV2SourceState(sourceId: string, state: { enabled: boolean; status: OpportunityV2Source["status"] }, filePath?: string): OpportunityV2Source {
+  return updateOpportunityV2Source(sourceId, state, filePath);
 }

@@ -1,7 +1,7 @@
 export const OPPORTUNITY_V2_SCHEMA = "chanceping-opportunity-v2.v1" as const;
 
 export type V2SourcePriority = "P0" | "P1";
-export type V2SourceStatus = "ACTIVE" | "BLOCKED" | "PENDING";
+export type V2SourceStatus = "ACTIVE" | "BLOCKED" | "PENDING" | "PAUSED" | "FAILED" | "NEEDS_ADAPTER";
 export type V2OpportunityStatus = "CURRENT" | "EXPIRED" | "UNKNOWN_DEADLINE";
 export type V2RadarRelevance = "RELEVANT" | "IRRELEVANT" | "UNCERTAIN";
 
@@ -53,6 +53,7 @@ export interface OpportunityV2SourceHealth {
   http_status: number | null;
   items_seen: number;
   error: string | null;
+  format?: "DEDICATED" | "RSS" | "HTML_LISTING" | null;
 }
 
 export interface OpportunityV2RunResult {
