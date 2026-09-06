@@ -1,0 +1,57 @@
+{
+  "batch": "stage5a-batch-02",
+  "mode": "write",
+  "candidate_count": 10,
+  "ds3_pass": 10,
+  "ds14_imported": 10,
+  "before_count": 137,
+  "after_count": 147,
+  "before_sha256": "6d9e534d25b50139e62001c53ea64a817419bc04c26b80ae171fa4a1e8cbad15",
+  "after_sha256": "070039a90e13420146af3c68bc4a8269b2b76af251d0a2c7a8d401bf0dd92c67",
+  "status_counts": {
+    "active": 20,
+    "opening_soon": 3,
+    "closing_soon": 13,
+    "long_term": 0,
+    "expired": 68,
+    "ended": 0,
+    "pending_confirmation": 36
+  },
+  "titles": [
+    "“闽都福韵·榕城有礼”福州非遗工美文创大赛采购项目",
+    "38th Annual Guam Micronesia Island Fair 2026 Vendor Application",
+    "Singapore Heritage Grants Scheme（Minor and Major Project Grants）2026申请窗口",
+    "Canada Indigenous Heritage — Museums Assistance Program 2027-2028",
+    "Evanston Art Center Winter Arts & Crafts Expo 2026",
+    "Kentucky Guild of Artists and Craftsmen Fall Art Market 2026",
+    "CraftForms 2026 International Juried Exhibition of Contemporary Fine Craft",
+    "The Open 2026 — Leicester Museums",
+    "National Lottery Heritage Grants £250,000–£10m 2026申请窗口",
+    "Handmade Arcade 2027 Modern Craft Market"
+  ],
+  "slugs": [
+    "fuzhou-heritage-craft-gift-procurement-2026",
+    "guam-micronesia-island-fair-vendor-2026",
+    "singapore-heritage-grants-2026-cycle",
+    "canada-indigenous-heritage-map-2027",
+    "evanston-winter-arts-crafts-expo-2026",
+    "kentucky-guild-fall-art-market-2026",
+    "craftforms-2026-wayne-art-center",
+    "leicester-museums-the-open-2026",
+    "uk-national-lottery-heritage-grants-2026-round",
+    "handmade-arcade-modern-craft-market-2027"
+  ],
+  "gate": "pass",
+  "sources": [
+    "https://www.fuzhou.gov.cn/zgfzzt/sjxw/fzjx/tzgg/202609/t20260904_5368132.htm",
+    "https://www.visitguam.com/gmif/vendor-application/",
+    "https://www.nhb.gov.sg/what-we-do/our-work/community-engagement/grants/grants/minor-and-major-project-grants",
+    "https://www.canada.ca/en/canadian-heritage/services/funding/museums-assistance/indigenous-heritage.html",
+    "https://www.evanstonartcenter.org/events/winter-arts-craft-expo-applications",
+    "https://www.kentuckyguild.org/fall-art-market",
+    "https://opportunities.wearecreativewest.org/opportunity/17168/CAFE",
+    "https://www.leicestermuseums.org/TheOpen",
+    "https://www.heritagefund.org.uk/funding/national-lottery-heritage-grants-250k-10m/deadlines",
+    "https://www.handmadearcade.org/modern-craft-market-applications"
+  ]
+}
