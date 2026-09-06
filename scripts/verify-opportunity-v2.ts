@@ -23,23 +23,25 @@ async function main(): Promise<void> {
     "https://www.xiacansai.com/mrjs.html": `<a class="tl-card" data-url-pc="https://www.chuangsaiyun.com/#/article/details?id=1"><div class="tl-header"><span>报名中</span></div><div class="tl-title">非遗传统工艺文创设计征集</div><div class="tl-meta">截止时间：2027-03-03 · 设计竞赛</div></a>`,
     "https://www.contestwatchers.com/feed/": `<rss><channel><item><title>Heritage Craft Open Call</title><link>https://contestwatchers.com/heritage</link><description>Open call for cultural heritage craft makers, deadline March 30, 2027</description><pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate></item></channel></rss>`,
     "https://www.craftscouncil.org.uk/sector-support/opportunities": `<a href="https://www.craftscouncil.org.uk/opportunities/heritage">Heritage Craft Residency</a>`,
-    "https://www.artconnect.com/opportunities": `<a href="https://www.artconnect.com/opportunities/heritage-craft">Heritage Craft Open Call</a>`,
+    "https://www.artconnect.com/opportunities": `<a href="https://www.artconnect.com/opportunity/heritage-craft">Heritage Craft Open Call</a>`,
     "https://competitions.archi/registration-ending-latest/": `<div class="competition-item"><a href="https://competitions.archi/heritage-craft"><h2 class="title">Traditional Craft Museum Competition</h2><span class="type"><span>Cultural heritage</span></span><span class="submission"><span>March 30, 2027</span></span></a></div>`,
     "https://example.com/markets": `<html><body><a href="/markets/heritage-craft">非遗手工艺市集征集</a></body></html>`,
     "https://example.com/rss": `<rss><channel><item><title>Heritage Market Open Call</title><link>https://example.com/rss/heritage-market</link><description>Craft market opportunity for cultural heritage makers</description></item></channel></rss>`,
     "https://example.com/unparseable": `<html><body><h1>Welcome</h1><p>About our company</p></body></html>`,
+    "https://craftprize.loewe.com/zh/craftprize2027": `<html><body><h1>Craft Prize 2027</h1><p>请于2027年3月30日之前提交您的申请。</p></body></html>`,
   };
   const fetcher = async (url: string) => ({ status: 200, final_url: url, text: fixtureBySource[url] ?? "" });
   const initialSources = readOpportunityV2Sources(sourcesPath);
-  assert.equal(initialSources.length, 6);
+  assert.equal(initialSources.length, 7);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
-  assert.equal(result.fetched_sources, 6);
-  assert.equal(result.successful_sources, 6);
+  assert.equal(result.fetched_sources, 7);
+  assert.equal(result.successful_sources, 7);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);
   assert.ok(result.radar_items > 0);
   assert.equal(result.radar_opportunities.some((item) => item.title === "纯摄影比赛"), false);
+  assert.equal(readOpportunityV2Pool(poolPath).opportunities.some((item) => item.source_id === "artconnect-opportunities" && /\/opportunities\//u.test(item.detail_url)), false);
   const baselineRadar = new Map(filterOpportunityV2Radar(readOpportunityV2Pool(poolPath).opportunities, readOpportunityV2Sources(sourcesPath)).map((item) => [item.id, JSON.stringify(item)]));
 
   const failedSourcesPath = path.join(temp, "failed-sources.json");
@@ -58,7 +60,7 @@ async function main(): Promise<void> {
   assert.equal(created.data.test.ok, true);
   assert.equal(created.data.test.format, "HTML_LISTING");
   assert.ok(created.data.run.raw_items > 0);
-  assert.equal(readOpportunityV2Sources(sourcesPath).length, 7);
+  assert.equal(readOpportunityV2Sources(sourcesPath).length, 8);
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0, "arbitrary source IDs are legal");
 
   const edited = await jsonRequest(manager, "/sources/test-custom-source", "PUT", { name: "某非遗市集平台（已编辑）", url: "https://example.com/markets", region: "CN", priority: "P1", types: ["market", "open_call"], radars: ["ich"] });
@@ -120,10 +122,19 @@ async function main(): Promise<void> {
   const ichPage = await (await app.request("http://localhost/ich")).text();
   const radarResponse = await app.request("http://localhost/api/opportunity-v2/radar");
   const radarApi = await radarResponse.json() as { total: number };
-  const displayedTotal = Number(ichPage.match(/(\d+) 条当前机会/u)?.[1] ?? -1);
+  const displayedTotal = Number(ichPage.match(/当前机会：\s*(\d+) 条/u)?.[1] ?? -1);
   assert.equal(displayedTotal, radarApi.total, "public /ich total must match the V2 radar API");
   assert.match(ichPage, /来源：/);
+  assert.match(ichPage, /ich-paper-atlas-hero\.png/);
+  assert.match(ichPage, /赛事 \/ 征集/);
+  assert.match(ichPage, /海外/);
+  assert.doesNotMatch(ichPage, /OPPORTUNITY V2|SOURCE → FETCH → DEDUP → FILTER|RELEVANT|CURRENT|UNKNOWN_DEADLINE|Source Manager/);
   assert.doesNotMatch(ichPage, /纯摄影比赛/);
+  const overseasPage = await (await app.request("http://localhost/ich?region=overseas")).text();
+  assert.match(overseasPage, /LOEWE FOUNDATION Craft Prize/);
+  assert.match(overseasPage, /https:\/\/craftprize\.loewe\.com\/zh\/craftprize2027/);
+  const pageTwo = await (await app.request("http://localhost/ich?page=2")).text();
+  assert.match(pageTwo, /ich-pagination/);
   assert.equal((await app.request("http://localhost/opportunity-v2/admin/sources")).status, 200);
   const page = await (await app.request("http://localhost/opportunity-v2/admin/sources")).text();
   assert.match(page, /Source Manager/);
@@ -134,7 +145,7 @@ async function main(): Promise<void> {
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-08T23:59:59.000Z")), false);
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-09T00:00:00.000Z")), true);
   assert.equal(opportunityV2NextRunAt("2026-09-06T00:00:00.000Z"), "2026-09-09T00:00:00.000Z");
-  console.log(JSON.stringify({ gate: "pass", sources_before: 6, sources_after_test: 7, generic_html: true, generic_rss: true, needs_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
+  console.log(JSON.stringify({ gate: "pass", sources_before: 7, sources_after_test: 8, generic_html: true, generic_rss: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
 }
 
 void main();

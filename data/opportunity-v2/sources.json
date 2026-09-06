@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping-opportunity-v2.sources.v1",
-  "updated_at": "2026-09-06T07:57:22.097Z",
+  "updated_at": "2026-09-06T14:25:05.061Z",
   "sources": [
     {
       "id": "shejijingsai-list",
@@ -18,7 +18,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T07:57:12.840Z"
+      "last_fetch_at": "2026-09-06T14:25:00.964Z"
     },
     {
       "id": "chuangsaiyun-competition-list",
@@ -36,7 +36,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T07:57:13.551Z"
+      "last_fetch_at": "2026-09-06T14:25:01.377Z"
     },
     {
       "id": "contest-watchers-open",
@@ -53,7 +53,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T07:57:14.424Z"
+      "last_fetch_at": "2026-09-06T14:25:01.611Z"
     },
     {
       "id": "crafts-council-opportunities",
@@ -70,7 +70,7 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
+      "status": "FAILED",
       "last_fetch_at": null
     },
     {
@@ -89,7 +89,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T07:57:16.857Z"
+      "last_fetch_at": "2026-09-06T14:25:02.962Z"
     },
     {
       "id": "competitions-archi",
@@ -105,8 +105,26 @@
         "ich"
       ],
       "enabled": true,
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-06T14:24:20.120Z"
+    },
+    {
+      "id": "loewe-craft-prize",
+      "name": "LOEWE FOUNDATION Craft Prize",
+      "url": "https://craftprize.loewe.com/zh/craftprize2027",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "award",
+        "competition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T07:57:19.231Z"
+      "last_fetch_at": "2026-09-06T14:25:04.691Z"
     }
   ]
 }

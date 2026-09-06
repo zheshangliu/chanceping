@@ -4,6 +4,7 @@ import { parseArtConnectListing, enrichArtConnectItem } from "./artconnect";
 import { parseCompetitionsArchiListing, enrichCompetitionsArchiItem } from "./competitions-archi";
 import { parseShejijingsaiListing } from "./shejijingsai";
 import { parseChuangsaiyunListing } from "./chuangsaiyun";
+import { parseLoeweCraftPrize } from "./loewe";
 import type { ParsedAggregationItem } from "./common";
 
 export interface AggregationAdapter {
@@ -29,6 +30,7 @@ export const AGGREGATION_ADAPTERS: AggregationAdapter[] = [
     adapter_id: "competitions-archi-v2", source_id: "competitions-archi",
     parseListing: parseCompetitionsArchiListing, enrichItem: enrichCompetitionsArchiItem,
   },
+  { adapter_id: "loewe-craft-prize-v1", source_id: "loewe-craft-prize", parseListing: parseLoeweCraftPrize },
 ];
 
 export function getAggregationAdapter(sourceId: string): AggregationAdapter {

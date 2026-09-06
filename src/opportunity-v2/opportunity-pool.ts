@@ -5,7 +5,10 @@ import type { OpportunityV2, OpportunityV2PoolFile, V2OpportunityStatus } from "
 import { classifyV2RadarRelevance } from "./keywords";
 
 function poolPath(filePath?: string): string {
-  return path.resolve(filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH ?? "data/opportunity-v2/opportunities.json");
+  const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH;
+  if (configured) return path.resolve(configured);
+  const runtimePath = "/var/lib/chanceping/opportunity-v2/opportunities.json";
+  return path.resolve(fs.existsSync(path.dirname(runtimePath)) ? runtimePath : "data/opportunity-v2/opportunities.json");
 }
 
 export function emptyOpportunityV2Pool(): OpportunityV2PoolFile {

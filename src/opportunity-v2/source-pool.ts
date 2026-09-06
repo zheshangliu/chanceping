@@ -10,6 +10,7 @@ export const OPPORTUNITY_V2_SOURCE_IDS = [
   "crafts-council-opportunities",
   "artconnect-opportunities",
   "competitions-archi",
+  "loewe-craft-prize",
 ] as const;
 
 export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
@@ -19,10 +20,14 @@ export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
   { id: "crafts-council-opportunities", name: "Crafts Council", url: "https://www.craftscouncil.org.uk/sector-support/opportunities", region: "GLOBAL", priority: "P0", types: ["craft", "open_call", "residency"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
   { id: "artconnect-opportunities", name: "ArtConnect", url: "https://www.artconnect.com/opportunities", region: "GLOBAL", priority: "P1", types: ["art", "open_call", "exhibition"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
   { id: "competitions-archi", name: "Competitions.archi", url: "https://competitions.archi/registration-ending-latest/", region: "GLOBAL", priority: "P1", types: ["competition", "architecture"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
+  { id: "loewe-craft-prize", name: "LOEWE FOUNDATION Craft Prize", url: "https://craftprize.loewe.com/zh/craftprize2027", region: "GLOBAL", priority: "P0", types: ["craft", "award", "competition"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
 ];
 
 function resolved(filePath?: string): string {
-  return path.resolve(filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH ?? "data/opportunity-v2/sources.json");
+  const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH;
+  if (configured) return path.resolve(configured);
+  const runtimePath = "/var/lib/chanceping/opportunity-v2/sources.json";
+  return path.resolve(fs.existsSync(path.dirname(runtimePath)) ? runtimePath : "data/opportunity-v2/sources.json");
 }
 
 export function readOpportunityV2Sources(filePath?: string): OpportunityV2Source[] {

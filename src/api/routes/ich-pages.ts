@@ -7,6 +7,7 @@ import {
   type PublicIchOpportunity,
 } from "../../ich/query";
 import { defaultIchStore, parseIchQuery, type IchReadRouteOptions } from "./public-ich";
+import { filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, type OpportunityV2 } from "../../opportunity-v2";
 
 const ICH_ORIGIN = "https://ich.chanceping.com";
 
@@ -88,6 +89,62 @@ function listPage(result: IchQueryResult, history: boolean): string {
   return `<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">ChancePing · 纸本地域目录</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta"><span>最近更新：${escapeHtml(result.last_updated_at || "持续更新中")}</span><span>当前机会：${result.total} 条</span></div></div></section><form class="ich-search" method="get" action="/ich"><input name="q" value="${escapeHtml(result.filters.q)}" placeholder="搜索机会名称、主办方、关键词（如：设计大赛、采购、资助）" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categories.map(([key, label, hint]) => `<a class="ich-filter-button${result.filters.category === key ? " is-active" : ""}" href="${href({category:key})}">${label}<small>${hint}</small></a>`).join("")}</div><div class="ich-filter-line"><span>地区索引：</span>${regions.map(([key,label]) => `<a class="${result.filters.region === key ? "is-active" : ""}" href="${href({region:key})}">${label}</a>`).join("")}</div><div class="ich-filter-line"><span>状态：</span>${statuses.map(([key,label]) => `<a class="${result.filters.status === key ? "is-active" : ""}" href="${href({status:key})}">${label}</a>`).join("")}<a class="${history ? "is-active" : ""}" href="/ich/history">历史机会</a><form method="get" action="/ich"><input type="hidden" name="q" value="${escapeHtml(result.filters.q)}"><input type="hidden" name="category" value="${escapeHtml(result.filters.category)}"><input type="hidden" name="region" value="${escapeHtml(result.filters.region)}"><input type="hidden" name="status" value="${escapeHtml(result.filters.status)}"><select class="ich-sort" name="sort" aria-label="排序" onchange="this.form.submit()"><option value="default" ${result.filters.sort === "default" ? "selected" : ""}>排序：截止时间（近→远）</option><option value="newest" ${result.filters.sort === "newest" ? "selected" : ""}>排序：最新收录</option></select></form></div></div><div class="ich-summary"><span>已选条件：　地区：${escapeHtml(FILTER_LABELS[result.filters.region] ?? result.filters.region)}　·　状态：${escapeHtml(FILTER_LABELS[history ? "history" : result.filters.status] ?? result.filters.status)}</span><a href="/ich">清空筛选</a></div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div><div class="ich-lower"><section><h2>来源与可信度</h2><p>我们优先从政府官网、主办方官网和官方报名页整理机会，线索会标明核验状态。申请前请回到官方来源复核。</p></section><section><h2>持续发现</h2><p>机会覆盖赛事、展销、采购、渠道、资助与国际交流，持续更新中。</p></section></div></main>`;
 }
 
+interface V2IchPageResult {
+  items: OpportunityV2[];
+  page: number;
+  page_size: number;
+  total: number;
+  total_pages: number;
+  q: string;
+  category: string;
+  region: string;
+  status: string;
+  sort: string;
+  updated_at: string | null;
+}
+
+function v2Card(item: OpportunityV2, index: number): string {
+  const categoryLabels: Record<string, string> = { competition: "赛事 / 征集", exhibition_market: "项目合作", procurement_project: "采购 / 订单", channel_collaboration: "渠道 / 合作", policy_funding: "资助 / 扶持", international: "培训 / 国际" };
+  const deadline = item.deadline ? new Date(item.deadline).toLocaleDateString("zh-CN", { timeZone: "Asia/Shanghai" }) : "截止时间待确认";
+  const tags = item.tags.slice(0, 3).map((tag) => `<span class="ich-tag">${escapeHtml(tag)}</span>`).join("");
+  const detailUrl = item.detail_url || item.source_url;
+  return `<article class="ich-card"><div class="ich-card-index" aria-hidden="true">${String(index).padStart(2, "0")}</div><div class="ich-card-main"><div class="ich-card-top"><span class="ich-category">${escapeHtml(categoryLabels[item.category] ?? item.category)}</span><span class="ich-status">${escapeHtml(item.deadline ? "进行中" : "截止时间待确认")}</span></div>
+<h2><a rel="nofollow noopener" href="${escapeHtml(detailUrl)}">${escapeHtml(item.title)}</a></h2><p>${escapeHtml(item.summary)}</p><div class="ich-card-meta"><span>来源：${escapeHtml(item.source_name)}</span><span>地区：${item.region === "GLOBAL" ? "海外" : "中国"}</span><span class="ich-card-deadline">截止：${escapeHtml(deadline)}</span></div><div class="ich-tags">${tags}</div></div><div class="ich-card-actions"><a rel="nofollow noopener" href="${escapeHtml(detailUrl)}">查看详情</a><a rel="nofollow noopener" href="${escapeHtml(item.source_url)}">来源页面</a></div></article>`;
+}
+
+function v2ListPage(result: V2IchPageResult, history: boolean): string {
+  const heading = history ? "历史非遗机会" : "全国及全球非遗机会导航";
+  const intro = history ? "这里展示机会池中已截止的历史记录。" : "为非遗手艺人、工作室、品牌与文创团队，发现可参与的项目、赛事、采购与合作机会。";
+  const queryParams = new URLSearchParams({ q: result.q, category: result.category, region: result.region, status: result.status, sort: result.sort });
+  const href = (patch: Record<string, string>) => { const next = new URLSearchParams(queryParams); Object.entries(patch).forEach(([key, value]) => next.set(key, value)); if (!("page" in patch)) next.delete("page"); return `/ich?${next.toString()}`; };
+  const categories = [["competition", "赛事 / 征集", "比赛与作品征集"], ["exhibition_market", "项目合作", "展会、市集与展销"], ["procurement_project", "采购 / 订单", "采购与项目需求"], ["channel_collaboration", "渠道 / 合作", "入驻与联名"], ["policy_funding", "资助 / 扶持", "政策与资金"], ["international", "培训 / 国际", "研学与交流"]];
+  const regions = [["all", "全部"], ["guangzhou", "广州"], ["guangdong", "广东省"], ["greater_bay_area", "粤港澳大湾区"], ["nationwide", "全国"], ["hong_kong_macao_taiwan", "港澳台"], ["overseas", "海外"], ["online_or_unrestricted", "线上"]];
+  const statuses = [["current", "全部当前"], ["closing_soon", "近期截止"], ["long_term", "长期征集"]];
+  const empty = history ? "暂无历史机会记录。" : "当前暂无已发布的非遗机会。我们会持续从来源整理和更新。";
+  const content = result.items.length > 0 ? `<div class="ich-grid">${result.items.map((item, index) => v2Card(item, (result.page - 1) * result.page_size + index + 1)).join("")}</div>` : `<section class="ich-notice"><h2>暂无可展示机会</h2><p>${empty}</p></section>`;
+  const pagination = Array.from({ length: result.total_pages }, (_, index) => index + 1).map((page) => page === result.page ? `<span class="current">${page}</span>` : `<a href="${href({ page: String(page) })}">${page}</a>`).join("");
+  return `<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">ChancePing · 纸本地域目录</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta"><span>最近更新：${escapeHtml(result.updated_at || "持续更新中")}</span><span>当前机会：${result.total} 条</span></div></div></section><form class="ich-search" method="get" action="/ich"><input name="q" value="${escapeHtml(result.q)}" placeholder="搜索机会名称、来源、关键词（如：设计大赛、采购、资助）" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categories.map(([key, label, hint]) => `<a class="ich-filter-button${result.category === key ? " is-active" : ""}" href="${href({ category: key })}">${label}<small>${hint}</small></a>`).join("")}</div><div class="ich-filter-line"><span>地区索引：</span>${regions.map(([key, label]) => `<a class="${result.region === key ? "is-active" : ""}" href="${href({ region: key })}">${label}</a>`).join("")}</div><div class="ich-filter-line"><span>状态：</span>${statuses.map(([key, label]) => `<a class="${result.status === key ? "is-active" : ""}" href="${href({ status: key })}">${label}</a>`).join("")}<a class="${history ? "is-active" : ""}" href="/ich/history">历史机会</a><form method="get" action="/ich"><input type="hidden" name="q" value="${escapeHtml(result.q)}"><input type="hidden" name="category" value="${escapeHtml(result.category)}"><input type="hidden" name="region" value="${escapeHtml(result.region)}"><input type="hidden" name="status" value="${escapeHtml(result.status)}"><select class="ich-sort" name="sort" aria-label="排序" onchange="this.form.submit()"><option value="default" ${result.sort === "default" ? "selected" : ""}>排序：截止时间（近→远）</option><option value="newest" ${result.sort === "newest" ? "selected" : ""}>排序：最新收录</option></select></form></div></div><div class="ich-summary"><span>已选条件：　地区：${escapeHtml(FILTER_LABELS[result.region] ?? result.region)}　·　状态：${escapeHtml(FILTER_LABELS[history ? "history" : result.status] ?? result.status)}</span><a href="/ich">清空筛选</a></div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div><div class="ich-lower"><section><h2>来源与可信度</h2><p>我们优先从政府官网、主办方官网和官方报名页整理机会，申请前请回到来源页面复核条件和有效性。</p></section><section><h2>持续发现</h2><p>机会覆盖赛事、展销、采购、渠道、资助与国际交流，持续更新中。</p></section></div></main>`;
+}
+
+function queryOpportunityV2ForIch(options: { q: string; category: string; region: string; status: string; sort: string; page: number; pageSize: number; history: boolean; sourcesPath?: string; poolPath?: string }): V2IchPageResult {
+  const sources = readOpportunityV2Sources(options.sourcesPath);
+  const pool = readOpportunityV2Pool(options.poolPath);
+  const region = options.region === "overseas" ? "GLOBAL" : options.region === "all" ? undefined : "CN";
+  let filtered = filterOpportunityV2Radar(pool.opportunities, sources, { q: options.q, ...(region ? { region } : {}) });
+  if (options.history) {
+    const enabled = new Set(sources.filter((source) => source.enabled).map((source) => source.id));
+    filtered = pool.opportunities.filter((item) => enabled.has(item.source_id) && item.radar_relevance === "RELEVANT" && item.status === "EXPIRED");
+  }
+  if (options.category !== "all") filtered = filtered.filter((item) => item.category === options.category);
+  if (options.status === "closing_soon") filtered = filtered.filter((item) => item.deadline && new Date(item.deadline).getTime() <= Date.now() + 30 * 24 * 60 * 60 * 1000);
+  if (options.status === "long_term") filtered = filtered.filter((item) => !item.deadline);
+  if (options.sort === "newest") filtered.sort((a, b) => b.last_seen_at.localeCompare(a.last_seen_at));
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / options.pageSize));
+  const page = Math.min(options.page, totalPages);
+  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, updated_at: pool.updated_at };
+}
+
 function collectionStructuredData(name: string, description: string, path: string): unknown[] {
   return [{
     "@context": "https://schema.org",
@@ -143,6 +200,15 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   const now = options.now ?? (() => new Date());
 
   app.get("/", (c) => {
+    if (options.opportunityV2) {
+      const parsed = parseIchQuery(c.req.query());
+      if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+      const query = parsed.query;
+      const result = queryOpportunityV2ForIch({ q: query.q, category: query.category, region: query.region, status: query.status, sort: query.sort, page: query.page, pageSize: 8, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+      const title = "非遗机会雷达｜ChancePing";
+      const description = "发现可信、可行动的非遗相关机会。";
+      return c.html(shell(title, description, "/ich", v2ListPage(result, false), { structuredData: collectionStructuredData(title, description, "/ich") }));
+    }
     const loaded = store.load();
     const parsed = parseIchQuery(c.req.query());
     if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
@@ -154,6 +220,15 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
     }));
   });
   app.get("/history", (c) => {
+    if (options.opportunityV2) {
+      const parsed = parseIchQuery(c.req.query());
+      if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+      const query = parsed.query;
+      const result = queryOpportunityV2ForIch({ q: query.q, category: query.category, region: query.region, status: "history", sort: query.sort, page: query.page, pageSize: 8, history: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+      const title = "历史非遗机会｜ChancePing";
+      const description = "查看已截止的非遗机会。";
+      return c.html(shell(title, description, "/ich/history", v2ListPage(result, true), { structuredData: collectionStructuredData(title, description, "/ich/history") }));
+    }
     const loaded = store.load();
     const parsed = parseIchQuery(c.req.query());
     if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);

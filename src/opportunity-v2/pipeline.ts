@@ -1,11 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
+import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import type { ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
-import { findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
+import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
@@ -24,7 +25,7 @@ export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status
 }
 
 function defaultHealthPath(): string {
-  return path.resolve(process.env.CHANCEPING_OPPORTUNITY_V2_HEALTH_PATH ?? "data/opportunity-v2/source-health.json");
+  return path.resolve(process.env.CHANCEPING_OPPORTUNITY_V2_HEALTH_PATH ?? (fs.existsSync("/var/lib/chanceping/opportunity-v2") ? "/var/lib/chanceping/opportunity-v2/source-health.json" : "data/opportunity-v2/source-health.json"));
 }
 
 function writeHealth(rows: OpportunityV2SourceHealth[], filePath?: string): void {
@@ -101,6 +102,9 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   const startedAt = now.toISOString();
   const fetcher = options.fetcher ?? defaultOpportunityV2Fetcher;
   const sources = readOpportunityV2Sources(options.sourcesPath);
+  if (!options.sourcesPath) for (const seed of DEFAULT_OPPORTUNITY_V2_SOURCES) {
+    if (!sources.some((source) => source.id === seed.id)) sources.push({ ...seed, types: [...seed.types], radars: [...seed.radars] });
+  }
   const selectedSources = options.sourceId
     ? sources.filter((source) => source.id === options.sourceId && source.enabled)
     : sources.filter((source) => source.enabled && source.status !== "PAUSED" && source.status !== "NEEDS_ADAPTER");
@@ -127,7 +131,8 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
     }
   }
   const deduped = deduplicateOpportunityV2(fetched);
-  const merged = mergeOpportunityV2(pool.opportunities, deduped.opportunities, now);
+  const merged = mergeOpportunityV2(pool.opportunities, deduped.opportunities, now)
+    .filter((item) => item.source_id !== "artconnect-opportunities" || isRealArtConnectOpportunityUrl(item.detail_url));
   writeOpportunityV2Pool({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date().toISOString(), opportunities: merged }, options.poolPath);
   writeOpportunityV2Sources(sources, options.sourcesPath);
   writeHealth(health, options.healthPath);

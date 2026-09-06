@@ -1,54 +1,69 @@
 {
   "schema_version": "chanceping-opportunity-v2.source-health.v1",
-  "updated_at": "2026-09-06T07:57:22.097Z",
+  "updated_at": "2026-09-06T14:25:05.062Z",
   "sources": [
     {
       "source_id": "shejijingsai-list",
-      "fetched_at": "2026-09-06T07:57:12.840Z",
+      "fetched_at": "2026-09-06T14:25:00.964Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 200,
-      "error": null
+      "error": null,
+      "format": "DEDICATED"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
-      "fetched_at": "2026-09-06T07:57:13.551Z",
+      "fetched_at": "2026-09-06T14:25:01.377Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 107,
-      "error": null
+      "error": null,
+      "format": "DEDICATED"
     },
     {
       "source_id": "contest-watchers-open",
-      "fetched_at": "2026-09-06T07:57:14.424Z",
+      "fetched_at": "2026-09-06T14:25:01.611Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 10,
-      "error": null
+      "error": null,
+      "format": "DEDICATED"
     },
     {
       "source_id": "crafts-council-opportunities",
-      "fetched_at": "2026-09-06T07:57:16.313Z",
+      "fetched_at": "2026-09-06T14:25:02.962Z",
       "ok": false,
-      "http_status": null,
+      "http_status": 403,
       "items_seen": 0,
-      "error": "HTTP 403"
+      "error": "HTTP 403",
+      "format": null
     },
     {
       "source_id": "artconnect-opportunities",
-      "fetched_at": "2026-09-06T07:57:16.857Z",
+      "fetched_at": "2026-09-06T14:25:02.962Z",
       "ok": true,
       "http_status": 200,
-      "items_seen": 52,
-      "error": null
+      "items_seen": 11,
+      "error": null,
+      "format": "DEDICATED"
     },
     {
       "source_id": "competitions-archi",
-      "fetched_at": "2026-09-06T07:57:19.231Z",
+      "fetched_at": "2026-09-06T14:25:04.691Z",
+      "ok": false,
+      "http_status": null,
+      "items_seen": 0,
+      "error": "fetch failed",
+      "format": null
+    },
+    {
+      "source_id": "loewe-craft-prize",
+      "fetched_at": "2026-09-06T14:25:04.691Z",
       "ok": true,
       "http_status": 200,
-      "items_seen": 12,
-      "error": null
+      "items_seen": 1,
+      "error": null,
+      "format": "DEDICATED"
     }
   ]
 }
