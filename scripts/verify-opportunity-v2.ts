@@ -32,16 +32,30 @@ async function main(): Promise<void> {
   };
   const fetcher = async (url: string) => ({ status: 200, final_url: url, text: fixtureBySource[url] ?? "" });
   const initialSources = readOpportunityV2Sources(sourcesPath);
-  assert.equal(initialSources.length, 7);
+  assert.equal(initialSources.length, 21);
+  assert.deepEqual(initialSources.slice(7).map((source) => source.id), [
+    "opencall-radar-craft", "opencalls-ai", "american-craft-council-opportunities", "craft-scotland-opportunities",
+    "kcdf-opportunities", "heritage-crafts-opportunities", "homo-faber-calls", "asef-culture360-opportunities",
+    "on-the-move-open-calls", "curatorspace-opportunities", "cafe-call-for-entry", "artshub-craft-opportunities",
+    "craft-council-bc-calls", "craft-council-nl-opportunities",
+  ]);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
-  assert.equal(result.fetched_sources, 7);
+  assert.equal(result.fetched_sources, 20);
   assert.equal(result.successful_sources, 7);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);
   assert.ok(result.radar_items > 0);
   assert.equal(result.radar_opportunities.some((item) => item.title === "纯摄影比赛"), false);
   assert.equal(readOpportunityV2Pool(poolPath).opportunities.some((item) => item.source_id === "artconnect-opportunities" && /\/opportunities\//u.test(item.detail_url)), false);
+
+  const wideSourcesPath = path.join(temp, "wide-sources.json");
+  const widePoolPath = path.join(temp, "wide-pool.json");
+  writeOpportunityV2Sources([{ ...initialSources[0], id: "wide-listing-source", url: "https://example.com/wide", status: "PENDING" }], wideSourcesPath);
+  fs.writeFileSync(widePoolPath, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date(0).toISOString(), opportunities: [] }));
+  const wideHtml = Array.from({ length: 205 }, (_, index) => `<a href="https://example.com/wide/${index}">Craft opportunity ${index}</a>`).join("");
+  const wide = await runOpportunityV2({ sourcesPath: wideSourcesPath, poolPath: widePoolPath, healthPath: path.join(temp, "wide-health.json"), fetcher: async () => ({ status: 200, final_url: "https://example.com/wide", text: wideHtml }) });
+  assert.equal(wide.raw_items, 205, "discovery must not silently truncate at 200 items");
   const baselineRadar = new Map(filterOpportunityV2Radar(readOpportunityV2Pool(poolPath).opportunities, readOpportunityV2Sources(sourcesPath)).map((item) => [item.id, JSON.stringify(item)]));
 
   const failedSourcesPath = path.join(temp, "failed-sources.json");
@@ -60,7 +74,7 @@ async function main(): Promise<void> {
   assert.equal(created.data.test.ok, true);
   assert.equal(created.data.test.format, "HTML_LISTING");
   assert.ok(created.data.run.raw_items > 0);
-  assert.equal(readOpportunityV2Sources(sourcesPath).length, 8);
+  assert.equal(readOpportunityV2Sources(sourcesPath).length, 22);
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0, "arbitrary source IDs are legal");
 
   const edited = await jsonRequest(manager, "/sources/test-custom-source", "PUT", { name: "某非遗市集平台（已编辑）", url: "https://example.com/markets", region: "CN", priority: "P1", types: ["market", "open_call"], radars: ["ich"] });
@@ -145,7 +159,7 @@ async function main(): Promise<void> {
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-08T23:59:59.000Z")), false);
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-09T00:00:00.000Z")), true);
   assert.equal(opportunityV2NextRunAt("2026-09-06T00:00:00.000Z"), "2026-09-09T00:00:00.000Z");
-  console.log(JSON.stringify({ gate: "pass", sources_before: 7, sources_after_test: 8, generic_html: true, generic_rss: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
+  console.log(JSON.stringify({ gate: "pass", sources_before: 21, sources_after_test: 22, generic_html: true, generic_rss: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
 }
 
 void main();

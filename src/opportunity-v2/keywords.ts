@@ -5,6 +5,10 @@ const STRONG_TERMS = [
   "文创", "文化创意", "文博", "博物馆", "文旅", "文化旅游", "城市礼物", "地方礼物", "伴手礼", "旅游商品", "文化ip", "国潮",
   "陶瓷", "陶艺", "刺绣", "织染", "漆艺", "竹编", "木雕", "剪纸", "雕刻", "金工", "传统纹样",
   "craft", "craftsmanship", "heritage craft", "traditional craft", "artisan", "handmade", "maker", "cultural heritage",
+  "applied arts", "decorative arts", "material craft", "fiber art", "fibre art", "textile art", "textile craft",
+  "ceramics", "ceramic art", "pottery", "glass art", "glassmaking", "jewellery", "jewelry", "silversmith", "goldsmith",
+  "metalwork", "woodwork", "woodworking", "basketry", "weaving", "embroidery", "printmaking", "folk art", "folk craft",
+  "traditional making", "material practice", "designer-maker", "designer maker", "makers",
 ];
 const GENERIC_TERMS = ["open call", "competition", "contest", "award", "residency", "exhibition", "grant", "market", "fair", "征集", "竞赛", "比赛", "展览"];
 const NEGATIVE_TERMS = ["纯摄影", "摄影比赛", "普通建筑竞赛", "汽车设计", "机械设计", "程序设计", "算法比赛", "纯ui", "纯 UI", "软件界面"];

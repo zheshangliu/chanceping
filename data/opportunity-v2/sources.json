@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping-opportunity-v2.sources.v1",
-  "updated_at": "2026-09-06T14:25:05.061Z",
+  "updated_at": "2026-09-06T15:20:04.069Z",
   "sources": [
     {
       "id": "shejijingsai-list",
@@ -18,7 +18,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T14:25:00.964Z"
+      "last_fetch_at": "2026-09-06T15:19:35.124Z"
     },
     {
       "id": "chuangsaiyun-competition-list",
@@ -36,7 +36,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T14:25:01.377Z"
+      "last_fetch_at": "2026-09-06T15:19:35.529Z"
     },
     {
       "id": "contest-watchers-open",
@@ -53,7 +53,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T14:25:01.611Z"
+      "last_fetch_at": "2026-09-06T15:19:35.744Z"
     },
     {
       "id": "crafts-council-opportunities",
@@ -89,7 +89,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T14:25:02.962Z"
+      "last_fetch_at": "2026-09-06T15:19:38.314Z"
     },
     {
       "id": "competitions-archi",
@@ -106,7 +106,7 @@
       ],
       "enabled": true,
       "status": "FAILED",
-      "last_fetch_at": "2026-09-06T14:24:20.120Z"
+      "last_fetch_at": "2026-09-06T15:18:30.823Z"
     },
     {
       "id": "loewe-craft-prize",
@@ -124,7 +124,285 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T14:25:04.691Z"
+      "last_fetch_at": "2026-09-06T15:19:46.579Z"
+    },
+    {
+      "id": "opencall-radar-craft",
+      "name": "OpenCall Radar｜Craft",
+      "url": "https://opencallradar.com/open-calls/discipline/craft",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:47.226Z"
+    },
+    {
+      "id": "opencalls-ai",
+      "name": "opencalls.ai",
+      "url": "https://opencalls.ai/",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "open_call",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "FAILED",
+      "last_fetch_at": null
+    },
+    {
+      "id": "american-craft-council-opportunities",
+      "name": "American Craft Council Opportunities Board",
+      "url": "https://craftcouncil.org/opportunities-board/",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "FAILED",
+      "last_fetch_at": null
+    },
+    {
+      "id": "craft-scotland-opportunities",
+      "name": "Craft Scotland",
+      "url": "https://www.craftscotland.org/community",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency",
+        "award",
+        "market"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:49.602Z"
+    },
+    {
+      "id": "kcdf-opportunities",
+      "name": "KCDF 한국공예·디자인문화진흥원",
+      "url": "https://www.kcdf.or.kr/main",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "design",
+        "open_call",
+        "grant",
+        "exhibition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:50.897Z"
+    },
+    {
+      "id": "heritage-crafts-opportunities",
+      "name": "Heritage Crafts",
+      "url": "https://heritagecrafts.org.uk/opportunities/",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "heritage",
+        "open_call",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:51.482Z"
+    },
+    {
+      "id": "homo-faber-calls",
+      "name": "Homo Faber Calls",
+      "url": "https://www.homofaber.com/en/news/cfp",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "fellowship",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:52.501Z"
+    },
+    {
+      "id": "asef-culture360-opportunities",
+      "name": "ASEF culture360 Opportunities",
+      "url": "https://culture360.org/opportunities/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "heritage",
+        "open_call",
+        "grant",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:52.786Z"
+    },
+    {
+      "id": "on-the-move-open-calls",
+      "name": "On the Move Open Calls",
+      "url": "https://on-the-move.org/news",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "open_call",
+        "grant",
+        "residency",
+        "mobility"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": "2026-09-06T15:10:12.197Z"
+    },
+    {
+      "id": "curatorspace-opportunities",
+      "name": "CuratorSpace Opportunities",
+      "url": "https://www.curatorspace.com/opportunities?orderBy=latest",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "residency",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:53.605Z"
+    },
+    {
+      "id": "cafe-call-for-entry",
+      "name": "CaFÉ CallForEntry",
+      "url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "award",
+        "competition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:19:56.199Z"
+    },
+    {
+      "id": "artshub-craft-opportunities",
+      "name": "ArtsHub Craft Opportunities",
+      "url": "https://www.artshub.com.au/opportunity/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "FAILED",
+      "last_fetch_at": null
+    },
+    {
+      "id": "craft-council-bc-calls",
+      "name": "Craft Council of British Columbia Calls",
+      "url": "https://craftcouncilbc.ca/call-for-entry/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "market",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:20:00.855Z"
+    },
+    {
+      "id": "craft-council-nl-opportunities",
+      "name": "Craft Council of Newfoundland and Labrador Opportunities",
+      "url": "https://www.craftcouncilnl.ca/opportunities/opportunities",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "market",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T15:20:02.853Z"
     }
   ]
 }

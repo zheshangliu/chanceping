@@ -3,7 +3,7 @@ import path from "node:path";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
-import { parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
+import { isLikelyGenericNavigationItem, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import type { ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
@@ -112,11 +112,15 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   const pool = readOpportunityV2Pool(options.poolPath);
   const fetched: ReturnType<typeof normalizeOpportunityV2>[] = [];
   const health: OpportunityV2SourceHealth[] = [];
+  const genericSources = new Set<string>();
   let successfulSources = 0;
   for (const source of selectedSources) {
     try {
       const result = await fetchAndParseSource(source, fetcher);
-      const parsed = result.parsed.slice(0, options.maxItems ?? 200);
+      // Do not silently cap discovery. maxItems remains an explicit caller-controlled
+      // safety valve for fixtures or bounded one-off runs only.
+      const parsed = options.maxItems === undefined ? result.parsed : result.parsed.slice(0, options.maxItems);
+      if (result.format === "HTML_LISTING") genericSources.add(source.id);
       for (const item of parsed) fetched.push(normalizeOpportunityV2(item, source, now));
       source.status = parsed.length ? "ACTIVE" : "NEEDS_ADAPTER";
       if (parsed.length) {
@@ -132,6 +136,7 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   }
   const deduped = deduplicateOpportunityV2(fetched);
   const merged = mergeOpportunityV2(pool.opportunities, deduped.opportunities, now)
+    .filter((item) => !genericSources.has(item.source_id) || !isLikelyGenericNavigationItem(item.title, item.detail_url))
     .filter((item) => item.source_id !== "artconnect-opportunities" || isRealArtConnectOpportunityUrl(item.detail_url));
   writeOpportunityV2Pool({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date().toISOString(), opportunities: merged }, options.poolPath);
   writeOpportunityV2Sources(sources, options.sourcesPath);

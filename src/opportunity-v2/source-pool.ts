@@ -3,16 +3,6 @@ import path from "node:path";
 import { identityHash } from "../ich/aggregation/adapters/common";
 import type { OpportunityV2Source } from "./types";
 
-export const OPPORTUNITY_V2_SOURCE_IDS = [
-  "shejijingsai-list",
-  "chuangsaiyun-competition-list",
-  "contest-watchers-open",
-  "crafts-council-opportunities",
-  "artconnect-opportunities",
-  "competitions-archi",
-  "loewe-craft-prize",
-] as const;
-
 export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
   { id: "shejijingsai-list", name: "设计竞赛网", url: "https://www.shejijingsai.com/liebiao", region: "CN", priority: "P0", types: ["competition", "design", "cultural_creative"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
   { id: "chuangsaiyun-competition-list", name: "创赛云", url: "https://www.xiacansai.com/mrjs.html", region: "CN", priority: "P0", types: ["competition", "design", "cultural_creative"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
@@ -21,7 +11,25 @@ export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
   { id: "artconnect-opportunities", name: "ArtConnect", url: "https://www.artconnect.com/opportunities", region: "GLOBAL", priority: "P1", types: ["art", "open_call", "exhibition"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
   { id: "competitions-archi", name: "Competitions.archi", url: "https://competitions.archi/registration-ending-latest/", region: "GLOBAL", priority: "P1", types: ["competition", "architecture"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
   { id: "loewe-craft-prize", name: "LOEWE FOUNDATION Craft Prize", url: "https://craftprize.loewe.com/zh/craftprize2027", region: "GLOBAL", priority: "P0", types: ["craft", "award", "competition"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
+  { id: "opencall-radar-craft", name: "OpenCall Radar｜Craft", url: "https://opencallradar.com/open-calls/discipline/craft", region: "GLOBAL", priority: "P0", types: ["craft", "open_call", "residency", "grant", "award"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "opencalls-ai", name: "opencalls.ai", url: "https://opencalls.ai/", region: "GLOBAL", priority: "P0", types: ["open_call", "residency", "grant", "award"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "american-craft-council-opportunities", name: "American Craft Council Opportunities Board", url: "https://craftcouncil.org/opportunities-board/", region: "GLOBAL", priority: "P0", types: ["craft", "open_call", "residency", "grant", "award"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "craft-scotland-opportunities", name: "Craft Scotland", url: "https://www.craftscotland.org/community", region: "GLOBAL", priority: "P0", types: ["craft", "open_call", "residency", "award", "market"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "kcdf-opportunities", name: "KCDF 한국공예·디자인문화진흥원", url: "https://www.kcdf.or.kr/main", region: "GLOBAL", priority: "P0", types: ["craft", "design", "open_call", "grant", "exhibition"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "heritage-crafts-opportunities", name: "Heritage Crafts", url: "https://heritagecrafts.org.uk/opportunities/", region: "GLOBAL", priority: "P0", types: ["craft", "heritage", "open_call", "grant", "award"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "homo-faber-calls", name: "Homo Faber Calls", url: "https://www.homofaber.com/en/news/cfp", region: "GLOBAL", priority: "P0", types: ["craft", "open_call", "fellowship", "residency"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "asef-culture360-opportunities", name: "ASEF culture360 Opportunities", url: "https://culture360.org/opportunities/", region: "GLOBAL", priority: "P1", types: ["craft", "heritage", "open_call", "grant", "residency"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "on-the-move-open-calls", name: "On the Move Open Calls", url: "https://on-the-move.org/news", region: "GLOBAL", priority: "P1", types: ["open_call", "grant", "residency", "mobility"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "curatorspace-opportunities", name: "CuratorSpace Opportunities", url: "https://www.curatorspace.com/opportunities?orderBy=latest", region: "GLOBAL", priority: "P1", types: ["craft", "open_call", "exhibition", "residency", "award"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "cafe-call-for-entry", name: "CaFÉ CallForEntry", url: "https://artist.callforentry.org/festivals.php/calendar.phtml", region: "GLOBAL", priority: "P1", types: ["craft", "open_call", "exhibition", "award", "competition"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "artshub-craft-opportunities", name: "ArtsHub Craft Opportunities", url: "https://www.artshub.com.au/opportunity/", region: "GLOBAL", priority: "P1", types: ["craft", "open_call", "exhibition", "residency", "grant", "award"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "craft-council-bc-calls", name: "Craft Council of British Columbia Calls", url: "https://craftcouncilbc.ca/call-for-entry/", region: "GLOBAL", priority: "P1", types: ["craft", "open_call", "exhibition", "market", "residency"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "craft-council-nl-opportunities", name: "Craft Council of Newfoundland and Labrador Opportunities", url: "https://www.craftcouncilnl.ca/opportunities/opportunities", region: "GLOBAL", priority: "P1", types: ["craft", "open_call", "exhibition", "market", "residency"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
 ];
+
+// These are the built-in seed IDs exported for compatibility. They are not an allowlist:
+// Source Manager validation accepts any legal lowercase slug.
+export const OPPORTUNITY_V2_SOURCE_IDS = DEFAULT_OPPORTUNITY_V2_SOURCES.map((source) => source.id);
 
 function resolved(filePath?: string): string {
   const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH;
