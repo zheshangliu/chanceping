@@ -43,7 +43,7 @@
       "name": "Contest Watchers",
       "url": "https://www.contestwatchers.com/feed/",
       "region": "GLOBAL",
-      "priority": "P0",
+      "priority": "P1",
       "types": [
         "competition",
         "open_call"
