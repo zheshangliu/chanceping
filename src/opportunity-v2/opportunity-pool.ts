@@ -38,6 +38,30 @@ export function opportunityStatus(deadline: string | null, now = new Date()): V2
   return Number.isFinite(timestamp) && timestamp < now.getTime() ? "EXPIRED" : "CURRENT";
 }
 
+function crossSourceTitleKey(title: string): string | null {
+  const normalized = title.toLowerCase().replace(/[^a-z0-9]+/gu, " ").trim();
+  return normalized.includes("loewe") && normalized.includes("foundation") && normalized.includes("craft") && normalized.includes("prize") && normalized.includes("2027")
+    ? "loewe-foundation-craft-prize-2027"
+    : null;
+}
+
+function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now: Date): OpportunityV2 {
+  const preferIncoming = item.source_id === "loewe-craft-prize" && prior.source_id !== "loewe-craft-prize";
+  return {
+    ...prior,
+    ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
+    summary: prior.summary.length >= item.summary.length ? prior.summary : item.summary,
+    deadline: prior.deadline ?? item.deadline,
+    status: opportunityStatus(prior.deadline ?? item.deadline, now),
+    first_seen_at: prior.first_seen_at,
+    last_seen_at: now.toISOString(),
+    discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
+    tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
+    source_url: preferIncoming ? item.source_url : (prior.source_url || item.source_url),
+    source_name: preferIncoming ? item.source_name : (prior.source_name || item.source_name),
+  };
+}
+
 export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { id: string; name: string; region: "CN" | "GLOBAL" }, now = new Date()): OpportunityV2 {
   const summary = input.raw_text.replace(/\s+/gu, " ").trim().slice(0, 360) || input.title;
   const relevance = classifyV2RadarRelevance(input.title, summary, input.source_category ?? "");
@@ -65,31 +89,20 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
 }
 
 export function mergeOpportunityV2(existing: OpportunityV2[], incoming: OpportunityV2[], now = new Date()): OpportunityV2[] {
-  const byId = new Map(existing.map((item) => [item.id, item]));
-  for (const item of incoming) {
-    const prior = byId.get(item.id);
-    if (!prior) {
-      byId.set(item.id, item);
-      continue;
-    }
-    byId.set(item.id, {
-      ...prior,
-      ...item,
-      first_seen_at: prior.first_seen_at,
-      last_seen_at: now.toISOString(),
-      discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
-      source_url: prior.source_url || item.source_url,
-      source_name: prior.source_name || item.source_name,
-    });
+  const byKey = new Map<string, OpportunityV2>();
+  for (const item of [...existing, ...incoming]) {
+    const key = crossSourceTitleKey(item.title) ?? `url:${item.source_id}:${item.detail_url}`;
+    const prior = byKey.get(key);
+    byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : { ...item, status: opportunityStatus(item.deadline, now) });
   }
-  return [...byId.values()].map((item) => ({ ...item, status: opportunityStatus(item.deadline, now) }));
+  return [...byKey.values()];
 }
 
 export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunities: OpportunityV2[]; duplicate_count: number } {
   const byIdentity = new Map<string, OpportunityV2>();
   let duplicate_count = 0;
   for (const item of items) {
-    const key = identityHash(item.title, item.deadline ?? "", item.organizer ?? "");
+    const key = crossSourceTitleKey(item.title) ?? identityHash(item.title, item.deadline ?? "", item.organizer ?? "");
     const prior = byIdentity.get(key);
     if (!prior) {
       byIdentity.set(key, item);

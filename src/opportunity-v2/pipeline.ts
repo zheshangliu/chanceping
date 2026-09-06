@@ -3,7 +3,7 @@ import path from "node:path";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
-import { isLikelyGenericNavigationItem, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
+import { isLikelySourceListingNoise, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import type { ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
@@ -11,6 +11,7 @@ import { filterOpportunityV2Radar } from "./radar-view";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
+const SOURCE_HYGIENE_IDS = new Set(["kcdf-opportunities", "homo-faber-calls", "craft-council-bc-calls"]);
 const DEFAULT_TIMEOUT_MS = 20_000;
 
 export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {
@@ -44,7 +45,8 @@ function parseSource(source: OpportunityV2Source, text: string, listingUrl: stri
   const rss = parseRssItems(text, listingUrl);
   if (rss.length) return { items: rss, format: "RSS" };
   const html = parseGenericListing(text, listingUrl);
-  if (html.length) return { items: html, format: "HTML_LISTING" };
+  const filtered = html.filter((item) => !isLikelySourceListingNoise(source.id, item.title, item.detail_url));
+  if (filtered.length) return { items: filtered, format: "HTML_LISTING" };
   return { items: [], format: null };
 }
 
@@ -136,7 +138,8 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   }
   const deduped = deduplicateOpportunityV2(fetched);
   const merged = mergeOpportunityV2(pool.opportunities, deduped.opportunities, now)
-    .filter((item) => !genericSources.has(item.source_id) || !isLikelyGenericNavigationItem(item.title, item.detail_url))
+    .filter((item) => !genericSources.has(item.source_id) || !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
+    .filter((item) => !SOURCE_HYGIENE_IDS.has(item.source_id) || !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
     .filter((item) => item.source_id !== "artconnect-opportunities" || isRealArtConnectOpportunityUrl(item.detail_url));
   writeOpportunityV2Pool({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date().toISOString(), opportunities: merged }, options.poolPath);
   writeOpportunityV2Sources(sources, options.sourcesPath);

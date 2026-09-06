@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { createApp } from "../src/api/app";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
+import { isLikelySourceListingNoise, parseGenericListing } from "../src/ich/aggregation/adapters/generic-listing";
 import { filterOpportunityV2Radar, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
 
 async function jsonRequest(app: ReturnType<typeof opportunityV2Routes>, url: string, method: string, body?: Record<string, unknown>): Promise<{ status: number; data: any }> {
@@ -28,6 +29,11 @@ async function main(): Promise<void> {
     "https://example.com/markets": `<html><body><a href="/markets/heritage-craft">非遗手工艺市集征集</a></body></html>`,
     "https://example.com/rss": `<rss><channel><item><title>Heritage Market Open Call</title><link>https://example.com/rss/heritage-market</link><description>Craft market opportunity for cultural heritage makers</description></item></channel></rss>`,
     "https://example.com/unparseable": `<html><body><h1>Welcome</h1><p>About our company</p></body></html>`,
+    "https://example.com/deadline-listing": `<html><body><a href="https://example.com/deadline-opportunity">Craft residency — Closing date: 29 Oct 2026</a><a href="mailto:hello@example.com">hello@example.com</a><a href="tel:+8613800000000">+86 138 0000 0000</a></body></html>`,
+    "https://www.kcdf.or.kr/main": `<html><body><a href="https://www.kcdf.or.kr/brd/board/337/L/menu/284?bbIdx=1">사업공모 2026 전통문화 지원사업 공모</a><a href="https://www.kcdf.or.kr/brd/board/335/L/menu/331?bbIdx=2">공예문화(Craft Culture) 71호</a></body></html>`,
+    "https://www.homofaber.com/en/news/cfp": `<html><body><a href="https://www.homofaber.com/en/nextgen/fellowship">Homo Faber Fellowship</a><a href="https://www.homofaber.com/en/nextgen/young-ambassadors">Young Ambassadors Programme</a><a href="https://www.homofaber.com/en/news/seasonsgreetings">Wishing you a happy, restful and well-crafted holiday season</a><a href="https://www.homofaber.com/en/info/artisan-how-to-apply">Artisan: how to apply?</a></body></html>`,
+    "https://craftcouncilbc.ca/call-for-entry/": `<html><body><a href="https://craftcouncilbc.ca/mactaquac-craft">Call for Vendors: Mactaquac Craft Festival 2026</a><a href="mailto:contact_us@craftcouncilbc.ca">contact_us@craftcouncilbc.ca</a><a href="https://craftcouncilbc.ca/in-craft">CCBC blog</a></body></html>`,
+    "https://culture360.org/opportunities/": `<html><body><a href="https://culture360.org/opportunities/loewe-foundation-2027-craft-prize">Loewe Foundation 2027 Craft Prize</a></body></html>`,
     "https://craftprize.loewe.com/zh/craftprize2027": `<html><body><h1>Craft Prize 2027</h1><p>请于2027年3月30日之前提交您的申请。</p></body></html>`,
   };
   const fetcher = async (url: string) => ({ status: 200, final_url: url, text: fixtureBySource[url] ?? "" });
@@ -39,15 +45,29 @@ async function main(): Promise<void> {
     "on-the-move-open-calls", "curatorspace-opportunities", "cafe-call-for-entry", "artshub-craft-opportunities",
     "craft-council-bc-calls", "craft-council-nl-opportunities",
   ]);
+  writeOpportunityV2Sources(initialSources.map((source) => ["kcdf-opportunities", "homo-faber-calls"].includes(source.id) ? { ...source, status: "ACTIVE" } : source), sourcesPath);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
   assert.equal(result.fetched_sources, 20);
-  assert.equal(result.successful_sources, 7);
+  assert.equal(result.successful_sources, 11);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);
   assert.ok(result.radar_items > 0);
   assert.equal(result.radar_opportunities.some((item) => item.title === "纯摄影比赛"), false);
-  assert.equal(readOpportunityV2Pool(poolPath).opportunities.some((item) => item.source_id === "artconnect-opportunities" && /\/opportunities\//u.test(item.detail_url)), false);
+  const resultPool = readOpportunityV2Pool(poolPath).opportunities;
+  assert.equal(resultPool.some((item) => item.source_id === "artconnect-opportunities" && /\/opportunities\//u.test(item.detail_url)), false);
+  assert.equal(resultPool.some((item) => item.title === "공예문화(Craft Culture) 71호"), false);
+  assert.equal(resultPool.some((item) => item.title.includes("holiday season")), false);
+  assert.equal(resultPool.some((item) => item.source_id === "craft-council-bc-calls" && /(?:blog|podcast|archive|contact_us|mailto:)/iu.test(`${item.title} ${item.detail_url}`)), false);
+  assert.equal(resultPool.filter((item) => /loewe foundation.*craft prize|craft prize.*loewe foundation/iu.test(item.title)).length, 1);
+  assert.deepEqual(resultPool.find((item) => /loewe foundation.*craft prize|craft prize.*loewe foundation/iu.test(item.title))?.discovered_by_sources.sort(), ["asef-culture360-opportunities", "loewe-craft-prize"]);
+  const genericDeadline = parseGenericListing(fixtureBySource["https://example.com/deadline-listing"], "https://example.com/deadline-listing");
+  assert.equal(genericDeadline.length, 1);
+  assert.equal(genericDeadline[0].deadline_at, "2026-10-29T23:59:00.000Z");
+  assert.equal(isLikelySourceListingNoise("craft-council-bc-calls", "contact_us[@]craftcouncilbc[.]ca", "mailto:contact_us@craftcouncilbc.ca"), true);
+  assert.equal(isLikelySourceListingNoise("kcdf-opportunities", "공예문화(Craft Culture) 71호", "https://www.kcdf.or.kr/article"), true);
+  assert.equal(isLikelySourceListingNoise("homo-faber-calls", "Wishing you a happy, restful and well-crafted holiday season", "https://www.homofaber.com/en/news/seasonsgreetings"), true);
+  assert.equal(isLikelySourceListingNoise("craft-council-bc-calls", "Call for Vendors: Mactaquac Craft Festival 2026", "https://craftcouncilbc.ca/mactaquac-craft"), false);
 
   const wideSourcesPath = path.join(temp, "wide-sources.json");
   const widePoolPath = path.join(temp, "wide-pool.json");
