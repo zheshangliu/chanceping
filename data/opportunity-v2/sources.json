@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping-opportunity-v2.sources.v1",
-  "updated_at": "2026-09-06T15:43:11.958Z",
+  "updated_at": "2026-09-06T17:01:16.635Z",
   "sources": [
     {
       "id": "shejijingsai-list",
@@ -18,7 +18,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:50.223Z"
+      "last_fetch_at": "2026-09-06T17:00:39.895Z"
     },
     {
       "id": "chuangsaiyun-competition-list",
@@ -36,7 +36,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:50.718Z"
+      "last_fetch_at": "2026-09-06T17:00:40.325Z"
     },
     {
       "id": "contest-watchers-open",
@@ -53,7 +53,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:50.934Z"
+      "last_fetch_at": "2026-09-06T17:00:40.580Z"
     },
     {
       "id": "crafts-council-opportunities",
@@ -89,7 +89,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:53.352Z"
+      "last_fetch_at": "2026-09-06T17:00:42.963Z"
     },
     {
       "id": "competitions-archi",
@@ -105,8 +105,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "FAILED",
-      "last_fetch_at": "2026-09-06T15:24:24.682Z"
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T17:00:44.486Z"
     },
     {
       "id": "loewe-craft-prize",
@@ -124,7 +124,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:55.163Z"
+      "last_fetch_at": "2026-09-06T17:00:45.979Z"
     },
     {
       "id": "opencall-radar-craft",
@@ -144,7 +144,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:55.604Z"
+      "last_fetch_at": "2026-09-06T17:00:46.480Z"
     },
     {
       "id": "opencalls-ai",
@@ -203,7 +203,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:58.223Z"
+      "last_fetch_at": "2026-09-06T17:00:50.070Z"
     },
     {
       "id": "kcdf-opportunities",
@@ -223,7 +223,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:42:59.405Z"
+      "last_fetch_at": "2026-09-06T17:00:51.287Z"
     },
     {
       "id": "heritage-crafts-opportunities",
@@ -243,7 +243,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:00.211Z"
+      "last_fetch_at": "2026-09-06T17:00:52.032Z"
     },
     {
       "id": "homo-faber-calls",
@@ -262,7 +262,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:01.254Z"
+      "last_fetch_at": "2026-09-06T17:00:53.027Z"
     },
     {
       "id": "asef-culture360-opportunities",
@@ -282,7 +282,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:01.788Z"
+      "last_fetch_at": "2026-09-06T17:00:53.164Z"
     },
     {
       "id": "on-the-move-open-calls",
@@ -321,7 +321,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:02.663Z"
+      "last_fetch_at": "2026-09-06T17:00:53.992Z"
     },
     {
       "id": "cafe-call-for-entry",
@@ -341,7 +341,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:04.634Z"
+      "last_fetch_at": "2026-09-06T17:00:55.625Z"
     },
     {
       "id": "artshub-craft-opportunities",
@@ -382,7 +382,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:08.784Z"
+      "last_fetch_at": "2026-09-06T17:00:59.608Z"
     },
     {
       "id": "craft-council-nl-opportunities",
@@ -402,7 +402,194 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-06T15:43:10.844Z"
+      "last_fetch_at": "2026-09-06T17:01:01.419Z"
+    },
+    {
+      "id": "cfw-cultural-ip",
+      "name": "CFW设计大赛｜文创IP",
+      "url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "ip",
+        "gift"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T17:01:02.356Z"
+    },
+    {
+      "id": "whaleideas-competition",
+      "name": "文创赛网｜鲸创意",
+      "url": "https://whaleideas.com/zjds/index.html",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "ip"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T17:01:03.798Z"
+    },
+    {
+      "id": "1zj-cultural-competition",
+      "name": "第一征集网｜全球征集网",
+      "url": "https://www.1zj.com/index.php?m=content&c=index&a=lists&catid=85&cid=6",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "design",
+        "gift"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": null
+    },
+    {
+      "id": "chuangyisai-cultural",
+      "name": "创意赛网",
+      "url": "https://chuangyisai.com/",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": null
+    },
+    {
+      "id": "zcool-challenges",
+      "name": "站酷挑战赛 ZCOOL",
+      "url": "https://www.zcool.com.cn/events/challenge",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "brand_collaboration",
+        "cultural_creative",
+        "ip",
+        "packaging",
+        "aigc",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T17:01:14.731Z"
+    },
+    {
+      "id": "zjmtcn-product-competition",
+      "name": "征集码头",
+      "url": "https://www.zjmtcn.com/zjxx/chanpin/index.html",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "tourism_product",
+        "gift",
+        "craft",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": null
+    },
+    {
+      "id": "iuben-cultural-competition",
+      "name": "优本视觉",
+      "url": "https://iuben.cn/collect/",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "packaging",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T17:01:15.492Z"
+    },
+    {
+      "id": "everyart-competition",
+      "name": "EveryArt",
+      "url": "https://www.everyart.cn/search/0/%E8%89%BA%E6%9C%AF%E5%BE%81%E9%9B%86",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "open_call",
+        "cultural_creative",
+        "heritage",
+        "residency",
+        "exhibition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-06T17:01:15.646Z"
+    },
+    {
+      "id": "gtn9-competition",
+      "name": "古田路9号",
+      "url": "https://www.gtn9.com/work_list.aspx?action=index_red&id=565&subcategory=567",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "ip",
+        "packaging",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "FAILED",
+      "last_fetch_at": null
     }
   ]
 }

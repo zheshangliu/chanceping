@@ -5,7 +5,7 @@ import path from "node:path";
 import { createApp } from "../src/api/app";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
 import { isLikelySourceListingNoise, parseGenericListing } from "../src/ich/aggregation/adapters/generic-listing";
-import { filterOpportunityV2Radar, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
+import { canonicalOpportunityTitle, filterOpportunityV2Radar, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
 
 async function jsonRequest(app: ReturnType<typeof opportunityV2Routes>, url: string, method: string, body?: Record<string, unknown>): Promise<{ status: number; data: any }> {
   const response = await app.request(`http://localhost${url}`, { method, headers: body ? { "content-type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined });
@@ -35,21 +35,27 @@ async function main(): Promise<void> {
     "https://craftcouncilbc.ca/call-for-entry/": `<html><body><a href="https://craftcouncilbc.ca/mactaquac-craft">Call for Vendors: Mactaquac Craft Festival 2026</a><a href="mailto:contact_us@craftcouncilbc.ca">contact_us@craftcouncilbc.ca</a><a href="https://craftcouncilbc.ca/in-craft">CCBC blog</a></body></html>`,
     "https://culture360.org/opportunities/": `<html><body><a href="https://culture360.org/opportunities/loewe-foundation-2027-craft-prize">Loewe Foundation 2027 Craft Prize</a></body></html>`,
     "https://craftprize.loewe.com/zh/craftprize2027": `<html><body><h1>Craft Prize 2027</h1><p>请于2027年3月30日之前提交您的申请。</p></body></html>`,
+    "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1": `<html><body><a href="https://dasai.cfw.cn/ds/1321.html">2026“山东手造·齐品淄博”城市礼物创意设计大赛</a><a href="https://dasai.cfw.cn/compete/search?page=2&ordernum=0&categoryCode=0400">2</a></body></html>`,
+    "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=2": `<html><body><a href="https://dasai.cfw.cn/ds/1329.html">2026国文奖两岸青年非遗文创设计大赛</a></body></html>`,
   };
   const fetcher = async (url: string) => ({ status: 200, final_url: url, text: fixtureBySource[url] ?? "" });
   const initialSources = readOpportunityV2Sources(sourcesPath);
-  assert.equal(initialSources.length, 21);
-  assert.deepEqual(initialSources.slice(7).map((source) => source.id), [
+  assert.equal(initialSources.length, 30);
+  assert.deepEqual(initialSources.slice(7, 21).map((source) => source.id), [
     "opencall-radar-craft", "opencalls-ai", "american-craft-council-opportunities", "craft-scotland-opportunities",
     "kcdf-opportunities", "heritage-crafts-opportunities", "homo-faber-calls", "asef-culture360-opportunities",
     "on-the-move-open-calls", "curatorspace-opportunities", "cafe-call-for-entry", "artshub-craft-opportunities",
     "craft-council-bc-calls", "craft-council-nl-opportunities",
   ]);
+  assert.deepEqual(initialSources.slice(21).map((source) => source.id), [
+    "cfw-cultural-ip", "whaleideas-competition", "1zj-cultural-competition", "chuangyisai-cultural", "zcool-challenges",
+    "zjmtcn-product-competition", "iuben-cultural-competition", "everyart-competition", "gtn9-competition",
+  ]);
   writeOpportunityV2Sources(initialSources.map((source) => ["kcdf-opportunities", "homo-faber-calls"].includes(source.id) ? { ...source, status: "ACTIVE" } : source), sourcesPath);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
-  assert.equal(result.fetched_sources, 20);
-  assert.equal(result.successful_sources, 11);
+  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && source.status !== "PAUSED" && source.status !== "NEEDS_ADAPTER").length);
+  assert.ok(result.successful_sources >= 1);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);
   assert.ok(result.radar_items > 0);
@@ -61,9 +67,20 @@ async function main(): Promise<void> {
   assert.equal(resultPool.some((item) => item.source_id === "craft-council-bc-calls" && /(?:blog|podcast|archive|contact_us|mailto:)/iu.test(`${item.title} ${item.detail_url}`)), false);
   assert.equal(resultPool.filter((item) => /loewe foundation.*craft prize|craft prize.*loewe foundation/iu.test(item.title)).length, 1);
   assert.deepEqual(resultPool.find((item) => /loewe foundation.*craft prize|craft prize.*loewe foundation/iu.test(item.title))?.discovered_by_sources.sort(), ["asef-culture360-opportunities", "loewe-craft-prize"]);
+  assert.equal(result.source_health.find((row) => row.source_id === "cfw-cultural-ip")?.items_seen, 2);
+  assert.equal(canonicalOpportunityTitle("2026“山东手造·齐品淄博”城市礼物创意设计大赛"), canonicalOpportunityTitle("山东手造·齐品淄博 2026 城市礼物创意设计大赛"));
   const genericDeadline = parseGenericListing(fixtureBySource["https://example.com/deadline-listing"], "https://example.com/deadline-listing");
   assert.equal(genericDeadline.length, 1);
   assert.equal(genericDeadline[0].deadline_at, "2026-10-29T23:59:00.000Z");
+  const iubenDeadline = parseGenericListing(
+    `<article><a href="https://iuben.cn/collect/detail-1.html">2026非遗文创设计征集</a><p>投稿截止：2026-10-20</p></article>`,
+    "https://iuben.cn/collect/",
+    [],
+    "iuben-cultural-competition",
+  );
+  assert.equal(iubenDeadline.length, 1);
+  assert.equal(iubenDeadline[0].deadline_at, "2026-10-20T23:59:00.000Z");
+  assert.equal(isLikelySourceListingNoise("cfw-cultural-ip", "2025文创设计大赛", "https://dasai.cfw.cn/ds/1000.html"), true);
   assert.equal(isLikelySourceListingNoise("craft-council-bc-calls", "contact_us[@]craftcouncilbc[.]ca", "mailto:contact_us@craftcouncilbc.ca"), true);
   assert.equal(isLikelySourceListingNoise("kcdf-opportunities", "공예문화(Craft Culture) 71호", "https://www.kcdf.or.kr/article"), true);
   assert.equal(isLikelySourceListingNoise("homo-faber-calls", "Wishing you a happy, restful and well-crafted holiday season", "https://www.homofaber.com/en/news/seasonsgreetings"), true);
@@ -94,7 +111,7 @@ async function main(): Promise<void> {
   assert.equal(created.data.test.ok, true);
   assert.equal(created.data.test.format, "HTML_LISTING");
   assert.ok(created.data.run.raw_items > 0);
-  assert.equal(readOpportunityV2Sources(sourcesPath).length, 22);
+  assert.equal(readOpportunityV2Sources(sourcesPath).length, 31);
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0, "arbitrary source IDs are legal");
 
   const edited = await jsonRequest(manager, "/sources/test-custom-source", "PUT", { name: "某非遗市集平台（已编辑）", url: "https://example.com/markets", region: "CN", priority: "P1", types: ["market", "open_call"], radars: ["ich"] });

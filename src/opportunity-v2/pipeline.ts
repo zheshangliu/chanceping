@@ -4,7 +4,7 @@ import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { isLikelySourceListingNoise, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
-import type { ParsedAggregationItem } from "../ich/aggregation/adapters/common";
+import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
@@ -44,10 +44,44 @@ function parseSource(source: OpportunityV2Source, text: string, listingUrl: stri
   }
   const rss = parseRssItems(text, listingUrl);
   if (rss.length) return { items: rss, format: "RSS" };
-  const html = parseGenericListing(text, listingUrl);
+  const html = parseGenericListing(text, listingUrl, [], source.id);
   const filtered = html.filter((item) => !isLikelySourceListingNoise(source.id, item.title, item.detail_url));
   if (filtered.length) return { items: filtered, format: "HTML_LISTING" };
   return { items: [], format: null };
+}
+
+interface PaginationPlan {
+  maxPages: number;
+  pageUrl: (page: number) => string;
+}
+
+function paginationPlan(source: OpportunityV2Source): PaginationPlan | null {
+  if (source.id === "cfw-cultural-ip") {
+    return { maxPages: 12, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
+  }
+  if (source.id === "whaleideas-competition") {
+    return { maxPages: 12, pageUrl: (page) => `https://whaleideas.com/zjds/index${page === 1 ? "" : `-${page}`}.html` };
+  }
+  if (source.id === "zjmtcn-product-competition") {
+    return { maxPages: 2, pageUrl: (page) => `https://www.zjmtcn.com/zjxx/chanpin/index${page === 1 ? "" : `-${page}`}.html` };
+  }
+  if (source.id === "iuben-cultural-competition") {
+    return { maxPages: 12, pageUrl: (page) => `https://iuben.cn/collect/${page === 1 ? "" : `list_10_${page}/`}` };
+  }
+  return null;
+}
+
+function hasNextPage(source: OpportunityV2Source, text: string, currentUrl: string, nextUrl: string): boolean {
+  const expected = new URL(nextUrl);
+  return extractAnchors(text, currentUrl).some(({ href }) => {
+    try {
+      const candidate = new URL(href);
+      if (candidate.origin !== expected.origin || candidate.pathname !== expected.pathname) return false;
+      return [...candidate.searchParams.entries()].sort().toString() === [...expected.searchParams.entries()].sort().toString();
+    } catch {
+      return false;
+    }
+  });
 }
 
 interface SourceFetchResult {
@@ -60,10 +94,31 @@ interface SourceFetchResult {
 
 async function fetchAndParseSource(source: OpportunityV2Source, fetcher: OpportunityV2Fetcher): Promise<SourceFetchResult> {
   const fetchedAt = new Date().toISOString();
-  const response = await fetcher(SPECIAL_SOURCE_URL[source.id] ?? source.url);
-  if (response.status < 200 || response.status >= 400) throw Object.assign(new Error(`HTTP ${response.status}`), { responseStatus: response.status, fetchedAt });
-  const parsedSource = parseSource(source, response.text, response.final_url);
-  return { parsed: parsedSource.items, format: parsedSource.format, responseStatus: response.status, fetchedAt, error: parsedSource.items.length ? null : "No RSS or HTML listing items recognized" };
+  const firstUrl = SPECIAL_SOURCE_URL[source.id] ?? source.url;
+  const plan = paginationPlan(source);
+  const pages = plan ? Math.max(1, plan.maxPages) : 1;
+  const parsed: ParsedAggregationItem[] = [];
+  const seen = new Set<string>();
+  let responseStatus = 0;
+  let format: SourceFetchResult["format"] = null;
+  for (let page = 1; page <= pages; page += 1) {
+    const pageUrl = page === 1 ? firstUrl : plan!.pageUrl(page);
+    const response = await fetcher(pageUrl);
+    if (response.status < 200 || response.status >= 400) {
+      if (page === 1) throw Object.assign(new Error(`HTTP ${response.status}`), { responseStatus: response.status, fetchedAt });
+      break;
+    }
+    if (!responseStatus) responseStatus = response.status;
+    const parsedSource = parseSource(source, response.text, source.url);
+    format = parsedSource.format ?? format;
+    for (const item of parsedSource.items) {
+      if (seen.has(item.source_item_id)) continue;
+      seen.add(item.source_item_id);
+      parsed.push(item);
+    }
+    if (!plan || page >= pages || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
+  }
+  return { parsed, format, responseStatus, fetchedAt, error: parsed.length ? null : "No RSS or HTML listing items recognized" };
 }
 
 function healthFor(source: OpportunityV2Source, result: SourceFetchResult): OpportunityV2SourceHealth {

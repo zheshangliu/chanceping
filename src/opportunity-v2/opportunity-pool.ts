@@ -38,11 +38,21 @@ export function opportunityStatus(deadline: string | null, now = new Date()): V2
   return Number.isFinite(timestamp) && timestamp < now.getTime() ? "EXPIRED" : "CURRENT";
 }
 
+export function canonicalOpportunityTitle(title: string): string {
+  let normalized = title.normalize("NFKC").toLowerCase().trim();
+  normalized = normalized
+    .replace(/[（(【\[][^）)】\]]*(?:截至|截止|截稿|报名)[^）)】\]]*[）)】\]]/gu, " ")
+    .replace(/(?:截至|截稿至|截止时间?|报名截止|征集时间)\s*[:：]?\s*(?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{1,2}[月./-]\d{1,2}日?)\s*$/u, " ");
+  const wrappers = /(?:报名通知|报名启事|征集启事|征稿通知|征集令|正式启动|报名开始|开始报名|公开征集|作品征集|征集活动|启动招募|等你来战|来了)$/u;
+  while (wrappers.test(normalized)) normalized = normalized.replace(wrappers, "").trim();
+  const years = normalized.match(/20\d{2}/gu) ?? [];
+  normalized = normalized.replace(/20\d{2}年?/gu, "");
+  return `${normalized.replace(/[^\p{L}\p{N}]+/gu, "")}${years.join("")}`;
+}
+
 function crossSourceTitleKey(title: string): string | null {
-  const normalized = title.toLowerCase().replace(/[^a-z0-9]+/gu, " ").trim();
-  return normalized.includes("loewe") && normalized.includes("foundation") && normalized.includes("craft") && normalized.includes("prize") && normalized.includes("2027")
-    ? "loewe-foundation-craft-prize-2027"
-    : null;
+  const normalized = canonicalOpportunityTitle(title);
+  return normalized || null;
 }
 
 function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now: Date): OpportunityV2 {
