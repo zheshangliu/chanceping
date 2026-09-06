@@ -1,0 +1,18 @@
+[Unit]
+Description=ChancePing Opportunity V2 source pool refresh
+After=network-online.target chanceping.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/chanceping/current
+EnvironmentFile=-/etc/chanceping/chanceping.env
+Environment=CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH=/var/lib/chanceping/opportunity-v2/sources.json
+Environment=CHANCEPING_OPPORTUNITY_V2_POOL_PATH=/var/lib/chanceping/opportunity-v2/opportunities.json
+Environment=CHANCEPING_OPPORTUNITY_V2_HEALTH_PATH=/var/lib/chanceping/opportunity-v2/source-health.json
+Environment=CHANCEPING_OPPORTUNITY_V2_SCHEDULE_PATH=/var/lib/chanceping/opportunity-v2/scheduler.json
+ExecStartPre=/usr/bin/install -d -o root -g root -m 0750 /var/lib/chanceping/opportunity-v2
+ExecStart=/usr/bin/npm run opportunity:v2:run
+TimeoutStartSec=30min
+User=root
+Group=root

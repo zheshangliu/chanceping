@@ -1,0 +1,54 @@
+{
+  "schema_version": "chanceping-opportunity-v2.source-health.v1",
+  "updated_at": "2026-09-06T07:57:22.097Z",
+  "sources": [
+    {
+      "source_id": "shejijingsai-list",
+      "fetched_at": "2026-09-06T07:57:12.840Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 200,
+      "error": null
+    },
+    {
+      "source_id": "chuangsaiyun-competition-list",
+      "fetched_at": "2026-09-06T07:57:13.551Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 107,
+      "error": null
+    },
+    {
+      "source_id": "contest-watchers-open",
+      "fetched_at": "2026-09-06T07:57:14.424Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 10,
+      "error": null
+    },
+    {
+      "source_id": "crafts-council-opportunities",
+      "fetched_at": "2026-09-06T07:57:16.313Z",
+      "ok": false,
+      "http_status": null,
+      "items_seen": 0,
+      "error": "HTTP 403"
+    },
+    {
+      "source_id": "artconnect-opportunities",
+      "fetched_at": "2026-09-06T07:57:16.857Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 52,
+      "error": null
+    },
+    {
+      "source_id": "competitions-archi",
+      "fetched_at": "2026-09-06T07:57:19.231Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 12,
+      "error": null
+    }
+  ]
+}

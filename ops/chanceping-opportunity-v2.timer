@@ -1,0 +1,11 @@
+[Unit]
+Description=Run ChancePing Opportunity V2 aggregator every 72 hours
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=72h
+Persistent=true
+Unit=chanceping-opportunity-v2.service
+
+[Install]
+WantedBy=timers.target

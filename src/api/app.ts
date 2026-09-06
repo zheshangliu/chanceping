@@ -31,6 +31,8 @@ import { ichAdminPagesRoutes } from "./routes/ich-admin-pages";
 import { ichSubmissionRoutes } from "./routes/ich-submissions";
 import { internalIchSubmissionRoutes } from "./routes/internal-ich-submissions";
 import { internalIchOperationsRoutes } from "./routes/internal-ich-operations";
+import { opportunityV2Routes } from "./routes/opportunity-v2";
+import { opportunityV2PagesRoutes } from "./routes/opportunity-v2-pages";
 import type { ApiResponse } from "./types";
 
 /** 从 package.json 读取版本号（启动时一次性读取，避免每次请求读文件） */
@@ -85,8 +87,11 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/internal/ich", internalIchRoutes());
   app.route("/api/internal/ich", internalIchSubmissionRoutes());
   app.route("/api/internal/ich", internalIchOperationsRoutes());
+  app.route("/api/opportunity-v2", opportunityV2Routes());
   app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes());
+  app.route("/opportunity-v2", opportunityV2PagesRoutes());
+  app.route("/opportunity-v2/", opportunityV2PagesRoutes());
 
   // Web UI 静态文件服务（根路径）
   app.route("/", webUiRoutes());
