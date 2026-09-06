@@ -5,6 +5,7 @@ import path from "node:path";
 const schedule = JSON.parse(fs.readFileSync(path.resolve("ops/ich-ds6-schedule.json"), "utf8")) as { enabled: boolean; timezone: string; interval_days: number; run_mode: string; formal_store_write: boolean; requires_manual_promotion: boolean };
 const timer = fs.readFileSync(path.resolve("ops/chanceping-ich-ds6.timer"), "utf8");
 const service = fs.readFileSync(path.resolve("ops/chanceping-ich-ds6.service"), "utf8");
+const ds6 = fs.readFileSync(path.resolve("scripts/run-ich-ds6-scheduled-readonly.ts"), "utf8");
 const ledger = JSON.parse(fs.readFileSync(path.resolve("docs/ich/DS6-只读调度运行账本_V1.0.json"), "utf8")) as { runs: Array<{ gate: string; readonly: boolean; formal_store_write: boolean; formal_store_unchanged: boolean; schedule: { interval_days: number }; steps: Array<{ exit_code: number }> }> };
 assert.equal(schedule.enabled, true);
 assert.equal(schedule.timezone, "Asia/Shanghai");
@@ -14,6 +15,7 @@ assert.equal(schedule.formal_store_write, false);
 assert.equal(schedule.requires_manual_promotion, true);
 assert(timer.includes("OnUnitActiveSec=72h") && timer.includes("Persistent=true") && timer.includes("chanceping-ich-ds6.service"));
 assert(service.includes("npm run ich:ds6:run-once") && service.includes("CHANCEPING_ICH_STORE_PATH") && service.includes("CHANCEPING_ICH_DS6_LEDGER_PATH=/var/lib/chanceping/ich-ds6/") && service.includes("ExecStartPre=/usr/bin/install -d") && !service.includes("replaceAll"));
+assert(ds6.includes("run-ich-aggregation-discovery.ts"), "DS6 must include Stage5-A.4 aggregation discovery before fixed adapters");
 assert(ledger.runs.length >= 3, "DS6 requires three consecutive runs before entering DS7");
 for (const run of ledger.runs.slice(-3)) {
   assert.equal(run.gate, "pass");

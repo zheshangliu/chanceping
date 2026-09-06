@@ -16,6 +16,10 @@ const ledgerPath = path.resolve(process.env.CHANCEPING_ICH_DS6_LEDGER_PATH ?? "d
 const beforeRaw = fs.readFileSync(storePath);
 const beforeHash = crypto.createHash("sha256").update(beforeRaw).digest("hex");
 const steps: Array<{ name: string; command: string[] }> = [];
+// Stage5-A.4 aggregation discovery is deliberately first in the readonly
+// funnel. It may write only its candidate/ledger/report artifacts; the formal
+// opportunity store remains protected by the hash gate below.
+steps.push({ name: "aggregation-discovery", command: ["scripts/run-ich-aggregation-discovery.ts"] });
 if (!skipEndpoints) steps.push({ name: "source-endpoints", command: ["scripts/verify-ich-source-endpoints.ts"] });
 steps.push(
   { name: "ds2-readonly-discovery", command: ["scripts/run-ich-ds2-readonly-discovery.ts"] },

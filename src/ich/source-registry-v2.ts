@@ -31,6 +31,9 @@ export interface IchSourceRegistryV2Entry {
   operational_status: IchSourceRegistryV2Status;
   url_verification: "registered" | "endpoint_pending" | "blocked";
   last_health_check: string | null;
+  /** Optional runtime metadata used by the aggregation discovery layer. */
+  adapter_id?: string;
+  health_status?: "healthy" | "partial" | "blocked" | "pending";
   eligibility_note?: string;
 }
 

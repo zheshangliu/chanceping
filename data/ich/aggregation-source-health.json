@@ -1,0 +1,66 @@
+{
+  "schema_version": "ich-aggregation-source-health.v1",
+  "updated_at": "2026-09-06T05:57:39.313Z",
+  "sources": [
+    {
+      "source_id": "shejijingsai-list",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T05:57:29.235Z",
+      "adapter_status": "PASS",
+      "parse_success": true,
+      "items_seen": 120,
+      "last_success_at": "2026-09-06T05:57:29.235Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "contest-watchers-open",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T05:57:29.235Z",
+      "adapter_status": "PASS",
+      "parse_success": true,
+      "items_seen": 10,
+      "last_success_at": "2026-09-06T05:57:29.235Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "crafts-council-opportunities",
+      "reachable": false,
+      "http_status": 403,
+      "last_checked_at": "2026-09-06T05:57:29.235Z",
+      "adapter_status": "BLOCKED",
+      "parse_success": false,
+      "items_seen": 0,
+      "last_success_at": null,
+      "consecutive_failures": 1,
+      "error": "HTTP 403; discovery not treated as success"
+    },
+    {
+      "source_id": "artconnect-opportunities",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T05:57:29.235Z",
+      "adapter_status": "PASS",
+      "parse_success": true,
+      "items_seen": 52,
+      "last_success_at": "2026-09-06T05:57:29.235Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "competitions-archi",
+      "reachable": false,
+      "http_status": null,
+      "last_checked_at": "2026-09-06T05:57:29.235Z",
+      "adapter_status": "PARSER_FAILED",
+      "parse_success": false,
+      "items_seen": 0,
+      "last_success_at": null,
+      "consecutive_failures": 1,
+      "error": "TypeError: fetch failed"
+    }
+  ]
+}
