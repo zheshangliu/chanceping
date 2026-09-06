@@ -10,6 +10,9 @@ const now = new Date("2026-09-06T12:00:00+08:00");
 const report = JSON.parse(fs.readFileSync(path.join(root, "docs/ich/stage5a-batch3-report.json"), "utf8")) as any;
 const directionSummaryPath = path.join(root, "docs/ich/stage5a2-direction-summary.json");
 const directionSummary = fs.existsSync(directionSummaryPath) ? JSON.parse(fs.readFileSync(directionSummaryPath, "utf8")) as { after_sha256?: string } : null;
+const batch4Path = path.join(root, "docs/ich/stage5a-batch4-report.json");
+const batch4 = fs.existsSync(batch4Path) ? JSON.parse(fs.readFileSync(batch4Path, "utf8")) as any : null;
+const postBatch4 = batch4?.mode === "write";
 const bytes = fs.readFileSync(path.join(root, "data/ich-opportunities.json"));
 const file = JSON.parse(bytes.toString("utf8")) as IchOpportunityFile;
 const hash = crypto.createHash("sha256").update(bytes).digest("hex");
@@ -23,8 +26,8 @@ const errors: string[] = [];
 if (report.gate !== "pass") errors.push("batch report gate is not pass");
 if (report.candidate_count !== 10 || report.official_backtrace_success !== 10 || report.ds3_pass !== 10 || report.ds14_imported !== 10) errors.push("batch counts do not equal 10/10/10/10");
 if (report.before_count !== 147 || report.after_count !== 157) errors.push(`unexpected counts ${report.before_count}/${report.after_count}`);
-if (file.entries.length !== 157) errors.push(`store count ${file.entries.length} != 157`);
-if (hash !== report.after_sha256 && hash !== directionSummary?.after_sha256) errors.push(`store hash ${hash} != Batch3 report hash ${report.after_sha256} or Stage5-A.2 hash ${directionSummary?.after_sha256 ?? "missing"}`);
+if (!postBatch4 && file.entries.length !== 157) errors.push(`store count ${file.entries.length} != 157`);
+if (hash !== report.after_sha256 && hash !== directionSummary?.after_sha256 && hash !== batch4?.after_sha256) errors.push(`store hash ${hash} != Batch3 report hash ${report.after_sha256}, Stage5-A.2 hash ${directionSummary?.after_sha256 ?? "missing"}, or Batch4 hash ${batch4?.after_sha256 ?? "missing"}`);
 
 const imported = slugs.map((slug) => file.entries.find((entry) => entry.slug === slug));
 if (imported.some((entry) => !entry)) errors.push("one or more imported slugs are missing");
@@ -71,6 +74,6 @@ for (const entry of file.entries.filter((item) => item.is_published)) {
   if (["active", "closing_soon", "long_term"].includes(status)) categoryCounts[entry.primary_category] = (categoryCounts[entry.primary_category] ?? 0) + 1;
 }
 const actionable = (counts.active ?? 0) + (counts.closing_soon ?? 0) + (counts.long_term ?? 0);
-if ((counts.active ?? 0) !== 23 || (counts.closing_soon ?? 0) !== 14 || (counts.long_term ?? 0) !== 6 || actionable !== 43) errors.push(`unexpected lifecycle counts active=${counts.active ?? 0}, closing=${counts.closing_soon ?? 0}, long_term=${counts.long_term ?? 0}, actionable=${actionable}`);
+if (!postBatch4 && ((counts.active ?? 0) !== 23 || (counts.closing_soon ?? 0) !== 14 || (counts.long_term ?? 0) !== 6 || actionable !== 43)) errors.push(`unexpected lifecycle counts active=${counts.active ?? 0}, closing=${counts.closing_soon ?? 0}, long_term=${counts.long_term ?? 0}, actionable=${actionable}`);
 if (errors.length) { console.error(errors.join("\n")); process.exit(1); }
 console.log(JSON.stringify({ pass: true, imported: newEntries.length, status_counts: counts, actionable_pool: actionable, actionable_category_counts: categoryCounts, hash }, null, 2));

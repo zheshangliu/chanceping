@@ -1,0 +1,74 @@
+{
+  "schema_version": "ich-stage5a-batch4.v1",
+  "batch": "stage5a-batch-04",
+  "checked_at": "2026-09-06T04:00:00.000Z",
+  "gate": "pass",
+  "mode": "write",
+  "source_coverage_counts": {
+    "DISCOVERY_ONLY": 6,
+    "FULLY_INTEGRATED": 2,
+    "NOT_SUITABLE": 1,
+    "NEEDS_INTEGRATION": 2
+  },
+  "candidates_discovered": 8,
+  "official_backtrace_success": 8,
+  "ds3_pass": 8,
+  "ds14_imported": 8,
+  "before_sha256": "8cc10b7ab24aac19e52764b77842ac6866a62c17a933b83e35d76304e6ab6ce9",
+  "after_sha256": "aa39deb93fc6b79705f6e6f65afc68dd8b35b13bafedc3105cb83c2cca3ebd5d",
+  "before": {
+    "formal_total": 157,
+    "active": 23,
+    "closing_soon": 14,
+    "opening_soon": 3,
+    "long_term": 6,
+    "expired": 68,
+    "pending_confirmation": 36,
+    "raw_actionable": 43,
+    "direction_aware_ich_actionable": 40,
+    "procurement_actionable": 2,
+    "channel_actionable": 8,
+    "supplier_channel_coverage": 4
+  },
+  "after": {
+    "formal_total": 165,
+    "active": 24,
+    "closing_soon": 18,
+    "opening_soon": 4,
+    "long_term": 8,
+    "expired": 68,
+    "pending_confirmation": 36,
+    "raw_actionable": 50,
+    "direction_aware_ich_actionable": 47,
+    "procurement_actionable": 5,
+    "channel_actionable": 12,
+    "supplier_channel_coverage": 8
+  },
+  "imported_slugs": [
+    "jinan-quancheng-ich-people-series-activities-procurement-2026",
+    "lianghe-hulusi-cultural-industry-development-procurement-2026",
+    "moyu-cultural-tourism-brand-promotion-procurement-2026-round2",
+    "hami-yuha-cultural-performance-procurement-2026",
+    "linyi-innovative-cultural-products-submission-2026",
+    "beijing-forestry-cultural-product-exhibition-submission-2026",
+    "nyhistory-museum-store-product-submissions-ongoing",
+    "north-carolina-museum-art-community-artisan-collaboration-ongoing"
+  ],
+  "rejected_candidates": [
+    {
+      "title": "正阳门文创空间授权招募公告",
+      "source": "https://wwj.beijing.gov.cn/bjww/wwjzzcslm/1729986/1730010/744010625/index.html",
+      "reason": "报名截止2026年5月22日，当前审计日已过，不进入Active正式库。"
+    },
+    {
+      "title": "Craft Contemporary Holiday Marketplace 2024",
+      "source": "https://www.craftcontemporary.org/holidaymarketplace/",
+      "reason": "官方页面为2024活动且明确申请已关闭，保留为来源线索，不发布。"
+    },
+    {
+      "title": "AI Events 文化线索（Shejijingsai聚合页）",
+      "source": "https://www.shejijingsai.com/2026/08/1618999.html",
+      "reason": "聚合/发现页无组织方L1详情，等待官方回溯。"
+    }
+  ]
+}

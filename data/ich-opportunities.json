@@ -37126,6 +37126,2182 @@
       "opportunity_direction": "supplier_to_institution",
       "ich_actionable": true,
       "supplier_channel_eligible": true
+    },
+    {
+      "id": "ich_d5e71a02163640f3a88a3a92537536fb",
+      "slug": "jinan-quancheng-ich-people-series-activities-procurement-2026",
+      "external_id": "stage5a-b4-jinan-quancheng-ich-people-series-activities-procurement-2026",
+      "title": "济南市文化馆泉城非遗人系列活动采购",
+      "title_original": "济南市文化馆泉城非遗人系列活动采购",
+      "title_en": null,
+      "summary": "济南市文化馆公开采购泉城非遗人系列活动组织服务，预算30万元，响应文件截止2026年9月18日09:00。",
+      "description": "济南市文化馆委托代理机构组织竞争性磋商，采购方为文化馆，供应商需通过山东省政府采购电子交易系统获取文件并提交响应文件。",
+      "opportunity_value_text": "采购预算及最高限价均为300000元，合同履行至2027年5月30日。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "非遗活动",
+        "文化馆",
+        "竞争性磋商",
+        "济南"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "济南市文化馆",
+        "name_en": null,
+        "type": "public_cultural_institution",
+        "official_website": "https://www.jinan.gov.cn",
+        "contact_text": "0531-81602202；项目联系人赵丹丹、胡常帅"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "山东省",
+        "city": "济南",
+        "district": null,
+        "venue_text": "在线提交；详情以官方页面和采购平台为准",
+        "region_groups": [
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "中国境内符合资格的供应商/机构"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "procurement_platform",
+        "requires_on_site_presence": true,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": "2026-09-04T11:43:00+08:00",
+        "application_start_at": "2026-09-07T00:00:00+08:00",
+        "deadline_at": "2026-09-18T09:00:00+08:00",
+        "deadline_text": "2026年9月18日09:00（北京时间）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "欢迎国内合格供应商参加；满足政府采购法第二十二条要求，不接受联合体，项目无特定资格要求。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": false,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "revenue",
+          "network"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": 300000,
+        "procurement_budget_max": 300000,
+        "procurement_currency": "CNY",
+        "sales_opportunity": true,
+        "channel_opportunity": false,
+        "benefit_text": "承接济南市文化馆泉城非遗人系列活动组织服务，采购预算300000元。"
+      },
+      "costs": {
+        "application_fee_amount": 0,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "采购文件免费获取；公告列明磋商保证金为0元，供应商仍需承担方案和投标执行成本。",
+        "cost_status": "confirmed"
+      },
+      "requirements": {
+        "documents_required": [
+          "营业执照/资格证明",
+          "活动组织方案",
+          "响应文件",
+          "报价文件"
+        ],
+        "portfolio_required": true,
+        "sample_required": false,
+        "proposal_required": true,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "按山东省政府采购电子交易系统要求获取磋商文件，准备资格证明、活动组织方案和响应文件。"
+      },
+      "application": {
+        "application_url": "https://dzjy.sdcz.gov.cn:30181/gateway/gp-auth-center/login?tenantId=ZF_JGBM_000035&code=sd&userType=2&systemRegion=120000",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "在山东省政府采购网注册账号",
+          "2026年9月7日至11日在线获取采购文件",
+          "准备并上传响应文件",
+          "2026年9月18日09:00在线参加开启"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "name": "财政部政府采购信息网官方公告",
+          "type": "official_government_procurement",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-09-04",
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方采购公告，明确采购方、预算、获取窗口、响应截止和资格要求。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-04T11:43:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "buyer_to_vendor",
+      "ich_actionable": true,
+      "supplier_channel_eligible": false,
+      "radar_tags": [
+        "ICH",
+        "Culture",
+        "Business",
+        "Procurement"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        },
+        "organizer": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        },
+        "procurement_budget": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        },
+        "application_start_at": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        },
+        "deadline_at": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        },
+        "eligibility": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        },
+        "application_url": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260904_27266403.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把采购代理机构或采购平台混作采购主体。"
+        }
+      }
+    },
+    {
+      "id": "ich_6785a5e364464aa99b9e2d2ac79430f0",
+      "slug": "lianghe-hulusi-cultural-industry-development-procurement-2026",
+      "external_id": "stage5a-b4-lianghe-hulusi-cultural-industry-development-procurement-2026",
+      "title": "梁河县葫芦丝产业文化发展项目采购",
+      "title_original": "梁河县葫芦丝产业文化发展项目采购",
+      "title_en": null,
+      "summary": "梁河县文化和旅游局采购葫芦丝文创产品设计开发制作、校园活动、演出交流和原创音乐创作服务，预算110万元，截止2026年9月14日15:00。",
+      "description": "该项目面向中小企业公开竞争性磋商，采购内容直接围绕葫芦丝传统文化产业，适合具备传统工艺产品、文化活动或音乐创作执行能力的供应商。",
+      "opportunity_value_text": "预算及最高限价均为1100000元，合同签订后90天内完成。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "葫芦丝",
+        "传统工艺",
+        "文创产品开发",
+        "文化活动采购"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "梁河县文化和旅游局",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.lianghe.gov.cn",
+        "contact_text": "0692-6161233；代理机构0692-2122555"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "云南省",
+        "city": "梁河",
+        "district": null,
+        "venue_text": "在线提交；详情以官方页面和采购平台为准",
+        "region_groups": [
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "中国境内符合资格的供应商/机构"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "procurement_platform",
+        "requires_on_site_presence": true,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": "2026-09-02T20:23:00+08:00",
+        "application_start_at": "2026-09-03T00:00:00+08:00",
+        "deadline_at": "2026-09-14T15:00:00+08:00",
+        "deadline_text": "2026年9月14日15:00（北京时间）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "满足政府采购法要求的供应商；项目专门面向中小企业、监狱企业或残疾人福利性单位，不接受联合体。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": false,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "revenue",
+          "network",
+          "exposure"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": 1100000,
+        "procurement_budget_max": 1100000,
+        "procurement_currency": "CNY",
+        "sales_opportunity": true,
+        "channel_opportunity": false,
+        "benefit_text": "承接葫芦丝文创产品设计开发制作、学校活动、演出交流和原创音乐创作，预算1100000元。"
+      },
+      "costs": {
+        "application_fee_amount": 0,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "采购文件售价0元；公告明确不收取磋商保证金，供应商仍需承担投标制作及履约成本。",
+        "cost_status": "confirmed"
+      },
+      "requirements": {
+        "documents_required": [
+          "营业执照/中小企业声明",
+          "项目方案",
+          "资格证明",
+          "电子响应文件"
+        ],
+        "portfolio_required": true,
+        "sample_required": false,
+        "proposal_required": true,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "使用云南省政府采购电子交易平台获取文件，准备文创产品开发、校园活动、演出交流和原创音乐方案及资格材料。"
+      },
+      "application": {
+        "application_url": "https://www.zcygov.cn/",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "在云南省政府采购电子交易平台注册并办理CA",
+          "2026年9月3日至10日获取采购文件",
+          "编制并提交电子响应文件",
+          "2026年9月14日15:00参加线上开标"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "name": "财政部政府采购信息网官方公告",
+          "type": "official_government_procurement",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-09-02",
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方采购公告，明确葫芦丝文创采购内容、预算、时间窗口和中小企业资格。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-02T20:23:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "buyer_to_vendor",
+      "ich_actionable": true,
+      "supplier_channel_eligible": false,
+      "radar_tags": [
+        "ICH",
+        "Culture",
+        "Business",
+        "Procurement"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        },
+        "organizer": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        },
+        "procurement_budget": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        },
+        "application_start_at": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        },
+        "deadline_at": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        },
+        "eligibility": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        },
+        "application_url": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260902_27255813.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；项目内容与非遗/传统工艺的关联来自采购需求原文。"
+        }
+      }
+    },
+    {
+      "id": "ich_e0502636104848e49ecf8302480aec83",
+      "slug": "moyu-cultural-tourism-brand-promotion-procurement-2026-round2",
+      "external_id": "stage5a-b4-moyu-cultural-tourism-brand-promotion-procurement-2026-round2",
+      "title": "2026年墨玉县文化旅游品牌推广工程项目（二次）采购",
+      "title_original": "2026年墨玉县文化旅游品牌推广工程项目（二次）采购",
+      "title_en": null,
+      "summary": "墨玉县文化体育广播电视和旅游局采购文化旅游品牌推广、精品文创产品开发生产及活动执行，预算107万元，投标截止2026年9月14日11:00。",
+      "description": "公开招标项目专门面向中小企业，采购需求包括文化旅游品牌推广和精品文创产品开发生产，适合文创企业、文化活动执行团队及产品研发供应商。",
+      "opportunity_value_text": "预算1070000元，最高限价1028000元，合同履约期为2026年9月至12月。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "文旅品牌",
+        "文创产品开发",
+        "公开招标",
+        "墨玉"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "墨玉县文化体育广播电视和旅游局（墨玉县文物局）",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.moyu.gov.cn",
+        "contact_text": "0903-6512413；代理机构0903-6530990"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "新疆维吾尔自治区",
+        "city": "墨玉",
+        "district": null,
+        "venue_text": "在线提交；详情以官方页面和采购平台为准",
+        "region_groups": [
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "中国境内符合资格的供应商/机构"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "procurement_platform",
+        "requires_on_site_presence": true,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": "2026-08-24T00:00:00+08:00",
+        "application_start_at": "2026-08-25T00:00:00+08:00",
+        "deadline_at": "2026-09-14T11:00:00+08:00",
+        "deadline_text": "2026年9月14日11:00（北京时间）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "满足政府采购法要求且为中小企业；须提供营业执照、税社保证明、财务报告、履约能力承诺和中小企业声明函。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": false,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "revenue",
+          "network",
+          "exposure"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": 1070000,
+        "procurement_budget_max": 1070000,
+        "procurement_currency": "CNY",
+        "sales_opportunity": true,
+        "channel_opportunity": false,
+        "benefit_text": "承接文化旅游品牌推广及精品文创产品开发生产，预算1070000元，最高限价1028000元。"
+      },
+      "costs": {
+        "application_fee_amount": 0,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "采购文件售价0元；需注册政采云并办理CA，投标费用由供应商自行承担。",
+        "cost_status": "confirmed"
+      },
+      "requirements": {
+        "documents_required": [
+          "营业执照",
+          "税收及社保证明",
+          "财务报告",
+          "履约能力承诺",
+          "中小企业声明函",
+          "投标文件"
+        ],
+        "portfolio_required": true,
+        "sample_required": false,
+        "proposal_required": true,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "在政采云平台获取招标文件，准备文创产品研发生产、品牌推广和活动执行方案及企业资格文件。"
+      },
+      "application": {
+        "application_url": "https://www.zcygov.cn/",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "在政采云平台注册入库并办理CA",
+          "2026年8月25日至9月11日获取招标文件",
+          "编制电子投标文件",
+          "2026年9月14日11:00在线提交并开标"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "name": "和田公共资源交易网官方采购公告",
+          "type": "official_government_procurement",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-08-24",
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方交易公告，明确采购主体、文创产品开发需求、预算、截止时间和中小企业资格。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-08-24T00:00:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "buyer_to_vendor",
+      "ich_actionable": true,
+      "supplier_channel_eligible": false,
+      "radar_tags": [
+        "ICH",
+        "Culture",
+        "Business",
+        "Procurement"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        },
+        "organizer": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        },
+        "procurement_budget": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        },
+        "application_start_at": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        },
+        "deadline_at": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        },
+        "eligibility": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        },
+        "application_url": {
+          "source_url": "https://ggzy.ht.gov.cn/jyxx/001004/001004001/20260824/c2a367cd-eef4-4d06-9b95-3b39e83249e0.html",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方交易公告逐字段核验；仅保留与文化旅游/文创产品开发直接相关的采购内容。"
+        }
+      }
+    },
+    {
+      "id": "ich_cd37099ee05e44f392e415165b25502c",
+      "slug": "hami-yuha-cultural-performance-procurement-2026",
+      "external_id": "stage5a-b4-hami-yuha-cultural-performance-procurement-2026",
+      "title": "渝哈精品剧目展演活动——《杜甫》展演活动采购",
+      "title_original": "渝哈精品剧目展演活动——《杜甫》展演活动采购",
+      "title_en": null,
+      "summary": "哈密市文化馆采购渝哈精品剧目展演活动服务，预算53万元，响应文件截止2026年9月16日10:30。",
+      "description": "哈密市文化馆就渝哈精品剧目展演活动发布竞争性磋商公告，采购内容围绕重庆对口援疆优秀剧目《杜甫》的展演组织与执行，属于文化展演类政府采购机会。",
+      "opportunity_value_text": "采购预算530000元，供应商按公告和磋商文件要求承接文化展演活动服务。",
+      "primary_category": "procurement_project",
+      "secondary_tags": [
+        "文化展演",
+        "传统文化",
+        "对口援疆",
+        "政府采购",
+        "哈密"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "哈密市文化馆",
+        "name_en": null,
+        "type": "public_cultural_institution",
+        "official_website": "https://www.hami.gov.cn",
+        "contact_text": "以官方采购公告及磋商文件列明联系方式为准"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "新疆维吾尔自治区",
+        "city": "哈密",
+        "district": null,
+        "venue_text": "在线提交；详情以官方页面和采购平台为准",
+        "region_groups": [
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "中国境内符合资格的供应商/机构"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "procurement_platform",
+        "requires_on_site_presence": true,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": "2026-09-05T22:22:00+08:00",
+        "application_start_at": "2026-09-05T00:00:00+08:00",
+        "deadline_at": "2026-09-16T10:30:00+08:00",
+        "deadline_text": "2026年9月16日10:30（北京时间）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "满足政府采购法及公告要求的国内供应商，按官方公告和磋商文件获取采购文件并递交响应文件；具体资格以文件为准。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": false,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "revenue",
+          "network",
+          "exposure"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": 530000,
+        "procurement_budget_max": 530000,
+        "procurement_currency": "CNY",
+        "sales_opportunity": true,
+        "channel_opportunity": false,
+        "benefit_text": "承接渝哈精品剧目展演活动服务，采购预算530000元。"
+      },
+      "costs": {
+        "application_fee_amount": 0,
+        "application_fee_currency": "CNY",
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "采购文件及响应费用以官方公告和磋商文件为准；供应商自行承担方案制作和履约成本。",
+        "cost_status": "confirmed"
+      },
+      "requirements": {
+        "documents_required": [
+          "营业执照/资格证明",
+          "文化展演组织方案",
+          "响应文件",
+          "报价文件"
+        ],
+        "portfolio_required": true,
+        "sample_required": false,
+        "proposal_required": true,
+        "invoice_required": null,
+        "bidding_qualification_required": true,
+        "production_capacity_text": null,
+        "requirements_text": "通过官方采购公告指定渠道获取磋商文件，准备文化展演组织方案、资格证明和响应文件。"
+      },
+      "application": {
+        "application_url": "https://www.ccgp-xinjiang.gov.cn/",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "阅读财政部政府采购信息网官方公告",
+          "按公告要求获取磋商文件",
+          "准备文化展演组织方案和资格文件",
+          "2026年9月16日10:30前递交响应文件"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "name": "财政部政府采购信息网官方公告",
+          "type": "official_government_procurement",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-09-05",
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方采购公告，明确采购方、文化展演内容、预算和响应截止时间。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-05T22:22:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "buyer_to_vendor",
+      "ich_actionable": true,
+      "supplier_channel_eligible": false,
+      "radar_tags": [
+        "ICH",
+        "Culture",
+        "Business",
+        "Procurement"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把展演主题扩大解释为非遗认证，仅保留其传统文化/文化展演属性。"
+        },
+        "organizer": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把展演主题扩大解释为非遗认证，仅保留其传统文化/文化展演属性。"
+        },
+        "procurement_budget": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把展演主题扩大解释为非遗认证，仅保留其传统文化/文化展演属性。"
+        },
+        "deadline_at": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把展演主题扩大解释为非遗认证，仅保留其传统文化/文化展演属性。"
+        },
+        "eligibility": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把展演主题扩大解释为非遗认证，仅保留其传统文化/文化展演属性。"
+        },
+        "application_url": {
+          "source_url": "https://www.ccgp.gov.cn/cggg/dfgg/jzxcs/202609/t20260905_27274990.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；未把展演主题扩大解释为非遗认证，仅保留其传统文化/文化展演属性。"
+        }
+      }
+    },
+    {
+      "id": "ich_c6a7965ff5f24eed876878a74c3f96f0",
+      "slug": "linyi-innovative-cultural-products-submission-2026",
+      "external_id": "stage5a-b4-linyi-innovative-cultural-products-submission-2026",
+      "title": "2026年临沂市创新创意文化产品征集",
+      "title_original": "2026年临沂市创新创意文化产品征集",
+      "title_en": null,
+      "summary": "临沂市委宣传部面向非遗传承人、手工匠人、文创工作室和企业征集创新创意文化产品，截止2026年9月15日。",
+      "description": "官方征集活动依托柳编、剪纸、面塑、刺绣、木雕等本土非遗技艺，征集可供市级媒体推广和文化品牌建设使用的原创手造文创产品。此记录是供应方提交产品给机构评审与推广，不承诺采购合同。",
+      "opportunity_value_text": "入围产品将由市级媒体资源推广，征集后进行产品初审、现场复评和名单发布。",
+      "primary_category": "channel_collaboration",
+      "secondary_tags": [
+        "非遗手造",
+        "文创产品",
+        "产品征集",
+        "临沂"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "中共临沂市委宣传部",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://www.linyi.gov.cn",
+        "contact_text": "965087308@qq.com"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "山东省",
+        "city": "临沂",
+        "district": null,
+        "venue_text": "在线提交；详情以官方页面和采购平台为准",
+        "region_groups": [
+          "nationwide"
+        ],
+        "participation_scope": "nationwide",
+        "eligible_regions": [
+          "中国境内符合资格的供应商/机构"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "email",
+        "requires_on_site_presence": false,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": "2026-09-01T00:00:00+08:00",
+        "application_start_at": "2026-08-25T00:00:00+08:00",
+        "deadline_at": "2026-09-15T23:59:00+08:00",
+        "deadline_text": "2026年9月15日前（北京时间）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "inheritor",
+          "individual",
+          "studio",
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "面向非遗传承人、手工匠人、拥有原创手造好物的个人创作者、文博场馆、文创设计工作室、文旅产品研发机构、老字号和特色文创食品企业。",
+        "ich_status_required": null,
+        "business_license_required": false,
+        "local_registration_required": false,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "exposure",
+          "network"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "合格产品进入临沂市创新创意文化产品评审和市级媒体宣传推广；不承诺采购或销售合同。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方公告未披露报名费；个人创作者无需提交营业执照，制作和寄送成本由参与方自行承担。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "申报表",
+          "营业执照（个人可免）",
+          "产品高清图片",
+          "产品介绍视频"
+        ],
+        "portfolio_required": true,
+        "sample_required": false,
+        "proposal_required": false,
+        "invoice_required": null,
+        "bidding_qualification_required": false,
+        "production_capacity_text": null,
+        "requirements_text": "提交申报表扫描件、营业执照（个人创作者无需）、产品高清实拍图和1分钟内产品介绍视频，邮件主题注明创新创意文化产品。"
+      },
+      "application": {
+        "application_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+        "application_email": "965087308@qq.com",
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "准备申报表和产品材料",
+          "将材料发送至965087308@qq.com",
+          "在9月15日前提交并等待初审"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "name": "临沂市文化和旅游局官方公告",
+          "type": "official_government_product_collection",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-09-01",
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方公告明确非遗产品征集对象、时间、材料和推广安排；无购买承诺。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-01T00:00:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true,
+      "radar_tags": [
+        "ICH",
+        "Craft",
+        "Culture",
+        "Business"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；供应渠道标签仅表示供应方向，不表示已签订采购合同。"
+        },
+        "organizer": {
+          "source_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；供应渠道标签仅表示供应方向，不表示已签订采购合同。"
+        },
+        "deadline_at": {
+          "source_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；供应渠道标签仅表示供应方向，不表示已签订采购合同。"
+        },
+        "eligibility": {
+          "source_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；供应渠道标签仅表示供应方向，不表示已签订采购合同。"
+        },
+        "application_email": {
+          "source_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；供应渠道标签仅表示供应方向，不表示已签订采购合同。"
+        },
+        "benefit": {
+          "source_url": "https://wgxj.linyi.gov.cn/info/1005/65177.htm",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方公告逐字段核验；供应渠道标签仅表示供应方向，不表示已签订采购合同。"
+        }
+      }
+    },
+    {
+      "id": "ich_a42d26adde97437baff56a44423bd487",
+      "slug": "beijing-forestry-cultural-product-exhibition-submission-2026",
+      "external_id": "stage5a-b4-beijing-forestry-cultural-product-exhibition-submission-2026",
+      "title": "北京市园林绿化政务服务十周年活动展出产品征集",
+      "title_original": "北京市园林绿化政务服务十周年活动展出产品征集",
+      "title_en": null,
+      "summary": "北京市园林绿化局面向相关企事业单位征集公园特色文创、非遗手作和特色工艺品，截止2026年9月20日。",
+      "description": "官方公告面向园林绿化领域相关企事业单位征集展出产品，产品将在北京市政务服务中心活动展互动展区展示一个月。该机会是向政府机构提交实物展品，不承诺采购。",
+      "opportunity_value_text": "入选产品用于2026年10月为期一个月的政务服务中心活动展展示。",
+      "primary_category": "channel_collaboration",
+      "secondary_tags": [
+        "非遗手作",
+        "特色工艺品",
+        "政府展览",
+        "北京"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "北京市园林绿化局（首都绿化委员会办公室）",
+        "name_en": null,
+        "type": "government",
+        "official_website": "https://yllhj.beijing.gov.cn",
+        "contact_text": "以官方公告联系方式为准"
+      },
+      "location": {
+        "country_code": "CN",
+        "country_name": "中国",
+        "province_state": "北京市",
+        "city": "北京",
+        "district": "丰台区",
+        "venue_text": "北京市政务服务中心一层大厅",
+        "region_groups": [
+          "regional"
+        ],
+        "participation_scope": "local_only",
+        "eligible_regions": [
+          "北京市园林绿化领域相关企事业单位"
+        ],
+        "is_online": true,
+        "is_hybrid": true,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "hybrid",
+        "submission_method": "contact_organizer",
+        "requires_on_site_presence": true,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": "2026-09-02T15:28:00+08:00",
+        "application_start_at": "2026-09-02T15:28:00+08:00",
+        "deadline_at": "2026-09-20T23:59:00+08:00",
+        "deadline_text": "2026年9月20日前（北京时间；以公告征集安排为准）",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "Asia/Shanghai",
+        "is_deadline_all_day": false,
+        "is_long_term": false,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "enterprise",
+          "organization"
+        ],
+        "eligibility_text": "面向园林绿化领域从事公园管理、勘察设计、施工养护、苗木花卉经营、动植物资源利用等相关企事业单位；征集内容包括非遗手作和特色工艺品。",
+        "ich_status_required": null,
+        "business_license_required": true,
+        "local_registration_required": true,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "exposure",
+          "network"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": false,
+        "channel_opportunity": true,
+        "benefit_text": "符合条件的非遗手作和特色工艺品可进入北京市政务服务中心十周年活动展互动展区展示一个月；不承诺采购。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方公告未披露报名费、展陈费用或采购金额；实物提供、运输和现场配合成本需按主办方要求确认。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "单位资质材料",
+          "产品图片/说明",
+          "实物展品",
+          "展示资料"
+        ],
+        "portfolio_required": true,
+        "sample_required": true,
+        "proposal_required": false,
+        "invoice_required": null,
+        "bidding_qualification_required": false,
+        "production_capacity_text": null,
+        "requirements_text": "按官方通知提交产品信息和实物展品，确认产品类别、展示资料及现场配合要求。"
+      },
+      "application": {
+        "application_url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+        "application_email": null,
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "阅读官方征集通知",
+          "确认单位和产品符合征集范围",
+          "按公告联系方式提交产品资料和实物",
+          "配合2026年10月展览展示"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+          "name": "北京市园林绿化局官方通知",
+          "type": "official_government_product_collection",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": "2026-09-02",
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方通知明确征集对象、非遗手作/特色工艺品范围和展出时间；无采购承诺。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-02T15:28:00+08:00",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true,
+      "radar_tags": [
+        "ICH",
+        "Craft",
+        "Culture",
+        "Design"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方通知逐字段核验；供应方向仅指产品向机构提交，不宣称存在购买合同。"
+        },
+        "organizer": {
+          "source_url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方通知逐字段核验；供应方向仅指产品向机构提交，不宣称存在购买合同。"
+        },
+        "deadline_at": {
+          "source_url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方通知逐字段核验；供应方向仅指产品向机构提交，不宣称存在购买合同。"
+        },
+        "eligibility": {
+          "source_url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方通知逐字段核验；供应方向仅指产品向机构提交，不宣称存在购买合同。"
+        },
+        "benefit": {
+          "source_url": "https://yllhj.beijing.gov.cn/zwgk/gsgg/202609/t20260902_4847504.shtml",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方通知逐字段核验；供应方向仅指产品向机构提交，不宣称存在购买合同。"
+        }
+      }
+    },
+    {
+      "id": "ich_ac46218d229d491c860e9246c9e8b8ee",
+      "slug": "nyhistory-museum-store-product-submissions-ongoing",
+      "external_id": "stage5a-b4-nyhistory-museum-store-product-submissions-ongoing",
+      "title": "The New York Historical Museum Store Product Submissions",
+      "title_original": "The New York Historical Museum Store Product Submissions",
+      "title_en": null,
+      "summary": "The New York Historical Museum Store长期接受供应商提交手工艺和文化产品供买手评估，需提供产品图片/样品、批发价和建议零售价。",
+      "description": "官方Museum Store Product Submission Guidelines面向vendors，要求提交产品信息、批发成本、建议零售价和最小订购量；这是供应方进入博物馆商店采购评估的长期渠道。",
+      "opportunity_value_text": "产品通过买手评估后可能进入The New York Historical Museum Store；官方未承诺选品或订单数量。",
+      "primary_category": "channel_collaboration",
+      "secondary_tags": [
+        "Museum Store",
+        "手工艺",
+        "供应商",
+        "国际渠道"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "The New York Historical",
+        "name_en": "The New York Historical",
+        "type": "museum",
+        "official_website": "https://www.nyhistory.org",
+        "contact_text": "museumstore@nyhistory.org"
+      },
+      "location": {
+        "country_code": "US",
+        "country_name": "United States",
+        "province_state": null,
+        "city": null,
+        "district": null,
+        "venue_text": "线上邮件/机构联系；地点以机构要求为准",
+        "region_groups": [
+          "international"
+        ],
+        "participation_scope": "regional",
+        "eligible_regions": [
+          "符合机构采购/合作要求的供应方"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "email",
+        "requires_on_site_presence": false,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": null,
+        "application_start_at": null,
+        "deadline_at": null,
+        "deadline_text": "长期接受提交；官方未设固定截止日期",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "America/New_York",
+        "is_deadline_all_day": false,
+        "is_long_term": true,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "enterprise",
+          "designer"
+        ],
+        "eligibility_text": "面向希望将产品提交给Museum Store买手评估的供应商；需提交产品描述、图片或样品、批发价、建议零售价和最小订购量。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": false,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "revenue",
+          "exposure",
+          "network"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "为工艺品牌提供进入博物馆商店买手评估和后续采购合作的长期入口；是否选品由官方买手决定。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方未披露申请费；样品寄送和退回邮费由供应商按官方要求承担。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "产品图片或样品",
+          "产品描述",
+          "批发价",
+          "建议零售价",
+          "最小订购量",
+          "供应商联系信息"
+        ],
+        "portfolio_required": true,
+        "sample_required": true,
+        "proposal_required": false,
+        "invoice_required": null,
+        "bidding_qualification_required": false,
+        "production_capacity_text": null,
+        "requirements_text": "邮件提交产品信息、产品图片或样品、批发成本、建议零售价、最小订购量及供应商联系信息。"
+      },
+      "application": {
+        "application_url": "https://shop.nyhistory.org/pages/product-submissions",
+        "application_email": "museumstore@nyhistory.org",
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "准备产品资料和样品",
+          "发送至museumstore@nyhistory.org",
+          "等待Museum Store买手评估"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://shop.nyhistory.org/pages/product-submissions",
+          "name": "The New York Historical Museum Store官方供应商页面",
+          "type": "official_museum_store_submission",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": null,
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方商店页面明确接受vendor产品提交、批发价和样品评估。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true,
+      "radar_tags": [
+        "ICH",
+        "Craft",
+        "Culture",
+        "Business",
+        "International"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://shop.nyhistory.org/pages/product-submissions",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方供应商页面逐字段核验；长期机会未虚构截止日期或采购保证。"
+        },
+        "application_url": {
+          "source_url": "https://shop.nyhistory.org/pages/product-submissions",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方供应商页面逐字段核验；长期机会未虚构截止日期或采购保证。"
+        },
+        "eligibility": {
+          "source_url": "https://shop.nyhistory.org/pages/product-submissions",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方供应商页面逐字段核验；长期机会未虚构截止日期或采购保证。"
+        },
+        "benefit": {
+          "source_url": "https://shop.nyhistory.org/pages/product-submissions",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方供应商页面逐字段核验；长期机会未虚构截止日期或采购保证。"
+        },
+        "cost": {
+          "source_url": "https://shop.nyhistory.org/pages/product-submissions",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方供应商页面逐字段核验；长期机会未虚构截止日期或采购保证。"
+        }
+      }
+    },
+    {
+      "id": "ich_3cee0c89098b43ecb7c04ee8540f51de",
+      "slug": "north-carolina-museum-art-community-artisan-collaboration-ongoing",
+      "external_id": "stage5a-b4-north-carolina-museum-art-community-artisan-collaboration-ongoing",
+      "title": "North Carolina Museum of Art Community Artisan Collaboration",
+      "title_original": "North Carolina Museum of Art Community Artisan Collaboration",
+      "title_en": null,
+      "summary": "North Carolina Museum of Art Museum Store和Exhibition Store长期邀请北卡艺术家与工匠提交作品，提供机构商店和展览商店合作入口。",
+      "description": "官方Museum Store页面明确邀请artists and artisans分享作品，并提供Community Artisan Collaboration Form；页面展示已有工匠合作案例。该机会不承诺采购量或固定展期。",
+      "opportunity_value_text": "通过博物馆商店和展览商店建立机构渠道合作，可能获得展示、销售和社区艺术家推广机会。",
+      "primary_category": "channel_collaboration",
+      "secondary_tags": [
+        "Museum Store",
+        "Artisan",
+        "Craft",
+        "长期合作"
+      ],
+      "classification_confidence": "high",
+      "classification_reason": "Batch4 使用官方详情页逐字段核验；聚合页仅用于发现，不作为主证据。",
+      "classification_status": "confirmed",
+      "status": "active",
+      "status_reason": "由 computeIchOpportunityStatus 按固定审计时间和官方截止窗口计算。",
+      "is_featured": false,
+      "is_published": true,
+      "archive_reason": null,
+      "organizer": {
+        "name": "North Carolina Museum of Art",
+        "name_en": "North Carolina Museum of Art",
+        "type": "museum",
+        "official_website": "https://ncartmuseum.org",
+        "contact_text": "Community Artisan Collaboration Form；help@ncartmuseum.org"
+      },
+      "location": {
+        "country_code": "US",
+        "country_name": "United States",
+        "province_state": "North Carolina",
+        "city": "Raleigh",
+        "district": null,
+        "venue_text": "NCMA West Building Museum Store / Exhibition Store",
+        "region_groups": [
+          "international"
+        ],
+        "participation_scope": "regional",
+        "eligible_regions": [
+          "北卡罗来纳州社区艺术家与工匠；具体资格以表单为准"
+        ],
+        "is_online": true,
+        "is_hybrid": false,
+        "is_multi_location": false,
+        "location_status": "confirmed"
+      },
+      "participation_mode": {
+        "mode": "online",
+        "submission_method": "contact_organizer",
+        "requires_on_site_presence": false,
+        "participation_notes": null
+      },
+      "dates": {
+        "published_at": null,
+        "application_start_at": null,
+        "deadline_at": null,
+        "deadline_text": "长期邀请提交；官方未设固定截止日期",
+        "event_start_at": null,
+        "event_end_at": null,
+        "timezone": "America/New_York",
+        "is_deadline_all_day": false,
+        "is_long_term": true,
+        "date_status": "confirmed"
+      },
+      "eligibility": {
+        "eligible_applicant_types": [
+          "individual",
+          "studio",
+          "designer"
+        ],
+        "eligibility_text": "官方页面面向North Carolina artists and artisans邀请作品分享与合作；具体地区、产品和评审条件以Community Artisan Collaboration Form为准。",
+        "ich_status_required": null,
+        "business_license_required": null,
+        "local_registration_required": true,
+        "recommendation_required": null,
+        "age_requirement_text": null,
+        "language_requirement_text": null,
+        "eligibility_status": "confirmed"
+      },
+      "benefits": {
+        "value_types": [
+          "revenue",
+          "exposure",
+          "network"
+        ],
+        "prize_amount": null,
+        "prize_currency": null,
+        "funding_amount": null,
+        "funding_currency": null,
+        "procurement_budget_min": null,
+        "procurement_budget_max": null,
+        "procurement_currency": null,
+        "sales_opportunity": true,
+        "channel_opportunity": true,
+        "benefit_text": "进入NCMA Museum Store和Exhibition Store的艺术家/工匠合作渠道，获得机构展示、销售和社区推广机会；不承诺订单。"
+      },
+      "costs": {
+        "application_fee_amount": null,
+        "application_fee_currency": null,
+        "booth_fee_amount": null,
+        "booth_fee_currency": null,
+        "deposit_amount": null,
+        "deposit_currency": null,
+        "commission_rate": null,
+        "travel_self_funded": null,
+        "accommodation_self_funded": null,
+        "materials_self_funded": null,
+        "shipping_self_funded": null,
+        "cost_text": "官方页面未披露申请费或佣金比例；运输、样品和履约成本需以合作表单确认。",
+        "cost_status": "not_disclosed"
+      },
+      "requirements": {
+        "documents_required": [
+          "作品图片/链接",
+          "工匠或品牌介绍",
+          "联系信息",
+          "合作表单"
+        ],
+        "portfolio_required": true,
+        "sample_required": null,
+        "proposal_required": false,
+        "invoice_required": null,
+        "bidding_qualification_required": false,
+        "production_capacity_text": null,
+        "requirements_text": "通过Community Artisan Collaboration Form提交作品和联系信息，等待Museum Store或Exhibition Store评估。"
+      },
+      "application": {
+        "application_url": "https://ncartmuseum.org/plan-your-visit/shop/",
+        "application_email": "help@ncartmuseum.org",
+        "application_phone": null,
+        "application_platform": "官方申请/政府采购/机构合作入口",
+        "application_steps": [
+          "阅读NCMA官方Store页面",
+          "打开页面中的Community Artisan Collaboration Form",
+          "提交作品和联系信息",
+          "等待机构评估和后续联系"
+        ],
+        "contact_text": "以官方详情页联系方式为准",
+        "application_status": "confirmed"
+      },
+      "sources": [
+        {
+          "url": "https://ncartmuseum.org/plan-your-visit/shop/",
+          "name": "North Carolina Museum of Art官方Museum Store页面",
+          "type": "official_museum_store_collaboration",
+          "level": "L1",
+          "is_primary": true,
+          "published_at": null,
+          "last_checked_at": "2026-09-06T04:00:00.000Z",
+          "is_accessible": true,
+          "notes": "L1官方页面明确邀请artists and artisans并链接合作表单；不虚构订单或固定截止日期。"
+        }
+      ],
+      "verification": {
+        "verification_status": "verified",
+        "verified_by": "manual",
+        "verified_at": "2026-09-06T04:00:00.000Z",
+        "source_conflict": false,
+        "conflict_notes": null,
+        "needs_recheck": true,
+        "recheck_after": "2026-09-09T00:00:00+08:00"
+      },
+      "seo": null,
+      "metadata": {
+        "created_at": "2026-09-06T04:00:00.000Z",
+        "updated_at": "2026-09-06T04:00:00.000Z",
+        "created_by": "stage5a-b4-curation",
+        "updated_by": "stage5a-b4-reviewer",
+        "first_discovered_at": "2026-09-06T04:00:00.000Z",
+        "last_checked_at": "2026-09-06T04:00:00.000Z",
+        "published_at": "2026-09-06T04:00:00.000Z",
+        "archived_at": null,
+        "data_version": "1.0",
+        "source_import_batch": null
+      },
+      "duplicate_status": "unique",
+      "duplicate_of_id": null,
+      "merged_from_ids": [],
+      "workflow": {
+        "state": "published",
+        "revision": 4,
+        "review_reason": null,
+        "submitted_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_at": "2026-09-06T04:00:00.000Z",
+        "reviewed_by": "stage5a-b4-reviewer",
+        "withdrawn_at": null,
+        "history": [
+          {
+            "action": "created",
+            "from": null,
+            "to": "draft",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 1
+          },
+          {
+            "action": "submitted",
+            "from": "draft",
+            "to": "pending_review",
+            "actor": "stage5a-b4-curation",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 L1官方来源、申请主体、方向和Evidence门禁通过。",
+            "revision": 2
+          },
+          {
+            "action": "approved",
+            "from": "pending_review",
+            "to": "approved",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": "Batch4 DS3/DS14 受控导入通过。",
+            "revision": 3
+          },
+          {
+            "action": "published",
+            "from": "approved",
+            "to": "published",
+            "actor": "stage5a-b4-reviewer",
+            "at": "2026-09-06T04:00:00.000Z",
+            "reason": null,
+            "revision": 4
+          }
+        ]
+      },
+      "opportunity_direction": "supplier_to_institution",
+      "ich_actionable": true,
+      "supplier_channel_eligible": true,
+      "radar_tags": [
+        "ICH",
+        "Craft",
+        "Culture",
+        "Business",
+        "International"
+      ],
+      "field_provenance": {
+        "title": {
+          "source_url": "https://ncartmuseum.org/plan-your-visit/shop/",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方Museum Store页面逐字段核验；地区和合作结果保持页面原文边界。"
+        },
+        "application_url": {
+          "source_url": "https://ncartmuseum.org/plan-your-visit/shop/",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方Museum Store页面逐字段核验；地区和合作结果保持页面原文边界。"
+        },
+        "eligibility": {
+          "source_url": "https://ncartmuseum.org/plan-your-visit/shop/",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方Museum Store页面逐字段核验；地区和合作结果保持页面原文边界。"
+        },
+        "benefit": {
+          "source_url": "https://ncartmuseum.org/plan-your-visit/shop/",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方Museum Store页面逐字段核验；地区和合作结果保持页面原文边界。"
+        },
+        "cost": {
+          "source_url": "https://ncartmuseum.org/plan-your-visit/shop/",
+          "checked_at": "2026-09-06T04:00:00.000Z",
+          "note": "官方Museum Store页面逐字段核验；地区和合作结果保持页面原文边界。"
+        }
+      }
     }
   ]
 }
