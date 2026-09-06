@@ -26,7 +26,7 @@ export const AGGREGATION_ADAPTERS: AggregationAdapter[] = [
     parseListing: parseArtConnectListing, enrichItem: enrichArtConnectItem,
   },
   {
-    adapter_id: "competitions-archi-v1", source_id: "competitions-archi",
+    adapter_id: "competitions-archi-v2", source_id: "competitions-archi",
     parseListing: parseCompetitionsArchiListing, enrichItem: enrichCompetitionsArchiItem,
   },
 ];

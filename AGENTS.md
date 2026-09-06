@@ -97,3 +97,6 @@ git checkout -b rescue/mvp-codex
 4. 真实网页验收步骤
 5. 仍未解决的问题
 6. 是否建议合并 main
+任何新建或扩展机会雷达前，
+必须先阅读并遵守：
+docs/radar-principles/AGGREGATOR_FIRST.md

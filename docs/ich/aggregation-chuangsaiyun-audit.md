@@ -14,7 +14,7 @@
 GET https://www.chuangsaiyun.com/#/diy?id=150       200（Nuxt/Vue shell）
   -> POST https://m.chuangsaiyun.com/public/index.php/api/pc/diy
        id=150, user_id=0, deviceType=pc, version=4.8.1
-       2004 / 成功；返回 4 个 iframe 配置
+       HTTP_STATUS=200, APPLICATION_CODE=2004, APPLICATION_MESSAGE=SUCCESS；返回 4 个 iframe 配置
   -> GET https://www.xiacansai.com/mrjs.html           200（赛事卡片 HTML）
   -> 公开 articleInfo 接口可按 article ID 读取详情
 ```
@@ -25,7 +25,7 @@ GET https://www.chuangsaiyun.com/#/diy?id=150       200（Nuxt/Vue shell）
 
 | 门禁 | 结果 | 证据 |
 | --- | --- | --- |
-| 页面可访问 | 通过 | 入口 GET HTTP 200；公开 `diy` POST HTTP 2004；列表 GET HTTP 200 |
+| 页面可访问 | 通过 | 入口 GET HTTP_STATUS=200；公开 `diy` POST HTTP_STATUS=200、APPLICATION_CODE=2004、APPLICATION_MESSAGE=SUCCESS；列表 GET HTTP_STATUS=200 |
 | 无需认证 | 通过 | 使用 `user_id=0`、公开版本参数即可返回；未要求登录、Token 或 CAPTCHA |
 | 结构化数据可重复获取 | 通过 | `mrjs.html` 连续两次：101,310 bytes，SHA-256 `81fc0afda78e118d37cf30db46ad2bf7d9051c05fae66a6458f577b4fd82522f` |
 | 稳定 competition ID | 通过 | 赛事卡片 `data-url-pc`/`data-url-h5` 含稳定 `article?id=<number>`；本次 107 张卡片、103 个唯一 ID |

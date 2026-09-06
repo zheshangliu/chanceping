@@ -42,12 +42,20 @@ export function identityHash(...parts: string[]): string {
 
 export function parseDateText(value: string | null, now = new Date()): string | null {
   if (!value) return null;
-  const normalized = value.replace(/[年月]/g, "-").replace(/日/g, "").replace(/[./]/g, "-").replace(/\s+/g, " ").trim();
+  const normalized = value.replace(/(\d{1,2})(?:st|nd|rd|th)\b/gi, "$1").replace(/[年月]/g, "-").replace(/日/g, "").replace(/[./]/g, "-").replace(/\s+/g, " ").trim();
   const iso = normalized.match(/(20\d{2})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2})(?::|点)(\d{1,2})?)?/u);
   if (iso) return new Date(Date.UTC(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]), Number(iso[4] ?? 23), Number(iso[5] ?? 59))).toISOString();
   const en = value.match(/(?:by\s+)?([A-Z][a-z]+\s+\d{1,2},?\s+20\d{2})/u);
   if (en) {
-    const date = new Date(en[1]);
+    const parts = en[1].replace(",", "").split(/\s+/u);
+    const month = new Date(`${parts[0]} 1, 2000`).getMonth();
+    const date = new Date(Date.UTC(Number(parts[2]), month, Number(parts[1]), 23, 59));
+    if (!Number.isNaN(date.getTime())) return date.toISOString();
+  }
+  const enDayFirst = normalized.match(/(\d{1,2})\s+([A-Z][a-z]+)\s+(20\d{2})/u);
+  if (enDayFirst) {
+    const month = new Date(`${enDayFirst[2]} 1, 2000`).getMonth();
+    const date = new Date(Date.UTC(Number(enDayFirst[3]), month, Number(enDayFirst[1]), 23, 59));
     if (!Number.isNaN(date.getTime())) return date.toISOString();
   }
   const dateOnly = new Date(value);

@@ -3,12 +3,28 @@ import type { IchPrimaryCategory } from "../types";
 export const AGGREGATION_SCHEMA = "ich-aggregation-discovery.v1" as const;
 export type AggregationItemStatus = "NEW" | "UPDATED" | "UNCHANGED" | "REMOVED";
 export type AggregationRelevance = "CORE_ICH" | "ICH_ADJACENT" | "GENERAL_CREATIVE" | "IRRELEVANT";
+export type FetchStrategy = "DIRECT" | "BROWSER_HEADERS" | "JINA_READER" | "SEARCH_INDEX";
+export type FetchReliabilityStatus =
+  | "DIRECT_PASS"
+  | "DIRECT_BLOCKED_FALLBACK_PASS"
+  | "SEARCH_INDEX_ONLY"
+  | "FULLY_BLOCKED";
+export type FetchErrorTaxonomy =
+  | "DNS_FAILED"
+  | "CONNECTION_FAILED"
+  | "TIMEOUT"
+  | "HTTP_BLOCKED"
+  | "HTTP_ERROR"
+  | "PARSER_FAILED"
+  | "EMPTY_RESULT"
+  | "SUCCESS";
 export type OfficialBacktraceStatus =
   | "OFFICIAL_FOUND"
   | "OFFICIAL_NOT_FOUND"
   | "MULTIPLE_CONFLICTING"
   | "ORGANIZER_UNKNOWN"
-  | "PENDING_PROVIDER";
+  | "PENDING_PROVIDER"
+  | "PENDING_REVIEW";
 
 export interface AggregationSourceDefinition {
   source_id: string;
@@ -23,6 +39,7 @@ export interface AggregationSourceDefinition {
   source_role: "discovery_source";
   categories: IchPrimaryCategory[];
   health_status: "healthy" | "partial" | "blocked" | "pending";
+  fetch_strategy?: FetchStrategy[];
 }
 
 export interface AggregationItem {
@@ -53,6 +70,9 @@ export interface AggregationItem {
   opportunity_type: IchPrimaryCategory;
   official_backtrace_status: OfficialBacktraceStatus;
   official_url: string | null;
+  official_confidence_score?: number;
+  official_candidate_urls?: string[];
+  backtrace_evidence?: string[];
   discovered_by_sources: string[];
 }
 
@@ -87,6 +107,10 @@ export interface SourceHealthRow {
   http_status: number | null;
   last_checked_at: string;
   adapter_status: "PASS" | "PARTIAL" | "BLOCKED" | "PARSER_FAILED" | "JS_REQUIRED" | "AUTH_REQUIRED";
+  fetch_strategy?: FetchStrategy[];
+  reliability_status?: FetchReliabilityStatus;
+  error_taxonomy?: FetchErrorTaxonomy;
+  attempts?: Array<{ strategy: FetchStrategy; status: number | null; error: string | null; elapsed_ms: number }>;
   parse_success: boolean;
   items_seen: number;
   last_success_at: string | null;
@@ -108,6 +132,15 @@ export interface AggregationFunnel {
   rejected_candidates: number;
   ds3_pass: number;
   ds14_imported: number;
+  backtrace_candidates_selected?: number;
+  direct_link_attempted?: number;
+  direct_link_candidates?: number;
+  direct_link_verified?: number;
+  provider_search_attempted?: number;
+  provider_queries?: number;
+  provider_raw_results?: number;
+  official_candidate_pages_read?: number;
+  official_candidate_verified?: number;
 }
 
 export interface AggregationRunReport {

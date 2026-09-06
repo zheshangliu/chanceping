@@ -138,6 +138,8 @@
     "ich:ds6:run-once": "tsx scripts/run-ich-ds6-scheduled-readonly.ts",
     "ich:aggregation:run": "tsx scripts/run-ich-aggregation-discovery.ts",
     "verify:ich:aggregation": "tsx scripts/verify-ich-aggregation-discovery.ts",
+    "ich:stage5a5:run": "tsx scripts/run-ich-stage5a5.ts",
+    "verify:ich:stage5a5": "tsx scripts/verify-ich-stage5a5.ts",
     "verify:ich:ds6": "tsx scripts/verify-ich-ds6-scheduler.ts",
     "ich:ds7:source-audit": "tsx scripts/run-ich-ds7-source-coverage-audit.ts",
     "verify:ich:ds7": "tsx scripts/verify-ich-ds7-source-coverage.ts",

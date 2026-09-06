@@ -1,0 +1,265 @@
+{
+  "schema_version": "ich-stage5a5.v1",
+  "run_id": "stage5a5-2026-09-06T07:13:12.179Z",
+  "readonly": true,
+  "formal_store_write": false,
+  "formal_store_before_sha256": "aa39deb93fc6b79705f6e6f65afc68dd8b35b13bafedc3105cb83c2cca3ebd5d",
+  "formal_store_after_sha256": "aa39deb93fc6b79705f6e6f65afc68dd8b35b13bafedc3105cb83c2cca3ebd5d",
+  "formal_store_unchanged": true,
+  "sources": [
+    {
+      "source_id": "shejijingsai-list",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T07:13:12.179Z",
+      "adapter_status": "PASS",
+      "fetch_strategy": [
+        "DIRECT"
+      ],
+      "reliability_status": "DIRECT_PASS",
+      "error_taxonomy": "SUCCESS",
+      "attempts": [
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 543
+        }
+      ],
+      "parse_success": true,
+      "items_seen": 288,
+      "last_success_at": "2026-09-06T07:13:12.179Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "chuangsaiyun-competition-list",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T07:13:12.179Z",
+      "adapter_status": "PASS",
+      "fetch_strategy": [
+        "DIRECT"
+      ],
+      "reliability_status": "DIRECT_PASS",
+      "error_taxonomy": "SUCCESS",
+      "attempts": [
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 373
+        }
+      ],
+      "parse_success": true,
+      "items_seen": 107,
+      "last_success_at": "2026-09-06T07:13:12.179Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "contest-watchers-open",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T07:13:12.179Z",
+      "adapter_status": "PASS",
+      "fetch_strategy": [
+        "DIRECT"
+      ],
+      "reliability_status": "DIRECT_PASS",
+      "error_taxonomy": "SUCCESS",
+      "attempts": [
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 2095
+        },
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 350
+        }
+      ],
+      "parse_success": true,
+      "items_seen": 41,
+      "last_success_at": "2026-09-06T07:13:12.179Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "crafts-council-opportunities",
+      "reachable": true,
+      "http_status": 403,
+      "last_checked_at": "2026-09-06T07:13:12.179Z",
+      "adapter_status": "PASS",
+      "fetch_strategy": [
+        "DIRECT",
+        "BROWSER_HEADERS",
+        "JINA_READER",
+        "SEARCH_INDEX"
+      ],
+      "reliability_status": "SEARCH_INDEX_ONLY",
+      "error_taxonomy": "SUCCESS",
+      "attempts": [
+        {
+          "strategy": "DIRECT",
+          "status": 403,
+          "error": "HTTP 403",
+          "elapsed_ms": 591
+        },
+        {
+          "strategy": "BROWSER_HEADERS",
+          "status": 403,
+          "error": "HTTP 403",
+          "elapsed_ms": 175
+        },
+        {
+          "strategy": "JINA_READER",
+          "status": null,
+          "error": "AbortError: This operation was aborted",
+          "elapsed_ms": 8005
+        },
+        {
+          "strategy": "SEARCH_INDEX",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 0
+        },
+        {
+          "strategy": "SEARCH_INDEX",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 0
+        },
+        {
+          "strategy": "SEARCH_INDEX",
+          "status": null,
+          "error": null,
+          "elapsed_ms": 0
+        }
+      ],
+      "parse_success": true,
+      "items_seen": 6,
+      "last_success_at": "2026-09-06T07:13:12.179Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "artconnect-opportunities",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T07:13:12.179Z",
+      "adapter_status": "PASS",
+      "fetch_strategy": [
+        "DIRECT"
+      ],
+      "reliability_status": "DIRECT_PASS",
+      "error_taxonomy": "SUCCESS",
+      "attempts": [
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 2074
+        }
+      ],
+      "parse_success": true,
+      "items_seen": 52,
+      "last_success_at": "2026-09-06T07:13:12.179Z",
+      "consecutive_failures": 0,
+      "error": null
+    },
+    {
+      "source_id": "competitions-archi",
+      "reachable": true,
+      "http_status": 200,
+      "last_checked_at": "2026-09-06T07:13:12.179Z",
+      "adapter_status": "PASS",
+      "fetch_strategy": [
+        "DIRECT"
+      ],
+      "reliability_status": "DIRECT_PASS",
+      "error_taxonomy": "SUCCESS",
+      "attempts": [
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 1383
+        },
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 818
+        },
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 796
+        },
+        {
+          "strategy": "DIRECT",
+          "status": 200,
+          "error": null,
+          "elapsed_ms": 720
+        }
+      ],
+      "parse_success": true,
+      "items_seen": 28,
+      "last_success_at": "2026-09-06T07:13:12.179Z",
+      "consecutive_failures": 0,
+      "error": null
+    }
+  ],
+  "backtrace": {
+    "candidates_selected": 20,
+    "domestic_shejijingsai": 5,
+    "domestic_chuangsaiyun": 5,
+    "overseas": 10,
+    "direct_link_attempted": 20,
+    "direct_link_candidates": 73,
+    "direct_link_verified": 0,
+    "provider_search_attempted": 5,
+    "provider_queries": 10,
+    "provider_raw_results": 36,
+    "official_candidate_pages_read": 20,
+    "official_candidate_verified": 0,
+    "official_backtrace_success": 0
+  },
+  "provider_contribution": [
+    {
+      "provider": "serper",
+      "queries": 6,
+      "raw_results": 18,
+      "errors": 0,
+      "status": "LIVE_CONFIRMED"
+    },
+    {
+      "provider": "bocha",
+      "queries": 6,
+      "raw_results": 18,
+      "errors": 0,
+      "status": "LIVE_CONFIRMED"
+    },
+    {
+      "provider": "brave",
+      "queries": 0,
+      "raw_results": 0,
+      "errors": 0,
+      "status": "NOT_CONFIGURED"
+    },
+    {
+      "provider": "doubao_search",
+      "queries": 1,
+      "raw_results": 0,
+      "errors": 0,
+      "status": "LIVE_CONFIRMED"
+    }
+  ],
+  "qualified_candidates": 0,
+  "can_enter_stage5a6": false
+}

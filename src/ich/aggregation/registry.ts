@@ -28,6 +28,11 @@ export function getAggregationRegistry(): AggregationSourceDefinition[] {
       source_role: "discovery_source",
       categories: entry.categories,
       health_status: entry.health_status ?? "pending",
+      fetch_strategy: sourceId === "crafts-council-opportunities"
+        ? ["DIRECT", "BROWSER_HEADERS", "JINA_READER", "SEARCH_INDEX"]
+        : sourceId === "competitions-archi"
+          ? ["DIRECT", "BROWSER_HEADERS"]
+          : ["DIRECT", "BROWSER_HEADERS"],
     };
   });
 }
