@@ -3,7 +3,7 @@ import path from "node:path";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
-import { isLikelySourceListingNoise, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
+import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
@@ -92,6 +92,23 @@ interface SourceFetchResult {
   error: string | null;
 }
 
+async function enrichCfwDetailDates(items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher): Promise<void> {
+  for (const item of items) {
+    if (item.deadline_at || !item.detail_url) continue;
+    try {
+      const response = await fetcher(item.detail_url);
+      if (response.status < 200 || response.status >= 400) continue;
+      const parsed = parseCfwDetailDate(response.text);
+      if (!parsed) continue;
+      item.deadline_text = parsed.raw;
+      item.deadline_at = parsed.deadlineAt;
+      item.raw_text = `${item.raw_text} ${parsed.raw}`.trim().slice(0, 8000);
+    } catch {
+      // One unavailable CFW detail page must not block the remaining cards.
+    }
+  }
+}
+
 async function fetchAndParseSource(source: OpportunityV2Source, fetcher: OpportunityV2Fetcher): Promise<SourceFetchResult> {
   const fetchedAt = new Date().toISOString();
   const firstUrl = SPECIAL_SOURCE_URL[source.id] ?? source.url;
@@ -118,6 +135,7 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
     }
     if (!plan || page >= pages || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
   }
+  if (source.id === "cfw-cultural-ip") await enrichCfwDetailDates(parsed, fetcher);
   return { parsed, format, responseStatus, fetchedAt, error: parsed.length ? null : "No RSS or HTML listing items recognized" };
 }
 

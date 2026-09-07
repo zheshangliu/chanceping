@@ -1,4 +1,4 @@
-import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseDateText, type ParsedAggregationItem } from "./common";
+import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseCfwDateRange, parseDateText, type ParsedAggregationItem, type ParsedDateRange } from "./common";
 
 const NAVIGATION_TEXT = /^(about(?: us)?|add listing|all opportunities|apply now|artists?|become (?:a )?(?:member|benefactor)|benefits|browse(?: all)?(?: open calls| opportunities)?(?: →)?|browse opportunities|call listings|categories|ca[féé™]*|ccbc (?:events?|gallery|projects?)|closing this week(?: →)?|competitions? & open calls|craft council(?: of british columbia)?|craft directory|craft fair|craft inventory|craft map|craft resource library|craft scotland|craft status|countries|contact(?: us)?|dashboard|deadline|directory|donate(?: now)?!?|editor's picks|emerging artists|events?|find calls|forgotten password\?|fully funded|get involved|grants?|guides?|hybrid residencies|in conversation|international|join|journal|learn more|list your studio|login|makers?(?: directory| list)?|meet the team|more|more details|more opportunities|next page|no application fee|opencall radar|opportunities|organisations? to know|our work|our stories|partners|pricing|prizes?|previous page|read more|red list|refund|report this\?|residencies|resources?|reset|return policy|rolling deadline|search|sign in|skip to content|studio guide|submit(?: an)? opportunity|subscribe|support(?: us)?|terms|the makers|the skills|travel covered|view all|what(?:'|’)s on|who we are|with accommodation|workshops|全部|关于我们|联系我们|机会|更多|登录|注册|搜索|提交|征集大赛)$/iu;
 const OPPORTUNITY_SIGNAL = /(?:opportunit|open.?call|contest|competition|residen|award|exhibition|craft|artist|apply|call|vendor|market|grant|fellowship|participat|young.?ambassadors|deadline|招募|征集|比赛|竞赛|大赛|展览| 사업공모|모집|공모|지원사업|지원|신청)/iu;
@@ -87,12 +87,41 @@ function structuredListingDeadline(html: string, listingUrl: string, sourceId?: 
   return result;
 }
 
+function structuredCfwListingDates(html: string, listingUrl: string, sourceId?: string): Map<string, ParsedDateRange> {
+  const result = new Map<string, ParsedDateRange>();
+  if (sourceId !== "cfw-cultural-ip") return result;
+  for (const match of html.matchAll(/<li\b[^>]*>[\s\S]*?<\/li>/giu)) {
+    const block = match[0];
+    const titleAnchor = block.match(/<a\b[^>]*href=["']([^"']+)["'][^>]*class=["'][^"']*\bname\b[^"']*["'][^>]*>([\s\S]*?)<\/a>/iu);
+    if (!titleAnchor) continue;
+    const detailUrl = normalizeUrl(titleAnchor[1], listingUrl);
+    if (!detailUrl) continue;
+    for (const dateMatch of block.matchAll(/<p\b[^>]*class=["'][^"']*\bpt15\b[^"']*\bc6\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/giu)) {
+      const parsed = parseCfwDateRange(htmlToText(dateMatch[1]));
+      if (parsed) {
+        result.set(detailUrl, parsed);
+        break;
+      }
+    }
+  }
+  return result;
+}
+
+export function parseCfwDetailDate(html: string): ParsedDateRange | null {
+  for (const match of html.matchAll(/<p\b[^>]*class=["'][^"']*\bpt10\b[^"']*\bc6\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/giu)) {
+    const parsed = parseCfwDateRange(htmlToText(match[1]));
+    if (parsed) return parsed;
+  }
+  return null;
+}
+
 export function parseGenericListing(html: string, listingUrl: string, patterns: RegExp[] = [], sourceId?: string): ParsedAggregationItem[] {
   const result: ParsedAggregationItem[] = [];
   const seen = new Set<string>();
   const listing = new URL(listingUrl);
   const structuredText = structuredAnchorText(html, listingUrl, sourceId);
   const structuredDeadlines = structuredListingDeadline(html, listingUrl, sourceId);
+  const structuredCfwDates = structuredCfwListingDates(html, listingUrl, sourceId);
   for (const anchor of extractAnchors(html, listingUrl)) {
     if (/^(?:mailto:|tel:)/iu.test(anchor.href)) continue;
     if (patterns.length && !patterns.some((pattern) => pattern.test(anchor.href))) continue;
@@ -111,11 +140,13 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
       continue;
     }
     if (!OPPORTUNITY_SIGNAL.test(`${anchor.href} ${candidateText}`)) continue;
-    const deadline = extractDeadlineText(candidateText) ?? structuredDeadlines.get(anchor.href) ?? null;
+    const detailUrl = normalizeUrl(anchor.href, listingUrl) ?? anchor.href;
+    const cfwDate = structuredCfwDates.get(detailUrl);
+    const deadline = extractDeadlineText(candidateText) ?? structuredDeadlines.get(anchor.href) ?? cfwDate?.raw ?? null;
     seen.add(anchor.href);
     result.push({
-      source_item_id: identityHash(anchor.href), title: candidateText, source_category: null, detail_url: normalizeUrl(anchor.href, listingUrl) ?? anchor.href,
-      source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: parseDateText(deadline, new Date(), candidateText), organizer: null, application_url: null, raw_text: candidateText,
+      source_item_id: identityHash(anchor.href), title: candidateText, source_category: null, detail_url: detailUrl,
+      source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: cfwDate?.deadlineAt ?? parseDateText(deadline, new Date(), candidateText), organizer: null, application_url: null, raw_text: [candidateText, cfwDate?.raw].filter(Boolean).join(" "),
     });
   }
   return result;

@@ -42,6 +42,11 @@ export function identityHash(...parts: string[]): string {
 
 const DATE_HYPHENS = /[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/gu;
 
+export interface ParsedDateRange {
+  raw: string;
+  deadlineAt: string;
+}
+
 const DEADLINE_DATE = String.raw`(?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}\s*[年./-]\s*\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?|\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?)`;
 const DEADLINE_MARKER = /(?:closing\s+date|application\s+deadline|deadline|截止日期|截止时间|报名截止|投稿截止|截稿至|截至|截止|申请截止|征集时间|마감일|접수기간)/iu;
 
@@ -77,6 +82,25 @@ export function parseDateText(value: string | null, now = new Date(), context = 
   if (!Number.isNaN(dateOnly.getTime()) && dateOnly.getFullYear() >= 2020) return dateOnly.toISOString();
   // A year without a month is deliberately not guessed.
   return null;
+}
+
+/**
+ * CFW publishes date ranges such as `2026.03.20-08.31` on each listing card.
+ * The end date is the application deadline; an omitted end year belongs to
+ * the start year. This parser is intentionally source-specific and does not
+ * broaden generic listing date inference.
+ */
+export function parseCfwDateRange(value: string | null): ParsedDateRange | null {
+  if (!value) return null;
+  const normalized = value.replace(DATE_HYPHENS, "-");
+  const match = normalized.match(/(?<!\d)(20\d{2})\s*[./-]\s*(\d{1,2})\s*[./-]\s*(\d{1,2})\s*(?:-|~|～|至)\s*(?:(20\d{2})\s*[./-]\s*)?(\d{1,2})\s*[./-]\s*(\d{1,2})(?!\d)/u);
+  if (!match) return null;
+  const endYear = Number(match[4] ?? match[1]);
+  const month = Number(match[5]);
+  const day = Number(match[6]);
+  const date = new Date(Date.UTC(endYear, month - 1, day, 23, 59));
+  if (Number.isNaN(date.getTime()) || date.getUTCFullYear() !== endYear || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return { raw: match[0].trim(), deadlineAt: date.toISOString() };
 }
 
 export function classifyCategory(sourceCategory: string | null, title: string): "competition" | "exhibition_market" | "procurement_project" | "channel_collaboration" | "policy_funding" | "international" {

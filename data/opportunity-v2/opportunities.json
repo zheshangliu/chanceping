@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping-opportunity-v2.v1",
-  "updated_at": "2026-09-07T01:11:06.606Z",
+  "updated_at": "2026-09-07T09:03:30.182Z",
   "opportunities": [
     {
       "id": "oppv2_31d1b48cc7580e9d36b9dabe",
@@ -25,7 +25,7 @@
     {
       "id": "oppv2_531bbbfed1173727da2b04b1",
       "title": "2026第六届“这礼是成都”文创产品设计大赛",
-      "summary": "【综合设计】 | 2026第六届“这礼是成都”文创产品设计大赛 | 2027年3月3日",
+      "summary": "2026第六届“这礼是成都”文创产品设计大赛 2026.07.17-2027.03.03",
       "source_id": "shejijingsai-list",
       "source_name": "设计竞赛网",
       "source_url": "https://www.shejijingsai.com/liebiao",
@@ -4155,7 +4155,7 @@
     {
       "id": "oppv2_6876ce3075d620838828ad48",
       "title": "“丝路双生 山海造物”晋江&敦煌2026国际文创设计大赛",
-      "summary": "【综合设计】 | “丝路双生 山海造物”晋江&敦煌2026国际文创设计大赛 | 2026年9月24日",
+      "summary": "“丝路双生 山海造物”晋江&敦煌2026国际文创设计大赛正式启动 2026.06.23-2026.09.24",
       "source_id": "shejijingsai-list",
       "source_name": "设计竞赛网",
       "source_url": "https://www.shejijingsai.com/liebiao",
@@ -6732,7 +6732,7 @@
     {
       "id": "oppv2_5a4695f55cc21ae9f11a19dc",
       "title": "2026年古堰画乡全国文创设计大赛",
-      "summary": "【综合设计】 | 2026年古堰画乡全国文创设计大赛 | 2026年9月15日",
+      "summary": "2026年古堰画乡全国文创设计大赛（截至2026.9.15） 2026.04.25-2026.06.15",
       "source_id": "shejijingsai-list",
       "source_name": "设计竞赛网",
       "source_url": "https://www.shejijingsai.com/liebiao",
@@ -9415,7 +9415,7 @@
       "deadline": null,
       "status": "UNKNOWN_DEADLINE",
       "first_seen_at": "2026-09-06T15:12:49.439Z",
-      "last_seen_at": "2026-09-06T15:24:18.855Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
         "curatorspace-opportunities"
       ],
@@ -9458,7 +9458,7 @@
       "deadline": null,
       "status": "UNKNOWN_DEADLINE",
       "first_seen_at": "2026-09-06T15:12:49.439Z",
-      "last_seen_at": "2026-09-06T15:19:35.122Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
         "curatorspace-opportunities"
       ],
@@ -9582,7 +9582,7 @@
       "deadline": null,
       "status": "UNKNOWN_DEADLINE",
       "first_seen_at": "2026-09-06T15:15:51.401Z",
-      "last_seen_at": "2026-09-06T15:40:17.220Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
         "curatorspace-opportunities"
       ],
@@ -10145,7 +10145,7 @@
     {
       "id": "oppv2_fd4bf17716f4ac47696dcfb4",
       "title": "2026 智护四海·妈祖安澜 “妈祖杯”文创设计大赛（截至2026.10.20）",
-      "summary": "2026 智护四海·妈祖安澜 “妈祖杯”文创设计大赛（截至2026.10.20）",
+      "summary": "2026 智护四海·妈祖安澜 “妈祖杯”文创设计大赛（截至2026.10.20） 2026.09.01-2026.10.20",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10169,7 +10169,7 @@
     {
       "id": "oppv2_aee4aa704e815604e3485f6f",
       "title": "秦小卫”数字IP公益形象全民征集活动【截稿至11月21日】",
-      "summary": "秦小卫”数字IP公益形象全民征集活动【截稿至11月21日】",
+      "summary": "秦小卫”数字IP公益形象全民征集活动【截稿至11月21日】 2026.09.01-2026.11.21",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10191,7 +10191,7 @@
     {
       "id": "oppv2_82efe867e5cb7b3059d9470d",
       "title": "2026国文奖两岸青年非遗文创设计大赛",
-      "summary": "2026国文奖两岸青年非遗文创设计大赛",
+      "summary": "2026国文奖两岸青年非遗文创设计大赛 2026.08.30-2026.12.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10202,8 +10202,8 @@
         "非遗",
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-12-31T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10215,7 +10215,7 @@
     {
       "id": "oppv2_76d84348ea83d2816dca17db",
       "title": "“营口海蜇”文创IP形象设计大赛【截稿至9月30日】",
-      "summary": "“营口海蜇”文创IP形象设计大赛【截稿至9月30日】",
+      "summary": "“营口海蜇”文创IP形象设计大赛【截稿至9月30日】 2026.08.20-2026.09.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10257,7 +10257,7 @@
     {
       "id": "oppv2_2d133416b995f1ed092026b3",
       "title": "2026福绵牛仔服装 “福泰杯” 创意设计大赛（截至2026年9月27日）",
-      "summary": "2026福绵牛仔服装 “福泰杯” 创意设计大赛（截至2026年9月27日）",
+      "summary": "2026福绵牛仔服装 “福泰杯” 创意设计大赛（截至2026年9月27日） 2026.08.08-2026.09.27",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10277,7 +10277,7 @@
     {
       "id": "oppv2_6320000fdecc8538b9edd237",
       "title": "2026第三届中关村AI创新创意设计大赛“国风戏曲毛绒 IP 形象设计赛道”",
-      "summary": "2026第三届中关村AI创新创意设计大赛“国风戏曲毛绒 IP 形象设计赛道”",
+      "summary": "2026第三届中关村AI创新创意设计大赛“国风戏曲毛绒 IP 形象设计赛道” 2026.08.07-2026.10.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10285,8 +10285,8 @@
       "category": "competition",
       "region": "CN",
       "tags": [],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-10-31T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10297,7 +10297,7 @@
     {
       "id": "oppv2_b847991aeae75d0833522e51",
       "title": "第八届粤港澳大湾区文化创意设计大赛来了",
-      "summary": "第八届粤港澳大湾区文化创意设计大赛来了",
+      "summary": "第八届粤港澳大湾区文化创意设计大赛来了 2026.07.09-2026.09.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10307,8 +10307,8 @@
       "tags": [
         "文化创意"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-09-30T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10319,7 +10319,7 @@
     {
       "id": "oppv2_7bd0cd0c61a461d5aa573cca",
       "title": "以文会友·文创兴疆 新疆特色文创产品设计大赛正式启幕",
-      "summary": "以文会友·文创兴疆 新疆特色文创产品设计大赛正式启幕",
+      "summary": "以文会友·文创兴疆 新疆特色文创产品设计大赛正式启幕 2026.06.12-2026.09.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10329,8 +10329,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-09-30T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10341,7 +10341,7 @@
     {
       "id": "oppv2_b05e00fe086aebb54ad54a94",
       "title": "“雪域赤橙 文创蓝焰”文创作品征集活动",
-      "summary": "“雪域赤橙 文创蓝焰”文创作品征集活动",
+      "summary": "“雪域赤橙 文创蓝焰”文创作品征集活动 2026.06.05-2026.09.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10352,8 +10352,8 @@
         "文创",
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-09-30T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10364,7 +10364,7 @@
     {
       "id": "oppv2_895ceb6fffdbb5002b913b7e",
       "title": "2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动（截至2026.9.30）",
-      "summary": "2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动（截至2026.9.30）",
+      "summary": "2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动（截至2026.9.30） 2026.05.16-2026.09.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10387,7 +10387,7 @@
     {
       "id": "oppv2_5ee24bd5d2d86b5ad31e3e3e",
       "title": "大赛 | 2026「SCC森迹杯」长三角青年文创设计大赛 正式启动！",
-      "summary": "大赛 | 2026「SCC森迹杯」长三角青年文创设计大赛 正式启动！",
+      "summary": "大赛 | 2026「SCC森迹杯」长三角青年文创设计大赛 正式启动！ 2026.04.30-2026.09.10",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10397,8 +10397,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-09-10T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10409,7 +10409,7 @@
     {
       "id": "oppv2_e3899c3b015ad73008f8c01c",
       "title": "“荆楚风华·创意无限”2026年湖北全省图书馆文化创意作品征集",
-      "summary": "“荆楚风华·创意无限”2026年湖北全省图书馆文化创意作品征集",
+      "summary": "“荆楚风华·创意无限”2026年湖北全省图书馆文化创意作品征集 2026.03.04-2026.10.15",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10420,8 +10420,8 @@
         "文化创意",
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-10-15T23:59:00.000Z",
+      "status": "CURRENT",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10432,7 +10432,7 @@
     {
       "id": "oppv2_e1032614679e3bebdb25b376",
       "title": "“千年文脉，万般创想”2026 涪陵文旅文创大赛",
-      "summary": "“千年文脉，万般创想”2026 涪陵文旅文创大赛",
+      "summary": "“千年文脉，万般创想”2026 涪陵文旅文创大赛 2026.07.13-2026.08.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10443,8 +10443,8 @@
         "文创",
         "文旅"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-08-30T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10455,7 +10455,7 @@
     {
       "id": "oppv2_94eaa0a636952300661867b9",
       "title": "2026平凉市崆峒区文创作品设计大赛",
-      "summary": "2026平凉市崆峒区文创作品设计大赛",
+      "summary": "2026平凉市崆峒区文创作品设计大赛 2026.07.08-2026.07.27",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10465,8 +10465,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-07-27T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10477,7 +10477,7 @@
     {
       "id": "oppv2_7d07407e584988dbea661920",
       "title": "“2026珠海礼物”文创商品征集",
-      "summary": "“2026珠海礼物”文创商品征集",
+      "summary": "“2026珠海礼物”文创商品征集 2026.07.08-2026.08.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10488,8 +10488,8 @@
         "文创",
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-08-31T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10500,7 +10500,7 @@
     {
       "id": "oppv2_4478f46994c49758186497a7",
       "title": "邢襄生态园IP征集正式开启！本次活动面向全社会公开征集！",
-      "summary": "邢襄生态园IP征集正式开启！本次活动面向全社会公开征集！",
+      "summary": "邢襄生态园IP征集正式开启！本次活动面向全社会公开征集！ 2026.07.06-2026.07.26",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10510,8 +10510,8 @@
       "tags": [
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-07-26T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10522,7 +10522,7 @@
     {
       "id": "oppv2_f4dbee7c8f9edbef4c363941",
       "title": "“创艺丰泽·蟳武新生”2026丰泽AI+文创设计大赛【截稿至 8月20日】",
-      "summary": "“创艺丰泽·蟳武新生”2026丰泽AI+文创设计大赛【截稿至 8月20日】",
+      "summary": "“创艺丰泽·蟳武新生”2026丰泽AI+文创设计大赛【截稿至 8月20日】 2026.06.23-2026.08.20",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10544,7 +10544,7 @@
     {
       "id": "oppv2_9ac2fcc5bd86b48b36293745",
       "title": "2026蚌埠市“智绘珠城·AI在蚌埠”城市形象IP系列AI创作大赛",
-      "summary": "2026蚌埠市“智绘珠城·AI在蚌埠”城市形象IP系列AI创作大赛",
+      "summary": "2026蚌埠市“智绘珠城·AI在蚌埠”城市形象IP系列AI创作大赛 2026.06.16-2026.07.05",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10552,8 +10552,8 @@
       "category": "competition",
       "region": "CN",
       "tags": [],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-07-05T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10564,7 +10564,7 @@
     {
       "id": "oppv2_bbd4d2a9a2e9af9fe4b1e02d",
       "title": "总奖金40万！2026年第五届海南国际设计师大赛（截至2026.8.14）",
-      "summary": "总奖金40万！2026年第五届海南国际设计师大赛（截至2026.8.14）",
+      "summary": "总奖金40万！2026年第五届海南国际设计师大赛（截至2026.8.14） 2026.06.01-2026.08.14",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10584,7 +10584,7 @@
     {
       "id": "oppv2_4fc52e4a0c466916e9d90992",
       "title": "纪念殷墟妇好墓考古发掘50周年：礼文宫杯“好·有创意”殷墟妇好墓主题创意设计大赛（截至2026.8.31）",
-      "summary": "纪念殷墟妇好墓考古发掘50周年：礼文宫杯“好·有创意”殷墟妇好墓主题创意设计大赛（截至2026.8.31）",
+      "summary": "纪念殷墟妇好墓考古发掘50周年：礼文宫杯“好·有创意”殷墟妇好墓主题创意设计大赛（截至2026.8.31） 2026.05.29-2026.08.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10604,7 +10604,7 @@
     {
       "id": "oppv2_39215ce6209442aebef4296d",
       "title": "“韵味杭州·游礼相伴” 2026杭州伴手礼创意设计大赛【截稿至7月5日】",
-      "summary": "“韵味杭州·游礼相伴” 2026杭州伴手礼创意设计大赛【截稿至7月5日】",
+      "summary": "“韵味杭州·游礼相伴” 2026杭州伴手礼创意设计大赛【截稿至7月5日】 2026.05.29-2026.07.05",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10626,7 +10626,7 @@
     {
       "id": "oppv2_057bb5ab55cf39e1ff0f7dab",
       "title": "许昌消防IP形象征集大赛【截稿至5月31日】",
-      "summary": "许昌消防IP形象征集大赛【截稿至5月31日】",
+      "summary": "许昌消防IP形象征集大赛【截稿至5月31日】 2026.05.09-2026.05.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10648,7 +10648,7 @@
     {
       "id": "oppv2_a3cf36d938ba0b85a9726fe9",
       "title": "2026 总台文创×吴江游礼“文创江南”设计征集活动",
-      "summary": "2026 总台文创×吴江游礼“文创江南”设计征集活动",
+      "summary": "2026 总台文创×吴江游礼“文创江南”设计征集活动 2026.05.08-2026.07.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10659,8 +10659,8 @@
         "文创",
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-07-31T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10671,7 +10671,7 @@
     {
       "id": "oppv2_8d7a6cebc7a917dc8b7c7cb9",
       "title": "首届国际陶瓷潮玩设计大赛全球征集公告",
-      "summary": "首届国际陶瓷潮玩设计大赛全球征集公告",
+      "summary": "首届国际陶瓷潮玩设计大赛全球征集公告 2026.05.01-2026.09.02",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10682,8 +10682,8 @@
         "陶瓷",
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-09-02T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10694,7 +10694,7 @@
     {
       "id": "oppv2_da7c57f28d7437a1a3a26252",
       "title": "上山文化”（浦江）文创产品创意设计大赛【截稿至6月20日】",
-      "summary": "上山文化”（浦江）文创产品创意设计大赛【截稿至6月20日】",
+      "summary": "上山文化”（浦江）文创产品创意设计大赛【截稿至6月20日】 2026.04.22-2026.06.20",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10716,7 +10716,7 @@
     {
       "id": "oppv2_2d5065ee8cb7e73e825ac076",
       "title": "2026“车城深汕”文创设计大赛",
-      "summary": "2026“车城深汕”文创设计大赛",
+      "summary": "2026“车城深汕”文创设计大赛 2026.03.26-2026.04.28",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10726,8 +10726,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-04-28T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10738,7 +10738,7 @@
     {
       "id": "oppv2_f3c180c93342887925a26e4f",
       "title": "2026第九届金茶花国际文创设计大赛征稿通知",
-      "summary": "2026第九届金茶花国际文创设计大赛征稿通知",
+      "summary": "2026第九届金茶花国际文创设计大赛征稿通知 2026.03.20-2026.08.31",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10748,8 +10748,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-08-31T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10760,7 +10760,7 @@
     {
       "id": "oppv2_6f069e44e0018df6669092ae",
       "title": "2026黄平县第一届文创产品(作品)设计大赛（截至2026.4.26）",
-      "summary": "2026黄平县第一届文创产品(作品)设计大赛（截至2026.4.26）",
+      "summary": "2026黄平县第一届文创产品(作品)设计大赛（截至2026.4.26） 2026.03.16-2026.04.26",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10782,7 +10782,7 @@
     {
       "id": "oppv2_4f6d5ae3913f558687948369",
       "title": "“创意首图·阅动未来”首都图书馆文创产品设计大赛",
-      "summary": "“创意首图·阅动未来”首都图书馆文创产品设计大赛",
+      "summary": "“创意首图·阅动未来”首都图书馆文创产品设计大赛 2026.02.04-2026.02.28",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10792,8 +10792,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-02-28T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10804,7 +10804,7 @@
     {
       "id": "oppv2_ec49bffe924d15bce13cbd6c",
       "title": "连云港非遗国潮文创好物设计大赛【截稿至3月10日】",
-      "summary": "连云港非遗国潮文创好物设计大赛【截稿至3月10日】",
+      "summary": "连云港非遗国潮文创好物设计大赛【截稿至3月10日】 2026.02.03-2026.03.10",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10828,7 +10828,7 @@
     {
       "id": "oppv2_c3a3edbb343985e57c788b69",
       "title": "开江有礼·瓦上新生——开江瓦雕及屋顶古建文化IP设计大赛（截至2026.3.9）",
-      "summary": "开江有礼·瓦上新生——开江瓦雕及屋顶古建文化IP设计大赛（截至2026.3.9）",
+      "summary": "开江有礼·瓦上新生——开江瓦雕及屋顶古建文化IP设计大赛（截至2026.3.9） 2026.01.22-2026.03.09",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10850,7 +10850,7 @@
     {
       "id": "oppv2_8bd2f86ed4c4f455b030c3f5",
       "title": "110+获奖名额|首届吐鲁番·吐峪沟非遗文创设计大赛作品征集公告",
-      "summary": "110+获奖名额|首届吐鲁番·吐峪沟非遗文创设计大赛作品征集公告",
+      "summary": "110+获奖名额|首届吐鲁番·吐峪沟非遗文创设计大赛作品征集公告 2026.01.22-2026.02.10",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10862,8 +10862,8 @@
         "文创",
         "征集"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-02-10T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10874,7 +10874,7 @@
     {
       "id": "oppv2_7e13b4e65354654aad43c30b",
       "title": "2026天长市首届“天长地久·玩偶狂想季” 文创玩具创意设计大赛",
-      "summary": "2026天长市首届“天长地久·玩偶狂想季” 文创玩具创意设计大赛",
+      "summary": "2026天长市首届“天长地久·玩偶狂想季” 文创玩具创意设计大赛 2026.01.12-2026.03.10",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10884,8 +10884,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-03-10T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10896,7 +10896,7 @@
     {
       "id": "oppv2_e7b013ee682c5d84636e7ddf",
       "title": "天长市首届“天长地久·玩偶狂想季”文创玩具创意设计大赛正式启动~（截至2026.3.10）",
-      "summary": "天长市首届“天长地久·玩偶狂想季”文创玩具创意设计大赛正式启动~（截至2026.3.10）",
+      "summary": "天长市首届“天长地久·玩偶狂想季”文创玩具创意设计大赛正式启动~（截至2026.3.10） 2026.01.12-2026.03.10",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10918,7 +10918,7 @@
     {
       "id": "oppv2_4bd8b173788e9150c5f58b20",
       "title": "2026非遗新声・匠造萍城——萍乡市非遗文创设计征集比赛",
-      "summary": "2026非遗新声・匠造萍城——萍乡市非遗文创设计征集比赛",
+      "summary": "2026非遗新声・匠造萍城——萍乡市非遗文创设计征集比赛 2026.01.01-2026.04.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10931,8 +10931,8 @@
         "征集",
         "比赛"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-04-30T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10943,7 +10943,7 @@
     {
       "id": "oppv2_7b53378a0b9f86007dcf0b1d",
       "title": "泸州市首届“ 泸州好礼·桂花杯 ”文创设计大赛",
-      "summary": "泸州市首届“ 泸州好礼·桂花杯 ”文创设计大赛",
+      "summary": "泸州市首届“ 泸州好礼·桂花杯 ”文创设计大赛 2025.12.24-2026.02.28",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10953,8 +10953,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2026-02-28T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -10965,7 +10965,7 @@
     {
       "id": "oppv2_5bf4838f1cb916322000ea1c",
       "title": "7万奖金！赣州城市形象标识全球征集（截至2026.1.16）",
-      "summary": "7万奖金！赣州城市形象标识全球征集（截至2026.1.16）",
+      "summary": "7万奖金！赣州城市形象标识全球征集（截至2026.1.16） 2025.12.04-2026.01.16",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10987,7 +10987,7 @@
     {
       "id": "oppv2_6b1a365a9ba9c36996632c6e",
       "title": "“融红色血脉 通强军梦想” 军事文创设计大赛",
-      "summary": "“融红色血脉 通强军梦想” 军事文创设计大赛",
+      "summary": "“融红色血脉 通强军梦想” 军事文创设计大赛 2025.08.29-2025.10.10",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -10997,8 +10997,8 @@
       "tags": [
         "文创"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2025-10-10T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -11009,7 +11009,7 @@
     {
       "id": "oppv2_f9b9f9921a39a2498eb81c7a",
       "title": "“泗洪稻·香天下”泗洪县第四届文化创意设计大赛公告",
-      "summary": "“泗洪稻·香天下”泗洪县第四届文化创意设计大赛公告",
+      "summary": "“泗洪稻·香天下”泗洪县第四届文化创意设计大赛公告 2025.06.30-2025.09.20",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -11019,8 +11019,8 @@
       "tags": [
         "文化创意"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2025-09-20T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -11031,7 +11031,7 @@
     {
       "id": "oppv2_92f10df2f58d5c4f17a183f6",
       "title": "最高奖金2万元！ “红岩印·青春”重庆红色文化创意产品设计大赛启动",
-      "summary": "最高奖金2万元！ “红岩印·青春”重庆红色文化创意产品设计大赛启动",
+      "summary": "最高奖金2万元！ “红岩印·青春”重庆红色文化创意产品设计大赛启动 2025.06.19-2025.09.30",
       "source_id": "cfw-cultural-ip",
       "source_name": "CFW设计大赛｜文创IP",
       "source_url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
@@ -11041,8 +11041,8 @@
       "tags": [
         "文化创意"
       ],
-      "deadline": null,
-      "status": "UNKNOWN_DEADLINE",
+      "deadline": "2025-09-30T23:59:00.000Z",
+      "status": "EXPIRED",
       "first_seen_at": "2026-09-06T17:00:39.893Z",
       "last_seen_at": "2026-09-06T16:00:00.000Z",
       "discovered_by_sources": [
@@ -14968,6 +14968,374 @@
         "curatorspace-opportunities"
       ],
       "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_549526ba7cacc65cc12a3d27",
+      "title": "2026“辽宁故事”杯农特产品包装创新创意大赛",
+      "summary": "报名中 截止时间：2026-10-15 23:59 2026“辽宁故事”杯农特产品包装创新创意大赛 截止时间：2026-10-15 23:59 · 创新创业大赛",
+      "source_id": "chuangsaiyun-competition-list",
+      "source_name": "创赛云",
+      "source_url": "https://www.xiacansai.com/mrjs.html",
+      "detail_url": "https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2788",
+      "category": "competition",
+      "region": "CN",
+      "tags": [],
+      "deadline": "2026-10-15T23:59:00.000Z",
+      "status": "CURRENT",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "chuangsaiyun-competition-list",
+        "iuben-cultural-competition"
+      ],
+      "radar_relevance": "IRRELEVANT"
+    },
+    {
+      "id": "oppv2_83f6361047a8252244559259",
+      "title": "2026年“新时代网络文明公益广告”征集展示活动通知",
+      "summary": "报名中 截止时间：2026-09-30 23:59 2026年“新时代网络文明公益广告”征集展示活动通知 截止时间：2026-09-30 23:59 · 设计摄影竞赛",
+      "source_id": "chuangsaiyun-competition-list",
+      "source_name": "创赛云",
+      "source_url": "https://www.xiacansai.com/mrjs.html",
+      "detail_url": "https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2789",
+      "category": "exhibition_market",
+      "region": "CN",
+      "tags": [
+        "征集",
+        "竞赛"
+      ],
+      "deadline": "2026-09-30T23:59:00.000Z",
+      "status": "CURRENT",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "chuangsaiyun-competition-list"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_c1fa5ffb0dd5607a75672e84",
+      "title": "2026年第五届辽宁省大学生“瑰宝传承”戏曲文化创新创意大赛",
+      "summary": "报名中 截止时间：2026-09-15 23:59 2026年第五届辽宁省大学生“瑰宝传承”戏曲文化创新创意大赛 截止时间：2026-09-15 23:59 · 创新创业大赛",
+      "source_id": "chuangsaiyun-competition-list",
+      "source_name": "创赛云",
+      "source_url": "https://www.xiacansai.com/mrjs.html",
+      "detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2790",
+      "category": "competition",
+      "region": "CN",
+      "tags": [],
+      "deadline": "2026-09-15T23:59:00.000Z",
+      "status": "CURRENT",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "chuangsaiyun-competition-list"
+      ],
+      "radar_relevance": "IRRELEVANT"
+    },
+    {
+      "id": "oppv2_3b3a294c41559a1c5be2fe03",
+      "title": "Bagri Foundation grants for Asian culture",
+      "summary": "Bagri Foundation grants for Asian culture",
+      "source_id": "asef-culture360-opportunities",
+      "source_name": "ASEF culture360 Opportunities",
+      "source_url": "https://culture360.org/opportunities/",
+      "detail_url": "https://culture360.org/opportunities/bagri-foundation-grants-for-asian-culture",
+      "category": "policy_funding",
+      "region": "GLOBAL",
+      "tags": [
+        "grant"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "asef-culture360-opportunities"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_ba910db85cabbf206491b84e",
+      "title": "Fairs/Festivals Columbus Arts Festival 2027 Columbus, Ohio Application fee: $40",
+      "summary": "Fairs/Festivals Columbus Arts Festival 2027 Columbus, Ohio Application fee: $40",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/14777/ZAPP",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "fair"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_87fe6199ebd07e0e7c668b37",
+      "title": "Exhibition Wavelength: Yellow Fort Wayne, Indiana Application fee: $12",
+      "summary": "Exhibition Wavelength: Yellow Fort Wayne, Indiana Application fee: $12",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/17967/CAFE",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "exhibition"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_0676703b845d8711a2d509f8",
+      "title": "Exhibition Naturalist Gallery Genre Art Exhibition Washington DC, District of Columbia Application fee: $30",
+      "summary": "Exhibition Naturalist Gallery Genre Art Exhibition Washington DC, District of Columbia Application fee: $30",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/18045/CAFE",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "exhibition"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_248c865e78fb7ca7e060ba60",
+      "title": "Exhibition COMPACT: Small Works Fort Wayne, Indiana Application fee: $12",
+      "summary": "Exhibition COMPACT: Small Works Fort Wayne, Indiana Application fee: $12",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/17966/CAFE",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "exhibition"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_682bbe9f70ba6de1697de321",
+      "title": "Fairs/Festivals Gasparilla Festival of the Arts 2027 57th Annual Tampa, Florida Application fee: $50",
+      "summary": "Fairs/Festivals Gasparilla Festival of the Arts 2027 57th Annual Tampa, Florida Application fee: $50",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/14737/ZAPP",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "fair"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_a338214952bd454005fe0b2e",
+      "title": "Fairs/Festivals Naples New Year's Art Fair 2027 - 31st Annual Naples, Florida Application fee: $40",
+      "summary": "Fairs/Festivals Naples New Year's Art Fair 2027 - 31st Annual Naples, Florida Application fee: $40",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/14704/ZAPP",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "fair"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_dc556f3f8895708fd3486c6c",
+      "title": "Fairs/Festivals Rocky River Fall Arts Festival 2026 Rocky River, Ohio Application fee: $25",
+      "summary": "Fairs/Festivals Rocky River Fall Arts Festival 2026 Rocky River, Ohio Application fee: $25",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/14118/ZAPP",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "fair"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_cbfc89aa9eb1dce28963d223",
+      "title": "Fairs/Festivals St. Armands Fall Fine Art Festival October 2026 (Paragon Festivals) Sarasota , Florida Application fee: $30",
+      "summary": "Fairs/Festivals St. Armands Fall Fine Art Festival October 2026 (Paragon Festivals) Sarasota , Florida Application fee: $30",
+      "source_id": "cafe-call-for-entry",
+      "source_name": "CaFÉ CallForEntry",
+      "source_url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "detail_url": "https://artist.callforentry.org/opportunity/14449/ZAPP",
+      "category": "exhibition_market",
+      "region": "GLOBAL",
+      "tags": [
+        "fair"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "cafe-call-for-entry"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_8e2980912441f5b6bfc101ea",
+      "title": "平面+视频作品|公益广告征集展示活动",
+      "summary": "平面+视频作品|公益广告征集展示活动",
+      "source_id": "whaleideas-competition",
+      "source_name": "文创赛网｜鲸创意",
+      "source_url": "https://whaleideas.com/zjds/index.html",
+      "detail_url": "https://whaleideas.com/zjds/sjcd/chsj/31932.html",
+      "category": "exhibition_market",
+      "region": "CN",
+      "tags": [
+        "征集"
+      ],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "whaleideas-competition"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_a58446bb4948c303a941a443",
+      "title": "一等奖2万元！深圳市南山区AI微短剧创作大赛",
+      "summary": "一等奖2万元！深圳市南山区AI微短剧创作大赛",
+      "source_id": "whaleideas-competition",
+      "source_name": "文创赛网｜鲸创意",
+      "source_url": "https://whaleideas.com/zjds/index.html",
+      "detail_url": "https://whaleideas.com/zjds/yssz/spzj/31931.html",
+      "category": "competition",
+      "region": "CN",
+      "tags": [],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "whaleideas-competition"
+      ],
+      "radar_relevance": "IRRELEVANT"
+    },
+    {
+      "id": "oppv2_8661d94d6fd060f047a3cbf6",
+      "title": "“AI+教育”创新应用技能大赛",
+      "summary": "“AI+教育”创新应用技能大赛",
+      "source_id": "whaleideas-competition",
+      "source_name": "文创赛网｜鲸创意",
+      "source_url": "https://whaleideas.com/zjds/index.html",
+      "detail_url": "https://whaleideas.com/zjds/gycp/wcsj/31933.html",
+      "category": "competition",
+      "region": "CN",
+      "tags": [],
+      "deadline": null,
+      "status": "UNKNOWN_DEADLINE",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "whaleideas-competition"
+      ],
+      "radar_relevance": "IRRELEVANT"
+    },
+    {
+      "id": "oppv2_45207521e2c5ea287c7085c8",
+      "title": "2026年“新时代网络文明公益广告”征集",
+      "summary": "2026年“新时代网络文明公益广告”征集",
+      "source_id": "iuben-cultural-competition",
+      "source_name": "优本视觉",
+      "source_url": "https://iuben.cn/collect/",
+      "detail_url": "https://iuben.cn/wcsj/6926.html",
+      "category": "exhibition_market",
+      "region": "CN",
+      "tags": [
+        "征集"
+      ],
+      "deadline": "2026-10-01T23:59:00.000Z",
+      "status": "CURRENT",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "iuben-cultural-competition"
+      ],
+      "radar_relevance": "UNCERTAIN"
+    },
+    {
+      "id": "oppv2_f1ff87b323594cd7c9e16abe",
+      "title": "2026“陇原创想・文化新生”甘肃文化创意设计大赛",
+      "summary": "2026“陇原创想・文化新生”甘肃文化创意设计大赛",
+      "source_id": "iuben-cultural-competition",
+      "source_name": "优本视觉",
+      "source_url": "https://iuben.cn/collect/",
+      "detail_url": "https://iuben.cn/wcsj/6925.html",
+      "category": "competition",
+      "region": "CN",
+      "tags": [
+        "文化创意"
+      ],
+      "deadline": "2026-09-25T23:59:00.000Z",
+      "status": "CURRENT",
+      "first_seen_at": "2026-09-06T16:00:00.000Z",
+      "last_seen_at": "2026-09-06T16:00:00.000Z",
+      "discovered_by_sources": [
+        "iuben-cultural-competition"
+      ],
+      "radar_relevance": "RELEVANT"
     }
   ]
 }

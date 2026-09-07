@@ -4,9 +4,9 @@ import os from "node:os";
 import path from "node:path";
 import { createApp } from "../src/api/app";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
-import { isLikelySourceListingNoise, parseGenericListing } from "../src/ich/aggregation/adapters/generic-listing";
-import { extractDeadlineText, parseDateText } from "../src/ich/aggregation/adapters/common";
-import { canonicalOpportunityTitle, filterOpportunityV2Radar, opportunityStatus, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
+import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../src/ich/aggregation/adapters/generic-listing";
+import { extractDeadlineText, parseCfwDateRange, parseDateText } from "../src/ich/aggregation/adapters/common";
+import { canonicalOpportunityTitle, filterOpportunityV2Radar, mergeOpportunityV2, normalizeOpportunityV2, opportunityStatus, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
 
 async function jsonRequest(app: ReturnType<typeof opportunityV2Routes>, url: string, method: string, body?: Record<string, unknown>): Promise<{ status: number; data: any }> {
   const response = await app.request(`http://localhost${url}`, { method, headers: body ? { "content-type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined });
@@ -69,11 +69,30 @@ async function main(): Promise<void> {
   assert.equal(resultPool.filter((item) => /loewe foundation.*craft prize|craft prize.*loewe foundation/iu.test(item.title)).length, 1);
   assert.deepEqual(resultPool.find((item) => /loewe foundation.*craft prize|craft prize.*loewe foundation/iu.test(item.title))?.discovered_by_sources.sort(), ["asef-culture360-opportunities", "loewe-craft-prize"]);
   assert.equal(result.source_health.find((row) => row.source_id === "cfw-cultural-ip")?.items_seen, 2);
+  const cfwCards = parseGenericListing(
+    `<ul class="competition-data"><li><a href="/ds/1195.html" class="name">2026第九届金茶花国际文创设计大赛征稿通知</a><p class="pt15 c6">2026.03.20-08.31</p></li><li><a href="/ds/1198.html" class="name">2026“车城深汕”文创设计大赛</a><p class="pt15 c6">2026.03.26-2026.04.28</p></li></ul>`,
+    "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
+    [],
+    "cfw-cultural-ip",
+  );
+  assert.equal(cfwCards.length, 2);
+  assert.equal(cfwCards.find((item) => item.detail_url.endsWith("/1195.html"))?.deadline_at, "2026-08-31T23:59:00.000Z");
+  assert.equal(cfwCards.find((item) => item.detail_url.endsWith("/1198.html"))?.deadline_at, "2026-04-28T23:59:00.000Z");
+  assert.deepEqual(parseCfwDateRange("2026.03.20-08.31"), { raw: "2026.03.20-08.31", deadlineAt: "2026-08-31T23:59:00.000Z" });
+  assert.deepEqual(parseCfwDateRange("2026.03.26-2026.04.28"), { raw: "2026.03.26-2026.04.28", deadlineAt: "2026-04-28T23:59:00.000Z" });
+  assert.deepEqual(parseCfwDetailDate(`<p class="pt10 c6">2026.03.20-08.31</p>`), { raw: "2026.03.20-08.31", deadlineAt: "2026-08-31T23:59:00.000Z" });
+  const deadlineNow = new Date("2026-09-07T00:00:00+08:00");
+  const cfwStablePrior = { ...cfwCards[0], deadline_at: null };
+  const cfwStableIncoming = { ...cfwCards[0], title: `${cfwCards[0].title}（延期）`, deadline_at: "2026-10-31T23:59:00.000Z" };
+  const stablePrior = normalizeOpportunityV2(cfwStablePrior, { id: "cfw-cultural-ip", name: "CFW", region: "CN" }, deadlineNow);
+  const stableIncoming = normalizeOpportunityV2(cfwStableIncoming, { id: "cfw-cultural-ip", name: "CFW", region: "CN" }, deadlineNow);
+  const stableMerged = mergeOpportunityV2([stablePrior], [stableIncoming], deadlineNow);
+  assert.equal(stableMerged.length, 1, "CFW detail URL backfill must not duplicate a renamed card");
+  assert.equal(stableMerged[0].deadline, "2026-10-31T23:59:00.000Z");
   assert.equal(canonicalOpportunityTitle("2026“山东手造·齐品淄博”城市礼物创意设计大赛"), canonicalOpportunityTitle("山东手造·齐品淄博 2026 城市礼物创意设计大赛"));
   const genericDeadline = parseGenericListing(fixtureBySource["https://example.com/deadline-listing"], "https://example.com/deadline-listing");
   assert.equal(genericDeadline.length, 1);
   assert.equal(genericDeadline[0].deadline_at, "2026-10-29T23:59:00.000Z");
-  const deadlineNow = new Date("2026-09-07T00:00:00+08:00");
   const deadlineCases = [
     ["2026比赛【截稿至7月5日】", "2026-07-05T23:59:00.000Z", "EXPIRED"],
     ["2026比赛【截稿至 8月20日】", "2026-08-20T23:59:00.000Z", "EXPIRED"],
