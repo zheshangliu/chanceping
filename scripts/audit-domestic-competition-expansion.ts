@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, canonicalOpportunityTitle, type OpportunityV2, type OpportunityV2Source, type OpportunityV2SourceHealth } from "../src/opportunity-v2";
+import { extractDeadlineText, parseDateText } from "../src/ich/aggregation/adapters/common";
+import { filterOpportunityV2Radar, opportunityStatus, readOpportunityV2Pool, readOpportunityV2Sources, canonicalOpportunityTitle, type OpportunityV2, type OpportunityV2Source, type OpportunityV2SourceHealth } from "../src/opportunity-v2";
 
 const NEW_SOURCE_IDS = [
   "cfw-cultural-ip", "whaleideas-competition", "1zj-cultural-competition", "chuangyisai-cultural",
@@ -54,6 +55,23 @@ function markdownCell(value: unknown): string {
   return String(value ?? "").replace(/\|/gu, "\\|").replace(/\n/gu, " ");
 }
 
+function auditNow(): Date {
+  const value = new Date(process.env.CHANCEPING_OPPORTUNITY_V2_AUDIT_NOW ?? new Date().toISOString());
+  if (Number.isNaN(value.getTime())) throw new Error("Invalid CHANCEPING_OPPORTUNITY_V2_AUDIT_NOW");
+  return value;
+}
+
+function explicitExpiredText(item: OpportunityV2, now: Date): boolean {
+  const context = `${item.title} ${item.summary}`;
+  const deadlineText = extractDeadlineText(context);
+  const parsed = parseDateText(deadlineText, now, context);
+  return Boolean(!item.deadline && parsed && opportunityStatus(parsed, now) === "EXPIRED");
+}
+
+function structuredExpired(item: OpportunityV2, now: Date): boolean {
+  return Boolean(item.deadline && opportunityStatus(item.deadline, now) === "EXPIRED");
+}
+
 function renderReport(baseline: BaselineSnapshot, reportPath: string): void {
   const sources = readOpportunityV2Sources();
   const pool = readOpportunityV2Pool();
@@ -63,6 +81,7 @@ function renderReport(baseline: BaselineSnapshot, reportPath: string): void {
   const newIds = new Set(NEW_SOURCE_IDS);
   const radar = filterOpportunityV2Radar(pool.opportunities, sources);
   const newUnique = radar.filter((item) => sourceIdsFor(item, newIds).length > 0 && !baselineKeys.has(canonicalOpportunityTitle(item.title)));
+  const newUniquePool = pool.opportunities.filter((item) => sourceIdsFor(item, newIds).length > 0 && !baselineKeys.has(canonicalOpportunityTitle(item.title)));
   const duplicateItems = pool.opportunities.filter((item) => sourceIdsFor(item, newIds).length > 0 && baselineKeys.has(canonicalOpportunityTitle(item.title)));
   const cnRadar = radar.filter((item) => item.region === "CN");
   const globalRadar = radar.filter((item) => item.region === "GLOBAL");
@@ -109,15 +128,23 @@ function renderReport(baseline: BaselineSnapshot, reportPath: string): void {
     return { label: label as string, count: discovered.length, sources: discovered.map((id) => sourceName(sources, id)) };
   });
 
-  const auditItems = [...newUnique].sort((a, b) => a.id.localeCompare(b.id)).slice(0, 30);
+  const now = auditNow();
+  const auditItems = [...newUniquePool].sort((a, b) => a.id.localeCompare(b.id)).slice(0, 30);
+  const isResultNews = (item: OpportunityV2): boolean => /(?:获奖名单|结果公布|评审结果|新闻|资讯|招聘|公示)/iu.test(`${item.title} ${item.summary}`);
+  const isNavigationNoise = (item: OpportunityV2): boolean => /(?:\/about|\/contact|\/archive|\/blog|\/podcast|mailto:|tel:)/iu.test(`${item.title} ${item.detail_url}`);
+  const expiredStructured = auditItems.filter((item) => structuredExpired(item, now));
+  const expiredTextDetected = auditItems.filter((item) => explicitExpiredText(item, now));
   const quality = {
     audited: auditItems.length,
-    real: auditItems.filter((item) => !["EXPIRED"].includes(item.status) && !/(?:获奖名单|结果公布|评审结果|新闻|资讯|招聘|公示)/iu.test(`${item.title} ${item.summary}`)).length,
-    expired: auditItems.filter((item) => item.status === "EXPIRED").length,
-    result_news: auditItems.filter((item) => /(?:获奖名单|结果公布|评审结果|新闻|资讯|招聘|公示)/iu.test(`${item.title} ${item.summary}`)).length,
+    real: auditItems.filter((item) => !structuredExpired(item, now) && !explicitExpiredText(item, now) && !isResultNews(item) && item.radar_relevance !== "IRRELEVANT" && !isNavigationNoise(item)).length,
+    expired_structured: expiredStructured.length,
+    expired_text_detected: expiredTextDetected.length,
+    result_news: auditItems.filter(isResultNews).length,
     irrelevant: auditItems.filter((item) => item.radar_relevance === "IRRELEVANT").length,
-    navigation_noise: auditItems.filter((item) => /(?:\/about|\/contact|\/archive|\/blog|\/podcast|mailto:|tel:)/iu.test(`${item.title} ${item.detail_url}`)).length,
+    navigation_noise: auditItems.filter(isNavigationNoise).length,
   };
+  const radarIds = new Set(radar.map((item) => item.id));
+  const expiredRemovedFromRadar = newUniquePool.filter((item) => (structuredExpired(item, now) || explicitExpiredText(item, now)) && !radarIds.has(item.id)).length;
 
   const lines: string[] = [
     "# Domestic Competition Source Expansion Round 1",
@@ -152,6 +179,7 @@ function renderReport(baseline: BaselineSnapshot, reportPath: string): void {
     `- after current relevant competitions: ${domesticCurrent.length}`,
     `- duplicates with existing sources: ${duplicateItems.length}`,
     `- NEW UNIQUE COMPETITIONS: ${newUnique.length}`,
+    `- expired removed from radar: ${expiredRemovedFromRadar}`,
     "",
     "### Top Unique Contributing Sources",
     "",
@@ -169,7 +197,8 @@ function renderReport(baseline: BaselineSnapshot, reportPath: string): void {
     "",
     `- audited: ${quality.audited}`,
     `- real: ${quality.real}`,
-    `- expired: ${quality.expired}`,
+    `- expired_structured: ${quality.expired_structured}`,
+    `- expired_text_detected: ${quality.expired_text_detected}`,
     `- result/news: ${quality.result_news}`,
     `- irrelevant: ${quality.irrelevant}`,
     `- navigation_noise: ${quality.navigation_noise}`,

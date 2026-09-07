@@ -1,9 +1,7 @@
-import { extractAnchors, htmlToText, identityHash, normalizeUrl, parseDateText, type ParsedAggregationItem } from "./common";
+import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseDateText, type ParsedAggregationItem } from "./common";
 
 const NAVIGATION_TEXT = /^(about(?: us)?|add listing|all opportunities|apply now|artists?|become (?:a )?(?:member|benefactor)|benefits|browse(?: all)?(?: open calls| opportunities)?(?: →)?|browse opportunities|call listings|categories|ca[féé™]*|ccbc (?:events?|gallery|projects?)|closing this week(?: →)?|competitions? & open calls|craft council(?: of british columbia)?|craft directory|craft fair|craft inventory|craft map|craft resource library|craft scotland|craft status|countries|contact(?: us)?|dashboard|deadline|directory|donate(?: now)?!?|editor's picks|emerging artists|events?|find calls|forgotten password\?|fully funded|get involved|grants?|guides?|hybrid residencies|in conversation|international|join|journal|learn more|list your studio|login|makers?(?: directory| list)?|meet the team|more|more details|more opportunities|next page|no application fee|opencall radar|opportunities|organisations? to know|our work|our stories|partners|pricing|prizes?|previous page|read more|red list|refund|report this\?|residencies|resources?|reset|return policy|rolling deadline|search|sign in|skip to content|studio guide|submit(?: an)? opportunity|subscribe|support(?: us)?|terms|the makers|the skills|travel covered|view all|what(?:'|’)s on|who we are|with accommodation|workshops|全部|关于我们|联系我们|机会|更多|登录|注册|搜索|提交|征集大赛)$/iu;
 const OPPORTUNITY_SIGNAL = /(?:opportunit|open.?call|contest|competition|residen|award|exhibition|craft|artist|apply|call|vendor|market|grant|fellowship|participat|young.?ambassadors|deadline|招募|征集|比赛|竞赛|大赛|展览| 사업공모|모집|공모|지원사업|지원|신청)/iu;
-const LISTING_DEADLINE = /(?:closing\s+date|application\s+deadline|deadline|截止日期|截止时间|报名截止|投稿截止|截稿至|截至|征集时间|마감일|접수기간)[^\d]{0,80}((?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?))/iu;
-
 const RESULT_OR_CONTENT_NOISE = /(?:获奖名单|名单公示|评审结果|结果公布|结果揭晓|获奖作品|入围名单|结果发布|作品赏析|新闻|资讯|招聘|公示|公告解读)/iu;
 
 function hasPriorYearTitle(title: string): boolean {
@@ -78,7 +76,7 @@ function structuredListingDeadline(html: string, listingUrl: string, sourceId?: 
   if (sourceId !== "iuben-cultural-competition") return result;
   for (const match of html.matchAll(/<article\b[\s\S]*?<\/article>/giu)) {
     const block = match[0];
-    const deadline = block.match(/(?:投稿截止|截止日期|截止时间|报名截止)[^\d]{0,40}((?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{4}-\d{1,2}-\d{1,2}))/iu)?.[1]
+    const deadline = extractDeadlineText(block)
       ?? block.match(/data-deadline=["']([^"']+)["']/iu)?.[1];
     if (!deadline) continue;
     for (const href of block.matchAll(/<a\b[^>]*href=["']([^"']+)["']/giu)) {
@@ -113,11 +111,11 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
       continue;
     }
     if (!OPPORTUNITY_SIGNAL.test(`${anchor.href} ${candidateText}`)) continue;
-    const deadline = candidateText.match(LISTING_DEADLINE)?.[1] ?? structuredDeadlines.get(anchor.href) ?? null;
+    const deadline = extractDeadlineText(candidateText) ?? structuredDeadlines.get(anchor.href) ?? null;
     seen.add(anchor.href);
     result.push({
       source_item_id: identityHash(anchor.href), title: candidateText, source_category: null, detail_url: normalizeUrl(anchor.href, listingUrl) ?? anchor.href,
-      source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: parseDateText(deadline), organizer: null, application_url: null, raw_text: candidateText,
+      source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: parseDateText(deadline, new Date(), candidateText), organizer: null, application_url: null, raw_text: candidateText,
     });
   }
   return result;
@@ -126,6 +124,7 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
 export function enrichGenericItem(item: ParsedAggregationItem, detailHtml: string, detailUrl: string): ParsedAggregationItem {
   const text = htmlToText(detailHtml);
   const title = detailHtml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
-  const deadline = text.match(/(?:deadline|closing date|application deadline|截止日期|截止时间|报名截止|投稿截止|截稿至|截至|征集时间)[^\d]{0,100}((?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?))/iu)?.[1] ?? null;
-  return { ...item, title: title ? htmlToText(title).replace(/\s*[|–-].*$/u, "").trim() || item.title : item.title, deadline_text: deadline, deadline_at: parseDateText(deadline), raw_text: `${item.raw_text} ${text}`.slice(0, 8000), detail_url: detailUrl };
+  const context = `${item.raw_text} ${text}`;
+  const deadline = extractDeadlineText(context);
+  return { ...item, title: title ? htmlToText(title).replace(/\s*[|–-].*$/u, "").trim() || item.title : item.title, deadline_text: deadline, deadline_at: parseDateText(deadline, new Date(), context), raw_text: context.slice(0, 8000), detail_url: detailUrl };
 }

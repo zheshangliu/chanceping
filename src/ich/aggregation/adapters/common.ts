@@ -40,11 +40,26 @@ export function identityHash(...parts: string[]): string {
   return sha256(parts.map((part) => part.trim().toLowerCase()).join("\u001f")).slice(0, 24);
 }
 
-export function parseDateText(value: string | null, now = new Date()): string | null {
+const DATE_HYPHENS = /[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/gu;
+
+const DEADLINE_DATE = String.raw`(?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}\s*[年./-]\s*\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?|\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?)`;
+const DEADLINE_MARKER = /(?:closing\s+date|application\s+deadline|deadline|截止日期|截止时间|报名截止|投稿截止|截稿至|截至|截止|申请截止|征集时间|마감일|접수기간)/iu;
+
+export function extractDeadlineText(value: string): string | null {
+  const match = value.replace(DATE_HYPHENS, "-").match(new RegExp(`${DEADLINE_MARKER.source}[^\\d]{0,100}(${DEADLINE_DATE})`, "iu"));
+  return match?.[1]?.trim() ?? null;
+}
+
+export function parseDateText(value: string | null, now = new Date(), context = ""): string | null {
   if (!value) return null;
-  const normalized = value.replace(/(\d{1,2})(?:st|nd|rd|th)\b/gi, "$1").replace(/[年月]/g, "-").replace(/日/g, "").replace(/[./]/g, "-").replace(/\s+/g, " ").trim();
+  const normalized = value.replace(DATE_HYPHENS, "-").replace(/(\d{1,2})(?:st|nd|rd|th)\b/gi, "$1").replace(/[年月]/g, "-").replace(/日/g, "").replace(/[./]/g, "-").replace(/\s+/g, " ").trim();
   const iso = normalized.match(/(20\d{2})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2})(?::|点)(\d{1,2})?)?/u);
   if (iso) return new Date(Date.UTC(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]), Number(iso[4] ?? 23), Number(iso[5] ?? 59))).toISOString();
+  const monthDay = normalized.match(/(?:^|[^\d])(\d{1,2})-(\d{1,2})(?:$|[^\d])/u);
+  if (monthDay) {
+    const year = Number(/(?:^|[^\d])2026(?:年|[^\d]|$)/u.test(context) ? 2026 : now.getUTCFullYear());
+    return new Date(Date.UTC(year, Number(monthDay[1]) - 1, Number(monthDay[2]), 23, 59)).toISOString();
+  }
   const en = value.match(/(?:by\s+)?([A-Z][a-z]+\s+\d{1,2},?\s+20\d{2})/u);
   if (en) {
     const parts = en[1].replace(",", "").split(/\s+/u);
@@ -61,7 +76,6 @@ export function parseDateText(value: string | null, now = new Date()): string | 
   const dateOnly = new Date(value);
   if (!Number.isNaN(dateOnly.getTime()) && dateOnly.getFullYear() >= 2020) return dateOnly.toISOString();
   // A year without a month is deliberately not guessed.
-  void now;
   return null;
 }
 

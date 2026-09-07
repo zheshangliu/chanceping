@@ -5,7 +5,8 @@ import path from "node:path";
 import { createApp } from "../src/api/app";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
 import { isLikelySourceListingNoise, parseGenericListing } from "../src/ich/aggregation/adapters/generic-listing";
-import { canonicalOpportunityTitle, filterOpportunityV2Radar, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
+import { extractDeadlineText, parseDateText } from "../src/ich/aggregation/adapters/common";
+import { canonicalOpportunityTitle, filterOpportunityV2Radar, opportunityStatus, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
 
 async function jsonRequest(app: ReturnType<typeof opportunityV2Routes>, url: string, method: string, body?: Record<string, unknown>): Promise<{ status: number; data: any }> {
   const response = await app.request(`http://localhost${url}`, { method, headers: body ? { "content-type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined });
@@ -72,6 +73,21 @@ async function main(): Promise<void> {
   const genericDeadline = parseGenericListing(fixtureBySource["https://example.com/deadline-listing"], "https://example.com/deadline-listing");
   assert.equal(genericDeadline.length, 1);
   assert.equal(genericDeadline[0].deadline_at, "2026-10-29T23:59:00.000Z");
+  const deadlineNow = new Date("2026-09-07T00:00:00+08:00");
+  const deadlineCases = [
+    ["2026比赛【截稿至7月5日】", "2026-07-05T23:59:00.000Z", "EXPIRED"],
+    ["2026比赛【截稿至 8月20日】", "2026-08-20T23:59:00.000Z", "EXPIRED"],
+    ["比赛｜申请截止：2026年08月28日", "2026-08-28T23:59:00.000Z", "EXPIRED"],
+    ["比赛｜申请截止：2026-08-28", "2026-08-28T23:59:00.000Z", "EXPIRED"],
+    ["比赛｜申请截止：2026‑08‑28", "2026-08-28T23:59:00.000Z", "EXPIRED"],
+    ["比赛｜截止10月20日", "2026-10-20T23:59:00.000Z", "CURRENT"],
+  ] as const;
+  for (const [text, expected, expectedStatus] of deadlineCases) {
+    const deadlineText = extractDeadlineText(text);
+    const deadline = parseDateText(deadlineText, deadlineNow, text);
+    assert.equal(deadline, expected, `deadline parsed: ${text}`);
+    assert.equal(opportunityStatus(deadline, deadlineNow), expectedStatus, `deadline status: ${text}`);
+  }
   const iubenDeadline = parseGenericListing(
     `<article><a href="https://iuben.cn/collect/detail-1.html">2026非遗文创设计征集</a><p>投稿截止：2026-10-20</p></article>`,
     "https://iuben.cn/collect/",
@@ -196,7 +212,7 @@ async function main(): Promise<void> {
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-08T23:59:59.000Z")), false);
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-09T00:00:00.000Z")), true);
   assert.equal(opportunityV2NextRunAt("2026-09-06T00:00:00.000Z"), "2026-09-09T00:00:00.000Z");
-  console.log(JSON.stringify({ gate: "pass", sources_before: 21, sources_after_test: 22, generic_html: true, generic_rss: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
+  console.log(JSON.stringify({ gate: "pass", sources_before: 21, sources_after_test: 22, generic_html: true, generic_rss: true, deadline_hygiene: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
 }
 
 void main();
