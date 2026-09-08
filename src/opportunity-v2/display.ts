@@ -4,7 +4,7 @@ import path from "node:path";
 import type { OpportunityV2 } from "./types";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 
-export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "llm-zh-v2";
+export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
 export type OpportunityV2TranslationStatus = "translated" | "pending" | "failed";
 
 export interface OpportunityV2Translation {
@@ -110,8 +110,15 @@ export function validateOpportunityV2Translation(item: OpportunityV2, title: str
   if (!summary.trim()) errors.push("empty translated summary");
   if (/<(?:script|style)\b/iu.test(`${title} ${summary}`)) errors.push("markup is not allowed");
   for (const token of factualTokens(`${item.title}\n${item.summary}`)) {
-    if (!`${title} ${summary}`.includes(token.replace(/\s+/gu, "")) && !`${title} ${summary}`.includes(token)) errors.push(`missing factual token ${token}`);
+    const normalizedToken = token.replace(/[.,]+$/u, "");
+    if (!`${title} ${summary}`.includes(normalizedToken.replace(/\s+/gu, "")) && !`${title} ${summary}`.includes(token)) errors.push(`missing factual token ${token}`);
   }
+  if (title.trim().toLocaleLowerCase() === item.title.trim().toLocaleLowerCase()) errors.push("translated title is unchanged");
+  const originalWords = new Set((`${item.title} ${item.summary}`.match(/[A-Za-z]{3,}/gu) ?? []).map((word) => word.toLocaleLowerCase()));
+  const residualWords = (title + " " + summary).match(/[A-Za-z]{4,}/gu) ?? [];
+  const common = new Set(["this", "that", "with", "from", "for", "the", "and", "application", "apply", "call", "craft", "prize", "award"]);
+  const residualContent = residualWords.filter((word) => !originalWords.has(word.toLocaleLowerCase()) && !common.has(word.toLocaleLowerCase()) && !/^[A-Z]{2,}$/u.test(word));
+  if (residualContent.length >= 6 || /(?:[A-Za-z]{4,}\s+){3,}[A-Za-z]{4,}/u.test(title + " " + summary)) errors.push("long non-proper English residue");
   if (/^(?:海外机会|来自.+的(?:赛事|资助申请|驻留或研修申请|市集或活动参与)信息)/u.test(summary.trim())) errors.push("template summary is not a translation");
   return errors;
 }
