@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { identityHash, classifyCategory, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import type { OpportunityV2, OpportunityV2PoolFile, V2OpportunityStatus } from "./types";
-import { classifyV2RadarRelevance } from "./keywords";
+import { classifyV2Dimensions, classifyV2RadarRelevance } from "./keywords";
 
 function poolPath(filePath?: string): string {
   const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH;
@@ -55,6 +55,11 @@ function crossSourceTitleKey(title: string): string | null {
   return normalized || null;
 }
 
+function conciseSummary(summary: string, title: string): string {
+  const cleaned = summary.replace(title, "").replace(/\s+/gu, " ").trim();
+  return (cleaned || "来源页面未提供更详细摘要。").slice(0, 360);
+}
+
 const CFW_SOURCE_ID = "cfw-cultural-ip";
 
 function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now: Date): OpportunityV2 {
@@ -64,7 +69,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   return {
     ...prior,
     ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
-    summary: prior.summary.length >= item.summary.length ? prior.summary : item.summary,
+    summary: conciseSummary(prior.summary, prior.title).length >= conciseSummary(item.summary, item.title).length ? conciseSummary(prior.summary, prior.title) : conciseSummary(item.summary, item.title),
     deadline,
     status: opportunityStatus(deadline, now),
     first_seen_at: prior.first_seen_at,
@@ -73,12 +78,20 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
     source_url: preferIncoming ? item.source_url : (prior.source_url || item.source_url),
     source_name: preferIncoming ? item.source_name : (prior.source_name || item.source_name),
+    ...(item.directions?.length || prior.directions?.length ? { directions: item.directions?.length ? item.directions : prior.directions } : {}),
+    ...(item.work_formats?.length || prior.work_formats?.length ? { work_formats: item.work_formats?.length ? item.work_formats : prior.work_formats } : {}),
+    event_location: item.event_location ?? prior.event_location ?? null,
+    participation_scope: item.participation_scope ?? prior.participation_scope,
+    participation_mode: item.participation_mode ?? prior.participation_mode,
+    is_long_term: item.is_long_term ?? prior.is_long_term ?? false,
+    starts_at: item.starts_at ?? prior.starts_at ?? null,
   };
 }
 
 export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { id: string; name: string; region: "CN" | "GLOBAL" }, now = new Date()): OpportunityV2 {
-  const summary = input.raw_text.replace(/\s+/gu, " ").trim().slice(0, 360) || input.title;
+  const summary = conciseSummary(input.raw_text.replace(/\s+/gu, " ").trim(), input.title);
   const relevance = classifyV2RadarRelevance(input.title, summary, input.source_category ?? "");
+  const dimensions = classifyV2Dimensions(input.title, summary, classifyCategory(input.source_category, input.title));
   const identity = identityHash(input.title, input.deadline_at ?? "", input.organizer ?? "");
   return {
     id: `oppv2_${identity}`,
@@ -99,6 +112,13 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     radar_relevance: relevance.relevance,
     ...(input.organizer ? { organizer: input.organizer } : {}),
     ...(input.application_url ? { application_url: input.application_url } : {}),
+    directions: dimensions.directions,
+    work_formats: dimensions.work_formats,
+    event_location: input.event_location ?? dimensions.event_location,
+    participation_scope: input.participation_scope ?? dimensions.participation_scope,
+    participation_mode: input.participation_mode ?? dimensions.participation_mode,
+    is_long_term: input.is_long_term ?? false,
+    starts_at: input.starts_at ?? null,
   };
 }
 
@@ -135,8 +155,13 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
       ...prior,
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
       tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
-      summary: prior.summary.length >= item.summary.length ? prior.summary : item.summary,
+      summary: conciseSummary(prior.summary, prior.title).length >= conciseSummary(item.summary, item.title).length ? conciseSummary(prior.summary, prior.title) : conciseSummary(item.summary, item.title),
       ...(prior.detail_url ? {} : { detail_url: item.detail_url }),
+      directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? [])])],
+      work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? [])])],
+      event_location: prior.event_location ?? item.event_location ?? null,
+      participation_scope: prior.participation_scope ?? item.participation_scope,
+      participation_mode: prior.participation_mode ?? item.participation_mode,
     });
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }

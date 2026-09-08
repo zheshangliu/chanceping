@@ -139,6 +139,7 @@
     "ich:aggregation:run": "tsx scripts/run-ich-aggregation-discovery.ts",
     "opportunity:v2:run": "tsx scripts/run-opportunity-v2.ts",
     "verify:opportunity:v2": "tsx scripts/verify-opportunity-v2.ts",
+    "verify:ich:competition-module": "tsx scripts/verify-ich-competition-module.ts",
     "verify:ich:aggregation": "tsx scripts/verify-ich-aggregation-discovery.ts",
     "ich:stage5a5:run": "tsx scripts/run-ich-stage5a5.ts",
     "verify:ich:stage5a5": "tsx scripts/verify-ich-stage5a5.ts",

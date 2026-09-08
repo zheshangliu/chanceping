@@ -105,11 +105,14 @@ export function parseCfwDateRange(value: string | null): ParsedDateRange | null 
 
 export function classifyCategory(sourceCategory: string | null, title: string): "competition" | "exhibition_market" | "procurement_project" | "channel_collaboration" | "policy_funding" | "international" {
   const value = `${sourceCategory ?? ""} ${title}`.toLowerCase();
-  if (/市集|展销|market|fair|exhibition|展览|展会|open call|征集/u.test(value)) return "exhibition_market";
   if (/采购|供应商|commission|supplier|招标/u.test(value)) return "procurement_project";
   if (/合作|联名|partnership|collaboration|入驻/u.test(value)) return "channel_collaboration";
-  if (/资助|基金|grant|fellowship|funding|program/u.test(value)) return "policy_funding";
-  if (/international|国际|residency|驻地/u.test(value)) return "international";
+  if (/资助|基金|grant|funding|scholarship|program/u.test(value)) return "policy_funding";
+  // “international/国际” describes geography, not the public module. Only
+  // classify explicit study, residency, fellowship, exchange, or mobility calls
+  // as 研修 / 交流.
+  if (/residency|驻地|fellowship|研修|培训|工作坊|workshop|exchange|交流|mobility|访问学者/u.test(value)) return "international";
+  if (/市集|展销|market|fair|exhibition|展览|展会|vendor|vendors/u.test(value)) return "exhibition_market";
   return "competition";
 }
 
@@ -126,6 +129,11 @@ export interface ParsedAggregationItem {
   organizer: string | null;
   application_url: string | null;
   raw_text: string;
+  event_location?: string | null;
+  participation_scope?: "nationwide" | "global" | "regional" | "unspecified";
+  participation_mode?: "online" | "physical" | "onsite" | "unspecified";
+  is_long_term?: boolean;
+  starts_at?: string | null;
 }
 
 export function extractAnchors(html: string, baseUrl: string): Array<{ href: string; text: string }> {

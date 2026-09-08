@@ -4,6 +4,10 @@ export type V2SourcePriority = "P0" | "P1";
 export type V2SourceStatus = "ACTIVE" | "BLOCKED" | "PENDING" | "PAUSED" | "FAILED" | "NEEDS_ADAPTER";
 export type V2OpportunityStatus = "CURRENT" | "EXPIRED" | "UNKNOWN_DEADLINE";
 export type V2RadarRelevance = "RELEVANT" | "IRRELEVANT" | "UNCERTAIN";
+export type V2OpportunityDirection = "ich_innovation" | "cultural_creative" | "craft_arts" | "museum_tourism" | "integrated_cultural_design" | "aigc_digital";
+export type V2WorkFormat = "material_craft" | "product_design" | "graphic_ip" | "packaging" | "fashion_jewellery" | "video_animation" | "interaction_game" | "mixed_media";
+export type V2ParticipationScope = "nationwide" | "global" | "regional" | "unspecified";
+export type V2ParticipationMode = "online" | "physical" | "onsite" | "unspecified";
 
 export interface OpportunityV2Source {
   id: string;
@@ -35,6 +39,13 @@ export interface OpportunityV2 {
   last_seen_at: string;
   discovered_by_sources: string[];
   radar_relevance: V2RadarRelevance;
+  directions?: V2OpportunityDirection[];
+  work_formats?: V2WorkFormat[];
+  event_location?: string | null;
+  participation_scope?: V2ParticipationScope;
+  participation_mode?: V2ParticipationMode;
+  is_long_term?: boolean;
+  starts_at?: string | null;
   official_url?: string;
   application_url?: string;
   organizer?: string;

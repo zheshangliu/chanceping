@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping-opportunity-v2.sources.v1",
-  "updated_at": "2026-09-07T09:03:30.189Z",
+  "updated_at": "2026-09-08T02:07:57.783Z",
   "sources": [
     {
       "id": "shejijingsai-list",
@@ -18,7 +18,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:48.844Z"
+      "last_fetch_at": "2026-09-08T02:07:17.607Z"
     },
     {
       "id": "chuangsaiyun-competition-list",
@@ -36,7 +36,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:49.699Z"
+      "last_fetch_at": "2026-09-08T02:07:18.161Z"
     },
     {
       "id": "contest-watchers-open",
@@ -53,7 +53,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:49.832Z"
+      "last_fetch_at": "2026-09-08T02:07:18.287Z"
     },
     {
       "id": "crafts-council-opportunities",
@@ -89,7 +89,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:52.220Z"
+      "last_fetch_at": "2026-09-08T02:07:21.075Z"
     },
     {
       "id": "competitions-archi",
@@ -105,8 +105,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:53.774Z"
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-08T01:57:08.957Z"
     },
     {
       "id": "loewe-craft-prize",
@@ -124,7 +124,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:55.236Z"
+      "last_fetch_at": "2026-09-08T02:07:24.165Z"
     },
     {
       "id": "opencall-radar-craft",
@@ -144,7 +144,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:56.139Z"
+      "last_fetch_at": "2026-09-08T02:07:25.055Z"
     },
     {
       "id": "opencalls-ai",
@@ -203,7 +203,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:57.767Z"
+      "last_fetch_at": "2026-09-08T02:07:27.866Z"
     },
     {
       "id": "kcdf-opportunities",
@@ -223,7 +223,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:59.005Z"
+      "last_fetch_at": "2026-09-08T02:07:29.078Z"
     },
     {
       "id": "heritage-crafts-opportunities",
@@ -243,7 +243,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:02:59.825Z"
+      "last_fetch_at": "2026-09-08T02:07:29.775Z"
     },
     {
       "id": "homo-faber-calls",
@@ -262,7 +262,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:02.185Z"
+      "last_fetch_at": "2026-09-08T02:07:31.325Z"
     },
     {
       "id": "asef-culture360-opportunities",
@@ -282,7 +282,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:02.828Z"
+      "last_fetch_at": "2026-09-08T02:07:32.768Z"
     },
     {
       "id": "on-the-move-open-calls",
@@ -321,7 +321,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:03.812Z"
+      "last_fetch_at": "2026-09-08T02:07:33.629Z"
     },
     {
       "id": "cafe-call-for-entry",
@@ -341,7 +341,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:05.820Z"
+      "last_fetch_at": "2026-09-08T02:07:35.255Z"
     },
     {
       "id": "artshub-craft-opportunities",
@@ -382,7 +382,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:10.340Z"
+      "last_fetch_at": "2026-09-08T02:07:40.086Z"
     },
     {
       "id": "craft-council-nl-opportunities",
@@ -402,7 +402,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:12.653Z"
+      "last_fetch_at": "2026-09-08T02:07:41.994Z"
     },
     {
       "id": "cfw-cultural-ip",
@@ -423,7 +423,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:13.469Z"
+      "last_fetch_at": "2026-09-08T02:07:42.830Z"
     },
     {
       "id": "whaleideas-competition",
@@ -443,7 +443,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:15.921Z"
+      "last_fetch_at": "2026-09-08T02:07:45.328Z"
     },
     {
       "id": "1zj-cultural-competition",
@@ -504,7 +504,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:28.414Z"
+      "last_fetch_at": "2026-09-08T02:07:55.907Z"
     },
     {
       "id": "zjmtcn-product-competition",
@@ -546,7 +546,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:28.983Z"
+      "last_fetch_at": "2026-09-08T02:07:56.473Z"
     },
     {
       "id": "everyart-competition",
@@ -567,7 +567,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-07T09:03:29.130Z"
+      "last_fetch_at": "2026-09-08T02:07:56.673Z"
     },
     {
       "id": "gtn9-competition",

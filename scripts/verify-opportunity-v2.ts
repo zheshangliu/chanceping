@@ -208,7 +208,7 @@ async function main(): Promise<void> {
   const ichPage = await (await app.request("http://localhost/ich")).text();
   const radarResponse = await app.request("http://localhost/api/opportunity-v2/radar");
   const radarApi = await radarResponse.json() as { total: number };
-  const displayedTotal = Number(ichPage.match(/当前机会：\s*(\d+) 条/u)?.[1] ?? -1);
+  const displayedTotal = Number(ichPage.match(/(?:当前机会|可浏览赛事)：\s*(\d+) 条/u)?.[1] ?? -1);
   assert.equal(displayedTotal, radarApi.total, "public /ich total must match the V2 radar API");
   assert.match(ichPage, /来源：/);
   assert.match(ichPage, /ich-paper-atlas-hero\.png/);
@@ -223,7 +223,7 @@ async function main(): Promise<void> {
   assert.match(pageTwo, /ich-pagination/);
   assert.equal((await app.request("http://localhost/opportunity-v2/admin/sources")).status, 200);
   const page = await (await app.request("http://localhost/opportunity-v2/admin/sources")).text();
-  assert.match(page, /Source Manager/);
+  assert.match(page, /现有数据源后台总览/);
   if (oldEnv.sources === undefined) delete process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH; else process.env.CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH = oldEnv.sources;
   if (oldEnv.pool === undefined) delete process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH; else process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH = oldEnv.pool;
 

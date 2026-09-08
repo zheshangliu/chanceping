@@ -6,7 +6,7 @@ import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
-import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
+import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
@@ -15,10 +15,12 @@ const SOURCE_HYGIENE_IDS = new Set(["kcdf-opportunities", "homo-faber-calls", "c
 const DEFAULT_TIMEOUT_MS = 20_000;
 
 export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {
+  if (!isPublicHttpUrl(url)) throw new Error("source URL must be a public HTTP(S) URL");
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
   try {
     const response = await fetch(url, { redirect: "follow", signal: controller.signal, headers: { "user-agent": "ChancePing-OpportunityV2/1.0" } });
+    if (!isPublicHttpUrl(response.url)) throw new Error("redirected source URL is not public");
     return { status: response.status, final_url: response.url, text: await response.text() };
   } finally {
     clearTimeout(timer);

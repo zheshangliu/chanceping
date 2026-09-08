@@ -70,13 +70,30 @@ export function validateOpportunityV2Sources(sources: OpportunityV2Source[]): st
   const errors: string[] = [];
   if (new Set(sources.map((source) => source.id)).size !== sources.length) errors.push("source ids must be unique");
   for (const source of sources) {
-    if (!source.id || !source.name || !/^https?:\/\//u.test(source.url)) errors.push(`${source.id || "unknown"}: id/name/url are required`);
+    if (!source.id || !source.name || !isPublicHttpUrl(source.url)) errors.push(`${source.id || "unknown"}: id/name/url are required and URL must be public HTTP(S)`);
     if (!/^[a-z0-9][a-z0-9-]{0,79}$/u.test(source.id)) errors.push(`${source.id || "unknown"}: id must be a lowercase slug`);
     if (source.region !== "CN" && source.region !== "GLOBAL") errors.push(`${source.id}: region must be CN or GLOBAL`);
     if (source.priority !== "P0" && source.priority !== "P1") errors.push(`${source.id}: priority must be P0 or P1`);
     if (source.radars.length === 0) errors.push(`${source.id}: at least one radar is required`);
   }
   return errors;
+}
+
+export function isPublicHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    if (!/^https?:$/u.test(url.protocol)) return false;
+    const host = url.hostname.toLowerCase();
+    if (host === "localhost" || host.endsWith(".local") || host === "::1" || host === "0.0.0.0" || host === "169.254.169.254") return false;
+    const ipv4 = host.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/u);
+    if (ipv4) {
+      const [a, b] = [Number(ipv4[1]), Number(ipv4[2])];
+      if (a === 0 || a === 10 || a === 127 || a === 192 && b === 168 || a === 172 && b >= 16 && b <= 31) return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export interface OpportunityV2SourceInput {
