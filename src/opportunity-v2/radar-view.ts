@@ -24,7 +24,8 @@ function values(value: string | string[] | undefined): string[] {
 }
 
 function liveStatus(item: OpportunityV2, now: Date): OpportunityV2["status"] {
-  return opportunityStatus(item.deadline, now);
+  const structured = opportunityStatus(item.deadline, now);
+  return structured === "UNKNOWN_DEADLINE" ? item.status : structured;
 }
 
 function startsInFuture(item: OpportunityV2, now: Date): boolean {

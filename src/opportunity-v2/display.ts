@@ -61,7 +61,7 @@ export function writeOpportunityV2Translations(translations: OpportunityV2Transl
 }
 
 function hasChinese(value: string): boolean { return /[\u3400-\u9fff]/u.test(value); }
-function hasKana(value: string): boolean { return /[\u3040-\u30ff]/u.test(value); }
+function hasKana(value: string): boolean { return /[\u3040-\u309f\u30a1-\u30fa\u30fc]/u.test(value); }
 function hasHangul(value: string): boolean { return /[\uac00-\ud7af]/u.test(value); }
 function latinCount(value: string): number { return (value.match(/[A-Za-z]/gu) ?? []).length; }
 

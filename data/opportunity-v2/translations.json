@@ -1,17 +1,16 @@
 {
   "schema_version": "chanceping-opportunity-v2.translation.v1",
-  "updated_at": "2026-09-08T09:12:38.173Z",
+  "updated_at": "2026-09-08T14:30:43.512Z",
   "translations": [
     {
       "opportunity_id": "oppv2_009f4f3cd08de2c9731b4b69",
       "source_hash": "f5111c6edf4dba47d92fe5c972c40d9007470674776894a82e44690755f66bc0",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "独立手工艺游行活动",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_01b51bad598d68f2b383074a",
@@ -65,8 +64,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_0676703b845d8711a2d509f8",
@@ -84,11 +83,10 @@
       "source_hash": "7aa18d3e4d12a22a2e14b804ece0ea30425267464f273ee3a09975fcfd4968b4",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "matchMAKER 工作与培训",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_07ebba319a8473bc2e0a7753",
@@ -120,8 +118,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_0c96cad244356f401ca3b34e",
@@ -150,11 +148,10 @@
       "source_hash": "78a49307b6fa8fec33aedc6f67981c917a99ffb057f86d9c3ae2bd931693b840",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "工艺实验室工作坊系列",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_101538d365d8bc5cc51fc9cc",
@@ -238,11 +235,10 @@
       "source_hash": "c1e9d27a10a7a338bdd6d41da8b820d96b4efafc5a5ff87f650f2686a2ce49f0",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "日本 | 2026年工艺与纺织沉浸式之旅",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_1703fedf782ab8760b2909b0",
@@ -260,11 +256,10 @@
       "source_hash": "5c0a7a439ed7fa87b8675230532d9faaf325470f95289b07c1ba9ae94c66a05b",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "美国工艺论坛",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_174b58f1f7ee6590c4927329",
@@ -480,11 +475,10 @@
       "source_hash": "ffe079f726c2a62b63f5ac8921bc0aa37fb490ff06bc1a6249e78154a7de9151",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "艺术家征集：酷儿木工艺——Museum for Art in Wood",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_2c55538eeac33218890b789d",
@@ -516,8 +510,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_3172d13efcc32716c957f85c",
@@ -549,8 +543,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_322b96a365a1493cb8d2d6f9",
@@ -843,22 +837,20 @@
       "source_hash": "7cdac49ef5f4f1766ba715741666bcd1c2ed8f95ae178c61f354e553623ae6fa",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "供应商征集：Mactaquac手工艺节2026",
+      "summary_zh": "为2026年Mactaquac手工艺节征集供应商。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_46c0ca5ad5243a08668941b5",
       "source_hash": "38c06a5826344e72fcf02e09e9b633ca7134fa2ffbc06ce747576122ec487773",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "第二届邵阳市文化旅游商品创意大赛",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_46e94b3e129952d1812d9b58",
@@ -1011,8 +1003,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_52011a0d1138259f822e7a15",
@@ -1052,11 +1044,10 @@
       "source_hash": "cc2fa3c0320397db872d1a1e6395c40028de9fb325455f5cfec122710618f933",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "工艺动态",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_53c5c4c3b31daef9be26337e",
@@ -1085,11 +1076,10 @@
       "source_hash": "3dd77784278719d3022c97d8bc3dd5a886e1045879b4de302fe4a648dc3da0e8",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "国家手工艺目录",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_570c6990e0be547ce81c5cec",
@@ -1261,11 +1251,10 @@
       "source_hash": "c150f5425d1d80d2d46bda6bcd8773f77856312c56d8bc020bfc4d3f8b75a08a",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "ACC的艺术家展示",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_6add8bda605de6a48b54373a",
@@ -1286,8 +1275,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_6b845a9109a2e05dd0580630",
@@ -1415,11 +1404,10 @@
       "source_hash": "9fe467752142e733d2a18a8b1a5dd4005a4150c92ee5b1b803f5504213966eac",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "纺织艺术双年展 BIEN 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_746e1e79f92cf291c08ab54d",
@@ -1503,11 +1491,10 @@
       "source_hash": "d281f5c1f380d33e5c0c23a41bcb372f5cb0ce09d35cdc5ccf7fdba8be21cf1d",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "圆形工艺假日市集2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_792b50313b11658fb86f44cf",
@@ -1638,8 +1625,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_84366a144ebac3df7c5156e1",
@@ -1690,11 +1677,10 @@
       "source_hash": "9e969a18f986c474d96def3257ee25523f43fb3ea7ee7a35f6601b8e7f51832a",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "爱丁堡雕塑工作室工作室与工作坊空间申请征集",
+      "summary_zh": "邀请从事当代雕塑实践的艺术家和制作者申请爱丁堡雕塑工作室（ESW）的工作室。截止日期：2026年10月29日。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_866cff1b6856da4bd7e260ec",
@@ -1704,8 +1690,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_87a46fe0577a8dfaa982d913",
@@ -1910,11 +1896,10 @@
       "source_hash": "372cc49fd78fa2d3c923426a7d3ea6daa367e7173316908f74fc86d22e6af367",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "希腊 | 陶土与陶瓷艺术教育者驻留项目",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_975ff21d3f68ce757ffaa045",
@@ -2045,8 +2030,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_9f26321e22b082060fd4c9c6",
@@ -2122,8 +2107,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_a338214952bd454005fe0b2e",
@@ -2185,11 +2170,10 @@
       "source_hash": "18f1ff63c6302662efb35837c6beef86b71480f26ca468b647f44c3e9c25dd6a",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "关于美国手工艺",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_a94888cc370733d98b31470d",
@@ -2240,11 +2224,10 @@
       "source_hash": "9c36d41141b9dd03bd8b80fd2cee705f2e8386173df5f6bd88017e9bc3b42942",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "“花YOUNG陈村·花绘世界”陈村文旅主题插画大赛",
+      "summary_zh": "¥20000，7天后投稿截止",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_ab49e98ccae85cb6696505bf",
@@ -2254,8 +2237,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_ab640068b4d5f0eeb1a7bf9f",
@@ -2284,11 +2267,10 @@
       "source_hash": "79221fc46496dc359b3ba61d1077e9f79c642263bd00fab7bc1cf3e319cb4db0",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "山乡宁静・创意乡宁，2026乡宁县文化创意设计大赛征集即将启动",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_ad5ef71f2a4b731ac542f0b3",
@@ -2306,11 +2288,10 @@
       "source_hash": "5957c883107b5c8df663212551eb74275bda1329db0bc2b24bc0671725b8cf3b",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "日本 | 第14届国际陶瓷展美浓",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_af6804c343db50e62cd3cda5",
@@ -2372,11 +2353,10 @@
       "source_hash": "d4d39d0f0c538f608d97a992f3f1fa749a76f5cd595c6b86900463cb0f89cf13",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "Alchemy: Goldsmiths Scotland",
+      "summary_zh": "Alchemy: Goldsmiths Scotland 是苏格兰一个全新的当代珠宝与银饰展会，现开放参展与销售申请，报名截止日期为2026年10月5日。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_b829cdb4d43f9629d7a44907",
@@ -2485,8 +2465,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_bbe54221141590836d8bf879",
@@ -2661,8 +2641,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_c562f24f038ed1ba1c3959a4",
@@ -2702,11 +2682,10 @@
       "source_hash": "f1eb0277c581a3cad23b3dfa6788b0d3fb3601a9db15849c0d53fda9ed81f005",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "在牛津展销手工艺品 | 国际当代工艺节",
+      "summary_zh": "你是一位独立的designer–maker，准备好迎接牛津郡的新受众了吗？",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_c69bbca7030ff312b54444d7",
@@ -2793,30 +2772,28 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_d07e7e8e00c3a83307f6596a",
       "source_hash": "8904daaf2ee3a3d1cb8e55f423e19961caef3dff7648f63dd34f322490eff207",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "史密森尼工艺2027展会艺术家征集",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_d1b45c9bc396baf34d1529bf",
       "source_hash": "c72b994983178012a73a1a736bc40fe7162c444d01d16c2683f8409f21ba3f6c",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "“河湟福谷·圣域湟中”青海艺河湟2980非遗及农土产品...",
+      "summary_zh": "¥0，22天后投稿截止",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_d21d5327ed03169107349433",
@@ -2977,11 +2954,10 @@
       "source_hash": "c33f5c1c6ba8d9820eac331082f77db8f07f31d54ae65a698f6b52e8b585f412",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "工艺冠军圈",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_dc40d8956cedd7a88f57743f",
@@ -3002,8 +2978,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_dc556f3f8895708fd3486c6c",
@@ -3024,8 +3000,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_ddd7762aeac069ac57521b9c",
@@ -3076,11 +3052,10 @@
       "source_hash": "a57734c2ec9bd76b3d2ecd8a23f98761f340677e559a8421ddc5660ad90373f3",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "艾琳·卢恩斯坦评论写作奖",
+      "summary_zh": "艾琳·卢恩斯坦奖支持关于工作室陶瓷和黏土艺术写作的新兴声音。截止日期：2027年2月28日。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_e37eb80c0639bb2b7f6ea637",
@@ -3145,19 +3120,18 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:DeepSeek API call failed after retry: DeepSeek API returned empty content",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_ec29f01eca6d22a3ddbb675e",
       "source_hash": "010e2ed016d36e6e229a62e8705571222fb5b23860e884015d2c4fa0388b4524",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "濒危工艺基金",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_ecc03903f7b1f34c0ac2bde3",
@@ -3186,11 +3160,10 @@
       "source_hash": "85aa7d6bedcd6ae07b9e1fe0f20ca04fbc3a0effd1ba3798d5e72dd32a5db9b1",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "财务经理——美国工艺品委员会",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:09:49.526Z"
     },
     {
       "opportunity_id": "oppv2_f1a5ab919ea4b64c27cff6bc",
@@ -3211,8 +3184,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_f1ff87b323594cd7c9e16abe",
@@ -3222,8 +3195,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_f30a00bb409de3202a44f34c",
@@ -3274,11 +3247,10 @@
       "source_hash": "864de9adee38c01b4ec38be311e5562e6131e7870772e0bd5ed811d5e551fec0",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "视觉艺术家与手工艺者奖 (VACMA)",
+      "summary_zh": "该奖项旨在支持视觉艺术家和手工艺者的创意与专业发展，提供£500或以上的固定资助。申请截止日期为2026年10月20日。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_f848306c63f63d281f5b9c05",
@@ -3310,8 +3282,8 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_facc4bc078314f9d851188a0",
@@ -3373,11 +3345,10 @@
       "source_hash": "77323da984daa320b8d60540b931de68a57c200eb53b975504844ba781ff7bde",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "格林威治之家陶艺展览提案征集",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:14:49.787Z"
     },
     {
       "opportunity_id": "oppv2_ff6e5a58d1a174266eea6db3",
@@ -3387,19 +3358,18 @@
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "error": "deepseek:quality_rejected",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     },
     {
       "opportunity_id": "oppv2_ffd0150901943a85c55a91ca",
       "source_hash": "0bca0c74fe1e3f18fa78178a0f434e24f72caff5ce56cf57e38b2105edab3602",
       "target_language": "zh-CN",
       "strategy_version": "provider-chain-zh-v1",
-      "title_zh": "",
-      "summary_zh": "",
-      "status": "failed",
-      "error": "translation provider is not configured",
-      "updated_at": "2026-09-08T09:12:38.148Z"
+      "title_zh": "LOEWE FOUNDATION 工艺奖 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T14:27:38.522Z"
     }
   ]
 }

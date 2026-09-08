@@ -33,7 +33,6 @@ export function parseCnyisaiListing(html: string, listingUrl: string): ParsedAgg
     const className = attr(match[0], "class") ?? "";
     result.push(item(cleanTitle, detailUrl, listingUrl, [htmlToText(organizer ?? ""), htmlToText(summary ?? ""), rawText].filter(Boolean).join(" "), {
       source_item_id: identityHash("cnyisai", detailUrl), source_category: className.includes("c-intl") ? "国际赛事" : "国内赛事", source_status: htmlToText(status ?? ""), deadline_text: deadline, deadline_at: parseDateText(deadline, new Date(), rawText), organizer: organizer ? htmlToText(organizer) : null,
-      participation_scope: className.includes("c-intl") ? "global" : "nationwide",
     }));
   }
   return result;
@@ -58,14 +57,20 @@ export function parse1zjListing(html: string, listingUrl: string): ParsedAggrega
   return result;
 }
 
-function parsePathListing(html: string, listingUrl: string, sourceId: string, pathPattern: RegExp): ParsedAggregationItem[] {
+function parsePathListing(
+  html: string,
+  listingUrl: string,
+  sourceId: string,
+  pathPattern: RegExp,
+  sourceCategoryForHref: (href: string) => string = () => "文创设计",
+): ParsedAggregationItem[] {
   const result: ParsedAggregationItem[] = [];
   for (const anchor of extractAnchors(html, listingUrl)) {
     if (!pathPattern.test(anchor.href) || anchor.href === listingUrl) continue;
     const title = anchor.text.trim();
     if (title.length < 4 || RESULT_NOISE.test(title) || !OPPORTUNITY_WORDS.test(title)) continue;
     const deadlineText = extractDeadlineText(title);
-    result.push(item(title, anchor.href, listingUrl, title, { source_item_id: identityHash(sourceId, anchor.href), deadline_text: deadlineText, source_category: "文创设计" }));
+    result.push(item(title, anchor.href, listingUrl, title, { source_item_id: identityHash(sourceId, anchor.href), deadline_text: deadlineText, source_category: sourceCategoryForHref(anchor.href) }));
   }
   return result;
 }
@@ -75,5 +80,9 @@ export function parseChuangyisaiListing(html: string, listingUrl: string): Parse
 }
 
 export function parseZjmtListing(html: string, listingUrl: string): ParsedAggregationItem[] {
-  return parsePathListing(html, listingUrl, "zjmtcn", /\/zjxx\/(?:chanpin|lipin|taoci)\//iu);
+  return parsePathListing(html, listingUrl, "zjmtcn", /\/zjxx\/(?:chanpin|lipin|taoci)\//iu, (href) => {
+    if (/\/zjxx\/lipin\//iu.test(href)) return "礼品征集";
+    if (/\/zjxx\/taoci\//iu.test(href)) return "陶瓷";
+    return "产品征集";
+  });
 }

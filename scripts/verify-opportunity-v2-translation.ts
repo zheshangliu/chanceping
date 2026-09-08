@@ -3,7 +3,7 @@ import { createAzureTranslator } from "../src/opportunity-v2/translation-provide
 import { createGoogleTranslator } from "../src/opportunity-v2/translation-providers/google-translator";
 import { createLibreTranslate } from "../src/opportunity-v2/translation-providers/libretranslate";
 import { configuredTranslationProviders, translateWithProviderChain, type OpportunityTranslationProvider } from "../src/opportunity-v2/translation-provider";
-import { createTranslatedOpportunityV2Translation, validateOpportunityV2Translation, type OpportunityV2 } from "../src/opportunity-v2";
+import { createTranslatedOpportunityV2Translation, isForeignLanguageOpportunity, validateOpportunityV2Translation, type OpportunityV2 } from "../src/opportunity-v2";
 
 const fixture = (title: string, summary: string): OpportunityV2 => ({
   id: `fixture-${title.slice(0, 8)}`, title, summary, source_id: "fixture", source_name: "Fixture", source_url: "https://example.com", detail_url: "https://example.com/detail", category: "competition", region: "GLOBAL", tags: [], deadline: null, status: "CURRENT", first_seen_at: "2026-09-08T00:00:00.000Z", last_seen_at: "2026-09-08T00:00:00.000Z", discovered_by_sources: ["fixture"], radar_relevance: "RELEVANT",
@@ -17,6 +17,8 @@ async function main(): Promise<void> {
   const homo = fixture("Homo Faber Fellowship", "The fellowship supports makers and includes a $2,000 stipend.");
   const jp = fixture("東京工芸コンペティション 2026", "応募締切は2026年10月20日です。");
   const ko = fixture("2026 공예 공모", "신청 마감은 2026-10-20입니다.");
+  const cnMixedPunctuation = fixture("未蓝奖・全国数字文创大赛（2026・5S）作品征集公告", "2026年11月10日");
+  assert.equal(isForeignLanguageOpportunity(cnMixedPunctuation), false);
   for (const item of [loewe, craftforms, homo, jp, ko]) {
     assert.equal(createTranslatedOpportunityV2Translation(item, { title_zh: `中文 ${item.title.slice(-4)}`, summary_zh: `中文摘要 ${item.summary}` }).status, "translated");
   }

@@ -78,7 +78,7 @@ function resolveCommercialProfile(
 ): LiveLlmApiProfile {
   const legacyDeepSeekKey = readEnv(env, "DEEPSEEK_API_KEY");
   const provider = readEnv(env, "COMMERCIAL_LLM_PROVIDER") || (legacyDeepSeekKey ? "deepseek" : "");
-  const model = readEnv(env, "COMMERCIAL_LLM_MODEL") || readEnv(env, "DEEPSEEK_MODEL") || (legacyDeepSeekKey ? "deepseek-chat" : "");
+  const model = readEnv(env, "COMMERCIAL_LLM_MODEL") || readEnv(env, "DEEPSEEK_MODEL") || (legacyDeepSeekKey ? "deepseek-v4-flash" : "");
   const baseUrl = readEnv(env, "COMMERCIAL_LLM_BASE_URL") || readEnv(env, "DEEPSEEK_BASE_URL") || (legacyDeepSeekKey ? "https://api.deepseek.com/v1" : "");
   const apiKey = readEnv(env, "COMMERCIAL_LLM_API_KEY") || legacyDeepSeekKey;
   const missing = [

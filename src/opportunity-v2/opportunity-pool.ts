@@ -42,6 +42,56 @@ export function opportunityStatus(deadline: string | null, now = new Date()): V2
   return timestamp < now.getTime() ? "EXPIRED" : "CURRENT";
 }
 
+export function opportunityStatusFromSourceStatus(sourceStatus: string | null | undefined): V2OpportunityStatus | null {
+  const value = String(sourceStatus ?? "").trim();
+  if (!value) return null;
+  if (/(?:^|\b)(?:EXPIRED|已结束|已截止|已经截止|投稿已经截止|报名已结束|获奖已公布|获奖公布|结果已公布|结果公布|已公示)(?:\b|$)/iu.test(value)) return "EXPIRED";
+  if (/(?:^|\b)(?:CURRENT|征稿中|报名中|招募中|投稿中|征集中|开放报名|正在征集|进行中)(?:\b|$)/iu.test(value)) return "CURRENT";
+  return null;
+}
+
+function statusWithoutDeadline(item: OpportunityV2, now: Date): V2OpportunityStatus {
+  const structured = opportunityStatus(item.deadline, now);
+  return structured === "UNKNOWN_DEADLINE" ? item.status : structured;
+}
+
+function mergedStatus(prior: OpportunityV2, item: OpportunityV2, sameSource: boolean, now: Date): V2OpportunityStatus {
+  if (item.deadline || prior.deadline) return opportunityStatus(item.deadline ?? prior.deadline, now);
+  if (sameSource) return item.status;
+  const statuses = [statusWithoutDeadline(prior, now), statusWithoutDeadline(item, now)];
+  if (statuses.every((status) => status === "EXPIRED")) return "EXPIRED";
+  if (statuses.includes("CURRENT")) return "CURRENT";
+  return "UNKNOWN_DEADLINE";
+}
+
+function storedSourceCategory(item: OpportunityV2): string | null {
+  if (item.source_id !== "zjmtcn-product-competition") return null;
+  if (/\/zjxx\/lipin\//iu.test(item.detail_url)) return "礼品征集";
+  if (/\/zjxx\/taoci\//iu.test(item.detail_url)) return "陶瓷";
+  if (/\/zjxx\/chanpin\//iu.test(item.detail_url)) return "产品征集";
+  return null;
+}
+
+export function refreshOpportunityV2DerivedFields(item: OpportunityV2): OpportunityV2 {
+  const sourceCategory = storedSourceCategory(item);
+  const sourceSpecificScope = item.source_id === "cnyisai-competition";
+  if (!sourceCategory && !sourceSpecificScope) return item;
+  const categoryInput = sourceCategory ?? item.category;
+  const category = classifyCategory(categoryInput, item.title);
+  const relevance = classifyV2RadarRelevance(item.title, item.summary, categoryInput);
+  const dimensions = classifyV2Dimensions(item.title, item.summary, category);
+  return {
+    ...item,
+    category,
+    tags: [...new Set([...item.tags, ...relevance.tags])].slice(0, 8),
+    radar_relevance: relevance.relevance,
+    directions: dimensions.directions,
+    work_formats: dimensions.work_formats,
+    participation_scope: dimensions.participation_scope,
+    participation_mode: item.participation_mode && item.participation_mode !== "unspecified" ? item.participation_mode : dimensions.participation_mode,
+  };
+}
+
 /** Formats source date-only values without shifting the published calendar day. */
 export function formatOpportunityV2Date(value: string | null | undefined): string {
   if (!value) return "";
@@ -89,6 +139,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   const category = item.category === "competition" && prior.category !== "competition" ? prior.category : (item.category || prior.category);
   const derived = classifyV2Dimensions(mergedTitle, mergedSummary, category);
   const relevance = classifyV2RadarRelevance(mergedTitle, mergedSummary, category);
+  const sameSource = item.source_id === prior.source_id;
   return {
     ...prior,
     ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
@@ -96,7 +147,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     summary: mergedSummary,
     category,
     deadline,
-    status: opportunityStatus(deadline, now),
+    status: mergedStatus({ ...prior, deadline }, item, sameSource, now),
     first_seen_at: prior.first_seen_at,
     last_seen_at: now.toISOString(),
     discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
@@ -107,7 +158,11 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     ...(item.directions?.length || prior.directions?.length || derived.directions.length ? { directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? []), ...derived.directions])] } : {}),
     ...(item.work_formats?.length || prior.work_formats?.length || derived.work_formats.length ? { work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? []), ...derived.work_formats])] } : {}),
     event_location: item.event_location?.trim() || prior.event_location || derived.event_location || null,
-    participation_scope: item.participation_scope && item.participation_scope !== "unspecified" ? item.participation_scope : (prior.participation_scope ?? derived.participation_scope),
+    participation_scope: sameSource
+      ? (item.participation_scope && item.participation_scope !== "unspecified" ? item.participation_scope : derived.participation_scope)
+      : (item.participation_scope && item.participation_scope !== "unspecified"
+        ? item.participation_scope
+        : (prior.participation_scope && prior.participation_scope !== "unspecified" ? prior.participation_scope : derived.participation_scope)),
     participation_mode: item.participation_mode && item.participation_mode !== "unspecified" ? item.participation_mode : (prior.participation_mode ?? derived.participation_mode),
     is_long_term: Boolean(prior.is_long_term || item.is_long_term),
     starts_at: item.starts_at ?? prior.starts_at ?? null,
@@ -119,6 +174,10 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
   const relevance = classifyV2RadarRelevance(input.title, summary, input.source_category ?? "");
   const dimensions = classifyV2Dimensions(input.title, summary, classifyCategory(input.source_category, input.title));
   const identity = identityHash(input.title, input.deadline_at ?? "", input.organizer ?? "");
+  const structuredStatus = opportunityStatus(input.deadline_at, now);
+  const status = structuredStatus === "UNKNOWN_DEADLINE"
+    ? (opportunityStatusFromSourceStatus(input.source_status) ?? structuredStatus)
+    : structuredStatus;
   return {
     id: `oppv2_${identity}`,
     title: input.title.trim(),
@@ -131,7 +190,7 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     region: source.region,
     tags: relevance.tags,
     deadline: input.deadline_at,
-    status: opportunityStatus(input.deadline_at, now),
+    status,
     first_seen_at: now.toISOString(),
     last_seen_at: now.toISOString(),
     discovered_by_sources: [source.id],
@@ -141,7 +200,7 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     directions: dimensions.directions,
     work_formats: dimensions.work_formats,
     event_location: input.event_location ?? dimensions.event_location,
-    participation_scope: input.participation_scope ?? dimensions.participation_scope,
+    participation_scope: input.participation_scope && input.participation_scope !== "unspecified" ? input.participation_scope : dimensions.participation_scope,
     participation_mode: input.participation_mode ?? dimensions.participation_mode,
     is_long_term: input.is_long_term ?? false,
     starts_at: input.starts_at ?? null,
@@ -156,10 +215,10 @@ export function mergeOpportunityV2(existing: OpportunityV2[], incoming: Opportun
     const cfwDetailKey = item.source_id === CFW_SOURCE_ID ? item.detail_url : null;
     const key = cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
     const prior = byKey.get(key);
-    byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : { ...item, status: opportunityStatus(item.deadline, now) });
+    byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : { ...item, status: item.status });
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }
-  return [...byKey.values()];
+  return [...byKey.values()].map(refreshOpportunityV2DerivedFields);
 }
 
 export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunities: OpportunityV2[]; duplicate_count: number } {
@@ -188,6 +247,7 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
       event_location: prior.event_location || item.event_location || null,
       participation_scope: prior.participation_scope && prior.participation_scope !== "unspecified" ? prior.participation_scope : item.participation_scope,
       participation_mode: prior.participation_mode && prior.participation_mode !== "unspecified" ? prior.participation_mode : item.participation_mode,
+      status: mergedStatus(prior, item, prior.source_id === item.source_id, new Date()),
     });
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }

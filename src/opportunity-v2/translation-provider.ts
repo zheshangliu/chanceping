@@ -71,8 +71,8 @@ function makeLlmProvider(env: NodeJS.ProcessEnv | Record<string, string | undefi
     const profile = resolveLiveLlmProfile({ env }) as LiveLlmApiProfile;
     if (profile.provider !== requested) return null;
     const adapter = requested === "deepseek"
-      ? new DeepSeekAdapter({ apiKey: profile.apiKey, model: profile.model, baseUrl: profile.baseUrl, mockMode: false, maxTokens: 500 })
-      : new QwenAdapter({ apiKey: profile.apiKey, model: profile.model, baseUrl: profile.baseUrl, mockMode: false, maxTokens: 500 });
+      ? new DeepSeekAdapter({ apiKey: profile.apiKey, model: profile.model, baseUrl: profile.baseUrl, mockMode: false, maxTokens: 4096 })
+      : new QwenAdapter({ apiKey: profile.apiKey, model: profile.model, baseUrl: profile.baseUrl, mockMode: false, maxTokens: 4096 });
     return createLlmTranslationProvider(requested, adapter);
   } catch {
     return null;

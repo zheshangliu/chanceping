@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping-opportunity-v2.sources.v1",
-  "updated_at": "2026-09-08T09:11:34.213Z",
+  "updated_at": "2026-09-08T14:09:01.898Z",
   "sources": [
     {
       "id": "shejijingsai-list",
@@ -18,7 +18,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:31.584Z"
+      "last_fetch_at": "2026-09-08T14:06:43.348Z"
     },
     {
       "id": "chuangsaiyun-competition-list",
@@ -36,7 +36,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:32.071Z"
+      "last_fetch_at": "2026-09-08T14:06:43.947Z"
     },
     {
       "id": "contest-watchers-open",
@@ -52,8 +52,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:32.385Z"
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-08T13:57:28.579Z"
     },
     {
       "id": "crafts-council-opportunities",
@@ -89,7 +89,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:35.187Z"
+      "last_fetch_at": "2026-09-08T14:07:06.131Z"
     },
     {
       "id": "competitions-archi",
@@ -106,7 +106,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:38.011Z"
+      "last_fetch_at": "2026-09-08T14:07:11.332Z"
     },
     {
       "id": "loewe-craft-prize",
@@ -124,7 +124,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:40.432Z"
+      "last_fetch_at": "2026-09-08T14:07:15.061Z"
     },
     {
       "id": "opencall-radar-craft",
@@ -144,7 +144,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:40.929Z"
+      "last_fetch_at": "2026-09-08T14:07:16.646Z"
     },
     {
       "id": "opencalls-ai",
@@ -182,8 +182,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:42.270Z"
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-08T13:57:42.469Z"
     },
     {
       "id": "craft-scotland-opportunities",
@@ -202,8 +202,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:45.078Z"
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-08T13:57:46.517Z"
     },
     {
       "id": "kcdf-opportunities",
@@ -223,7 +223,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:46.964Z"
+      "last_fetch_at": "2026-09-08T14:07:43.028Z"
     },
     {
       "id": "heritage-crafts-opportunities",
@@ -242,8 +242,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:47.443Z"
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-08T13:57:55.265Z"
     },
     {
       "id": "homo-faber-calls",
@@ -262,7 +262,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:50.112Z"
+      "last_fetch_at": "2026-09-08T14:07:49.657Z"
     },
     {
       "id": "asef-culture360-opportunities",
@@ -282,7 +282,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:50.992Z"
+      "last_fetch_at": "2026-09-08T14:07:51.994Z"
     },
     {
       "id": "on-the-move-open-calls",
@@ -321,7 +321,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:52.152Z"
+      "last_fetch_at": "2026-09-08T14:07:53.127Z"
     },
     {
       "id": "cafe-call-for-entry",
@@ -340,8 +340,8 @@
         "ich"
       ],
       "enabled": true,
-      "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:54.257Z"
+      "status": "FAILED",
+      "last_fetch_at": "2026-09-08T13:58:08.941Z"
     },
     {
       "id": "artshub-craft-opportunities",
@@ -382,7 +382,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:10:59.296Z"
+      "last_fetch_at": "2026-09-08T14:08:24.670Z"
     },
     {
       "id": "craft-council-nl-opportunities",
@@ -402,7 +402,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:02.189Z"
+      "last_fetch_at": "2026-09-08T14:08:31.644Z"
     },
     {
       "id": "cfw-cultural-ip",
@@ -423,7 +423,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:03.357Z"
+      "last_fetch_at": "2026-09-08T14:08:35.397Z"
     },
     {
       "id": "whaleideas-competition",
@@ -443,7 +443,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:05.885Z"
+      "last_fetch_at": "2026-09-08T14:08:37.344Z"
     },
     {
       "id": "1zj-cultural-competition",
@@ -462,7 +462,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:23.128Z"
+      "last_fetch_at": "2026-09-08T14:08:47.800Z"
     },
     {
       "id": "chuangyisai-cultural",
@@ -504,7 +504,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:30.740Z"
+      "last_fetch_at": "2026-09-08T14:08:57.075Z"
     },
     {
       "id": "zjmtcn-product-competition",
@@ -525,7 +525,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:31.808Z"
+      "last_fetch_at": "2026-09-08T14:08:58.173Z"
     },
     {
       "id": "iuben-cultural-competition",
@@ -546,7 +546,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:32.660Z"
+      "last_fetch_at": "2026-09-08T14:08:59.157Z"
     },
     {
       "id": "everyart-competition",
@@ -567,7 +567,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:32.853Z"
+      "last_fetch_at": "2026-09-08T14:08:59.429Z"
     },
     {
       "id": "gtn9-competition",
@@ -609,7 +609,7 @@
       ],
       "enabled": true,
       "status": "ACTIVE",
-      "last_fetch_at": "2026-09-08T09:11:33.939Z"
+      "last_fetch_at": "2026-09-08T14:09:00.743Z"
     }
   ]
 }
