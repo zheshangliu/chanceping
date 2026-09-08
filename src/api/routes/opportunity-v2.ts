@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, runOpportunityV2Source, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, writeOpportunityV2Sources, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 
-export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; }
+export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
 
 function queryOf(raw: Record<string, string>): OpportunityV2RadarQuery {
   const region = raw.region === "CN" || raw.region === "GLOBAL" ? raw.region : undefined;
@@ -32,6 +32,7 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   const pool = () => readOpportunityV2Pool(options.poolPath);
   const sourceOr404 = (sourceId: string) => findOpportunityV2Source(sourceId, options.sourcesPath);
   const requireAdmin = (c: { req: { header: (name: string) => string | undefined } }) => {
+    if (options.adminRequired && !options.adminToken) return new Response(JSON.stringify({ error: { code: "ADMIN_NOT_CONFIGURED", message: "管理员配置未完成，暂不允许写入" } }), { status: 503, headers: { "content-type": "application/json" } });
     if (!options.adminToken) return null;
     if (c.req.header("x-ich-admin-token") !== options.adminToken) return new Response(JSON.stringify({ error: { code: "FORBIDDEN", message: "需要后台权限" } }), { status: 403, headers: { "content-type": "application/json" } });
     return null;

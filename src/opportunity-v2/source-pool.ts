@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import net from "node:net";
 import path from "node:path";
 import { identityHash } from "../ich/aggregation/adapters/common";
 import type { OpportunityV2Source } from "./types";
@@ -63,7 +64,9 @@ export function readOpportunityV2Sources(filePath?: string): OpportunityV2Source
 export function writeOpportunityV2Sources(sources: OpportunityV2Source[], filePath?: string): void {
   const target = resolved(filePath);
   fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, `${JSON.stringify({ schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources }, null, 2)}\n`, "utf8");
+  const temp = `${target}.${process.pid}.tmp`;
+  fs.writeFileSync(temp, `${JSON.stringify({ schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources }, null, 2)}\n`, "utf8");
+  fs.renameSync(temp, target);
 }
 
 export function validateOpportunityV2Sources(sources: OpportunityV2Source[]): string[] {
@@ -83,17 +86,30 @@ export function isPublicHttpUrl(value: string): boolean {
   try {
     const url = new URL(value);
     if (!/^https?:$/u.test(url.protocol)) return false;
-    const host = url.hostname.toLowerCase();
-    if (host === "localhost" || host.endsWith(".local") || host === "::1" || host === "0.0.0.0" || host === "169.254.169.254") return false;
-    const ipv4 = host.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/u);
-    if (ipv4) {
-      const [a, b] = [Number(ipv4[1]), Number(ipv4[2])];
-      if (a === 0 || a === 10 || a === 127 || a === 192 && b === 168 || a === 172 && b >= 16 && b <= 31) return false;
-    }
-    return true;
+    if (url.username || url.password) return false;
+    const host = url.hostname.toLowerCase().replace(/^\[|\]$/gu, "");
+    if (host === "localhost" || host.endsWith(".local") || host.endsWith(".internal") || host === "metadata.google.internal") return false;
+    if (net.isIP(host)) return isPublicIp(host);
+    return host.length > 0 && !host.endsWith(".");
   } catch {
     return false;
   }
+}
+
+export function isPublicIp(address: string): boolean {
+  const host = address.toLowerCase().replace(/^\[|\]$/gu, "");
+  if (net.isIP(host) === 4) {
+    const parts = host.split(".").map(Number);
+    const [a, b] = parts;
+    if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return false;
+    return a !== 0 && a !== 10 && a !== 127 && !(a === 169 && b === 254) && !(a === 172 && b >= 16 && b <= 31) && !(a === 192 && b === 168) && !(a >= 224);
+  }
+  if (net.isIP(host) === 6) {
+    if (host === "::" || host === "::1" || host.startsWith("fc") || host.startsWith("fd") || host.startsWith("fe8") || host.startsWith("fe9") || host.startsWith("fea") || host.startsWith("feb") || host.startsWith("ff")) return false;
+    const mapped = host.match(/::ffff:(\d+\.\d+\.\d+\.\d+)$/u);
+    return !mapped || isPublicIp(mapped[1]);
+  }
+  return false;
 }
 
 export interface OpportunityV2SourceInput {

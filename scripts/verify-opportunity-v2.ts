@@ -206,7 +206,7 @@ async function main(): Promise<void> {
   const app = createApp();
   assert.equal((await app.request("http://localhost/ich")).status, 200);
   const ichPage = await (await app.request("http://localhost/ich")).text();
-  const radarResponse = await app.request("http://localhost/api/opportunity-v2/radar");
+  const radarResponse = await app.request("http://localhost/api/opportunity-v2/radar?category=competition");
   const radarApi = await radarResponse.json() as { total: number };
   const displayedTotal = Number(ichPage.match(/(?:当前机会|可浏览赛事)：\s*(\d+) 条/u)?.[1] ?? -1);
   assert.equal(displayedTotal, radarApi.total, "public /ich total must match the V2 radar API");

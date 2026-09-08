@@ -1,0 +1,1866 @@
+{
+  "schema_version": "chanceping-opportunity-v2.translation.v1",
+  "updated_at": "2026-09-08T03:07:03.579Z",
+  "translations": [
+    {
+      "opportunity_id": "oppv2_4ac7a117053eeaf94510d95b",
+      "source_hash": "ca0cbe62681f1929f3c8c215e89cd8ad771036d2708dbc680d80780e2225b377",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜PHOTOLAR 18th – 摄影 比赛",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_931b6abdfb0a8359fb78c824",
+      "source_hash": "71ba1083f7db8c58b55c78a3c7f52e2e868925e8fab5fa44fda31a453bfab391",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "The 18th JEJU 国际 PHOTO 比赛",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_706f563934fe1126dab6a0fa",
+      "source_hash": "4a0f9fdc58cca1f5299504d831a3eecc0e4a0667b007454b89c7fb97be8b5540",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜Revelation Perth 国际 Film 艺术节 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a77479c0ca1f46f651cc7dc7",
+      "source_hash": "6266e603d0674b2289b77606dc2921323f18912fbf456f9e2a114d9a4ada3518",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜Science Without Borders Challenge 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_746e1e79f92cf291c08ab54d",
+      "source_hash": "89bff5d14da380bd085e1b7dd814a5a3f6a6e58dd398bf702a18a7a7ae3faf05",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜Embracing Our Differences 2028 展览 竞赛",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_53eff1eef4c6b0098933d934",
+      "source_hash": "a27e5473b82820404f084f9f4d92dd04221e354da4dba632f1627d7502ee6fc0",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜Independent & Freelance Photojournalist 奖项 (IFPA) 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9d755418271a22b263cbc0d9",
+      "source_hash": "6a62aad850c6339909cd25e4bb6790d39ab09fb81e64195d5c1f8489c76ba1bb",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜2026 InnovMetal 奖项",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_1ebcefd4d4cf2abd07ab2b6c",
+      "source_hash": "03ec66ec6b4eb34ba0fdf1cfc9f4e44a79000f59fe40609425e30ab6d125ed81",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "BBA 艺术家 奖 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_1d721b00a5e11a83c4c140ba",
+      "source_hash": "c47fcc8b9a506439840246ef7399dfe492de47e5271244503e5e572109831679",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜19th Stereohype Button Badge 设计 竞赛 (2026)",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_7ee832bb5a368553bba3ec40",
+      "source_hash": "3992071a75fbc6c1230e8906b5a4d8cbf59613681cd4c6cacfd60a6299830446",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Contest Watchers国际竞赛机会｜17th ICMA – 国际 Creative Media 奖项",
+      "summary_zh": "来自Contest Watchers国际竞赛机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_63fc1d8a60c47911b424093c",
+      "source_hash": "8c835810c7962413013034fe6c2c1a651f22236810aede0978617c1caacb6f0a",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜Persian Garden Suite: Redefining Iranian Architectural Concepts in Contemporary Toronto",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-03-31。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_10e1d695d3f4b81dd8c407e4",
+      "source_hash": "47b3788e824954e775725b30fc1302b5ab84bd761d1b4089635f3def9ed4ea43",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Living 市集 竞赛",
+      "summary_zh": "来自Competitions.archi设计竞赛的市集或活动参与信息，已列明截止日期为 2027-02-28。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_6dff384b8cb200042b57ca53",
+      "source_hash": "facd5020546fa44e9a3385251774bfd42d05acef7ead6e5796cf8edc82dfd7b7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜The Oak Moon Pavilion",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-03-01。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_93643f56e3d3877820e258ef",
+      "source_hash": "88d87490ccf3602b1c660dbb09d10ec8ecf7d296d0d7c3126e21189cd0e4cbf2",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜Museum of Emotions #9",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-02-22。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9e0a8bdaa99294b83400d2f4",
+      "source_hash": "23743b79e30f342fe395b8304120367c831591208138e58e4f08f646620ade75",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜The Valli Wine Tasting Room",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-02-15。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9026b605b11e6e4b1a166a6e",
+      "source_hash": "a3578cb4ffebe6f88d5d152a550d3185a86489d17873dec0f0a8553f1073405e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜The Quiet Tower",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-02-15。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_1d66a3be05ac8ef5727667fe",
+      "source_hash": "0297b164e382f9e0aaea60cb701a0cbec58ebf0debec4060a4aafa4e093e2bff",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜The Architecture of Play 2026-2027",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-01-20。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_e8f379dccf6659873ec3b0cc",
+      "source_hash": "7f21aa0303610aea99250aa2891be8d7767c6792334c2f2ebf3acfe3cdc6ec6f",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜2026 设计 DISCOVERY 奖项 (D&A): SEASON 2",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_f5a52fbfcad5ac7332b5d51e",
+      "source_hash": "cc28c17cc44366d710bcfe00fe9cabd8d136e9e85479de36b353317006b814a3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜AIxGaudi: A new format integrating advanced AI course and an 国际 architecture 竞赛",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_4602d71f673d4e85d7d2e7ad",
+      "source_hash": "6fda5169ec0b3cf405fd872afa59f66b36fa34e68165440f2929a3bab45f643b",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜Rural Housing II",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2026-12-11。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_f9e66b87115572fff743a8db",
+      "source_hash": "836fac914f1f6d9a90be40cd6d4bf405c7f3ebf9fab3f0bf586ec39fccc3c085",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜The New York High Falls Riverfront 市集",
+      "summary_zh": "来自Competitions.archi设计竞赛的市集或活动参与信息，已列明截止日期为 2027-01-18。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_101538d365d8bc5cc51fc9cc",
+      "source_hash": "e7e99de01e810bb30aa4bd4491e7fed87b5a3407a7facf176ba78a4d8a98d0d0",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Competitions.archi设计竞赛｜Portugal Long Table Restaurant",
+      "summary_zh": "来自Competitions.archi设计竞赛的赛事、公开征集或作品申请信息，已列明截止日期为 2027-01-11。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_210eb55d327f71d903196a26",
+      "source_hash": "a83624925bfc3b09a16d3521cd3dc22030a656260839ea5a24494dfc3195e947",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "beyond the image 艺术家 奖 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b891201a3dd9f764c1b5d59c",
+      "source_hash": "68b4a4611a49aa7cfe6dffd97dbee5f4011e34caed7572d1600e4351208dae03",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜设计 researchers in residence",
+      "summary_zh": "来自ArtConnect艺术机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_77ed7ba4eac925fb25710e92",
+      "source_hash": "5cdd13134166c3315a752363d6fd8095386515a7d6f10d5000c5172e0909f0ba",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜welcome to the neighborhood: your name here?",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_bb2231f4058851e25de8e754",
+      "source_hash": "4d3d1cc2f4215f65989215272ccbfd44db415a80e5bac1d95eeb3af0f41e844c",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜国际 granada writers in residence 计划 2026",
+      "summary_zh": "来自ArtConnect艺术机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c562f24f038ed1ba1c3959a4",
+      "source_hash": "29a0ac10f6d71e5be7a769aa574ba0aac1c6ea595f464abc446e41e9f1f8bfca",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜the tagli 2026 mentorship 奖项",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_0d0c6e1c5471377194ae5058",
+      "source_hash": "2387320b161ab8cbcae620ecb514bb7634937f249207e73dfcb1a7c75ce807be",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜\"ecosystems as living communities\" vol. iii",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_2e58d5d178a3623e6cefc43c",
+      "source_hash": "02c2a664ce98df72289df0f3a81c263af1b94b0ea85408186dfc72843a253002",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜2027 erie canal 艺术家-in-residence",
+      "summary_zh": "来自ArtConnect艺术机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_e536c39c097dee9b224e721a",
+      "source_hash": "feec95154bb64372198efe2ce63c8870aa5fe0094767b80b0064b80b6ffb3773",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜where is the tomorrow we saw yesterday?",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_4431f530667c78b761f3cdcb",
+      "source_hash": "947a46d22dbe2aaa791b0d4ced7986fd3e21f27722d1e237d8df43ef93307f75",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "format27 公开征集: play",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_bc1fe3c562678d50ced662cd",
+      "source_hash": "02298d005104600f7199969667fa775b7459cdffb630db1a898d7e9e33fb94b3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜kultur ensemble palermo 驻留 2027",
+      "summary_zh": "来自ArtConnect艺术机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_1703fedf782ab8760b2909b0",
+      "source_hash": "5cc5513a4ed6ff729d11fa200dab50aeed0098514c4e9c8864d2fdc6aedda25c",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜cite the past, sight the stars",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ffd0150901943a85c55a91ca",
+      "source_hash": "e029b7e7dd94add5cb2e959060390bb648a516a470b0114fa8a0513911f62fe7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "LOEWE基金会工艺奖 2027",
+      "summary_zh": "来自LOEWE基金会工艺奖的赛事、公开征集或作品申请信息，已列明截止日期为 2026-10-15。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_3cf2199ebaea23955143d2d1",
+      "source_hash": "b2e9851166c394579a113a258bd377d52685ac16083455d14a3a71dca099d252",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜No Limits 2026",
+      "summary_zh": "来自OpenCall Radar｜Craft的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_5020f546e3c6e0733de55374",
+      "source_hash": "1f336859d09ce17da812ac64622e95c70e5442e75b3e68b3e6220ba29f5953e7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜艺术家 驻留 in Vénissieux 2027 – Madeleine Lambert 艺术家 Center",
+      "summary_zh": "来自OpenCall Radar｜Craft的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c36816c3c38090904224e96b",
+      "source_hash": "531b3dcadaae97cbbb6af2c6ef7f7979099da397bc3584cc3812eaefbf43151d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "公开征集 for 驻留 2027: What is real?",
+      "summary_zh": "来自OpenCall Radar｜Craft的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b88811790c51a70288620df9",
+      "source_hash": "2b0d7a967470fe8ed7f24159938d1e61945e814b900e39d3069825deda6b64cf",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "展览",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a7141f64f774768bff261f31",
+      "source_hash": "94558da5705a9be898e468760b6110e14cd7ef76756f16f940f928bdf067f913",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Browse by organizer →",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_86628a4c690d00e42f0dbf9b",
+      "source_hash": "9e969a18f986c474d96def3257ee25523f43fb3ea7ee7a35f6601b8e7f51832a",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Studio & Workshop Spaces Call for Studio 申请 at Edinburgh Sculpture Workshop 申请 are invited for studios at ESW from 艺术家 and makers working within contemporary sculpture practice. Closing date: 29 Oct 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_05e60c41c6ebabae19e84fbc",
+      "source_hash": "462424a42480a5f86d17dabaf910360cf7f86aeba02d7ab1888a1fcc09a273b8",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Project 公开征集: Made of Fife Made of Fife: A Call for Material Makers, Researchers and Practitioners Closing date: 12 Oct 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b7a4f27ee9cec2d9ab5855c8",
+      "source_hash": "d4d39d0f0c538f608d97a992f3f1fa749a76f5cd595c6b86900463cb0f89cf13",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Exhibit & Sell 申请 Open for Alchemy: Goldsmiths Scotland Alchemy: Goldsmiths Scotland is a new fair of contemporary 珠宝 and silver in Scotland. Closing date: 5 Oct 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_dcd7d94eb79bfb02a02f26f4",
+      "source_hash": "e0d72cadc470fcf4327c2e2de1336347fc9401cfed7a645199d88cda72c65f9e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Professional Development Editors' Table: How to Tell Your Story and Navigate The Media Online workshop for independent makers, 设计 and 艺术家 led by Debika Ray. Closing date: 1 Oct 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9eb3948749311cacf4c92c5b",
+      "source_hash": "b9c1a85811af9840e4a797f14704638d448c0fbf797cc99803c8281e0b5e29d1",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Professional Development Forge Ahead - Professional Development 计划 Cockpit’s 奖项-winning Business Incubation Team presents Forge Ahead, a professional development 计划 for established makers.",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_e2a450203749e0f515ee8372",
+      "source_hash": "a57734c2ec9bd76b3d2ecd8a23f98761f340677e559a8421ddc5660ad90373f3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; 奖项 & 竞赛 Eileen Lewenstein 奖 for Critical Writing The Eileen Lewenstein 奖 supports new and emerging voices in writing on studio 陶瓷 and 陶土 艺术家. Closing date: 28 Feb 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_53c5c4c3b31daef9be26337e",
+      "source_hash": "40285c8e99e829e78fa8ad1b534a3237bda2e7084a5989ba672020cdc0cee0fa",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Studio & Workshop Spaces Birnam Arts: Tutors Call Out Birnam Arts are looking for passionate tutors and facilitators to lead creative workshops. Closing date: 7 Mar 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b95a02734d6ead7e5d8d11e3",
+      "source_hash": "32e33b2e6ba3ced7a43a762de62080874312e3968a99977a91fca44174178e0a",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Volunteering Join the Council of Visual Arts Scotland Three positions are open to join the council and work with the VAS team to deliver an exciting 计划 of events.",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c57f2b60c740a02df70a2f74",
+      "source_hash": "f1eb0277c581a3cad23b3dfa6788b0d3fb3601a9db15849c0d53fda9ed81f005",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Exhibit & Sell Handmade Oxford | The 国际 Contemporary 工艺 艺术节 Are you an independent 设计&ndash;maker ready to reach a new audience in Oxfordshire?",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ea53714a2d5ae1a8e57e7c5b",
+      "source_hash": "aec61e8ab15bf49d52cecce37109bacfc8b545dc8cbf05a5c6902bd41231455b",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Studio & Workshop Spaces Make Space for Your 工艺 - Resident Workshop Bays Available Take your creative business to the next level with a professional workshop space to rent in a supportive maker community.",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ba1a624ad884f8d829f0b7ec",
+      "source_hash": "ba3526fc5e578ce3b62f9291ec1cf7ad331133b5ad8f5ad91df7c81f06101937",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Professional Development The INKubator 计划 2027 Designed by jewellers, for jewellers. Ten months of technical training, mentoring and professional development to help you build a thriving creative practice. Closing date: 6 Nov 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_66e06d713ae0dfb6973c183b",
+      "source_hash": "f33567d4e2f92c20ad2b7dd07af048877b340d37bf10e8c0c3f97a6d60af3072",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Studio & Workshop Spaces Studios available in Burntisland High quality studio space available for 艺术家 and creatives with amazing light and Forth views",
+      "summary_zh": "来自苏格兰工艺机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_623884733ce61720d50efee8",
+      "source_hash": "3e36e89548f6c6c58bd64bed258d79a3192308a586150585bc24c3804876d487",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Make an enquiry",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d4b9767001a0f3b369dd576e",
+      "source_hash": "d5a5e9b916fe4fc6819292128ee5de2804170216aa3cb40d3f62a1920db3f756",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Receive news, 机会 and more",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_49630e5b673a62417ed0c5d5",
+      "source_hash": "9be648c42b8152104914dcf9154f7732af0fb93dfd28c097979687f88b1ee591",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Privacy Policy.",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ac0e7a05ea861bc3c01162fb",
+      "source_hash": "06e9288cff0f7f848feac77528fa7f815864c399e85269cb1255d64bdde9d366",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Terms & Conditions",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_6b845a9109a2e05dd0580630",
+      "source_hash": "db145d0eb23289c619562cc9016811d9694d68cba3bb0a67239fafa04a491d59",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Press & Media",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_be99020daca32753b2bde801",
+      "source_hash": "3fc318681eff51e53749a992a3d90a6d195c6578809b6ecb5f22df77e45c410d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Careers",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_5951c9f0c3be2636be5f9e00",
+      "source_hash": "bb25bc2ec8f207296dc092ed40f5476e49f232c63ca6592d9e7bac9c4d50b20f",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜FAQs",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_28f152b415a16784fd5ccb63",
+      "source_hash": "15c27b69ab01d9e87b85ae1d27817fd3bd24eaa31af622838a454f9d9cb7093b",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Recipients",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_8f6f26bee318cfab1bf86f57",
+      "source_hash": "80b2bbf39518104cae3ce2e6ad41cb22b45ae65a7777d30e1b86d6e22004aebf",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜The Red List",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_aa4510dda197d9ccc3c16360",
+      "source_hash": "5b4e0b280c5584e7b8c968db399e89cd90103b8da99baa35b3e65d3f73661080",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Living 传统文化 Community Support Hub",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ec29f01eca6d22a3ddbb675e",
+      "source_hash": "010e2ed016d36e6e229a62e8705571222fb5b23860e884015d2c4fa0388b4524",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Endangered 工艺 Fund",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d6ae01387522c839ecb281d7",
+      "source_hash": "881c3a03f8ab37616f972e1bce65b2d947a5a1fa20e3a0199529719279568dd5",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Training bursaries",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a5fbb35f729bfa5758c82596",
+      "source_hash": "82e395aa371a5b0a93d5e28b7212edaa691ceda3efb0bbfe4b9855c13997a39f",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "奖项",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_07373bdcd4705b6299f92186",
+      "source_hash": "7aa18d3e4d12a22a2e14b804ece0ea30425267464f273ee3a09975fcfd4968b4",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜matchMAKER jobs and training",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d3a5e103e54a9183693c26b5",
+      "source_hash": "0441d38d07c40a339b5f8cb7eaa6e1bc751d2ca99431087f96fb9193feac4160",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Jobs and volunteering",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_beaad1325cb5db966c0d5683",
+      "source_hash": "1c61ab5e6af296def4882d23713bc6b8fb6736fab0125ae464ba9cfb5ad4cb6e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Renew my Membership",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_22b1340a1abfb7667b9d0c84",
+      "source_hash": "5fbe761ceb7723cef3f5b2bcc7dbd0873eba5625ea5b7cb734a45afedb3b60f6",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Ways to give",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_64f317a26ab3ef5133834dee",
+      "source_hash": "7814389ff7b862763e367a3adf97f090b2941c8f132ac79b79edfdf5e790b140",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Alumni",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c69bbca7030ff312b54444d7",
+      "source_hash": "d7185e3945679beab56744eef6a2c69b9da73d5051c80c6a76199af91d1d97cc",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Cookie Policy",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_85fde0f0ce20221662153c09",
+      "source_hash": "730fd61f7a4daedc0216b478e90ee841804a7ff10d06b21a36aaf764528e7f43",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "东京双年展 2027｜场域响应提案征集",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_e0f0017c1fe321b3b21053b1",
+      "source_hash": "5d00afb8b8d7e8610d54db7bd9ea659be76cc8355446618bc5e75001422d4e6c",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "日常摄影 2026 资助计划",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_94090f5e132dd5de2b250b30",
+      "source_hash": "372cc49fd78fa2d3c923426a7d3ea6daa367e7173316908f74fc86d22e6af367",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "希腊｜陶土与陶瓷艺术教育者驻留",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c816ee8243faa0bb290deb73",
+      "source_hash": "145f579e57042d043221a67ef3c50d5c1adba125308c3c83c93628bffdf3c5f6",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "白兔画廊 2026 数字艺术作品征集",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_6add8bda605de6a48b54373a",
+      "source_hash": "7877f46e67a3c710313bbb75d2183bf5edb818f5f8ccac6b2c85e4619ffe2d30",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Call for Content | Arts & AI",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_fd32b0a4bb6524fe52b3ea27",
+      "source_hash": "2af1780fb215b404a67a5b357bd7150cd98bb02e12a4d7fc211250f2f85caf3d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Nordic Currents 2027–2028",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_843b57010a28a24b37a2b20f",
+      "source_hash": "ae51957ea0ad929415ce9c07d316bf661b99641e356c1d1dd1640507208915b3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜France | Camargo Foundation 研修 2027–2028",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ae7e82cbce6f46793b988cc4",
+      "source_hash": "5957c883107b5c8df663212551eb74275bda1329db0bc2b24bc0671725b8cf3b",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Japan | 14th 国际 陶瓷 展览 Mino",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_732b2f9c093bfd42a5749ab7",
+      "source_hash": "9fe467752142e733d2a18a8b1a5dd4005a4150c92ee5b1b803f5504213966eac",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜纺织 艺术家 Biennial BIEN 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_157f3cbbd2a575ed53565723",
+      "source_hash": "c1e9d27a10a7a338bdd6d41da8b820d96b4efafc5a5ff87f650f2686a2ce49f0",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Japan | 工艺 and 纺织 Immersion Tour 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d362e3d8cbae7f4649848312",
+      "source_hash": "a3e90536bf63d6b443c1ffe4c6cfa3ce13d5e2be497f2683cfa6884f9d0748ff",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Hungary | European Dance Development Network Atelier 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_89d352e5dec7b4bd4d765931",
+      "source_hash": "363f83670149c4e74f2063068908cc8abc308ead231d7a30e3798e38fa40a992",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Czech Republic | Ars Biologica 艺术家 x Science 驻留 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_62e50bfc81af04271ff7e3ab",
+      "source_hash": "eddbed7e33d76b8a976891c055b5b88c21d667550d1a551835397fee6b2c55af",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Italy | Wonderland 艺术节 2026 for 国际 programmers",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9f26321e22b082060fd4c9c6",
+      "source_hash": "379a1e86838d7fe433c9d16321f3153a5cfe6925d74ae3f3977073dd5d380fd0",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜UK | 9th John Moores Painting 奖 for 艺术家 from China",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c2fbb755ac964ea7464bb6e7",
+      "source_hash": "fb6f5277fe468be4c641a351dbff958e2cac8fdf9a353754bb5c12ac3dbbda14",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Spain | Research and creation 驻留 at scientific institutions 2027",
+      "summary_zh": "来自亚洲—欧洲基金会文化360机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d4c6d19c3ebc1804fd7368de",
+      "source_hash": "085bed3c645a451402c9ac13ba80ce906c9d5535cc93e8012c75b9b95bca2624",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "竞赛 & 奖项 (4)",
+      "summary_zh": "来自On the Move Open Calls的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_1f7cda3ebaeb45113db4ab70",
+      "source_hash": "2905ee555b63b42ffe1698f4a54d7c17310e66faed7cca5cfa57b3e4986fbb8e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "驻留 (16)",
+      "summary_zh": "来自On the Move Open Calls的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_bccd73d895249d63c59f09fd",
+      "source_hash": "4d9eb7dd3bc056b3c8c4673e26e35bb1045183e484a8eb22342f2c7c4d930816",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜AURA: 公开征集 公开征集 for 艺术家 and writers to submit their work to a feminist online zine based on...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a2907a2b89b556978b0f30aa",
+      "source_hash": "02082ac671f9ee7c0e745ef254df93e2eaed51b18d71f1bfb30c30632e36ec68",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Feature on The FLUX Review Complimentary 机会 - Feature a Q&A on The Flux Review website.",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_892fb48407e40122f9627053",
+      "source_hash": "0345f021f83c05c6154763071b3dc9e8235ed56ed37fc38ba1f03308c77ab4ee",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Audio Work Required - 艺术家 and Friends Podcast - 公开征集 艺术家 and Friends is a Podcast that reviews current digital and physical 展览. The show...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a6ebbee3217a85d9ba7254a6",
+      "source_hash": "835d680793a07b9107357c44803b5e76c725fa939239a397241620252503a2c8",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Kensington 艺术家 Fair 2027 Milford, Michigan 申请 fee: $30",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_46e94b3e129952d1812d9b58",
+      "source_hash": "164bd0c6380d8222c7567ae8ab7d0cdd936fcd01853f60e1ab902e295396356d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Draw the Line Chico, California 申请 fee: $15",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c3fceef86ca283ac3c958cc3",
+      "source_hash": "0d28b21aac9d99c891c3ba7cb84c37dd84e126365cfabf7a8cabd52a29c7bc66",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Ridgway Rendezvous Arts & 工艺 艺术节 2027, 42nd Annual Ridgway, Colorado 申请 fee: $35",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_4b360b565b45b296f6ac38b5",
+      "source_hash": "943c6bf6a73689273c3f4fb986ab350c22c0aee472cd31a321523bb366dedb60",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Commissions Wolf River Cultural Greenway: Rotating Sculpture 展览 Germantown, Tennessee 申请 fee: $0",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_8bb8560c951bac7415ac847d",
+      "source_hash": "3e1103872238e280ed87d8b9e83283fde946ca0bf55aa368b80691d4a9cda694",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 \"Photografique - The Best Of Photographic 艺术家\" Issue 004 Seattle, Washington 申请 fee: $0",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d712b0e6287fe3b2b41dd007",
+      "source_hash": "1375d8907e326522656b756f99f5210d739113cb0a80a57f125fb6d5330a9b26",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜竞赛 STRANGE & BEAUTIFUL Los Angeles, California 申请 fee: $32",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_8cb823bc222cbf6ec1a61575",
+      "source_hash": "ab31bad789aef61320ab0a1f641a587cf079565ac4d2f8c5bb8b31b1da142356",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 12 x 12 Museum Fundraiser 资助 Pass, Oregon 申请 fee: $0",
+      "summary_zh": "来自CaFÉ CallForEntry的资助申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_99ceaa216b532306c6c72bbc",
+      "source_hash": "9e0521b9682282d5d5f3b62961ed7deca26c01e27e453ef9ba12ba48d3d5c4bc",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Sarasota Fine 艺术家 Show - October 31 & November 1, 2026 by Hot Works Sarasota, Florida 申请 fee: $35",
+      "summary_zh": "来自CaFÉ CallForEntry的市集或活动参与信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_fcc6a844a21b6ba5e9b1e51d",
+      "source_hash": "3b24fdb0c58219563e65974d377573621e5452752bffa24c8f4c2fbfbe9c0737",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Savage Area Arts 艺术节 2026 Savage, Minnesota 申请 fee: $25",
+      "summary_zh": "来自CaFÉ CallForEntry的市集或活动参与信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_570c6990e0be547ce81c5cec",
+      "source_hash": "c23cb2f0c54863964beb7df493057a9faa8a794bc7043e4d96df5f26c42b3f3e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Fairs/艺术节 Pecan Street FALL 艺术节 2026 51st @ Sept 12 AND 13 Bee Cave, Texas 申请 fee: $30",
+      "summary_zh": "来自CaFÉ CallForEntry的市集或活动参与信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_80d95fc9d68554561a204136",
+      "source_hash": "f6c1e7984c16ae0fc7159ad1bca5428a6c54f8acce7dda45964003dbc6b2874c",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 公开征集 . Greater Los Angeles Los Angeles, California 申请 fee: $35",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_76aeeb4143cd3f4f53eb79b5",
+      "source_hash": "727c16d6a0b9d6fbd0a674ca3f7504b22a135e87becf68ca63d63dd2f737f999",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 艺术家 on the Fox Algonquin 2026 Late 申请 Algonquin, Illinois 申请 fee: $20 / $25",
+      "summary_zh": "来自CaFÉ CallForEntry的市集或活动参与信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a2617e0701a5ad06a956206a",
+      "source_hash": "35931f218eb9862e64ac1978788a432a5253416bf461debfcf5b380892af4432",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜竞赛 Sea to Shining Sea 展览 Saint Joseph, Missouri 申请 fee: $40",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_34b6fa32542aec30e0883fec",
+      "source_hash": "8a9648dce53263dd9252e4c50fccdefc15b372bd04d1a05d72f800b41645b2de",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Los Angeles . Gallery Row Los Angeles, California 申请 fee: $35",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_f51210345ed35f7b6c51bf48",
+      "source_hash": "870940b0832ae6723337fff248e8a28c44c08e20ae1b9aed09718afeb6994611",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜竞赛 EcoTheo Review 2026: Quarterly Print and Rolling Online Literary Magazine Austin, Texas 申请 fee: $10",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_602783f8e0c802a0d33107e9",
+      "source_hash": "96c19c8cd05daaa93dce8c96ad2c5028dd6303a66b3beceb7c55de8a29392f33",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜资助 The Bennett 奖 5 Muskegon, Michigan 申请 fee: $50",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b271f34087155a0968ca0c56",
+      "source_hash": "6c786533b25e9322e089d325e4be856f3eb6fb477faadee3a4caf9c84eec6e23",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜竞赛 Athenaeum Solo or Group Show 2025-2026 Alexandria, Virginia 申请 fee: $40",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d3367b71d5f79a1b6cb99e71",
+      "source_hash": "47338682b23dfd924c3b61fa3c2432aba08846d3277fade18eec8b40058c1c87",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜资助 2026 National Juried 摄影 展览 Frederick, Maryland 申请 fee: $25 / $35",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_70433021fb54cdfc900a1c06",
+      "source_hash": "c13fa98833e47dbc4119b96d1a7de424f36740bb27597d2421e48e998d4bcdb0",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜资助 Winter 2027 'Vintage' Issue: 公开征集 for Submissions Philadelphia, Pennsylvania 申请 fee: $14",
+      "summary_zh": "来自CaFÉ CallForEntry的资助申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_75bce8d0694c47e3f93693bf",
+      "source_hash": "dea4cbc7d09559c9ccb040614c4c67905bbf513c2c58473be149252749b190d3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Handheld for the Holidays 2026 Roseville, California 申请 fee: $25",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_42d0af8784cafbfe9881da8d",
+      "source_hash": "3a830f8b073ef66724c4e80b63424883f0c4990686a1fb007d6eabb8b456adab",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜资助 31st Annual Gateway to the Rockies 艺术家 Show Aurora, Colorado 申请 fee: $45",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c7e400a3beed9cfdcbc4c1da",
+      "source_hash": "ef011b9d4a2ecb8d09f53352b91d671ebdb7196d232af5e7d8f6654965cd4e3a",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "不列颠哥伦比亚工艺协会机会｜urban sketching in jalisco 驻留",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_d24755376cf984799467340b",
+      "source_hash": "26f5622ff753ce5cf0c2db52bb937707fb5ed34250a9fe90a1e37fbd3863fb2e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "不列颠哥伦比亚工艺协会机会｜banff centre — visual arts thematic 驻留",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_78ad8a3dda3a32868979b5ca",
+      "source_hash": "d281f5c1f380d33e5c0c23a41bcb372f5cb0ce09d35cdc5ccf7fdba8be21cf1d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "circle 工艺 holiday 市集 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_463344efcabdb644cdb98702",
+      "source_hash": "7cdac49ef5f4f1766ba715741666bcd1c2ed8f95ae178c61f354e553623ae6fa",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "不列颠哥伦比亚工艺协会机会｜Call for Vendors: Mactaquac 工艺 艺术节 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_454e1d8add94da8ac69ccd3c",
+      "source_hash": "71c7a158e8d46c821f293f5966cc5b974533bea29332dd675e4ba5369d601dd3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Deer Lake 艺术家 驻留 2027",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_df20b689f6ddca030e8b3fe2",
+      "source_hash": "dac4e5736d0d34ba8881c1f06d0f2e937012c25f4bf8217159599a91425078f5",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "不列颠哥伦比亚工艺协会机会｜call for entry: flying solo",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_aa97022e6edc040552a5a109",
+      "source_hash": "c9c5c8cde1722acdf921f672f56ae2136dfbbd5d01bd35a834455cfec2e6d25e",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Categories of Risk",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_facc4bc078314f9d851188a0",
+      "source_hash": "3077789e3ca006823d06616ccc6d2886f230b5290e4765446c424104eeab3b54",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜The Light Frame Gallery | 公开征集 for Guest Writers (Museums, 摄影 & Community) Seeking guest writers for our new online journal. We want rigorous, research‑informed articles...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_531ecc167f1a258922b0c6a6",
+      "source_hash": "f6556e3436d518b5d58a91096fc193e4e334e1dd2b5b844905dd7239950a5d73",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜NTKO 艺术家 Gallery Is Looking For Solo / Group Show 提案 NTKO (Not That Kind Of) is a contemporary, welcoming and open 艺术家 space and gallery championing...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b5cafe3fe475dca3a588d2e7",
+      "source_hash": "c077126720a0e03be4bd3da792c874866123e22279527e403cd886c63ca5927f",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜公开征集 FOR 艺术家 驻留 We are seeking a multimedia 艺术家 to be a resident for at least three months on our 艺术家 zine to...",
+      "summary_zh": "来自CuratorSpace Opportunities的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_2a287e008a0e6c4b0924e49e",
+      "source_hash": "7506e1327d6712fe5f3476090108f6c474420c9b78f97eed7ca5c139ecbae272",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Seasons Pawtucket, Rhode Island 申请 fee: $20",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_7f0aa57bde535af11d44bc6c",
+      "source_hash": "6e2a9f41827faea384ebc6bdd84487645580530f02065bbe957d83ea2c641213",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜No 7 Museum Street: 艺术家' Studio Space 文化 Warrington has created a space for affordable studios attached to Warrington Museum &...",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c16878a3d15e5c6daeb5588c",
+      "source_hash": "982b4fb498601c3a7b5a2e401b5757f952b20fc8a2146a2cb6855133b7ca5fd5",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜View all stories",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_261507eb9d4450df1feff674",
+      "source_hash": "9b764d08b5a8c85e1040c90aceca8e73466a9cc3c9570bcb2e12a3565363994d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "英国传统工艺机会｜Our Partners",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_fc7fd81231638fe917f18b5f",
+      "source_hash": "316960bf61d7d80bc98b69ce96444569d5fdbd57fadcb764e077f2aa88230eff",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "公开征集 for DIGITAL WORKS 公开征集 for 艺术家. Send us your Digital Work to show in our gallery.",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_975ff21d3f68ce757ffaa045",
+      "source_hash": "326f0414e87b8d662690cdf33f93346634bdcac54e75c7e2873ec0b44c3f003b",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Children`s and Young People`s 艺术家 机会 This is a fantastic 机会 for children and young people aged 4yrs -18yrs to showcase their...",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_905596f4d47e541aa374ff18",
+      "source_hash": "ee661715b795d8e6f498fce987456f5a94f4f0f1209b993186ba461b5405c735",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜The Walls 展览 The Old Red Bus Station is offering Leeds based creatives the 机会 to host 展览 at...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_41e2bbbb71357f364515e8b5",
+      "source_hash": "06ce0a19fd338843be7e78e5e079fcf66bf2f5cf093ea0fe8c8bd970273babab",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "展览 艺术家 in the Atrium 26 - City of Frisco, TX Frisco, Texas 申请 fee: $0",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_dad863face584b0ed28f46a8",
+      "source_hash": "f7a957bb3f1e8aeb1682b3e14154e866920c069df8e019e36a5c46cf201d5f4a",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Call Out for Performers and Musicians | Sybarite Nights cabaret in the basement This is a call-out to musicians, performance 艺术家, poets, ventriloquists, magicians and all...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a0051b1db6bbf341bdc8fea6",
+      "source_hash": "bca22b509b0baf91ac021f1684ada1b7816a7b9cb36f111f94c5e51f827362d9",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜RuptureXIBIT Invitational 驻留 for Visual 艺术家 & Writers RuptureXIBIT is an inclusive, 艺术家-run space/艺术家 incubator located in Hampton Wick, London,...",
+      "summary_zh": "来自CuratorSpace Opportunities的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_47916e66a1dd9f2385ae1cfc",
+      "source_hash": "32535abd65aeca182eb668e95b22e2480314deb1fc05c1c36d7bcf05704a282d",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Scenic - 2026 (6th Annual Juried 展览, Promotion, Sales) Vancouver 申请 fee: $0",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_75b602829f6a10bc26483d25",
+      "source_hash": "57ebf39d0794c39787619aea94b0335ac57d431513724a99357b709c967c01dc",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Carre Gallery, Sleaford Established in 2010, the Carre Gallery is Sleaford's only visual arts gallery, and is operated...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_7bde3b711b868f69953859b6",
+      "source_hash": "8a859da7e3d23ea11041ec76477a42cf1af318b5a3072baf8c471d0b73f8a4d1",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜2026 하반기 전통문화 혁신이용권 공급기업 공모",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_01b51bad598d68f2b383074a",
+      "source_hash": "9fcfa5c8748a31b1bab3de54469ea6e5bd93aa1d0e0ef0e1d630323d16a3dc61",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜2026 올해의 공예상 후보자 추천 공모",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_0531a0d2b773e51b9ee9575d",
+      "source_hash": "9e97a463018af0e53b4b2ea528203a3861edd2c7986e6a70a14bf96db34778bd",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜2026년 KCDF갤러리 수시대관 모집안내",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9d21c6f6e148c39aee31a9ad",
+      "source_hash": "aa10ddbd6b9a116c3ef7ef149fbdda2d9ea710672e674d1ec657909bb16ea2b4",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜사업공모 2026 하반기 전통문화 혁신이용권 공급기업 공모 2026-08-31",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a157192f356c3188f14247a7",
+      "source_hash": "3ad83d21e7ab30ea8833231529efa3982321fc4ef052bfda29a0e21447ee8342",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜사업공모 2026 공공디자인 라운드 3차 참여자 모집 공모 2026-08-26",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_155a93107fef8eadf7c19ddf",
+      "source_hash": "8d80f59908f4343c6ec5ef5575a3a337647c98e8da4ca1ef1abeca0db6388b97",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜사업공모 2026 공공데이터 아이디어 공모 2026-08-10",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ddd7762aeac069ac57521b9c",
+      "source_hash": "1e202f4ce83b18dcf84c61f5d7bc319378408bc81fcb9cc5389dfdfce210c3e7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜사업공모 2026 디자인마이애미 현장운영 세일즈 파트너사 공모 2026-08-07",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_37bf8d44679d37fd306342f0",
+      "source_hash": "780dd037f6baf1724f7c9609286d70066216e192426dd1cff4eccd4c4a8da845",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜사업공모 2026 디자인마이애미 한국공예부스 참여작가 공모 2026-08-07",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ba664ade4271e02869399091",
+      "source_hash": "3d32951001590d378f7b20c4319b0cb95a017467962f728d84f99e5b1fdcbba3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜사업공모 2026 한복문화주간 일반참여처 추가 모집 2026-07-31",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_350a149ee39a0bd3170c28ad",
+      "source_hash": "e26dce5d4435207cc37750916f03d0c33c7a2a41221cce6b94005aec30161124",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Homo Faber 研修",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_156fe4845e9d0027e48da1fc",
+      "source_hash": "88855f8c9945005a7510f3e90b7120f37440b4d01c40ec35ef4021a5928c9687",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜The Nook 展览 The Nook is a new micro-gallery that offers a space for students to exhibit their work within...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_8cf22a3fa5f1dc9fbc46bd99",
+      "source_hash": "664d5922215a68ca6bef6028e4415886b2346fd0971682532946c7223468f1d8",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Homo Faber工艺机会｜Young Ambassadors 计划",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_9cbb692021a59762c516faff",
+      "source_hash": "eedaadb1d055c7901758407030fe7df8601b68994e3a3f1dfcc5781a38cdfe97",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Visual 艺术家 Studio Space - Canberra, Australia Professional Visual Arts Studios available 艺术家 working in all mediums",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_e37eb80c0639bb2b7f6ea637",
+      "source_hash": "f50a1eb6bf644eaf520b6a23a2343d19152064001d547640c2e8383ea98ad69b",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Available Temporary Studio Space - Doncaster We have a number of spaces available in an ex-office space in central Doncaster only a 5min walk...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_5f58d261d61cd6244b1dde03",
+      "source_hash": "aca85a449b7f35be497aba637875151c001a8afbfca15b777839c585ba2672f5",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "不列颠哥伦比亚工艺协会机会｜annual call – ferry building gallery",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_dc40d8956cedd7a88f57743f",
+      "source_hash": "96c49a8137672608ecaf61a71803bb72238a7599babecd7acf86a75e6eabaec1",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜hunt museum open submission 2026",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_c7ab89a178a2551fe99debfa",
+      "source_hash": "265ce264910d335768a1681ea7a1c152f716137d410a26d9b40c35bf54bddbb4",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜arcane scholarship 2026",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_f3235a9e8ef50c5bb1e98a0f",
+      "source_hash": "10825b3e51204946abc4b19b13e0406dba5a79f2e7e470df8666963d26f82374",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "linz 文化 working 资助",
+      "summary_zh": "来自ArtConnect艺术机会的资助申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_dad442b72995e79ffa3dfd15",
+      "source_hash": "6c3ae07f1b18061e72efa8698c6aa8e72b2b16c1e000d96fee2f082a9a5eb369",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜il posto–afterall editorial and research 研修",
+      "summary_zh": "来自ArtConnect艺术机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_12b7d3fffec87414f3cea723",
+      "source_hash": "46fa1458da4f2d9a85afc3f5cc539ddcd96ee39d3484768306c7c7725eb05af3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Elmswell Library is looking for 艺术家 to exhibit. We are a village library in the heart of...",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_af6804c343db50e62cd3cda5",
+      "source_hash": "5070d3eeaaa0ded5e38e625aae8673219fa770e345736345f71b0c754047bf43",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜sónar+d/fundación cotec: installation at knowcase",
+      "summary_zh": "来自ArtConnect艺术机会的资助申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_52011a0d1138259f822e7a15",
+      "source_hash": "edcfe7fb08df9ac2fb1fd9b2b522b886588263076883fd401d9cc44377fb7872",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "on::view 艺术家 驻留 2027",
+      "summary_zh": "来自ArtConnect艺术机会的驻留或研修申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_37b4f31b5e752e5588f5db74",
+      "source_hash": "e732ab00ca96a8e9658b496e2701601aa3cab0d8b54f460d33bd0e0eb98e72fc",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "公开征集: who walks here",
+      "summary_zh": "来自ArtConnect艺术机会的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_b829cdb4d43f9629d7a44907",
+      "source_hash": "3d39a10ffee4b7de54f0459ea7b685516855f50149cd7bf5f68664ecc7945ccb",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜experimental visual 艺术家 for hardcover book editions & online",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_3cd061b846b5ac191dcfd30b",
+      "source_hash": "72c58e42cdb32dcaff20f5378ccf3740a50126cbdf559f324d1d77240fbd3df8",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜princeton arts 艺术节",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_59447a1ed15b35325a2c4049",
+      "source_hash": "280a1bd37f65764e6c3af49ebca3ea767e9f02461bffa1c3f60230d3138fc894",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜numèric 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_51e8bf8851776a15c7a51e23",
+      "source_hash": "242b855ab7f34c1887e737a66de0454d1fa573a5b663140f7852a4bdc69a4741",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜CraftForms 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ecf695307a6e9d72905d9903",
+      "source_hash": "36de0fd42414fe21f33505e822f8d7b2e45d57ade2b15c22e6909985afeb8e2f",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜竞赛 Animals of the Planet - 2026 (3rd Annual Juried 展览, Publication, Sales) Vancouver 申请 fee: $0",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_3de3c40fd37fad3787fae7f1",
+      "source_hash": "769380be0611874575f4092233d167bdc1b36bca150053a885ec47312b8f679a",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Vault Collective ** 公开征集** Rolling Deadline **公开征集** VAULT COLLECTIVE ** ROLLING DEADLINE**",
+      "summary_zh": "来自CuratorSpace Opportunities的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_3b3a294c41559a1c5be2fe03",
+      "source_hash": "8c82409daf0a3c75d84cbe2d10a40af0d53928c55ee6c187b9e5cc112cfcfb48",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "亚洲—欧洲基金会文化360机会｜Bagri Foundation 资助 for Asian 文化",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_ba910db85cabbf206491b84e",
+      "source_hash": "c1b7739d9757b0b9f0ead517fb6b061f488221c604e8c162053c713c18d0187c",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Columbus Arts 艺术节 2027 Columbus, Ohio 申请 fee: $40",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_87fe6199ebd07e0e7c668b37",
+      "source_hash": "0e3dc50eaac3233d7525e22197058dc2e8736dfd5e6eab4adc27bc4a54254228",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Wavelength: Yellow Fort Wayne, Indiana 申请 fee: $12",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_0676703b845d8711a2d509f8",
+      "source_hash": "f4490b135f683328807e3e5a24d05122423acb9a8be7165834c2f959456f0ce8",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜展览 Naturalist Gallery Genre 艺术家 展览 Washington DC, District of Columbia 申请 fee: $30",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_248c865e78fb7ca7e060ba60",
+      "source_hash": "2282155bc94305184066377ab9683290b43a8f025d9b8b5fbffc57b91ae47afb",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "展览 COMPACT: Small Works Fort Wayne, Indiana 申请 fee: $12",
+      "summary_zh": "来自CaFÉ CallForEntry的赛事、公开征集或作品申请信息，截止日期待从来源原文确认。参赛范围、材料与提交方式请以来源原文为准。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_682bbe9f70ba6de1697de321",
+      "source_hash": "c965a71c7326e9fc4e2eeba835cffbee38a35025295ff41e371a4ce68beca678",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Gasparilla 艺术节 of the Arts 2027 57th Annual Tampa, Florida 申请 fee: $50",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_a338214952bd454005fe0b2e",
+      "source_hash": "d71a9e83c44b4b36851ff04254a7ff885c1c5b8e236b9debfd108e3afc0345ad",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Fairs/艺术节 Naples New Year's 艺术家 Fair 2027 - 31st Annual Naples, Florida 申请 fee: $40",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_dc556f3f8895708fd3486c6c",
+      "source_hash": "556e6dcf6d9f1cbcb57b337d589c4f850477dd733a643aba553edcdd0a1d8363",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "Fairs/艺术节 Rocky River Fall Arts 艺术节 2026 Rocky River, Ohio 申请 fee: $25",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_cbfc89aa9eb1dce28963d223",
+      "source_hash": "3a1f6182c644e7a30371a54d76b2d8159560b5459ee9bf89637cffbe57eda065",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 St. Armands Fall Fine 艺术家 艺术节 October 2026 (Paragon 艺术节) Sarasota , Florida 申请 fee: $30",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_3fb6d88b43e34f667a914500",
+      "source_hash": "5c57969410f23b020baa61b0f5ca091b74c1389d92d6aa732cf10076c9f63ec7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "The Adachi UKIYOE 奖项 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_2c55538eeac33218890b789d",
+      "source_hash": "d648df8a7bd9f7f6e609fe0bb833cffd3088334ab209a98f110a32535cfe32d7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "the hodder 研修",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_782a5f89b484820d41d76ae8",
+      "source_hash": "f010def0bba9c8f63e337ca752e1d258b22a156dbfb9c0e14015d7e69f7f6c22",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "urban arts 驻留 in mexico",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_19420973614bd4f63318df4d",
+      "source_hash": "156e92925544041eac4561428382132a92f960655d4f6cc67fda25f2c69e6618",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜house in the neighborhood",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_34c4497dcbb06b6bc4b132a6",
+      "source_hash": "78fa683b09b0029448fcb068f4f84ccbb6bfd1086899df0b400de20c32f43f89",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜princeton arts 研修",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_14d2fc6ad27cae13e8696164",
+      "source_hash": "e557b977536091ced780219a0ae05d399df0d9664a68123e8ddc92da23ac39ce",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜george street construction hoarding - public 艺术家 机会",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_1a5674ac3f364324a4dd0156",
+      "source_hash": "49fbcee11dd093c8d5f48f06aeaaeff6923b97c6fd73503d98a83a0fdf88f4f7",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜exhibit your 艺术家 in london september 2026 - huge gallery",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_02c644b10f3d2214bb6da94a",
+      "source_hash": "4d9af042bc5d274672bad7407704fe8c6c61a4560b8067e31da1564c4e7a50c4",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "ArtConnect艺术机会｜artevol 2026: a view from everywhere",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_6c8feb5d8875905976bbed4d",
+      "source_hash": "699881d9891d7087b5692a74e4338220dbe64c82f93c50f441e626cc89ed193c",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fully Funded Radcliffe 研修 Creative Arts 2027, Harvard",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_792b50313b11658fb86f44cf",
+      "source_hash": "5dc93e4da6bde0098494b23fd9a85c2cb385ec078e177348f31861ff3d6a6071",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Public 艺术家 Agency Sweden Announces New Commission For 艺术家",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_f717cd8962251bfabb0a783c",
+      "source_hash": "864de9adee38c01b4ec38be311e5562e6131e7870772e0bd5ed811d5e551fec0",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "苏格兰工艺机会｜Full details &rarr; Funding Visual 艺术家 and 工艺 Makers 奖项 Are you looking for funding to support your creative and professional development? VACMA is designed to help you grow and develop your creative practice with fixed bursaries of &pound;500 or&hellip; Closing date: 20 Oct 2026",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_866cff1b6856da4bd7e260ec",
+      "source_hash": "01d9740b2bcb313a7eafbbdd6545b261fe6a2abe2a363c2d6dbd8dae730d15ba",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Fairs/艺术节 Clinch River Fall Antique 艺术节 2026 (Artisan 申请) 25th Annual Clinton, Tennessee 申请 fee: $15 / $20",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_4fc6bad52ba27a193b72561e",
+      "source_hash": "594e6fc816cea28eb5f1cab53d10768f1c6b43b925edef73db9d84e8383b4f72",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜资助 Dorothy Antoinette LaSelle 2026 Travel 研修 Houston, Texas 申请 fee: $0",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_7d601bd813e65b05539eb1d4",
+      "source_hash": "202dd129c6a4d06f0eb5298309c692f8eac9e6ac56417c09c1e2249244ad9740",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜竞赛 公开征集: ONGOING Los Angeles, California 申请 fee: $32",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    },
+    {
+      "opportunity_id": "oppv2_70589b86b4e9249038b4fea7",
+      "source_hash": "7be2fb0dc5febd5b799edfc5391619e4fbc0094bd2e46c1c744baf2359a9c4f3",
+      "target_language": "zh-CN",
+      "strategy_version": "deterministic-zh-v1.2",
+      "title_zh": "海外机会｜Call for presentations at 艺术家 Lab 艺术家’ Presentations and Critical Dialogue",
+      "summary_zh": "来源页面未提供更详细摘要。",
+      "status": "translated",
+      "updated_at": "2026-09-08T03:07:03.568Z"
+    }
+  ]
+}

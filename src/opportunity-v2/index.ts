@@ -6,3 +6,4 @@ export * from "./radar-view";
 export * from "./pipeline";
 export * from "./scheduler";
 export * from "./source-overview";
+export * from "./display";

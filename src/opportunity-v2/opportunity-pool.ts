@@ -66,21 +66,28 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   const preferIncoming = item.source_id === "loewe-craft-prize" && prior.source_id !== "loewe-craft-prize";
   const sameCfwDetail = item.source_id === CFW_SOURCE_ID && prior.source_id === CFW_SOURCE_ID && item.detail_url === prior.detail_url;
   const deadline = sameCfwDetail && item.deadline ? item.deadline : (prior.deadline ?? item.deadline);
+  const mergedTitle = preferIncoming ? item.title : prior.title;
+  const mergedSummary = conciseSummary(prior.summary, prior.title).length >= conciseSummary(item.summary, item.title).length ? conciseSummary(prior.summary, prior.title) : conciseSummary(item.summary, item.title);
+  const derived = classifyV2Dimensions(mergedTitle, mergedSummary, item.category || prior.category);
+  const relevance = classifyV2RadarRelevance(mergedTitle, mergedSummary, item.category || prior.category);
   return {
     ...prior,
     ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
-    summary: conciseSummary(prior.summary, prior.title).length >= conciseSummary(item.summary, item.title).length ? conciseSummary(prior.summary, prior.title) : conciseSummary(item.summary, item.title),
+    title: mergedTitle,
+    summary: mergedSummary,
+    category: item.category || prior.category,
     deadline,
     status: opportunityStatus(deadline, now),
     first_seen_at: prior.first_seen_at,
     last_seen_at: now.toISOString(),
     discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
-    tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
+    tags: [...new Set([...prior.tags, ...item.tags, ...relevance.tags])].slice(0, 8),
+    radar_relevance: relevance.relevance === "IRRELEVANT" && prior.radar_relevance === "RELEVANT" ? prior.radar_relevance : relevance.relevance,
     source_url: preferIncoming ? item.source_url : (prior.source_url || item.source_url),
     source_name: preferIncoming ? item.source_name : (prior.source_name || item.source_name),
-    ...(item.directions?.length || prior.directions?.length ? { directions: item.directions?.length ? item.directions : prior.directions } : {}),
-    ...(item.work_formats?.length || prior.work_formats?.length ? { work_formats: item.work_formats?.length ? item.work_formats : prior.work_formats } : {}),
-    event_location: item.event_location ?? prior.event_location ?? null,
+    ...(item.directions?.length || prior.directions?.length || derived.directions.length ? { directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? []), ...derived.directions])] } : {}),
+    ...(item.work_formats?.length || prior.work_formats?.length || derived.work_formats.length ? { work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? []), ...derived.work_formats])] } : {}),
+    event_location: item.event_location ?? prior.event_location ?? derived.event_location ?? null,
     participation_scope: item.participation_scope ?? prior.participation_scope,
     participation_mode: item.participation_mode ?? prior.participation_mode,
     is_long_term: item.is_long_term ?? prior.is_long_term ?? false,

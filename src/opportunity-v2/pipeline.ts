@@ -1,12 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
+import dns from "node:dns/promises";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
-import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
+import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, isPublicIp, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
@@ -16,12 +17,30 @@ const DEFAULT_TIMEOUT_MS = 20_000;
 
 export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {
   if (!isPublicHttpUrl(url)) throw new Error("source URL must be a public HTTP(S) URL");
+  async function assertResolvedPublic(target: string): Promise<void> {
+    const parsed = new URL(target);
+    const addresses = await dns.lookup(parsed.hostname, { all: true, verbatim: true });
+    if (!addresses.length || addresses.some(({ address }) => !isPublicIp(address))) throw new Error("source URL resolves to a non-public address");
+  }
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
   try {
-    const response = await fetch(url, { redirect: "follow", signal: controller.signal, headers: { "user-agent": "ChancePing-OpportunityV2/1.0" } });
-    if (!isPublicHttpUrl(response.url)) throw new Error("redirected source URL is not public");
-    return { status: response.status, final_url: response.url, text: await response.text() };
+    let current = url;
+    for (let hop = 0; hop <= 4; hop += 1) {
+      if (!isPublicHttpUrl(current)) throw new Error("redirected source URL is not public");
+      await assertResolvedPublic(current);
+      const response = await fetch(current, { redirect: "manual", signal: controller.signal, headers: { "user-agent": "ChancePing-OpportunityV2/1.0" } });
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get("location");
+        if (!location) throw new Error("source redirect has no location");
+        if (hop === 4) throw new Error("source redirect limit exceeded");
+        current = new URL(location, current).toString();
+        continue;
+      }
+      if (response.headers.get("content-length") && Number(response.headers.get("content-length")) > 5_000_000) throw new Error("source response is too large");
+      return { status: response.status, final_url: current, text: await response.text() };
+    }
+    throw new Error("source redirect limit exceeded");
   } finally {
     clearTimeout(timer);
   }
@@ -34,7 +53,16 @@ function defaultHealthPath(): string {
 function writeHealth(rows: OpportunityV2SourceHealth[], filePath?: string): void {
   const target = path.resolve(filePath ?? defaultHealthPath());
   fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, `${JSON.stringify({ schema_version: "chanceping-opportunity-v2.source-health.v1", updated_at: new Date().toISOString(), sources: rows }, null, 2)}\n`, "utf8");
+  let existing: OpportunityV2SourceHealth[] = [];
+  try {
+    const parsed = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2SourceHealth[] };
+    existing = Array.isArray(parsed.sources) ? parsed.sources : [];
+  } catch { /* first run */ }
+  const byId = new Map(existing.map((row) => [row.source_id, row]));
+  for (const row of rows) byId.set(row.source_id, row);
+  const temp = `${target}.${process.pid}.tmp`;
+  fs.writeFileSync(temp, `${JSON.stringify({ schema_version: "chanceping-opportunity-v2.source-health.v1", updated_at: new Date().toISOString(), sources: [...byId.values()] }, null, 2)}\n`, "utf8");
+  fs.renameSync(temp, target);
 }
 
 function parseSource(source: OpportunityV2Source, text: string, listingUrl: string): { items: ParsedAggregationItem[]; format: "DEDICATED" | "RSS" | "HTML_LISTING" | null } {

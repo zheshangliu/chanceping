@@ -26,13 +26,19 @@ function liveStatus(item: OpportunityV2, now: Date): OpportunityV2["status"] {
   return opportunityStatus(item.deadline, now);
 }
 
+function startsInFuture(item: OpportunityV2, now: Date): boolean {
+  if (!item.starts_at) return false;
+  const start = new Date(item.starts_at).getTime();
+  return Number.isFinite(start) && start > now.getTime();
+}
+
 function statusMatches(item: OpportunityV2, filter: string | string[] | undefined, now: Date): boolean {
   const expected = values(filter);
   const status = liveStatus(item, now);
-  if (expected.length === 0) return status !== "EXPIRED";
+  if (expected.length === 0) return status !== "EXPIRED" && !startsInFuture(item, now);
   return expected.some((candidate) => {
     if (candidate === "history") return status === "EXPIRED";
-    if (candidate === "current") return status === "CURRENT";
+    if (candidate === "current") return status === "CURRENT" && !startsInFuture(item, now);
     if (candidate === "deadline_tbd") return status === "UNKNOWN_DEADLINE" && !item.is_long_term;
     if (candidate === "long_term") return status === "UNKNOWN_DEADLINE" && item.is_long_term === true;
     if (candidate === "closing_soon") {
@@ -43,7 +49,7 @@ function statusMatches(item: OpportunityV2, filter: string | string[] | undefine
     if (candidate === "opening_soon") {
       if (!item.starts_at) return false;
       const start = new Date(item.starts_at).getTime();
-      return start >= now.getTime() && start <= now.getTime() + 30 * 24 * 60 * 60 * 1000;
+      return Number.isFinite(start) && start >= now.getTime() && start <= now.getTime() + 30 * 24 * 60 * 60 * 1000;
     }
     return true;
   });
@@ -51,11 +57,11 @@ function statusMatches(item: OpportunityV2, filter: string | string[] | undefine
 
 function eventRegionMatches(item: OpportunityV2, region: OpportunityV2RadarQuery["event_region"]): boolean {
   if (!region) return true;
-  const location = item.event_location?.toLowerCase() ?? "";
+  const location = item.event_location?.toLowerCase().trim() ?? "";
   if (region === "unknown") return !location;
-  if (region === "overseas") return item.region === "GLOBAL" || /japan|uk|united kingdom|usa|us|canada|australia|海外|英国|美国|加拿大|日本/u.test(location);
+  if (region === "overseas") return /japan|uk|united kingdom|usa|\bus\b|canada|australia|france|germany|italy|spain|europe|海外|英国|美国|加拿大|日本|法国|德国|意大利|西班牙|欧洲|韩国|korea|singapore|新加坡|greece|希腊|scotland|苏格兰|england|英格兰|new zealand|新西兰/u.test(location);
   if (region === "hkmt") return /香港|澳门|台湾|hong kong|macau|taiwan/u.test(location);
-  return item.region === "CN" && !/香港|澳门|台湾|hong kong|macau|taiwan/u.test(location);
+  return /中国大陆|中国内地|中国|北京|上海|广州|深圳|广东|浙江|江苏|四川|杭州|成都|福建|厦门|山东|西安|武汉|重庆|mainland china|china/u.test(location) && !/香港|澳门|台湾|hong kong|macau|taiwan/u.test(location);
 }
 
 export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources: OpportunityV2Source[], query: OpportunityV2RadarQuery = {}): OpportunityV2[] {
@@ -68,7 +74,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
     .filter((item) => statusMatches(item, query.status, now))
     .filter((item) => !query.region || item.region === query.region)
-    .filter((item) => !query.source_id || item.source_id === query.source_id)
+    .filter((item) => !query.source_id || item.source_id === query.source_id || item.discovered_by_sources.includes(query.source_id))
     .filter((item) => !tag || item.tags.some((value) => value.toLowerCase() === tag || value.toLowerCase().includes(tag)))
     .filter((item) => values(query.category).length === 0 || values(query.category).includes(item.category))
     .filter((item) => values(query.direction).length === 0 || values(query.direction).some((value) => (item.directions ?? []).includes(value as never)))
