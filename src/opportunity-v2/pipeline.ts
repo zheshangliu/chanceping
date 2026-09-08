@@ -57,7 +57,10 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
       method: "GET",
       headers: { "user-agent": "ChancePing-OpportunityV2/1.0", accept: "text/html,application/rss+xml,application/xml;q=0.9,*/*;q=0.8" },
       servername: net.isIP(parsed.hostname.replace(/^\[|\]$/gu, "")) ? undefined : parsed.hostname,
-      lookup: (_hostname, _options, callback) => callback(null, resolved.address, resolved.family),
+      lookup: (_hostname, options, callback) => {
+        if (options.all) callback(null, [{ address: resolved.address, family: resolved.family }]);
+        else callback(null, resolved.address, resolved.family);
+      },
     }, (response) => {
       const contentLength = Number(response.headers["content-length"] ?? 0);
       if (contentLength > MAX_RESPONSE_BYTES) {
@@ -83,7 +86,11 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
       response.on("end", () => {
         if (settled) return;
         settled = true;
-        resolve({ status: response.statusCode ?? 0, headers: response.headers, text: Buffer.concat(chunks).toString("utf8") });
+        const body = Buffer.concat(chunks);
+        const contentType = String(response.headers["content-type"] ?? "");
+        const charset = contentType.match(/charset\s*=\s*["']?([^;"']+)/iu)?.[1]?.trim().toLowerCase();
+        const decoder = charset === "gbk" || charset === "gb2312" || charset === "gb18030" ? new TextDecoder("gb18030") : new TextDecoder("utf-8");
+        resolve({ status: response.statusCode ?? 0, headers: response.headers, text: decoder.decode(body) });
       });
     });
     request.setTimeout(DEFAULT_TIMEOUT_MS, () => request.destroy(new Error("source request timed out")));
@@ -150,6 +157,9 @@ interface PaginationPlan {
 }
 
 function paginationPlan(source: OpportunityV2Source): PaginationPlan | null {
+  if (source.id === "1zj-cultural-competition") {
+    return { maxPages: 65, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
+  }
   if (source.id === "cfw-cultural-ip") {
     return { maxPages: 12, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
   }
@@ -157,7 +167,7 @@ function paginationPlan(source: OpportunityV2Source): PaginationPlan | null {
     return { maxPages: 12, pageUrl: (page) => `https://whaleideas.com/zjds/index${page === 1 ? "" : `-${page}`}.html` };
   }
   if (source.id === "zjmtcn-product-competition") {
-    return { maxPages: 2, pageUrl: (page) => `https://www.zjmtcn.com/zjxx/chanpin/index${page === 1 ? "" : `-${page}`}.html` };
+    return { maxPages: 12, pageUrl: (page) => `https://www.zjmtcn.com/zjxx/chanpin/index${page === 1 ? "" : `-${page}`}.html` };
   }
   if (source.id === "iuben-cultural-competition") {
     return { maxPages: 12, pageUrl: (page) => `https://iuben.cn/collect/${page === 1 ? "" : `list_10_${page}/`}` };
@@ -301,9 +311,12 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   if (!options.sourcesPath) for (const seed of DEFAULT_OPPORTUNITY_V2_SOURCES) {
     if (!sources.some((source) => source.id === seed.id)) sources.push({ ...seed, types: [...seed.types], radars: [...seed.radars] });
   }
+  const hasDedicatedAdapter = (source: OpportunityV2Source): boolean => {
+    try { getAggregationAdapter(source.id); return true; } catch { return false; }
+  };
   const selectedSources = options.sourceId
     ? sources.filter((source) => source.id === options.sourceId && source.enabled)
-    : sources.filter((source) => source.enabled && source.status !== "PAUSED" && source.status !== "NEEDS_ADAPTER");
+    : sources.filter((source) => source.enabled && source.status !== "PAUSED" && (source.status !== "NEEDS_ADAPTER" || hasDedicatedAdapter(source)));
   if (options.sourceId && !selectedSources.length) throw new Error(`Source not found or paused: ${options.sourceId}`);
   const pool = readOpportunityV2Pool(options.poolPath);
   const fetched: ReturnType<typeof normalizeOpportunityV2>[] = [];

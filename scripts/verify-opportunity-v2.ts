@@ -41,7 +41,7 @@ async function main(): Promise<void> {
   };
   const fetcher = async (url: string) => ({ status: 200, final_url: url, text: fixtureBySource[url] ?? "" });
   const initialSources = readOpportunityV2Sources(sourcesPath);
-  assert.equal(initialSources.length, 30);
+  assert.equal(initialSources.length, 31);
   assert.deepEqual(initialSources.slice(7, 21).map((source) => source.id), [
     "opencall-radar-craft", "opencalls-ai", "american-craft-council-opportunities", "craft-scotland-opportunities",
     "kcdf-opportunities", "heritage-crafts-opportunities", "homo-faber-calls", "asef-culture360-opportunities",
@@ -50,12 +50,12 @@ async function main(): Promise<void> {
   ]);
   assert.deepEqual(initialSources.slice(21).map((source) => source.id), [
     "cfw-cultural-ip", "whaleideas-competition", "1zj-cultural-competition", "chuangyisai-cultural", "zcool-challenges",
-    "zjmtcn-product-competition", "iuben-cultural-competition", "everyart-competition", "gtn9-competition",
+    "zjmtcn-product-competition", "iuben-cultural-competition", "everyart-competition", "gtn9-competition", "cnyisai-competition",
   ]);
   writeOpportunityV2Sources(initialSources.map((source) => ["kcdf-opportunities", "homo-faber-calls"].includes(source.id) ? { ...source, status: "ACTIVE" } : source), sourcesPath);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
-  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && source.status !== "PAUSED" && source.status !== "NEEDS_ADAPTER").length);
+  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && source.status !== "PAUSED" && (source.status !== "NEEDS_ADAPTER" || ["cnyisai-competition", "1zj-cultural-competition", "chuangyisai-cultural", "zjmtcn-product-competition"].includes(source.id))).length);
   assert.ok(result.successful_sources >= 1);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);
@@ -146,7 +146,7 @@ async function main(): Promise<void> {
   assert.equal(created.data.test.ok, true);
   assert.equal(created.data.test.format, "HTML_LISTING");
   assert.ok(created.data.run.raw_items > 0);
-  assert.equal(readOpportunityV2Sources(sourcesPath).length, 31);
+  assert.equal(readOpportunityV2Sources(sourcesPath).length, 32);
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0, "arbitrary source IDs are legal");
 
   const edited = await jsonRequest(manager, "/sources/test-custom-source", "PUT", { name: "某非遗市集平台（已编辑）", url: "https://example.com/markets", region: "CN", priority: "P1", types: ["market", "open_call"], radars: ["ich"] });
@@ -190,7 +190,7 @@ async function main(): Promise<void> {
     { ...initialSources[0], status: "FAILED" },
     { ...initialSources[1], status: "PENDING" },
     { ...initialSources[2], status: "PAUSED", enabled: false },
-    { ...initialSources[3], status: "NEEDS_ADAPTER" },
+    { ...initialSources[7], status: "NEEDS_ADAPTER" },
   ], retrySourcesPath);
   fs.writeFileSync(retryPoolPath, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date(0).toISOString(), opportunities: [] }));
   const retry = await runOpportunityV2({ sourcesPath: retrySourcesPath, poolPath: retryPoolPath, healthPath: path.join(temp, "retry-health.json"), fetcher });
@@ -231,7 +231,7 @@ async function main(): Promise<void> {
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-08T23:59:59.000Z")), false);
   assert.equal(opportunityV2ShouldRun("2026-09-06T00:00:00.000Z", new Date("2026-09-09T00:00:00.000Z")), true);
   assert.equal(opportunityV2NextRunAt("2026-09-06T00:00:00.000Z"), "2026-09-09T00:00:00.000Z");
-  console.log(JSON.stringify({ gate: "pass", sources_before: 21, sources_after_test: 22, generic_html: true, generic_rss: true, deadline_hygiene: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
+  console.log(JSON.stringify({ gate: "pass", sources_before: initialSources.length, sources_after_test: readOpportunityV2Sources(sourcesPath).length, generic_html: true, generic_rss: true, deadline_hygiene: true, needs_adapter: true, artconnect_navigation_removed: true, loewe_adapter: true, existing_radar_items_unchanged: true, scheduler_interval_hours: 72 }, null, 2));
 }
 
 void main();

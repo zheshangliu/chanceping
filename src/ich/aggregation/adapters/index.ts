@@ -6,6 +6,7 @@ import { parseShejijingsaiListing } from "./shejijingsai";
 import { parseChuangsaiyunListing } from "./chuangsaiyun";
 import { parseLoeweCraftPrize } from "./loewe";
 import type { ParsedAggregationItem } from "./common";
+import { parseCnyisaiListing, parse1zjListing, parseChuangyisaiListing, parseZjmtListing } from "./round2-domestic";
 
 export interface AggregationAdapter {
   adapter_id: string;
@@ -31,6 +32,10 @@ export const AGGREGATION_ADAPTERS: AggregationAdapter[] = [
     parseListing: parseCompetitionsArchiListing, enrichItem: enrichCompetitionsArchiItem,
   },
   { adapter_id: "loewe-craft-prize-v1", source_id: "loewe-craft-prize", parseListing: parseLoeweCraftPrize },
+  { adapter_id: "cnyisai-competition-v1", source_id: "cnyisai-competition", parseListing: parseCnyisaiListing },
+  { adapter_id: "1zj-cultural-competition-v1", source_id: "1zj-cultural-competition", parseListing: parse1zjListing },
+  { adapter_id: "chuangyisai-cultural-v1", source_id: "chuangyisai-cultural", parseListing: parseChuangyisaiListing },
+  { adapter_id: "zjmtcn-product-competition-v1", source_id: "zjmtcn-product-competition", parseListing: parseZjmtListing },
 ];
 
 export function getAggregationAdapter(sourceId: string): AggregationAdapter {

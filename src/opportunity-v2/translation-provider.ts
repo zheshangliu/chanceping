@@ -1,5 +1,6 @@
 import type { LLMAdapter } from "../agents/llm-adapter";
 import { DeepSeekAdapter } from "../agents/deepseek-adapter";
+import { QwenAdapter } from "../agents/qwen-adapter";
 import { loadLocalApiEnv } from "../config/local-env";
 import { resolveLiveLlmProfile, type LiveLlmApiProfile } from "../config/live-llm-profile";
 import { createTranslatedOpportunityV2Translation, type OpportunityV2Translation } from "./display";
@@ -65,13 +66,14 @@ function read(env: NodeJS.ProcessEnv | Record<string, string | undefined>, key: 
   return String(env[key] ?? "").trim();
 }
 
-function makeLlmProvider(env: NodeJS.ProcessEnv | Record<string, string | undefined>): OpportunityTranslationProvider | null {
+function makeLlmProvider(env: NodeJS.ProcessEnv | Record<string, string | undefined>, requested: "deepseek" | "qwen" = "deepseek"): OpportunityTranslationProvider | null {
   try {
     const profile = resolveLiveLlmProfile({ env }) as LiveLlmApiProfile;
-    const adapter = profile.provider === "deepseek"
+    if (profile.provider !== requested) return null;
+    const adapter = requested === "deepseek"
       ? new DeepSeekAdapter({ apiKey: profile.apiKey, model: profile.model, baseUrl: profile.baseUrl, mockMode: false, maxTokens: 500 })
-      : null;
-    return adapter ? createLlmTranslationProvider("deepseek", adapter) : null;
+      : new QwenAdapter({ apiKey: profile.apiKey, model: profile.model, baseUrl: profile.baseUrl, mockMode: false, maxTokens: 500 });
+    return createLlmTranslationProvider(requested, adapter);
   } catch {
     return null;
   }
@@ -100,6 +102,8 @@ export function configuredTranslationProviders(env: NodeJS.ProcessEnv | Record<s
       if (url) add(() => require("./translation-providers/libretranslate").createLibreTranslate({ url, apiKey: read(env, "LIBRETRANSLATE_API_KEY") || undefined }));
     } else if (id === "deepseek") {
       add(() => makeLlmProvider(env));
+    } else if (id === "qwen") {
+      add(() => makeLlmProvider(env, "qwen"));
     }
   }
   return {

@@ -1,0 +1,79 @@
+import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseDateText, type ParsedAggregationItem } from "./common";
+
+const RESULT_NOISE = /(?:获奖|获奖公布|结果|揭晓|公示|关于我们|赛事推广|会员登录|客服|导航|论坛|发布征集|VIP|广告)/iu;
+const OPPORTUNITY_WORDS = /(?:大赛|竞赛|比赛|征集|征稿|设计|文创|非遗|工艺|产品|礼品|陶瓷|国潮|奖)/u;
+
+function attr(tag: string, name: string): string | null {
+  return tag.match(new RegExp(`${name}=["']([^"']*)["']`, "iu"))?.[1] ?? null;
+}
+
+function item(title: string, detailUrl: string, sourceUrl: string, rawText: string, fields: Partial<ParsedAggregationItem> = {}): ParsedAggregationItem {
+  const deadlineText = fields.deadline_text ?? extractDeadlineText(rawText);
+  return {
+    source_item_id: fields.source_item_id ?? identityHash(detailUrl), title: title.trim(), source_category: fields.source_category ?? "文创设计", source_status: fields.source_status ?? null,
+    detail_url: detailUrl, source_url: sourceUrl, published_at: fields.published_at ?? null, deadline_text: deadlineText, deadline_at: fields.deadline_at ?? parseDateText(deadlineText, new Date(), rawText), organizer: fields.organizer ?? null, application_url: fields.application_url ?? null, raw_text: rawText.slice(0, 8000),
+    event_location: fields.event_location ?? null, participation_scope: fields.participation_scope ?? "unspecified", participation_mode: fields.participation_mode ?? "unspecified",
+  };
+}
+
+export function parseCnyisaiListing(html: string, listingUrl: string): ParsedAggregationItem[] {
+  const result: ParsedAggregationItem[] = [];
+  for (const match of html.matchAll(/<a\b[^>]*class=["'][^"']*\bcard\b[^"']*["'][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/giu)) {
+    const detailUrl = normalizeUrl(match[1], listingUrl);
+    const inner = match[2];
+    const title = inner.match(/<h3\b[^>]*>([\s\S]*?)<\/h3>/iu)?.[1];
+    if (!detailUrl || !title) continue;
+    const cleanTitle = htmlToText(title);
+    const rawText = htmlToText(inner);
+    if (!cleanTitle || RESULT_NOISE.test(cleanTitle) || !OPPORTUNITY_WORDS.test(cleanTitle)) continue;
+    const status = inner.match(/<span\b[^>]*class=["'][^"']*\bchip\b[^"']*["'][^>]*>([\s\S]*?)<\/span>/iu)?.[1];
+    const deadline = inner.match(/data-deadline=["']([^"']+)["']/iu)?.[1] ?? null;
+    const organizer = inner.match(/<div\b[^>]*class=["'][^"']*\bhost\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/iu)?.[1];
+    const summary = inner.match(/<p\b[^>]*class=["'][^"']*\bcard-sum\b[^"']*["'][^>]*>([\s\S]*?)<\/p>/iu)?.[1];
+    const className = attr(match[0], "class") ?? "";
+    result.push(item(cleanTitle, detailUrl, listingUrl, [htmlToText(organizer ?? ""), htmlToText(summary ?? ""), rawText].filter(Boolean).join(" "), {
+      source_item_id: identityHash("cnyisai", detailUrl), source_category: className.includes("c-intl") ? "国际赛事" : "国内赛事", source_status: htmlToText(status ?? ""), deadline_text: deadline, deadline_at: parseDateText(deadline, new Date(), rawText), organizer: organizer ? htmlToText(organizer) : null,
+      participation_scope: className.includes("c-intl") ? "global" : "nationwide",
+    }));
+  }
+  return result;
+}
+
+export function parse1zjListing(html: string, listingUrl: string): ParsedAggregationItem[] {
+  const result: ParsedAggregationItem[] = [];
+  for (const match of html.matchAll(/<a\b[^>]*class=["']list-item["'][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/giu)) {
+    const detailUrl = normalizeUrl(match[1], listingUrl);
+    const inner = match[2];
+    const title = inner.match(/class=["']list-item-title["'][^>]*>([\s\S]*?)<\/span>/iu)?.[1];
+    if (!detailUrl || !title) continue;
+    const cleanTitle = htmlToText(title);
+    const rawText = htmlToText(inner);
+    if (!cleanTitle || RESULT_NOISE.test(cleanTitle) || !OPPORTUNITY_WORDS.test(cleanTitle)) continue;
+    const reward = inner.match(/class=["']list-item-price["'][^>]*>([\s\S]*?)<\/span>/iu)?.[1];
+    const timeText = htmlToText(inner.match(/class=["']list-item-time["'][^>]*>([\s\S]*?)<\/span>/iu)?.[1] ?? "");
+    const status = /(?:已经截止|已结束|截止)/u.test(timeText) ? "EXPIRED" : "CURRENT_OR_UNKNOWN";
+    const deadlineText = extractDeadlineText(rawText);
+    result.push(item(cleanTitle, detailUrl, listingUrl, rawText, { source_item_id: identityHash("1zj", detailUrl), source_category: "文创设计", source_status: status, deadline_text: deadlineText, organizer: null, raw_text: `${rawText} 奖金 ${htmlToText(reward ?? "")}` }));
+  }
+  return result;
+}
+
+function parsePathListing(html: string, listingUrl: string, sourceId: string, pathPattern: RegExp): ParsedAggregationItem[] {
+  const result: ParsedAggregationItem[] = [];
+  for (const anchor of extractAnchors(html, listingUrl)) {
+    if (!pathPattern.test(anchor.href) || anchor.href === listingUrl) continue;
+    const title = anchor.text.trim();
+    if (title.length < 4 || RESULT_NOISE.test(title) || !OPPORTUNITY_WORDS.test(title)) continue;
+    const deadlineText = extractDeadlineText(title);
+    result.push(item(title, anchor.href, listingUrl, title, { source_item_id: identityHash(sourceId, anchor.href), deadline_text: deadlineText, source_category: "文创设计" }));
+  }
+  return result;
+}
+
+export function parseChuangyisaiListing(html: string, listingUrl: string): ParsedAggregationItem[] {
+  return parsePathListing(html, listingUrl, "chuangyisai", /\/zjds\/gycp\//iu);
+}
+
+export function parseZjmtListing(html: string, listingUrl: string): ParsedAggregationItem[] {
+  return parsePathListing(html, listingUrl, "zjmtcn", /\/zjxx\/(?:chanpin|lipin|taoci)\//iu);
+}

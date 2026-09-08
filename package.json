@@ -144,6 +144,7 @@
     "verify:ich:competition-module": "tsx scripts/verify-ich-competition-module.ts",
     "verify:ich:v11": "tsx scripts/verify-ich-v11.ts",
     "verify:ich:1950": "tsx scripts/verify-ich-1950-finish.ts",
+    "verify:ich:round2:sources": "tsx scripts/verify-ich-round2-sources.ts",
     "verify:ich:aggregation": "tsx scripts/verify-ich-aggregation-discovery.ts",
     "ich:stage5a5:run": "tsx scripts/run-ich-stage5a5.ts",
     "verify:ich:stage5a5": "tsx scripts/verify-ich-stage5a5.ts",

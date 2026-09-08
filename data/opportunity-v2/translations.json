@@ -1,7 +1,18 @@
 {
   "schema_version": "chanceping-opportunity-v2.translation.v1",
-  "updated_at": "2026-09-08T07:54:14.772Z",
+  "updated_at": "2026-09-08T09:12:38.173Z",
   "translations": [
+    {
+      "opportunity_id": "oppv2_009f4f3cd08de2c9731b4b69",
+      "source_hash": "f5111c6edf4dba47d92fe5c972c40d9007470674776894a82e44690755f66bc0",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
     {
       "opportunity_id": "oppv2_01b51bad598d68f2b383074a",
       "source_hash": "9fcfa5c8748a31b1bab3de54469ea6e5bd93aa1d0e0ef0e1d630323d16a3dc61",
@@ -50,12 +61,12 @@
       "opportunity_id": "oppv2_05e60c41c6ebabae19e84fbc",
       "source_hash": "462424a42480a5f86d17dabaf910360cf7f86aeba02d7ab1888a1fcc09a273b8",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_0676703b845d8711a2d509f8",
@@ -72,23 +83,56 @@
       "opportunity_id": "oppv2_07373bdcd4705b6299f92186",
       "source_hash": "7aa18d3e4d12a22a2e14b804ece0ea30425267464f273ee3a09975fcfd4968b4",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_07ebba319a8473bc2e0a7753",
+      "source_hash": "573ba345e2601e9e6aaba554c1e2baf781ce0b9ced554c1fd3fb3c62ef2875e8",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_09716ca0e7e8795d97547874",
+      "source_hash": "bca483b7ccdf06e2d44ab1335484a61dbee5d75955d870752e0f6fdbbb905f00",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_0b51e69ee445f0ddd589b2e1",
       "source_hash": "c28afa70cdfb7bb298b2997c3cab75e8d637b3a07e59e6cda100662135082a1a",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_0c96cad244356f401ca3b34e",
+      "source_hash": "c71ef84effccfb7bdf2e7e5e712fbfafd98594ef392327ff8f7575d63121a624",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_0d0c6e1c5471377194ae5058",
@@ -100,6 +144,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_0e43ee64c2ea4a979bc8046f",
+      "source_hash": "78a49307b6fa8fec33aedc6f67981c917a99ffb057f86d9c3ae2bd931693b840",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_101538d365d8bc5cc51fc9cc",
@@ -122,6 +177,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_116214e8b2fd689478ea8fd5",
+      "source_hash": "16b9df1cdefc0e690757c8d6df6e1f9992df72362b68a04306258469be335933",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_12b7d3fffec87414f3cea723",
@@ -171,12 +237,12 @@
       "opportunity_id": "oppv2_157f3cbbd2a575ed53565723",
       "source_hash": "c1e9d27a10a7a338bdd6d41da8b820d96b4efafc5a5ff87f650f2686a2ce49f0",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_1703fedf782ab8760b2909b0",
@@ -188,6 +254,28 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_171615442e8593c142b2f2e2",
+      "source_hash": "5c0a7a439ed7fa87b8675230532d9faaf325470f95289b07c1ba9ae94c66a05b",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_174b58f1f7ee6590c4927329",
+      "source_hash": "365bf54a120a37636a652795a031d473d2a9da7f899c99cd16f1fc97df951403",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_19420973614bd4f63318df4d",
@@ -388,6 +476,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_2b113aedba673b03b52fe529",
+      "source_hash": "ffe079f726c2a62b63f5ac8921bc0aa37fb490ff06bc1a6249e78154a7de9151",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_2c55538eeac33218890b789d",
       "source_hash": "d648df8a7bd9f7f6e609fe0bb833cffd3088334ab209a98f110a32535cfe32d7",
       "target_language": "zh-CN",
@@ -413,12 +512,45 @@
       "opportunity_id": "oppv2_2ec67f42c862c26d9b40fc56",
       "source_hash": "47dd4490721fe5b0f9114071ac103c155e230432a49a017f498784cf2c25a034",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_3172d13efcc32716c957f85c",
+      "source_hash": "7978895f078f0f6bbcb8e9d407167551bda7fe715b02ed02588ea2124b22e43a",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_31acb7ce04dec29832eebc26",
+      "source_hash": "4ad0f7be444a85ccbe1432da60a469fffefe9e4ea8d6394d4a1e985a07e57c28",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_31e9590c1159cab0455d3a97",
+      "source_hash": "6325765c20f2255e0e2998424b669d308aac07111f4bf77cb0f5eadb415000ec",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_322b96a365a1493cb8d2d6f9",
@@ -430,6 +562,28 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_33c66bfd5f03f7a22c933584",
+      "source_hash": "35bb3115ae5d365f8899af06495ee862837a41eb72e881c957deab529a43a460",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_34811d6ed98c746757848c72",
+      "source_hash": "b9c62cc74d6aeb1a1ea5a235677cae7c89cbc0c5b8235f3a3c8f92161a33b04b",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_34b6fa32542aec30e0883fec",
@@ -465,6 +619,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_35a4836fa8c7525bc16c7a12",
+      "source_hash": "28cc5f70edd7ac4bcf6fa9675134928146ff610479a44b96b913dc13a2fa6b7d",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_37b4f31b5e752e5588f5db74",
       "source_hash": "e732ab00ca96a8e9658b496e2701601aa3cab0d8b54f460d33bd0e0eb98e72fc",
       "target_language": "zh-CN",
@@ -485,6 +650,28 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_3a4bbd28480a3f2ffe51ac8d",
+      "source_hash": "59ea3b984e7c057d6bb4bc4018b0035490cb3926287280fc6094844fdbb0a470",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_3aab3c094e4603bd6259553f",
+      "source_hash": "f6c4e5a5aed9c62606d615545204b1e36c712fb559d6a09f1ef348af14badc3c",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_3b3a294c41559a1c5be2fe03",
@@ -531,6 +718,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_3ed56c17ced28963e8a196ac",
+      "source_hash": "e5ae0ea8e0b5981b9f606f1763dfec1784290f46b580fb39283761048ed022c3",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_3fb6d88b43e34f667a914500",
       "source_hash": "5c57969410f23b020baa61b0f5ca091b74c1389d92d6aa732cf10076c9f63ec7",
       "target_language": "zh-CN",
@@ -540,6 +738,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_412b406a8f6c3464ca972e0f",
+      "source_hash": "dfb16bb04c45af453fb1ed73d27e4fa2bb60b43b7d29bebac58ec2ec0db5e58f",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_4157cd2bc780016e1a10f0ec",
@@ -573,6 +782,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_42bd3b3787f9ea190fe0ff2a",
+      "source_hash": "45e88d6dfe3ab54c5f738a7d5fec56901f507bac7887f0ab5415c1a3918454c6",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_42d0af8784cafbfe9881da8d",
@@ -622,23 +842,23 @@
       "opportunity_id": "oppv2_463344efcabdb644cdb98702",
       "source_hash": "7cdac49ef5f4f1766ba715741666bcd1c2ed8f95ae178c61f354e553623ae6fa",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_46c0ca5ad5243a08668941b5",
       "source_hash": "38c06a5826344e72fcf02e09e9b633ca7134fa2ffbc06ce747576122ec487773",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_46e94b3e129952d1812d9b58",
@@ -674,6 +894,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_4817f50b136ec66b690041ce",
+      "source_hash": "68eeb8acde7b6467b5dee17fce700e83e4e78643289f431b4346e6ac2380434e",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_49630e5b673a62417ed0c5d5",
       "source_hash": "9be648c42b8152104914dcf9154f7732af0fb93dfd28c097979687f88b1ee591",
       "target_language": "zh-CN",
@@ -683,6 +914,28 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_4a850ad71d5cf9533c2934b4",
+      "source_hash": "eeae50e061f99f87934be4cef08624d7894e4217778f245f852224c82b3f6cda",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_4a93094bb4fcaac7b8c153b5",
+      "source_hash": "a0d09471bf08fe1e1e621f4f039092e0c9e869d32b0f303d37cb10a78132e7b3",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_4ac7a117053eeaf94510d95b",
@@ -754,12 +1007,12 @@
       "opportunity_id": "oppv2_51e8bf8851776a15c7a51e23",
       "source_hash": "242b855ab7f34c1887e737a66de0454d1fa573a5b663140f7852a4bdc69a4741",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_52011a0d1138259f822e7a15",
@@ -773,6 +1026,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_531c503f6ea2a7f32feb01b8",
+      "source_hash": "9c566b0b3719937b9a2a1b10106683a621ceda4cedaa9c7f3399d26042a1ea79",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_531ecc167f1a258922b0c6a6",
       "source_hash": "f6556e3436d518b5d58a91096fc193e4e334e1dd2b5b844905dd7239950a5d73",
       "target_language": "zh-CN",
@@ -782,6 +1046,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_535e4c8c44d189f91e8dc562",
+      "source_hash": "cc2fa3c0320397db872d1a1e6395c40028de9fb325455f5cfec122710618f933",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_53c5c4c3b31daef9be26337e",
@@ -804,6 +1079,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_561bb563ae35d3531dbe239a",
+      "source_hash": "3dd77784278719d3022c97d8bc3dd5a886e1045879b4de302fe4a648dc3da0e8",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_570c6990e0be547ce81c5cec",
@@ -859,6 +1145,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_5f75c51b8ce97baad516b707",
+      "source_hash": "767da4ea73a08d2872962ca0801c67a468941f1be5e0608cdce27c2928c23dac",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_602783f8e0c802a0d33107e9",
@@ -927,6 +1224,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_671c8fc53d2445f372b48d17",
+      "source_hash": "7d5399e4253cd7a75c9cbbdb57eddc2fa4018a123e77f8c261cdfdb4235eb554",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_682bbe9f70ba6de1697de321",
       "source_hash": "c965a71c7326e9fc4e2eeba835cffbee38a35025295ff41e371a4ce68beca678",
       "target_language": "zh-CN",
@@ -949,6 +1257,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_68d312c9e8c4b9c70a5fdb94",
+      "source_hash": "c150f5425d1d80d2d46bda6bcd8773f77856312c56d8bc020bfc4d3f8b75a08a",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_6add8bda605de6a48b54373a",
       "source_hash": "7877f46e67a3c710313bbb75d2183bf5edb818f5f8ccac6b2c85e4619ffe2d30",
       "target_language": "zh-CN",
@@ -963,12 +1282,12 @@
       "opportunity_id": "oppv2_6b6df389bcf8678e946f3e79",
       "source_hash": "68586c61dab1e881c14dedeef170998a266126440931d1c25e6d884b628e5c8f",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_6b845a9109a2e05dd0580630",
@@ -993,6 +1312,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_6bb0c2e4f225a9fb14a59cd8",
+      "source_hash": "86059ae417fd95c87fe190f7cc31ef2b165cc22d7dd1dbf133ba7c58b6009fe1",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_6c8feb5d8875905976bbed4d",
       "source_hash": "699881d9891d7087b5692a74e4338220dbe64c82f93c50f441e626cc89ed193c",
       "target_language": "zh-CN",
@@ -1002,6 +1332,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_6c9c5ec79fb52395c1e00dbb",
+      "source_hash": "0ebb03d386e1d08616ac661a54679079cd20a683e846fc016ea03b56c9ad49f9",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_6dff384b8cb200042b57ca53",
@@ -1059,15 +1400,26 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
-      "opportunity_id": "oppv2_732b2f9c093bfd42a5749ab7",
-      "source_hash": "9fe467752142e733d2a18a8b1a5dd4005a4150c92ee5b1b803f5504213966eac",
+      "opportunity_id": "oppv2_7306dbd3aeb430e7ee008498",
+      "source_hash": "ac63fa263e91b8fd4d828be408f313e12962379d476918893dc3d23a3f70653b",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_732b2f9c093bfd42a5749ab7",
+      "source_hash": "9fe467752142e733d2a18a8b1a5dd4005a4150c92ee5b1b803f5504213966eac",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_746e1e79f92cf291c08ab54d",
@@ -1114,6 +1466,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_77d5afe2d319f8677cbc3fed",
+      "source_hash": "80fc1ca1d1f7c779cf9fb48cf2f4aeb6b0af343eb1624907a41f964a63f19f73",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_77ed7ba4eac925fb25710e92",
       "source_hash": "5cdd13134166c3315a752363d6fd8095386515a7d6f10d5000c5172e0909f0ba",
       "target_language": "zh-CN",
@@ -1139,12 +1502,12 @@
       "opportunity_id": "oppv2_78ad8a3dda3a32868979b5ca",
       "source_hash": "d281f5c1f380d33e5c0c23a41bcb372f5cb0ce09d35cdc5ccf7fdba8be21cf1d",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_792b50313b11658fb86f44cf",
@@ -1167,6 +1530,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_7c94281b6b184b7dfea1660e",
+      "source_hash": "28b53915384c05e572fa6f820a0c0d901860076ccaa4683fc46aac6fdab5fc7f",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_7d601bd813e65b05539eb1d4",
@@ -1213,6 +1587,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_7f8b5cbe73c423a1988e8f43",
+      "source_hash": "6aa4f5e6aad8919881e9debc9cf93da7068e8eed1c8828e088d47a8223f397cd",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_80d95fc9d68554561a204136",
       "source_hash": "f6c1e7984c16ae0fc7159ad1bca5428a6c54f8acce7dda45964003dbc6b2874c",
       "target_language": "zh-CN",
@@ -1222,6 +1607,50 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_818d06d4d6dc139564072e4c",
+      "source_hash": "cfca4ff8753efa94b0400ef58d4f441598cf31b132c8e6c50ffe46d4d47695b6",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_81c2ea5b8d08f74ee94a0ef3",
+      "source_hash": "f2bcf98fa8d2ebec4719a07bdd1258e95a207c029e1ad2c0a9b30199b87c67e9",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_8288430434f9cf7da9dd65a2",
+      "source_hash": "9d4744d8d5feb6259349b4e81f554068f318557b2d4c0f3758df876ab2a29bb4",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_84366a144ebac3df7c5156e1",
+      "source_hash": "52311cffda3ebdc87792e2c6732b3472a33b85e6758cbebdc09ff4b5449ecf77",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_843b57010a28a24b37a2b20f",
@@ -1260,23 +1689,34 @@
       "opportunity_id": "oppv2_86628a4c690d00e42f0dbf9b",
       "source_hash": "9e969a18f986c474d96def3257ee25523f43fb3ea7ee7a35f6601b8e7f51832a",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_866cff1b6856da4bd7e260ec",
       "source_hash": "01d9740b2bcb313a7eafbbdd6545b261fe6a2abe2a363c2d6dbd8dae730d15ba",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_87a46fe0577a8dfaa982d913",
+      "source_hash": "c393d5bc1215798d637f26d9dfd2c7e8e2286e7399d40911e0fe637b78e5d339",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_87fe6199ebd07e0e7c668b37",
@@ -1310,6 +1750,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_8ac987bbed703d0827065dbc",
+      "source_hash": "8d3f3f383518b2950ce3e8da9f203cae06c3fd1542be17361ea02f67139e5e47",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_8bb8560c951bac7415ac847d",
@@ -1411,6 +1862,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_90c7dd8dc5757bed57fb9c38",
+      "source_hash": "3ec4aaf949339d6909ca0bfdf2b2d03c87bee2f17fe88278c1664f30b84b95be",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_931b6abdfb0a8359fb78c824",
       "source_hash": "71ba1083f7db8c58b55c78a3c7f52e2e868925e8fab5fa44fda31a453bfab391",
       "target_language": "zh-CN",
@@ -1433,15 +1895,26 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
-      "opportunity_id": "oppv2_94090f5e132dd5de2b250b30",
-      "source_hash": "372cc49fd78fa2d3c923426a7d3ea6daa367e7173316908f74fc86d22e6af367",
+      "opportunity_id": "oppv2_939ed3efb7512cf46ac35855",
+      "source_hash": "2e747dbd740c6a553d5e10ff10bf759d1588fa0de49a575f96a0f136c6198e6d",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_94090f5e132dd5de2b250b30",
+      "source_hash": "372cc49fd78fa2d3c923426a7d3ea6daa367e7173316908f74fc86d22e6af367",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_975ff21d3f68ce757ffaa045",
@@ -1455,6 +1928,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_996422e7abe66115fbaea263",
+      "source_hash": "b60803ad70e6e3532abecf61701770a03abe3ef637e6a08605287165580f4af3",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_99ceaa216b532306c6c72bbc",
       "source_hash": "9e0521b9682282d5d5f3b62961ed7deca26c01e27e453ef9ba12ba48d3d5c4bc",
       "target_language": "zh-CN",
@@ -1464,6 +1948,28 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_9a72603acee628f4e7f0c814",
+      "source_hash": "b33f06e77cda2c64e521a8969660a7ae63e3eaf7e345f2a681341e543f47b10f",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_9aac791a63155cfa23254de0",
+      "source_hash": "972371ee48e5e59b63f2b46798bc26015e0b6ebde51cbe073085dde7aa11bf9b",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_9b8ffa264a1688152a82032d",
@@ -1499,6 +2005,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_9d3e70061ebeff98ed0ea400",
+      "source_hash": "1e45b647224d522009f0faacb361dffbcf467f1f9c51995f71587b16463cfd34",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_9d755418271a22b263cbc0d9",
       "source_hash": "6a62aad850c6339909cd25e4bb6790d39ab09fb81e64195d5c1f8489c76ba1bb",
       "target_language": "zh-CN",
@@ -1524,12 +2041,12 @@
       "opportunity_id": "oppv2_9eb3948749311cacf4c92c5b",
       "source_hash": "b9c1a85811af9840e4a797f14704638d448c0fbf797cc99803c8281e0b5e29d1",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_9f26321e22b082060fd4c9c6",
@@ -1576,6 +2093,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_a2724e887e91e5d20024a209",
+      "source_hash": "1e44cd7200b61110cd74e4d372d3d5eafc033d62ac8300751ffa7217be27fe94",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_a2907a2b89b556978b0f30aa",
       "source_hash": "02082ac671f9ee7c0e745ef254df93e2eaed51b18d71f1bfb30c30632e36ec68",
       "target_language": "zh-CN",
@@ -1585,6 +2113,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_a2a415f4858ef377915d1159",
+      "source_hash": "e2db19d67b3bdc5a7290e244fe5902050aae06327b3eeb9eeab490d7bdcbea82",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_a338214952bd454005fe0b2e",
@@ -1642,6 +2181,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_a7e95d6e22b5e600406401e5",
+      "source_hash": "18f1ff63c6302662efb35837c6beef86b71480f26ca468b647f44c3e9c25dd6a",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_a94888cc370733d98b31470d",
       "source_hash": "7b676faafdbe6ae87dbed4e83c5fc00c00d0a665958a8e0d9c91fd118ccf2008",
       "target_language": "zh-CN",
@@ -1651,6 +2201,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_a94f9f5cb740ffee86681225",
+      "source_hash": "6b99f086be182228950edee1614203f3ec79838f44df8fbe3351b15df8b96db3",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_aa4510dda197d9ccc3c16360",
@@ -1675,15 +2236,37 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
-      "opportunity_id": "oppv2_ab49e98ccae85cb6696505bf",
-      "source_hash": "d7d8b6ff4897575dfcb6d3b14e685b02548c3d0ae17f03cca6efd3b07cadfb12",
+      "opportunity_id": "oppv2_ab36e915ca774b08e026f316",
+      "source_hash": "9c36d41141b9dd03bd8b80fd2cee705f2e8386173df5f6bd88017e9bc3b42942",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_ab49e98ccae85cb6696505bf",
+      "source_hash": "d7d8b6ff4897575dfcb6d3b14e685b02548c3d0ae17f03cca6efd3b07cadfb12",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_ab640068b4d5f0eeb1a7bf9f",
+      "source_hash": "cd1d89db504972e1415e3a90c449a702d4bc05e574e785a6f845343baab1e334",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_ac0e7a05ea861bc3c01162fb",
@@ -1695,6 +2278,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_ad39f9139fe03a2d018fd841",
+      "source_hash": "79221fc46496dc359b3ba61d1077e9f79c642263bd00fab7bc1cf3e319cb4db0",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_ad5ef71f2a4b731ac542f0b3",
@@ -1711,12 +2305,12 @@
       "opportunity_id": "oppv2_ae7e82cbce6f46793b988cc4",
       "source_hash": "5957c883107b5c8df663212551eb74275bda1329db0bc2b24bc0671725b8cf3b",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_af6804c343db50e62cd3cda5",
@@ -1752,6 +2346,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_b5d0fa76337d8b0ce18e35e8",
+      "source_hash": "3094cac8a11b99b9370bdad66ea92520ed6f4d29a55ea624fd80d37332ebb412",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_b5d14f6013ad864600523891",
       "source_hash": "d12b101d897e5e233afc6df4b531ec987c366225194071a009e39669fdd17589",
       "target_language": "zh-CN",
@@ -1766,12 +2371,12 @@
       "opportunity_id": "oppv2_b7a4f27ee9cec2d9ab5855c8",
       "source_hash": "d4d39d0f0c538f608d97a992f3f1fa749a76f5cd595c6b86900463cb0f89cf13",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_b829cdb4d43f9629d7a44907",
@@ -1851,6 +2456,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_bab9fdc122291f9850bfe0ba",
+      "source_hash": "0c975219f60a4fbf8cc9216a264b72b6dd572a113918d3f7b598c40235ce9a90",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_bb2231f4058851e25de8e754",
       "source_hash": "4d3d1cc2f4215f65989215272ccbfd44db415a80e5bac1d95eeb3af0f41e844c",
       "target_language": "zh-CN",
@@ -1860,6 +2476,28 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_bb709de117b11000bd76c3da",
+      "source_hash": "764567112035b8432ca166f7f22f22929f5a24f7a95d4f3896a83190aa2214b1",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_bbe54221141590836d8bf879",
+      "source_hash": "be260e2fcb0f863b52777b164f32f1238992910bde848294cd34da10ac7b4a8d",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_bc1fe3c562678d50ced662cd",
@@ -1917,6 +2555,28 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_bf86b0355bec8f94c20c0c0f",
+      "source_hash": "576fab289af5092d18050a74f6c5fc3d5f064db94c65451df7396a25f5898512",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_c0aa77b0d2bfdf4bd8b70c84",
+      "source_hash": "68eb02803f69a34e4a2898e0433ca32d5cab5371673904f8896e1750f7ad67fc",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_c16878a3d15e5c6daeb5588c",
       "source_hash": "982b4fb498601c3a7b5a2e401b5757f952b20fc8a2146a2cb6855133b7ca5fd5",
       "target_language": "zh-CN",
@@ -1937,6 +2597,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_c215ec474af100dd677f4431",
+      "source_hash": "d4d1d19e2c981811d0ad652dbcbd87b829498f7683f48a79a9361097d589471b",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_c2b004ccd6e4dcb43d00795d",
@@ -1986,12 +2657,12 @@
       "opportunity_id": "oppv2_c3fceef86ca283ac3c958cc3",
       "source_hash": "0d28b21aac9d99c891c3ba7cb84c37dd84e126365cfabf7a8cabd52a29c7bc66",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_c562f24f038ed1ba1c3959a4",
@@ -2030,12 +2701,12 @@
       "opportunity_id": "oppv2_c57f2b60c740a02df70a2f74",
       "source_hash": "f1eb0277c581a3cad23b3dfa6788b0d3fb3601a9db15849c0d53fda9ed81f005",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_c69bbca7030ff312b54444d7",
@@ -2093,15 +2764,70 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
-      "opportunity_id": "oppv2_ce6fe43c9ad273407cf39d29",
-      "source_hash": "ffab2421f67591671395301576a4fd4b7db0e2082b3960a32b8a2660d9dc0fc7",
+      "opportunity_id": "oppv2_cd8d159c336aa75703f6c64c",
+      "source_hash": "e74b2b5faeebf34af8a4f9e5c4f94847a90bacf177cf2ad58bb3c9d1e986ebe6",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_cdb62a955c4d8393af3c4a3c",
+      "source_hash": "996e4f8b371f7d9f20843845dbd421a5cf398ab6874efc49c80ee04bc980de5e",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_ce6fe43c9ad273407cf39d29",
+      "source_hash": "69ed2097e76506cc12b75364a2e543406b01d6b358bc9791258983b455bd0848",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_d07e7e8e00c3a83307f6596a",
+      "source_hash": "8904daaf2ee3a3d1cb8e55f423e19961caef3dff7648f63dd34f322490eff207",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_d1b45c9bc396baf34d1529bf",
+      "source_hash": "c72b994983178012a73a1a736bc40fe7162c444d01d16c2683f8409f21ba3f6c",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_d21d5327ed03169107349433",
+      "source_hash": "b88b5fcf77afd4124c566fa4bc12a457ee92a63ecdfd30eb36c5a4964a0deac8",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_d24755376cf984799467340b",
@@ -2170,6 +2896,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_d4ecc414b1bc5021574ffe04",
+      "source_hash": "9e64dd85fe59a39c298cdbf4e02b7d1a2cc60b2de4e05984c6b8193eeb7e3465",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_d6763d3484d72c7abd60f5a5",
       "source_hash": "d28ab197933707419916ff8f09d69193d35ce6b13a3654816b5777062e13ee82",
       "target_language": "zh-CN",
@@ -2236,6 +2973,17 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
+      "opportunity_id": "oppv2_dbd2bfe4ba6cb839cc393ec7",
+      "source_hash": "c33f5c1c6ba8d9820eac331082f77db8f07f31d54ae65a698f6b52e8b585f412",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
       "opportunity_id": "oppv2_dc40d8956cedd7a88f57743f",
       "source_hash": "96c49a8137672608ecaf61a71803bb72238a7599babecd7acf86a75e6eabaec1",
       "target_language": "zh-CN",
@@ -2245,6 +2993,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_dc416d8f9f62da62cadeca5d",
+      "source_hash": "fc82a4da31367b0377d63e9f6d063a2faea233f29f2ed892c94d1fa1b23d48af",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_dc556f3f8895708fd3486c6c",
@@ -2261,12 +3020,12 @@
       "opportunity_id": "oppv2_dcd7d94eb79bfb02a02f26f4",
       "source_hash": "e0d72cadc470fcf4327c2e2de1336347fc9401cfed7a645199d88cda72c65f9e",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_ddd7762aeac069ac57521b9c",
@@ -2278,6 +3037,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_de62b1896ea6b553ed91154c",
+      "source_hash": "54c08e2506237510d2f1e143f4fb75e7e014798e579021ebb8d4bb23ddad0b6d",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_df20b689f6ddca030e8b3fe2",
@@ -2305,12 +3075,12 @@
       "opportunity_id": "oppv2_e2a450203749e0f515ee8372",
       "source_hash": "a57734c2ec9bd76b3d2ecd8a23f98761f340677e559a8421ddc5660ad90373f3",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_e37eb80c0639bb2b7f6ea637",
@@ -2333,6 +3103,17 @@
       "status": "failed",
       "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
       "updated_at": "2026-09-08T07:54:00.082Z"
+    },
+    {
+      "opportunity_id": "oppv2_e88e3efec1f7c5f151fcc6cb",
+      "source_hash": "b4c60fde17cc42eee450b8eaa522ca6535e02ae6ad220189df4e539768974c28",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_e8f0fbfccdae2a5c0f7d1215",
@@ -2360,23 +3141,34 @@
       "opportunity_id": "oppv2_ea53714a2d5ae1a8e57e7c5b",
       "source_hash": "aec61e8ab15bf49d52cecce37109bacfc8b545dc8cbf05a5c6902bd41231455b",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_ec29f01eca6d22a3ddbb675e",
       "source_hash": "010e2ed016d36e6e229a62e8705571222fb5b23860e884015d2c4fa0388b4524",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_ecc03903f7b1f34c0ac2bde3",
+      "source_hash": "6544676f31d98ef2587142a1a37d0204c3b23591c51bb2cf7852b2af2c927f06",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_ecf695307a6e9d72905d9903",
@@ -2390,26 +3182,59 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
-      "opportunity_id": "oppv2_f1b0094720a39a95047f9c9f",
-      "source_hash": "95d40dd7efe104120c9d81b37ca7285da556106c55750c2a3e0bc998d58aa355",
+      "opportunity_id": "oppv2_efc2f8cd00446046ff8afb76",
+      "source_hash": "85aa7d6bedcd6ae07b9e1fe0f20ca04fbc3a0effd1ba3798d5e72dd32a5db9b1",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_f1a5ab919ea4b64c27cff6bc",
+      "source_hash": "0dd2d84c2e282378d6f3b576b41cc4feab4d09d0be78fd94061386a08d9a9dc2",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_f1b0094720a39a95047f9c9f",
+      "source_hash": "95d40dd7efe104120c9d81b37ca7285da556106c55750c2a3e0bc998d58aa355",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_f1ff87b323594cd7c9e16abe",
       "source_hash": "8f9526e0e60513ea607a04b0e6076ce2818a854cc5bdd1687f702d83371ada43",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_f30a00bb409de3202a44f34c",
+      "source_hash": "ee1d5664c6ae43e240cf602a9467fb24c8a5be6da1b32b9f42729ed40c29bff8",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_f3235a9e8ef50c5bb1e98a0f",
@@ -2448,12 +3273,23 @@
       "opportunity_id": "oppv2_f717cd8962251bfabb0a783c",
       "source_hash": "864de9adee38c01b4ec38be311e5562e6131e7870772e0bd5ed811d5e551fec0",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_f848306c63f63d281f5b9c05",
+      "source_hash": "e7a4336545985634922a1c163522d5542e8131bd6f33b664a84671bb10d4ec5a",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_f9e66b87115572fff743a8db",
@@ -2470,12 +3306,12 @@
       "opportunity_id": "oppv2_facb0b5a672fafc9d39aa1e9",
       "source_hash": "d85f62e3f1b0ac9b83f95e14005c290b7a0a2d7ab7a6c2ee18a2034f6eb8f1f9",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     },
     {
       "opportunity_id": "oppv2_facc4bc078314f9d851188a0",
@@ -2533,15 +3369,37 @@
       "updated_at": "2026-09-08T07:54:00.082Z"
     },
     {
-      "opportunity_id": "oppv2_ffd0150901943a85c55a91ca",
-      "source_hash": "e029b7e7dd94add5cb2e959060390bb648a516a470b0114fa8a0513911f62fe7",
+      "opportunity_id": "oppv2_ff3dbe6221b6b22de9d5abb1",
+      "source_hash": "77323da984daa320b8d60540b931de68a57c200eb53b975504844ba781ff7bde",
       "target_language": "zh-CN",
-      "strategy_version": "llm-zh-v2",
+      "strategy_version": "provider-chain-zh-v1",
       "title_zh": "",
       "summary_zh": "",
       "status": "failed",
-      "error": "Qwen API call failed after retry: Qwen API error: status=403, body={\"error\":{\"message\":\"Free quota exhausted. To continue accessing the model on a paid basis, please add funds or disable the \\\"use free tier only\\\" mode in the management con",
-      "updated_at": "2026-09-08T07:54:00.082Z"
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_ff6e5a58d1a174266eea6db3",
+      "source_hash": "f52c616fc0dbf16f0c929cf5119eedb29820f3596de6e82585895b6bdbd89bb6",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
+    },
+    {
+      "opportunity_id": "oppv2_ffd0150901943a85c55a91ca",
+      "source_hash": "0bca0c74fe1e3f18fa78178a0f434e24f72caff5ce56cf57e38b2105edab3602",
+      "target_language": "zh-CN",
+      "strategy_version": "provider-chain-zh-v1",
+      "title_zh": "",
+      "summary_zh": "",
+      "status": "failed",
+      "error": "translation provider is not configured",
+      "updated_at": "2026-09-08T09:12:38.148Z"
     }
   ]
 }

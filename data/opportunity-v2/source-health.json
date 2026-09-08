@@ -1,240 +1,336 @@
 {
   "schema_version": "chanceping-opportunity-v2.source-health.v1",
-  "updated_at": "2026-09-08T02:07:57.788Z",
+  "updated_at": "2026-09-08T09:11:34.214Z",
   "sources": [
     {
       "source_id": "shejijingsai-list",
-      "fetched_at": "2026-09-08T02:07:17.607Z",
+      "fetched_at": "2026-09-08T09:10:31.584Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 286,
       "error": null,
-      "format": "DEDICATED"
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "chuangsaiyun-competition-list",
-      "fetched_at": "2026-09-08T02:07:18.161Z",
+      "fetched_at": "2026-09-08T09:10:32.071Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 104,
       "error": null,
-      "format": "DEDICATED"
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "contest-watchers-open",
-      "fetched_at": "2026-09-08T02:07:18.287Z",
+      "fetched_at": "2026-09-08T09:10:32.385Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 10,
       "error": null,
-      "format": "DEDICATED"
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "crafts-council-opportunities",
-      "fetched_at": "2026-09-08T02:07:21.075Z",
+      "fetched_at": "2026-09-08T09:10:35.187Z",
       "ok": false,
       "http_status": 403,
       "items_seen": 0,
       "error": "HTTP 403",
-      "format": null
+      "format": null,
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "artconnect-opportunities",
-      "fetched_at": "2026-09-08T02:07:21.075Z",
+      "fetched_at": "2026-09-08T09:10:35.187Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 11,
       "error": null,
-      "format": "DEDICATED"
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "competitions-archi",
-      "fetched_at": "2026-09-08T02:07:24.165Z",
-      "ok": false,
-      "http_status": null,
-      "items_seen": 0,
-      "error": "fetch failed",
-      "format": null
-    },
-    {
-      "source_id": "loewe-craft-prize",
-      "fetched_at": "2026-09-08T02:07:24.165Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 1,
-      "error": null,
-      "format": "DEDICATED"
-    },
-    {
-      "source_id": "opencall-radar-craft",
-      "fetched_at": "2026-09-08T02:07:25.055Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 5,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "opencalls-ai",
-      "fetched_at": "2026-09-08T02:07:26.788Z",
-      "ok": false,
-      "http_status": 403,
-      "items_seen": 0,
-      "error": "HTTP 403",
-      "format": null
-    },
-    {
-      "source_id": "american-craft-council-opportunities",
-      "fetched_at": "2026-09-08T02:07:27.866Z",
-      "ok": false,
-      "http_status": 403,
-      "items_seen": 0,
-      "error": "HTTP 403",
-      "format": null
-    },
-    {
-      "source_id": "craft-scotland-opportunities",
-      "fetched_at": "2026-09-08T02:07:27.866Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 18,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "kcdf-opportunities",
-      "fetched_at": "2026-09-08T02:07:29.078Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 9,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "heritage-crafts-opportunities",
-      "fetched_at": "2026-09-08T02:07:29.775Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 18,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "homo-faber-calls",
-      "fetched_at": "2026-09-08T02:07:31.325Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 2,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "asef-culture360-opportunities",
-      "fetched_at": "2026-09-08T02:07:32.768Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 16,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "curatorspace-opportunities",
-      "fetched_at": "2026-09-08T02:07:33.629Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 3,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "cafe-call-for-entry",
-      "fetched_at": "2026-09-08T02:07:35.255Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 21,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "artshub-craft-opportunities",
-      "fetched_at": "2026-09-08T02:07:40.086Z",
-      "ok": false,
-      "http_status": 403,
-      "items_seen": 0,
-      "error": "HTTP 403",
-      "format": null
-    },
-    {
-      "source_id": "craft-council-bc-calls",
-      "fetched_at": "2026-09-08T02:07:40.086Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 8,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "craft-council-nl-opportunities",
-      "fetched_at": "2026-09-08T02:07:41.994Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 1,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "cfw-cultural-ip",
-      "fetched_at": "2026-09-08T02:07:42.830Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 57,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "whaleideas-competition",
-      "fetched_at": "2026-09-08T02:07:45.328Z",
-      "ok": true,
-      "http_status": 200,
-      "items_seen": 179,
-      "error": null,
-      "format": "HTML_LISTING"
-    },
-    {
-      "source_id": "zcool-challenges",
-      "fetched_at": "2026-09-08T02:07:55.907Z",
+      "fetched_at": "2026-09-08T09:10:38.011Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 12,
       "error": null,
-      "format": "HTML_LISTING"
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "loewe-craft-prize",
+      "fetched_at": "2026-09-08T09:10:40.432Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 1,
+      "error": null,
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "opencall-radar-craft",
+      "fetched_at": "2026-09-08T09:10:40.929Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 5,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "opencalls-ai",
+      "fetched_at": "2026-09-08T09:10:42.270Z",
+      "ok": false,
+      "http_status": 403,
+      "items_seen": 0,
+      "error": "HTTP 403",
+      "format": null,
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "american-craft-council-opportunities",
+      "fetched_at": "2026-09-08T09:10:42.270Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 50,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "craft-scotland-opportunities",
+      "fetched_at": "2026-09-08T09:10:45.078Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 18,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "kcdf-opportunities",
+      "fetched_at": "2026-09-08T09:10:46.964Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 10,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "heritage-crafts-opportunities",
+      "fetched_at": "2026-09-08T09:10:47.443Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 18,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "homo-faber-calls",
+      "fetched_at": "2026-09-08T09:10:50.112Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 2,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "asef-culture360-opportunities",
+      "fetched_at": "2026-09-08T09:10:50.992Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 16,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "curatorspace-opportunities",
+      "fetched_at": "2026-09-08T09:10:52.152Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 3,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "cafe-call-for-entry",
+      "fetched_at": "2026-09-08T09:10:54.257Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 21,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "artshub-craft-opportunities",
+      "fetched_at": "2026-09-08T09:10:59.296Z",
+      "ok": false,
+      "http_status": 403,
+      "items_seen": 0,
+      "error": "HTTP 403",
+      "format": null,
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "craft-council-bc-calls",
+      "fetched_at": "2026-09-08T09:10:59.296Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 8,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "craft-council-nl-opportunities",
+      "fetched_at": "2026-09-08T09:11:02.189Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 1,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "cfw-cultural-ip",
+      "fetched_at": "2026-09-08T09:11:03.357Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 58,
+      "error": "Partial pagination; next page 13",
+      "format": "HTML_LISTING",
+      "partial": true,
+      "next_page": 13
+    },
+    {
+      "source_id": "whaleideas-competition",
+      "fetched_at": "2026-09-08T09:11:05.885Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 179,
+      "error": "Partial pagination; next page 13",
+      "format": "HTML_LISTING",
+      "partial": true,
+      "next_page": 13
+    },
+    {
+      "source_id": "zcool-challenges",
+      "fetched_at": "2026-09-08T09:11:30.740Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 12,
+      "error": null,
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "iuben-cultural-competition",
-      "fetched_at": "2026-09-08T02:07:56.473Z",
+      "fetched_at": "2026-09-08T09:11:32.660Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 15,
       "error": null,
-      "format": "HTML_LISTING"
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "everyart-competition",
-      "fetched_at": "2026-09-08T02:07:56.673Z",
+      "fetched_at": "2026-09-08T09:11:32.853Z",
       "ok": true,
       "http_status": 200,
       "items_seen": 11,
       "error": null,
-      "format": "HTML_LISTING"
+      "format": "HTML_LISTING",
+      "partial": false,
+      "next_page": null
     },
     {
       "source_id": "gtn9-competition",
-      "fetched_at": "2026-09-08T02:07:57.764Z",
+      "fetched_at": "2026-09-08T09:11:33.939Z",
       "ok": false,
       "http_status": 521,
       "items_seen": 0,
       "error": "HTTP 521",
-      "format": null
+      "format": null,
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "1zj-cultural-competition",
+      "fetched_at": "2026-09-08T09:11:23.128Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 1176,
+      "error": null,
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "chuangyisai-cultural",
+      "fetched_at": "2026-09-08T09:11:30.040Z",
+      "ok": false,
+      "http_status": 200,
+      "items_seen": 0,
+      "error": "No RSS or HTML listing items recognized",
+      "format": null,
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "zjmtcn-product-competition",
+      "fetched_at": "2026-09-08T09:11:31.808Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 70,
+      "error": null,
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
+    },
+    {
+      "source_id": "cnyisai-competition",
+      "fetched_at": "2026-09-08T09:11:33.939Z",
+      "ok": true,
+      "http_status": 200,
+      "items_seen": 110,
+      "error": null,
+      "format": "DEDICATED",
+      "partial": false,
+      "next_page": null
     }
   ]
 }
