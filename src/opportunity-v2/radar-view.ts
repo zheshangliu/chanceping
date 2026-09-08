@@ -1,7 +1,8 @@
 import { opportunityStatus } from "./opportunity-pool";
+import { readOpportunityV2Translations } from "./display";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
-export type OpportunityV2StatusFilter = "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history";
+export type OpportunityV2StatusFilter = "browse" | "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history";
 
 export interface OpportunityV2RadarQuery {
   q?: string;
@@ -35,14 +36,15 @@ function startsInFuture(item: OpportunityV2, now: Date): boolean {
 function statusMatches(item: OpportunityV2, filter: string | string[] | undefined, now: Date): boolean {
   const expected = values(filter);
   const status = liveStatus(item, now);
-  if (expected.length === 0) return status !== "EXPIRED" && !startsInFuture(item, now);
+  if (expected.length === 0) return status !== "EXPIRED";
   return expected.some((candidate) => {
+    if (candidate === "browse") return status !== "EXPIRED";
     if (candidate === "history") return status === "EXPIRED";
     if (candidate === "current") return status === "CURRENT" && !startsInFuture(item, now);
     if (candidate === "deadline_tbd") return status === "UNKNOWN_DEADLINE" && !item.is_long_term;
     if (candidate === "long_term") return status === "UNKNOWN_DEADLINE" && item.is_long_term === true;
     if (candidate === "closing_soon") {
-      if (status !== "CURRENT" || !item.deadline) return false;
+      if (status !== "CURRENT" || !item.deadline || startsInFuture(item, now)) return false;
       const deadline = new Date(item.deadline).getTime();
       return deadline >= now.getTime() && deadline <= now.getTime() + 30 * 24 * 60 * 60 * 1000;
     }
@@ -69,6 +71,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
   const enabled = new Set(sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
   const q = query.q?.trim().toLowerCase();
   const tag = query.tag?.trim().toLowerCase();
+  const translations = q ? new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry])) : new Map();
   return opportunities
     .filter((item) => enabled.has(item.source_id))
     .filter((item) => item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
@@ -80,7 +83,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => values(query.direction).length === 0 || values(query.direction).some((value) => (item.directions ?? []).includes(value as never)))
     .filter((item) => values(query.work_format).length === 0 || values(query.work_format).some((value) => (item.work_formats ?? []).includes(value as never)))
     .filter((item) => eventRegionMatches(item, query.event_region))
-    .filter((item) => !q || `${item.title} ${item.summary} ${item.source_name} ${item.tags.join(" ")} ${(item.directions ?? []).join(" ")} ${item.event_location ?? ""}`.toLowerCase().includes(q))
+    .filter((item) => !q || `${item.title} ${item.summary} ${item.source_name} ${item.tags.join(" ")} ${(item.directions ?? []).join(" ")} ${item.event_location ?? ""} ${translations.get(item.id)?.title_zh ?? ""} ${translations.get(item.id)?.summary_zh ?? ""}`.toLowerCase().includes(q))
     .sort((a, b) => {
       const aDeadline = a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER;
       const bDeadline = b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER;

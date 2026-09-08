@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { identityHash, classifyCategory, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
+import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2, OpportunityV2PoolFile, V2OpportunityStatus } from "./types";
 import { classifyV2Dimensions, classifyV2RadarRelevance } from "./keywords";
 
@@ -28,14 +29,27 @@ export function readOpportunityV2Pool(filePath?: string): OpportunityV2PoolFile 
 
 export function writeOpportunityV2Pool(pool: OpportunityV2PoolFile, filePath?: string): void {
   const target = poolPath(filePath);
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, `${JSON.stringify(pool, null, 2)}\n`, "utf8");
+  withJsonFileLock(target, () => atomicWriteJson(target, pool));
 }
 
 export function opportunityStatus(deadline: string | null, now = new Date()): V2OpportunityStatus {
   if (!deadline) return "UNKNOWN_DEADLINE";
   const timestamp = new Date(deadline).getTime();
-  return Number.isFinite(timestamp) && timestamp < now.getTime() ? "EXPIRED" : "CURRENT";
+  if (!Number.isFinite(timestamp)) return "UNKNOWN_DEADLINE";
+  const day = deadline.match(/^(20\d{2}-\d{2}-\d{2})/u)?.[1];
+  const nowDay = now.toISOString().slice(0, 10);
+  if (day) return day < nowDay ? "EXPIRED" : "CURRENT";
+  return timestamp < now.getTime() ? "EXPIRED" : "CURRENT";
+}
+
+/** Formats source date-only values without shifting the published calendar day. */
+export function formatOpportunityV2Date(value: string | null | undefined): string {
+  if (!value) return "";
+  const dateOnly = value.match(/^(20\d{2})-(\d{2})-(\d{2})/u);
+  if (dateOnly) return `${dateOnly[1]}/${Number(dateOnly[2])}/${Number(dateOnly[3])}`;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", year: "numeric", month: "numeric", day: "numeric" }).format(parsed);
 }
 
 export function canonicalOpportunityTitle(title: string): string {
@@ -60,22 +74,27 @@ function conciseSummary(summary: string, title: string): string {
   return (cleaned || "来源页面未提供更详细摘要。").slice(0, 360);
 }
 
+function hasUsableSummary(summary: string | null | undefined, title: string): boolean {
+  return Boolean(summary?.replace(title, "").replace(/\s+/gu, " ").trim());
+}
+
 const CFW_SOURCE_ID = "cfw-cultural-ip";
 
 function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now: Date): OpportunityV2 {
   const preferIncoming = item.source_id === "loewe-craft-prize" && prior.source_id !== "loewe-craft-prize";
   const sameCfwDetail = item.source_id === CFW_SOURCE_ID && prior.source_id === CFW_SOURCE_ID && item.detail_url === prior.detail_url;
-  const deadline = sameCfwDetail && item.deadline ? item.deadline : (prior.deadline ?? item.deadline);
+  const deadline = sameCfwDetail && item.deadline ? item.deadline : (item.deadline ?? prior.deadline);
   const mergedTitle = preferIncoming ? item.title : prior.title;
-  const mergedSummary = conciseSummary(prior.summary, prior.title).length >= conciseSummary(item.summary, item.title).length ? conciseSummary(prior.summary, prior.title) : conciseSummary(item.summary, item.title);
-  const derived = classifyV2Dimensions(mergedTitle, mergedSummary, item.category || prior.category);
-  const relevance = classifyV2RadarRelevance(mergedTitle, mergedSummary, item.category || prior.category);
+  const mergedSummary = hasUsableSummary(item.summary, item.title) ? conciseSummary(item.summary, item.title) : conciseSummary(prior.summary, prior.title);
+  const category = item.category === "competition" && prior.category !== "competition" ? prior.category : (item.category || prior.category);
+  const derived = classifyV2Dimensions(mergedTitle, mergedSummary, category);
+  const relevance = classifyV2RadarRelevance(mergedTitle, mergedSummary, category);
   return {
     ...prior,
     ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
     title: mergedTitle,
     summary: mergedSummary,
-    category: item.category || prior.category,
+    category,
     deadline,
     status: opportunityStatus(deadline, now),
     first_seen_at: prior.first_seen_at,
@@ -87,10 +106,10 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     source_name: preferIncoming ? item.source_name : (prior.source_name || item.source_name),
     ...(item.directions?.length || prior.directions?.length || derived.directions.length ? { directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? []), ...derived.directions])] } : {}),
     ...(item.work_formats?.length || prior.work_formats?.length || derived.work_formats.length ? { work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? []), ...derived.work_formats])] } : {}),
-    event_location: item.event_location ?? prior.event_location ?? derived.event_location ?? null,
-    participation_scope: item.participation_scope ?? prior.participation_scope,
-    participation_mode: item.participation_mode ?? prior.participation_mode,
-    is_long_term: item.is_long_term ?? prior.is_long_term ?? false,
+    event_location: item.event_location?.trim() || prior.event_location || derived.event_location || null,
+    participation_scope: item.participation_scope && item.participation_scope !== "unspecified" ? item.participation_scope : (prior.participation_scope ?? derived.participation_scope),
+    participation_mode: item.participation_mode && item.participation_mode !== "unspecified" ? item.participation_mode : (prior.participation_mode ?? derived.participation_mode),
+    is_long_term: Boolean(prior.is_long_term || item.is_long_term),
     starts_at: item.starts_at ?? prior.starts_at ?? null,
   };
 }
@@ -162,13 +181,13 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
       ...prior,
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
       tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
-      summary: conciseSummary(prior.summary, prior.title).length >= conciseSummary(item.summary, item.title).length ? conciseSummary(prior.summary, prior.title) : conciseSummary(item.summary, item.title),
+      summary: conciseSummary(item.summary, item.title) || conciseSummary(prior.summary, prior.title),
       ...(prior.detail_url ? {} : { detail_url: item.detail_url }),
       directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? [])])],
       work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? [])])],
-      event_location: prior.event_location ?? item.event_location ?? null,
-      participation_scope: prior.participation_scope ?? item.participation_scope,
-      participation_mode: prior.participation_mode ?? item.participation_mode,
+      event_location: prior.event_location || item.event_location || null,
+      participation_scope: prior.participation_scope && prior.participation_scope !== "unspecified" ? prior.participation_scope : item.participation_scope,
+      participation_mode: prior.participation_mode && prior.participation_mode !== "unspecified" ? prior.participation_mode : item.participation_mode,
     });
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }

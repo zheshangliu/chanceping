@@ -2,6 +2,7 @@ import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
 import { identityHash } from "../ich/aggregation/adapters/common";
+import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2Source } from "./types";
 
 export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
@@ -63,10 +64,20 @@ export function readOpportunityV2Sources(filePath?: string): OpportunityV2Source
 
 export function writeOpportunityV2Sources(sources: OpportunityV2Source[], filePath?: string): void {
   const target = resolved(filePath);
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  const temp = `${target}.${process.pid}.tmp`;
-  fs.writeFileSync(temp, `${JSON.stringify({ schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources }, null, 2)}\n`, "utf8");
-  fs.renameSync(temp, target);
+  withJsonFileLock(target, () => atomicWriteJson(target, { schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources }));
+}
+
+export function appendOpportunityV2Source(source: OpportunityV2Source, filePath?: string): OpportunityV2Source {
+  const target = resolved(filePath);
+  return withJsonFileLock(target, () => {
+    const sources = readOpportunityV2Sources(filePath);
+    if (sources.some((candidate) => candidate.id === source.id)) throw new Error("Source ID 已存在");
+    const next = [...sources, source];
+    const errors = validateOpportunityV2Sources(next);
+    if (errors.length) throw new Error(errors.join("; "));
+    atomicWriteJson(target, { schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources: next });
+    return source;
+  });
 }
 
 export function validateOpportunityV2Sources(sources: OpportunityV2Source[]): string[] {
@@ -106,8 +117,15 @@ export function isPublicIp(address: string): boolean {
   }
   if (net.isIP(host) === 6) {
     if (host === "::" || host === "::1" || host.startsWith("fc") || host.startsWith("fd") || host.startsWith("fe8") || host.startsWith("fe9") || host.startsWith("fea") || host.startsWith("feb") || host.startsWith("ff")) return false;
-    const mapped = host.match(/::ffff:(\d+\.\d+\.\d+\.\d+)$/u);
-    return !mapped || isPublicIp(mapped[1]);
+    const mapped = host.match(/::ffff:(.+)$/u);
+    if (!mapped) return true;
+    const dotted = mapped[1].match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/u);
+    if (dotted) return isPublicIp(dotted[0]);
+    const hex = mapped[1].split(":");
+    if (hex.length !== 2 || hex.some((part) => !/^[0-9a-f]{1,4}$/u.test(part))) return false;
+    const high = Number.parseInt(hex[0], 16);
+    const low = Number.parseInt(hex[1], 16);
+    return isPublicIp(`${high >>> 8}.${high & 255}.${low >>> 8}.${low & 255}`);
   }
   return false;
 }
@@ -160,15 +178,18 @@ export function findOpportunityV2Source(sourceId: string, filePath?: string): Op
 }
 
 export function updateOpportunityV2Source(sourceId: string, patch: Partial<OpportunityV2Source>, filePath?: string): OpportunityV2Source {
-  const sources = readOpportunityV2Sources(filePath);
-  const index = sources.findIndex((source) => source.id === sourceId);
-  if (index < 0) throw new Error(`Source not found: ${sourceId}`);
-  const next = { ...sources[index], ...patch, id: sourceId };
-  const errors = validateOpportunityV2Sources([next]);
-  if (errors.length) throw new Error(errors.join("; "));
-  sources[index] = next;
-  writeOpportunityV2Sources(sources, filePath);
-  return next;
+  const target = resolved(filePath);
+  return withJsonFileLock(target, () => {
+    const sources = readOpportunityV2Sources(filePath);
+    const index = sources.findIndex((source) => source.id === sourceId);
+    if (index < 0) throw new Error(`Source not found: ${sourceId}`);
+    const next = { ...sources[index], ...patch, id: sourceId };
+    const errors = validateOpportunityV2Sources([next]);
+    if (errors.length) throw new Error(errors.join("; "));
+    sources[index] = next;
+    atomicWriteJson(target, { schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources });
+    return next;
+  });
 }
 
 export function setOpportunityV2SourceState(sourceId: string, state: { enabled: boolean; status: OpportunityV2Source["status"] }, filePath?: string): OpportunityV2Source {

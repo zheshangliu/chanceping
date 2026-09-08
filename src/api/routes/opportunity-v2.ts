@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, runOpportunityV2Source, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, writeOpportunityV2Sources, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, runOpportunityV2Source, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 
 export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
 
@@ -44,8 +44,7 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
     const denied = requireAdmin(c); if (denied) return denied;
     try {
       const source = createOpportunityV2Source(sourceInput(await bodyOf(c)));
-      if (sourceOr404(source.id)) return c.json({ error: { code: "CONFLICT", message: "Source ID 已存在" } }, 409);
-      writeOpportunityV2Sources([...sources(), source], options.sourcesPath);
+      appendOpportunityV2Source(source, options.sourcesPath);
       const test = await testOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath });
       const run = test.ok ? await runOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath }) : null;
       return c.json({ source: findOpportunityV2Source(source.id, options.sourcesPath), test, run });

@@ -1,4 +1,7 @@
 import fs from "node:fs";
+import http from "node:http";
+import https from "node:https";
+import net from "node:net";
 import path from "node:path";
 import dns from "node:dns/promises";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
@@ -7,43 +10,105 @@ import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
-import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, isPublicIp, readOpportunityV2Sources, writeOpportunityV2Sources } from "./source-pool";
+import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, isPublicIp, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
+import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
 const SOURCE_HYGIENE_IDS = new Set(["kcdf-opportunities", "homo-faber-calls", "craft-council-bc-calls"]);
 const DEFAULT_TIMEOUT_MS = 20_000;
+const MAX_RESPONSE_BYTES = 5_000_000;
+
+interface PinnedAddress {
+  address: string;
+  family: 4 | 6;
+}
+
+async function resolvePublicAddress(target: string): Promise<PinnedAddress> {
+  const parsed = new URL(target);
+  const hostname = parsed.hostname.replace(/^\[|\]$/gu, "");
+  const ipFamily = net.isIP(hostname);
+  if (ipFamily === 4 || ipFamily === 6) {
+    if (!isPublicIp(hostname)) throw new Error("source URL resolves to a non-public address");
+    return { address: hostname, family: ipFamily };
+  }
+  const addresses = await dns.lookup(hostname, { all: true, verbatim: true });
+  if (!addresses.length || addresses.some(({ address }) => !isPublicIp(address))) throw new Error("source URL resolves to a non-public address");
+  const selected = addresses[0];
+  return { address: selected.address, family: selected.family as 4 | 6 };
+}
+
+async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ status: number; headers: http.IncomingHttpHeaders; text: string }> {
+  const parsed = new URL(target);
+  const transport = parsed.protocol === "https:" ? https : http;
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const fail = (error: Error): void => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+    const request = transport.request({
+      protocol: parsed.protocol,
+      hostname: parsed.hostname,
+      port: parsed.port || undefined,
+      path: `${parsed.pathname}${parsed.search}`,
+      method: "GET",
+      headers: { "user-agent": "ChancePing-OpportunityV2/1.0", accept: "text/html,application/rss+xml,application/xml;q=0.9,*/*;q=0.8" },
+      servername: net.isIP(parsed.hostname.replace(/^\[|\]$/gu, "")) ? undefined : parsed.hostname,
+      lookup: (_hostname, _options, callback) => callback(null, resolved.address, resolved.family),
+    }, (response) => {
+      const contentLength = Number(response.headers["content-length"] ?? 0);
+      if (contentLength > MAX_RESPONSE_BYTES) {
+        response.resume();
+        request.destroy();
+        fail(new Error("source response is too large"));
+        return;
+      }
+      const chunks: Buffer[] = [];
+      let total = 0;
+      response.on("data", (chunk: Buffer | string) => {
+        const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+        total += buffer.length;
+        if (total > MAX_RESPONSE_BYTES) {
+          request.destroy();
+          fail(new Error("source response is too large"));
+          return;
+        }
+        chunks.push(buffer);
+      });
+      response.on("aborted", () => fail(new Error("source response was aborted")));
+      response.on("error", (error) => fail(error));
+      response.on("end", () => {
+        if (settled) return;
+        settled = true;
+        resolve({ status: response.statusCode ?? 0, headers: response.headers, text: Buffer.concat(chunks).toString("utf8") });
+      });
+    });
+    request.setTimeout(DEFAULT_TIMEOUT_MS, () => request.destroy(new Error("source request timed out")));
+    request.on("error", (error) => fail(error));
+    request.end();
+  });
+}
 
 export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {
   if (!isPublicHttpUrl(url)) throw new Error("source URL must be a public HTTP(S) URL");
-  async function assertResolvedPublic(target: string): Promise<void> {
-    const parsed = new URL(target);
-    const addresses = await dns.lookup(parsed.hostname, { all: true, verbatim: true });
-    if (!addresses.length || addresses.some(({ address }) => !isPublicIp(address))) throw new Error("source URL resolves to a non-public address");
-  }
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
-  try {
-    let current = url;
-    for (let hop = 0; hop <= 4; hop += 1) {
-      if (!isPublicHttpUrl(current)) throw new Error("redirected source URL is not public");
-      await assertResolvedPublic(current);
-      const response = await fetch(current, { redirect: "manual", signal: controller.signal, headers: { "user-agent": "ChancePing-OpportunityV2/1.0" } });
-      if (response.status >= 300 && response.status < 400) {
-        const location = response.headers.get("location");
-        if (!location) throw new Error("source redirect has no location");
-        if (hop === 4) throw new Error("source redirect limit exceeded");
-        current = new URL(location, current).toString();
-        continue;
-      }
-      if (response.headers.get("content-length") && Number(response.headers.get("content-length")) > 5_000_000) throw new Error("source response is too large");
-      return { status: response.status, final_url: current, text: await response.text() };
+  let current = url;
+  for (let hop = 0; hop <= 4; hop += 1) {
+    if (!isPublicHttpUrl(current)) throw new Error("redirected source URL is not public");
+    const resolved = await resolvePublicAddress(current);
+    const response = await fetchPinned(current, resolved);
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.location;
+      if (!location) throw new Error("source redirect has no location");
+      if (hop === 4) throw new Error("source redirect limit exceeded");
+      current = new URL(Array.isArray(location) ? location[0] : location, current).toString();
+      continue;
     }
-    throw new Error("source redirect limit exceeded");
-  } finally {
-    clearTimeout(timer);
+    return { status: response.status, final_url: current, text: response.text };
   }
+  throw new Error("source redirect limit exceeded");
 }
 
 function defaultHealthPath(): string {
@@ -52,17 +117,16 @@ function defaultHealthPath(): string {
 
 function writeHealth(rows: OpportunityV2SourceHealth[], filePath?: string): void {
   const target = path.resolve(filePath ?? defaultHealthPath());
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  let existing: OpportunityV2SourceHealth[] = [];
-  try {
-    const parsed = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2SourceHealth[] };
-    existing = Array.isArray(parsed.sources) ? parsed.sources : [];
-  } catch { /* first run */ }
-  const byId = new Map(existing.map((row) => [row.source_id, row]));
-  for (const row of rows) byId.set(row.source_id, row);
-  const temp = `${target}.${process.pid}.tmp`;
-  fs.writeFileSync(temp, `${JSON.stringify({ schema_version: "chanceping-opportunity-v2.source-health.v1", updated_at: new Date().toISOString(), sources: [...byId.values()] }, null, 2)}\n`, "utf8");
-  fs.renameSync(temp, target);
+  withJsonFileLock(target, () => {
+    let existing: OpportunityV2SourceHealth[] = [];
+    try {
+      const parsed = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2SourceHealth[] };
+      existing = Array.isArray(parsed.sources) ? parsed.sources : [];
+    } catch { /* first run */ }
+    const byId = new Map(existing.map((row) => [row.source_id, row]));
+    for (const row of rows) byId.set(row.source_id, row);
+    atomicWriteJson(target, { schema_version: "chanceping-opportunity-v2.source-health.v1", updated_at: new Date().toISOString(), sources: [...byId.values()] });
+  });
 }
 
 function parseSource(source: OpportunityV2Source, text: string, listingUrl: string): { items: ParsedAggregationItem[]; format: "DEDICATED" | "RSS" | "HTML_LISTING" | null } {
@@ -120,6 +184,8 @@ interface SourceFetchResult {
   responseStatus: number;
   fetchedAt: string;
   error: string | null;
+  partial: boolean;
+  next_page: number | null;
 }
 
 async function enrichCfwDetailDates(items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher): Promise<void> {
@@ -148,11 +214,23 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
   const seen = new Set<string>();
   let responseStatus = 0;
   let format: SourceFetchResult["format"] = null;
+  let partial = false;
+  let nextPage: number | null = null;
   for (let page = 1; page <= pages; page += 1) {
     const pageUrl = page === 1 ? firstUrl : plan!.pageUrl(page);
-    const response = await fetcher(pageUrl);
+    let response: Awaited<ReturnType<OpportunityV2Fetcher>>;
+    try {
+      response = await fetcher(pageUrl);
+    } catch (error) {
+      if (page === 1) throw error;
+      partial = true;
+      nextPage = page;
+      break;
+    }
     if (response.status < 200 || response.status >= 400) {
       if (page === 1) throw Object.assign(new Error(`HTTP ${response.status}`), { responseStatus: response.status, fetchedAt });
+      partial = true;
+      nextPage = page;
       break;
     }
     if (!responseStatus) responseStatus = response.status;
@@ -163,14 +241,27 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       seen.add(item.source_item_id);
       parsed.push(item);
     }
-    if (!plan || page >= pages || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
+    if (!plan || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
+    if (page >= pages) {
+      partial = true;
+      nextPage = page + 1;
+      break;
+    }
   }
   if (source.id === "cfw-cultural-ip") await enrichCfwDetailDates(parsed, fetcher);
-  return { parsed, format, responseStatus, fetchedAt, error: parsed.length ? null : "No RSS or HTML listing items recognized" };
+  return {
+    parsed,
+    format,
+    responseStatus,
+    fetchedAt,
+    error: parsed.length ? (partial ? `Partial pagination; next page ${nextPage}` : null) : "No RSS or HTML listing items recognized",
+    partial,
+    next_page: nextPage,
+  };
 }
 
 function healthFor(source: OpportunityV2Source, result: SourceFetchResult): OpportunityV2SourceHealth {
-  return { source_id: source.id, fetched_at: result.fetchedAt, ok: result.parsed.length > 0, http_status: result.responseStatus, items_seen: result.parsed.length, error: result.error, format: result.format };
+  return { source_id: source.id, fetched_at: result.fetchedAt, ok: result.parsed.length > 0, http_status: result.responseStatus, items_seen: result.parsed.length, error: result.error, format: result.format, partial: result.partial, next_page: result.next_page };
 }
 
 export interface OpportunityV2SourceTestResult {
@@ -190,13 +281,13 @@ export async function testOpportunityV2Source(options: { sourceId: string; fetch
     const result = await fetchAndParseSource(source, fetcher);
     source.status = result.parsed.length ? "ACTIVE" : "NEEDS_ADAPTER";
     if (result.parsed.length) source.last_fetch_at = result.fetchedAt;
-    writeOpportunityV2Sources(readOpportunityV2Sources(options.sourcesPath).map((item) => item.id === source.id ? source : item), options.sourcesPath);
+    updateOpportunityV2Source(source.id, { status: source.status, ...(source.last_fetch_at ? { last_fetch_at: source.last_fetch_at } : {}) }, options.sourcesPath);
     writeHealth([healthFor(source, result)], options.healthPath);
     return { source, ok: result.parsed.length > 0, http_status: result.responseStatus, items_seen: result.parsed.length, format: result.format, error: result.error };
   } catch (error) {
     const responseStatus = typeof error === "object" && error !== null && "responseStatus" in error ? Number(error.responseStatus) : null;
     source.status = "FAILED";
-    writeOpportunityV2Sources(readOpportunityV2Sources(options.sourcesPath).map((item) => item.id === source.id ? source : item), options.sourcesPath);
+    updateOpportunityV2Source(source.id, { status: source.status }, options.sourcesPath);
     writeHealth([{ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null }], options.healthPath);
     return { source, ok: false, http_status: responseStatus, items_seen: 0, format: null, error: error instanceof Error ? error.message : String(error) };
   }
@@ -236,7 +327,7 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
     } catch (error) {
       const responseStatus = typeof error === "object" && error !== null && "responseStatus" in error ? Number(error.responseStatus) : null;
       source.status = "FAILED";
-      health.push({ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null });
+      health.push({ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null, partial: false, next_page: null });
     }
   }
   const deduped = deduplicateOpportunityV2(fetched);

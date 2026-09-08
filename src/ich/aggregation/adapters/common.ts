@@ -59,24 +59,37 @@ export function parseDateText(value: string | null, now = new Date(), context = 
   if (!value) return null;
   const normalized = value.replace(DATE_HYPHENS, "-").replace(/(\d{1,2})(?:st|nd|rd|th)\b/gi, "$1").replace(/[年月]/g, "-").replace(/日/g, "").replace(/[./]/g, "-").replace(/\s+/g, " ").trim();
   const iso = normalized.match(/(20\d{2})-(\d{1,2})-(\d{1,2})(?:\s+(\d{1,2})(?::|点)(\d{1,2})?)?/u);
-  if (iso) return new Date(Date.UTC(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]), Number(iso[4] ?? 23), Number(iso[5] ?? 59))).toISOString();
+  if (iso) {
+    const year = Number(iso[1]);
+    const month = Number(iso[2]);
+    const day = Number(iso[3]);
+    const hour = Number(iso[4] ?? 23);
+    const minute = Number(iso[5] ?? 59);
+    const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
+    if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day || hour > 23 || minute > 59) return null;
+    return date.toISOString();
+  }
   const monthDay = normalized.match(/(?:^|[^\d])(\d{1,2})-(\d{1,2})(?:$|[^\d])/u);
   if (monthDay) {
     const year = Number(/(?:^|[^\d])2026(?:年|[^\d]|$)/u.test(context) ? 2026 : now.getUTCFullYear());
-    return new Date(Date.UTC(year, Number(monthDay[1]) - 1, Number(monthDay[2]), 23, 59)).toISOString();
+    const month = Number(monthDay[1]);
+    const day = Number(monthDay[2]);
+    const date = new Date(Date.UTC(year, month - 1, day, 23, 59));
+    if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+    return date.toISOString();
   }
   const en = value.match(/(?:by\s+)?([A-Z][a-z]+\s+\d{1,2},?\s+20\d{2})/u);
   if (en) {
     const parts = en[1].replace(",", "").split(/\s+/u);
     const month = new Date(`${parts[0]} 1, 2000`).getMonth();
     const date = new Date(Date.UTC(Number(parts[2]), month, Number(parts[1]), 23, 59));
-    if (!Number.isNaN(date.getTime())) return date.toISOString();
+    if (!Number.isNaN(date.getTime()) && date.getUTCFullYear() === Number(parts[2]) && date.getUTCMonth() === month && date.getUTCDate() === Number(parts[1])) return date.toISOString();
   }
   const enDayFirst = normalized.match(/(\d{1,2})\s+([A-Z][a-z]+)\s+(20\d{2})/u);
   if (enDayFirst) {
     const month = new Date(`${enDayFirst[2]} 1, 2000`).getMonth();
     const date = new Date(Date.UTC(Number(enDayFirst[3]), month, Number(enDayFirst[1]), 23, 59));
-    if (!Number.isNaN(date.getTime())) return date.toISOString();
+    if (!Number.isNaN(date.getTime()) && date.getUTCFullYear() === Number(enDayFirst[3]) && date.getUTCMonth() === month && date.getUTCDate() === Number(enDayFirst[1])) return date.toISOString();
   }
   const dateOnly = new Date(value);
   if (!Number.isNaN(dateOnly.getTime()) && dateOnly.getFullYear() >= 2020) return dateOnly.toISOString();

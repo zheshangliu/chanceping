@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { ichPagesRoutes } from "../src/api/routes/ich-pages";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
-import { buildOpportunityV2Display, createOpportunityV2Translation, filterOpportunityV2Radar, isPublicHttpUrl, isPublicIp, readOpportunityV2Translations, testOpportunityV2Source, writeOpportunityV2Sources } from "../src/opportunity-v2";
+import { buildOpportunityV2Display, createOpportunityV2Translation, createTranslatedOpportunityV2Translation, filterOpportunityV2Radar, isPublicHttpUrl, isPublicIp, testOpportunityV2Source, writeOpportunityV2Sources } from "../src/opportunity-v2";
 import type { OpportunityV2, OpportunityV2Source } from "../src/opportunity-v2/types";
 
 const source = (id: string, status: OpportunityV2Source["status"] = "ACTIVE"): OpportunityV2Source => ({ id, name: id, url: `https://${id}.example.com/list`, region: "CN", priority: "P0", types: ["competition"], radars: ["ich"], enabled: status !== "PAUSED", status, last_fetch_at: null });
@@ -16,18 +16,20 @@ async function main(): Promise<void> {
   assert.equal(isPublicHttpUrl("http://169.254.169.254"), false);
   assert.equal(isPublicIp("fe80::1"), false);
   assert.equal(isPublicIp("10.0.0.1"), false);
+  assert.equal(isPublicIp("::ffff:127.0.0.1"), false);
 
   const geo = [item("jp", { event_location: "Tokyo, Japan" }), item("unknown", { event_location: null }), item("cn", { event_location: "广州，中国大陆" })];
   const sources = [source("fixture-a")];
   assert.equal(filterOpportunityV2Radar(geo, sources, { event_region: "overseas" }).map((entry) => entry.id).join(","), "jp");
   assert.equal(filterOpportunityV2Radar(geo, sources, { event_region: "unknown" }).map((entry) => entry.id).join(","), "unknown");
-  assert.equal(filterOpportunityV2Radar([item("future", { starts_at: "2026-12-01T00:00:00.000Z" })], sources, { now: new Date("2026-09-08T00:00:00.000Z") }).length, 0);
+  assert.equal(filterOpportunityV2Radar([item("future", { starts_at: "2026-12-01T00:00:00.000Z" })], sources, { status: "current", now: new Date("2026-09-08T00:00:00.000Z") }).length, 0);
 
   const loewe = item("loewe", { title: "LOEWE FOUNDATION Craft Prize 2027", summary: "€50,000 prize", source_id: "loewe-craft-prize", source_name: "LOEWE FOUNDATION Craft Prize", region: "GLOBAL", discovered_by_sources: ["loewe-craft-prize"] });
-  const display = buildOpportunityV2Display(loewe, [createOpportunityV2Translation(loewe)]);
-  assert.equal(display.translated, true);
-  assert.match(display.title, /工艺奖/u);
-  assert.equal(display.original_title, loewe.title);
+  const pending = buildOpportunityV2Display(loewe, [createOpportunityV2Translation(loewe)]);
+  assert.equal(pending.translated, false);
+  assert.equal(pending.title, loewe.title);
+  const translated = createTranslatedOpportunityV2Translation(loewe, { title_zh: "LOEWE 基金会 2027 工艺奖", summary_zh: "奖金 €50,000。" });
+  assert.equal(buildOpportunityV2Display(loewe, [translated]).translated, true);
 
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-ich-v11-"));
   const sourcesPath = path.join(temp, "sources.json");
@@ -63,9 +65,7 @@ async function main(): Promise<void> {
   assert.equal(deniedResponse.status, 503);
   const adminPage = await (await (await import("../src/api/routes/opportunity-v2-pages")).opportunityV2PagesRoutes().request("http://localhost/admin/sources")).text();
   assert.match(adminPage, /管理员凭据/u);
-  const translations = readOpportunityV2Translations();
-  assert.ok(translations.length >= 186);
-  console.log(JSON.stringify({ ok: true, checks: ["fail-closed-admin", "ipv4-ipv6-ssrf", "event-geo", "future-status", "memo-205-full-load", "detail-route", "health-ledger-merge", "cached-foreign-display"], translation_records: translations.length }, null, 2));
+  console.log(JSON.stringify({ ok: true, checks: ["fail-closed-admin", "ipv4-ipv6-ssrf", "event-geo", "browse-current-status", "memo-205-full-load", "detail-route", "health-ledger-merge", "no-fake-foreign-fallback"], translation_provider_required: true }, null, 2));
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

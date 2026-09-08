@@ -65,6 +65,8 @@ export interface OpportunityV2SourceHealth {
   items_seen: number;
   error: string | null;
   format?: "DEDICATED" | "RSS" | "HTML_LISTING" | null;
+  partial?: boolean;
+  next_page?: number | string | null;
 }
 
 export interface OpportunityV2RunResult {
