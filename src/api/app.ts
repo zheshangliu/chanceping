@@ -87,7 +87,7 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/internal/ich", internalIchRoutes());
   app.route("/api/internal/ich", internalIchSubmissionRoutes());
   app.route("/api/internal/ich", internalIchOperationsRoutes());
-  app.route("/api/opportunity-v2", opportunityV2Routes({ adminToken: process.env.CHANCEPING_ICH_ADMIN_TOKEN }));
+  app.route("/api/opportunity-v2", opportunityV2Routes({ adminToken: process.env.CHANCEPING_ICH_ADMIN_TOKEN || (process.env.NODE_ENV === "production" ? "__admin_token_not_configured__" : undefined) }));
   app.route("/ich/admin", ichAdminPagesRoutes());
   app.route("/ich", ichPagesRoutes({ opportunityV2: true }));
   app.route("/opportunity-v2", opportunityV2PagesRoutes());
