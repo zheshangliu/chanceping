@@ -16,6 +16,34 @@ function item(title: string, detailUrl: string, sourceUrl: string, rawText: stri
   };
 }
 
+function extractSpanInnerHtml(html: string, className: string): string {
+  const opening = html.match(new RegExp("<span\\b[^>]*class=[\"'][^\"']*\\b" + className + "\\b[^\"']*[\"'][^>]*>", "iu"));
+  if (!opening || opening.index === undefined) return "";
+  const contentStart = opening.index + opening[0].length;
+  const tokens = /<\/?span\b[^>]*>/giu;
+  tokens.lastIndex = contentStart;
+  let depth = 1;
+  let token: RegExpExecArray | null;
+  while ((token = tokens.exec(html))) {
+    if (/^<\/span/iu.test(token[0])) depth -= 1;
+    else if (!/\/\s*>$/u.test(token[0])) depth += 1;
+    if (depth === 0) return html.slice(contentStart, token.index);
+  }
+  return html.slice(contentStart);
+}
+
+function classify1zjTimeStatus(timeText: string): string {
+  const compact = timeText.replace(/\s+/gu, "").trim();
+  if (!compact) return "CURRENT_OR_UNKNOWN";
+  if (/(?:\d+)(?:天|日|小时|周|个月)后/u.test(compact) || /(?:尚未|还未|未)(?:截止|结束)/u.test(compact)) {
+    return "CURRENT_OR_UNKNOWN";
+  }
+  if (/(?:已|已经)(?:截止|结束)(?:了)?/u.test(compact) || /(?:获奖|结果)(?:已|已经)(?:公布|公示|揭晓)/u.test(compact)) {
+    return "EXPIRED";
+  }
+  return "CURRENT_OR_UNKNOWN";
+}
+
 export function parseCnyisaiListing(html: string, listingUrl: string): ParsedAggregationItem[] {
   const result: ParsedAggregationItem[] = [];
   for (const match of html.matchAll(/<a\b[^>]*class=["'][^"']*\bcard\b[^"']*["'][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/giu)) {
@@ -49,8 +77,8 @@ export function parse1zjListing(html: string, listingUrl: string): ParsedAggrega
     const rawText = htmlToText(inner);
     if (!cleanTitle || RESULT_NOISE.test(cleanTitle) || !OPPORTUNITY_WORDS.test(cleanTitle)) continue;
     const reward = inner.match(/class=["']list-item-price["'][^>]*>([\s\S]*?)<\/span>/iu)?.[1];
-    const timeText = htmlToText(inner.match(/class=["']list-item-time["'][^>]*>([\s\S]*?)<\/span>/iu)?.[1] ?? "");
-    const status = /(?:已经截止|已结束|截止)/u.test(timeText) ? "EXPIRED" : "CURRENT_OR_UNKNOWN";
+    const timeText = htmlToText(extractSpanInnerHtml(inner, "list-item-time"));
+    const status = classify1zjTimeStatus(timeText);
     const deadlineText = extractDeadlineText(rawText);
     result.push(item(cleanTitle, detailUrl, listingUrl, rawText, { source_item_id: identityHash("1zj", detailUrl), source_category: "文创设计", source_status: status, deadline_text: deadlineText, organizer: null, raw_text: `${rawText} 奖金 ${htmlToText(reward ?? "")}` }));
   }
