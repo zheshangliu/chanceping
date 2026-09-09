@@ -42,7 +42,7 @@ export interface TranslationProviderConfig {
 
 export function translationPrompt(input: OpportunityTranslationInput): { system: string; user: string } {
   return {
-    system: "你是严格的中文赛事信息编辑。只根据给定来源原文，将标题和摘要翻译成简体中文。标题只保留赛事/征集名称，不要加入来源导航、Full details、Closing date或整张卡片内容。摘要只保留原文明确支持的主题、征集内容、提交形式、金额、年份和限制条件。保留专有名词、年份、金额、币种和否定条件；没有原文支持的信息不要补写。只返回JSON：{\"title_zh\":\"...\",\"summary_zh\":\"...\"}。",
+    system: "你是严格的中文赛事信息编辑。只根据给定来源原文，将标题和摘要翻译成简体中文。标题只保留赛事/征集名称，不要加入来源导航、Full details、Closing date或整张卡片内容。摘要只保留原文明确支持的主题、征集内容、提交形式、金额、年份和限制条件。保留专有名词、年份、金额、币种和否定条件；没有原文支持的信息不要补写。若标题主要是品牌名或系列名且没有自然中文译名，可以保留该专有名词，不要为了翻译而臆造名称。来源摘要已经是中文时，直接保留其原文；不要输出空摘要。只返回JSON：{\"title_zh\":\"...\",\"summary_zh\":\"...\"}。",
     user: `原始标题：${input.title}\n原始摘要：${input.summary}`,
   };
 }
@@ -57,7 +57,11 @@ export function createLlmTranslationProvider(id: "deepseek" | "qwen", adapter: L
         { role: "user", content: translationPrompt(input).user },
       ] });
       const parsed = response.parsed && typeof response.parsed === "object" ? response.parsed as Record<string, unknown> : {};
-      return { title_zh: String(parsed.title_zh ?? ""), summary_zh: String(parsed.summary_zh ?? "") };
+      const translatedSummary = String(parsed.summary_zh ?? "").trim();
+      return {
+        title_zh: String(parsed.title_zh ?? ""),
+        summary_zh: translatedSummary || (/^[\s\S]*[\u3400-\u9fff]/u.test(input.summary) ? input.summary : ""),
+      };
     },
   };
 }

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createAzureTranslator } from "../src/opportunity-v2/translation-providers/azure-translator";
 import { createGoogleTranslator } from "../src/opportunity-v2/translation-providers/google-translator";
 import { createLibreTranslate } from "../src/opportunity-v2/translation-providers/libretranslate";
-import { configuredTranslationProviders, translateWithProviderChain, type OpportunityTranslationProvider } from "../src/opportunity-v2/translation-provider";
+import { configuredTranslationProviders, createLlmTranslationProvider, translateWithProviderChain, type OpportunityTranslationProvider } from "../src/opportunity-v2/translation-provider";
 import { createTranslatedOpportunityV2Translation, isForeignLanguageOpportunity, validateOpportunityV2Translation, type OpportunityV2 } from "../src/opportunity-v2";
 
 const fixture = (title: string, summary: string): OpportunityV2 => ({
@@ -24,6 +24,10 @@ async function main(): Promise<void> {
     createTranslatedOpportunityV2Translation(listingDeadline, { title_zh: "Made of Fife：面向材料制造者、研究人员和实践者的征集", summary_zh: "来源页面未提供更详细摘要。" }).status,
     "translated",
   );
+  const properBrand = fixture("CraftForms 2026", "来源页面未提供更详细摘要。");
+  assert.equal(createTranslatedOpportunityV2Translation(properBrand, { title_zh: "CraftForms 2026", summary_zh: properBrand.summary }).status, "translated");
+  const fee = fixture("Off Center 2027 - An International Ceramics Competition Application fee: $35", "来源页面未提供更详细摘要。");
+  assert.equal(createTranslatedOpportunityV2Translation(fee, { title_zh: "Off Center 2027 国际陶瓷竞赛", summary_zh: "申请费：35美元。" }).status, "translated");
   for (const item of [loewe, craftforms, homo, jp, ko]) {
     assert.equal(createTranslatedOpportunityV2Translation(item, { title_zh: `中文 ${item.title.slice(-4)}`, summary_zh: `中文摘要 ${item.summary}` }).status, "translated");
   }
@@ -31,6 +35,12 @@ async function main(): Promise<void> {
   assert.ok(validateOpportunityV2Translation(loewe, "洛伊威基金会工艺奖 2027", "The original English application remains in this long residual sentence for review").includes("long non-proper English residue"));
   assert.equal(configuredTranslationProviders({}).status, "CREDENTIAL_NOT_CONFIGURED");
   assert.equal(configuredTranslationProviders({}).providers.length, 0);
+
+  const placeholderProvider = createLlmTranslationProvider("deepseek", {
+    chat: async () => ({ content: "{}", parsed: { title_zh: "Maker支持", summary_zh: "" } }),
+  });
+  const placeholderResult = await placeholderProvider.translate({ title: "Maker support", summary: "来源页面未提供更详细摘要。", targetLanguage: "zh-CN" });
+  assert.equal(placeholderResult.summary_zh, "来源页面未提供更详细摘要。");
 
   let calls = 0;
   const azure = createAzureTranslator({ key: "test-key", region: "eastasia", endpoint: "https://azure.test", fetchImpl: async (_url, init) => { calls += 1; assert.equal(init?.method, "POST"); return response([{ translations: [{ text: "洛伊威基金会工艺奖 2027" }] }, { translations: [{ text: "提交原创作品，奖金 €100,000。" }] }]); } });
@@ -42,7 +52,7 @@ async function main(): Promise<void> {
   assert.equal(chain.provider_id, "azure");
   assert.equal(calls, 1);
   assert.ok(chain.characters_sent_to_free_provider > 0);
-  console.log(JSON.stringify({ fixtures: 5, provider_chain: "PASS", no_credentials: "CREDENTIAL_NOT_CONFIGURED", one_request_for_title_summary: "PASS" }, null, 2));
+  console.log(JSON.stringify({ fixtures: 8, provider_chain: "PASS", no_credentials: "CREDENTIAL_NOT_CONFIGURED", one_request_for_title_summary: "PASS", placeholder_summary_fallback: "PASS" }, null, 2));
 }
 
 void main();

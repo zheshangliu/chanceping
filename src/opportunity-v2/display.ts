@@ -119,6 +119,24 @@ function stripDeadlineFragments(value: string): string {
   );
 }
 
+function factualTokenVariants(token: string): string[] {
+  const match = token.match(/^(€|£|\$|¥|￥)\s?(\d[\d,.]*)$/u);
+  if (!match) return [token];
+  const [, symbol, amount] = match;
+  const currencyName = { "€": "欧元", "£": "英镑", "$": "美元", "¥": "日元", "￥": "人民币" }[symbol] ?? "";
+  return [token, `${amount}${currencyName}`, `${amount} ${currencyName}`, `${currencyName}${amount}`];
+}
+
+function containsFactualToken(value: string, token: string): boolean {
+  const compact = value.replace(/\s+/gu, "");
+  return factualTokenVariants(token).some((variant) => compact.includes(variant.replace(/\s+/gu, "")));
+}
+
+function isAcceptableUnchangedProperTitle(value: string): boolean {
+  const words = value.match(/[A-Za-z]{3,}/gu) ?? [];
+  return value.length <= 32 && words.length <= 2;
+}
+
 export function validateOpportunityV2Translation(item: OpportunityV2, title: string, summary: string): string[] {
   const errors: string[] = [];
   if (!title.trim()) errors.push("empty translated title");
@@ -126,9 +144,9 @@ export function validateOpportunityV2Translation(item: OpportunityV2, title: str
   if (/<(?:script|style)\b/iu.test(`${title} ${summary}`)) errors.push("markup is not allowed");
   for (const token of factualTokens(stripDeadlineFragments(`${item.title}\n${item.summary}`))) {
     const normalizedToken = token.replace(/[.,]+$/u, "");
-    if (!`${title} ${summary}`.includes(normalizedToken.replace(/\s+/gu, "")) && !`${title} ${summary}`.includes(token)) errors.push(`missing factual token ${token}`);
+    if (!containsFactualToken(`${title} ${summary}`, normalizedToken)) errors.push(`missing factual token ${token}`);
   }
-  if (title.trim().toLocaleLowerCase() === item.title.trim().toLocaleLowerCase()) errors.push("translated title is unchanged");
+  if (title.trim().toLocaleLowerCase() === item.title.trim().toLocaleLowerCase() && !isAcceptableUnchangedProperTitle(title.trim())) errors.push("translated title is unchanged");
   const originalWords = new Set((`${item.title} ${item.summary}`.match(/[A-Za-z]{3,}/gu) ?? []).map((word) => word.toLocaleLowerCase()));
   const residualWords = (title + " " + summary).match(/[A-Za-z]{4,}/gu) ?? [];
   const common = new Set(["this", "that", "with", "from", "for", "the", "and", "application", "apply", "call", "craft", "prize", "award"]);
