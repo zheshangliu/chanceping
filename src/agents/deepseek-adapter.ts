@@ -285,7 +285,7 @@ export class DeepSeekAdapter implements LLMAdapter {
           choices?: Array<{ message?: { content?: string } }>;
         };
         const content = data?.choices?.[0]?.message?.content ?? "";
-        if (content === "") {
+        if (!content.trim()) {
           throw new Error("DeepSeek API returned empty content");
         }
 
@@ -324,6 +324,9 @@ export class DeepSeekAdapter implements LLMAdapter {
     if (request.response_format === "json") {
       // OpenAI 兼容模式：response_format 指定 json_object
       body.response_format = { type: "json_object" };
+      // DeepSeek V4 默认开启 thinking。翻译只需要短 JSON；关闭 thinking
+      // 可避免 JSON Output 偶发只返回 reasoning、content 为空。
+      body.thinking = { type: "disabled" };
     }
     return body;
   }
@@ -332,7 +335,7 @@ export class DeepSeekAdapter implements LLMAdapter {
   private isRetryableError(err: Error): boolean {
     const msg = err.message.toLowerCase();
     // 网络错误特征：fetch failed / network / timeout / econnreset
-    if (/fetch failed|network|timeout|econnreset|enotfound/.test(msg)) {
+    if (/fetch failed|network|timeout|econnreset|enotfound|empty content/.test(msg)) {
       return true;
     }
     const status = Number(msg.match(/status=(\d{3})/)?.[1] ?? 0);

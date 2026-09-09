@@ -19,6 +19,11 @@ async function main(): Promise<void> {
   const ko = fixture("2026 공예 공모", "신청 마감은 2026-10-20입니다.");
   const cnMixedPunctuation = fixture("未蓝奖・全国数字文创大赛（2026・5S）作品征集公告", "2026年11月10日");
   assert.equal(isForeignLanguageOpportunity(cnMixedPunctuation), false);
+  const listingDeadline = { ...fixture("Full details &rarr; Project Open Call: Made of Fife Made of Fife: A Call for Material Makers, Researchers and Practitioners Closing date: 12 Oct 2026", "来源页面未提供更详细摘要。"), deadline: "2026-10-12T23:59:00.000Z" };
+  assert.equal(
+    createTranslatedOpportunityV2Translation(listingDeadline, { title_zh: "Made of Fife：面向材料制造者、研究人员和实践者的征集", summary_zh: "来源页面未提供更详细摘要。" }).status,
+    "translated",
+  );
   for (const item of [loewe, craftforms, homo, jp, ko]) {
     assert.equal(createTranslatedOpportunityV2Translation(item, { title_zh: `中文 ${item.title.slice(-4)}`, summary_zh: `中文摘要 ${item.summary}` }).status, "translated");
   }

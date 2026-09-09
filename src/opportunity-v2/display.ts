@@ -104,12 +104,27 @@ function factualTokens(value: string): string[] {
   ])];
 }
 
+/**
+ * Deadline is already rendered as a separate card field. Source titles often
+ * contain "Closing date" / "申请截止" text, while the translation prompt
+ * explicitly removes that navigation metadata from the translated title.
+ * Remove only those deadline fragments before checking factual tokens so the
+ * validator does not reject an otherwise valid translation for omitting a
+ * duplicated deadline year.
+ */
+function stripDeadlineFragments(value: string): string {
+  return value.replace(
+    /(?:closing\s+date|application\s+deadline|submission\s+deadline|entry\s+deadline|deadline|applications?\s+(?:close|closing|end|ends)(?:\s+on)?|截止日期|截止时间|报名截止|投稿截止|申请截止|截稿(?:至)?|截至|截止)\s*[:：]?\s*[^\n。；;]*/giu,
+    "",
+  );
+}
+
 export function validateOpportunityV2Translation(item: OpportunityV2, title: string, summary: string): string[] {
   const errors: string[] = [];
   if (!title.trim()) errors.push("empty translated title");
   if (!summary.trim()) errors.push("empty translated summary");
   if (/<(?:script|style)\b/iu.test(`${title} ${summary}`)) errors.push("markup is not allowed");
-  for (const token of factualTokens(`${item.title}\n${item.summary}`)) {
+  for (const token of factualTokens(stripDeadlineFragments(`${item.title}\n${item.summary}`))) {
     const normalizedToken = token.replace(/[.,]+$/u, "");
     if (!`${title} ${summary}`.includes(normalizedToken.replace(/\s+/gu, "")) && !`${title} ${summary}`.includes(token)) errors.push(`missing factual token ${token}`);
   }
