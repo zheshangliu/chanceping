@@ -7,17 +7,7 @@
   "hero_text_width": "CSS constrained to 60% desktop / 100% mobile",
   "filter_row_count": 4,
   "repeated_summary_block_count": 0,
-  "horizontal_overflow": {
-    "home-desktop": false,
-    "home-mobile": false,
-    "overseas-desktop": false,
-    "procurement-desktop": false,
-    "procurement-mobile": false,
-    "memo-desktop": false,
-    "memo-mobile": false,
-    "source-manager": false,
-    "competition-detail": false
-  },
+  "horizontal_overflow": "pending-browser-capture",
   "screenshots": {
     "home_desktop": "audits/ich/ui/latest/home-desktop.png",
     "home_mobile": "audits/ich/ui/latest/home-mobile.png",
@@ -28,6 +18,5 @@
     "memo_mobile": "audits/ich/ui/latest/memo-mobile.png",
     "detail": "audits/ich/ui/latest/competition-detail.png",
     "source_manager": "audits/ich/ui/latest/source-manager.png"
-  },
-  "captured_at": "2026-09-09T15:28:04.746Z"
+  }
 }

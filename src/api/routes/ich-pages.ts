@@ -350,6 +350,35 @@ function v2MemoMarkdown(result: V2IchPageResult): string {
   return `${lines.join("\n")}\n`;
 }
 
+function v2MemoJson(result: V2IchPageResult): Record<string, unknown> {
+  return {
+    generated_at: new Date().toISOString(),
+    total: result.total,
+    known_deadlines: result.total_known_deadline,
+    unknown_deadlines: result.total_deadline_tbd,
+    long_term: result.total_long_term,
+    items: result.items.map((item) => {
+      const display = buildOpportunityV2Display(item, result.translations);
+      return {
+        id: item.id,
+        title: display.title,
+        summary: display.summary,
+        category: item.category,
+        directions: item.directions ?? [],
+        work_formats: item.work_formats ?? [],
+        region: item.region,
+        deadline: item.deadline,
+        deadline_text: item.deadline_text ?? null,
+        status: opportunityV2LiveStatus(item),
+        source_name: item.source_name,
+        source_id: item.source_id,
+        detail_url: item.detail_url,
+        discovered_by_sources: item.discovered_by_sources,
+      };
+    }),
+  };
+}
+
 function collectionStructuredData(name: string, description: string, path: string): unknown[] {
   return [{
     "@context": "https://schema.org",
@@ -431,6 +460,18 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       return c.text(v2MemoMarkdown(result), 200, { "Content-Type": "text/markdown; charset=UTF-8", "Content-Disposition": "attachment; filename=ich-memo.md" });
     }
     return c.html(shell("赛事备忘录｜盯非遗", "按截止时间查看同一赛事池中的全部可浏览赛事。", "/ich/memo", v2MemoPage(result), { structuredData: collectionStructuredData("赛事备忘录", "按截止时间查看可浏览赛事。", "/ich/memo") }));
+  });
+  app.get("/memo.json", (c) => {
+    if (!options.opportunityV2) return c.json({ error: "memo unavailable" }, 404);
+    const query = parseV2PageQuery(c.req.query());
+    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: 1, pageSize: 10000, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    return c.json(v2MemoJson(result));
+  });
+  app.get("/memo.md", (c) => {
+    if (!options.opportunityV2) return c.text("memo unavailable", 404);
+    const query = parseV2PageQuery(c.req.query());
+    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: 1, pageSize: 10000, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    return c.text(v2MemoMarkdown(result), 200, { "Content-Type": "text/markdown; charset=UTF-8", "Content-Disposition": "attachment; filename=ich-memo.md" });
   });
   app.get("/history", (c) => {
     if (options.opportunityV2) {

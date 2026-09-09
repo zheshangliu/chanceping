@@ -53,6 +53,7 @@
     },
     "procurement_empty_state": true,
     "json_total": 144,
+    "memo_json_total": 144,
     "markdown_rows": 144,
     "parity": true
   },
@@ -75,17 +76,7 @@
     "hero_text_width": "CSS constrained to 60% desktop / 100% mobile",
     "filter_row_count": 4,
     "repeated_summary_block_count": 0,
-    "horizontal_overflow": {
-      "home-desktop": false,
-      "home-mobile": false,
-      "overseas-desktop": false,
-      "procurement-desktop": false,
-      "procurement-mobile": false,
-      "memo-desktop": false,
-      "memo-mobile": false,
-      "source-manager": false,
-      "competition-detail": false
-    },
+    "horizontal_overflow": "pending-browser-capture",
     "screenshots": {
       "home_desktop": "audits/ich/ui/latest/home-desktop.png",
       "home_mobile": "audits/ich/ui/latest/home-mobile.png",
@@ -96,11 +87,10 @@
       "memo_mobile": "audits/ich/ui/latest/memo-mobile.png",
       "detail": "audits/ich/ui/latest/competition-detail.png",
       "source_manager": "audits/ich/ui/latest/source-manager.png"
-    },
-    "captured_at": "2026-09-09T15:28:04.746Z"
+    }
   },
   "manifest": {
-    "generated_at": "2026-09-09T15:27:10.624Z",
+    "generated_at": "2026-09-09T15:31:04.233Z",
     "base": "rescue/mvp-codex",
     "pages": [
       "/ich",
@@ -117,17 +107,6 @@
       "copy-summary.json",
       "visual-checks.json"
     ],
-    "screenshot_status": "captured-and-inspected",
-    "screenshots": [
-      "audits/ich/ui/latest/home-desktop.png",
-      "audits/ich/ui/latest/home-mobile.png",
-      "audits/ich/ui/latest/overseas-desktop.png",
-      "audits/ich/ui/latest/procurement-desktop.png",
-      "audits/ich/ui/latest/procurement-mobile.png",
-      "audits/ich/ui/latest/memo-desktop.png",
-      "audits/ich/ui/latest/memo-mobile.png",
-      "audits/ich/ui/latest/source-manager.png",
-      "audits/ich/ui/latest/competition-detail.png"
-    ]
+    "screenshot_status": "capture-script-required"
   }
 }

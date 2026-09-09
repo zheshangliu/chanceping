@@ -52,6 +52,7 @@
   },
   "procurement_empty_state": true,
   "json_total": 144,
+  "memo_json_total": 144,
   "markdown_rows": 144,
   "parity": true
 }

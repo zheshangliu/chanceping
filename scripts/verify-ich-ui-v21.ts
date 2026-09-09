@@ -66,6 +66,9 @@ async function main(): Promise<void> {
   const markdown = await markdownResponse.text();
   assert.equal(markdownResponse.status, 200);
   assert.match(markdownResponse.headers.get("content-type") ?? "", /text\/markdown/u);
+  const jsonResponse = await app.request("http://localhost/ich/memo.json");
+  assert.equal(jsonResponse.status, 200);
+  const memoJson = await jsonResponse.json() as { total: number; items: unknown[] };
   const procurementResponse = await app.request("http://localhost/ich?category=procurement_project");
   const procurement = await procurementResponse.text();
   assert.equal(procurementResponse.status, 200);
@@ -102,6 +105,7 @@ async function main(): Promise<void> {
   const procurementText = visibleText(procurement);
   const markdownRows = markdown.split("\n").filter((line) => /^\|/u.test(line) && !/^\|\s*(?:截止日期|---)/u.test(line)).length;
   const memoTotal = Number(memo.match(/全部赛事\s+(\d+)/u)?.[1] ?? -1);
+  const jsonTotal = memoJson.total;
   const resultTotal = Number(home.match(/当前赛事：?(\d+)\s*条?/u)?.[1] ?? -1);
   const firstTenIds = [...home.matchAll(/\/ich\/opportunities\/([^"?]+)/gu)].map((match) => decodeURIComponent(match[1])).filter((id, index, ids) => ids.indexOf(id) === index).slice(0, 10);
   const nav = listOf(/<nav class="ich-nav">([\s\S]*?)<\/nav>/u, home).join(" ");
@@ -145,8 +149,9 @@ async function main(): Promise<void> {
     },
     procurement_empty_state: procurementText.includes("暂无符合非遗 / 文创范围的当前采购机会"),
     json_total: radar.total,
+    memo_json_total: jsonTotal,
     markdown_rows: markdownRows,
-    parity: radar.total === memoTotal && memoTotal === markdownRows,
+    parity: radar.total === memoTotal && memoTotal === jsonTotal && memoTotal === markdownRows && memoJson.items.length === jsonTotal,
   };
   const visualChecks = {
     hero_image: { asset: "/assets/ich-paper-atlas-hero.png", fused_gradient: /linear-gradient\([^)]*ich-paper/iu.test(home) || /linear-gradient/iu.test(home), hard_boundary: false },
