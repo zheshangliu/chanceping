@@ -1,6 +1,7 @@
 import { deduplicateOpportunityV2, opportunityStatus } from "./opportunity-pool";
 import { readOpportunityV2Translations } from "./display";
 import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
+import { isLikelySourceListingNoise } from "../ich/aggregation/adapters/generic-listing";
 import { isCraftRelevantProcurement } from "./procurement";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
@@ -79,6 +80,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
   const translations = q ? new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry])) : new Map();
   const filtered = opportunities
     .filter((item) => enabled.has(item.source_id))
+    .filter((item) => !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
     .filter((item) => !hasEncodingCorruption(item.title))
     // A legacy row classified as procurement without structured procurement
     // metadata is not safe to publish: it could be a supplier page, an award,

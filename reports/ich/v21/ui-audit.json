@@ -1,0 +1,133 @@
+{
+  "domSummary": {
+    "brand_text": "盯非遗",
+    "brand_asset": "/assets/dingfeiyi-logo.png",
+    "hero_h1": "全球赛事，一站看全",
+    "hero_eyebrow": "国内外文创・非遗・手工艺赛事覆盖最全",
+    "hero_subtitle": "持续聚合国内外设计、文创、非遗与手工艺赛事，并逐步扩展采购、合作、资助、市集与研修机会，让手艺人、设计师、工作室和文创团队更快找到值得行动的项目。",
+    "nav": [
+      "机会导航 赛事备忘录 历史机会 联系作者 提交来源"
+    ],
+    "channels": [
+      "赛事 / 征集 比赛与作品征集",
+      "市集 / 展销 市集、展会与展销",
+      "采购 / 订单 采购与项目需求",
+      "渠道 / 合作 入驻与联名",
+      "资助 / 扶持 政策与资金",
+      "研修 / 交流 研学、驻地与交流"
+    ],
+    "filters": [
+      "赛事方向： 全部赛事 非遗创新 文创设计 工艺美术 文博文旅 综合文化设计 AIGC / 数字创作",
+      "作品形式： 全部形式 实物工艺 产品设计方案 平面 / 插画 / IP 包装设计 服饰 / 首饰 视频 / 动画 交互 / 游戏 综合媒介",
+      "来源地区： 全部来源 国内来源 海外来源",
+      "截止状态： 全部可浏览 正在征集 近期截止 即将开始 长期征集 日期待补 历史机会 排序：截止时间（近→远） 排序：最新收录"
+    ],
+    "stats": {
+      "text": "当前赛事：144 海外赛事：15 数据源：29 每72小时更新 最近更新：2026年9月8日",
+      "result_total": 144,
+      "source_count": 31
+    },
+    "result_total": 144,
+    "result_count": 144,
+    "memo_total": 144,
+    "procurement_public_total": 0,
+    "first_10_ids": [
+      "oppv2_5ee24bd5d2d86b5ad31e3e3e",
+      "oppv2_ce6fe43c9ad273407cf39d29",
+      "oppv2_6b65f314231648bd47919ae1",
+      "oppv2_adb5882c57e65d011e4f8266",
+      "oppv2_43c53b1ffbeb81953c97f1bc",
+      "oppv2_5a4695f55cc21ae9f11a19dc",
+      "oppv2_0f0d2273518d1a1de547ead9",
+      "oppv2_a96f1da67139eb5d973adf1c"
+    ],
+    "pages": {
+      "home": 200,
+      "overseas": 200,
+      "memo": 200,
+      "procurement": 200,
+      "detail": 200,
+      "submit": 200,
+      "source_principles": 200,
+      "source_manager": 200
+    },
+    "procurement_empty_state": true,
+    "json_total": 144,
+    "markdown_rows": 144,
+    "parity": true
+  },
+  "copySummary": {
+    "raw_iso_timestamp_count": 0,
+    "ChancePing_visible_count": 0,
+    "待确认_count": 0,
+    "more_filters_desktop_count": 0,
+    "duplicate_summary_bar_count": 0,
+    "encoding_error_count": 0,
+    "unsafe_deadline_count": 0,
+    "bottom_redundant_modules_visible": 0
+  },
+  "visualChecks": {
+    "hero_image": {
+      "asset": "/assets/ich-paper-atlas-hero.png",
+      "fused_gradient": true,
+      "hard_boundary": false
+    },
+    "hero_text_width": "CSS constrained to 60% desktop / 100% mobile",
+    "filter_row_count": 4,
+    "repeated_summary_block_count": 0,
+    "horizontal_overflow": {
+      "home-desktop": false,
+      "home-mobile": false,
+      "overseas-desktop": false,
+      "procurement-desktop": false,
+      "procurement-mobile": false,
+      "memo-desktop": false,
+      "memo-mobile": false,
+      "source-manager": false,
+      "competition-detail": false
+    },
+    "screenshots": {
+      "home_desktop": "audits/ich/ui/latest/home-desktop.png",
+      "home_mobile": "audits/ich/ui/latest/home-mobile.png",
+      "overseas_desktop": "audits/ich/ui/latest/overseas-desktop.png",
+      "procurement_desktop": "audits/ich/ui/latest/procurement-desktop.png",
+      "procurement_mobile": "audits/ich/ui/latest/procurement-mobile.png",
+      "memo_desktop": "audits/ich/ui/latest/memo-desktop.png",
+      "memo_mobile": "audits/ich/ui/latest/memo-mobile.png",
+      "detail": "audits/ich/ui/latest/competition-detail.png",
+      "source_manager": "audits/ich/ui/latest/source-manager.png"
+    },
+    "captured_at": "2026-09-09T15:28:04.746Z"
+  },
+  "manifest": {
+    "generated_at": "2026-09-09T15:27:10.624Z",
+    "base": "rescue/mvp-codex",
+    "pages": [
+      "/ich",
+      "/ich?region=GLOBAL",
+      "/ich?category=procurement_project",
+      "/ich/memo",
+      "/ich/opportunities/oppv2_5ee24bd5d2d86b5ad31e3e3e",
+      "/ich/submit",
+      "/ich/source-principles",
+      "/opportunity-v2/admin/sources"
+    ],
+    "artifacts": [
+      "dom-summary.json",
+      "copy-summary.json",
+      "visual-checks.json"
+    ],
+    "screenshot_status": "captured-and-inspected",
+    "screenshots": [
+      "audits/ich/ui/latest/home-desktop.png",
+      "audits/ich/ui/latest/home-mobile.png",
+      "audits/ich/ui/latest/overseas-desktop.png",
+      "audits/ich/ui/latest/procurement-desktop.png",
+      "audits/ich/ui/latest/procurement-mobile.png",
+      "audits/ich/ui/latest/memo-desktop.png",
+      "audits/ich/ui/latest/memo-mobile.png",
+      "audits/ich/ui/latest/source-manager.png",
+      "audits/ich/ui/latest/competition-detail.png"
+    ]
+  }
+}

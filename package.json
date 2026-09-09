@@ -145,6 +145,8 @@
     "opportunity:v2:display": "tsx scripts/run-opportunity-v2-display.ts",
     "verify:opportunity:v2:translation": "tsx scripts/verify-opportunity-v2-translation.ts",
     "verify:opportunity:v2": "tsx scripts/verify-opportunity-v2.ts",
+    "verify:ich:ui-v21": "tsx scripts/verify-ich-ui-v21.ts",
+    "verify:ich:competition-reconciliation": "tsx scripts/verify-ich-competition-reconciliation.ts",
     "verify:ich:v12": "tsx scripts/verify-ich-v12-memo.ts",
     "verify:ich:v13": "tsx scripts/verify-ich-v13.ts",
     "verify:ich:deadline-round1": "tsx scripts/verify-ich-deadline-round1.ts",

@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-09-09T15:27:10.624Z",
+  "base": "rescue/mvp-codex",
+  "pages": [
+    "/ich",
+    "/ich?region=GLOBAL",
+    "/ich?category=procurement_project",
+    "/ich/memo",
+    "/ich/opportunities/oppv2_5ee24bd5d2d86b5ad31e3e3e",
+    "/ich/submit",
+    "/ich/source-principles",
+    "/opportunity-v2/admin/sources"
+  ],
+  "artifacts": [
+    "dom-summary.json",
+    "copy-summary.json",
+    "visual-checks.json"
+  ],
+  "screenshot_status": "captured-and-inspected",
+  "screenshots": [
+    "audits/ich/ui/latest/home-desktop.png",
+    "audits/ich/ui/latest/home-mobile.png",
+    "audits/ich/ui/latest/overseas-desktop.png",
+    "audits/ich/ui/latest/procurement-desktop.png",
+    "audits/ich/ui/latest/procurement-mobile.png",
+    "audits/ich/ui/latest/memo-desktop.png",
+    "audits/ich/ui/latest/memo-mobile.png",
+    "audits/ich/ui/latest/source-manager.png",
+    "audits/ich/ui/latest/competition-detail.png"
+  ]
+}

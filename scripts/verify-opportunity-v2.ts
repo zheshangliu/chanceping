@@ -208,10 +208,15 @@ async function main(): Promise<void> {
   const ichPage = await (await app.request("http://localhost/ich")).text();
   const radarResponse = await app.request("http://localhost/api/opportunity-v2/radar?category=competition");
   const radarApi = await radarResponse.json() as { total: number };
-  const displayedTotal = Number(ichPage.match(/(?:当前机会|可浏览赛事)：\s*(\d+) 条/u)?.[1] ?? -1);
+  const displayedTotal = Number(ichPage.match(/(?:当前赛事|当前机会|可浏览赛事)(?:：)?\s*:?\s*(\d+)/u)?.[1] ?? -1);
   assert.equal(displayedTotal, radarApi.total, "public /ich total must match the V2 radar API");
   assert.match(ichPage, /来源：/);
   assert.match(ichPage, /ich-paper-atlas-hero\.png/);
+  assert.match(ichPage, /src="\/assets\/dingfeiyi-logo\.png"/);
+  assert.match(ichPage, /alt="盯非遗"/);
+  assert.match(ichPage, /全球赛事，一站看全/);
+  assert.match(ichPage, /国内来源/);
+  assert.doesNotMatch(ichPage, /更多筛选/);
   assert.match(ichPage, /赛事 \/ 征集/);
   assert.match(ichPage, /海外/);
   assert.doesNotMatch(ichPage, /OPPORTUNITY V2|SOURCE → FETCH → DEDUP → FILTER|RELEVANT|CURRENT|UNKNOWN_DEADLINE|Source Manager/);
