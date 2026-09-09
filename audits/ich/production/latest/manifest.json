@@ -1,0 +1,105 @@
+{
+  "schema_version": "chanceping.ich.readonly-audit.v1",
+  "captured_at": "2026-09-09T05:32:07.743Z",
+  "base_url": "https://ich.chanceping.com",
+  "production_commit": "95b4f2bcb6ad57581fd09734e88a31b1985ebf1e",
+  "production_read_only": true,
+  "no_runtime_writes": true,
+  "endpoints": [
+    {
+      "path": "/health",
+      "url": "https://ich.chanceping.com/health",
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    {
+      "path": "/ich",
+      "url": "https://ich.chanceping.com/ich",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8"
+    },
+    {
+      "path": "/ich/memo",
+      "url": "https://ich.chanceping.com/ich/memo",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8"
+    },
+    {
+      "path": "/ich/memo.json",
+      "url": "https://ich.chanceping.com/ich/memo.json",
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    {
+      "path": "/ich/memo.md",
+      "url": "https://ich.chanceping.com/ich/memo.md",
+      "status": 200,
+      "content_type": "text/markdown; charset=UTF-8"
+    },
+    {
+      "path": "/api/opportunity-v2/radar?category=competition",
+      "url": "https://ich.chanceping.com/api/opportunity-v2/radar?category=competition",
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    {
+      "path": "/api/opportunity-v2/sources",
+      "url": "https://ich.chanceping.com/api/opportunity-v2/sources",
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    {
+      "path": "/api/opportunity-v2/sources/overview",
+      "url": "https://ich.chanceping.com/api/opportunity-v2/sources/overview",
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    }
+  ],
+  "counts": {
+    "sources": 31,
+    "radar_competitions": 173,
+    "memo_competitions": 622,
+    "memo_known_source_names": 31
+  },
+  "source_overview_summary": {
+    "registered": 31,
+    "enabled": 31,
+    "recent_success": 27,
+    "failed": 1,
+    "needs_adapter": 3,
+    "current_contribution": 214
+  },
+  "next_run_at": "2026-09-09T07:57:22.097Z",
+  "checks": {
+    "http_all_200": true,
+    "source_pool_visible": true,
+    "source_count": 31,
+    "home_competition_total": 173,
+    "radar_competition_total": 173,
+    "memo_total": 622,
+    "memo_json_markdown_same_ids": true,
+    "memo_location_column_removed": true,
+    "memo_noise_hidden": true,
+    "loewe_visible_once": false,
+    "loewe_sources": [],
+    "named_sources_visible": [
+      "Craft Scotland",
+      "Heritage Crafts",
+      "ASEF culture360 Opportunities"
+    ],
+    "no_expired_default_radar": true,
+    "home_and_radar_counts_match": true
+  },
+  "complete": false,
+  "files": [
+    "manifest.json",
+    "checks.json",
+    "home.html",
+    "memo.html",
+    "memo.json",
+    "memo.md",
+    "radar.json",
+    "sources.json",
+    "source-overview.json"
+  ]
+}
