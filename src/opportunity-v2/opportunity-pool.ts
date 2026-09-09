@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { identityHash, classifyCategory, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
+import { cleanGenericListingTitle } from "../ich/aggregation/adapters/generic-listing";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2, OpportunityV2PoolFile, V2OpportunityStatus } from "./types";
 import { classifyV2Dimensions, classifyV2RadarRelevance } from "./keywords";
@@ -103,7 +104,7 @@ export function formatOpportunityV2Date(value: string | null | undefined): strin
 }
 
 export function canonicalOpportunityTitle(title: string): string {
-  let normalized = title.normalize("NFKC").toLowerCase().trim();
+  let normalized = cleanGenericListingTitle(title).normalize("NFKC").toLowerCase().trim();
   normalized = normalized
     .replace(/[（(【\[][^）)】\]]*(?:截至|截止|截稿|报名)[^）)】\]]*[）)】\]]/gu, " ")
     .replace(/(?:截至|截稿至|截止时间?|报名截止|征集时间)\s*[:：]?\s*(?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{1,2}[月./-]\d{1,2}日?)\s*$/u, " ");
@@ -134,7 +135,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   const preferIncoming = item.source_id === "loewe-craft-prize" && prior.source_id !== "loewe-craft-prize";
   const sameCfwDetail = item.source_id === CFW_SOURCE_ID && prior.source_id === CFW_SOURCE_ID && item.detail_url === prior.detail_url;
   const deadline = sameCfwDetail && item.deadline ? item.deadline : (item.deadline ?? prior.deadline);
-  const mergedTitle = preferIncoming ? item.title : prior.title;
+  const mergedTitle = preferIncoming ? item.title : cleanGenericListingTitle(prior.title);
   const mergedSummary = hasUsableSummary(item.summary, item.title) ? conciseSummary(item.summary, item.title) : conciseSummary(prior.summary, prior.title);
   const category = item.category === "competition" && prior.category !== "competition" ? prior.category : (item.category || prior.category);
   const derived = classifyV2Dimensions(mergedTitle, mergedSummary, category);
@@ -147,6 +148,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     summary: mergedSummary,
     category,
     deadline,
+    deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
     status: mergedStatus({ ...prior, deadline }, item, sameSource, now),
     first_seen_at: prior.first_seen_at,
     last_seen_at: now.toISOString(),
@@ -170,17 +172,18 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
 }
 
 export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { id: string; name: string; region: "CN" | "GLOBAL" }, now = new Date()): OpportunityV2 {
-  const summary = conciseSummary(input.raw_text.replace(/\s+/gu, " ").trim(), input.title);
-  const relevance = classifyV2RadarRelevance(input.title, summary, input.source_category ?? "");
-  const dimensions = classifyV2Dimensions(input.title, summary, classifyCategory(input.source_category, input.title));
-  const identity = identityHash(input.title, input.deadline_at ?? "", input.organizer ?? "");
+  const title = cleanGenericListingTitle(input.title) || input.title.trim();
+  const summary = conciseSummary(input.raw_text.replace(/\s+/gu, " ").trim(), title);
+  const relevance = classifyV2RadarRelevance(title, summary, input.source_category ?? "");
+  const dimensions = classifyV2Dimensions(title, summary, classifyCategory(input.source_category, title));
+  const identity = identityHash(title, input.deadline_at ?? "", input.organizer ?? "");
   const structuredStatus = opportunityStatus(input.deadline_at, now);
   const status = structuredStatus === "UNKNOWN_DEADLINE"
     ? (opportunityStatusFromSourceStatus(input.source_status) ?? structuredStatus)
     : structuredStatus;
   return {
     id: `oppv2_${identity}`,
-    title: input.title.trim(),
+    title,
     summary,
     source_id: source.id,
     source_name: source.name,
@@ -190,6 +193,7 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     region: source.region,
     tags: relevance.tags,
     deadline: input.deadline_at,
+    deadline_text: input.deadline_text,
     status,
     first_seen_at: now.toISOString(),
     last_seen_at: now.toISOString(),
@@ -241,6 +245,7 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
       tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
       summary: conciseSummary(item.summary, item.title) || conciseSummary(prior.summary, prior.title),
+      deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
       ...(prior.detail_url ? {} : { detail_url: item.detail_url }),
       directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? [])])],
       work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? [])])],

@@ -65,13 +65,16 @@ function hasKana(value: string): boolean { return /[\u3040-\u309f\u30a1-\u30fa\u
 function hasHangul(value: string): boolean { return /[\uac00-\ud7af]/u.test(value); }
 function latinCount(value: string): number { return (value.match(/[A-Za-z]/gu) ?? []).length; }
 
-/** Mixed CJK/Latin titles are foreign when the non-Chinese script is substantive. */
-export function isForeignLanguageOpportunity(item: Pick<OpportunityV2, "title">): boolean {
+/** Mixed CJK/Latin records are foreign when either field is substantively non-Chinese. */
+export function isForeignLanguageOpportunity(item: Pick<OpportunityV2, "title" | "summary">): boolean {
   const title = item.title.trim();
+  const summary = item.summary.trim();
   if (hasKana(title) || hasHangul(title)) return true;
-  const latin = latinCount(title);
-  const chinese = (title.match(/[\u3400-\u9fff]/gu) ?? []).length;
-  return latin >= 3 && (!hasChinese(title) || latin >= 8 || latin > chinese);
+  const titleLatin = latinCount(title);
+  const titleChinese = (title.match(/[\u3400-\u9fff]/gu) ?? []).length;
+  if (titleLatin >= 3 && (!hasChinese(title) || titleLatin >= 8 || titleLatin > titleChinese)) return true;
+  if (summary && !hasChinese(summary) && (hasKana(summary) || hasHangul(summary) || latinCount(summary) >= 12)) return true;
+  return false;
 }
 
 function pendingTranslation(item: OpportunityV2, now: Date, status: OpportunityV2TranslationStatus, error?: string): OpportunityV2Translation {
@@ -114,7 +117,7 @@ function factualTokens(value: string): string[] {
  */
 function stripDeadlineFragments(value: string): string {
   return value.replace(
-    /(?:closing\s+date|application\s+deadline|submission\s+deadline|entry\s+deadline|deadline|applications?\s+(?:close|closing|end|ends)(?:\s+on)?|截止日期|截止时间|报名截止|投稿截止|申请截止|截稿(?:至)?|截至|截止)\s*[:：]?\s*[^\n。；;]*/giu,
+    /(?:closing\s+date|application\s+deadline|submission\s+deadline|entry\s+deadline|deadline|applications?\s+(?:close|closing|end|ends)(?:\s+on)?|截止日期|截止时间|报名截止|投稿截止|申请截止|截稿(?:至)?|截至|截止)\s*[:：-]?\s*(?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}\s*[年./-]\s*\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?|\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?)/giu,
     "",
   );
 }

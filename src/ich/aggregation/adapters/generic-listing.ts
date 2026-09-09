@@ -3,6 +3,16 @@ import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normaliz
 const NAVIGATION_TEXT = /^(about(?: us)?|add listing|all opportunities|apply now|artists?|become (?:a )?(?:member|benefactor)|benefits|browse(?: all)?(?: open calls| opportunities)?(?: →)?|browse opportunities|call listings|categories|ca[féé™]*|ccbc (?:events?|gallery|projects?)|closing this week(?: →)?|competitions? & open calls|craft council(?: of british columbia)?|craft directory|craft fair|craft inventory|craft map|craft resource library|craft scotland|craft status|countries|contact(?: us)?|dashboard|deadline|directory|donate(?: now)?!?|editor's picks|emerging artists|events?|find calls|forgotten password\?|fully funded|get involved|grants?|guides?|hybrid residencies|in conversation|international|join|journal|learn more|list your studio|login|makers?(?: directory| list)?|meet the team|more|more details|more opportunities|next page|no application fee|opencall radar|opportunities|organisations? to know|our work|our stories|partners|pricing|prizes?|previous page|read more|red list|refund|report this\?|residencies|resources?|reset|return policy|rolling deadline|search|sign in|skip to content|studio guide|submit(?: an)? opportunity|subscribe|support(?: us)?|terms|the makers|the skills|travel covered|view all|what(?:'|’)s on|who we are|with accommodation|workshops|全部|关于我们|联系我们|机会|更多|登录|注册|搜索|提交|征集大赛)$/iu;
 const OPPORTUNITY_SIGNAL = /(?:opportunit|open.?call|contest|competition|residen|award|exhibition|craft|artist|apply|call|vendor|market|grant|fellowship|participat|young.?ambassadors|deadline|招募|征集|比赛|竞赛|大赛|展览| 사업공모|모집|공모|지원사업|지원|신청)/iu;
 const RESULT_OR_CONTENT_NOISE = /(?:获奖名单|名单公示|评审结果|结果公布|结果揭晓|获奖作品|入围名单|结果发布|作品赏析|新闻|资讯|招聘|公示|公告解读)/iu;
+const INLINE_DEADLINE = String.raw`(?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}\s*[年./-]\s*\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?|\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?)`;
+
+/** Removes listing chrome while retaining the actual opportunity wording. */
+export function cleanGenericListingTitle(value: string): string {
+  return value
+    .replace(/^\s*(?:full\s+details?|more\s+details?)\s*(?:&rarr;|&raquo;|→|->|›)?\s*/iu, "")
+    .replace(new RegExp(`(?:closing\\s+date|application\\s+deadline|submission\\s+deadline|entry\\s+deadline|deadline|截止日期|截止时间|报名截止|投稿截止|申请截止|截稿(?:至)?|截至|截止)\\s*[:：-]?\\s*${INLINE_DEADLINE}`, "iu"), "")
+    .replace(/\s+/gu, " ")
+    .trim();
+}
 
 function hasPriorYearTitle(title: string): boolean {
   const currentYear = new Date().getUTCFullYear();
@@ -35,6 +45,11 @@ export function isLikelyGenericNavigationItem(title: string, detailUrl: string):
 export function isLikelySourceListingNoise(sourceId: string, title: string, detailUrl: string): boolean {
   if (isLikelyGenericNavigationItem(title, detailUrl)) return true;
   const value = `${title} ${detailUrl}`;
+  if (sourceId === "american-craft-council-opportunities") {
+    if (/^(?:national craft directory|about american craft|craft happenings|craft champions circle|maker support)$/iu.test(title.trim())) return true;
+    if (/\/(?:national-directory|magazine|craft-happenings-calendar|craft-champions-circle)$/iu.test(detailUrl)) return true;
+  }
+  if (sourceId === "craft-scotland-opportunities" && /(?:shared studio|studio (?:application|space)|workshop spaces|general (?:tour|travel)|about|news|podcast|archive)/iu.test(value)) return true;
   if (["cfw-cultural-ip", "whaleideas-competition", "zjmtcn-product-competition", "iuben-cultural-competition"].includes(sourceId)) {
     if (RESULT_OR_CONTENT_NOISE.test(value) || hasPriorYearTitle(title)) return true;
   }
@@ -126,8 +141,9 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
     if (/^(?:mailto:|tel:)/iu.test(anchor.href)) continue;
     if (patterns.length && !patterns.some((pattern) => pattern.test(anchor.href))) continue;
     if (anchor.href === listingUrl || seen.has(anchor.href)) continue;
-    const candidateText = structuredText.get(anchor.href) ?? anchor.text;
-    if (isLikelyGenericNavigationItem(candidateText, anchor.href)) continue;
+    const rawCandidateText = structuredText.get(anchor.href) ?? anchor.text;
+    if (isLikelyGenericNavigationItem(rawCandidateText, anchor.href)) continue;
+    const candidateText = cleanGenericListingTitle(rawCandidateText);
     if (/\S+@\S+/u.test(candidateText) || candidateText.trim().length < 4) continue;
     try {
       const target = new URL(anchor.href);
@@ -142,7 +158,7 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
     if (!OPPORTUNITY_SIGNAL.test(`${anchor.href} ${candidateText}`)) continue;
     const detailUrl = normalizeUrl(anchor.href, listingUrl) ?? anchor.href;
     const cfwDate = structuredCfwDates.get(detailUrl);
-    const deadline = extractDeadlineText(candidateText) ?? structuredDeadlines.get(anchor.href) ?? cfwDate?.raw ?? null;
+    const deadline = extractDeadlineText(rawCandidateText) ?? structuredDeadlines.get(anchor.href) ?? cfwDate?.raw ?? null;
     seen.add(anchor.href);
     result.push({
       source_item_id: identityHash(anchor.href), title: candidateText, source_category: null, detail_url: detailUrl,

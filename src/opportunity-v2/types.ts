@@ -34,6 +34,7 @@ export interface OpportunityV2 {
   region: "CN" | "GLOBAL";
   tags: string[];
   deadline: string | null;
+  deadline_text?: string | null;
   status: V2OpportunityStatus;
   first_seen_at: string;
   last_seen_at: string;

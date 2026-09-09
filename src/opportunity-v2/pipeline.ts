@@ -198,6 +198,20 @@ interface SourceFetchResult {
   next_page: number | null;
 }
 
+function paginationStartPage(source: OpportunityV2Source, healthPath?: string): number {
+  const plan = paginationPlan(source);
+  if (!plan) return 1;
+  const target = path.resolve(healthPath ?? defaultHealthPath());
+  try {
+    const parsed = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2SourceHealth[] };
+    const row = parsed.sources?.find((candidate) => candidate.source_id === source.id);
+    const next = typeof row?.next_page === "number" ? row.next_page : 1;
+    return next >= 1 && next <= plan.maxPages ? next : 1;
+  } catch {
+    return 1;
+  }
+}
+
 async function enrichCfwDetailDates(items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher): Promise<void> {
   for (const item of items) {
     if (item.deadline_at || !item.detail_url) continue;
@@ -215,18 +229,20 @@ async function enrichCfwDetailDates(items: ParsedAggregationItem[], fetcher: Opp
   }
 }
 
-async function fetchAndParseSource(source: OpportunityV2Source, fetcher: OpportunityV2Fetcher): Promise<SourceFetchResult> {
+async function fetchAndParseSource(source: OpportunityV2Source, fetcher: OpportunityV2Fetcher, startPage = 1): Promise<SourceFetchResult> {
   const fetchedAt = new Date().toISOString();
   const firstUrl = SPECIAL_SOURCE_URL[source.id] ?? source.url;
   const plan = paginationPlan(source);
-  const pages = plan ? Math.max(1, plan.maxPages) : 1;
+  const firstPage = plan ? Math.min(Math.max(1, startPage), plan.maxPages) : 1;
+  const pages = plan ? Math.max(1, plan.maxPages - firstPage + 1) : 1;
   const parsed: ParsedAggregationItem[] = [];
   const seen = new Set<string>();
   let responseStatus = 0;
   let format: SourceFetchResult["format"] = null;
   let partial = false;
   let nextPage: number | null = null;
-  for (let page = 1; page <= pages; page += 1) {
+  for (let offset = 0; offset < pages; offset += 1) {
+    const page = firstPage + offset;
     const pageUrl = page === 1 ? firstUrl : plan!.pageUrl(page);
     let response: Awaited<ReturnType<OpportunityV2Fetcher>>;
     try {
@@ -252,7 +268,7 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       parsed.push(item);
     }
     if (!plan || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
-    if (page >= pages) {
+    if (offset + 1 >= pages || page >= plan!.maxPages) {
       partial = true;
       nextPage = page + 1;
       break;
@@ -325,7 +341,7 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   let successfulSources = 0;
   for (const source of selectedSources) {
     try {
-      const result = await fetchAndParseSource(source, fetcher);
+      const result = await fetchAndParseSource(source, fetcher, paginationStartPage(source, options.healthPath));
       // Do not silently cap discovery. maxItems remains an explicit caller-controlled
       // safety valve for fixtures or bounded one-off runs only.
       const parsed = options.maxItems === undefined ? result.parsed : result.parsed.slice(0, options.maxItems);

@@ -46,6 +46,8 @@ async function main(): Promise<void> {
   });
   const currencyResult = await currencyProvider.translate({ title: "Off Center 2027 - Application fee: $35", summary: "来源页面未提供更详细摘要。", targetLanguage: "zh-CN" });
   assert.match(currencyResult.summary_zh, /\$35/);
+  assert.match(currencyResult.summary_zh, /报名费：\$35/u);
+  assert.doesNotMatch(currencyResult.summary_zh, /金额：\$35/u);
 
   let calls = 0;
   const azure = createAzureTranslator({ key: "test-key", region: "eastasia", endpoint: "https://azure.test", fetchImpl: async (_url, init) => { calls += 1; assert.equal(init?.method, "POST"); return response([{ translations: [{ text: "洛伊威基金会工艺奖 2027" }] }, { translations: [{ text: "提交原创作品，奖金 €100,000。" }] }]); } });

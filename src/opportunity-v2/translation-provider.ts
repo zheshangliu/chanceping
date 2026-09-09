@@ -40,6 +40,29 @@ export interface TranslationProviderConfig {
   status: "READY" | "CREDENTIAL_NOT_CONFIGURED";
 }
 
+function currencyFacts(value: string): Array<{ token: string; context: string }> {
+  const facts: Array<{ token: string; context: string }> = [];
+  for (const match of value.matchAll(/(?:€|£|\$|¥|￥)\s?\d[\d,.]*/gu)) {
+    const token = match[0];
+    const start = Math.max(0, (match.index ?? 0) - 80);
+    const end = Math.min(value.length, (match.index ?? 0) + token.length + 80);
+    const context = value.slice(start, end).split(/[.!?。！？；;\n]/u).find((part) => part.includes(token))?.trim() ?? token;
+    if (!facts.some((fact) => fact.token === token && fact.context === context)) facts.push({ token, context });
+  }
+  return facts;
+}
+
+function translatedCurrencyFacts(input: OpportunityTranslationInput, title: string, summary: string): string[] {
+  const translated = `${title} ${summary}`.replace(/\s+/gu, "");
+  return currencyFacts(`${input.title}\n${input.summary}`)
+    .filter(({ token }) => !translated.includes(token.replace(/\s+/gu, "")))
+    .map(({ token, context }) => {
+      if (/(?:entry|application|submission)\s+fee|fee|报名费|申请费|投稿费/iu.test(context)) return `报名费：${token}。`;
+      if (/(?:prize|award|cash|stipend|grant|fund|奖金|奖项|资助|基金)/iu.test(context)) return `奖金/资助金额：${token}。`;
+      return `原文金额信息：${context.replace(/\s+/gu, " ").trim()}。`;
+    });
+}
+
 export function translationPrompt(input: OpportunityTranslationInput): { system: string; user: string } {
   return {
     system: "你是严格的中文赛事信息编辑。只根据给定来源原文，将标题和摘要翻译成简体中文。标题只保留赛事/征集名称，不要加入来源导航、Full details、Closing date或整张卡片内容。摘要只保留原文明确支持的主题、征集内容、提交形式、金额、年份和限制条件。保留专有名词、年份、金额、币种和否定条件；金额/费用必须出现在标题或摘要中，不得遗漏；没有原文支持的信息不要补写。若标题主要是品牌名或系列名且没有自然中文译名，可以保留该专有名词，不要为了翻译而臆造名称。来源摘要已经是中文时，直接保留其原文；不要输出空摘要。只返回JSON：{\"title_zh\":\"...\",\"summary_zh\":\"...\"}。",
@@ -59,12 +82,10 @@ export function createLlmTranslationProvider(id: "deepseek" | "qwen", adapter: L
       const parsed = response.parsed && typeof response.parsed === "object" ? response.parsed as Record<string, unknown> : {};
       const translatedSummary = String(parsed.summary_zh ?? "").trim();
       const translatedTitle = String(parsed.title_zh ?? "");
-      const translatedText = `${translatedTitle} ${translatedSummary}`;
-      const sourceCurrencyTokens = [...new Set((`${input.title}\n${input.summary}`.match(/(?:€|£|\$|¥|￥)\s?\d[\d,.]*/gu) ?? []))];
-      const missingCurrencyTokens = sourceCurrencyTokens.filter((token) => !translatedText.replace(/\s+/gu, "").includes(token.replace(/\s+/gu, "")));
+      const missingCurrencyFacts = translatedCurrencyFacts(input, translatedTitle, translatedSummary);
       const summaryWithFacts = [
         translatedSummary || (/^[\s\S]*[\u3400-\u9fff]/u.test(input.summary) ? input.summary : ""),
-        ...missingCurrencyTokens.map((token) => `金额：${token}。`),
+        ...missingCurrencyFacts,
       ].filter(Boolean).join(" ");
       return {
         title_zh: translatedTitle,

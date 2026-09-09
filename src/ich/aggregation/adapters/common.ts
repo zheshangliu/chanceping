@@ -120,7 +120,7 @@ export function classifyCategory(sourceCategory: string | null, title: string): 
   const value = `${sourceCategory ?? ""} ${title}`.toLowerCase();
   if (/采购|供应商|commission|supplier|招标/u.test(value)) return "procurement_project";
   if (/合作|联名|partnership|collaboration|入驻/u.test(value)) return "channel_collaboration";
-  if (/资助|基金|grant|funding|scholarship|program/u.test(value)) return "policy_funding";
+  if (/资助|基金|grant|\bfund(?:ing)?\b|scholarship|program/u.test(value)) return "policy_funding";
   // “international/国际” describes geography, not the public module. Only
   // classify explicit study, residency, fellowship, exchange, or mobility calls
   // as 研修 / 交流.

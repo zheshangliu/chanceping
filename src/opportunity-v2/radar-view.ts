@@ -15,6 +15,8 @@ export interface OpportunityV2RadarQuery {
   event_region?: "mainland" | "hkmt" | "overseas" | "unknown";
   status?: OpportunityV2StatusFilter | OpportunityV2StatusFilter[];
   include_uncertain?: boolean;
+  /** Internal/public memo export opt-in; the home radar keeps its relevance filter. */
+  include_irrelevant?: boolean;
   now?: Date;
 }
 
@@ -75,7 +77,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
   const translations = q ? new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry])) : new Map();
   return opportunities
     .filter((item) => enabled.has(item.source_id))
-    .filter((item) => item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
+    .filter((item) => query.include_irrelevant === true || item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
     .filter((item) => statusMatches(item, query.status, now))
     .filter((item) => !query.region || item.region === query.region)
     .filter((item) => !query.source_id || item.source_id === query.source_id || item.discovered_by_sources.includes(query.source_id))

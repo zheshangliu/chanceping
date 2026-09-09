@@ -93,6 +93,13 @@ export function createApp(context?: AppContext): Hono {
   app.route("/opportunity-v2", opportunityV2PagesRoutes());
   app.route("/opportunity-v2/", opportunityV2PagesRoutes());
 
+  // Keep the root robots endpoint aligned with the V2 public collection.
+  app.get("/robots.txt", (c) => c.text(
+    "User-agent: *\nAllow: /ich\nDisallow: /ich/admin\nDisallow: /ich/history\nDisallow: /api/internal/\n\nSitemap: https://ich.chanceping.com/ich/sitemap.xml\n",
+    200,
+    { "Content-Type": "text/plain; charset=UTF-8", "Cache-Control": "public, max-age=3600", "X-Content-Type-Options": "nosniff" },
+  ));
+
   // Web UI 静态文件服务（根路径）
   app.route("/", webUiRoutes());
 
