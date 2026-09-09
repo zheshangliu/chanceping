@@ -144,6 +144,8 @@
     "verify:ich:v12": "tsx scripts/verify-ich-v12-memo.ts",
     "verify:ich:v13": "tsx scripts/verify-ich-v13.ts",
     "verify:ich:deadline-round1": "tsx scripts/verify-ich-deadline-round1.ts",
+    "verify:ich:encoding": "tsx scripts/verify-opportunity-v2-encoding-hygiene.ts",
+    "verify:ich:deadline-conflict": "tsx scripts/verify-ich-deadline-conflict.ts",
     "audit:ich:v13:readonly": "tsx scripts/run-ich-readonly-audit.ts",
     "audit:ich:deadline-coverage": "tsx scripts/audit-ich-deadline-coverage.ts",
     "verify:ich:competition-module": "tsx scripts/verify-ich-competition-module.ts",

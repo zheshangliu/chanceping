@@ -21,6 +21,26 @@ export function htmlToText(html: string): string {
     .trim();
 }
 
+export type EncodingErrorField = "title" | "summary";
+
+/**
+ * Keep this deliberately narrow. Replacement characters are an unambiguous
+ * signal that the byte decoder could not represent the source text; the
+ * mojibake form below is the same signal after a second Latin-1/UTF-8 pass.
+ * Do not classify ordinary CJK text by shape or character frequency.
+ */
+export function hasEncodingCorruption(value: string | null | undefined): boolean {
+  if (!value) return false;
+  return value.includes("\uFFFD") || value.includes("ï¿½");
+}
+
+export function encodingErrorFields(title: string | null | undefined, summary: string | null | undefined): EncodingErrorField[] {
+  return [
+    ...(hasEncodingCorruption(title) ? ["title" as const] : []),
+    ...(hasEncodingCorruption(summary) ? ["summary" as const] : []),
+  ];
+}
+
 export function normalizeUrl(href: string, baseUrl: string): string | null {
   try {
     const url = new URL(decodeHtml(href), baseUrl);
@@ -67,6 +87,7 @@ export interface DeadlineConflict {
   conflicting_deadline: string;
   evidence: string;
   source_url?: string | null;
+  kind?: DeadlineKind | null;
 }
 
 function deadlineKind(marker: string): { kind: DeadlineKind; priority: number } {
@@ -74,6 +95,11 @@ function deadlineKind(marker: string): { kind: DeadlineKind; priority: number } 
   if (/(?:application|申请)/iu.test(marker)) return { kind: "application_deadline", priority: 2 };
   if (/(?:registration|报名|接收|접수)/iu.test(marker)) return { kind: "registration_deadline", priority: 3 };
   return { kind: "deadline", priority: 4 };
+}
+
+export function inferDeadlineKind(value: string | null | undefined): DeadlineKind | null {
+  if (!value?.trim()) return null;
+  return deadlineKind(value).kind;
 }
 
 function dateMatches(value: string): RegExpMatchArray[] {
@@ -225,6 +251,8 @@ export interface ParsedAggregationItem {
   deadline_checked_at?: string | null;
   deadline_resolution?: DeadlineResolution;
   deadline_conflicts?: DeadlineConflict[];
+  deadline_kind?: DeadlineKind | null;
+  deadline_conflict_unsafe?: boolean;
   organizer: string | null;
   application_url: string | null;
   raw_text: string;

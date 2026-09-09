@@ -9,12 +9,15 @@ export type V2WorkFormat = "material_craft" | "product_design" | "graphic_ip" | 
 export type V2ParticipationScope = "nationwide" | "global" | "regional" | "unspecified";
 export type V2ParticipationMode = "online" | "physical" | "onsite" | "unspecified";
 export type V2DeadlineResolution = "found" | "found_listing" | "found_detail" | "found_cross_source" | "long_term" | "source_has_no_date" | "detail_fetch_failed" | "date_conflict" | "relative_only" | "not_attempted" | "fetch_failed" | "image_only" | "ambiguous" | "not_stated";
+export type V2DeadlineKind = "submission_deadline" | "application_deadline" | "registration_deadline" | "deadline";
+export type V2EncodingErrorField = "title" | "summary";
 
 export interface V2DeadlineConflict {
   stored_deadline: string | null;
   conflicting_deadline: string;
   evidence: string;
   source_url?: string | null;
+  kind?: V2DeadlineKind | null;
 }
 
 export interface OpportunityV2Source {
@@ -48,7 +51,11 @@ export interface OpportunityV2 {
   deadline_raw_text?: string | null;
   deadline_checked_at?: string | null;
   deadline_resolution?: V2DeadlineResolution;
+  deadline_kind?: V2DeadlineKind | null;
   deadline_conflicts?: V2DeadlineConflict[];
+  deadline_conflict_unsafe?: boolean;
+  encoding_error?: boolean;
+  encoding_error_fields?: V2EncodingErrorField[];
   status: V2OpportunityStatus;
   first_seen_at: string;
   last_seen_at: string;

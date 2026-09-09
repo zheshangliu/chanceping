@@ -1,4 +1,4 @@
-import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseDateText, type ParsedAggregationItem } from "./common";
+import { extractAnchors, extractDeadlineEvidence, extractDeadlineText, htmlToText, identityHash, inferDeadlineKind, normalizeUrl, parseDateText, type ParsedAggregationItem } from "./common";
 
 const RESULT_NOISE = /(?:获奖|获奖公布|结果|揭晓|公示|关于我们|赛事推广|会员登录|客服|导航|论坛|发布征集|VIP|广告)/iu;
 const OPPORTUNITY_WORDS = /(?:大赛|竞赛|比赛|征集|征稿|设计|文创|非遗|工艺|产品|礼品|陶瓷|国潮|奖)/u;
@@ -9,11 +9,13 @@ function attr(tag: string, name: string): string | null {
 
 function item(title: string, detailUrl: string, sourceUrl: string, rawText: string, fields: Partial<ParsedAggregationItem> = {}): ParsedAggregationItem {
   const deadlineText = fields.deadline_text ?? extractDeadlineText(rawText);
+  const deadlineEvidence = extractDeadlineEvidence(rawText, new Date(), title).find((candidate) => candidate.deadline_at) ?? null;
   const relativeOnly = !deadlineText && /\d+\s*(?:天|日|小时|周|个月)\s*(?:后|内|剩余|截止)/u.test(rawText);
   return {
     source_item_id: fields.source_item_id ?? identityHash(detailUrl), title: title.trim(), source_category: fields.source_category ?? "文创设计", source_status: fields.source_status ?? null,
     detail_url: detailUrl, source_url: sourceUrl, published_at: fields.published_at ?? null, deadline_text: deadlineText, deadline_at: fields.deadline_at ?? parseDateText(deadlineText, new Date(), rawText), organizer: fields.organizer ?? null, application_url: fields.application_url ?? null, raw_text: rawText.slice(0, 8000),
     deadline_resolution: fields.deadline_resolution ?? (deadlineText ? "found_listing" : relativeOnly ? "relative_only" : "not_attempted"),
+    deadline_kind: fields.deadline_kind ?? deadlineEvidence?.kind ?? inferDeadlineKind(deadlineText),
     event_location: fields.event_location ?? null, participation_scope: fields.participation_scope ?? "unspecified", participation_mode: fields.participation_mode ?? "unspecified",
   };
 }

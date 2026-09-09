@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { hasEncodingCorruption } from "../src/ich/aggregation/adapters/common";
 
 const baseUrl = (process.env.CHANCEPING_AUDIT_BASE_URL ?? "https://ich.chanceping.com").replace(/\/$/u, "");
 const outputDir = path.resolve(process.env.CHANCEPING_AUDIT_OUTPUT ?? process.argv[2] ?? "audits/ich/production/latest");
@@ -64,8 +65,8 @@ async function main(): Promise<void> {
   const radarResponse = byPath.get("/api/opportunity-v2/radar?category=competition")!;
   const sourceResponse = byPath.get("/api/opportunity-v2/sources")!;
   const overviewResponse = byPath.get("/api/opportunity-v2/sources/overview")!;
-  const memo = jsonBody<{ snapshot_id?: string; total?: number; items?: Array<{ id: string; title: string; detail_url: string; source_name: string; deadline?: string | null; discovered_by_sources?: string[] }> }>(memoJsonResponse);
-  const radar = jsonBody<{ total?: number; opportunities?: Array<{ id: string; title: string; source_name: string; region: string; status?: string }> }>(radarResponse);
+  const memo = jsonBody<{ snapshot_id?: string; total?: number; items?: Array<{ id: string; title: string; original_title?: string | null; summary?: string; original_summary?: string | null; detail_url: string; source_name: string; source_id?: string; deadline?: string | null; discovered_by_sources?: string[] }> }>(memoJsonResponse);
+  const radar = jsonBody<{ total?: number; opportunities?: Array<{ id: string; title: string; summary?: string; source_name: string; source_id?: string; region: string; status?: string }> }>(radarResponse);
   const sources = jsonBody<{ sources?: Array<{ id: string; name: string; status: string }> }>(sourceResponse);
   const overview = jsonBody<{ summary?: Record<string, number>; next_run_at?: string | null }>(overviewResponse);
   const memoItems = memo?.items ?? [];
@@ -90,8 +91,58 @@ async function main(): Promise<void> {
     named_sources_visible: ["Craft Scotland", "Heritage Crafts", "ASEF culture360 Opportunities"].filter((name) => sourceNames.has(name)),
     no_expired_default_radar: radarItems.every((item) => item.status !== "EXPIRED"),
     home_and_radar_counts_match: false,
+    encoding_quality_memo_errors: null as number | null,
+    encoding_quality_radar_errors: null as number | null,
   };
   checks.home_and_radar_counts_match = Number.isFinite(checks.home_competition_total) && checks.home_competition_total === checks.radar_competition_total;
+  const poolPath = process.env.CHANCEPING_AUDIT_POOL_PATH;
+  const poolEncoding = (() => {
+    if (!poolPath || !fs.existsSync(poolPath)) return { errors: 0, by_source: {} as Record<string, { errors: number; sample_ids: string[] }>, sample_ids: [] as string[] };
+    try {
+      const pool = JSON.parse(fs.readFileSync(poolPath, "utf8")) as { opportunities?: Array<{ id: string; source_id: string; title?: string; summary?: string }> };
+      const bySource: Record<string, { errors: number; sample_ids: string[] }> = {};
+      const sampleIds: string[] = [];
+      for (const item of pool.opportunities ?? []) {
+        const error = hasEncodingCorruption(item.title) || hasEncodingCorruption(item.summary);
+        if (!error) continue;
+        const row = bySource[item.source_id] ?? { errors: 0, sample_ids: [] };
+        row.errors += 1;
+        if (row.sample_ids.length < 10) row.sample_ids.push(item.id);
+        if (sampleIds.length < 20) sampleIds.push(item.id);
+        bySource[item.source_id] = row;
+      }
+      return { errors: sampleIds.length ? Object.values(bySource).reduce((total, row) => total + row.errors, 0) : 0, by_source: bySource, sample_ids: sampleIds };
+    } catch {
+      return { errors: 0, by_source: {} as Record<string, { errors: number; sample_ids: string[] }>, sample_ids: [] as string[] };
+    }
+  })();
+  const endpointEncoding = (items: Array<{ id: string; title?: string; original_title?: string | null; summary?: string; original_summary?: string | null; source_id?: string }>) => {
+    const bySource: Record<string, { errors: number; sample_ids: string[] }> = {};
+    const sampleIds: string[] = [];
+    for (const item of items) {
+      const error = hasEncodingCorruption(item.original_title ?? item.title) || hasEncodingCorruption(item.original_summary ?? item.summary);
+      if (!error) continue;
+      const source = item.source_id ?? "unknown";
+      const row = bySource[source] ?? { errors: 0, sample_ids: [] };
+      row.errors += 1;
+      if (row.sample_ids.length < 10) row.sample_ids.push(item.id);
+      if (sampleIds.length < 20) sampleIds.push(item.id);
+      bySource[source] = row;
+    }
+    return { errors: sampleIds.length ? Object.values(bySource).reduce((total, row) => total + row.errors, 0) : 0, by_source: bySource, sample_ids: sampleIds };
+  };
+  const memoEncoding = endpointEncoding(memoItems);
+  const radarEncoding = endpointEncoding(radarItems);
+  const encodingQuality = {
+    pool_encoding_errors: poolEncoding.errors,
+    memo_encoding_errors: memoEncoding.errors,
+    radar_encoding_errors: radarEncoding.errors,
+    by_source: { pool: poolEncoding.by_source, memo: memoEncoding.by_source, radar: radarEncoding.by_source },
+    sample_ids: { pool: poolEncoding.sample_ids, memo: memoEncoding.sample_ids, radar: radarEncoding.sample_ids },
+    gate: memoEncoding.errors === 0 && radarEncoding.errors === 0,
+  };
+  checks.encoding_quality_memo_errors = encodingQuality.memo_encoding_errors;
+  checks.encoding_quality_radar_errors = encodingQuality.radar_encoding_errors;
   const filterMatrix = filterCases.map(({ key, route }) => {
     const html = byPath.get(route);
     const jsonRoute = route.replace("/ich/memo", "/ich/memo.json");
@@ -107,7 +158,6 @@ async function main(): Promise<void> {
   });
   const deadlineCoverage = { memo_total: memo?.total ?? memoItems.length, known_deadline: memoItems.filter((item) => item.deadline).length, unknown_deadline: memoItems.filter((item) => !item.deadline).length, coverage_rate: memoItems.length ? Number(((memoItems.filter((item) => item.deadline).length / memoItems.length) * 100).toFixed(2)) : 0 };
   const sourceCoverage = { captured_at: capturedAt, sources: sources?.sources ?? [], overview: overview?.summary ?? null };
-  const poolPath = process.env.CHANCEPING_AUDIT_POOL_PATH;
   const deadlineResolution = (() => {
     if (!poolPath || !fs.existsSync(poolPath)) return { captured_at: capturedAt, source_health: sourceCoverage.overview };
     try {
@@ -143,8 +193,9 @@ async function main(): Promise<void> {
     deadline_coverage: deadlineCoverage,
     filter_matrix: filterMatrix,
     checks,
-    complete: checks.http_all_200 && checks.source_pool_visible && checks.memo_json_markdown_same_ids && checks.memo_location_column_removed && checks.memo_noise_hidden && checks.loewe_visible_once && checks.home_and_radar_counts_match,
-    files: ["manifest.json", "checks.json", "home.html", "memo.html", "memo.json", "memo.md", "radar.json", "sources.json", "source-overview.json", "deadline-resolution.json", "source-coverage.json", "filter-matrix.json"],
+    encoding_quality: encodingQuality,
+    complete: checks.http_all_200 && checks.source_pool_visible && checks.memo_json_markdown_same_ids && checks.memo_location_column_removed && checks.memo_noise_hidden && checks.loewe_visible_once && checks.home_and_radar_counts_match && encodingQuality.gate,
+    files: ["manifest.json", "checks.json", "home.html", "memo.html", "memo.json", "memo.md", "radar.json", "sources.json", "source-overview.json", "deadline-resolution.json", "source-coverage.json", "filter-matrix.json", "encoding-quality.json"],
   };
   write("manifest.json", `${JSON.stringify(manifest, null, 2)}\n`);
   write("checks.json", `${JSON.stringify(checks, null, 2)}\n`);
@@ -158,7 +209,8 @@ async function main(): Promise<void> {
   write("deadline-resolution.json", `${JSON.stringify(deadlineResolution, null, 2)}\n`);
   write("source-coverage.json", `${JSON.stringify(sourceCoverage, null, 2)}\n`);
   write("filter-matrix.json", `${JSON.stringify(filterMatrix, null, 2)}\n`);
-  write("README.md", `# 盯非遗生产只读巡检快照\n\n- 抓取时间：${capturedAt}\n- 生产地址：${baseUrl}\n- 生产 commit：${productionCommit ?? "未提供"}\n- 只读：是；运行时写入：否\n- 完整性：**${manifest.complete ? "通过" : "未通过"}**\n\n机器结果见 [manifest.json](./manifest.json) 和 [checks.json](./checks.json)。页面副本见 [home.html](./home.html)、[memo.html](./memo.html)，接口副本见 [memo.json](./memo.json)、[memo.md](./memo.md)、[radar.json](./radar.json)。\n`);
+  write("encoding-quality.json", `${JSON.stringify(encodingQuality, null, 2)}\n`);
+  write("README.md", `# 盯非遗生产只读巡检快照\n\n- 抓取时间：${capturedAt}\n- 生产地址：${baseUrl}\n- 生产 commit：${productionCommit ?? "未提供"}\n- 只读：是；运行时写入：否\n- 完整性：**${manifest.complete ? "通过" : "未通过"}**\n\n机器结果见 [manifest.json](./manifest.json)、[checks.json](./checks.json) 和 [encoding-quality.json](./encoding-quality.json)。页面副本见 [home.html](./home.html)、[memo.html](./memo.html)，接口副本见 [memo.json](./memo.json)、[memo.md](./memo.md)、[radar.json](./radar.json)。\n`);
   console.log(JSON.stringify({ complete: manifest.complete, output_dir: outputDir, counts: manifest.counts, checks }, null, 2));
   if (!manifest.complete) process.exitCode = 1;
 }

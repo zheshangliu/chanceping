@@ -83,7 +83,7 @@ async function main(): Promise<void> {
   assert.deepEqual(parseCfwDetailDate(`<p class="pt10 c6">2026.03.20-08.31</p>`), { raw: "2026.03.20-08.31", deadlineAt: "2026-08-31T23:59:00.000Z" });
   const deadlineNow = new Date("2026-09-07T00:00:00+08:00");
   const cfwStablePrior = { ...cfwCards[0], deadline_at: null };
-  const cfwStableIncoming = { ...cfwCards[0], title: `${cfwCards[0].title}（延期）`, deadline_at: "2026-10-31T23:59:00.000Z" };
+  const cfwStableIncoming = { ...cfwCards[0], title: `${cfwCards[0].title}（延期）`, deadline_at: "2026-10-31T23:59:00.000Z", deadline_text: "2026.03.20-10.31", deadline_raw_text: "2026.03.20-10.31" };
   const stablePrior = normalizeOpportunityV2(cfwStablePrior, { id: "cfw-cultural-ip", name: "CFW", region: "CN" }, deadlineNow);
   const stableIncoming = normalizeOpportunityV2(cfwStableIncoming, { id: "cfw-cultural-ip", name: "CFW", region: "CN" }, deadlineNow);
   const stableMerged = mergeOpportunityV2([stablePrior], [stableIncoming], deadlineNow);

@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import type { OpportunityV2 } from "./types";
+import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
@@ -32,6 +33,10 @@ export interface OpportunityV2Display {
   original_summary: string | null;
   translated: boolean;
   translation_status: "translated" | "pending" | "failed" | "not_needed";
+}
+
+function displaySummary(item: Pick<OpportunityV2, "summary" | "encoding_error_fields">): string {
+  return item.encoding_error_fields?.includes("summary") || hasEncodingCorruption(item.summary) ? "" : item.summary;
 }
 
 function translationPath(filePath?: string): string {
@@ -177,14 +182,15 @@ export function createTranslatedOpportunityV2Translation(item: OpportunityV2, va
 }
 
 export function buildOpportunityV2Display(item: OpportunityV2, translations: OpportunityV2Translation[] = []): OpportunityV2Display {
+  const summary = displaySummary(item);
   if (!isForeignLanguageOpportunity(item)) {
-    return { title: item.title, original_title: null, summary: item.summary, original_summary: null, translated: false, translation_status: "not_needed" };
+    return { title: item.title, original_title: null, summary, original_summary: null, translated: false, translation_status: "not_needed" };
   }
   const cached = translations.find((entry) => entry.opportunity_id === item.id && entry.source_hash === opportunityV2SourceHash(item) && entry.target_language === "zh-CN" && entry.strategy_version === OPPORTUNITY_V2_DISPLAY_STRATEGY);
   if (cached?.status === "translated" && cached.title_zh && cached.summary_zh) {
-    return { title: cached.title_zh, original_title: item.title, summary: cached.summary_zh, original_summary: item.summary || null, translated: true, translation_status: "translated" };
+    return { title: cached.title_zh, original_title: item.title, summary: cached.summary_zh, original_summary: summary || null, translated: true, translation_status: "translated" };
   }
-  return { title: item.title, original_title: item.title, summary: item.summary, original_summary: item.summary || null, translated: false, translation_status: cached?.status ?? "pending" };
+  return { title: item.title, original_title: item.title, summary, original_summary: summary || null, translated: false, translation_status: cached?.status ?? "pending" };
 }
 
 export function isLikelyForeignText(value: string): boolean {

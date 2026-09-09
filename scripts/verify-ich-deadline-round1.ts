@@ -60,7 +60,9 @@ async function main(): Promise<void> {
   assert.equal(same[0].deadline_resolution, "found_cross_source", "same cross-source deadline is marked");
   const conflict = mergeOpportunityV2([opportunity("a", sameTitle, "loewe-craft-prize", "2027-01-01T23:59:00.000Z")], [opportunity("b", "Loewe Foundation 2027 Craft Prize", "asef-culture360-opportunities", "2027-02-01T23:59:00.000Z")], NOW);
   assert.equal(conflict[0].deadline_resolution, "date_conflict", "cross-source disagreement is explicit");
-  assert.equal(conflict[0].deadline_conflicts?.length, 1, "cross-source conflict is recorded");
+  assert.equal(conflict[0].deadline, null, "same-strength disagreement downgrades the selected date");
+  assert.equal(conflict[0].deadline_conflict_unsafe, true, "same-strength disagreement is marked unsafe");
+  assert.equal(conflict[0].deadline_conflicts?.length, 2, "both conflicting evidence bundles are preserved");
   assert.equal(opportunity("expired", "2026比赛", "fixture", "2026-07-05T23:59:00.000Z").status, "EXPIRED", "2026-07-05 is expired on 2026-09-07");
   assert.equal(opportunity("current", "2026比赛", "fixture", "2026-10-20T23:59:00.000Z").status, "CURRENT", "2026-10-20 is current on 2026-09-07");
   console.log(JSON.stringify({ deadline_cases: cases.length, detail_only: true, range_end: "2026-10-15", priority: "application_deadline", relative_only: true, curator_space: "2026-10-08", cross_source_same: true, cross_source_conflict: true, expired_on_2026_09_07: 3, current_on_2026_09_07: 1 }, null, 2));

@@ -39,6 +39,7 @@ export function parseCompetitionsArchiListing(html: string, url: string): Parsed
       published_at: null,
       deadline_text: deadlineText,
       deadline_at: parseDateText(deadlineText),
+      deadline_kind: submission ? "submission_deadline" : registration ? "registration_deadline" : null,
       organizer: null,
       application_url: null,
       raw_text: rawText,

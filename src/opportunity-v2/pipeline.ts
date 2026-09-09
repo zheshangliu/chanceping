@@ -87,16 +87,43 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
         settled = true;
         const body = Buffer.concat(chunks);
         const contentType = String(response.headers["content-type"] ?? "");
-        const charset = contentType.match(/charset\s*=\s*["']?([^;"']+)/iu)?.[1]?.trim().toLowerCase();
-        const legacyCharset = /(?:^|\.)1zj\.com$/iu.test(parsed.hostname) || /(?:^|\.)zjmtcn\.com$/iu.test(parsed.hostname);
-        const decoder = charset === "gbk" || charset === "gb2312" || charset === "gb18030" || legacyCharset ? new TextDecoder("gb18030") : new TextDecoder("utf-8");
-        resolve({ status: response.statusCode ?? 0, headers: response.headers, text: decoder.decode(body) });
+        resolve({ status: response.statusCode ?? 0, headers: response.headers, text: decodeOpportunityResponseBody(body, contentType, parsed.hostname) });
       });
     });
     request.setTimeout(DEFAULT_TIMEOUT_MS, () => request.destroy(new Error("source request timed out")));
     request.on("error", (error) => fail(error));
     request.end();
   });
+}
+
+function normalizeDeclaredCharset(value: string | null | undefined): string | null {
+  const normalized = value?.trim().toLowerCase().replace(/["']/gu, "");
+  if (!normalized) return null;
+  if (["utf-8", "utf8"].includes(normalized)) return "utf-8";
+  if (["gbk", "gb2312", "gb18030", "x-gbk"].includes(normalized)) return "gb18030";
+  return normalized;
+}
+
+function htmlMetaCharset(body: Buffer): string | null {
+  // Charset attributes are ASCII, so a Latin-1 probe is safe even when the
+  // rest of the page is GB18030. HTTP Content-Type remains higher priority.
+  const probe = body.toString("latin1").slice(0, 100_000);
+  const direct = probe.match(/<meta\b[^>]*\bcharset\s*=\s*["']?\s*([^\s"'/>;]+)/iu)?.[1];
+  if (direct) return normalizeDeclaredCharset(direct);
+  const content = probe.match(/<meta\b[^>]*\bcontent\s*=\s*["'][^"']*?\bcharset\s*=\s*([^\s"';>]+)/iu)?.[1];
+  return normalizeDeclaredCharset(content);
+}
+
+function decoderForCharset(label: string) {
+  try { return new TextDecoder(label); } catch { return new TextDecoder("utf-8"); }
+}
+
+export function decodeOpportunityResponseBody(body: Buffer, contentType: string, hostname: string): string {
+  const httpCharset = normalizeDeclaredCharset(contentType.match(/charset\s*=\s*["']?([^;"'\s]+)/iu)?.[1]);
+  const declaredCharset = httpCharset ?? htmlMetaCharset(body);
+  const legacyHost = /(?:^|\.)1zj\.com$/iu.test(hostname) || /(?:^|\.)zjmtcn\.com$/iu.test(hostname);
+  const charset = declaredCharset ?? (legacyHost ? "gb18030" : "utf-8");
+  return decoderForCharset(charset).decode(body);
 }
 
 export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {
@@ -420,6 +447,8 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
             deadline_raw_text: item.deadline_raw_text,
             deadline_checked_at: item.deadline_checked_at,
             deadline_resolution: item.deadline_resolution,
+            deadline_kind: item.deadline_kind,
+            deadline_conflict_unsafe: item.deadline_conflict_unsafe,
             organizer: item.organizer ?? null,
             application_url: item.application_url ?? null,
             raw_text: `${item.title} ${item.summary}`,

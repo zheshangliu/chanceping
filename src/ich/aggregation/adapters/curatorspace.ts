@@ -24,6 +24,7 @@ function curatorSpaceItem(block: string, listingUrl: string): ParsedAggregationI
     deadline_raw_text: deadlineText,
     deadline_checked_at: deadlineAt ? new Date().toISOString() : null,
     deadline_resolution: deadlineAt ? "found_listing" : deadlineText ? "relative_only" : "not_attempted",
+    deadline_kind: deadlineAt ? "deadline" : null,
     organizer: null,
     application_url: null,
     raw_text: rawText.slice(0, 8000),

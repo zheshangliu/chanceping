@@ -4,6 +4,7 @@ import path from "node:path";
 import { filterOpportunityV2Radar, type OpportunityV2RadarQuery } from "./radar-view";
 import { readOpportunityV2Pool } from "./opportunity-pool";
 import { readOpportunityV2Sources } from "./source-pool";
+import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import type { OpportunityV2, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 export const OPPORTUNITY_V2_MEMO_SCOPE = "all_competitions" as const;
@@ -51,6 +52,7 @@ export function isRealCompetitionMemoItem(item: Pick<OpportunityV2, "category" |
   // “About the awards”; using the whole summary here would drop the actual
   // opportunity even though its title is a competition.
   const title = item.title.trim();
+  if (hasEncodingCorruption(title)) return false;
   if (NON_COMPETITION_TITLE.test(title) || NON_COMPETITION_PATH.test(item.detail_url)) return false;
   if (/^(?:press|archives?|stories?|news|contact|about|advertis(?:e|ing)|submit|privacy|terms|renew|alumni|recipients?)\b/iu.test(title)) return false;
   return true;

@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { identityHash, classifyCategory, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
+import { encodingErrorFields, hasEncodingCorruption, identityHash, classifyCategory, inferDeadlineKind, normalizeUrl, type DeadlineKind, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { cleanGenericListingTitle } from "../ich/aggregation/adapters/generic-listing";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
-import type { OpportunityV2, OpportunityV2PoolFile, V2OpportunityStatus } from "./types";
+import type { OpportunityV2, OpportunityV2PoolFile, V2DeadlineConflict, V2DeadlineKind, V2DeadlineResolution, V2OpportunityStatus } from "./types";
 import { classifyV2Dimensions, classifyV2RadarRelevance } from "./keywords";
 
 function poolPath(filePath?: string): string {
@@ -22,7 +22,7 @@ export function readOpportunityV2Pool(filePath?: string): OpportunityV2PoolFile 
   if (!fs.existsSync(target)) return emptyOpportunityV2Pool();
   try {
     const value = JSON.parse(fs.readFileSync(target, "utf8")) as OpportunityV2PoolFile;
-    return Array.isArray(value.opportunities) ? value : emptyOpportunityV2Pool();
+    return Array.isArray(value.opportunities) ? { ...value, opportunities: reconcileOpportunityV2Deadlines(value.opportunities) } : emptyOpportunityV2Pool();
   } catch {
     return emptyOpportunityV2Pool();
   }
@@ -57,7 +57,7 @@ function statusWithoutDeadline(item: OpportunityV2, now: Date): V2OpportunitySta
   return structured === "UNKNOWN_DEADLINE" ? item.status : structured;
 }
 
-function mergedStatus(prior: OpportunityV2, item: OpportunityV2, sameSource: boolean, now: Date): V2OpportunityStatus {
+function mergedStatusWithoutConflict(prior: OpportunityV2, item: OpportunityV2, sameSource: boolean, now: Date): V2OpportunityStatus {
   if (item.deadline || prior.deadline) return opportunityStatus(item.deadline ?? prior.deadline, now);
   if (sameSource) return item.status;
   const statuses = [statusWithoutDeadline(prior, now), statusWithoutDeadline(item, now)];
@@ -130,38 +130,269 @@ function hasUsableSummary(summary: string | null | undefined, title: string): bo
   return Boolean(summary?.replace(title, "").replace(/\s+/gu, " ").trim());
 }
 
+export interface DeadlineBundle {
+  deadline: string | null;
+  deadline_text: string | null;
+  deadline_source_url: string | null;
+  deadline_raw_text: string | null;
+  deadline_checked_at: string | null;
+  deadline_resolution: V2DeadlineResolution;
+  deadline_kind: V2DeadlineKind | null;
+  source_id: string;
+  detail_url: string;
+  evidence_strength: number;
+}
+
+export interface DeadlineSelection {
+  selected: DeadlineBundle;
+  unsafe: boolean;
+}
+
+const DEADLINE_KIND_PRIORITY: Record<V2DeadlineKind, number> = {
+  submission_deadline: 1,
+  application_deadline: 2,
+  registration_deadline: 3,
+  deadline: 4,
+};
+
+function asV2DeadlineKind(value: DeadlineKind | V2DeadlineKind | null | undefined): V2DeadlineKind | null {
+  return value ? value as V2DeadlineKind : null;
+}
+
+function inferV2DeadlineKind(value: string | null | undefined): V2DeadlineKind | null {
+  return asV2DeadlineKind(inferDeadlineKind(value));
+}
+
+function deadlineEvidenceStrength(resolution: V2DeadlineResolution, sourceUrl: string | null, detailUrl: string): number {
+  if (resolution === "found_detail") return 3;
+  if (resolution === "found_listing") return 2;
+  if (resolution === "found_cross_source") return 1;
+  if (sourceUrl && normalizeUrl(sourceUrl, detailUrl) === normalizeUrl(detailUrl, detailUrl)) return 3;
+  return resolution === "date_conflict" ? 3 : 1;
+}
+
+function deadlineBundleFromOpportunity(item: OpportunityV2): DeadlineBundle {
+  const resolution = item.deadline_resolution ?? (item.deadline ? "found" : "not_attempted");
+  const sourceUrl = item.deadline_source_url ?? (item.deadline ? item.detail_url : null);
+  return {
+    deadline: item.deadline ?? null,
+    deadline_text: item.deadline_text ?? null,
+    deadline_source_url: sourceUrl,
+    deadline_raw_text: item.deadline_raw_text ?? item.deadline_text ?? null,
+    deadline_checked_at: item.deadline_checked_at ?? null,
+    deadline_resolution: resolution,
+    deadline_kind: item.deadline_kind ?? inferV2DeadlineKind(item.deadline_raw_text ?? item.deadline_text) ?? (item.deadline ? "deadline" : null),
+    source_id: item.source_id,
+    detail_url: item.detail_url,
+    evidence_strength: deadlineEvidenceStrength(resolution, sourceUrl, item.detail_url),
+  };
+}
+
+function deadlineBundleFromParsed(input: ParsedAggregationItem, sourceId: string): DeadlineBundle {
+  const resolution = input.deadline_resolution ?? (input.deadline_at ? "found" : "not_attempted");
+  const sourceUrl = input.deadline_source_url ?? (input.deadline_at ? input.detail_url : null);
+  return {
+    deadline: input.deadline_at ?? null,
+    deadline_text: input.deadline_text ?? null,
+    deadline_source_url: sourceUrl,
+    deadline_raw_text: input.deadline_raw_text ?? input.deadline_text ?? null,
+    deadline_checked_at: input.deadline_checked_at ?? null,
+    deadline_resolution: resolution,
+    deadline_kind: asV2DeadlineKind(input.deadline_kind) ?? inferV2DeadlineKind(input.deadline_raw_text ?? input.deadline_text) ?? (input.deadline_at ? "deadline" : null),
+    source_id: sourceId,
+    detail_url: input.detail_url,
+    evidence_strength: deadlineEvidenceStrength(resolution, sourceUrl, input.detail_url),
+  };
+}
+
+function deadlineBundleFromConflict(conflict: V2DeadlineConflict, parent: DeadlineBundle): DeadlineBundle {
+  const sourceUrl = conflict.source_url ?? parent.deadline_source_url;
+  const resolution: V2DeadlineResolution = sourceUrl && normalizeUrl(sourceUrl, parent.detail_url) === normalizeUrl(parent.detail_url, parent.detail_url) ? "found_detail" : "found_cross_source";
+  return {
+    deadline: conflict.conflicting_deadline,
+    deadline_text: conflict.evidence || null,
+    deadline_source_url: sourceUrl ?? null,
+    deadline_raw_text: conflict.evidence || null,
+    deadline_checked_at: null,
+    deadline_resolution: resolution,
+    deadline_kind: asV2DeadlineKind(conflict.kind) ?? inferV2DeadlineKind(conflict.evidence) ?? "deadline",
+    source_id: parent.source_id,
+    detail_url: parent.detail_url,
+    evidence_strength: deadlineEvidenceStrength(resolution, sourceUrl ?? null, parent.detail_url),
+  };
+}
+
+function evidenceCalendarDays(value: string | null | undefined): string[] {
+  if (!value) return [];
+  const normalized = value.replace(/[年月]/gu, "-").replace(/日/gu, "").replace(/[./]/gu, "-").replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/gu, "-");
+  const days = [...normalized.matchAll(/(?<!\d)(20\d{2})-(\d{1,2})-(\d{1,2})\s*(?:-|~|～|至)\s*(?:(20\d{2})-)?(\d{1,2})-(\d{1,2})(?!\d)/gu)].flatMap((match) => {
+    const start = `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}`;
+    const end = `${match[4] ?? match[1]}-${match[5].padStart(2, "0")}-${match[6].padStart(2, "0")}`;
+    return [start, end];
+  });
+  const singleDays = [...normalized.matchAll(/(?<!\d)(20\d{2})-(\d{1,2})-(\d{1,2})(?!\d)/gu)].map((match) => `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}`);
+  return [...new Set([...days, ...singleDays])];
+}
+
+function deadlineMatchesEvidence(bundle: DeadlineBundle): boolean {
+  if (!bundle.deadline || !bundle.deadline_raw_text) return true;
+  const days = evidenceCalendarDays(bundle.deadline_raw_text);
+  if (!days.length) return true;
+  return days.includes(bundle.deadline.slice(0, 10));
+}
+
+function emptyDeadlineBundle(reference: DeadlineBundle, kind: V2DeadlineKind | null): DeadlineBundle {
+  return { ...reference, deadline: null, deadline_text: null, deadline_source_url: null, deadline_raw_text: null, deadline_checked_at: null, deadline_resolution: "date_conflict", deadline_kind: kind, evidence_strength: 0 };
+}
+
+function safeResolution(bundle: DeadlineBundle, crossSource: boolean): V2DeadlineResolution {
+  if (crossSource) return "found_cross_source";
+  if (bundle.deadline_resolution !== "date_conflict") return bundle.deadline_resolution;
+  return bundle.deadline_source_url && normalizeUrl(bundle.deadline_source_url, bundle.detail_url) === normalizeUrl(bundle.detail_url, bundle.detail_url)
+    ? "found_detail"
+    : "found_listing";
+}
+
+function isPastDeadline(bundle: DeadlineBundle, now: Date): boolean {
+  return Boolean(bundle.deadline && new Date(bundle.deadline).getTime() < now.getTime());
+}
+
+/**
+ * Select one deadline together with all of its evidence. Semantic priority is
+ * stronger than date recency; same-kind disagreements stay unknown unless
+ * one evidence source is clearly stronger. Past-vs-current conflicts are
+ * treated as historical evidence when a current candidate exists.
+ */
+export function selectDeadlineBundle(candidates: DeadlineBundle[], now = new Date()): DeadlineSelection {
+  const dated = candidates.filter((candidate) => Boolean(candidate.deadline));
+  const validDated = dated.filter(deadlineMatchesEvidence);
+  if (!validDated.length) {
+    if (!dated.length) return { selected: candidates[0] ?? emptyDeadlineBundle({ deadline: null, deadline_text: null, deadline_source_url: null, deadline_raw_text: null, deadline_checked_at: null, deadline_resolution: "not_attempted", deadline_kind: null, source_id: "", detail_url: "", evidence_strength: 0 }, null), unsafe: false };
+    return { selected: emptyDeadlineBundle(dated[0], dated[0].deadline_kind), unsafe: true };
+  }
+  const usable = validDated;
+  const current = usable.filter((candidate) => !isPastDeadline(candidate, now));
+  const pool = current.length ? current : usable;
+  const bestKindPriority = Math.min(...pool.map((candidate) => DEADLINE_KIND_PRIORITY[candidate.deadline_kind ?? "deadline"]));
+  const sameKind = pool.filter((candidate) => DEADLINE_KIND_PRIORITY[candidate.deadline_kind ?? "deadline"] === bestKindPriority);
+  const bestStrength = Math.max(...sameKind.map((candidate) => candidate.evidence_strength));
+  const strongest = sameKind.filter((candidate) => candidate.evidence_strength === bestStrength);
+  const dates = new Set(strongest.map((candidate) => candidate.deadline));
+  if (dates.size === 1) {
+    const selected = strongest[0];
+    const crossSource = strongest.some((candidate) => candidate.source_id !== selected.source_id);
+    return { selected: { ...selected, deadline_resolution: safeResolution(selected, crossSource) }, unsafe: false };
+  }
+  return { selected: emptyDeadlineBundle(strongest[0], asV2DeadlineKind(strongest[0].deadline_kind)), unsafe: true };
+}
+
+function normalizedDeadlineConflicts(conflicts: V2DeadlineConflict[]): V2DeadlineConflict[] {
+  return conflicts
+    .map((conflict) => ({ ...conflict, kind: asV2DeadlineKind(conflict.kind) ?? inferV2DeadlineKind(conflict.evidence) ?? "deadline" }))
+    .filter((conflict, index, all) => all.findIndex((candidate) => candidate.conflicting_deadline === conflict.conflicting_deadline && candidate.evidence === conflict.evidence && candidate.source_url === conflict.source_url && candidate.kind === conflict.kind) === index);
+}
+
+function appendDeadlineConflict(conflicts: V2DeadlineConflict[], selected: DeadlineBundle, candidate: DeadlineBundle): V2DeadlineConflict[] {
+  if (!candidate.deadline || candidate.deadline === selected.deadline) return conflicts;
+  const next: V2DeadlineConflict = {
+    stored_deadline: selected.deadline,
+    conflicting_deadline: candidate.deadline,
+    evidence: candidate.deadline_raw_text ?? candidate.deadline_text ?? "",
+    source_url: candidate.deadline_source_url,
+    kind: candidate.deadline_kind,
+  };
+  const exists = conflicts.some((conflict) => conflict.conflicting_deadline === next.conflicting_deadline && conflict.evidence === next.evidence && conflict.source_url === next.source_url);
+  return exists ? conflicts : [...conflicts, next];
+}
+
+function deadlineFields(selected: DeadlineBundle, unsafe: boolean): Pick<OpportunityV2, "deadline" | "deadline_text" | "deadline_source_url" | "deadline_raw_text" | "deadline_checked_at" | "deadline_resolution" | "deadline_kind" | "deadline_conflict_unsafe"> {
+  return {
+    deadline: selected.deadline,
+    deadline_text: selected.deadline_text,
+    deadline_source_url: selected.deadline_source_url,
+    deadline_raw_text: selected.deadline_raw_text,
+    deadline_checked_at: selected.deadline_checked_at,
+    deadline_resolution: selected.deadline_resolution,
+    deadline_kind: selected.deadline_kind,
+    deadline_conflict_unsafe: unsafe,
+  };
+}
+
+export function reconcileOpportunityV2Deadlines(items: OpportunityV2[], now = new Date()): OpportunityV2[] {
+  return items.map((item) => {
+    const base = deadlineBundleFromOpportunity(item);
+    if (!(item.deadline_conflicts?.length)) return withEncodingMetadata({ ...item, ...deadlineFields(base, false) });
+    const conflicts = normalizedDeadlineConflicts(item.deadline_conflicts);
+    const candidates = [base, ...conflicts.map((conflict) => deadlineBundleFromConflict(conflict, base))];
+    const selection = selectDeadlineBundle(candidates, now);
+    // Reconciliation can encounter legacy rows where the stored conflict list
+    // repeats the selected date (for example, a listing and detail page both
+    // reported the same day). Keep only real alternatives after selecting the
+    // atomic evidence bundle.
+    const allConflicts = conflicts.reduce((acc, conflict, index) => appendDeadlineConflict(acc, selection.selected, candidates[index + 1]), [] as V2DeadlineConflict[]);
+    const status = selection.selected.deadline ? opportunityStatus(selection.selected.deadline, now) : "UNKNOWN_DEADLINE";
+    return withEncodingMetadata({ ...item, ...deadlineFields(selection.selected, selection.unsafe), deadline_conflicts: allConflicts, status });
+  });
+}
+
+function withEncodingMetadata(item: OpportunityV2): OpportunityV2 {
+  const fields = encodingErrorFields(item.title, item.summary);
+  return { ...item, encoding_error: fields.length > 0, encoding_error_fields: fields };
+}
+
+function sourceIdentityAliases(item: Pick<OpportunityV2, "source_id" | "source_item_id" | "detail_url" | "source_url">): string[] {
+  const aliases: string[] = [];
+  const sourceItemId = item.source_item_id?.trim();
+  if (sourceItemId) aliases.push(`${item.source_id}|item:${sourceItemId}`);
+  const detailUrl = normalizeUrl(item.detail_url, item.source_url);
+  if (detailUrl) aliases.push(`${item.source_id}|url:${detailUrl}`);
+  return aliases;
+}
+
+function mergeTitleText(prior: string, incoming: string, preferIncoming: boolean): string {
+  if (hasEncodingCorruption(prior) && !hasEncodingCorruption(incoming)) return incoming;
+  if (!hasEncodingCorruption(prior) && hasEncodingCorruption(incoming)) return cleanGenericListingTitle(prior);
+  return preferIncoming ? incoming : cleanGenericListingTitle(prior);
+}
+
+function mergeSummaryText(prior: string, incoming: string, priorTitle: string, incomingTitle: string): string {
+  if (hasEncodingCorruption(prior) && !hasEncodingCorruption(incoming)) return conciseSummary(incoming, incomingTitle);
+  if (!hasEncodingCorruption(prior) && hasEncodingCorruption(incoming)) return conciseSummary(prior, priorTitle);
+  return hasUsableSummary(incoming, incomingTitle) ? conciseSummary(incoming, incomingTitle) : conciseSummary(prior, priorTitle);
+}
+
 const CFW_SOURCE_ID = "cfw-cultural-ip";
 
 function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now: Date): OpportunityV2 {
   const preferIncoming = item.source_id === "loewe-craft-prize" && prior.source_id !== "loewe-craft-prize";
-  const sameCfwDetail = item.source_id === CFW_SOURCE_ID && prior.source_id === CFW_SOURCE_ID && item.detail_url === prior.detail_url;
-  const conflictingDeadline = Boolean(item.deadline && prior.deadline && item.deadline !== prior.deadline && !sameCfwDetail);
-  const preferDetailDeadline = item.deadline_resolution === "found_detail" && prior.deadline_resolution !== "found_detail";
-  const deadline = sameCfwDetail && item.deadline ? item.deadline : (conflictingDeadline && !preferDetailDeadline ? prior.deadline : (item.deadline ?? prior.deadline));
-  const deadlineConflicts = conflictingDeadline
-    ? [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? []), { stored_deadline: prior.deadline, conflicting_deadline: item.deadline as string, evidence: item.deadline_raw_text ?? item.deadline_text ?? "", source_url: item.deadline_source_url ?? item.detail_url }]
-    : [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])];
-  const mergedTitle = preferIncoming ? item.title : cleanGenericListingTitle(prior.title);
-  const mergedSummary = hasUsableSummary(item.summary, item.title) ? conciseSummary(item.summary, item.title) : conciseSummary(prior.summary, prior.title);
-  const category = item.category === "competition" && prior.category !== "competition" ? prior.category : (item.category || prior.category);
+  const priorDeadline = deadlineBundleFromOpportunity(prior);
+  const incomingDeadline = deadlineBundleFromOpportunity(item);
+  const deadlineSelection = selectDeadlineBundle([priorDeadline, incomingDeadline], now);
+  const deadlineConflicts = [
+    ...normalizedDeadlineConflicts([...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])]),
+  ].reduce((acc, conflict) => appendDeadlineConflict(acc, deadlineSelection.selected, deadlineBundleFromConflict(conflict, priorDeadline)), [] as V2DeadlineConflict[]);
+  const withDirectConflict = appendDeadlineConflict(deadlineConflicts, deadlineSelection.selected, priorDeadline);
+  const allDeadlineConflicts = appendDeadlineConflict(withDirectConflict, deadlineSelection.selected, incomingDeadline);
+  const mergedTitle = mergeTitleText(prior.title, item.title, preferIncoming);
+  const mergedSummary = mergeSummaryText(prior.summary, item.summary, prior.title, item.title);
+  // A cross-source record is still a competition when either source
+  // classified the same opportunity as one. Do not let a broader source
+  // taxonomy such as `grant` demote a real contest out of the public module.
+  const category = prior.category === "competition" || item.category === "competition" ? "competition" : (item.category || prior.category);
   const derived = classifyV2Dimensions(mergedTitle, mergedSummary, category);
   const relevance = classifyV2RadarRelevance(mergedTitle, mergedSummary, category);
   const sameSource = item.source_id === prior.source_id;
-  return {
+  const mergedStatus = deadlineSelection.selected.deadline ? opportunityStatus(deadlineSelection.selected.deadline, now) : deadlineSelection.unsafe ? "UNKNOWN_DEADLINE" : mergedStatusWithoutConflict(prior, item, sameSource, now);
+  return withEncodingMetadata({
     ...prior,
     ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
     title: mergedTitle,
     summary: mergedSummary,
     source_item_id: prior.source_item_id ?? item.source_item_id,
     category,
-    deadline,
-    deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
-    deadline_source_url: item.deadline_source_url ?? prior.deadline_source_url ?? null,
-    deadline_raw_text: item.deadline_raw_text ?? prior.deadline_raw_text ?? item.deadline_text ?? prior.deadline_text ?? null,
-    deadline_checked_at: item.deadline_checked_at ?? prior.deadline_checked_at ?? null,
-    deadline_resolution: conflictingDeadline ? "date_conflict" : (deadline && prior.deadline && item.deadline && prior.deadline === item.deadline && prior.source_id !== item.source_id ? "found_cross_source" : (item.deadline_resolution ?? prior.deadline_resolution ?? (deadline ? "found" : "not_attempted"))),
-    deadline_conflicts: deadlineConflicts,
-    status: mergedStatus({ ...prior, deadline }, item, sameSource, now),
+    ...deadlineFields(deadlineSelection.selected, deadlineSelection.unsafe),
+    deadline_conflicts: allDeadlineConflicts,
+    status: mergedStatus,
     first_seen_at: prior.first_seen_at,
     last_seen_at: now.toISOString(),
     discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
@@ -180,7 +411,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     participation_mode: item.participation_mode && item.participation_mode !== "unspecified" ? item.participation_mode : (prior.participation_mode ?? derived.participation_mode),
     is_long_term: Boolean(prior.is_long_term || item.is_long_term),
     starts_at: item.starts_at ?? prior.starts_at ?? null,
-  };
+  });
 }
 
 export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { id: string; name: string; region: "CN" | "GLOBAL"; types?: string[] }, now = new Date()): OpportunityV2 {
@@ -190,12 +421,19 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
   const category = classifyCategory(categoryInput, input.title);
   const relevance = classifyV2RadarRelevance(title, summary, input.source_category ?? "");
   const dimensions = classifyV2Dimensions(title, summary, category);
-  const identity = identityHash(title, input.deadline_at ?? "", input.organizer ?? "");
-  const structuredStatus = opportunityStatus(input.deadline_at, now);
-  const status = structuredStatus === "UNKNOWN_DEADLINE"
+  const parsedDeadline = deadlineBundleFromParsed(input, source.id);
+  const parsedConflicts = normalizedDeadlineConflicts((input.deadline_conflicts ?? []) as V2DeadlineConflict[]);
+  const deadlineSelection = parsedDeadline.deadline
+    ? selectDeadlineBundle([parsedDeadline, ...parsedConflicts.map((conflict) => deadlineBundleFromConflict(conflict, parsedDeadline))], now)
+    : { selected: parsedDeadline, unsafe: false };
+  const identity = identityHash(title, deadlineSelection.selected.deadline ?? "", input.organizer ?? "");
+  const structuredStatus = deadlineSelection.selected.deadline ? opportunityStatus(deadlineSelection.selected.deadline, now) : "UNKNOWN_DEADLINE";
+  const status = deadlineSelection.unsafe
+    ? "UNKNOWN_DEADLINE"
+    : structuredStatus === "UNKNOWN_DEADLINE"
     ? (opportunityStatusFromSourceStatus(input.source_status) ?? structuredStatus)
     : structuredStatus;
-  return {
+  return withEncodingMetadata({
     id: `oppv2_${identity}`,
     title,
     summary,
@@ -207,13 +445,8 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     category,
     region: source.region,
     tags: relevance.tags,
-    deadline: input.deadline_at,
-    deadline_text: input.deadline_text,
-    deadline_source_url: input.deadline_source_url ?? null,
-    deadline_raw_text: input.deadline_raw_text ?? input.deadline_text ?? null,
-    deadline_checked_at: input.deadline_checked_at ?? null,
-    deadline_resolution: input.deadline_resolution ?? (input.deadline_at ? "found" : "not_attempted"),
-    deadline_conflicts: input.deadline_conflicts ?? [],
+    ...deadlineFields(deadlineSelection.selected, deadlineSelection.unsafe),
+    deadline_conflicts: parsedConflicts,
     status,
     first_seen_at: now.toISOString(),
     last_seen_at: now.toISOString(),
@@ -228,18 +461,24 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     participation_mode: input.participation_mode ?? dimensions.participation_mode,
     is_long_term: input.is_long_term ?? false,
     starts_at: input.starts_at ?? null,
-  };
+  });
 }
 
 export function mergeOpportunityV2(existing: OpportunityV2[], incoming: OpportunityV2[], now = new Date()): OpportunityV2[] {
   const byKey = new Map<string, OpportunityV2>();
   const cfwDetailKeys = new Map<string, string>();
+  const sourceIdentityKeys = new Map<string, string>();
   for (const item of [...existing, ...incoming]) {
     const titleKey = crossSourceTitleKey(item.title) ?? `url:${item.source_id}:${item.detail_url}`;
     const cfwDetailKey = item.source_id === CFW_SOURCE_ID ? item.detail_url : null;
-    const key = cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
+    const sourceKeys = sourceIdentityAliases(item);
+    const existingSourceKey = sourceKeys.map((candidate) => sourceIdentityKeys.get(candidate)).find(Boolean);
+    const key = existingSourceKey
+      ? existingSourceKey
+      : cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
     const prior = byKey.get(key);
-    byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : { ...item, status: item.status });
+    byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : withEncodingMetadata({ ...item, status: item.status }));
+    for (const sourceKey of sourceKeys) sourceIdentityKeys.set(sourceKey, key);
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }
   const reconciled = [...byKey.values()].map(refreshOpportunityV2DerivedFields);
@@ -253,14 +492,14 @@ export function mergeOpportunityV2(existing: OpportunityV2[], incoming: Opportun
       byStableId.set(item.id, item);
       continue;
     }
-    byStableId.set(item.id, {
+    byStableId.set(item.id, withEncodingMetadata({
       ...prior,
       ...(prior.deadline ? {} : item.deadline ? { deadline: item.deadline, deadline_text: item.deadline_text, deadline_source_url: item.deadline_source_url, deadline_raw_text: item.deadline_raw_text, deadline_checked_at: item.deadline_checked_at, deadline_resolution: item.deadline_resolution } : {}),
-      title: prior.title.length >= item.title.length ? prior.title : item.title,
-      summary: prior.summary.length >= item.summary.length ? prior.summary : item.summary,
+      title: mergeTitleText(prior.title, item.title, item.title.length > prior.title.length),
+      summary: mergeSummaryText(prior.summary, item.summary, prior.title, item.title),
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
       deadline_conflicts: [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])],
-    });
+    }));
   }
   return [...byStableId.values()];
 }
@@ -268,45 +507,26 @@ export function mergeOpportunityV2(existing: OpportunityV2[], incoming: Opportun
 export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunities: OpportunityV2[]; duplicate_count: number } {
   const byIdentity = new Map<string, OpportunityV2>();
   const cfwDetailKeys = new Map<string, string>();
+  const sourceIdentityKeys = new Map<string, string>();
   let duplicate_count = 0;
   for (const item of items) {
     const titleKey = crossSourceTitleKey(item.title) ?? identityHash(item.title, item.deadline ?? "", item.organizer ?? "");
     const cfwDetailKey = item.source_id === CFW_SOURCE_ID ? item.detail_url : null;
-    const key = cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
+    const sourceKeys = sourceIdentityAliases(item);
+    const existingSourceKey = sourceKeys.map((candidate) => sourceIdentityKeys.get(candidate)).find(Boolean);
+    const key = existingSourceKey
+      ? existingSourceKey
+      : cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
     const prior = byIdentity.get(key);
     if (!prior) {
-      byIdentity.set(key, item);
+      byIdentity.set(key, withEncodingMetadata(item));
+      for (const sourceKey of sourceKeys) sourceIdentityKeys.set(sourceKey, key);
       if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
       continue;
     }
     duplicate_count += 1;
-    const deadlineConflict = Boolean(prior.deadline && item.deadline && prior.deadline !== item.deadline);
-    const selectedDeadline = deadlineConflict
-      ? (item.deadline_resolution === "found_detail" && prior.deadline_resolution !== "found_detail" ? item.deadline : prior.deadline)
-      : (prior.deadline ?? item.deadline);
-    byIdentity.set(key, {
-      ...prior,
-      discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
-      source_item_id: prior.source_item_id ?? item.source_item_id,
-      tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
-      summary: conciseSummary(item.summary, item.title) || conciseSummary(prior.summary, prior.title),
-      deadline: selectedDeadline,
-      deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
-      deadline_source_url: item.deadline_source_url ?? prior.deadline_source_url ?? null,
-      deadline_raw_text: item.deadline_raw_text ?? prior.deadline_raw_text ?? item.deadline_text ?? prior.deadline_text ?? null,
-      deadline_checked_at: item.deadline_checked_at ?? prior.deadline_checked_at ?? null,
-      deadline_resolution: deadlineConflict ? "date_conflict" : (selectedDeadline && prior.deadline && item.deadline && prior.deadline === item.deadline && prior.source_id !== item.source_id ? "found_cross_source" : (item.deadline_resolution ?? prior.deadline_resolution ?? (selectedDeadline ? "found" : "not_attempted"))),
-      deadline_conflicts: deadlineConflict
-        ? [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? []), { stored_deadline: prior.deadline, conflicting_deadline: item.deadline as string, evidence: item.deadline_raw_text ?? item.deadline_text ?? "", source_url: item.deadline_source_url ?? item.detail_url }]
-        : [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])],
-      ...(prior.detail_url ? {} : { detail_url: item.detail_url }),
-      directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? [])])],
-      work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? [])])],
-      event_location: prior.event_location || item.event_location || null,
-      participation_scope: prior.participation_scope && prior.participation_scope !== "unspecified" ? prior.participation_scope : item.participation_scope,
-      participation_mode: prior.participation_mode && prior.participation_mode !== "unspecified" ? prior.participation_mode : item.participation_mode,
-      status: mergedStatus(prior, item, prior.source_id === item.source_id, new Date()),
-    });
+    byIdentity.set(key, mergeOpportunityRecords(prior, item, new Date()));
+    for (const sourceKey of sourceKeys) sourceIdentityKeys.set(sourceKey, key);
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }
   return { opportunities: [...byIdentity.values()], duplicate_count };

@@ -333,7 +333,7 @@ function publicMemoItem(item: OpportunityV2, translations: OpportunityV2Translat
     id: item.id,
     original_title: item.title,
     title: display.title,
-    original_summary: item.summary,
+    original_summary: display.original_summary ?? (display.summary ? item.summary : null),
     summary: display.summary,
     translation_status: display.translation_status,
     category: item.category,
@@ -345,6 +345,9 @@ function publicMemoItem(item: OpportunityV2, translations: OpportunityV2Translat
     participation_mode: item.participation_mode ?? "unspecified",
     deadline: item.deadline,
     deadline_text: item.deadline_text ?? null,
+    deadline_kind: item.deadline_kind ?? null,
+    deadline_conflict_unsafe: item.deadline_conflict_unsafe ?? false,
+    deadline_conflicts: item.deadline_conflicts ?? [],
     status: opportunityV2LiveStatus(item),
     is_long_term: item.is_long_term ?? false,
     starts_at: item.starts_at ?? null,
@@ -519,7 +522,7 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
       const formats: Record<string, string> = { material_craft: "实物工艺", product_design: "产品设计方案", graphic_ip: "平面 / 插画 / IP", packaging: "包装设计", fashion_jewellery: "服饰 / 首饰", video_animation: "视频 / 动画", interaction_game: "交互 / 游戏", mixed_media: "综合媒介" };
       const location = item.event_location?.trim() || null;
-      const deadline = item.is_long_term ? "长期开放" : item.deadline ? formatOpportunityV2Date(item.deadline) : "截止日期未注明，请查看赛事原文。";
+      const deadline = item.is_long_term ? "长期开放" : item.deadline_conflict_unsafe ? "截止日期存在冲突，请打开赛事来源页面查看。" : item.deadline ? formatOpportunityV2Date(item.deadline) : "截止日期未注明，请查看赛事原文。";
       const concreteSourceUrl = item.detail_url || item.source_url;
       const knownDimensions = [...(item.directions ?? []).map((key) => directions[key] ?? key), ...(item.work_formats ?? []).map((key) => formats[key] ?? key)].filter(Boolean);
       const knownInfo = [
