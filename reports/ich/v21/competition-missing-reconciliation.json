@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:31:16.016Z",
+  "generated_at": "2026-09-09T15:58:45.633Z",
   "summary": {
     "baseline_count": 1816,
     "historical_after_count": 1859,
@@ -7,8 +7,11 @@
     "historical_missing_count": 76,
     "explicit_identity_count": 50,
     "unmaterialized_missing_count": 26,
+    "input_count_mismatch": true,
+    "procurement_count_in_same_audit": 76,
     "classifications": {
-      "SOURCE_LISTING_REFRESH_DIFFERENCE": 34,
+      "SOURCE_LISTING_REFRESH_DIFFERENCE": 33,
+      "NON_COMPETITION_CONTENT": 1,
       "NAVIGATION_NOISE": 16
     },
     "legit_competition_missing": 0,
@@ -24,287 +27,287 @@
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2711",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
       "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2421",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年第十九届“认证杯”数学中国数学建模网络挑战赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2421",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_5a8acd1d81bf893d9423f09a",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2418",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026OPPO 2026影像大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2418",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_bcfc0851df383882d8f5bcd5",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2710",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年第八届大学生语言文字能力大赛写作专项赛报名通知！",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2710",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_f7018b8f982ef3848deab2de",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2716",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "第八届全国高校计算机能力挑战赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2716",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_1c48e09af18940616052cd2d",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2477",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年批改网杯全国大学生英语写作大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2477",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_01fd132712bbb3a766b422fc",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2590",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "第十八届全国大学生数学竞赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2590",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_708e6200e674d42ecadf4be9",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2787",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026“和氏璧杯”成语之都大学生创意奖暨第十六届邯郸市青年创新创业大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2787",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_5a83e30a3a4bc93c6aff8380",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2786",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "绘你所想 织你所创｜2026恒强杯制版创意大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2786",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_c351c7e46e178cbc8d3ac3d1",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2758",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "第十二届“中金所杯”全国大学生金融知识大赛启动报名",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2758",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_8cfcf3b8db59b140ea8456e0",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2754",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "关于举办第八届AIC算法大赛算法主题赛（AI+开源）的通知",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2754",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_2586625774687a317af236fb",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2396",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年赢在南京青年大学生创业大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2396",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_148c0d882f7b9a2aed4209bd",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2728",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年度公益广告创新创意大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2728",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_b11655d0d91545f65f6fe6d5",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2714",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "“工行杯”全国大学生金融科技创新大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2714",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_3d72f6dcd60539c9b60cbcdd",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2771",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "全国大学生嵌入式芯片与系统设计竞赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2771",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_4b2353fa458dcafb6ac31bca",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2751",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026 非遗新生 茶香无界——第四届“焕新茶生活”非遗联创大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2751",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_26195037ece00a426051907b",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2696",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年河南省工业设计大赛“浩德杯”钢制家具专项赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2696",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_cb170aa295bba042cd82ef90",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2709",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026“湾区源创·硅芯商会杯” AI+IP潮玩设计大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2709",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_a9e2faf12e765bc49cbef583",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2723",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026小榄镇首届菊花纤维服装设计比赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2723",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_17232fc56a74193d2864c27a",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2432",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026高教社杯全国大学生数学建模竞赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2432",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_0788a5ccaece9d245deda1d8",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2747",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "聚焦新大众文艺，书写时代烟火与青春力量——青年作家网首届“新大众文艺”征文大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2747",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_adf23fb881994fb370246bfe",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2679",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "南航文创吉祥物暨文创设计大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2679",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_3db050474b9a02326390495c",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2583",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026第六届印记太原文化创意设计大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2583",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_c0f40053ae7ec8b27cc426f2",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2776",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026“数智赋能·面向未来”兰州数智牛肉拉面品牌创意暨短视频大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2776",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_38fd0b041b6f623cbeadf897",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2712",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "“学创杯” 全国大学生创业综合模拟大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2712",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_6c408931413e6019de2316b6",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2411",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026常熟杯时尚设计大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2411",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_f30f87f928b5557d01b3c9e3",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2559",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026微笑泾县·“纸”等你来——泾县文旅创意产品大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2559",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_736c6e7b7c1196190b0da873",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2435",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "东方设计奖·全国高校创新设计大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2435",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_ccdaeef85d9ae8ab2066fbfe",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2405",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "第17届蓝桥杯视觉艺术设计赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2405",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_b903b2fab33a018a4b1d21e4",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
@@ -312,10 +315,10 @@
       "old_identity": "craft-scotland-opportunities|https://www.craftscotland.org/community/opportunity/studios-available-in-burntisland-2174",
       "old_title": "Full details &rarr; Studio & Workshop Spaces Studios available in Burntisland High quality studio space available for artists and creatives with amazing light and Forth views",
       "old_detail_url": "https://www.craftscotland.org/community/opportunity/studios-available-in-burntisland-2174",
-      "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
+      "classification": "NON_COMPETITION_CONTENT",
       "surviving_id": "oppv2_66e06d713ae0dfb6973c183b",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
-      "action": "保留当前记录并标记为已恢复/仍存活。"
+      "reason": "历史 identity 是工作室/工作坊等非赛事机会，不能计入赛事回归。",
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "craft-scotland-opportunities",
@@ -325,7 +328,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_623884733ce61720d50efee8",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "craft-scotland-opportunities",
@@ -335,7 +338,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_d4b9767001a0f3b369dd576e",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "craft-scotland-opportunities",
@@ -345,7 +348,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_49630e5b673a62417ed0c5d5",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "craft-scotland-opportunities",
@@ -355,7 +358,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_ac0e7a05ea861bc3c01162fb",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "craft-scotland-opportunities",
@@ -365,7 +368,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_6b845a9109a2e05dd0580630",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "heritage-crafts-opportunities",
@@ -375,7 +378,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_5951c9f0c3be2636be5f9e00",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "heritage-crafts-opportunities",
@@ -385,7 +388,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_d3a5e103e54a9183693c26b5",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "heritage-crafts-opportunities",
@@ -395,7 +398,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_beaad1325cb5db966c0d5683",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "heritage-crafts-opportunities",
@@ -405,7 +408,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_c16878a3d15e5c6daeb5588c",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "heritage-crafts-opportunities",
@@ -415,7 +418,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_261507eb9d4450df1feff674",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "whaleideas-competition",
@@ -424,7 +427,7 @@
       "old_detail_url": "https://whaleideas.com/zjds/gycp/wcsj/31796.html",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
       "surviving_id": "oppv2_62c72ac0e2f030c51bed5b1a",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
@@ -434,7 +437,7 @@
       "old_detail_url": "https://iuben.cn/wcsj/6905.html",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
       "surviving_id": "oppv2_76babbd2bd3e394dd2d41c3a",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
@@ -444,17 +447,17 @@
       "old_detail_url": "https://iuben.cn/hykj/6904.html",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
       "surviving_id": "oppv2_83301e921c383cc43bee5be2",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
       "source_id": "chuangsaiyun-competition-list",
       "old_identity": "chuangsaiyun-competition-list|https://www.chuangsaiyun.com/#/article/details?id=2790",
-      "old_title": "2026“阳光下的红十字”河北省首届公益AI创作大赛",
+      "old_title": "2026年第五届辽宁省大学生“瑰宝传承”戏曲文化创新创意大赛",
       "old_detail_url": "https://www.chuangsaiyun.com/#/article/details?id=2790",
       "classification": "SOURCE_LISTING_REFRESH_DIFFERENCE",
-      "surviving_id": "oppv2_db1158b8785fa15cbeb226a4",
-      "reason": "当前副本已按 source_id + detail_url 找回该记录。",
+      "surviving_id": "oppv2_c1fa5ffb0dd5607a75672e84",
+      "reason": "当前副本已按 source_id + normalized detail_url 找回该记录。",
       "action": "保留当前记录并标记为已恢复/仍存活。"
     },
     {
@@ -465,7 +468,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_a7d1e9455fec6a969cf79a12",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "american-craft-council-opportunities",
@@ -475,7 +478,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_535e4c8c44d189f91e8dc562",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "american-craft-council-opportunities",
@@ -485,7 +488,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_c40cb4436a6503e870ed756f",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "american-craft-council-opportunities",
@@ -495,7 +498,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_758f98b68350f48c7771761b",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "american-craft-council-opportunities",
@@ -505,7 +508,7 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_b005b71c3b750574c6044698",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     },
     {
       "source_id": "american-craft-council-opportunities",
@@ -515,8 +518,8 @@
       "classification": "NAVIGATION_NOISE",
       "surviving_id": "oppv2_561bb563ae35d3531dbe239a",
       "reason": "历史审计 identity 是导航/内容页，不是独立赛事。",
-      "action": "保留 evidence，禁止进入公开 Radar。"
+      "action": "保留 evidence，禁止进入赛事备忘录。"
     }
   ],
-  "note": "原审计报告声明 missing_count=76，但只提供了 50 个 explicit missing_ids；其余 26 个没有 identity/detail_url，不能安全分类。"
+  "note": "本报告只使用上游审计实际提供的 missing_ids；若 missing_count 大于该数组长度，额外数量不与 procurement_count 混同，保留为输入快照缺失身份的阻断证据。Hash 路由 detail_url 保留 fragment 参与同源身份匹配。"
 }
