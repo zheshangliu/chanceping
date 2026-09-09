@@ -4,6 +4,7 @@
   "待确认_count": 0,
   "more_filters_desktop_count": 0,
   "duplicate_summary_bar_count": 0,
+  "memo_mobile_hidden_by_default": 1,
   "encoding_error_count": 0,
   "unsafe_deadline_count": 0,
   "bottom_redundant_modules_visible": 0

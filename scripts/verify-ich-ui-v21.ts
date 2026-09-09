@@ -118,6 +118,7 @@ async function main(): Promise<void> {
     待确认_count: (bodyText.match(/待确认/gu) ?? []).length,
     more_filters_desktop_count: (bodyText.match(/更多筛选/gu) ?? []).length,
     duplicate_summary_bar_count: (home.match(/class="ich-summary"/gu) ?? []).length > 1 ? (home.match(/class="ich-summary"/gu) ?? []).length : 0,
+    memo_mobile_hidden_by_default: /\.ich-memo-mobile\{display:none\}/u.test(memo) ? 1 : 0,
     encoding_error_count: (bodyText.match(/�/gu) ?? []).length,
     unsafe_deadline_count: (bodyText.match(/不安全的精确日期|来源日期冲突/gu) ?? []).length,
     bottom_redundant_modules_visible: (bodyText.match(/来源与使用说明|持续发现/gu) ?? []).length,
@@ -219,6 +220,7 @@ async function main(): Promise<void> {
   assert.equal(copySummary.ChancePing_visible_count, 0);
   assert.equal(copySummary.more_filters_desktop_count, 0);
   assert.equal(copySummary.duplicate_summary_bar_count, 0);
+  assert.equal(copySummary.memo_mobile_hidden_by_default, 1);
   assert.equal(copySummary.encoding_error_count, 0);
   assert.equal(copySummary.unsafe_deadline_count, 0);
   assert.equal(domSummary.parity, true);
