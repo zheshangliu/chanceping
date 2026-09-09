@@ -27,6 +27,7 @@ export interface OpportunityV2 {
   title: string;
   summary: string;
   source_id: string;
+  source_item_id?: string;
   source_name: string;
   source_url: string;
   detail_url: string;
@@ -35,6 +36,10 @@ export interface OpportunityV2 {
   tags: string[];
   deadline: string | null;
   deadline_text?: string | null;
+  deadline_source_url?: string | null;
+  deadline_raw_text?: string | null;
+  deadline_checked_at?: string | null;
+  deadline_resolution?: "found" | "not_attempted" | "fetch_failed" | "image_only" | "ambiguous" | "not_stated";
   status: V2OpportunityStatus;
   first_seen_at: string;
   last_seen_at: string;
@@ -68,6 +73,10 @@ export interface OpportunityV2SourceHealth {
   format?: "DEDICATED" | "RSS" | "HTML_LISTING" | null;
   partial?: boolean;
   next_page?: number | string | null;
+  source_item_ids?: string[];
+  canonical_records?: number;
+  merged_duplicates?: number;
+  reconciliation_status?: "complete" | "partial" | "failed" | "unknown";
 }
 
 export interface OpportunityV2RunResult {

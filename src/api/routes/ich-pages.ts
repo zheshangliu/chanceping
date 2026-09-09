@@ -7,7 +7,7 @@ import {
   type PublicIchOpportunity,
 } from "../../ich/query";
 import { defaultIchStore, parseIchQuery, type IchReadRouteOptions } from "./public-ich";
-import { buildOpportunityV2Display, buildOpportunityV2MemoSnapshot, filterOpportunityV2Radar, formatOpportunityV2Date, isRealCompetitionMemoItem, opportunityV2LiveStatus, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2MemoSnapshot, type OpportunityV2Translation } from "../../opportunity-v2";
+import { buildOpportunityV2Display, buildOpportunityV2MemoSnapshot, filterOpportunityV2Radar, formatOpportunityV2Date, isRealCompetitionMemoItem, opportunityV2LiveStatus, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2MemoSnapshot, type OpportunityV2Source, type OpportunityV2Translation } from "../../opportunity-v2";
 
 const ICH_ORIGIN = "https://ich.chanceping.com";
 
@@ -108,6 +108,39 @@ interface V2IchPageResult {
   new_this_week: number;
   updated_at: string | null;
   translations: OpportunityV2Translation[];
+  sources: OpportunityV2Source[];
+}
+
+interface ParsedV2PageQuery {
+  q: string;
+  category: string;
+  region: string;
+  status: string;
+  sort: string;
+  direction: string;
+  work_format: string;
+  event_region: string;
+  source_id: string;
+  scope: "ich" | "all_competitions";
+  page: number;
+}
+
+interface V2PageQueryParseResult {
+  query: ParsedV2PageQuery | null;
+  error?: string;
+}
+
+const V2_DIRECTIONS = new Set(["ich_innovation", "cultural_creative", "craft_arts", "museum_tourism", "integrated_cultural_design", "aigc_digital"]);
+const V2_WORK_FORMATS = new Set(["material_craft", "product_design", "graphic_ip", "packaging", "fashion_jewellery", "video_animation", "interaction_game", "mixed_media"]);
+const V2_CATEGORIES = new Set(["all", "competition", "exhibition_market", "procurement_project", "channel_collaboration", "policy_funding", "international"]);
+const V2_STATUSES = new Set(["browse", "current", "closing_soon", "opening_soon", "long_term", "deadline_tbd"]);
+const V2_SORTS = new Set(["default", "nearest", "newest"]);
+
+function parseCsvFilter(value: string, allowed: Set<string>, label: string): string | null {
+  if (!value) return "";
+  const values = value.split(",").map((entry) => entry.trim()).filter(Boolean);
+  if (values.some((entry) => !allowed.has(entry))) return `${label}包含无法识别的选项，请重新选择。`;
+  return [...new Set(values)].join(",");
 }
 
 function v2StatusLabel(item: OpportunityV2): string {
@@ -139,10 +172,10 @@ function v2ListPage(result: V2IchPageResult, history: boolean): string {
   const competitionView = result.category === "competition";
   const heading = history ? "历史非遗机会" : competitionView ? "文创、非遗、手工艺比赛，一站看见" : "文创、非遗与手工艺机会导航";
   const intro = history ? "这里展示机会池中已截止的历史记录。" : competitionView ? "为手艺人、设计师、工作室与文创团队，持续整理国内外可参与的赛事与作品征集。" : "持续整理国内外赛事、征集、市集、采购、资助与合作机会。";
-  const queryParams = new URLSearchParams({ q: result.q, category: result.category, region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, event_region: result.event_region, source_id: result.source_id });
+  const queryParams = new URLSearchParams({ q: result.q, category: result.category, region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, source_id: result.source_id });
   const href = (patch: Record<string, string>) => { const next = new URLSearchParams(queryParams); Object.entries(patch).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key)); if (!("page" in patch)) next.delete("page"); return `${history ? "/ich/history" : "/ich"}?${next.toString()}`; };
   const categories = [["competition", "赛事 / 征集", "比赛与作品征集"], ["exhibition_market", "市集 / 展销", "市集、展会与展销"], ["procurement_project", "采购 / 订单", "采购与项目需求"], ["channel_collaboration", "渠道 / 合作", "入驻与联名"], ["policy_funding", "资助 / 扶持", "政策与资金"], ["international", "研修 / 交流", "研学、驻地与交流"]];
-  const regions = [["all", "全部"], ["guangzhou", "广州"], ["guangdong", "广东省"], ["greater_bay_area", "粤港澳大湾区"], ["nationwide", "全国"], ["hong_kong_macao_taiwan", "港澳台"], ["overseas", "海外"], ["online_or_unrestricted", "线上"]];
+  const regions = [["all", "全部来源"], ["overseas", "海外来源"]];
   const statuses = [["browse", "全部可浏览"], ["current", "正在征集"], ["closing_soon", "近期截止"], ["opening_soon", "即将开始"], ["long_term", "长期征集"], ["deadline_tbd", "截止待确认"]];
   const directions = [["", "全部赛事"], ["ich_innovation", "非遗创新"], ["cultural_creative", "文创设计"], ["craft_arts", "工艺美术"], ["museum_tourism", "文博文旅"], ["integrated_cultural_design", "综合文化设计"], ["aigc_digital", "AIGC / 数字创作"]];
   const formats = [["", "全部形式"], ["material_craft", "实物工艺"], ["product_design", "产品设计方案"], ["graphic_ip", "平面 / 插画 / IP"], ["packaging", "包装设计"], ["fashion_jewellery", "服饰 / 首饰"], ["video_animation", "视频 / 动画"], ["interaction_game", "交互 / 游戏"], ["mixed_media", "综合媒介"]];
@@ -155,32 +188,55 @@ function v2ListPage(result: V2IchPageResult, history: boolean): string {
   const statusHtml = statuses.map(([key, label]) => `<a class="${result.status === key ? "is-active" : ""}" href="${href({ status: key })}">${label}</a>`).join("");
   const formatHtml = formats.map(([key, label]) => `<a class="${result.work_format === key ? "is-active" : ""}" href="${href({ work_format: key })}">${label}</a>`).join("");
   const sortPath = history ? "/ich/history" : "/ich";
-  const preserved = { category: result.category, region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, event_region: result.event_region, source_id: result.source_id };
+  const preserved = { category: result.category, region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, source_id: result.source_id };
   const searchHidden = Object.entries(preserved).map(([key, value]) => `<input type="hidden" name="${key}" value="${escapeHtml(value)}">`).join("");
-  const sortHidden = Object.entries({ q: result.q, category: result.category, region: result.region, status: result.status, direction: result.direction, work_format: result.work_format, event_region: result.event_region, source_id: result.source_id }).map(([key, value]) => `<input type="hidden" name="${key}" value="${escapeHtml(value)}">`).join("");
+  const sortHidden = Object.entries({ q: result.q, category: result.category, region: result.region, status: result.status, direction: result.direction, work_format: result.work_format, source_id: result.source_id }).map(([key, value]) => `<input type="hidden" name="${key}" value="${escapeHtml(value)}">`).join("");
   const sortHtml = `<form class="ich-sort-form" method="get" action="${sortPath}">${sortHidden}<select class="ich-sort" name="sort" aria-label="排序" onchange="this.form.submit()"><option value="default" ${result.sort === "default" ? "selected" : ""}>排序：截止时间（远→近）</option><option value="nearest" ${result.sort === "nearest" ? "selected" : ""}>排序：截止时间（近→远）</option><option value="newest" ${result.sort === "newest" ? "selected" : ""}>排序：最新收录</option></select></form>`;
-  return `<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">ChancePing · 文创与手工艺机会导航</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta"><span>最近更新：${escapeHtml(result.updated_at || "持续更新中")}</span><span>${competitionView ? "可浏览赛事" : "可浏览机会"}：${result.total} 条</span><span>本周收录：${result.new_this_week} 条</span></div></div></section><form class="ich-search" method="get" action="${sortPath}">${searchHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索比赛、征集、文创、非遗、手工艺关键词" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categoryHtml}</div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>来源地区：</span>${regionHtml}</div><div class="ich-filter-line"><span>状态：</span>${statusHtml}${sortHtml}</div><details class="ich-more"><summary>更多筛选</summary><div class="ich-filter-line"><span>赛事所在地：</span><a class="${result.event_region === "" ? "is-active" : ""}" href="${href({ event_region: "" })}">全部</a><a class="${result.event_region === "mainland" ? "is-active" : ""}" href="${href({ event_region: "mainland" })}">中国大陆</a><a class="${result.event_region === "hkmt" ? "is-active" : ""}" href="${href({ event_region: "hkmt" })}">港澳台</a><a class="${result.event_region === "overseas" ? "is-active" : ""}" href="${href({ event_region: "overseas" })}">海外</a><a class="${result.event_region === "unknown" ? "is-active" : ""}" href="${href({ event_region: "unknown" })}">地点未说明</a></div><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div></details></div><div class="ich-summary"><span>更新说明：按 72 小时周期更新，逐条保留来源链接。　已选：${escapeHtml(FILTER_LABELS[result.region] ?? result.region)}<br><a href="/ich?category=all">全部机会（赛事、项目与合作）</a> · <a href="/ich/memo">赛事备忘录（完整赛事导出）</a></span><a href="/ich">清空筛选</a></div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div><div class="ich-lower"><section><h2>来源与使用说明</h2><p>每条机会都保留具体来源页面；未知字段会明确标注，申请条件和材料以来源原文为准。</p></section><section><h2>持续发现</h2><p>赛事、征集、市集、采购、合作与研修机会持续整理中。</p></section></div></main>`;
+  return `<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">ChancePing · 文创与手工艺机会导航</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta"><span>最近更新：${escapeHtml(result.updated_at || "持续更新中")}</span><span>${competitionView ? "可浏览赛事" : "可浏览机会"}：${result.total} 条</span><span>本周收录：${result.new_this_week} 条</span></div></div></section><form class="ich-search" method="get" action="${sortPath}">${searchHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索比赛、征集、文创、非遗、手工艺关键词" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categoryHtml}</div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>来源地区：</span>${regionHtml}</div><div class="ich-filter-line"><span>状态：</span>${statusHtml}${sortHtml}</div><details class="ich-more"><summary>更多筛选</summary><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div></details></div><div class="ich-summary"><span>更新说明：按 72 小时周期更新，逐条保留来源链接。　已选：${escapeHtml(FILTER_LABELS[result.region] ?? result.region)}<br><a href="/ich?category=all">全部机会（赛事、项目与合作）</a> · <a href="/ich/memo">赛事备忘录（完整赛事导出）</a></span><a href="/ich">清空筛选</a></div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div><div class="ich-lower"><section><h2>来源与使用说明</h2><p>每条机会都保留具体来源页面；未知字段会明确标注，申请条件和材料以来源原文为准。</p></section><section><h2>持续发现</h2><p>赛事、征集、市集、采购、合作与研修机会持续整理中。</p></section></div></main>`;
 }
 
-function parseV2PageQuery(raw: Record<string, string>): { q: string; category: string; region: string; status: string; sort: string; direction: string; work_format: string; event_region: string; source_id: string; scope: "ich" | "all_competitions"; page: number } {
-  const page = Math.max(1, Number.isInteger(Number(raw.page)) ? Number(raw.page) : 1);
-  return { q: (raw.q ?? "").trim().slice(0, 100), category: raw.category ?? "competition", region: raw.region ?? "all", status: raw.status ?? "browse", sort: raw.sort ?? "default", direction: raw.direction ?? "", work_format: raw.work_format ?? "", event_region: raw.event_region ?? "", source_id: raw.source_id ?? "", scope: raw.scope === "all_competitions" ? "all_competitions" : "ich", page };
+function parseV2PageQuery(raw: Record<string, string>): V2PageQueryParseResult {
+  const category = raw.category ?? "competition";
+  const region = raw.region ?? "all";
+  const status = raw.status ?? "browse";
+  const sort = raw.sort ?? "default";
+  const direction = parseCsvFilter(raw.direction ?? "", V2_DIRECTIONS, "赛事方向");
+  const workFormat = parseCsvFilter(raw.work_format ?? "", V2_WORK_FORMATS, "作品形式");
+  const pageValue = raw.page ?? "1";
+  const page = Number(pageValue);
+  if (!V2_CATEGORIES.has(category)) return { query: null, error: "category 不是可识别的赛事分类。" };
+  if (!new Set(["all", "overseas", "CN", "GLOBAL"]).has(region)) return { query: null, error: "region 不是可识别的来源地区。" };
+  if (!V2_STATUSES.has(status)) return { query: null, error: "status 不是可识别的截止状态。" };
+  if (!V2_SORTS.has(sort)) return { query: null, error: "sort 不是可识别的排序方式。" };
+  if (direction === null || workFormat === null) return { query: null, error: direction === null ? "赛事方向包含无法识别的选项，请重新选择。" : "作品形式包含无法识别的选项，请重新选择。" };
+  if (raw.event_region) return { query: null, error: "赛事所在地筛选已移除；请使用来源地区、方向或来源筛选。" };
+  if (!/^\d+$/u.test(pageValue) || !Number.isSafeInteger(page) || page < 1) return { query: null, error: "page 必须是正整数。" };
+  if (raw.source_id && !/^[a-z0-9][a-z0-9-]{0,79}$/u.test(raw.source_id)) return { query: null, error: "source_id 不是可识别的来源。" };
+  return {
+    query: {
+      q: (raw.q ?? "").trim().slice(0, 100),
+      category,
+      region,
+      status,
+      sort,
+      direction,
+      work_format: workFormat,
+      event_region: "",
+      source_id: raw.source_id ?? "",
+      scope: raw.scope === "all_competitions" ? "all_competitions" : "ich",
+      page,
+    },
+  };
 }
 
 function queryOpportunityV2ForIch(options: { q: string; category: string; region: string; status: string; sort: string; direction: string; work_format: string; event_region: string; source_id: string; scope: "ich" | "all_competitions"; page: number; pageSize: number; history: boolean; sourcesPath?: string; poolPath?: string }): V2IchPageResult {
   const sources = readOpportunityV2Sources(options.sourcesPath);
   const pool = readOpportunityV2Pool(options.poolPath);
   const now = new Date();
-  const region = options.region === "overseas" ? "GLOBAL" : options.region === "all" ? undefined : ["guangzhou", "guangdong", "greater_bay_area", "nationwide", "online_or_unrestricted"].includes(options.region) ? "CN" : undefined;
+  const region = options.region === "overseas" || options.region === "GLOBAL" ? "GLOBAL" : options.region === "CN" ? "CN" : undefined;
   const status = options.history ? "history" : options.status === "browse" ? undefined : options.status;
   let filtered = filterOpportunityV2Radar(pool.opportunities, sources, { q: options.q, ...(region ? { region: region as "CN" | "GLOBAL" } : {}), ...(options.source_id ? { source_id: options.source_id } : {}), ...(options.category !== "all" ? { category: options.category } : {}), ...(options.direction ? { direction: options.direction.split(",").filter(Boolean) } : {}), ...(options.work_format ? { work_format: options.work_format.split(",").filter(Boolean) } : {}), ...(options.event_region ? { event_region: options.event_region as "mainland" | "hkmt" | "overseas" | "unknown" } : {}), ...(status ? { status: status as "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history" } : {}), ...(options.scope === "all_competitions" ? { include_irrelevant: true } : {}), now });
   if (options.scope === "all_competitions") filtered = filtered.filter(isRealCompetitionMemoItem);
-  if (["guangzhou", "guangdong", "greater_bay_area"].includes(options.region)) {
-    const needles: Record<string, string[]> = { guangzhou: ["广州", "guangzhou"], guangdong: ["广东", "guangdong"], greater_bay_area: ["大湾区", "粤港澳", "greater bay"] };
-    filtered = filtered.filter((item) => item.event_location && needles[options.region].some((needle) => item.event_location?.toLowerCase().includes(needle.toLowerCase())));
-  }
-  if (options.region === "nationwide") filtered = filtered.filter((item) => item.participation_scope === "nationwide");
-  if (options.region === "online_or_unrestricted") filtered = filtered.filter((item) => item.participation_mode === "online");
   if (options.sort === "newest") filtered.sort((a, b) => b.first_seen_at.localeCompare(a.first_seen_at));
   else if (options.sort === "nearest") filtered.sort((a, b) => {
     const aDeadline = a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER;
@@ -193,7 +249,7 @@ function queryOpportunityV2ForIch(options: { q: string; category: string; region
   const page = Math.min(options.page, totalPages);
   const weekStart = new Date(now); weekStart.setHours(0, 0, 0, 0); weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
   const newThisWeek = filtered.filter((item) => new Date(item.first_seen_at).getTime() >= weekStart.getTime()).length;
-  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, direction: options.direction, work_format: options.work_format, event_region: options.event_region, source_id: options.source_id, scope: options.scope, new_this_week: newThisWeek, updated_at: pool.updated_at, translations: readOpportunityV2Translations() };
+  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, direction: options.direction, work_format: options.work_format, event_region: "", source_id: options.source_id, scope: options.scope, new_this_week: newThisWeek, updated_at: pool.updated_at, translations: readOpportunityV2Translations(), sources };
 }
 
 function memoDate(item: OpportunityV2): string {
@@ -222,14 +278,53 @@ function v2MemoPageBody(result: V2IchPageResult): string {
   return `<main class="ich-memo"><section class="ich-memo-head"><div><p class="ich-kicker">ChancePing · 赛事安排页</p><h1>赛事备忘录</h1><p>同一赛事池中的真实赛事与评选型作品征集，按截止日期从远到近整理；不把目录、资助、驻地和一般活动混入。</p></div><div class="ich-memo-actions"><a href="${href({ sort: result.sort === "newest" ? "default" : "newest" })}">切换最新收录排序</a><a href="/ich">卡片视图</a><a href="/ich/memo.json">JSON</a><a href="/ich/memo.md">Markdown</a></div></section>${searchForm}<div class="ich-memo-stats"><span>赛事总数 ${result.total}</span><span>已列明截止 ${knownDeadline}</span><span>长期开放 ${longTerm}</span><span>截止日期未注明 ${tbd}</span><span>条件：${escapeHtml(result.q || "全部")}</span></div><div class="ich-filter-line"><span>赛事筛选：</span><a href="${href({ direction: "" })}">全部方向</a><a href="${href({ direction: "craft_arts" })}">工艺美术</a><a href="${href({ direction: "cultural_creative" })}">文创设计</a><a href="${href({ direction: "aigc_digital" })}">AIGC / 数字创作</a><a href="${href({ event_region: "overseas" })}">海外举办地</a><a href="${href({ event_region: "unknown" })}">地点未说明</a></div><div class="ich-memo-table-wrap"><table class="ich-memo-table"><caption>赛事备忘录：共 ${result.total} 条，默认按明确截止日期从远到近，无日期记录置于表尾。</caption><thead><tr><th scope="col">截止日期</th><th scope="col">赛事名称</th><th scope="col">方向 / 作品形式</th><th scope="col">赛事所在地</th><th scope="col">来源</th><th scope="col">操作</th></tr></thead><tbody>${rows || `<tr><td colspan="6">暂无可浏览赛事</td></tr>`}</tbody></table></div><style>.ich-memo-table-wrap{overflow:visible}.ich-memo-table caption{caption-side:top;text-align:left;padding:12px 0;color:var(--muted);font-size:13px}.ich-memo-table{width:100%;margin-top:18px;border-collapse:collapse;table-layout:fixed}.ich-memo-table th,.ich-memo-table td{padding:13px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.ich-memo-table th{font-weight:700;color:var(--ink);background:rgba(235,228,214,.38)}.ich-memo-table th:nth-child(1){width:14%}.ich-memo-table th:nth-child(2){width:31%}.ich-memo-table th:nth-child(3){width:17%}.ich-memo-table th:nth-child(4){width:14%}.ich-memo-table th:nth-child(5){width:14%}.ich-memo-table th:nth-child(6){width:10%}.ich-memo-table td:first-child{color:var(--clay);font-weight:600}.ich-memo-table td a{color:var(--indigo);text-decoration:none}.ich-memo-table td a:hover{text-decoration:underline}.ich-memo-table small{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:400}@media(max-width:700px){.ich-memo-head{display:block}.ich-memo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ich-memo-table,.ich-memo-table tbody,.ich-memo-table tr,.ich-memo-table td{display:block;width:100%}.ich-memo-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ich-memo-table tr{padding:12px 0;border-top:1px solid var(--line)}.ich-memo-table td{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:10px;padding:6px 0;border-top:0}.ich-memo-table td::before{content:attr(data-label);color:var(--muted);font-weight:400}.ich-memo-table td[colspan]::before{content:none}.ich-memo-table caption{font-size:12px}}@media print{.ich-header,.ich-footer,.ich-memo-actions,.ich-filter-line{display:none!important}.ich-site{padding:0}.ich-memo-table-wrap{overflow:visible}.ich-memo-table{font-size:10px}.ich-memo-table caption{font-size:10px;page-break-after:avoid}}</style></main>`;
 }
 
+function v2MemoPageBodyV13(result: V2IchPageResult): string {
+  const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
+  const formats: Record<string, string> = { material_craft: "实物工艺", product_design: "产品设计方案", graphic_ip: "平面 / 插画 / IP", packaging: "包装设计", fashion_jewellery: "服饰 / 首饰", video_animation: "视频 / 动画", interaction_game: "交互 / 游戏", mixed_media: "综合媒介" };
+  const statuses: Record<string, string> = { browse: "全部可浏览", current: "正在征集", closing_soon: "近期截止", opening_soon: "即将开始", long_term: "长期征集", deadline_tbd: "截止待确认" };
+  const base = new URLSearchParams({ q: result.q, category: "competition", region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, source_id: result.source_id });
+  const href = (pathName: string, patch: Record<string, string> = {}) => {
+    const next = new URLSearchParams(base);
+    Object.entries(patch).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key));
+    const query = next.toString();
+    return query ? `${pathName}?${query}` : pathName;
+  };
+  const conditionParts = [
+    result.q ? `搜索：${result.q}` : "",
+    result.direction ? `方向：${result.direction.split(",").map((key) => directions[key] ?? key).join("、")}` : "",
+    result.work_format ? `作品形式：${result.work_format.split(",").map((key) => formats[key] ?? key).join("、")}` : "",
+    result.status !== "browse" ? `截止状态：${statuses[result.status] ?? result.status}` : "",
+    result.source_id ? `来源：${result.sources.find((source) => source.id === result.source_id)?.name ?? result.source_id}` : "",
+    result.region !== "all" ? `来源地区：${result.region === "overseas" ? "海外来源" : result.region}` : "",
+  ].filter(Boolean);
+  const rows = result.items.map((item) => {
+    const display = buildOpportunityV2Display(item, result.translations);
+    const dimensions = [...(item.directions ?? []).map((key) => directions[key] ?? key), ...(item.work_formats ?? []).map((key) => formats[key] ?? key)].slice(0, 3).join(" · ") || "分类待补充";
+    return `<tr data-opportunity-id="${escapeHtml(item.id)}"><td data-label="截止日期">${escapeHtml(memoDate(item))}<small>${escapeHtml(v2StatusLabel(item))}</small></td><td data-label="赛事名称"><a href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td data-label="方向 / 作品形式">${escapeHtml(dimensions)}</td><td data-label="来源">${escapeHtml(item.source_name)}${item.discovered_by_sources.length > 1 ? `<small>另有 ${item.discovered_by_sources.length - 1} 个发现来源</small>` : ""}</td><td data-label="操作"><a href="/ich/opportunities/${encodeURIComponent(item.id)}">查看信息</a><br><a rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">打开赛事来源页面 ↗</a></td></tr>`;
+  }).join("");
+  const directionHtml = [["", "全部方向"], ...Object.entries(directions)].map(([key, label]) => `<a class="${result.direction === key ? "is-active" : ""}" href="${href("/ich/memo", { direction: key })}">${label}</a>`).join("");
+  const formatHtml = [["", "全部形式"], ...Object.entries(formats)].map(([key, label]) => `<a class="${result.work_format === key ? "is-active" : ""}" href="${href("/ich/memo", { work_format: key })}">${label}</a>`).join("");
+  const statusHtml = Object.entries(statuses).map(([key, label]) => `<a class="${result.status === key ? "is-active" : ""}" href="${href("/ich/memo", { status: key })}">${label}</a>`).join("");
+  const sourceOptions = result.sources.map((source) => `<option value="${escapeHtml(source.id)}" ${result.source_id === source.id ? "selected" : ""}>${escapeHtml(source.name)}</option>`).join("");
+  const sourceFormHidden = ["q", "category", "region", "status", "sort", "direction", "work_format"].map((key) => `<input type="hidden" name="${key}" value="${escapeHtml(key === "category" ? "competition" : (result as unknown as Record<string, string>)[key] ?? "")}">`).join("");
+  const knownDeadline = result.items.filter((item) => Boolean(item.deadline)).length;
+  const longTerm = result.items.filter((item) => item.is_long_term).length;
+  const tbd = result.items.filter((item) => !item.deadline && !item.is_long_term).length;
+  const queryHidden = ["category", "region", "status", "sort", "direction", "work_format", "source_id"].map((key) => `<input type="hidden" name="${key}" value="${escapeHtml(key === "category" ? "competition" : (result as unknown as Record<string, string>)[key] ?? "")}">`).join("");
+  const searchForm = `<form class="ich-search" method="get" action="/ich/memo">${queryHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索赛事名称、方向或来源" aria-label="搜索赛事备忘录"><button type="submit">搜索</button></form>`;
+  const empty = `<tr><td colspan="5">暂无符合条件的赛事。<a href="/ich/memo">清空全部筛选</a></td></tr>`;
+  return `<main class="ich-memo"><section class="ich-memo-head"><div><p class="ich-kicker">ChancePing · 赛事安排页</p><h1>赛事备忘录</h1><p>同一赛事池中的真实赛事与评选型作品征集，按截止日期从远到近整理；不把目录、资助、驻地和一般活动混入。</p></div><div class="ich-memo-actions"><a href="${href("/ich/memo", { sort: result.sort === "newest" ? "default" : "newest" })}">切换最新收录排序</a><a href="${href("/ich/memo", {})}">按截止日期远→近</a><a href="${href("/ich/memo.json")}">JSON</a><a href="${href("/ich/memo.md")}">Markdown</a><a href="${href("/ich", {})}">卡片视图</a><a href="/ich/memo">清空全部筛选</a></div></section>${searchForm}<div class="ich-memo-stats"><span>赛事总数 ${result.total}</span><span>已列明截止 ${knownDeadline}</span><span>长期开放 ${longTerm}</span><span>截止日期未注明 ${tbd}</span><span>已选条件：${escapeHtml(conditionParts.join(" · ") || "全部")}</span></div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div><div class="ich-filter-line"><span>截止状态：</span>${statusHtml}</div><form class="ich-filter-line ich-source-filter" method="get" action="/ich/memo"><span>来源：</span>${sourceFormHidden}<select name="source_id" aria-label="来源" onchange="this.form.submit()"><option value="">全部来源</option>${sourceOptions}</select><noscript><button type="submit">应用来源</button></noscript></form><div class="ich-memo-table-wrap"><table class="ich-memo-table"><caption>赛事备忘录：共 ${result.total} 条，默认按明确截止日期从远到近，无日期记录置于表尾。</caption><thead><tr><th scope="col">截止日期</th><th scope="col">赛事名称</th><th scope="col">方向 / 作品形式</th><th scope="col">来源</th><th scope="col">操作</th></tr></thead><tbody>${rows || empty}</tbody></table></div><style>.ich-memo-table-wrap{overflow:visible}.ich-memo-table{width:100%;margin-top:18px;border-collapse:collapse;table-layout:fixed}.ich-memo-table th,.ich-memo-table td{padding:13px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.ich-memo-table th{font-weight:700;color:var(--ink);background:rgba(235,228,214,.38)}.ich-memo-table th:nth-child(1){width:15%}.ich-memo-table th:nth-child(2){width:35%}.ich-memo-table th:nth-child(3){width:22%}.ich-memo-table th:nth-child(4){width:16%}.ich-memo-table th:nth-child(5){width:12%}.ich-memo-table td:first-child{color:var(--clay);font-weight:600}.ich-memo-table td a{color:var(--indigo);text-decoration:none}.ich-memo-table td a:hover{text-decoration:underline}.ich-memo-table small{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:400}.ich-filter-line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}.ich-filter-line a{color:var(--indigo);text-decoration:none}.ich-filter-line a.is-active{font-weight:700;text-decoration:underline}.ich-source-filter select{padding:6px 9px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}@media(max-width:700px){.ich-memo-head{display:block}.ich-memo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ich-memo-table,.ich-memo-table tbody,.ich-memo-table tr,.ich-memo-table td{display:block;width:100%}.ich-memo-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ich-memo-table tr{padding:12px 0;border-top:1px solid var(--line)}.ich-memo-table td{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:10px;padding:6px 0;border-top:0}.ich-memo-table td::before{content:attr(data-label);color:var(--muted);font-weight:400}.ich-memo-table td[colspan]::before{content:none}}@media print{.ich-header,.ich-footer,.ich-memo-actions,.ich-filter-line{display:none!important}.ich-site{padding:0}.ich-memo-table-wrap{overflow:visible}.ich-memo-table{font-size:10px}.ich-memo-table caption{font-size:10px;page-break-after:avoid}}</style></main>`;
+}
+
 function v2MemoPage(result: V2IchPageResult): string {
-  return v2MemoPageBody(result);
+  return v2MemoPageBodyV13(result);
 }
 
 function publicMemoSnapshot(result: V2IchPageResult, sourcesPath?: string, poolPath?: string): OpportunityV2MemoSnapshot {
   const sources = readOpportunityV2Sources(sourcesPath);
   const pool = readOpportunityV2Pool(poolPath);
-  return buildOpportunityV2MemoSnapshot({ opportunities: result.items, sources, poolUpdatedAt: result.updated_at || pool.updated_at, generatedAt: new Date().toISOString() });
+  const sort = result.sort === "nearest" ? "deadline_asc" : result.sort === "newest" ? "newest" : "deadline_desc";
+  return buildOpportunityV2MemoSnapshot({ opportunities: result.items, sources, poolUpdatedAt: result.updated_at || pool.updated_at, generatedAt: new Date().toISOString(), alreadyFiltered: true, sort });
 }
 
 function publicMemoItem(item: OpportunityV2, translations: OpportunityV2Translation[]): Record<string, unknown> {
@@ -286,14 +381,14 @@ function memoMarkdown(snapshot: OpportunityV2MemoSnapshot): string {
     "",
     "## 赛事",
     "",
-    "| ID | 截止日期 | 赛事名称 | 方向 / 作品形式 | 地区 | 来源 | 详情 |",
-    "| --- | --- | --- | --- | --- | --- | --- |",
+    "| ID | 截止日期 | 赛事名称 | 方向 / 作品形式 | 来源 | 详情 |",
+    "| --- | --- | --- | --- | --- | --- |",
   ];
   for (const item of snapshot.items) {
     const display = buildOpportunityV2Display(item, readOpportunityV2Translations());
     const dimensions = [...(item.directions ?? []), ...(item.work_formats ?? [])].join(" · ") || "未注明";
     const deadline = item.is_long_term ? "长期开放" : item.deadline ? formatOpportunityV2Date(item.deadline) : "截止日期未注明";
-    lines.push(`| ${item.id} | ${deadline} | ${display.title.replace(/\|/gu, "\\|")} | ${dimensions.replace(/\|/gu, "\\|")} | ${item.event_location || "未注明"} | ${item.source_name.replace(/\|/gu, "\\|")} | [打开赛事来源页面 ↗](${item.detail_url}) |`);
+    lines.push(`| ${item.id} | ${deadline} | ${display.title.replace(/\|/gu, "\\|")} | ${dimensions.replace(/\|/gu, "\\|")} | ${item.source_name.replace(/\|/gu, "\\|")} | [打开赛事来源页面 ↗](${item.detail_url}) |`);
   }
   return `${lines.join("\n")}\n`;
 }
@@ -354,8 +449,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
 
   app.get("/", (c) => {
     if (options.opportunityV2) {
-      const query = parseV2PageQuery(c.req.query());
-      const result = queryOpportunityV2ForIch({ ...query, scope: "ich", pageSize: 8, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+      const parsed = parseV2PageQuery(c.req.query());
+      if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+      const result = queryOpportunityV2ForIch({ ...parsed.query, scope: "ich", pageSize: 8, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
       const title = "盯非遗｜文创、非遗与手工艺赛事机会导航";
       const description = "文创 · 非遗 · 手工艺机会导航，持续发现国内外赛事、征集与合作机会。";
       return c.html(shell(title, description, "/ich", v2ListPage(result, false), { structuredData: collectionStructuredData(title, description, "/ich") }));
@@ -372,29 +468,33 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   });
   app.get("/memo", (c) => {
     if (!options.opportunityV2) return c.redirect("/ich?category=competition");
-    const query = parseV2PageQuery(c.req.query());
-    const result = queryOpportunityV2ForIch({ ...query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    const parsed = parseV2PageQuery(c.req.query());
+    if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+    const result = queryOpportunityV2ForIch({ ...parsed.query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     return c.html(shell("赛事备忘录｜盯非遗", "按截止时间查看同一赛事池中的全部可浏览赛事。", "/ich/memo", v2MemoPage(result), { structuredData: collectionStructuredData("赛事备忘录", "按截止时间查看可浏览赛事。", "/ich/memo") }));
   });
   app.get("/memo.json", (c) => {
     if (!options.opportunityV2) return c.json({ error: "memo unavailable" }, 404);
-    const query = parseV2PageQuery(c.req.query());
-    const result = queryOpportunityV2ForIch({ ...query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    const parsed = parseV2PageQuery(c.req.query());
+    if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+    const result = queryOpportunityV2ForIch({ ...parsed.query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     const snapshot = publicMemoSnapshot(result, options.opportunityV2SourcesPath, options.opportunityV2PoolPath);
     const translations = readOpportunityV2Translations();
     return c.json({ ...snapshot, items: snapshot.items.map((item) => publicMemoItem(item, translations)) });
   });
   app.get("/memo.md", (c) => {
     if (!options.opportunityV2) return c.text("memo unavailable", 404);
-    const query = parseV2PageQuery(c.req.query());
-    const result = queryOpportunityV2ForIch({ ...query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    const parsed = parseV2PageQuery(c.req.query());
+    if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+    const result = queryOpportunityV2ForIch({ ...parsed.query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     const snapshot = publicMemoSnapshot(result, options.opportunityV2SourcesPath, options.opportunityV2PoolPath);
     return c.body(memoMarkdown(snapshot), 200, { "Content-Type": "text/markdown; charset=UTF-8", "Cache-Control": "public, max-age=300", "X-Content-Type-Options": "nosniff" });
   });
   app.get("/history", (c) => {
     if (options.opportunityV2) {
-      const query = parseV2PageQuery(c.req.query());
-      const result = queryOpportunityV2ForIch({ ...query, status: "history", scope: "all_competitions", pageSize: 8, history: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+      const parsed = parseV2PageQuery(c.req.query());
+      if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+      const result = queryOpportunityV2ForIch({ ...parsed.query, status: "history", scope: "all_competitions", pageSize: 8, history: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
       const title = "盯非遗｜历史机会";
       const description = "查看已截止的文创、非遗与手工艺机会。";
       return c.html(shell(title, description, "/ich/history", v2ListPage(result, true), { noindex: true, structuredData: collectionStructuredData(title, description, "/ich/history") }));
@@ -461,8 +561,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   )));
   app.get("/sitemap.xml", (c) => {
     if (options.opportunityV2) {
-      const query = parseV2PageQuery({});
-      const result = queryOpportunityV2ForIch({ ...query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+      const parsed = parseV2PageQuery({});
+      if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
+      const result = queryOpportunityV2ForIch({ ...parsed.query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
       const fixed = [
         { path: "/ich", lastmod: result.updated_at },
         { path: "/ich/memo", lastmod: result.updated_at },

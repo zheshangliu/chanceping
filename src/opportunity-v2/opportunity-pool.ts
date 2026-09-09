@@ -38,7 +38,8 @@ export function opportunityStatus(deadline: string | null, now = new Date()): V2
   const timestamp = new Date(deadline).getTime();
   if (!Number.isFinite(timestamp)) return "UNKNOWN_DEADLINE";
   const day = deadline.match(/^(20\d{2}-\d{2}-\d{2})/u)?.[1];
-  const nowDay = now.toISOString().slice(0, 10);
+  const nowParts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(now);
+  const nowDay = `${nowParts.find((part) => part.type === "year")?.value}-${nowParts.find((part) => part.type === "month")?.value}-${nowParts.find((part) => part.type === "day")?.value}`;
   if (day) return day < nowDay ? "EXPIRED" : "CURRENT";
   return timestamp < now.getTime() ? "EXPIRED" : "CURRENT";
 }
@@ -146,9 +147,14 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     ...(preferIncoming ? { title: item.title, detail_url: item.detail_url, source_url: item.source_url, source_id: item.source_id, source_name: item.source_name } : {}),
     title: mergedTitle,
     summary: mergedSummary,
+    source_item_id: prior.source_item_id ?? item.source_item_id,
     category,
     deadline,
     deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
+    deadline_source_url: item.deadline_source_url ?? prior.deadline_source_url ?? null,
+    deadline_raw_text: item.deadline_raw_text ?? prior.deadline_raw_text ?? item.deadline_text ?? prior.deadline_text ?? null,
+    deadline_checked_at: item.deadline_checked_at ?? prior.deadline_checked_at ?? null,
+    deadline_resolution: deadline ? "found" : (item.deadline_resolution ?? prior.deadline_resolution ?? "not_attempted"),
     status: mergedStatus({ ...prior, deadline }, item, sameSource, now),
     first_seen_at: prior.first_seen_at,
     last_seen_at: now.toISOString(),
@@ -171,11 +177,13 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   };
 }
 
-export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { id: string; name: string; region: "CN" | "GLOBAL" }, now = new Date()): OpportunityV2 {
+export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { id: string; name: string; region: "CN" | "GLOBAL"; types?: string[] }, now = new Date()): OpportunityV2 {
   const title = cleanGenericListingTitle(input.title) || input.title.trim();
   const summary = conciseSummary(input.raw_text.replace(/\s+/gu, " ").trim(), title);
+  const categoryInput = [input.source_category, ...(source.types ?? [])].filter(Boolean).join(" ");
+  const category = classifyCategory(categoryInput, input.title);
   const relevance = classifyV2RadarRelevance(title, summary, input.source_category ?? "");
-  const dimensions = classifyV2Dimensions(title, summary, classifyCategory(input.source_category, title));
+  const dimensions = classifyV2Dimensions(title, summary, category);
   const identity = identityHash(title, input.deadline_at ?? "", input.organizer ?? "");
   const structuredStatus = opportunityStatus(input.deadline_at, now);
   const status = structuredStatus === "UNKNOWN_DEADLINE"
@@ -186,14 +194,19 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     title,
     summary,
     source_id: source.id,
+    source_item_id: input.source_item_id,
     source_name: source.name,
     source_url: input.source_url,
     detail_url: input.detail_url,
-    category: classifyCategory(input.source_category, input.title),
+    category,
     region: source.region,
     tags: relevance.tags,
     deadline: input.deadline_at,
     deadline_text: input.deadline_text,
+    deadline_source_url: input.deadline_source_url ?? null,
+    deadline_raw_text: input.deadline_raw_text ?? input.deadline_text ?? null,
+    deadline_checked_at: input.deadline_checked_at ?? null,
+    deadline_resolution: input.deadline_resolution ?? (input.deadline_at ? "found" : "not_attempted"),
     status,
     first_seen_at: now.toISOString(),
     last_seen_at: now.toISOString(),
@@ -243,9 +256,14 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
     byIdentity.set(key, {
       ...prior,
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
+      source_item_id: prior.source_item_id ?? item.source_item_id,
       tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
       summary: conciseSummary(item.summary, item.title) || conciseSummary(prior.summary, prior.title),
       deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
+      deadline_source_url: item.deadline_source_url ?? prior.deadline_source_url ?? null,
+      deadline_raw_text: item.deadline_raw_text ?? prior.deadline_raw_text ?? item.deadline_text ?? prior.deadline_text ?? null,
+      deadline_checked_at: item.deadline_checked_at ?? prior.deadline_checked_at ?? null,
+      deadline_resolution: item.deadline ? "found" : (item.deadline_resolution ?? prior.deadline_resolution ?? "not_attempted"),
       ...(prior.detail_url ? {} : { detail_url: item.detail_url }),
       directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? [])])],
       work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? [])])],

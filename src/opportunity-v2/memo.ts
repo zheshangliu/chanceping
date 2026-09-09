@@ -22,7 +22,7 @@ export interface OpportunityV2MemoSnapshot {
   snapshot_id: string;
   generated_at: string;
   scope: typeof OPPORTUNITY_V2_MEMO_SCOPE;
-  sort: "deadline_desc";
+  sort: "deadline_desc" | "deadline_asc" | "newest";
   total: number;
   returned_count: number;
   truncated: false;
@@ -33,24 +33,27 @@ export interface OpportunityV2MemoSnapshot {
   items: OpportunityV2[];
 }
 
-const NON_COMPETITION_TITLE = /(?:^|\b)(?:about(?: us)?|archive|blog|champions? circle|contact(?: us)?|craft happenings|craft directory|directory|endangered crafts? fund|events?|fellowship|fund(?:ing)?|grant|happenings|holiday season|journal|maker support|magazine|news|newsletter|podcast|residen(?:cy|cies)|resource library|shared studio|studio (?:application|guide|space)|support(?: resources?)?|tour|travel|workshop)(?:\b|$)/iu;
+const NON_COMPETITION_TITLE = /(?:^|[\s|:：/])(?:about(?: us)?|advertising?|alumni|archive(?:s)?|blog|champions? circle|中文\s*(?:zh)?|contact(?: us)?|craft happenings|craft directory|directory|endangered crafts? fund|events?|fellowship|fund(?:ing)?|grant|happenings|holiday season|journal|maker support|magazine|news|newsletter|podcast|portugu[eê]s(?:\s+pt)?|press(?:\s*(?:pack|&\s*media))?|privacy policy\.?|public art|recipients?|renew my membership|residen(?:cy|cies)|resource library|shared studio|staff preview[^|]*|stories?|studio (?:application|guide|space)|submit(?: a)? listing|support(?: resources?)?|terms(?: of (?:use|sale))?\.?|tour|travel|workshop)(?:\s*[.!?])?$/iu;
 // Do not blanket-block `/events/`: several configured sources use that path
 // for their actual competition detail pages. Only block navigation/archive
 // paths that are unambiguously non-opportunity pages.
-const NON_COMPETITION_PATH = /\/(?:about|archive|blog|contact|craft-happenings|craft-champions-circle|craft-directory|directory|journal|magazine|news|podcasts?|resources?|residenc(?:y|ies)|studios?|support|workshops?)(?:\/|$)/iu;
+const NON_COMPETITION_PATH = /\/(?:about|archive|blog|contact|craft-happenings|craft-champions-circle|craft-directory|directory|journal|magazine|podcasts?|resources?|residenc(?:y|ies)|studios?|support|workshops?)(?:\/|$)/iu;
 
 /**
  * The memo is broader than the home radar, but it is still a competition
  * table. This narrow negative list prevents navigation and clearly non-event
  * pages from inheriting the generic category fallback of "competition".
  */
-export function isRealCompetitionMemoItem(item: Pick<OpportunityV2, "category" | "title" | "summary" | "detail_url">): boolean {
+export function isRealCompetitionMemoItem(item: Pick<OpportunityV2, "category" | "title" | "summary" | "detail_url"> & Partial<Pick<OpportunityV2, "source_id" | "source_name">>): boolean {
   if (item.category !== "competition") return false;
   // Navigation phrases are intentionally evaluated against the title only.
   // Legitimate competition summaries often begin with editorial copy such as
   // “About the awards”; using the whole summary here would drop the actual
   // opportunity even though its title is a competition.
-  return !NON_COMPETITION_TITLE.test(item.title.trim()) && !NON_COMPETITION_PATH.test(item.detail_url);
+  const title = item.title.trim();
+  if (NON_COMPETITION_TITLE.test(title) || NON_COMPETITION_PATH.test(item.detail_url)) return false;
+  if (/^(?:press|archives?|stories?|news|contact|about|advertis(?:e|ing)|submit|privacy|terms|renew|alumni|recipients?)\b/iu.test(title)) return false;
+  return true;
 }
 
 function healthPath(filePath?: string): string {
@@ -86,8 +89,11 @@ function coverage(sources: OpportunityV2Source[], health: OpportunityV2SourceHea
   const failedSources = sources.filter((source) => source.status === "FAILED" || healthById.get(source.id)?.ok === false).map((source) => source.id);
   const needsAdapterSources = sources.filter((source) => source.status === "NEEDS_ADAPTER").map((source) => source.id);
   const listingItems = health.reduce((total, row) => total + row.items_seen, 0);
-  const poolSourceIds = new Set(items.flatMap((item) => item.discovered_by_sources));
-  const omissionCount = health.reduce((total, row) => total + (poolSourceIds.has(row.source_id) ? 0 : row.items_seen), 0);
+  const poolItemIds = new Set(items.flatMap((item) => item.source_item_id ? [`${item.source_id}:${item.source_item_id}`] : []));
+  const omissionCount = health.reduce((total, row) => {
+    if (!row.source_item_ids?.length) return total;
+    return total + row.source_item_ids.filter((id) => !poolItemIds.has(`${row.source_id}:${id}`)).length;
+  }, 0);
   return {
     registered_sources: sources.length,
     successful_sources: new Set(health.filter((row) => row.ok).map((row) => row.source_id)).size,
@@ -106,21 +112,29 @@ export function buildOpportunityV2MemoSnapshot(options: {
   query?: OpportunityV2RadarQuery;
   generatedAt?: string;
   poolUpdatedAt?: string;
+  alreadyFiltered?: boolean;
+  sort?: "deadline_desc" | "deadline_asc" | "newest";
 } = {}): OpportunityV2MemoSnapshot {
   const opportunities = options.opportunities ?? readOpportunityV2Pool().opportunities;
   const sources = options.sources ?? readOpportunityV2Sources();
   const health = options.health ?? readOpportunityV2Health();
   const query = options.query ?? {};
-  const filtered = filterOpportunityV2Radar(opportunities, sources, { ...query, include_irrelevant: true });
-  const items = sortOpportunityV2Memo(filtered.filter(isRealCompetitionMemoItem));
+  const filtered = options.alreadyFiltered ? opportunities : filterOpportunityV2Radar(opportunities, sources, { ...query, include_irrelevant: true });
+  const clean = filtered.filter(isRealCompetitionMemoItem);
+  const sort = options.sort ?? "deadline_desc";
+  const items = sort === "deadline_asc"
+    ? [...clean].sort((a, b) => (a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER) - (b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title, "zh-CN"))
+    : sort === "newest"
+      ? [...clean].sort((a, b) => b.first_seen_at.localeCompare(a.first_seen_at) || a.title.localeCompare(b.title, "zh-CN"))
+      : sortOpportunityV2Memo(clean);
   const generatedAt = options.generatedAt ?? new Date().toISOString();
   const poolUpdatedAt = options.poolUpdatedAt ?? readOpportunityV2Pool().updated_at;
-  const snapshot_id = crypto.createHash("sha256").update(`${OPPORTUNITY_V2_MEMO_SCOPE}\n${poolUpdatedAt}\n${items.map((item) => item.id).join("\n")}`, "utf8").digest("hex").slice(0, 24);
+  const snapshot_id = crypto.createHash("sha256").update(`${OPPORTUNITY_V2_MEMO_SCOPE}\n${poolUpdatedAt}\n${sort}\n${items.map((item) => `${item.id}|${item.deadline ?? ""}|${item.last_seen_at}|${item.title}`).join("\n")}`, "utf8").digest("hex").slice(0, 24);
   return {
     snapshot_id,
     generated_at: generatedAt,
     scope: OPPORTUNITY_V2_MEMO_SCOPE,
-    sort: "deadline_desc",
+    sort,
     total: items.length,
     returned_count: items.length,
     truncated: false,

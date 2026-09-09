@@ -7,7 +7,7 @@ import dns from "node:dns/promises";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
-import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
+import { enrichGenericItem, isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, isPublicIp, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
@@ -16,7 +16,6 @@ import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
-const SOURCE_HYGIENE_IDS = new Set(["kcdf-opportunities", "homo-faber-calls", "craft-council-bc-calls"]);
 const DEFAULT_TIMEOUT_MS = 20_000;
 const MAX_RESPONSE_BYTES = 5_000_000;
 
@@ -152,25 +151,25 @@ function parseSource(source: OpportunityV2Source, text: string, listingUrl: stri
 }
 
 interface PaginationPlan {
-  maxPages: number;
+  pageBudget: number;
   pageUrl: (page: number) => string;
 }
 
 function paginationPlan(source: OpportunityV2Source): PaginationPlan | null {
   if (source.id === "1zj-cultural-competition") {
-    return { maxPages: 65, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
+    return { pageBudget: 65, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
   }
   if (source.id === "cfw-cultural-ip") {
-    return { maxPages: 12, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
+    return { pageBudget: 12, pageUrl: (page) => { const url = new URL(source.url); url.searchParams.set("page", String(page)); return url.toString(); } };
   }
   if (source.id === "whaleideas-competition") {
-    return { maxPages: 12, pageUrl: (page) => `https://whaleideas.com/zjds/index${page === 1 ? "" : `-${page}`}.html` };
+    return { pageBudget: 12, pageUrl: (page) => `https://whaleideas.com/zjds/index${page === 1 ? "" : `-${page}`}.html` };
   }
   if (source.id === "zjmtcn-product-competition") {
-    return { maxPages: 12, pageUrl: (page) => `https://www.zjmtcn.com/zjxx/chanpin/index${page === 1 ? "" : `-${page}`}.html` };
+    return { pageBudget: 12, pageUrl: (page) => `https://www.zjmtcn.com/zjxx/chanpin/index${page === 1 ? "" : `-${page}`}.html` };
   }
   if (source.id === "iuben-cultural-competition") {
-    return { maxPages: 12, pageUrl: (page) => `https://iuben.cn/collect/${page === 1 ? "" : `list_10_${page}/`}` };
+    return { pageBudget: 12, pageUrl: (page) => `https://iuben.cn/collect/${page === 1 ? "" : `list_10_${page}/`}` };
   }
   return null;
 }
@@ -206,25 +205,44 @@ function paginationStartPage(source: OpportunityV2Source, healthPath?: string): 
     const parsed = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2SourceHealth[] };
     const row = parsed.sources?.find((candidate) => candidate.source_id === source.id);
     const next = typeof row?.next_page === "number" ? row.next_page : 1;
-    return next >= 1 && next <= plan.maxPages ? next : 1;
+    return next >= 1 ? next : 1;
   } catch {
     return 1;
   }
 }
 
-async function enrichCfwDetailDates(items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher): Promise<void> {
+export { paginationStartPage };
+
+async function enrichDetailDates(source: OpportunityV2Source, items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher, budget: number): Promise<void> {
+  let attempted = 0;
+  let detailEnricher: ((item: ParsedAggregationItem, detailHtml: string, detailUrl: string) => ParsedAggregationItem) | undefined;
+  try { detailEnricher = getAggregationAdapter(source.id).enrichItem; } catch { /* generic detail fallback */ }
   for (const item of items) {
-    if (item.deadline_at || !item.detail_url) continue;
+    if (item.deadline_at || !item.detail_url || attempted >= budget) {
+      if (!item.deadline_at && item.detail_url && !item.deadline_resolution) item.deadline_resolution = "not_attempted";
+      continue;
+    }
+    attempted += 1;
     try {
       const response = await fetcher(item.detail_url);
-      if (response.status < 200 || response.status >= 400) continue;
-      const parsed = parseCfwDetailDate(response.text);
-      if (!parsed) continue;
-      item.deadline_text = parsed.raw;
-      item.deadline_at = parsed.deadlineAt;
-      item.raw_text = `${item.raw_text} ${parsed.raw}`.trim().slice(0, 8000);
+      if (response.status < 200 || response.status >= 400) {
+        item.deadline_resolution = "fetch_failed";
+        item.deadline_source_url = item.detail_url;
+        item.deadline_checked_at = new Date().toISOString();
+        continue;
+      }
+      const parsed = source.id === "cfw-cultural-ip" ? parseCfwDetailDate(response.text) : null;
+      const enriched = parsed
+        ? { ...item, deadline_text: parsed.raw, deadline_at: parsed.deadlineAt, raw_text: `${item.raw_text} ${parsed.raw}`.trim().slice(0, 8000) }
+        : (detailEnricher ? detailEnricher(item, response.text, item.detail_url) : enrichGenericItem(item, response.text, item.detail_url));
+      Object.assign(item, enriched);
+      item.deadline_source_url = item.detail_url;
+      item.deadline_checked_at = new Date().toISOString();
+      item.deadline_resolution = item.deadline_at ? "found" : "not_stated";
     } catch {
-      // One unavailable CFW detail page must not block the remaining cards.
+      item.deadline_resolution = "fetch_failed";
+      item.deadline_source_url = item.detail_url;
+      item.deadline_checked_at = new Date().toISOString();
     }
   }
 }
@@ -233,8 +251,8 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
   const fetchedAt = new Date().toISOString();
   const firstUrl = SPECIAL_SOURCE_URL[source.id] ?? source.url;
   const plan = paginationPlan(source);
-  const firstPage = plan ? Math.min(Math.max(1, startPage), plan.maxPages) : 1;
-  const pages = plan ? Math.max(1, plan.maxPages - firstPage + 1) : 1;
+  const firstPage = plan ? Math.max(1, startPage) : 1;
+  const pages = plan ? plan.pageBudget : 1;
   const parsed: ParsedAggregationItem[] = [];
   const seen = new Set<string>();
   let responseStatus = 0;
@@ -268,13 +286,15 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       parsed.push(item);
     }
     if (!plan || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
-    if (offset + 1 >= pages || page >= plan!.maxPages) {
+    if (offset + 1 >= pages || page >= plan!.pageBudget) {
       partial = true;
       nextPage = page + 1;
       break;
     }
   }
-  if (source.id === "cfw-cultural-ip") await enrichCfwDetailDates(parsed, fetcher);
+  const detailBudgetRaw = Number(process.env.CHANCEPING_OPPORTUNITY_V2_DETAIL_BUDGET ?? "12");
+  const detailBudget = Number.isInteger(detailBudgetRaw) && detailBudgetRaw >= 0 ? detailBudgetRaw : 12;
+  await enrichDetailDates(source, parsed, fetcher, detailBudget);
   return {
     parsed,
     format,
@@ -287,7 +307,21 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
 }
 
 function healthFor(source: OpportunityV2Source, result: SourceFetchResult): OpportunityV2SourceHealth {
-  return { source_id: source.id, fetched_at: result.fetchedAt, ok: result.parsed.length > 0, http_status: result.responseStatus, items_seen: result.parsed.length, error: result.error, format: result.format, partial: result.partial, next_page: result.next_page };
+  return {
+    source_id: source.id,
+    fetched_at: result.fetchedAt,
+    ok: result.parsed.length > 0,
+    http_status: result.responseStatus,
+    items_seen: result.parsed.length,
+    error: result.error,
+    format: result.format,
+    partial: result.partial,
+    next_page: result.next_page,
+    source_item_ids: result.parsed.map((item) => item.source_item_id),
+    canonical_records: result.parsed.length,
+    merged_duplicates: 0,
+    reconciliation_status: result.partial ? "partial" : result.parsed.length ? "complete" : "unknown",
+  };
 }
 
 export interface OpportunityV2SourceTestResult {
@@ -327,17 +361,13 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   if (!options.sourcesPath) for (const seed of DEFAULT_OPPORTUNITY_V2_SOURCES) {
     if (!sources.some((source) => source.id === seed.id)) sources.push({ ...seed, types: [...seed.types], radars: [...seed.radars] });
   }
-  const hasDedicatedAdapter = (source: OpportunityV2Source): boolean => {
-    try { getAggregationAdapter(source.id); return true; } catch { return false; }
-  };
   const selectedSources = options.sourceId
-    ? sources.filter((source) => source.id === options.sourceId && source.enabled)
-    : sources.filter((source) => source.enabled && source.status !== "PAUSED" && (source.status !== "NEEDS_ADAPTER" || hasDedicatedAdapter(source)));
+    ? sources.filter((source) => source.id === options.sourceId && source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status))
+    : sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status));
   if (options.sourceId && !selectedSources.length) throw new Error(`Source not found or paused: ${options.sourceId}`);
   const pool = readOpportunityV2Pool(options.poolPath);
   const fetched: ReturnType<typeof normalizeOpportunityV2>[] = [];
   const health: OpportunityV2SourceHealth[] = [];
-  const genericSources = new Set<string>();
   let successfulSources = 0;
   for (const source of selectedSources) {
     try {
@@ -345,7 +375,6 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
       // Do not silently cap discovery. maxItems remains an explicit caller-controlled
       // safety valve for fixtures or bounded one-off runs only.
       const parsed = options.maxItems === undefined ? result.parsed : result.parsed.slice(0, options.maxItems);
-      if (result.format === "HTML_LISTING") genericSources.add(source.id);
       for (const item of parsed) fetched.push(normalizeOpportunityV2(item, source, now));
       source.status = parsed.length ? "ACTIVE" : "NEEDS_ADAPTER";
       if (parsed.length) {
@@ -361,8 +390,11 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   }
   const deduped = deduplicateOpportunityV2(fetched);
   const merged = mergeOpportunityV2(pool.opportunities, deduped.opportunities, now)
-    .filter((item) => !genericSources.has(item.source_id) || !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
-    .filter((item) => !SOURCE_HYGIENE_IDS.has(item.source_id) || !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
+    // Apply the same listing-noise guard to retained records as to newly
+    // fetched records. A full run must clean stale menu/content rows already
+    // present in the pool; otherwise they survive forever when a source later
+    // stops publishing them.
+    .filter((item) => !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
     .filter((item) => item.source_id !== "artconnect-opportunities" || isRealArtConnectOpportunityUrl(item.detail_url));
   writeOpportunityV2Pool({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date().toISOString(), opportunities: merged }, options.poolPath);
   writeOpportunityV2Sources(sources, options.sourcesPath);

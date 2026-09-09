@@ -55,7 +55,7 @@ async function main(): Promise<void> {
   writeOpportunityV2Sources(initialSources.map((source) => ["kcdf-opportunities", "homo-faber-calls"].includes(source.id) ? { ...source, status: "ACTIVE" } : source), sourcesPath);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
-  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && source.status !== "PAUSED" && (source.status !== "NEEDS_ADAPTER" || ["cnyisai-competition", "1zj-cultural-competition", "chuangyisai-cultural", "zjmtcn-product-competition"].includes(source.id))).length);
+  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).length);
   assert.ok(result.successful_sources >= 1);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);

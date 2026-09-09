@@ -1,8 +1,10 @@
 import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseCfwDateRange, parseDateText, type ParsedAggregationItem, type ParsedDateRange } from "./common";
 
 const NAVIGATION_TEXT = /^(about(?: us)?|add listing|all opportunities|apply now|artists?|become (?:a )?(?:member|benefactor)|benefits|browse(?: all)?(?: open calls| opportunities)?(?: →)?|browse opportunities|call listings|categories|ca[féé™]*|ccbc (?:events?|gallery|projects?)|closing this week(?: →)?|competitions? & open calls|craft council(?: of british columbia)?|craft directory|craft fair|craft inventory|craft map|craft resource library|craft scotland|craft status|countries|contact(?: us)?|dashboard|deadline|directory|donate(?: now)?!?|editor's picks|emerging artists|events?|find calls|forgotten password\?|fully funded|get involved|grants?|guides?|hybrid residencies|in conversation|international|join|journal|learn more|list your studio|login|makers?(?: directory| list)?|meet the team|more|more details|more opportunities|next page|no application fee|opencall radar|opportunities|organisations? to know|our work|our stories|partners|pricing|prizes?|previous page|read more|red list|refund|report this\?|residencies|resources?|reset|return policy|rolling deadline|search|sign in|skip to content|studio guide|submit(?: an)? opportunity|subscribe|support(?: us)?|terms|the makers|the skills|travel covered|view all|what(?:'|’)s on|who we are|with accommodation|workshops|全部|关于我们|联系我们|机会|更多|登录|注册|搜索|提交|征集大赛)$/iu;
+const CLEAR_NAVIGATION_TEXT = /^(?:advertising|archives?|newsletter(?: signup)?|object stories|our history|press(?: & media)?|privacy policy\.?|renew my membership|stay in the loop|terms(?: & conditions| of (?:use|sale))?|view all stories)$/iu;
+const CLEAR_CONTENT_PATH = /\/(?:advertising|archives?|object-stories|our-history|press(?:-and-media)?|privacy(?:-policy)?|stories?|terms(?:-and-conditions|-of-use|-of-sale)?)(?:\/|$)/iu;
 const OPPORTUNITY_SIGNAL = /(?:opportunit|open.?call|contest|competition|residen|award|exhibition|craft|artist|apply|call|vendor|market|grant|fellowship|participat|young.?ambassadors|deadline|招募|征集|比赛|竞赛|大赛|展览| 사업공모|모집|공모|지원사업|지원|신청)/iu;
-const RESULT_OR_CONTENT_NOISE = /(?:获奖名单|名单公示|评审结果|结果公布|结果揭晓|获奖作品|入围名单|结果发布|作品赏析|新闻|资讯|招聘|公示|公告解读)/iu;
+const RESULT_OR_CONTENT_NOISE = /(?:获奖名单|名单公示|评审结果|结果公布|结果揭晓|获奖作品|入围名单|结果发布|作品赏析|招聘|公示|公告解读)/iu;
 const INLINE_DEADLINE = String.raw`(?:[A-Z][a-z]+\s+\d{1,2},?\s+20\d{2}|\d{1,2}\s+[A-Z][a-z]+\s+20\d{2}|20\d{2}\s*[年./-]\s*\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?|\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?)`;
 
 /** Removes listing chrome while retaining the actual opportunity wording. */
@@ -21,7 +23,7 @@ function hasPriorYearTitle(title: string): boolean {
 
 export function isLikelyGenericNavigationItem(title: string, detailUrl: string): boolean {
   const normalizedTitle = title.trim();
-  if (NAVIGATION_TEXT.test(normalizedTitle) || /^\d+$/u.test(normalizedTitle) || /^&(?:raquo|rarr);$/iu.test(normalizedTitle)) return true;
+  if (NAVIGATION_TEXT.test(normalizedTitle) || CLEAR_NAVIGATION_TEXT.test(normalizedTitle) || /^\d+$/u.test(normalizedTitle) || /^&(?:raquo|rarr);$/iu.test(normalizedTitle)) return true;
   if (/^(?:mailto:|tel:)/iu.test(detailUrl)) return true;
   try {
     const target = new URL(detailUrl);
@@ -33,8 +35,10 @@ export function isLikelyGenericNavigationItem(title: string, detailUrl: string):
     if (/\/(?:artists?|about|benefactors?|category|categories|craft-directory|craft-map|crafts?|forgot-password|guides?|hybrid-residencies|join|makers?(?:-list)?|membership|new-opportunities|opportunities|popular|resources?|skills?|upcoming-deadlines|questions|subscribe|terms|privacy|refund|impressum|events?|donate(?:-now)?|ccbcgallery|signature-events|artist-resources|shop|studio-guide|studio-guide-info|return-policy|checkout|favourites|benefits|directory|dashboard|library)$/iu.test(pathname)) return true;
     if (/\/opportunities\/index\/page\//iu.test(pathname) || /\/open-calls\/(?:discipline|country|monthly)\//iu.test(pathname)) return true;
     if (/\/report$/iu.test(pathname)) return true;
+    if (CLEAR_CONTENT_PATH.test(pathname)) return true;
     const contentPath = /\/(?:blog|podcast|archive|contact|stories?|journal|press|about|faq|info|resources?|news)(?:\/|$)/iu.test(pathname);
-    if (contentPath && !OPPORTUNITY_SIGNAL.test(`${normalizedTitle} ${detailUrl}`)) return true;
+    if (contentPath && !/\/news(?:\/|$)/iu.test(pathname)) return true;
+    if (/\/news(?:\/|$)/iu.test(pathname) && !OPPORTUNITY_SIGNAL.test(`${normalizedTitle} ${detailUrl}`)) return true;
   } catch {
     return true;
   }
@@ -53,7 +57,6 @@ export function isLikelySourceListingNoise(sourceId: string, title: string, deta
   if (["cfw-cultural-ip", "whaleideas-competition", "zjmtcn-product-competition", "iuben-cultural-competition"].includes(sourceId)) {
     if (RESULT_OR_CONTENT_NOISE.test(value) || hasPriorYearTitle(title)) return true;
   }
-  if (sourceId === "cfw-cultural-ip" && /\/news\//iu.test(detailUrl)) return true;
   if (sourceId === "everyart-competition") {
     if (!/\/single\/\d+/iu.test(detailUrl)) return true;
     if (/(?:招聘|就业|艺术家介绍|展览回顾|新闻|资讯)/iu.test(value)) return true;
@@ -162,7 +165,9 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
     seen.add(anchor.href);
     result.push({
       source_item_id: identityHash(anchor.href), title: candidateText, source_category: null, detail_url: detailUrl,
-      source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: cfwDate?.deadlineAt ?? parseDateText(deadline, new Date(), candidateText), organizer: null, application_url: null, raw_text: [candidateText, cfwDate?.raw].filter(Boolean).join(" "),
+      source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: cfwDate?.deadlineAt ?? parseDateText(deadline, new Date(), candidateText),
+      deadline_source_url: deadline ? listingUrl : null, deadline_raw_text: deadline, deadline_checked_at: deadline ? new Date().toISOString() : null, deadline_resolution: deadline ? "found" : "not_attempted",
+      organizer: null, application_url: null, raw_text: [candidateText, cfwDate?.raw].filter(Boolean).join(" "),
     });
   }
   return result;
@@ -172,6 +177,19 @@ export function enrichGenericItem(item: ParsedAggregationItem, detailHtml: strin
   const text = htmlToText(detailHtml);
   const title = detailHtml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
   const context = `${item.raw_text} ${text}`;
-  const deadline = extractDeadlineText(context);
-  return { ...item, title: title ? htmlToText(title).replace(/\s*[|–-].*$/u, "").trim() || item.title : item.title, deadline_text: deadline, deadline_at: parseDateText(deadline, new Date(), context), raw_text: context.slice(0, 8000), detail_url: detailUrl };
+  const deadline = extractDeadlineText(text) ?? extractDeadlineText(item.raw_text) ?? item.deadline_text;
+  const parsedTitle = title ? htmlToText(title).replace(/\s*[|–-].*$/u, "").trim() : "";
+  const nextTitle = parsedTitle && !isLikelyGenericNavigationItem(parsedTitle, detailUrl) ? parsedTitle : item.title;
+  return {
+    ...item,
+    title: nextTitle,
+    deadline_text: deadline,
+    deadline_at: parseDateText(deadline, new Date(), context) ?? item.deadline_at,
+    deadline_source_url: deadline ? detailUrl : detailUrl,
+    deadline_raw_text: deadline ?? item.deadline_raw_text ?? null,
+    deadline_checked_at: new Date().toISOString(),
+    deadline_resolution: deadline ? "found" : "not_stated",
+    raw_text: context.slice(0, 8000),
+    detail_url: detailUrl,
+  };
 }

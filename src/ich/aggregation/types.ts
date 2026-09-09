@@ -67,7 +67,7 @@ export interface AggregationItem {
   rule_relevance: number;
   semantic_relevance: number | null;
   relevance: AggregationRelevance;
-  opportunity_type: IchPrimaryCategory;
+  opportunity_type: IchPrimaryCategory | "other";
   official_backtrace_status: OfficialBacktraceStatus;
   official_url: string | null;
   official_confidence_score?: number;

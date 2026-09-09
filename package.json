@@ -142,6 +142,8 @@
     "verify:opportunity:v2:translation": "tsx scripts/verify-opportunity-v2-translation.ts",
     "verify:opportunity:v2": "tsx scripts/verify-opportunity-v2.ts",
     "verify:ich:v12": "tsx scripts/verify-ich-v12-memo.ts",
+    "verify:ich:v13": "tsx scripts/verify-ich-v13.ts",
+    "audit:ich:v13:readonly": "tsx scripts/run-ich-readonly-audit.ts",
     "verify:ich:competition-module": "tsx scripts/verify-ich-competition-module.ts",
     "verify:ich:v11": "tsx scripts/verify-ich-v11.ts",
     "verify:ich:1950": "tsx scripts/verify-ich-1950-finish.ts",
