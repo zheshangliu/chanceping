@@ -16,10 +16,14 @@ async function main(): Promise<void> {
     if (!value) return "";
     try {
       const url = new URL(value);
-      url.hash = "";
-      return url.toString().replace(/\/$/u, "");
+      for (const key of [...url.searchParams.keys()]) {
+        if (/^(?:utm_|ref$|source$)/iu.test(key)) url.searchParams.delete(key);
+      }
+      url.pathname = url.pathname.replace(/\/+$/u, "") || "/";
+      url.hash = url.hash.replace(/\/+$/u, "");
+      return `${url.protocol}//${url.host}${url.pathname}${url.search}${url.hash}`.toLowerCase();
     } catch {
-      return value;
+      return value.trim().replace(/\/+$/u, "").toLowerCase();
     }
   };
   // A source may add source_item_id after an older row was stored. Compare
@@ -41,9 +45,9 @@ async function main(): Promise<void> {
   const competitionRegression = {
     baseline_count: baselineCompetition.length,
     after_count: pool.opportunities.filter((item) => item.category === "competition").length,
-    missing_ids: missing.map((item) => `${item.source_id ?? ""}|${item.source_item_id ?? item.detail_url ?? item.id}`).slice(0, 50),
+    missing_ids: missing.map((item) => `${item.source_id ?? ""}|${item.source_item_id ?? item.detail_url ?? item.id}`),
     missing_count: missing.length,
-    reclassified_ids: reclassified.map((item) => `${item.source_id ?? ""}|${item.source_item_id ?? item.detail_url ?? item.id}`).slice(0, 50),
+    reclassified_ids: reclassified.map((item) => `${item.source_id ?? ""}|${item.source_item_id ?? item.detail_url ?? item.id}`),
     reclassified_count: reclassified.length,
     preserved: missing.length === 0 && reclassified.length === 0,
   };
