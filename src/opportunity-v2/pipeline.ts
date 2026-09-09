@@ -122,8 +122,14 @@ export function decodeOpportunityResponseBody(body: Buffer, contentType: string,
   const httpCharset = normalizeDeclaredCharset(contentType.match(/charset\s*=\s*["']?([^;"'\s]+)/iu)?.[1]);
   const declaredCharset = httpCharset ?? htmlMetaCharset(body);
   const legacyHost = /(?:^|\.)1zj\.com$/iu.test(hostname) || /(?:^|\.)zjmtcn\.com$/iu.test(hostname);
-  const charset = declaredCharset ?? (legacyHost ? "gb18030" : "utf-8");
-  return decoderForCharset(charset).decode(body);
+  if (declaredCharset) return decoderForCharset(declaredCharset).decode(body);
+  try {
+    // A legacy hostname is not enough evidence to override a valid UTF-8
+    // response. Only fall back to GB18030 after a fatal UTF-8 decode fails.
+    return new TextDecoder("utf-8", { fatal: true }).decode(body);
+  } catch {
+    return legacyHost ? decoderForCharset("gb18030").decode(body) : decoderForCharset("utf-8").decode(body);
+  }
 }
 
 export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {

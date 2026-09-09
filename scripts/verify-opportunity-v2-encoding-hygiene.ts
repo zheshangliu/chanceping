@@ -46,6 +46,8 @@ function opportunity(overrides: Partial<OpportunityV2>): OpportunityV2 {
 const gb18030Title = Buffer.from("1tDOxMj8ysKx6szi", "base64");
 assert.equal(decodeOpportunityResponseBody(gb18030Title, "text/html; charset=gb18030", "www.1zj.com"), "中文赛事标题");
 assert.match(decodeOpportunityResponseBody(Buffer.from("<meta charset=\"utf-8\">UTF-8中文页面", "utf8"), "", "www.1zj.com"), /UTF-8中文页面/u);
+assert.equal(decodeOpportunityResponseBody(Buffer.from("中文赛事标题", "utf8"), "", "www.1zj.com"), "中文赛事标题");
+assert.equal(decodeOpportunityResponseBody(gb18030Title, "", "www.1zj.com"), "中文赛事标题");
 assert.equal(hasEncodingCorruption("����logo"), true);
 assert.equal(hasEncodingCorruption("2026 LOGO设计大赛"), false);
 
@@ -72,4 +74,4 @@ const outputs = [
   `| ${normal.id} | ${normal.title} |`,
 ];
 assert.equal(outputs.some((output) => hasEncodingCorruption(output)), false);
-console.log(JSON.stringify({ gb18030: "PASS", utf8_hostname_guard: "PASS", replacement_detection: "PASS", normal_text: "PASS", source_identity_reconciliation: "PASS", summary_error_kept_but_hidden: "PASS", outputs_clean: "PASS" }, null, 2));
+console.log(JSON.stringify({ explicit_gb18030: "PASS", meta_utf8: "PASS", utf8_no_charset_legacy_host: "PASS", gb18030_no_charset_legacy_host: "PASS", replacement_detection: "PASS", normal_text: "PASS", source_identity_reconciliation: "PASS", summary_error_kept_but_hidden: "PASS", outputs_clean: "PASS" }, null, 2));
