@@ -42,13 +42,19 @@ async function main(): Promise<void> {
   const memoHtml = await memoResponse.text();
   assert.equal(memoResponse.status, 200);
   assert.match(memoHtml, /赛事备忘录/u);
-  assert.equal((memoHtml.match(/<tr>/gu) ?? []).length, 206, "memo loads the full 205-row fixture plus header row");
-  assert.doesNotMatch(memoHtml, /加载更多|第 2 页/u);
+  assert.equal((memoHtml.match(/<tr(?:\s|>)/gu) ?? []).length, 51, "memo renders the first 50 rows plus header row");
+  assert.match(memoHtml, /1-50 \/ 205 条/u);
+  assert.match(memoHtml, /下一页/u);
+  const memoPage2Response = await pages.request("http://localhost/memo?page=2");
+  const memoPage2Html = await memoPage2Response.text();
+  assert.equal(memoPage2Response.status, 200);
+  assert.match(memoPage2Html, /51-100 \/ 205 条/u);
+  assert.match(memoPage2Html, /上一页/u);
   const detailResponse = await pages.request("http://localhost/opportunities/memo-0");
   const detailHtml = await detailResponse.text();
   assert.equal(detailResponse.status, 200);
   assert.match(detailHtml, /赛事信息/u);
-  assert.match(detailHtml, /来源原文/u);
+  assert.match(detailHtml, /打开赛事来源页面/u);
 
   const healthPath = path.join(temp, "health.json");
   const healthSourcesPath = path.join(temp, "health-sources.json");
@@ -63,9 +69,9 @@ async function main(): Promise<void> {
   const denied = opportunityV2Routes({ sourcesPath, poolPath, adminRequired: true });
   const deniedResponse = await denied.request("http://localhost/sources", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: "Denied", url: "https://example.com", region: "CN", priority: "P0", types: ["competition"], radars: ["ich"] }) });
   assert.equal(deniedResponse.status, 503);
-  const adminPage = await (await (await import("../src/api/routes/opportunity-v2-pages")).opportunityV2PagesRoutes().request("http://localhost/admin/sources")).text();
+  const adminPage = await (await (await import("../src/api/routes/opportunity-v2-pages.js")).opportunityV2PagesRoutes().request("http://localhost/admin/sources")).text();
   assert.match(adminPage, /管理员凭据/u);
-  console.log(JSON.stringify({ ok: true, checks: ["fail-closed-admin", "ipv4-ipv6-ssrf", "event-geo", "browse-current-status", "memo-205-full-load", "detail-route", "health-ledger-merge", "no-fake-foreign-fallback"], translation_provider_required: true }, null, 2));
+  console.log(JSON.stringify({ ok: true, checks: ["fail-closed-admin", "ipv4-ipv6-ssrf", "event-geo", "browse-current-status", "memo-pagination", "detail-route", "health-ledger-merge", "no-fake-foreign-fallback"], translation_provider_required: true }, null, 2));
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

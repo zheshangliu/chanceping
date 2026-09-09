@@ -106,6 +106,9 @@ interface V2IchPageResult {
   source_id: string;
   scope: "ich" | "all_competitions";
   new_this_week: number;
+  total_known_deadline: number;
+  total_long_term: number;
+  total_deadline_tbd: number;
   updated_at: string | null;
   translations: OpportunityV2Translation[];
   sources: OpportunityV2Source[];
@@ -152,20 +155,96 @@ function v2StatusLabel(item: OpportunityV2): string {
   return "正在征集";
 }
 
+const NAVIGATION_MARKERS = [
+  /skip to (?:content|main content)/iu,
+  /close menu/iu,
+  /\b(?:menu|login|sign in|pricing|about us|our work|projects|reports)\b/iu,
+  /home\s*\/\s*(?:open calls|opportunities)/iu,
+  /当前位置\s*:/u,
+  /首页\s+热门推荐/u,
+  /(?:본문 바로가기|주메뉴 바로가기|로그인|회원가입)/u,
+];
+
+function isNavigationNoise(value: string): boolean {
+  const markerCount = NAVIGATION_MARKERS.reduce((count, marker) => count + (marker.test(value) ? 1 : 0), 0);
+  return markerCount >= 3 || (markerCount >= 1 && /来源页面未提供更详细摘要/u.test(value));
+}
+
+function safeOpportunitySummary(value: string | null | undefined, deadlineConflict = false): string {
+  const summary = String(value ?? "")
+    .replace(/\s+/gu, " ")
+    .replace(/^(?:报名中|征稿中|征集中|正在征集|开放报名)\s*/u, "")
+    .replace(/(截止(?:时间|日期)?\s*[:：]?\s*20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}(?:日)?(?:\s+\d{1,2}:\d{2})?)\s+\1/gu, "$1")
+    .trim();
+  if (!summary || isNavigationNoise(summary)) return "来源页面未提供可直接使用的赛事简介，请打开来源原文查看完整要求。";
+  if (deadlineConflict) return "来源中的截止日期存在冲突，当前暂不展示精确日期，请打开来源原文核对。";
+  if (/^中文待补$/u.test(summary)) return "当前显示来源原文，请打开来源页面查看完整要求。";
+  return summary.slice(0, 360);
+}
+
+function dateKey(value: string | null | undefined, fallbackYear?: string): string | null {
+  const text = String(value ?? "");
+  const numeric = text.match(/(20\d{2})\s*[年./-]\s*(\d{1,2})\s*[月./-]\s*(\d{1,2})/u);
+  if (numeric) return `${numeric[1]}-${numeric[2].padStart(2, "0")}-${numeric[3].padStart(2, "0")}`;
+  const monthDay = text.match(/(\d{1,2})\s*月\s*(\d{1,2})\s*日?/u);
+  if (monthDay && fallbackYear) return `${fallbackYear}-${monthDay[1].padStart(2, "0")}-${monthDay[2].padStart(2, "0")}`;
+  const english = text.match(/\b([A-Z][a-z]{2,8})\s+(\d{1,2})(?:,\s*|\s+)(20\d{2})\b/u);
+  if (english) {
+    const month = new Date(`${english[1]} ${english[2]}, ${english[3]} 12:00:00Z`).getUTCMonth() + 1;
+    return `${english[3]}-${String(month).padStart(2, "0")}-${english[2].padStart(2, "0")}`;
+  }
+  return null;
+}
+
+function explicitDeadlineKeys(value: string, fallbackYear?: string): string[] {
+  const keys = new Set<string>();
+  const pattern = /(?:截稿至|截止时间|截止日期|报名截止|投稿截止|申请截止|截止|deadline|closing date|due date)\s*[:：]?\s*((?:20\d{2}\s*[年./-]\s*\d{1,2}\s*[月./-]\s*\d{1,2}\s*日?)|(?:\d{1,2}\s*月\s*\d{1,2}\s*日?)|(?:[A-Z][a-z]{2,8}\s+\d{1,2}(?:,\s*|\s+)20\d{2}))/giu;
+  for (const match of value.matchAll(pattern)) {
+    const key = dateKey(match[1], fallbackYear);
+    if (key) keys.add(key);
+  }
+  return [...keys];
+}
+
+interface DisplayDeadline {
+  text: string;
+  conflict: boolean;
+}
+
+function displayDeadline(item: OpportunityV2, summary: string): DisplayDeadline {
+  if (item.is_long_term) return { text: "长期开放", conflict: false };
+  if (!item.deadline) return { text: "截止时间待确认", conflict: false };
+  const structured = dateKey(item.deadline);
+  const evidence = explicitDeadlineKeys(summary, structured?.slice(0, 4));
+  const conflict = Boolean(structured && evidence.length > 0 && !evidence.includes(structured));
+  return { text: conflict ? "截止时间待核实" : formatOpportunityV2Date(item.deadline), conflict };
+}
+
+function discoveryLabel(item: OpportunityV2): string {
+  const count = new Set(item.discovered_by_sources).size;
+  return count > 1 ? `另有 ${count - 1} 个发现来源` : "";
+}
+
+function activeChip(label: string, href: string): string {
+  return `<a class="ich-filter-chip" href="${href}">${escapeHtml(label)} <span aria-hidden="true">×</span></a>`;
+}
+
 function v2Card(item: OpportunityV2, index: number, translations: OpportunityV2Translation[]): string {
   const categoryLabels: Record<string, string> = { competition: "赛事 / 征集", exhibition_market: "市集 / 展销", procurement_project: "采购 / 订单", channel_collaboration: "渠道 / 合作", policy_funding: "资助 / 扶持", international: "研修 / 交流" };
   const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
-  const status = opportunityV2LiveStatus(item);
   const display = buildOpportunityV2Display(item, translations);
-  const deadline = status === "UNKNOWN_DEADLINE" ? "截止时间待确认" : formatOpportunityV2Date(item.deadline);
+  const deadline = displayDeadline(item, `${item.summary}\n${display.summary}`);
+  const summary = safeOpportunitySummary(display.summary, deadline.conflict);
   const tags = [...(item.directions ?? []).map((tag) => directions[tag] ?? tag), ...item.tags].slice(0, 4).map((tag) => `<span class="ich-tag">${escapeHtml(tag)}</span>`).join("");
   const detailUrl = `/ich/opportunities/${encodeURIComponent(item.id)}`;
-  const location = item.event_location || "地点待补充";
-  const scope = item.participation_scope && item.participation_scope !== "unspecified" ? ({ nationwide: "全国可投", global: "全球可投", regional: "地区限制" }[item.participation_scope] ?? item.participation_scope) : "参赛范围待确认";
   const translationLabel = display.translation_status === "pending" ? `<span class="ich-translation-status">中文待补</span>` : display.translation_status === "failed" ? `<span class="ich-translation-status">中文翻译失败，显示原文</span>` : "";
   const original = display.original_title && display.translated ? `<details class="ich-original"><summary>原名</summary><span>${escapeHtml(display.original_title)}</span></details>` : "";
+  const sourceCount = discoveryLabel(item);
+  const deadlineWarning = deadline.conflict ? `<span class="ich-data-warning" title="来源摘要中的截止日期与结构化日期不一致">来源日期冲突，暂不显示精确日期</span>` : "";
+  const detailLabel = `查看 ${display.title} 详情`;
+  const sourceLabel = `打开 ${display.title} 来源原文`;
   return `<article class="ich-card"><div class="ich-card-index" aria-hidden="true">${String(index).padStart(2, "0")}</div><div class="ich-card-main"><div class="ich-card-top"><span class="ich-category">${escapeHtml(categoryLabels[item.category] ?? item.category)}</span><span class="ich-status">${escapeHtml(v2StatusLabel(item))}</span></div>
-<h2><a href="${detailUrl}">${escapeHtml(display.title)}</a></h2>${translationLabel}${original}<p>${escapeHtml(display.summary)}</p><div class="ich-card-meta"><span>来源：${escapeHtml(item.source_name)}</span><span>地点：${escapeHtml(location)}</span><span>范围：${escapeHtml(scope)}</span><span class="ich-card-deadline">${item.is_long_term ? "有效期" : "截止"}：${escapeHtml(item.is_long_term ? "长期开放" : deadline)}</span></div><div class="ich-tags">${tags}</div></div><div class="ich-card-actions"><a href="${detailUrl}">查看信息</a><a rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></div></article>`;
+<h2><a aria-label="${escapeHtml(detailLabel)}" href="${detailUrl}">${escapeHtml(display.title)}</a></h2>${translationLabel}${original}<p>${escapeHtml(summary)}</p><div class="ich-card-meta"><span>来源：${escapeHtml(item.source_name)}</span>${sourceCount ? `<span class="ich-source-count">${escapeHtml(sourceCount)}</span>` : ""}<span class="ich-card-deadline">${escapeHtml(deadline.text)}</span>${deadlineWarning}</div><div class="ich-tags">${tags}</div></div><div class="ich-card-actions"><a aria-label="${escapeHtml(detailLabel)}" href="${detailUrl}">查看详情</a><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></div></article>`;
 }
 
 function v2ListPage(result: V2IchPageResult, history: boolean): string {
@@ -182,17 +261,21 @@ function v2ListPage(result: V2IchPageResult, history: boolean): string {
   const empty = history ? "暂无历史机会记录。" : "当前暂无已发布的非遗机会。我们会持续从来源整理和更新。";
   const content = result.items.length > 0 ? `<div class="ich-grid">${result.items.map((item, index) => v2Card(item, (result.page - 1) * result.page_size + index + 1, result.translations)).join("")}</div>` : `<section class="ich-notice"><h2>暂无可展示机会</h2><p>${empty}</p></section>`;
   const pagination = Array.from({ length: result.total_pages }, (_, index) => index + 1).map((page) => page === result.page ? `<span class="current">${page}</span>` : `<a href="${href({ page: String(page) })}">${page}</a>`).join("");
-  const categoryHtml = categories.map(([key, label, hint]) => `<a class="ich-filter-button${result.category === key ? " is-active" : ""}" href="${href({ category: key })}">${label}<small>${hint}</small></a>`).join("");
-  const directionHtml = directions.map(([key, label]) => `<a class="${result.direction === key ? "is-active" : ""}" href="${href({ direction: key })}">${label}</a>`).join("");
-  const regionHtml = regions.map(([key, label]) => `<a class="${result.region === key ? "is-active" : ""}" href="${href({ region: key })}">${label}</a>`).join("");
-  const statusHtml = statuses.map(([key, label]) => `<a class="${result.status === key ? "is-active" : ""}" href="${href({ status: key })}">${label}</a>`).join("");
-  const formatHtml = formats.map(([key, label]) => `<a class="${result.work_format === key ? "is-active" : ""}" href="${href({ work_format: key })}">${label}</a>`).join("");
+  const active = (selected: boolean): string => selected ? ' class="is-active" aria-current="page"' : ' class=""';
+  const categoryHtml = categories.map(([key, label, hint]) => `<a class="ich-filter-button${result.category === key ? " is-active" : ""}"${result.category === key ? ' aria-current="page"' : ""} href="${href({ category: key })}">${label}<small>${hint}</small></a>`).join("");
+  const directionHtml = directions.map(([key, label]) => `<a${active(result.direction === key)} href="${href({ direction: key })}">${label}</a>`).join("");
+  const regionHtml = regions.map(([key, label]) => `<a${active(result.region === key)} href="${href({ region: key })}">${label}</a>`).join("");
+  const statusHtml = statuses.map(([key, label]) => `<a${active(result.status === key)} href="${href({ status: key })}">${label}</a>`).join("");
+  const formatHtml = formats.map(([key, label]) => `<a${active(result.work_format === key)} href="${href({ work_format: key })}">${label}</a>`).join("");
   const sortPath = history ? "/ich/history" : "/ich";
   const preserved = { category: result.category, region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, source_id: result.source_id };
   const searchHidden = Object.entries(preserved).map(([key, value]) => `<input type="hidden" name="${key}" value="${escapeHtml(value)}">`).join("");
   const sortHidden = Object.entries({ q: result.q, category: result.category, region: result.region, status: result.status, direction: result.direction, work_format: result.work_format, source_id: result.source_id }).map(([key, value]) => `<input type="hidden" name="${key}" value="${escapeHtml(value)}">`).join("");
   const sortHtml = `<form class="ich-sort-form" method="get" action="${sortPath}">${sortHidden}<select class="ich-sort" name="sort" aria-label="排序" onchange="this.form.submit()"><option value="default" ${result.sort === "default" ? "selected" : ""}>排序：截止时间（远→近）</option><option value="nearest" ${result.sort === "nearest" ? "selected" : ""}>排序：截止时间（近→远）</option><option value="newest" ${result.sort === "newest" ? "selected" : ""}>排序：最新收录</option></select></form>`;
-  return `<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">ChancePing · 文创与手工艺机会导航</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta"><span>最近更新：${escapeHtml(result.updated_at || "持续更新中")}</span><span>${competitionView ? "可浏览赛事" : "可浏览机会"}：${result.total} 条</span><span>本周收录：${result.new_this_week} 条</span></div></div></section><form class="ich-search" method="get" action="${sortPath}">${searchHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索比赛、征集、文创、非遗、手工艺关键词" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categoryHtml}</div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>来源地区：</span>${regionHtml}</div><div class="ich-filter-line"><span>状态：</span>${statusHtml}${sortHtml}</div><details class="ich-more"><summary>更多筛选</summary><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div></details></div><div class="ich-summary"><span>更新说明：按 72 小时周期更新，逐条保留来源链接。　已选：${escapeHtml(FILTER_LABELS[result.region] ?? result.region)}<br><a href="/ich?category=all">全部机会（赛事、项目与合作）</a> · <a href="/ich/memo">赛事备忘录（完整赛事导出）</a></span><a href="/ich">清空筛选</a></div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div><div class="ich-lower"><section><h2>来源与使用说明</h2><p>每条机会都保留具体来源页面；未知字段会明确标注，申请条件和材料以来源原文为准。</p></section><section><h2>持续发现</h2><p>赛事、征集、市集、采购、合作与研修机会持续整理中。</p></section></div></main>`;
+  const selectedParts = [result.q ? `搜索：${result.q}` : "", result.direction ? `方向：${result.direction.split(",").map((key) => FILTER_LABELS[key] ?? key).join("、")}` : "", result.work_format ? `形式：${result.work_format}` : "", result.status !== "browse" ? `状态：${FILTER_LABELS[result.status] ?? result.status}` : "", result.region !== "all" ? `来源地区：${FILTER_LABELS[result.region] ?? result.region}` : ""].filter(Boolean);
+  const chips = selectedParts.map((label) => activeChip(label, href({}))).join("");
+  const resultHeading = competitionView ? "公开赛事" : "公开机会";
+  return `<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">ChancePing · 文创与手工艺机会导航</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta"><span>最近更新：${escapeHtml(result.updated_at || "持续更新中")}</span><span>${competitionView ? "可浏览赛事" : "可浏览机会"}：${result.total} 条</span><span>本周收录：${result.new_this_week} 条</span></div></div></section><form class="ich-search" method="get" action="${sortPath}">${searchHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索比赛、征集、文创、非遗、手工艺关键词" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categoryHtml}</div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>来源地区：</span>${regionHtml}</div><div class="ich-filter-line"><span>状态：</span>${statusHtml}${sortHtml}</div><details class="ich-more"><summary>更多筛选</summary><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div></details></div><div class="ich-summary"><div><strong>${resultHeading}</strong>　共 ${result.total} 条${chips ? `<div class="ich-filter-chips">${chips}</div>` : ""}<small>更新周期：72 小时　保留每条机会的来源链接，申请前请以来源原文为准。</small></div><div class="ich-summary-actions"><a href="/ich?category=all">全部机会</a><a href="/ich/memo">赛事备忘录</a><a href="${href({})}">清空筛选</a></div></div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div><div class="ich-lower"><section><h2>来源与使用说明</h2><p>每条机会都保留具体来源页面；未知字段会明确标注，申请条件和材料以来源原文为准。</p></section><section><h2>持续发现</h2><p>赛事、征集、市集、采购、合作与研修机会持续整理中。</p></section></div></main>`;
 }
 
 function parseV2PageQuery(raw: Record<string, string>): V2PageQueryParseResult {
@@ -249,7 +332,10 @@ function queryOpportunityV2ForIch(options: { q: string; category: string; region
   const page = Math.min(options.page, totalPages);
   const weekStart = new Date(now); weekStart.setHours(0, 0, 0, 0); weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
   const newThisWeek = filtered.filter((item) => new Date(item.first_seen_at).getTime() >= weekStart.getTime()).length;
-  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, direction: options.direction, work_format: options.work_format, event_region: "", source_id: options.source_id, scope: options.scope, new_this_week: newThisWeek, updated_at: pool.updated_at, translations: readOpportunityV2Translations(), sources };
+  const totalKnownDeadline = filtered.filter((item) => Boolean(item.deadline) && opportunityV2LiveStatus(item, now) !== "EXPIRED").length;
+  const totalLongTerm = filtered.filter((item) => item.is_long_term).length;
+  const totalDeadlineTbd = filtered.filter((item) => !item.deadline && !item.is_long_term).length;
+  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, direction: options.direction, work_format: options.work_format, event_region: "", source_id: options.source_id, scope: options.scope, new_this_week: newThisWeek, total_known_deadline: totalKnownDeadline, total_long_term: totalLongTerm, total_deadline_tbd: totalDeadlineTbd, updated_at: pool.updated_at, translations: readOpportunityV2Translations(), sources };
 }
 
 function memoDate(item: OpportunityV2): string {
@@ -286,6 +372,7 @@ function v2MemoPageBodyV13(result: V2IchPageResult): string {
   const href = (pathName: string, patch: Record<string, string> = {}) => {
     const next = new URLSearchParams(base);
     Object.entries(patch).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key));
+    if (!("page" in patch)) next.delete("page");
     const query = next.toString();
     return query ? `${pathName}?${query}` : pathName;
   };
@@ -300,20 +387,27 @@ function v2MemoPageBodyV13(result: V2IchPageResult): string {
   const rows = result.items.map((item) => {
     const display = buildOpportunityV2Display(item, result.translations);
     const dimensions = [...(item.directions ?? []).map((key) => directions[key] ?? key), ...(item.work_formats ?? []).map((key) => formats[key] ?? key)].slice(0, 3).join(" · ") || "分类待补充";
-    return `<tr data-opportunity-id="${escapeHtml(item.id)}"><td data-label="截止日期">${escapeHtml(memoDate(item))}<small>${escapeHtml(v2StatusLabel(item))}</small></td><td data-label="赛事名称"><a href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td data-label="方向 / 作品形式">${escapeHtml(dimensions)}</td><td data-label="来源">${escapeHtml(item.source_name)}${item.discovered_by_sources.length > 1 ? `<small>另有 ${item.discovered_by_sources.length - 1} 个发现来源</small>` : ""}</td><td data-label="操作"><a href="/ich/opportunities/${encodeURIComponent(item.id)}">查看信息</a><br><a rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">打开赛事来源页面 ↗</a></td></tr>`;
+    const deadline = displayDeadline(item, `${item.summary}\n${display.summary}`);
+    const deadlineNote = deadline.conflict ? `<small>来源日期冲突，暂不显示精确日期</small>` : "";
+    const detailLabel = `查看 ${display.title} 详情`;
+    const sourceLabel = `打开 ${display.title} 来源原文`;
+    return `<tr data-opportunity-id="${escapeHtml(item.id)}"><td data-label="截止日期">${escapeHtml(deadline.text)}<small>${escapeHtml(v2StatusLabel(item))}</small>${deadlineNote}</td><td data-label="赛事名称"><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td data-label="方向 / 作品形式">${escapeHtml(dimensions)}</td><td data-label="来源">${escapeHtml(item.source_name)}${item.discovered_by_sources.length > 1 ? `<small>另有 ${item.discovered_by_sources.length - 1} 个发现来源</small>` : ""}</td><td data-label="操作"><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">查看信息</a><br><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">打开赛事来源页面 ↗</a></td></tr>`;
   }).join("");
   const directionHtml = [["", "全部方向"], ...Object.entries(directions)].map(([key, label]) => `<a class="${result.direction === key ? "is-active" : ""}" href="${href("/ich/memo", { direction: key })}">${label}</a>`).join("");
   const formatHtml = [["", "全部形式"], ...Object.entries(formats)].map(([key, label]) => `<a class="${result.work_format === key ? "is-active" : ""}" href="${href("/ich/memo", { work_format: key })}">${label}</a>`).join("");
   const statusHtml = Object.entries(statuses).map(([key, label]) => `<a class="${result.status === key ? "is-active" : ""}" href="${href("/ich/memo", { status: key })}">${label}</a>`).join("");
   const sourceOptions = result.sources.map((source) => `<option value="${escapeHtml(source.id)}" ${result.source_id === source.id ? "selected" : ""}>${escapeHtml(source.name)}</option>`).join("");
   const sourceFormHidden = ["q", "category", "region", "status", "sort", "direction", "work_format"].map((key) => `<input type="hidden" name="${key}" value="${escapeHtml(key === "category" ? "competition" : (result as unknown as Record<string, string>)[key] ?? "")}">`).join("");
-  const knownDeadline = result.items.filter((item) => Boolean(item.deadline)).length;
-  const longTerm = result.items.filter((item) => item.is_long_term).length;
-  const tbd = result.items.filter((item) => !item.deadline && !item.is_long_term).length;
+  const knownDeadline = result.total_known_deadline;
+  const longTerm = result.total_long_term;
+  const tbd = result.total_deadline_tbd;
+  const pageStart = result.total === 0 ? 0 : (result.page - 1) * result.page_size + 1;
+  const pageEnd = Math.min(result.page * result.page_size, result.total);
+  const pagination = result.total_pages > 1 ? `<nav class="ich-pagination" aria-label="赛事备忘录分页">${result.page > 1 ? `<a href="${href("/ich/memo", { page: String(result.page - 1) })}">上一页</a>` : ""}<span>${pageStart}-${pageEnd} / ${result.total} 条</span>${result.page < result.total_pages ? `<a href="${href("/ich/memo", { page: String(result.page + 1) })}">下一页</a>` : ""}</nav>` : `<p class="ich-memo-range">${pageStart}-${pageEnd} / ${result.total} 条</p>`;
   const queryHidden = ["category", "region", "status", "sort", "direction", "work_format", "source_id"].map((key) => `<input type="hidden" name="${key}" value="${escapeHtml(key === "category" ? "competition" : (result as unknown as Record<string, string>)[key] ?? "")}">`).join("");
   const searchForm = `<form class="ich-search" method="get" action="/ich/memo">${queryHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索赛事名称、方向或来源" aria-label="搜索赛事备忘录"><button type="submit">搜索</button></form>`;
   const empty = `<tr><td colspan="5">暂无符合条件的赛事。<a href="/ich/memo">清空全部筛选</a></td></tr>`;
-  return `<main class="ich-memo"><section class="ich-memo-head"><div><p class="ich-kicker">ChancePing · 赛事安排页</p><h1>赛事备忘录</h1><p>同一赛事池中的真实赛事与评选型作品征集，按截止日期从远到近整理；不把目录、资助、驻地和一般活动混入。</p></div><div class="ich-memo-actions"><a href="${href("/ich/memo", { sort: result.sort === "newest" ? "default" : "newest" })}">切换最新收录排序</a><a href="${href("/ich/memo", {})}">按截止日期远→近</a><a href="${href("/ich/memo.json")}">JSON</a><a href="${href("/ich/memo.md")}">Markdown</a><a href="${href("/ich", {})}">卡片视图</a><a href="/ich/memo">清空全部筛选</a></div></section>${searchForm}<div class="ich-memo-stats"><span>赛事总数 ${result.total}</span><span>已列明截止 ${knownDeadline}</span><span>长期开放 ${longTerm}</span><span>截止日期未注明 ${tbd}</span><span>已选条件：${escapeHtml(conditionParts.join(" · ") || "全部")}</span></div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div><div class="ich-filter-line"><span>截止状态：</span>${statusHtml}</div><form class="ich-filter-line ich-source-filter" method="get" action="/ich/memo"><span>来源：</span>${sourceFormHidden}<select name="source_id" aria-label="来源" onchange="this.form.submit()"><option value="">全部来源</option>${sourceOptions}</select><noscript><button type="submit">应用来源</button></noscript></form><div class="ich-memo-table-wrap"><table class="ich-memo-table"><caption>赛事备忘录：共 ${result.total} 条，默认按明确截止日期从远到近，无日期记录置于表尾。</caption><thead><tr><th scope="col">截止日期</th><th scope="col">赛事名称</th><th scope="col">方向 / 作品形式</th><th scope="col">来源</th><th scope="col">操作</th></tr></thead><tbody>${rows || empty}</tbody></table></div><style>.ich-memo-table-wrap{overflow:visible}.ich-memo-table{width:100%;margin-top:18px;border-collapse:collapse;table-layout:fixed}.ich-memo-table th,.ich-memo-table td{padding:13px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.ich-memo-table th{font-weight:700;color:var(--ink);background:rgba(235,228,214,.38)}.ich-memo-table th:nth-child(1){width:15%}.ich-memo-table th:nth-child(2){width:35%}.ich-memo-table th:nth-child(3){width:22%}.ich-memo-table th:nth-child(4){width:16%}.ich-memo-table th:nth-child(5){width:12%}.ich-memo-table td:first-child{color:var(--clay);font-weight:600}.ich-memo-table td a{color:var(--indigo);text-decoration:none}.ich-memo-table td a:hover{text-decoration:underline}.ich-memo-table small{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:400}.ich-filter-line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}.ich-filter-line a{color:var(--indigo);text-decoration:none}.ich-filter-line a.is-active{font-weight:700;text-decoration:underline}.ich-source-filter select{padding:6px 9px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}@media(max-width:700px){.ich-memo-head{display:block}.ich-memo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ich-memo-table,.ich-memo-table tbody,.ich-memo-table tr,.ich-memo-table td{display:block;width:100%}.ich-memo-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ich-memo-table tr{padding:12px 0;border-top:1px solid var(--line)}.ich-memo-table td{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:10px;padding:6px 0;border-top:0}.ich-memo-table td::before{content:attr(data-label);color:var(--muted);font-weight:400}.ich-memo-table td[colspan]::before{content:none}}@media print{.ich-header,.ich-footer,.ich-memo-actions,.ich-filter-line{display:none!important}.ich-site{padding:0}.ich-memo-table-wrap{overflow:visible}.ich-memo-table{font-size:10px}.ich-memo-table caption{font-size:10px;page-break-after:avoid}}</style></main>`;
+  return `<main class="ich-memo"><section class="ich-memo-head"><div><p class="ich-kicker">ChancePing · 赛事安排页</p><h1>赛事备忘录</h1><p>同一赛事池中的真实赛事与评选型作品征集，按截止日期从远到近整理；不把目录、资助、驻地和一般活动混入。</p></div><div class="ich-memo-actions"><a href="${href("/ich/memo", { sort: result.sort === "newest" ? "default" : "newest" })}">切换最新收录排序</a><a href="${href("/ich/memo", {})}">按截止日期远→近</a><a href="${href("/ich/memo.json")}">JSON</a><a href="${href("/ich/memo.md")}">Markdown</a><a href="${href("/ich", {})}">卡片视图</a><a href="/ich/memo">清空全部筛选</a></div></section>${searchForm}<div class="ich-memo-stats"><span>赛事总数 ${result.total}</span><span>已列明截止 ${knownDeadline}</span><span>长期开放 ${longTerm}</span><span>截止日期未注明 ${tbd}</span><span>已选条件：${escapeHtml(conditionParts.join(" · ") || "全部")}</span></div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line"><span>作品形式：</span>${formatHtml}</div><div class="ich-filter-line"><span>截止状态：</span>${statusHtml}</div><form class="ich-filter-line ich-source-filter" method="get" action="/ich/memo"><span>来源：</span>${sourceFormHidden}<select name="source_id" aria-label="来源" onchange="this.form.submit()"><option value="">全部来源</option>${sourceOptions}</select><noscript><button type="submit">应用来源</button></noscript></form>${pagination}<div class="ich-memo-table-wrap"><table class="ich-memo-table"><caption>赛事备忘录：共 ${result.total} 条，默认按明确截止日期从远到近，无日期记录置于表尾。</caption><thead><tr><th scope="col">截止日期</th><th scope="col">赛事名称</th><th scope="col">方向 / 作品形式</th><th scope="col">来源</th><th scope="col">操作</th></tr></thead><tbody>${rows || empty}</tbody></table></div>${pagination}<style>.ich-memo-table-wrap{overflow:visible}.ich-memo-table{width:100%;margin-top:18px;border-collapse:collapse;table-layout:fixed}.ich-memo-table th,.ich-memo-table td{padding:13px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.ich-memo-table th{font-weight:700;color:var(--ink);background:rgba(235,228,214,.38)}.ich-memo-table th:nth-child(1){width:15%}.ich-memo-table th:nth-child(2){width:35%}.ich-memo-table th:nth-child(3){width:22%}.ich-memo-table th:nth-child(4){width:16%}.ich-memo-table th:nth-child(5){width:12%}.ich-memo-table td:first-child{color:var(--clay);font-weight:600}.ich-memo-table td a{color:var(--indigo);text-decoration:none}.ich-memo-table td a:hover{text-decoration:underline}.ich-memo-table small{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:400}.ich-filter-line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}.ich-filter-line a{color:var(--indigo);text-decoration:none}.ich-filter-line a.is-active{font-weight:700;text-decoration:underline}.ich-source-filter select{padding:6px 9px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}.ich-pagination{display:flex;align-items:center;justify-content:center;gap:18px;margin:14px 0;color:var(--muted)}.ich-pagination a{color:var(--indigo);text-decoration:none}.ich-pagination span{font-variant-numeric:tabular-nums}.ich-memo-range{color:var(--muted);text-align:center;margin:14px 0}@media(max-width:700px){.ich-memo-head{display:block}.ich-memo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ich-memo-table,.ich-memo-table tbody,.ich-memo-table tr,.ich-memo-table td{display:block;width:100%}.ich-memo-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ich-memo-table tr{padding:12px 0;border-top:1px solid var(--line)}.ich-memo-table td{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:10px;padding:6px 0;border-top:0}.ich-memo-table td::before{content:attr(data-label);color:var(--muted);font-weight:400}.ich-memo-table td[colspan]::before{content:none}}@media print{.ich-header,.ich-footer,.ich-memo-actions,.ich-filter-line{display:none!important}.ich-site{padding:0}.ich-memo-table-wrap{overflow:visible}.ich-memo-table{font-size:10px}.ich-memo-table caption{font-size:10px;page-break-after:avoid}}</style></main>`;
 }
 
 function v2MemoPage(result: V2IchPageResult): string {
@@ -473,7 +567,7 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
     if (!options.opportunityV2) return c.redirect("/ich?category=competition");
     const parsed = parseV2PageQuery(c.req.query());
     if (!parsed.query) return c.text(parsed.error ?? "Invalid query", 400);
-    const result = queryOpportunityV2ForIch({ ...parsed.query, category: "competition", scope: "all_competitions", page: 1, pageSize: Number.MAX_SAFE_INTEGER, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    const result = queryOpportunityV2ForIch({ ...parsed.query, category: "competition", scope: "all_competitions", page: parsed.query.page, pageSize: 50, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     return c.html(shell("赛事备忘录｜盯非遗", "按截止时间查看同一赛事池中的全部可浏览赛事。", "/ich/memo", v2MemoPage(result), { structuredData: collectionStructuredData("赛事备忘录", "按截止时间查看可浏览赛事。", "/ich/memo") }));
   });
   app.get("/memo.json", (c) => {
@@ -522,7 +616,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
       const formats: Record<string, string> = { material_craft: "实物工艺", product_design: "产品设计方案", graphic_ip: "平面 / 插画 / IP", packaging: "包装设计", fashion_jewellery: "服饰 / 首饰", video_animation: "视频 / 动画", interaction_game: "交互 / 游戏", mixed_media: "综合媒介" };
       const location = item.event_location?.trim() || null;
-      const deadline = item.is_long_term ? "长期开放" : item.deadline_conflict_unsafe ? "截止日期存在冲突，请打开赛事来源页面查看。" : item.deadline ? formatOpportunityV2Date(item.deadline) : "截止日期未注明，请查看赛事原文。";
+      const deadlineInfo = displayDeadline(item, `${item.summary}\n${display.summary}`);
+      const deadline = item.is_long_term ? "长期开放" : deadlineInfo.conflict || item.deadline_conflict_unsafe ? "截止日期存在冲突，请打开赛事来源页面查看。" : deadlineInfo.text;
+      const summary = safeOpportunitySummary(display.summary, deadlineInfo.conflict || Boolean(item.deadline_conflict_unsafe));
       const concreteSourceUrl = item.detail_url || item.source_url;
       const knownDimensions = [...(item.directions ?? []).map((key) => directions[key] ?? key), ...(item.work_formats ?? []).map((key) => formats[key] ?? key)].filter(Boolean);
       const knownInfo = [
@@ -532,8 +628,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       ].filter(Boolean).join("<br>");
       const unknownPrompt = knownInfo && (location || item.organizer) ? "" : "<p class=\"ich-detail-note\"><strong>参赛对象、提交方式及完整材料要求，请点击下方「打开赛事来源页面」查看。</strong></p>";
       const translationLabel = display.translation_status === "pending" ? `<span class="ich-translation-status">中文待补，当前显示原文</span>` : display.translation_status === "failed" ? `<span class="ich-translation-status">中文翻译失败，当前显示原文</span>` : "";
-      const detailBody = `<main class="ich-detail"><p class="ich-detail-kicker">ChancePing · 纸本地域目录 / ${escapeHtml(categoryLabels[item.category] ?? item.category)}</p><span class="ich-status">${escapeHtml(v2StatusLabel(item))}</span>${translationLabel}<h1>${escapeHtml(display.title)}</h1>${display.original_title && display.translated ? `<details class="ich-original"><summary>查看原名</summary><p>${escapeHtml(display.original_title)}</p></details>` : ""}<p class="ich-detail-lede">${escapeHtml(display.summary || "来源页面未提供更详细摘要。")}</p><div class="ich-detail-layout"><section class="ich-detail-main"><h2>赛事信息</h2><p>${knownInfo || "来源页面未提供结构化赛事字段。"}</p>${unknownPrompt}<h2>报名与材料</h2><p>${item.application_url && item.application_url !== concreteSourceUrl ? `<a rel="nofollow noopener" href="${escapeHtml(item.application_url)}">打开报名入口 ↗</a>` : "报名材料、费用和资格要求请查看赛事原文。"}</p>${display.original_summary && display.translated ? `<details class="ich-original"><summary>查看来源摘要</summary><p>${escapeHtml(display.original_summary)}</p></details>` : ""}<div class="ich-source-box"><h2>赛事来源</h2><p>来源：${escapeHtml(item.source_name)}${sources.length > 1 ? `（另有 ${sources.length - 1} 个发现来源）` : ""}</p><p><a class="ich-source-primary" rel="nofollow noopener" href="${escapeHtml(concreteSourceUrl)}">打开赛事来源页面 ↗</a></p></div></section><aside class="ich-detail-aside"><h2>关键节点</h2><dl><dt>截止时间</dt><dd>${escapeHtml(deadline)}</dd>${location ? `<dt>赛事所在地</dt><dd>${escapeHtml(location)}</dd>` : ""}${item.organizer ? `<dt>主办方</dt><dd>${escapeHtml(item.organizer)}</dd>` : ""}<dt>发现来源</dt><dd>${escapeHtml(sources.map((source) => source.name).join("、") || item.source_name)}</dd></dl></aside></div></main>`;
-      return c.html(shell(`${display.title}｜盯非遗`, display.summary, c.req.path, detailBody));
+      const deadlineWarning = deadlineInfo.conflict || item.deadline_conflict_unsafe ? `<p class="ich-data-warning">来源页面中的截止日期与结构化日期不一致，当前不显示不安全的精确日期，请打开来源原文核对。</p>` : "";
+      const detailBody = `<main class="ich-detail"><p class="ich-detail-kicker">ChancePing · 纸本地域目录 / ${escapeHtml(categoryLabels[item.category] ?? item.category)}</p><span class="ich-status">${escapeHtml(v2StatusLabel(item))}</span>${translationLabel}<h1>${escapeHtml(display.title)}</h1>${display.original_title && display.translated ? `<details class="ich-original"><summary>查看原名</summary><p>${escapeHtml(display.original_title)}</p></details>` : ""}<p class="ich-detail-lede">${escapeHtml(summary || "来源页面未提供更详细摘要。")}</p><div class="ich-detail-layout"><section class="ich-detail-main"><h2>赛事信息</h2><p>${knownInfo || "来源页面未提供结构化赛事字段。"}</p>${unknownPrompt}<h2>报名与材料</h2><p>${item.application_url && item.application_url !== concreteSourceUrl ? `<a rel="nofollow noopener" href="${escapeHtml(item.application_url)}">打开报名入口 ↗</a>` : "报名材料、费用和资格要求请查看赛事原文。"}</p>${display.original_summary && display.translated ? `<details class="ich-original"><summary>查看来源摘要</summary><p>${escapeHtml(safeOpportunitySummary(display.original_summary))}</p></details>` : ""}${deadlineWarning}<div class="ich-source-box"><h2>赛事来源</h2><p>来源：${escapeHtml(item.source_name)}${sources.length > 1 ? `（另有 ${sources.length - 1} 个发现来源）` : ""}</p><p><a class="ich-source-primary" rel="nofollow noopener" href="${escapeHtml(concreteSourceUrl)}">打开赛事来源页面 ↗</a></p></div></section><aside class="ich-detail-aside"><h2>关键节点</h2><dl><dt>截止时间</dt><dd>${escapeHtml(deadline)}</dd>${location ? `<dt>赛事所在地</dt><dd>${escapeHtml(location)}</dd>` : ""}${item.organizer ? `<dt>主办方</dt><dd>${escapeHtml(item.organizer)}</dd>` : ""}<dt>发现来源</dt><dd>${escapeHtml(sources.map((source) => source.name).join("、") || item.source_name)}${discoveryLabel(item) ? `（${escapeHtml(discoveryLabel(item))}）` : ""}</dd></dl></aside></div></main>`;
+      return c.html(shell(`${display.title}｜盯非遗`, summary, c.req.path, detailBody));
     }
     const loaded = store.load();
     const item = getPublicIchOpportunity(loaded.entries, c.req.param("slug"), now());

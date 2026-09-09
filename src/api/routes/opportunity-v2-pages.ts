@@ -22,10 +22,16 @@ document.querySelectorAll('.filters select').forEach(x=>x.addEventListener('chan
 </script><script>const moduleSelect=document.getElementById('filter-module');[['procurement','采购'],['channel_collaboration','渠道'],['grant','资助'],['residency','驻地'],['fellowship','研修'],['exhibition','展览']].forEach(([value,label])=>{if(![...moduleSelect.options].some(option=>option.value===value))moduleSelect.add(new Option(label,value))});fetch(apiBase+'/sources/overview').then(r=>r.json()).then(d=>{const at=d.next_run_at?new Date(d.next_run_at).toLocaleString('zh-CN'):'—';document.getElementById('stats').insertAdjacentHTML('beforeend','<div class="stat"><span>下次计划</span><strong style="font-size:13px">'+esc(at)+'</strong></div>')}).catch(()=>{});</script></body></html>`;
 }
 
+function enhanceSourceManagerPage(html: string): string {
+  const style = `<style>.row-actions{display:flex;flex-wrap:wrap;gap:4px;min-width:170px}.row-actions button{margin:0}.filters label{margin:0}.source-manager-caption{caption-side:top;text-align:left;padding:0 0 8px;color:#6b655b;font-size:12px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}</style>`;
+  const script = `<script>(()=>{const decorate=()=>{const message=document.getElementById('message');if(message)message.setAttribute('role','status');const labels={"filter-module":"模块","filter-region":"地区","filter-priority":"优先级","filter-status":"抓取状态"};Object.entries(labels).forEach(([id,label])=>{const select=document.getElementById(id);if(select)select.setAttribute('aria-label',label)});const table=document.querySelector('table');if(table&&!table.querySelector('caption')){const caption=document.createElement('caption');caption.className='source-manager-caption';caption.textContent='已注册来源及抓取状态';table.prepend(caption)};document.querySelectorAll('#sources-body tr').forEach(row=>{const name=row.querySelector('td strong')?.textContent?.trim()||'来源';const actions=row.lastElementChild;if(!actions)return;actions.classList.add('row-actions');actions.querySelectorAll('button').forEach(button=>{if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',button.textContent?.trim()+ ' ' + name)})})};new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});decorate()})();</script>`;
+  return html.replace("</head>", `${style}</head>`).replace("</body>", `${script}</body>`);
+}
+
 export function opportunityV2PagesRoutes(options: OpportunityV2RouteOptions = {}): Hono {
   const app = new Hono();
   const render = (c: Context) => radarPage(options, c);
-  app.get("/admin/sources", (c) => c.html(adminPage()));
+  app.get("/admin/sources", (c) => c.html(enhanceSourceManagerPage(adminPage())));
   app.get("/", render); app.get("", render);
   return app;
 }

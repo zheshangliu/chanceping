@@ -109,7 +109,7 @@ export function canonicalOpportunityTitle(title: string): string {
   normalized = normalized
     .replace(/[（(【\[][^）)】\]]*(?:截至|截止|截稿|报名)[^）)】\]]*[）)】\]]/gu, " ")
     .replace(/(?:截至|截稿至|截止时间?|报名截止|征集时间)\s*[:：]?\s*(?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{1,2}[月./-]\d{1,2}日?)\s*$/u, " ");
-  const wrappers = /(?:报名通知|报名启事|征集启事|征稿通知|征集令|正式启动|报名开始|开始报名|公开征集|作品征集|征集活动|启动招募|等你来战|来了)$/u;
+  const wrappers = /(?:报名通知|报名启事|征集启事|征稿通知|征集令|正式启动|报名开始|开始报名|公开征集|作品征集|征集(?:活动)?(?:正式)?(?:启动|开启|招募)?|启动招募|等你来战|来了)$/u;
   while (wrappers.test(normalized)) normalized = normalized.replace(wrappers, "").trim();
   const years = normalized.match(/20\d{2}/gu) ?? [];
   normalized = normalized.replace(/20\d{2}年?/gu, "");
@@ -119,6 +119,29 @@ export function canonicalOpportunityTitle(title: string): string {
 function crossSourceTitleKey(title: string): string | null {
   const normalized = canonicalOpportunityTitle(title);
   return normalized || null;
+}
+
+function yearlessTitleKey(title: string): string {
+  return canonicalOpportunityTitle(title).replace(/20\d{2}/gu, "");
+}
+
+function hasExplicitYear(title: string): boolean {
+  return /20\d{2}/u.test(title);
+}
+
+function findYearlessAlias<T extends { title: string; source_id: string; discovered_by_sources: string[] }>(entries: Iterable<[string, T]>, item: T): string | null {
+  const key = yearlessTitleKey(item.title);
+  if (!key) return null;
+  const itemHasYear = hasExplicitYear(item.title);
+  for (const [candidateKey, candidate] of entries) {
+    const crossSource = candidate.source_id !== item.source_id || candidate.discovered_by_sources.some((sourceId) => sourceId !== item.source_id);
+    if (crossSource && yearlessTitleKey(candidate.title) === key && hasExplicitYear(candidate.title) !== itemHasYear) return candidateKey;
+  }
+  return null;
+}
+
+function sameSourceRecordKey(item: OpportunityV2): string {
+  return `source:${item.source_id}:${item.detail_url}`;
 }
 
 function conciseSummary(summary: string, title: string): string {
@@ -475,7 +498,7 @@ export function mergeOpportunityV2(existing: OpportunityV2[], incoming: Opportun
     const existingSourceKey = sourceKeys.map((candidate) => sourceIdentityKeys.get(candidate)).find(Boolean);
     const key = existingSourceKey
       ? existingSourceKey
-      : cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
+      : cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : (byKey.get(titleKey) ? titleKey : findYearlessAlias(byKey.entries(), item) ?? titleKey);
     const prior = byKey.get(key);
     byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : withEncodingMetadata({ ...item, status: item.status }));
     for (const sourceKey of sourceKeys) sourceIdentityKeys.set(sourceKey, key);
@@ -514,9 +537,13 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
     const cfwDetailKey = item.source_id === CFW_SOURCE_ID ? item.detail_url : null;
     const sourceKeys = sourceIdentityAliases(item);
     const existingSourceKey = sourceKeys.map((candidate) => sourceIdentityKeys.get(candidate)).find(Boolean);
+    const titleMatch = byIdentity.get(titleKey);
+    const canMergeByTitle = titleMatch && (titleMatch.source_id !== item.source_id || titleMatch.discovered_by_sources.some((sourceId) => sourceId !== item.source_id));
+    const sameSourceSameDetail = titleMatch && titleMatch.source_id === item.source_id && titleMatch.detail_url === item.detail_url;
+    const yearlessAlias = !titleMatch ? findYearlessAlias(byIdentity.entries(), item) : null;
     const key = existingSourceKey
       ? existingSourceKey
-      : cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : titleKey;
+      : cfwDetailKey ? (cfwDetailKeys.get(cfwDetailKey) ?? titleKey) : (canMergeByTitle || sameSourceSameDetail ? titleKey : titleMatch ? sameSourceRecordKey(item) : yearlessAlias ?? titleKey);
     const prior = byIdentity.get(key);
     if (!prior) {
       byIdentity.set(key, withEncodingMetadata(item));

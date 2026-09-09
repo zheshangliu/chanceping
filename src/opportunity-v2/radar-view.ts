@@ -1,4 +1,4 @@
-import { opportunityStatus } from "./opportunity-pool";
+import { deduplicateOpportunityV2, opportunityStatus } from "./opportunity-pool";
 import { readOpportunityV2Translations } from "./display";
 import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
@@ -76,7 +76,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
   const q = query.q?.trim().toLowerCase();
   const tag = query.tag?.trim().toLowerCase();
   const translations = q ? new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry])) : new Map();
-  return opportunities
+  const filtered = opportunities
     .filter((item) => enabled.has(item.source_id))
     .filter((item) => !hasEncodingCorruption(item.title))
     .filter((item) => query.include_irrelevant === true || item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
@@ -88,8 +88,8 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => values(query.direction).length === 0 || values(query.direction).some((value) => (item.directions ?? []).includes(value as never)))
     .filter((item) => values(query.work_format).length === 0 || values(query.work_format).some((value) => (item.work_formats ?? []).includes(value as never)))
     .filter((item) => eventRegionMatches(item, query.event_region))
-    .filter((item) => !q || `${item.title} ${item.encoding_error_fields?.includes("summary") ? "" : item.summary} ${item.source_name} ${item.tags.join(" ")} ${(item.directions ?? []).join(" ")} ${item.event_location ?? ""} ${translations.get(item.id)?.title_zh ?? ""} ${translations.get(item.id)?.summary_zh ?? ""}`.toLowerCase().includes(q))
-    .sort((a, b) => {
+    .filter((item) => !q || `${item.title} ${item.encoding_error_fields?.includes("summary") ? "" : item.summary} ${item.source_name} ${item.tags.join(" ")} ${(item.directions ?? []).join(" ")} ${item.event_location ?? ""} ${translations.get(item.id)?.title_zh ?? ""} ${translations.get(item.id)?.summary_zh ?? ""}`.toLowerCase().includes(q));
+  return deduplicateOpportunityV2(filtered).opportunities.sort((a, b) => {
       const aDeadline = a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER;
       const bDeadline = b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER;
       return aDeadline - bDeadline || b.first_seen_at.localeCompare(a.first_seen_at);
