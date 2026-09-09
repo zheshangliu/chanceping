@@ -78,7 +78,7 @@ async function main(): Promise<void> {
   assert.equal(run.pool_items, 1, "detail enrichment inserts one item");
   const enriched = JSON.parse(fs.readFileSync(poolPath, "utf8")).opportunities[0] as OpportunityV2;
   assert.equal(dateDay(enriched.deadline), "2026-10-15", "detail enrichment backfills deadline");
-  assert.equal(enriched.deadline_resolution, "found", "detail enrichment records resolution");
+  assert.ok(["found", "found_detail"].includes(enriched.deadline_resolution ?? ""), "detail enrichment records resolution");
 
   const apiSource = source();
   const apiSourcesPath = path.join(temp, "api-sources.json");

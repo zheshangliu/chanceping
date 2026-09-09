@@ -9,9 +9,11 @@ function attr(tag: string, name: string): string | null {
 
 function item(title: string, detailUrl: string, sourceUrl: string, rawText: string, fields: Partial<ParsedAggregationItem> = {}): ParsedAggregationItem {
   const deadlineText = fields.deadline_text ?? extractDeadlineText(rawText);
+  const relativeOnly = !deadlineText && /\d+\s*(?:天|日|小时|周|个月)\s*(?:后|内|剩余|截止)/u.test(rawText);
   return {
     source_item_id: fields.source_item_id ?? identityHash(detailUrl), title: title.trim(), source_category: fields.source_category ?? "文创设计", source_status: fields.source_status ?? null,
     detail_url: detailUrl, source_url: sourceUrl, published_at: fields.published_at ?? null, deadline_text: deadlineText, deadline_at: fields.deadline_at ?? parseDateText(deadlineText, new Date(), rawText), organizer: fields.organizer ?? null, application_url: fields.application_url ?? null, raw_text: rawText.slice(0, 8000),
+    deadline_resolution: fields.deadline_resolution ?? (deadlineText ? "found_listing" : relativeOnly ? "relative_only" : "not_attempted"),
     event_location: fields.event_location ?? null, participation_scope: fields.participation_scope ?? "unspecified", participation_mode: fields.participation_mode ?? "unspecified",
   };
 }

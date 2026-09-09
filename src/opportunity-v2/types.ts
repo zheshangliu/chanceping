@@ -8,6 +8,14 @@ export type V2OpportunityDirection = "ich_innovation" | "cultural_creative" | "c
 export type V2WorkFormat = "material_craft" | "product_design" | "graphic_ip" | "packaging" | "fashion_jewellery" | "video_animation" | "interaction_game" | "mixed_media";
 export type V2ParticipationScope = "nationwide" | "global" | "regional" | "unspecified";
 export type V2ParticipationMode = "online" | "physical" | "onsite" | "unspecified";
+export type V2DeadlineResolution = "found" | "found_listing" | "found_detail" | "found_cross_source" | "long_term" | "source_has_no_date" | "detail_fetch_failed" | "date_conflict" | "relative_only" | "not_attempted" | "fetch_failed" | "image_only" | "ambiguous" | "not_stated";
+
+export interface V2DeadlineConflict {
+  stored_deadline: string | null;
+  conflicting_deadline: string;
+  evidence: string;
+  source_url?: string | null;
+}
 
 export interface OpportunityV2Source {
   id: string;
@@ -39,7 +47,8 @@ export interface OpportunityV2 {
   deadline_source_url?: string | null;
   deadline_raw_text?: string | null;
   deadline_checked_at?: string | null;
-  deadline_resolution?: "found" | "not_attempted" | "fetch_failed" | "image_only" | "ambiguous" | "not_stated";
+  deadline_resolution?: V2DeadlineResolution;
+  deadline_conflicts?: V2DeadlineConflict[];
   status: V2OpportunityStatus;
   first_seen_at: string;
   last_seen_at: string;
@@ -77,6 +86,10 @@ export interface OpportunityV2SourceHealth {
   canonical_records?: number;
   merged_duplicates?: number;
   reconciliation_status?: "complete" | "partial" | "failed" | "unknown";
+  deadline_attempted?: number;
+  deadline_resolved?: number;
+  deadline_unknown?: number;
+  deadline_conflicts?: number;
 }
 
 export interface OpportunityV2RunResult {

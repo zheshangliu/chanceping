@@ -1,4 +1,4 @@
-import { extractAnchors, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseCfwDateRange, parseDateText, type ParsedAggregationItem, type ParsedDateRange } from "./common";
+import { extractAnchors, extractDeadlineEvidence, extractDeadlineText, htmlToText, identityHash, normalizeUrl, parseCfwDateRange, parseDateText, type ParsedAggregationItem, type ParsedDateRange } from "./common";
 
 const NAVIGATION_TEXT = /^(about(?: us)?|add listing|all opportunities|apply now|artists?|become (?:a )?(?:member|benefactor)|benefits|browse(?: all)?(?: open calls| opportunities)?(?: →)?|browse opportunities|call listings|categories|ca[féé™]*|ccbc (?:events?|gallery|projects?)|closing this week(?: →)?|competitions? & open calls|craft council(?: of british columbia)?|craft directory|craft fair|craft inventory|craft map|craft resource library|craft scotland|craft status|countries|contact(?: us)?|dashboard|deadline|directory|donate(?: now)?!?|editor's picks|emerging artists|events?|find calls|forgotten password\?|fully funded|get involved|grants?|guides?|hybrid residencies|in conversation|international|join|journal|learn more|list your studio|login|makers?(?: directory| list)?|meet the team|more|more details|more opportunities|next page|no application fee|opencall radar|opportunities|organisations? to know|our work|our stories|partners|pricing|prizes?|previous page|read more|red list|refund|report this\?|residencies|resources?|reset|return policy|rolling deadline|search|sign in|skip to content|studio guide|submit(?: an)? opportunity|subscribe|support(?: us)?|terms|the makers|the skills|travel covered|view all|what(?:'|’)s on|who we are|with accommodation|workshops|全部|关于我们|联系我们|机会|更多|登录|注册|搜索|提交|征集大赛)$/iu;
 const CLEAR_NAVIGATION_TEXT = /^(?:advertising|archives?|newsletter(?: signup)?|object stories|our history|press(?: & media)?|privacy policy\.?|renew my membership|stay in the loop|terms(?: & conditions| of (?:use|sale))?|view all stories)$/iu;
@@ -163,10 +163,11 @@ export function parseGenericListing(html: string, listingUrl: string, patterns: 
     const cfwDate = structuredCfwDates.get(detailUrl);
     const deadline = extractDeadlineText(rawCandidateText) ?? structuredDeadlines.get(anchor.href) ?? cfwDate?.raw ?? null;
     seen.add(anchor.href);
+    const deadlineResolution = cfwDate ? "found_listing" : deadline && parseDateText(deadline, new Date(), `${rawCandidateText} ${candidateText}`) ? "found_listing" : deadline ? "relative_only" : "not_attempted";
     result.push({
       source_item_id: identityHash(anchor.href), title: candidateText, source_category: null, detail_url: detailUrl,
       source_url: listingUrl, published_at: null, deadline_text: deadline, deadline_at: cfwDate?.deadlineAt ?? parseDateText(deadline, new Date(), candidateText),
-      deadline_source_url: deadline ? listingUrl : null, deadline_raw_text: deadline, deadline_checked_at: deadline ? new Date().toISOString() : null, deadline_resolution: deadline ? "found" : "not_attempted",
+      deadline_source_url: deadline ? listingUrl : null, deadline_raw_text: deadline, deadline_checked_at: deadline ? new Date().toISOString() : null, deadline_resolution: deadlineResolution,
       organizer: null, application_url: null, raw_text: [candidateText, cfwDate?.raw].filter(Boolean).join(" "),
     });
   }
@@ -177,18 +178,29 @@ export function enrichGenericItem(item: ParsedAggregationItem, detailHtml: strin
   const text = htmlToText(detailHtml);
   const title = detailHtml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
   const context = `${item.raw_text} ${text}`;
-  const deadline = extractDeadlineText(text) ?? extractDeadlineText(item.raw_text) ?? item.deadline_text;
+  const evidence = extractDeadlineEvidence(text, new Date(), `${item.title} ${item.raw_text}`);
+  const primary = evidence.find((candidate) => candidate.deadline_at) ?? null;
+  const deadline = primary?.text ?? extractDeadlineText(item.raw_text) ?? item.deadline_text;
+  const deadlineAt = primary?.deadline_at ?? parseDateText(deadline, new Date(), `${item.raw_text} ${text}`) ?? item.deadline_at;
+  const conflicts = evidence.filter((candidate) => candidate.deadline_at && candidate.deadline_at !== deadlineAt).map((candidate) => ({ stored_deadline: deadlineAt, conflicting_deadline: candidate.deadline_at as string, evidence: candidate.raw_text, source_url: detailUrl }));
+  if (item.deadline_at && deadlineAt && item.deadline_at !== deadlineAt) conflicts.unshift({ stored_deadline: item.deadline_at, conflicting_deadline: deadlineAt, evidence: primary?.raw_text ?? deadline ?? "", source_url: detailUrl });
   const parsedTitle = title ? htmlToText(title).replace(/\s*[|–-].*$/u, "").trim() : "";
-  const nextTitle = parsedTitle && !isLikelyGenericNavigationItem(parsedTitle, detailUrl) ? parsedTitle : item.title;
+  // Many detail pages use the publisher name as their HTML <title>. Keep the
+  // listing title unless the parsed title still carries an opportunity signal;
+  // otherwise the source-level noise filter can mistake the real item for a
+  // navigation row and the enriched deadline never reconciles back into the
+  // existing pool record.
+  const nextTitle = parsedTitle && parsedTitle.length >= Math.max(8, item.title.length * 0.6) && !isLikelyGenericNavigationItem(parsedTitle, detailUrl) && OPPORTUNITY_SIGNAL.test(parsedTitle) ? parsedTitle : item.title;
   return {
     ...item,
     title: nextTitle,
     deadline_text: deadline,
-    deadline_at: parseDateText(deadline, new Date(), context) ?? item.deadline_at,
+    deadline_at: deadlineAt,
     deadline_source_url: deadline ? detailUrl : detailUrl,
     deadline_raw_text: deadline ?? item.deadline_raw_text ?? null,
     deadline_checked_at: new Date().toISOString(),
-    deadline_resolution: deadline ? "found" : "not_stated",
+    deadline_resolution: conflicts.length ? "date_conflict" : primary ? "found_detail" : evidence.some((candidate) => !candidate.deadline_at) ? "relative_only" : (deadline ? "not_stated" : "source_has_no_date"),
+    deadline_conflicts: [...(item.deadline_conflicts ?? []), ...conflicts],
     raw_text: context.slice(0, 8000),
     detail_url: detailUrl,
   };

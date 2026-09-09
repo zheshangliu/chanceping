@@ -88,7 +88,8 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
         const body = Buffer.concat(chunks);
         const contentType = String(response.headers["content-type"] ?? "");
         const charset = contentType.match(/charset\s*=\s*["']?([^;"']+)/iu)?.[1]?.trim().toLowerCase();
-        const decoder = charset === "gbk" || charset === "gb2312" || charset === "gb18030" ? new TextDecoder("gb18030") : new TextDecoder("utf-8");
+        const legacyCharset = /(?:^|\.)1zj\.com$/iu.test(parsed.hostname) || /(?:^|\.)zjmtcn\.com$/iu.test(parsed.hostname);
+        const decoder = charset === "gbk" || charset === "gb2312" || charset === "gb18030" || legacyCharset ? new TextDecoder("gb18030") : new TextDecoder("utf-8");
         resolve({ status: response.statusCode ?? 0, headers: response.headers, text: decoder.decode(body) });
       });
     });
@@ -197,6 +198,20 @@ interface SourceFetchResult {
   next_page: number | null;
 }
 
+const DETAIL_BUDGET_BY_SOURCE: Record<string, number> = {
+  "whaleideas-competition": 80,
+  "1zj-cultural-competition": 52,
+  "artconnect-opportunities": 16,
+  "kcdf-opportunities": 12,
+  "curatorspace-opportunities": 20,
+};
+
+function detailBudgetForSource(sourceId: string): number {
+  const configured = process.env.CHANCEPING_OPPORTUNITY_V2_DETAIL_BUDGET;
+  const value = Number(configured ?? String(DETAIL_BUDGET_BY_SOURCE[sourceId] ?? 12));
+  return Number.isInteger(value) && value >= 0 ? value : 12;
+}
+
 function paginationStartPage(source: OpportunityV2Source, healthPath?: string): number {
   const plan = paginationPlan(source);
   if (!plan) return 1;
@@ -238,7 +253,8 @@ async function enrichDetailDates(source: OpportunityV2Source, items: ParsedAggre
       Object.assign(item, enriched);
       item.deadline_source_url = item.detail_url;
       item.deadline_checked_at = new Date().toISOString();
-      item.deadline_resolution = item.deadline_at ? "found" : "not_stated";
+      if (item.deadline_at && item.deadline_resolution !== "date_conflict") item.deadline_resolution = item.deadline_resolution === "found_listing" ? "found_detail" : "found_detail";
+      else if (!item.deadline_at && item.deadline_resolution !== "relative_only") item.deadline_resolution = "source_has_no_date";
     } catch {
       item.deadline_resolution = "fetch_failed";
       item.deadline_source_url = item.detail_url;
@@ -292,9 +308,7 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       break;
     }
   }
-  const detailBudgetRaw = Number(process.env.CHANCEPING_OPPORTUNITY_V2_DETAIL_BUDGET ?? "12");
-  const detailBudget = Number.isInteger(detailBudgetRaw) && detailBudgetRaw >= 0 ? detailBudgetRaw : 12;
-  await enrichDetailDates(source, parsed, fetcher, detailBudget);
+  await enrichDetailDates(source, parsed, fetcher, detailBudgetForSource(source.id));
   return {
     parsed,
     format,
@@ -307,6 +321,9 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
 }
 
 function healthFor(source: OpportunityV2Source, result: SourceFetchResult): OpportunityV2SourceHealth {
+  const deadlineAttempted = result.parsed.filter((item) => item.deadline_checked_at).length;
+  const deadlineResolved = result.parsed.filter((item) => Boolean(item.deadline_at)).length;
+  const deadlineConflicts = result.parsed.reduce((count, item) => count + (item.deadline_conflicts?.length ?? 0), 0);
   return {
     source_id: source.id,
     fetched_at: result.fetchedAt,
@@ -321,6 +338,10 @@ function healthFor(source: OpportunityV2Source, result: SourceFetchResult): Oppo
     canonical_records: result.parsed.length,
     merged_duplicates: 0,
     reconciliation_status: result.partial ? "partial" : result.parsed.length ? "complete" : "unknown",
+    deadline_attempted: deadlineAttempted,
+    deadline_resolved: deadlineResolved,
+    deadline_unknown: result.parsed.length - deadlineResolved,
+    deadline_conflicts: deadlineConflicts,
   };
 }
 
@@ -376,6 +397,46 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
       // safety valve for fixtures or bounded one-off runs only.
       const parsed = options.maxItems === undefined ? result.parsed : result.parsed.slice(0, options.maxItems);
       for (const item of parsed) fetched.push(normalizeOpportunityV2(item, source, now));
+      // The source listing can contain a continuation page while older pool
+      // records still have detail URLs without a usable deadline. For the
+      // Round 1 high-value sources, spend the bounded detail budget on those
+      // retained records as well, so a full local run actually backfills the
+      // existing pool instead of only enriching newly discovered cards.
+      if (DETAIL_BUDGET_BY_SOURCE[source.id] !== undefined && options.maxItems === undefined) {
+        const candidates = pool.opportunities
+          .filter((item) => item.source_id === source.id && !item.deadline && item.detail_url)
+          .slice(0, detailBudgetForSource(source.id))
+          .map((item) => ({
+            source_item_id: item.source_item_id ?? item.id,
+            title: item.title,
+            source_category: item.category,
+            source_status: item.status,
+            detail_url: item.detail_url,
+            source_url: item.source_url,
+            published_at: item.first_seen_at,
+            deadline_text: item.deadline_text ?? null,
+            deadline_at: item.deadline,
+            deadline_source_url: item.deadline_source_url,
+            deadline_raw_text: item.deadline_raw_text,
+            deadline_checked_at: item.deadline_checked_at,
+            deadline_resolution: item.deadline_resolution,
+            organizer: item.organizer ?? null,
+            application_url: item.application_url ?? null,
+            raw_text: `${item.title} ${item.summary}`,
+            event_location: item.event_location,
+            participation_scope: item.participation_scope,
+            participation_mode: item.participation_mode,
+            is_long_term: item.is_long_term,
+            starts_at: item.starts_at,
+          } satisfies ParsedAggregationItem));
+        await enrichDetailDates(source, candidates, fetcher, detailBudgetForSource(source.id));
+        for (const enriched of candidates.filter((item) => item.deadline_at)) {
+          const prior = pool.opportunities.find((item) => item.source_id === source.id && (item.source_item_id === enriched.source_item_id || item.detail_url === enriched.detail_url));
+          if (!prior) continue;
+          const normalized = normalizeOpportunityV2(enriched, source, now);
+          fetched.push({ ...normalized, id: prior.id, first_seen_at: prior.first_seen_at, discovered_by_sources: prior.discovered_by_sources });
+        }
+      }
       source.status = parsed.length ? "ACTIVE" : "NEEDS_ADAPTER";
       if (parsed.length) {
         source.last_fetch_at = result.fetchedAt;

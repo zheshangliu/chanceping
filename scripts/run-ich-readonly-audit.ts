@@ -35,6 +35,16 @@ function write(name: string, value: string): void {
 
 async function main(): Promise<void> {
   fs.mkdirSync(outputDir, { recursive: true });
+  const filterCases = [
+    { key: "memo", route: "/ich/memo" },
+    { key: "direction_cultural_creative", route: "/ich/memo?direction=cultural_creative" },
+    { key: "work_format_product_design", route: "/ich/memo?work_format=product_design" },
+    { key: "status_current", route: "/ich/memo?status=current" },
+    { key: "status_deadline_tbd", route: "/ich/memo?status=deadline_tbd" },
+    { key: "sort_nearest", route: "/ich/memo?sort=nearest" },
+    { key: "source_whaleideas", route: "/ich/memo?source_id=whaleideas-competition" },
+    { key: "direction_format_status", route: "/ich/memo?direction=cultural_creative&work_format=product_design&status=current" },
+  ];
   const responses = await Promise.all([
     capture("/health"),
     capture("/ich"),
@@ -44,6 +54,7 @@ async function main(): Promise<void> {
     capture("/api/opportunity-v2/radar?category=competition"),
     capture("/api/opportunity-v2/sources"),
     capture("/api/opportunity-v2/sources/overview"),
+    ...filterCases.flatMap(({ route }) => [capture(route), capture(route.replace("/ich/memo", "/ich/memo.json")), capture(route.replace("/ich/memo", "/ich/memo.md"))]),
   ]);
   const byPath = new Map(responses.map((response) => [response.path, response]));
   const home = byPath.get("/ich")!;
@@ -53,7 +64,7 @@ async function main(): Promise<void> {
   const radarResponse = byPath.get("/api/opportunity-v2/radar?category=competition")!;
   const sourceResponse = byPath.get("/api/opportunity-v2/sources")!;
   const overviewResponse = byPath.get("/api/opportunity-v2/sources/overview")!;
-  const memo = jsonBody<{ snapshot_id?: string; total?: number; items?: Array<{ id: string; title: string; detail_url: string; source_name: string; discovered_by_sources?: string[] }> }>(memoJsonResponse);
+  const memo = jsonBody<{ snapshot_id?: string; total?: number; items?: Array<{ id: string; title: string; detail_url: string; source_name: string; deadline?: string | null; discovered_by_sources?: string[] }> }>(memoJsonResponse);
   const radar = jsonBody<{ total?: number; opportunities?: Array<{ id: string; title: string; source_name: string; region: string; status?: string }> }>(radarResponse);
   const sources = jsonBody<{ sources?: Array<{ id: string; name: string; status: string }> }>(sourceResponse);
   const overview = jsonBody<{ summary?: Record<string, number>; next_run_at?: string | null }>(overviewResponse);
@@ -81,6 +92,43 @@ async function main(): Promise<void> {
     home_and_radar_counts_match: false,
   };
   checks.home_and_radar_counts_match = Number.isFinite(checks.home_competition_total) && checks.home_competition_total === checks.radar_competition_total;
+  const filterMatrix = filterCases.map(({ key, route }) => {
+    const html = byPath.get(route);
+    const jsonRoute = route.replace("/ich/memo", "/ich/memo.json");
+    const markdownRoute = route.replace("/ich/memo", "/ich/memo.md");
+    const json = byPath.get(jsonRoute);
+    const markdown = byPath.get(markdownRoute);
+    const parsed = json ? jsonBody<{ total?: number; items?: Array<{ id: string }> }>(json) : null;
+    const jsonIds = parsed?.items?.map((item) => item.id) ?? [];
+    const markdownIdsForRoute = markdown ? [...markdown.body.matchAll(/^\|\s*(oppv2_[^|\s]+)\s*\|/gmu)].map((match) => match[1]) : [];
+    const htmlIds = html ? [...html.body.matchAll(/data-opportunity-id="([^"]+)"/gu)].map((match) => match[1]) : [];
+    const likelyFilter = key !== "memo" && !key.startsWith("sort_");
+    return { key, url: `${baseUrl}${route}`, status: html?.status ?? 0, total: parsed?.total ?? htmlIds.length, first10_ids: jsonIds.slice(0, 10), html_ids_same: JSON.stringify(htmlIds) === JSON.stringify(jsonIds), json_markdown_ids_same: JSON.stringify(jsonIds) === JSON.stringify(markdownIdsForRoute), suspicious_unchanged: likelyFilter && jsonIds.length === memoIds.size && jsonIds.every((id) => memoIds.has(id)) };
+  });
+  const deadlineCoverage = { memo_total: memo?.total ?? memoItems.length, known_deadline: memoItems.filter((item) => item.deadline).length, unknown_deadline: memoItems.filter((item) => !item.deadline).length, coverage_rate: memoItems.length ? Number(((memoItems.filter((item) => item.deadline).length / memoItems.length) * 100).toFixed(2)) : 0 };
+  const sourceCoverage = { captured_at: capturedAt, sources: sources?.sources ?? [], overview: overview?.summary ?? null };
+  const poolPath = process.env.CHANCEPING_AUDIT_POOL_PATH;
+  const deadlineResolution = (() => {
+    if (!poolPath || !fs.existsSync(poolPath)) return { captured_at: capturedAt, source_health: sourceCoverage.overview };
+    try {
+      const pool = JSON.parse(fs.readFileSync(poolPath, "utf8")) as { opportunities?: Array<{ source_id: string; deadline?: string | null; deadline_resolution?: string; deadline_conflicts?: unknown[]; status?: string }> };
+      const byResolution: Record<string, number> = {};
+      const bySource: Record<string, { records: number; known: number; unknown: number; conflicts: number }> = {};
+      for (const item of pool.opportunities ?? []) {
+        const resolution = item.deadline_resolution ?? (item.deadline ? "found" : "not_recorded");
+        byResolution[resolution] = (byResolution[resolution] ?? 0) + 1;
+        const row = bySource[item.source_id] ?? { records: 0, known: 0, unknown: 0, conflicts: 0 };
+        row.records += 1;
+        row.known += item.deadline ? 1 : 0;
+        row.unknown += item.deadline ? 0 : 1;
+        row.conflicts += item.deadline_conflicts?.length ?? 0;
+        bySource[item.source_id] = row;
+      }
+      return { captured_at: capturedAt, pool_path: poolPath, total: pool.opportunities?.length ?? 0, by_resolution: byResolution, by_source: bySource };
+    } catch (error) {
+      return { captured_at: capturedAt, error: error instanceof Error ? error.message : String(error) };
+    }
+  })();
   const manifest = {
     schema_version: "chanceping.ich.readonly-audit.v1",
     captured_at: capturedAt,
@@ -92,9 +140,11 @@ async function main(): Promise<void> {
     counts: { sources: checks.source_count, radar_competitions: checks.radar_competition_total, memo_competitions: checks.memo_total, memo_known_source_names: sourceNames.size },
     source_overview_summary: overview?.summary ?? null,
     next_run_at: overview?.next_run_at ?? null,
+    deadline_coverage: deadlineCoverage,
+    filter_matrix: filterMatrix,
     checks,
     complete: checks.http_all_200 && checks.source_pool_visible && checks.memo_json_markdown_same_ids && checks.memo_location_column_removed && checks.memo_noise_hidden && checks.loewe_visible_once && checks.home_and_radar_counts_match,
-    files: ["manifest.json", "checks.json", "home.html", "memo.html", "memo.json", "memo.md", "radar.json", "sources.json", "source-overview.json"],
+    files: ["manifest.json", "checks.json", "home.html", "memo.html", "memo.json", "memo.md", "radar.json", "sources.json", "source-overview.json", "deadline-resolution.json", "source-coverage.json", "filter-matrix.json"],
   };
   write("manifest.json", `${JSON.stringify(manifest, null, 2)}\n`);
   write("checks.json", `${JSON.stringify(checks, null, 2)}\n`);
@@ -105,6 +155,9 @@ async function main(): Promise<void> {
   write("radar.json", radarResponse.body);
   write("sources.json", sourceResponse.body);
   write("source-overview.json", overviewResponse.body);
+  write("deadline-resolution.json", `${JSON.stringify(deadlineResolution, null, 2)}\n`);
+  write("source-coverage.json", `${JSON.stringify(sourceCoverage, null, 2)}\n`);
+  write("filter-matrix.json", `${JSON.stringify(filterMatrix, null, 2)}\n`);
   write("README.md", `# 盯非遗生产只读巡检快照\n\n- 抓取时间：${capturedAt}\n- 生产地址：${baseUrl}\n- 生产 commit：${productionCommit ?? "未提供"}\n- 只读：是；运行时写入：否\n- 完整性：**${manifest.complete ? "通过" : "未通过"}**\n\n机器结果见 [manifest.json](./manifest.json) 和 [checks.json](./checks.json)。页面副本见 [home.html](./home.html)、[memo.html](./memo.html)，接口副本见 [memo.json](./memo.json)、[memo.md](./memo.md)、[radar.json](./radar.json)。\n`);
   console.log(JSON.stringify({ complete: manifest.complete, output_dir: outputDir, counts: manifest.counts, checks }, null, 2));
   if (!manifest.complete) process.exitCode = 1;

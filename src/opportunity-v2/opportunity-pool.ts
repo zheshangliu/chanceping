@@ -135,7 +135,12 @@ const CFW_SOURCE_ID = "cfw-cultural-ip";
 function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now: Date): OpportunityV2 {
   const preferIncoming = item.source_id === "loewe-craft-prize" && prior.source_id !== "loewe-craft-prize";
   const sameCfwDetail = item.source_id === CFW_SOURCE_ID && prior.source_id === CFW_SOURCE_ID && item.detail_url === prior.detail_url;
-  const deadline = sameCfwDetail && item.deadline ? item.deadline : (item.deadline ?? prior.deadline);
+  const conflictingDeadline = Boolean(item.deadline && prior.deadline && item.deadline !== prior.deadline && !sameCfwDetail);
+  const preferDetailDeadline = item.deadline_resolution === "found_detail" && prior.deadline_resolution !== "found_detail";
+  const deadline = sameCfwDetail && item.deadline ? item.deadline : (conflictingDeadline && !preferDetailDeadline ? prior.deadline : (item.deadline ?? prior.deadline));
+  const deadlineConflicts = conflictingDeadline
+    ? [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? []), { stored_deadline: prior.deadline, conflicting_deadline: item.deadline as string, evidence: item.deadline_raw_text ?? item.deadline_text ?? "", source_url: item.deadline_source_url ?? item.detail_url }]
+    : [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])];
   const mergedTitle = preferIncoming ? item.title : cleanGenericListingTitle(prior.title);
   const mergedSummary = hasUsableSummary(item.summary, item.title) ? conciseSummary(item.summary, item.title) : conciseSummary(prior.summary, prior.title);
   const category = item.category === "competition" && prior.category !== "competition" ? prior.category : (item.category || prior.category);
@@ -154,7 +159,8 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     deadline_source_url: item.deadline_source_url ?? prior.deadline_source_url ?? null,
     deadline_raw_text: item.deadline_raw_text ?? prior.deadline_raw_text ?? item.deadline_text ?? prior.deadline_text ?? null,
     deadline_checked_at: item.deadline_checked_at ?? prior.deadline_checked_at ?? null,
-    deadline_resolution: deadline ? "found" : (item.deadline_resolution ?? prior.deadline_resolution ?? "not_attempted"),
+    deadline_resolution: conflictingDeadline ? "date_conflict" : (deadline && prior.deadline && item.deadline && prior.deadline === item.deadline && prior.source_id !== item.source_id ? "found_cross_source" : (item.deadline_resolution ?? prior.deadline_resolution ?? (deadline ? "found" : "not_attempted"))),
+    deadline_conflicts: deadlineConflicts,
     status: mergedStatus({ ...prior, deadline }, item, sameSource, now),
     first_seen_at: prior.first_seen_at,
     last_seen_at: now.toISOString(),
@@ -207,6 +213,7 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     deadline_raw_text: input.deadline_raw_text ?? input.deadline_text ?? null,
     deadline_checked_at: input.deadline_checked_at ?? null,
     deadline_resolution: input.deadline_resolution ?? (input.deadline_at ? "found" : "not_attempted"),
+    deadline_conflicts: input.deadline_conflicts ?? [],
     status,
     first_seen_at: now.toISOString(),
     last_seen_at: now.toISOString(),
@@ -235,7 +242,27 @@ export function mergeOpportunityV2(existing: OpportunityV2[], incoming: Opportun
     byKey.set(key, prior ? mergeOpportunityRecords(prior, item, now) : { ...item, status: item.status });
     if (cfwDetailKey) cfwDetailKeys.set(cfwDetailKey, key);
   }
-  return [...byKey.values()].map(refreshOpportunityV2DerivedFields);
+  const reconciled = [...byKey.values()].map(refreshOpportunityV2DerivedFields);
+  // A prior enrichment may have retained the same stable id under two
+  // slightly different source titles. Keep the pool one-record-per-id while
+  // preserving the richer deadline and discovery metadata.
+  const byStableId = new Map<string, OpportunityV2>();
+  for (const item of reconciled) {
+    const prior = byStableId.get(item.id);
+    if (!prior) {
+      byStableId.set(item.id, item);
+      continue;
+    }
+    byStableId.set(item.id, {
+      ...prior,
+      ...(prior.deadline ? {} : item.deadline ? { deadline: item.deadline, deadline_text: item.deadline_text, deadline_source_url: item.deadline_source_url, deadline_raw_text: item.deadline_raw_text, deadline_checked_at: item.deadline_checked_at, deadline_resolution: item.deadline_resolution } : {}),
+      title: prior.title.length >= item.title.length ? prior.title : item.title,
+      summary: prior.summary.length >= item.summary.length ? prior.summary : item.summary,
+      discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
+      deadline_conflicts: [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])],
+    });
+  }
+  return [...byStableId.values()];
 }
 
 export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunities: OpportunityV2[]; duplicate_count: number } {
@@ -253,17 +280,25 @@ export function deduplicateOpportunityV2(items: OpportunityV2[]): { opportunitie
       continue;
     }
     duplicate_count += 1;
+    const deadlineConflict = Boolean(prior.deadline && item.deadline && prior.deadline !== item.deadline);
+    const selectedDeadline = deadlineConflict
+      ? (item.deadline_resolution === "found_detail" && prior.deadline_resolution !== "found_detail" ? item.deadline : prior.deadline)
+      : (prior.deadline ?? item.deadline);
     byIdentity.set(key, {
       ...prior,
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
       source_item_id: prior.source_item_id ?? item.source_item_id,
       tags: [...new Set([...prior.tags, ...item.tags])].slice(0, 8),
       summary: conciseSummary(item.summary, item.title) || conciseSummary(prior.summary, prior.title),
+      deadline: selectedDeadline,
       deadline_text: item.deadline_text ?? prior.deadline_text ?? null,
       deadline_source_url: item.deadline_source_url ?? prior.deadline_source_url ?? null,
       deadline_raw_text: item.deadline_raw_text ?? prior.deadline_raw_text ?? item.deadline_text ?? prior.deadline_text ?? null,
       deadline_checked_at: item.deadline_checked_at ?? prior.deadline_checked_at ?? null,
-      deadline_resolution: item.deadline ? "found" : (item.deadline_resolution ?? prior.deadline_resolution ?? "not_attempted"),
+      deadline_resolution: deadlineConflict ? "date_conflict" : (selectedDeadline && prior.deadline && item.deadline && prior.deadline === item.deadline && prior.source_id !== item.source_id ? "found_cross_source" : (item.deadline_resolution ?? prior.deadline_resolution ?? (selectedDeadline ? "found" : "not_attempted"))),
+      deadline_conflicts: deadlineConflict
+        ? [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? []), { stored_deadline: prior.deadline, conflicting_deadline: item.deadline as string, evidence: item.deadline_raw_text ?? item.deadline_text ?? "", source_url: item.deadline_source_url ?? item.detail_url }]
+        : [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])],
       ...(prior.detail_url ? {} : { detail_url: item.detail_url }),
       directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? [])])],
       work_formats: [...new Set([...(prior.work_formats ?? []), ...(item.work_formats ?? [])])],

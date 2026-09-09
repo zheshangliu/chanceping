@@ -1,0 +1,169 @@
+{
+  "captured_at": "2026-09-09T07:04:56.992Z",
+  "pool_path": "/tmp/ich-round1-runtime2.4iqRS2/opportunities.json",
+  "total": 2130,
+  "by_resolution": {
+    "found": 253,
+    "date_conflict": 43,
+    "found_cross_source": 92,
+    "fetch_failed": 64,
+    "source_has_no_date": 43,
+    "relative_only": 14,
+    "not_recorded": 270,
+    "found_detail": 120,
+    "found_listing": 32,
+    "not_attempted": 1199
+  },
+  "by_source": {
+    "shejijingsai-list": {
+      "records": 288,
+      "known": 288,
+      "unknown": 0,
+      "conflicts": 13
+    },
+    "chuangsaiyun-competition-list": {
+      "records": 8,
+      "known": 8,
+      "unknown": 0,
+      "conflicts": 1
+    },
+    "contest-watchers-open": {
+      "records": 14,
+      "known": 10,
+      "unknown": 4,
+      "conflicts": 0
+    },
+    "competitions-archi": {
+      "records": 12,
+      "known": 11,
+      "unknown": 1,
+      "conflicts": 2
+    },
+    "artconnect-opportunities": {
+      "records": 34,
+      "known": 26,
+      "unknown": 8,
+      "conflicts": 3
+    },
+    "loewe-craft-prize": {
+      "records": 1,
+      "known": 1,
+      "unknown": 0,
+      "conflicts": 0
+    },
+    "opencall-radar-craft": {
+      "records": 13,
+      "known": 3,
+      "unknown": 10,
+      "conflicts": 0
+    },
+    "craft-scotland-opportunities": {
+      "records": 13,
+      "known": 9,
+      "unknown": 4,
+      "conflicts": 1
+    },
+    "heritage-crafts-opportunities": {
+      "records": 13,
+      "known": 6,
+      "unknown": 7,
+      "conflicts": 8
+    },
+    "asef-culture360-opportunities": {
+      "records": 24,
+      "known": 10,
+      "unknown": 14,
+      "conflicts": 2
+    },
+    "on-the-move-open-calls": {
+      "records": 2,
+      "known": 0,
+      "unknown": 2,
+      "conflicts": 0
+    },
+    "curatorspace-opportunities": {
+      "records": 30,
+      "known": 9,
+      "unknown": 21,
+      "conflicts": 0
+    },
+    "cafe-call-for-entry": {
+      "records": 56,
+      "known": 0,
+      "unknown": 56,
+      "conflicts": 0
+    },
+    "craft-council-bc-calls": {
+      "records": 8,
+      "known": 5,
+      "unknown": 3,
+      "conflicts": 0
+    },
+    "kcdf-opportunities": {
+      "records": 10,
+      "known": 10,
+      "unknown": 0,
+      "conflicts": 0
+    },
+    "homo-faber-calls": {
+      "records": 2,
+      "known": 0,
+      "unknown": 2,
+      "conflicts": 0
+    },
+    "cfw-cultural-ip": {
+      "records": 45,
+      "known": 44,
+      "unknown": 1,
+      "conflicts": 2
+    },
+    "whaleideas-competition": {
+      "records": 160,
+      "known": 68,
+      "unknown": 92,
+      "conflicts": 14
+    },
+    "zcool-challenges": {
+      "records": 15,
+      "known": 0,
+      "unknown": 15,
+      "conflicts": 0
+    },
+    "iuben-cultural-competition": {
+      "records": 14,
+      "known": 13,
+      "unknown": 1,
+      "conflicts": 28
+    },
+    "everyart-competition": {
+      "records": 13,
+      "known": 8,
+      "unknown": 5,
+      "conflicts": 1
+    },
+    "american-craft-council-opportunities": {
+      "records": 41,
+      "known": 1,
+      "unknown": 40,
+      "conflicts": 0
+    },
+    "1zj-cultural-competition": {
+      "records": 1163,
+      "known": 0,
+      "unknown": 1163,
+      "conflicts": 0
+    },
+    "zjmtcn-product-competition": {
+      "records": 63,
+      "known": 0,
+      "unknown": 63,
+      "conflicts": 0
+    },
+    "cnyisai-competition": {
+      "records": 88,
+      "known": 19,
+      "unknown": 69,
+      "conflicts": 1
+    }
+  }
+}

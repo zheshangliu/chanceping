@@ -1,0 +1,23 @@
+{
+  "http_all_200": true,
+  "source_pool_visible": true,
+  "source_count": 31,
+  "home_competition_total": 148,
+  "radar_competition_total": 148,
+  "memo_total": 431,
+  "memo_json_markdown_same_ids": true,
+  "memo_location_column_removed": true,
+  "memo_noise_hidden": true,
+  "loewe_visible_once": true,
+  "loewe_sources": [
+    "loewe-craft-prize",
+    "asef-culture360-opportunities"
+  ],
+  "named_sources_visible": [
+    "Craft Scotland",
+    "Heritage Crafts",
+    "ASEF culture360 Opportunities"
+  ],
+  "no_expired_default_radar": true,
+  "home_and_radar_counts_match": true
+}
