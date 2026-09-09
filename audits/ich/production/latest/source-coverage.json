@@ -1,0 +1,622 @@
+{
+  "captured_at": "2026-09-09T09:24:14.855Z",
+  "sources": [
+    {
+      "id": "shejijingsai-list",
+      "name": "设计竞赛网",
+      "url": "https://www.shejijingsai.com/liebiao",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "design",
+        "cultural_creative"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:14.856Z"
+    },
+    {
+      "id": "chuangsaiyun-competition-list",
+      "name": "创赛云",
+      "url": "https://www.xiacansai.com/mrjs.html",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "design",
+        "cultural_creative"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:16.084Z"
+    },
+    {
+      "id": "contest-watchers-open",
+      "name": "Contest Watchers",
+      "url": "https://www.contestwatchers.com/feed/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "open_call"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:19.973Z"
+    },
+    {
+      "id": "crafts-council-opportunities",
+      "name": "Crafts Council",
+      "url": "https://www.craftscouncil.org.uk/sector-support/opportunities",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:28.925Z"
+    },
+    {
+      "id": "artconnect-opportunities",
+      "name": "ArtConnect",
+      "url": "https://www.artconnect.com/opportunities",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "art",
+        "open_call",
+        "exhibition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:32.274Z"
+    },
+    {
+      "id": "competitions-archi",
+      "name": "Competitions.archi",
+      "url": "https://competitions.archi/registration-ending-latest/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "architecture"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:44.140Z"
+    },
+    {
+      "id": "loewe-craft-prize",
+      "name": "LOEWE FOUNDATION Craft Prize",
+      "url": "https://craftprize.loewe.com/zh/craftprize2027",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "award",
+        "competition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:49.669Z"
+    },
+    {
+      "id": "opencall-radar-craft",
+      "name": "OpenCall Radar｜Craft",
+      "url": "https://opencallradar.com/open-calls/discipline/craft",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:49.999Z"
+    },
+    {
+      "id": "opencalls-ai",
+      "name": "opencalls.ai",
+      "url": "https://opencalls.ai/",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "open_call",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:17:56.528Z"
+    },
+    {
+      "id": "american-craft-council-opportunities",
+      "name": "American Craft Council Opportunities Board",
+      "url": "https://craftcouncil.org/opportunities-board/",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:18:02.294Z"
+    },
+    {
+      "id": "craft-scotland-opportunities",
+      "name": "Craft Scotland",
+      "url": "https://www.craftscotland.org/community",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "residency",
+        "award",
+        "market"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:18:17.706Z"
+    },
+    {
+      "id": "kcdf-opportunities",
+      "name": "KCDF 한국공예·디자인문화진흥원",
+      "url": "https://www.kcdf.or.kr/main",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "design",
+        "open_call",
+        "grant",
+        "exhibition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:18:21.711Z"
+    },
+    {
+      "id": "heritage-crafts-opportunities",
+      "name": "Heritage Crafts",
+      "url": "https://heritagecrafts.org.uk/opportunities/",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "heritage",
+        "open_call",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:18:48.597Z"
+    },
+    {
+      "id": "homo-faber-calls",
+      "name": "Homo Faber Calls",
+      "url": "https://www.homofaber.com/en/news/cfp",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "craft",
+        "open_call",
+        "fellowship",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:19:02.225Z"
+    },
+    {
+      "id": "asef-culture360-opportunities",
+      "name": "ASEF culture360 Opportunities",
+      "url": "https://culture360.org/opportunities/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "heritage",
+        "open_call",
+        "grant",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:19:05.680Z"
+    },
+    {
+      "id": "on-the-move-open-calls",
+      "name": "On the Move Open Calls",
+      "url": "https://on-the-move.org/news",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "open_call",
+        "grant",
+        "residency",
+        "mobility"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": "2026-09-06T15:10:12.197Z"
+    },
+    {
+      "id": "curatorspace-opportunities",
+      "name": "CuratorSpace Opportunities",
+      "url": "https://www.curatorspace.com/opportunities?orderBy=latest",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "residency",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:19:08.962Z"
+    },
+    {
+      "id": "cafe-call-for-entry",
+      "name": "CaFÉ CallForEntry",
+      "url": "https://artist.callforentry.org/festivals.php/calendar.phtml",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "award",
+        "competition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:20:00.228Z"
+    },
+    {
+      "id": "artshub-craft-opportunities",
+      "name": "ArtsHub Craft Opportunities",
+      "url": "https://www.artshub.com.au/opportunity/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "residency",
+        "grant",
+        "award"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:20:08.462Z"
+    },
+    {
+      "id": "craft-council-bc-calls",
+      "name": "Craft Council of British Columbia Calls",
+      "url": "https://craftcouncilbc.ca/call-for-entry/",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "market",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:20:27.938Z"
+    },
+    {
+      "id": "craft-council-nl-opportunities",
+      "name": "Craft Council of Newfoundland and Labrador Opportunities",
+      "url": "https://www.craftcouncilnl.ca/opportunities/opportunities",
+      "region": "GLOBAL",
+      "priority": "P1",
+      "types": [
+        "craft",
+        "open_call",
+        "exhibition",
+        "market",
+        "residency"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": "2026-09-09T00:46:18.613Z"
+    },
+    {
+      "id": "cfw-cultural-ip",
+      "name": "CFW设计大赛｜文创IP",
+      "url": "https://dasai.cfw.cn/compete/search?categoryCode=0400&ordernum=0&page=1",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "ip",
+        "gift"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:20:33.028Z"
+    },
+    {
+      "id": "whaleideas-competition",
+      "name": "文创赛网｜鲸创意",
+      "url": "https://whaleideas.com/zjds/index.html",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "ip"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:20:33.944Z"
+    },
+    {
+      "id": "1zj-cultural-competition",
+      "name": "第一征集网｜全球征集网",
+      "url": "https://www.1zj.com/index.php?a=mlists&c=index&catid=85&cid=91&m=content&page=1",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "design",
+        "gift"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:21:11.576Z"
+    },
+    {
+      "id": "chuangyisai-cultural",
+      "name": "创意赛网",
+      "url": "https://www.chuangyisai.com/zjds/gycp/wcsj",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": null
+    },
+    {
+      "id": "zcool-challenges",
+      "name": "站酷挑战赛 ZCOOL",
+      "url": "https://www.zcool.com.cn/events/challenge",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "brand_collaboration",
+        "cultural_creative",
+        "ip",
+        "packaging",
+        "aigc",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:21:20.964Z"
+    },
+    {
+      "id": "zjmtcn-product-competition",
+      "name": "征集码头",
+      "url": "https://www.zjmtcn.com/zjxx/chanpin/index.html",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "tourism_product",
+        "gift",
+        "craft",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "NEEDS_ADAPTER",
+      "last_fetch_at": "2026-09-08T14:08:58.173Z"
+    },
+    {
+      "id": "iuben-cultural-competition",
+      "name": "优本视觉",
+      "url": "https://iuben.cn/collect/",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "packaging",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:21:25.131Z"
+    },
+    {
+      "id": "everyart-competition",
+      "name": "EveryArt",
+      "url": "https://www.everyart.cn/search/0/%E8%89%BA%E6%9C%AF%E5%BE%81%E9%9B%86",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "open_call",
+        "cultural_creative",
+        "heritage",
+        "residency",
+        "exhibition"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:21:26.800Z"
+    },
+    {
+      "id": "gtn9-competition",
+      "name": "古田路9号",
+      "url": "https://www.gtn9.com/work_list.aspx?action=index_red&id=565&subcategory=567",
+      "region": "CN",
+      "priority": "P1",
+      "types": [
+        "competition",
+        "cultural_creative",
+        "heritage",
+        "tourism_product",
+        "ip",
+        "packaging",
+        "design"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "FAILED",
+      "last_fetch_at": null
+    },
+    {
+      "id": "cnyisai-competition",
+      "name": "艺赛中国",
+      "url": "https://www.cnyisai.com/calls.html",
+      "region": "CN",
+      "priority": "P0",
+      "types": [
+        "competition",
+        "design",
+        "cultural_creative",
+        "heritage",
+        "tourism_product"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": "2026-09-09T09:21:29.108Z"
+    }
+  ],
+  "overview": {
+    "registered": 31,
+    "enabled": 31,
+    "recent_success": 26,
+    "failed": 1,
+    "needs_adapter": 4,
+    "current_contribution": 266
+  }
+}

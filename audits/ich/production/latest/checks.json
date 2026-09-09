@@ -2,9 +2,9 @@
   "http_all_200": true,
   "source_pool_visible": true,
   "source_count": 31,
-  "home_competition_total": 162,
-  "radar_competition_total": 162,
-  "memo_total": 526,
+  "home_competition_total": 206,
+  "radar_competition_total": 206,
+  "memo_total": 576,
   "memo_json_markdown_same_ids": true,
   "memo_location_column_removed": true,
   "memo_noise_hidden": true,
@@ -19,5 +19,7 @@
     "ASEF culture360 Opportunities"
   ],
   "no_expired_default_radar": true,
-  "home_and_radar_counts_match": true
+  "home_and_radar_counts_match": true,
+  "encoding_quality_memo_errors": 0,
+  "encoding_quality_radar_errors": 0
 }

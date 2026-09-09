@@ -1,0 +1,16 @@
+{
+  "captured_at": "2026-09-09T09:24:14.855Z",
+  "production_commit": "8e163490012c3c83f8c60818d1141ae28f76134c",
+  "runtime_path": "/var/lib/chanceping/opportunity-v2",
+  "current_memo_conflict_count": 37,
+  "date_conflict_resolution_count": 5,
+  "application_deadline_conflicts": 13,
+  "unsafe_selected_deadline_count": 0,
+  "safe_conflicts": 32,
+  "downgraded_to_deadline_unknown": 5,
+  "memo_total": 576,
+  "known_deadline": 442,
+  "unknown_deadline": 134,
+  "coverage_rate": 76.74,
+  "gate": "PASS"
+}
