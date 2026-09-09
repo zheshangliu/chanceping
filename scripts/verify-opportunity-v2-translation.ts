@@ -41,6 +41,11 @@ async function main(): Promise<void> {
   });
   const placeholderResult = await placeholderProvider.translate({ title: "Maker support", summary: "来源页面未提供更详细摘要。", targetLanguage: "zh-CN" });
   assert.equal(placeholderResult.summary_zh, "来源页面未提供更详细摘要。");
+  const currencyProvider = createLlmTranslationProvider("deepseek", {
+    chat: async () => ({ content: "{}", parsed: { title_zh: "Off Center 2027 国际陶瓷竞赛", summary_zh: "来源页面未提供更详细摘要。" } }),
+  });
+  const currencyResult = await currencyProvider.translate({ title: "Off Center 2027 - Application fee: $35", summary: "来源页面未提供更详细摘要。", targetLanguage: "zh-CN" });
+  assert.match(currencyResult.summary_zh, /\$35/);
 
   let calls = 0;
   const azure = createAzureTranslator({ key: "test-key", region: "eastasia", endpoint: "https://azure.test", fetchImpl: async (_url, init) => { calls += 1; assert.equal(init?.method, "POST"); return response([{ translations: [{ text: "洛伊威基金会工艺奖 2027" }] }, { translations: [{ text: "提交原创作品，奖金 €100,000。" }] }]); } });
@@ -52,7 +57,7 @@ async function main(): Promise<void> {
   assert.equal(chain.provider_id, "azure");
   assert.equal(calls, 1);
   assert.ok(chain.characters_sent_to_free_provider > 0);
-  console.log(JSON.stringify({ fixtures: 8, provider_chain: "PASS", no_credentials: "CREDENTIAL_NOT_CONFIGURED", one_request_for_title_summary: "PASS", placeholder_summary_fallback: "PASS" }, null, 2));
+  console.log(JSON.stringify({ fixtures: 9, provider_chain: "PASS", no_credentials: "CREDENTIAL_NOT_CONFIGURED", one_request_for_title_summary: "PASS", placeholder_summary_fallback: "PASS", currency_fact_preserved: "PASS" }, null, 2));
 }
 
 void main();
