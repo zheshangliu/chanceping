@@ -1,0 +1,23 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { parseProcurementPayload } from "../src/opportunity-v2/procurement";
+import { hasEncodingCorruption } from "../src/ich/aggregation/adapters/common";
+
+const fixturePath = path.resolve("config/procurement/acceptance-fixtures.json");
+const fixtures = JSON.parse(fs.readFileSync(fixturePath, "utf8")) as { cases: Array<{ id: string; kind?: string; input?: Record<string, unknown>; expected?: Record<string, unknown> }> };
+assert.equal(fixtures.cases.length, 46, "package acceptance fixture count must remain 46");
+const ted = JSON.stringify({ releases: [{ ocid: "ocds-1", id: "rel-1", tender: { title: "Craft museum procurement", description: "Open tender for craft exhibition", tenderPeriod: { endDate: "2026-12-20T17:00:00Z" } }, buyer: { name: "Museum" }, status: "active" }] });
+const items = parseProcurementPayload(ted, "proc-uk-fts", "https://example.test/tender/1", "GLOBAL");
+assert.equal(items.length, 1); assert.equal(items[0].procurement?.direction, "buyer_demand"); assert.equal(items[0].deadline_at?.slice(0, 10), "2026-12-20");
+const synthetic = (title: string, description: string) => parseProcurementPayload(JSON.stringify({ releases: [{ ocid: title, tender: { title, description, tenderPeriod: { endDate: "2026-09-30T17:00:00Z" } }, status: "active" }] }), "proc-fixture", "https://example.test/fixture", "GLOBAL");
+assert.equal(synthetic("博物馆文创纪念品采购", "采购500套文创礼盒，接受供应商报价。")[0].procurement?.direction, "buyer_demand");
+assert.equal(synthetic("Museum gift shop product submissions", "Submit your product for consideration. Orders are not guaranteed.")[0].procurement?.direction, "supplier_application");
+assert.equal(synthetic("Cultural programme market engagement", "We are gathering supplier feedback before a future tender.")[0].procurement?.direction, "market_engagement");
+assert.equal(synthetic("工会节日花艺体验服务采购", "询价采购花艺活动服务及花材，预算30000元。")[0].procurement?.budget_amount, 30000);
+const seller = parseProcurementPayload(JSON.stringify({ releases: [{ ocid: "seller", tender: { title: "Buy wholesale craft supplies" } }] }), "proc-uk-fts", "https://example.test/seller", "GLOBAL");
+assert.equal(seller.length, 0, "seller offer must not be treated as current buyer demand");
+assert.equal(hasEncodingCorruption("����logo"), true); assert.equal(hasEncodingCorruption("2026 LOGO设计大赛"), false);
+const sourceRegistry = JSON.parse(fs.readFileSync(path.resolve("config/procurement/source-research.json"), "utf8"));
+assert.equal(sourceRegistry.sources.length, 177, "all research registrations must remain auditable");
+console.log(JSON.stringify({ fixtures: fixtures.cases.length, source_registrations: sourceRegistry.sources.length, parsed_procurement: items.length, seller_offer_excluded: true, encoding_fixture: "PASS" }, null, 2));

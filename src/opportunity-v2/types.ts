@@ -11,6 +11,10 @@ export type V2ParticipationMode = "online" | "physical" | "onsite" | "unspecifie
 export type V2DeadlineResolution = "found" | "found_listing" | "found_detail" | "found_cross_source" | "long_term" | "source_has_no_date" | "detail_fetch_failed" | "date_conflict" | "relative_only" | "not_attempted" | "fetch_failed" | "image_only" | "ambiguous" | "not_stated";
 export type V2DeadlineKind = "submission_deadline" | "application_deadline" | "registration_deadline" | "deadline";
 export type V2EncodingErrorField = "title" | "summary";
+export type V2ProcurementDirection = "buyer_demand" | "supplier_application" | "market_engagement" | "seller_offer" | "unknown";
+export type V2ProcurementStage = "planned" | "prequalification" | "open" | "ongoing_intake" | "awarded" | "closed" | "cancelled" | "unknown";
+export interface V2ProcurementMilestone { kind: string; date: string | null; text?: string; }
+export interface V2ProcurementMetadata { direction: V2ProcurementDirection; stage: V2ProcurementStage; notice_type: string; project_id: string | null; lot_id?: string | null; buyer_name?: string | null; procurement_method?: string | null; budget_amount?: number | null; budget_currency?: string | null; milestones: V2ProcurementMilestone[]; source_record_id?: string | null; }
 
 export interface V2DeadlineConflict {
   stored_deadline: string | null;
@@ -71,6 +75,7 @@ export interface OpportunityV2 {
   official_url?: string;
   application_url?: string;
   organizer?: string;
+  procurement?: V2ProcurementMetadata;
 }
 
 export interface OpportunityV2PoolFile {

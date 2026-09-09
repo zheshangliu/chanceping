@@ -224,7 +224,7 @@ export function parseCfwDateRange(value: string | null): ParsedDateRange | null 
 
 export function classifyCategory(sourceCategory: string | null, title: string): "competition" | "exhibition_market" | "procurement_project" | "channel_collaboration" | "policy_funding" | "international" | "other" {
   const value = `${sourceCategory ?? ""} ${title}`.toLowerCase();
-  if (/采购|供应商|commission|supplier|招标/u.test(value)) return "procurement_project";
+  if (/procurement_project|buyer_demand|procurement|采购项目|采购|招标|委托/u.test(value)) return "procurement_project";
   if (/合作|联名|partnership|collaboration|入驻/u.test(value)) return "channel_collaboration";
   if (/资助|基金|grant|\bfund(?:ing)?\b|scholarship|program/u.test(value)) return "policy_funding";
   // “international/国际” describes geography, not the public module. Only
@@ -261,6 +261,31 @@ export interface ParsedAggregationItem {
   participation_mode?: "online" | "physical" | "onsite" | "unspecified";
   is_long_term?: boolean;
   starts_at?: string | null;
+  procurement?: ProcurementMetadata;
+}
+
+export type ProcurementDirection = "buyer_demand" | "supplier_application" | "market_engagement" | "seller_offer" | "unknown";
+export type ProcurementStage = "planned" | "prequalification" | "open" | "ongoing_intake" | "awarded" | "closed" | "cancelled" | "unknown";
+export type ProcurementNoticeType = "tender" | "request_for_information" | "prior_information" | "award" | "other";
+
+export interface ProcurementMilestone {
+  kind: "publication" | "clarification" | "submission" | "award" | "contract_start" | "contract_end" | "other";
+  date: string | null;
+  text?: string;
+}
+
+export interface ProcurementMetadata {
+  direction: ProcurementDirection;
+  stage: ProcurementStage;
+  notice_type: ProcurementNoticeType;
+  project_id: string | null;
+  lot_id?: string | null;
+  buyer_name?: string | null;
+  procurement_method?: string | null;
+  budget_amount?: number | null;
+  budget_currency?: string | null;
+  milestones: ProcurementMilestone[];
+  source_record_id?: string | null;
 }
 
 export function extractAnchors(html: string, baseUrl: string): Array<{ href: string; text: string }> {

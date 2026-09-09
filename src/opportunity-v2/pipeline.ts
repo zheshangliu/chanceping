@@ -9,6 +9,7 @@ import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artc
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { enrichGenericItem, isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
+import { parseProcurementPayload, isCurrentProcurement } from "./procurement";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, isPublicIp, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
@@ -16,8 +17,8 @@ import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
-const DEFAULT_TIMEOUT_MS = 20_000;
-const MAX_RESPONSE_BYTES = 5_000_000;
+const DEFAULT_TIMEOUT_MS = 30_000;
+const MAX_RESPONSE_BYTES = 10_000_000;
 
 interface PinnedAddress {
   address: string;
@@ -170,6 +171,10 @@ function writeHealth(rows: OpportunityV2SourceHealth[], filePath?: string): void
 }
 
 function parseSource(source: OpportunityV2Source, text: string, listingUrl: string): { items: ParsedAggregationItem[]; format: "DEDICATED" | "RSS" | "HTML_LISTING" | null } {
+  if (source.id.startsWith("proc-")) {
+    const parsed = parseProcurementPayload(text, source.id, listingUrl, source.region).filter(isCurrentProcurement);
+    return { items: parsed, format: parsed.length ? "DEDICATED" : null };
+  }
   try {
     const dedicated = getAggregationAdapter(source.id).parseListing(text, listingUrl);
     if (dedicated.length) return { items: dedicated, format: "DEDICATED" };

@@ -1,0 +1,254 @@
+{
+  "schema_version": "chanceping.procurement.query-pack.v1",
+  "research_date": "2026-09-09",
+  "no_numeric_scoring": true,
+  "topic_groups": {
+    "cultural_products": [
+      "文创产品",
+      "文化创意产品",
+      "旅游商品",
+      "城市礼物",
+      "伴手礼",
+      "纪念品",
+      "非遗产品",
+      "工艺品",
+      "礼品定制",
+      "陶瓷礼品",
+      "文化礼盒",
+      "文创手办",
+      "衍生品",
+      "文博文创",
+      "cultural merchandise",
+      "museum merchandise",
+      "souvenirs",
+      "promotional gifts",
+      "handicrafts",
+      "artisan products",
+      "bespoke gifts"
+    ],
+    "design_packaging": [
+      "包装设计",
+      "礼盒设计",
+      "IP形象",
+      "吉祥物",
+      "插画",
+      "视觉设计",
+      "红封",
+      "手提袋",
+      "design services",
+      "packaging design",
+      "illustration commission",
+      "brand identity"
+    ],
+    "cultural_activities": [
+      "非遗体验",
+      "手工体验",
+      "手作活动",
+      "文化活动",
+      "客户沙龙",
+      "节庆活动",
+      "工会活动",
+      "研学课程",
+      "活动策划",
+      "场地布置",
+      "宣传活动",
+      "展陈策划",
+      "craft workshops",
+      "cultural events",
+      "event management",
+      "exhibition design",
+      "interpretation design"
+    ],
+    "floral_decor": [
+      "花艺服务",
+      "花卉布置",
+      "节日花艺",
+      "花艺体验",
+      "押花",
+      "压花",
+      "植物标本文创",
+      "floral arrangements",
+      "floral design",
+      "pressed flower",
+      "botanical art"
+    ],
+    "art_commission": [
+      "公共艺术",
+      "艺术装置",
+      "壁画委托",
+      "艺术品制作",
+      "雕塑",
+      "public art commission",
+      "artist commission",
+      "mural commission",
+      "sculpture commission",
+      "community arts commission"
+    ]
+  },
+  "demand_terms": {
+    "zh": [
+      "采购公告",
+      "招标公告",
+      "询价",
+      "比选",
+      "磋商",
+      "谈判",
+      "征集供应商",
+      "供应商招募",
+      "需求调研",
+      "产品征集",
+      "委托制作",
+      "设计服务",
+      "入围",
+      "定点供应",
+      "征求报价"
+    ],
+    "en": [
+      "tender",
+      "invitation to tender",
+      "request for quotation",
+      "RFQ",
+      "request for proposal",
+      "RFP",
+      "expression of interest",
+      "EOI",
+      "supplier registration",
+      "product submission",
+      "call for suppliers",
+      "commission",
+      "procurement notice",
+      "market engagement"
+    ]
+  },
+  "local_language_queries": {
+    "zh-Hant": [
+      "文創商品 採購",
+      "紀念品 招標",
+      "文化活動 採購",
+      "禮品 供應商",
+      "手作 服務 徵求"
+    ],
+    "ja": [
+      "記念品 調達",
+      "ノベルティ 入札",
+      "文化イベント 企画運営 業務委託",
+      "ミュージアムショップ 商品 募集",
+      "工芸品 調達"
+    ],
+    "ko": [
+      "기념품 구매 입찰",
+      "공예품 구매",
+      "문화행사 운영 용역",
+      "박물관 문화상품 공모",
+      "홍보물 제작 입찰"
+    ],
+    "fr": [
+      "marché public objets promotionnels",
+      "appel d’offres produits dérivés musée",
+      "prestations événementielles culturelles",
+      "commande artistique"
+    ],
+    "de": [
+      "Ausschreibung Werbeartikel",
+      "Vergabe Museum Gestaltung",
+      "Kulturveranstaltung Ausschreibung",
+      "Kunst am Bau Wettbewerb Auftrag"
+    ],
+    "es": [
+      "licitación artículos promocionales",
+      "contratación eventos culturales",
+      "productos tienda museo proveedores",
+      "convocatoria comisión artística"
+    ],
+    "pt": [
+      "licitação brindes personalizados",
+      "contratação eventos culturais",
+      "aquisição artesanato",
+      "serviços de exposição"
+    ],
+    "ar": [
+      "مناقصة هدايا تذكارية",
+      "توريد هدايا دعائية",
+      "تنظيم فعاليات ثقافية",
+      "تسجيل الموردين"
+    ],
+    "id": [
+      "pengadaan souvenir",
+      "jasa penyelenggaraan acara budaya",
+      "pengadaan cinderamata"
+    ],
+    "tr": [
+      "hediyelik eşya ihale",
+      "kültürel etkinlik hizmet alımı"
+    ]
+  },
+  "query_templates": [
+    "{topic} {demand} {region}",
+    "site:{verified_source_domain} {topic} {demand}",
+    "{buyer} 采购 公告 礼品 活动",
+    "{buyer} procurement supplier gifts cultural events"
+  ],
+  "do_not_match_on_alone": [
+    "设计",
+    "创意",
+    "创新",
+    "银行",
+    "博物馆",
+    "文化厅",
+    "大学",
+    "craft",
+    "museum",
+    "innovation",
+    "design"
+  ],
+  "lifecycle_negative_or_update": [
+    "中标公告",
+    "成交公告",
+    "结果公告",
+    "验收公告",
+    "废标",
+    "终止",
+    "取消",
+    "流标",
+    "更正",
+    "澄清",
+    "延期",
+    "contract award",
+    "awarded",
+    "cancelled",
+    "cancellation",
+    "amendment",
+    "corrigendum"
+  ],
+  "hard_noise": [
+    "隐私政策",
+    "会员登录",
+    "联系我们",
+    "发布采购",
+    "公司简介",
+    "privacy policy",
+    "terms of use",
+    "contact us",
+    "login",
+    "post a tender"
+  ],
+  "scope_rules": [
+    "先判公告/需求身份，再判断采购对象；菜单含采购词仍不是机会。",
+    "纯IT设备、网络机房、道路施工、医疗器械、通用安保物业、食品供餐不因采购人是文化机构而纳入。",
+    "含设计/创新/AI不能单独强相关；文化数字内容、文化IP和互动展陈有明确服务需求时可纳入。",
+    "非遗活动中采购材料包或执行服务可以纳入；普通学员报名手工课/摊主付费入场不是采购订单。",
+    "更正/延期不能作为无关消息丢弃，必须回连原项目；中标/终止归历史状态。",
+    "买方地点、交付地点、来源地区、境外资格四个字段独立；未知资格显示查看原文，不猜。",
+    "申请供应商库与真实订单两个不同子类型；佣金渠道与采购金额不同。"
+  ],
+  "optional_classification_codes": {
+    "CPV_UNSPSC": "仅当来源提供或正式词表确认后使用；本包不凭记忆硬写未经验证的编码。中文/当地语言关键词与来源分类并用，不能只靠编码检索。"
+  },
+  "retrieval_budget": {
+    "initial_window_days": 60,
+    "initial_window_note": "这是起始搜索窗，不是候选数量上限。仍开放的更早项目、长期供应申请必须补全；大平台用更新水位与分类/关键词，不遍历所有历史。",
+    "incremental_overlap_days": 7,
+    "frequency_hours": 72,
+    "short_window_risk": "72h可能遗漏短期采购；本轮保持现有周期，实际记录短窗遗漏风险，需要24h/12h时单独获批，不静默改比赛调度。"
+  }
+}

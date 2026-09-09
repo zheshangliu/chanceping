@@ -37,6 +37,8 @@ export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
   { id: "everyart-competition", name: "EveryArt", url: "https://www.everyart.cn/search/0/%E8%89%BA%E6%9C%AF%E5%BE%81%E9%9B%86", region: "CN", priority: "P1", types: ["competition", "open_call", "cultural_creative", "heritage", "residency", "exhibition"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
   { id: "gtn9-competition", name: "古田路9号", url: "https://www.gtn9.com/work_list.aspx?action=index_red&id=565&subcategory=567", region: "CN", priority: "P1", types: ["competition", "cultural_creative", "heritage", "tourism_product", "ip", "packaging", "design"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
   { id: "cnyisai-competition", name: "艺赛中国", url: "https://www.cnyisai.com/calls.html", region: "CN", priority: "P0", types: ["competition", "design", "cultural_creative", "heritage", "tourism_product"], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+  { id: "proc-uk-fts", name: "英国 Find a Tender（OCDS）", url: "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?limit=100", region: "GLOBAL", priority: "P0", types: ["procurement", "buyer_demand", "official_api"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
+  { id: "proc-ca-canadabuys", name: "CanadaBuys Open Tenders CSV", url: "https://canadabuys.canada.ca/opendata/pub/openTenderNotice-ouvertAvisAppelOffres.csv", region: "GLOBAL", priority: "P0", types: ["procurement", "buyer_demand", "open_data"], radars: ["ich"], enabled: true, status: "ACTIVE", last_fetch_at: null },
 ];
 
 // These are the built-in seed IDs exported for compatibility. They are not an allowlist:

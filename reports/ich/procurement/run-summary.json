@@ -1,0 +1,58 @@
+{
+  "schema_version": "chanceping-ich-procurement-run.v1",
+  "run_id": "opportunity-v2-20260909134829",
+  "generated_at": "2026-09-09T13:48:29.657Z",
+  "environment": "development-isolated-copy",
+  "production_deployed": false,
+  "research_registry_count": 177,
+  "runtime_source_pool_count": 33,
+  "run": {
+    "fetched_sources": 31,
+    "successful_sources": 26,
+    "raw_items": 2851,
+    "pool_items": 2140,
+    "radar_items": 291,
+    "api_radar_total": 267
+  },
+  "procurement": {
+    "structured_metadata_items": 73,
+    "procurement_category_items": 76,
+    "current_ich_radar_items": 0,
+    "directions": {
+      "buyer_demand": 23,
+      "supplier_application": 26,
+      "market_engagement": 5,
+      "unknown": 19
+    },
+    "seller_offer_in_current": false,
+    "awarded_or_cancelled_in_current": false
+  },
+  "connected_public_sources": [
+    {
+      "source_id": "proc-uk-fts",
+      "name": "英国 Find a Tender（OCDS）",
+      "status": "ACTIVE",
+      "http_status": 200,
+      "items_seen": 84,
+      "format": "DEDICATED"
+    },
+    {
+      "source_id": "proc-ca-canadabuys",
+      "name": "CanadaBuys Open Tenders CSV",
+      "status": "ACTIVE",
+      "http_status": 200,
+      "items_seen": 628,
+      "format": "DEDICATED"
+    }
+  ],
+  "source_probe_counts": {
+    "LIVE_PUBLIC_CANDIDATE": 2,
+    "PUBLIC_PAGE_NO_STRUCTURED_LISTING": 105,
+    "PUBLIC_INDEX_RESEARCHED": 13,
+    "BLOCKED_PUBLIC_ACCESS": 47,
+    "NO_PUBLIC_LISTING_VERIFIED": 4,
+    "CHANNEL_OR_DISCOVERY_ONLY": 2,
+    "BLOCKED_CREDENTIAL_NOT_CONFIGURED": 1,
+    "EXCLUDED_BY_PACKAGE": 3
+  }
+}

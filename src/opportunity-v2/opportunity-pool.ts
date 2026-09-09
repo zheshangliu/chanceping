@@ -5,6 +5,7 @@ import { cleanGenericListingTitle } from "../ich/aggregation/adapters/generic-li
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2, OpportunityV2PoolFile, V2DeadlineConflict, V2DeadlineKind, V2DeadlineResolution, V2OpportunityStatus } from "./types";
 import { classifyV2Dimensions, classifyV2RadarRelevance } from "./keywords";
+import { isCraftRelevantProcurement } from "./procurement";
 
 function poolPath(filePath?: string): string {
   const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH;
@@ -403,7 +404,11 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   // taxonomy such as `grant` demote a real contest out of the public module.
   const category = prior.category === "competition" || item.category === "competition" ? "competition" : (item.category || prior.category);
   const derived = classifyV2Dimensions(mergedTitle, mergedSummary, category);
-  const relevance = classifyV2RadarRelevance(mergedTitle, mergedSummary, category);
+  const procurement = item.procurement ?? prior.procurement;
+  const procurementRelevant = procurement ? isCraftRelevantProcurement(`${mergedTitle} ${mergedSummary}`) : false;
+  const relevance = category === "procurement_project" && procurement && procurement.direction !== "seller_offer" && procurementRelevant
+    ? { relevance: "RELEVANT" as const, tags: ["procurement"] }
+    : classifyV2RadarRelevance(mergedTitle, mergedSummary, category);
   const sameSource = item.source_id === prior.source_id;
   const mergedStatus = deadlineSelection.selected.deadline ? opportunityStatus(deadlineSelection.selected.deadline, now) : deadlineSelection.unsafe ? "UNKNOWN_DEADLINE" : mergedStatusWithoutConflict(prior, item, sameSource, now);
   return withEncodingMetadata({
@@ -420,7 +425,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     last_seen_at: now.toISOString(),
     discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
     tags: [...new Set([...prior.tags, ...item.tags, ...relevance.tags])].slice(0, 8),
-    radar_relevance: relevance.relevance === "IRRELEVANT" && prior.radar_relevance === "RELEVANT" ? prior.radar_relevance : relevance.relevance,
+    radar_relevance: category === "procurement_project" && procurement ? (procurementRelevant ? "RELEVANT" : "IRRELEVANT") : (relevance.relevance === "IRRELEVANT" && prior.radar_relevance === "RELEVANT" ? prior.radar_relevance : relevance.relevance),
     source_url: preferIncoming ? item.source_url : (prior.source_url || item.source_url),
     source_name: preferIncoming ? item.source_name : (prior.source_name || item.source_name),
     ...(item.directions?.length || prior.directions?.length || derived.directions.length ? { directions: [...new Set([...(prior.directions ?? []), ...(item.directions ?? []), ...derived.directions])] } : {}),
@@ -434,6 +439,7 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
     participation_mode: item.participation_mode && item.participation_mode !== "unspecified" ? item.participation_mode : (prior.participation_mode ?? derived.participation_mode),
     is_long_term: Boolean(prior.is_long_term || item.is_long_term),
     starts_at: item.starts_at ?? prior.starts_at ?? null,
+    ...(procurement ? { procurement } : {}),
   });
 }
 
@@ -442,7 +448,10 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
   const summary = conciseSummary(input.raw_text.replace(/\s+/gu, " ").trim(), title);
   const categoryInput = [input.source_category, ...(source.types ?? [])].filter(Boolean).join(" ");
   const category = classifyCategory(categoryInput, input.title);
-  const relevance = classifyV2RadarRelevance(title, summary, input.source_category ?? "");
+  const procurementRelevant = input.procurement ? isCraftRelevantProcurement(`${title} ${summary}`) : false;
+  const relevance = category === "procurement_project" && input.procurement && input.procurement.direction !== "seller_offer" && procurementRelevant
+    ? { relevance: "RELEVANT" as const, tags: ["procurement"] }
+    : classifyV2RadarRelevance(title, summary, input.source_category ?? "");
   const dimensions = classifyV2Dimensions(title, summary, category);
   const parsedDeadline = deadlineBundleFromParsed(input, source.id);
   const parsedConflicts = normalizedDeadlineConflicts((input.deadline_conflicts ?? []) as V2DeadlineConflict[]);
@@ -484,6 +493,7 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
     participation_mode: input.participation_mode ?? dimensions.participation_mode,
     is_long_term: input.is_long_term ?? false,
     starts_at: input.starts_at ?? null,
+    ...(input.procurement ? { procurement: input.procurement } : {}),
   });
 }
 
@@ -522,6 +532,7 @@ export function mergeOpportunityV2(existing: OpportunityV2[], incoming: Opportun
       summary: mergeSummaryText(prior.summary, item.summary, prior.title, item.title),
       discovered_by_sources: [...new Set([...prior.discovered_by_sources, ...item.discovered_by_sources])],
       deadline_conflicts: [...(prior.deadline_conflicts ?? []), ...(item.deadline_conflicts ?? [])],
+      ...(item.procurement ?? prior.procurement ? { procurement: item.procurement ?? prior.procurement } : {}),
     }));
   }
   return [...byStableId.values()];

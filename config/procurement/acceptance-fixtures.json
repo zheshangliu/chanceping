@@ -1,0 +1,553 @@
+{
+  "schema_version": "chanceping.procurement.fixtures.v1",
+  "cases": [
+    {
+      "id": "P01",
+      "title": "博物馆文创纪念品采购",
+      "text": "采购500套文创礼盒，接受供应商报价，提交截止2026-09-30。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "category": "procurement_project",
+        "direction": "buyer_demand",
+        "stage": "open",
+        "public": true
+      }
+    },
+    {
+      "id": "P02",
+      "title": "银行客户非遗沙龙执行服务",
+      "text": "提供押花体验、材料包、讲师及布置，供应商报名至2026-09-18。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "category": "procurement_project",
+        "topic": "cultural_activities",
+        "public": true
+      }
+    },
+    {
+      "id": "P03",
+      "title": "工会节日花艺体验服务采购",
+      "text": "询价采购花艺活动服务及花材，预算30000元。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "public": true,
+        "budget": 30000,
+        "currency": "CNY",
+        "budget_is_revenue": false
+      }
+    },
+    {
+      "id": "P04",
+      "title": "城市礼物包装设计比选",
+      "text": "礼盒设计及打样，获取文件至9月12日，报价至9月20日。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "public": true,
+        "preserve_two_deadlines": true
+      }
+    },
+    {
+      "id": "P05",
+      "title": "Museum gift shop product submissions",
+      "text": "Submit your product for consideration. Orders are not guaranteed.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "direction": "supplier_application",
+        "order_guaranteed": false,
+        "type": "supplier_intake",
+        "public": true
+      }
+    },
+    {
+      "id": "P06",
+      "title": "Cultural programme market engagement",
+      "text": "We are gathering supplier feedback before a future tender.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "stage": "planned_or_market_engagement",
+        "accepting_formal_bids": false,
+        "watch_visible": true
+      }
+    },
+    {
+      "id": "P07",
+      "title": "Public art mural commission",
+      "text": "Commission budget £9,000 inclusive of VAT and all expenses.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "category": "procurement_project",
+        "direction": "buyer_demand",
+        "value": 9000,
+        "currency": "GBP",
+        "tax": "inclusive",
+        "cost_scope": "all_expenses",
+        "net_income": null
+      }
+    },
+    {
+      "id": "P08",
+      "title": "文创服务采购延期公告",
+      "text": "项目A的投标截止由2026-09-08延至2026-09-20。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "notice_type": "amendment",
+        "updates_project": "A",
+        "new_deadline": "2026-09-20",
+        "not_new_project": true
+      }
+    },
+    {
+      "id": "P09",
+      "title": "文创商品定点供应商入围",
+      "text": "框架上限100万元，按实际订单结算，不承诺最低采购额。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "opportunity_type": "framework_supplier",
+        "budget_ceiling": 1000000,
+        "guaranteed_revenue": null
+      }
+    },
+    {
+      "id": "N01",
+      "title": "博物馆服务器与防火墙采购",
+      "text": "采购机房服务器、交换机、防火墙。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "public": false,
+        "reason": "unrelated_IT_not_cultural_merchandise"
+      }
+    },
+    {
+      "id": "N02",
+      "title": "艺术学院建筑节能改造招标",
+      "text": "楼宇保温、屋面、空调改造施工。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "public": false,
+        "reason": "general_construction"
+      }
+    },
+    {
+      "id": "N03",
+      "title": "隐私政策 Procurement Terms",
+      "text": "Terms of use and privacy policy.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "pool_opportunity": false,
+        "reason": "navigation"
+      }
+    },
+    {
+      "id": "N04",
+      "title": "博物馆商店批发业务",
+      "text": "Our wholesale programme sells our museum merchandise to retailers.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "direction": "seller_offer",
+        "procurement_visible": false
+      }
+    },
+    {
+      "id": "N05",
+      "title": "MuseumShops平台店铺申请",
+      "text": "Eligible applicants are museums, galleries, heritage houses and libraries.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "direction": "institution_only_channel",
+        "generic_craft_supplier_eligible": null,
+        "procurement_visible": false
+      }
+    },
+    {
+      "id": "N06",
+      "title": "非遗市集摊主招募",
+      "text": "摊位费1000元，商家自带商品售卖。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "category": "exhibition_market",
+        "procurement_visible": false
+      }
+    },
+    {
+      "id": "N07",
+      "title": "文创课程报名",
+      "text": "学员报名费298元，手作课程体验。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "buyer_demand": false,
+        "procurement_visible": false
+      }
+    },
+    {
+      "id": "N08",
+      "title": "文创采购成交公告",
+      "text": "项目A于2026-09-01成交，成交价20万元。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "stage": "awarded",
+        "current_public": false,
+        "update_existing": true
+      }
+    },
+    {
+      "id": "N09",
+      "title": "文化活动项目终止公告",
+      "text": "取消项目B采购，不再接受响应。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "stage": "cancelled",
+        "current_public": false,
+        "remove_prior_open": true
+      }
+    },
+    {
+      "id": "N10",
+      "title": "非遗扶持资金申报",
+      "text": "申请政府补助资金。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "category": "policy_funding",
+        "procurement_visible": false
+      }
+    },
+    {
+      "id": "N11",
+      "title": "采购经理招聘",
+      "text": "年薪30万元，招聘采购经理一人。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "procurement_visible": false,
+        "reason": "employment_not_commission"
+      }
+    },
+    {
+      "id": "D01",
+      "title": "文创采购报名与投标时间",
+      "text": "必须先报名，报名2026-09-08结束；投标2026-09-20结束。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "prerequisite_closed": true,
+        "claim_open_to_new_applicants": false,
+        "bid_deadline": "2026-09-20"
+      }
+    },
+    {
+      "id": "D02",
+      "title": "纪念品供货交付期",
+      "text": "投标截止2026-09-18，合同交付至2026-12-31。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "deadline": "2026-09-18",
+        "delivery_end": "2026-12-31",
+        "not_bid_deadline": "2026-12-31"
+      }
+    },
+    {
+      "id": "D03",
+      "title": "招标更正与非延期未来日期",
+      "text": "公告报名截止9月5日；活动于10月20日举行，没有延期说明。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "future_event_is_extension": false,
+        "claim_open_to_new_applicants": false
+      }
+    },
+    {
+      "id": "D04",
+      "title": "未披露截止的采购公告",
+      "text": "现征集工艺礼品供应商，日期未在可读文本中提供。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "public": true,
+        "date_precision": "unknown",
+        "deadline": null,
+        "label": "响应时间请查看原文"
+      }
+    },
+    {
+      "id": "D05",
+      "title": "仅日期的欧洲采购",
+      "text": "Closing date: 30 September 2026. Time zone not stated.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "local_date": "2026-09-30",
+        "timezone": null,
+        "invented_2359": false
+      }
+    },
+    {
+      "id": "D06",
+      "title": "明确时区采购",
+      "text": "Submission closes 2026-09-30 17:00 Europe/London.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "keep_local_and_timezone": true,
+        "convert_only_when_timezone_known": true
+      }
+    },
+    {
+      "id": "D07",
+      "title": "冲突同阶段日期",
+      "text": "来源A报价截至9月20日，来源B截至9月25日；没有明确更正。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "deadline_conflict": true,
+        "arbitrary_future_preference": false,
+        "precise_date_public_if_unresolved": false
+      }
+    },
+    {
+      "id": "M01",
+      "title": "礼品采购金额字段",
+      "text": "预算人民币200000元，保证金3000元，文件费500元。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "budget": 200000,
+        "bid_bond": 3000,
+        "document_fee": 500,
+        "merge_money_fields": false
+      }
+    },
+    {
+      "id": "M02",
+      "title": "含税与不含税报价",
+      "text": "预算£30000 excluding VAT。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "value": 30000,
+        "currency": "GBP",
+        "tax": "exclusive"
+      }
+    },
+    {
+      "id": "M03",
+      "title": "不确定美元符号",
+      "text": "Supplier quote budget $5000; country and currency not supplied.",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "value": 5000,
+        "currency": null,
+        "currency_symbol": "$",
+        "assume_USD": false
+      }
+    },
+    {
+      "id": "I01",
+      "title": "同项目不同标包",
+      "text": "项目XYZ包1礼盒，包2宣传片，分别投标。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "project_group": "XYZ",
+        "distinct_lots": 2,
+        "do_not_collapse_lots": true
+      }
+    },
+    {
+      "id": "I02",
+      "title": "同公告跨源转发",
+      "text": "同买方、同项目号、同包号、同公告内容，被三个站点转载。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "canonical_count": 1,
+        "discovered_source_count": 3
+      }
+    },
+    {
+      "id": "I03",
+      "title": "同项目后续成交",
+      "text": "同项目XYZ先招标后成交。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "retain_version_history": true,
+        "new_active_lead_count": 0
+      }
+    },
+    {
+      "id": "I04",
+      "title": "采购方和代理机构",
+      "text": "采购方是市博物馆，代理是招标咨询公司。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "buyer": "市博物馆",
+        "agent": "招标咨询公司",
+        "do_not_swap_roles": true
+      }
+    },
+    {
+      "id": "I05",
+      "title": "海外资格未说明",
+      "text": "英国平台收录法国文化展陈服务招标；没有国际申请条款。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "source_region": "UK",
+        "buyer_region": "FR",
+        "eligibility": "unknown",
+        "global_eligible": null
+      }
+    },
+    {
+      "id": "I06",
+      "title": "明确地区限制",
+      "text": "公开给本地注册企业，要求相应营业资质。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "eligibility_restrictions_preserved": true,
+        "eligible_for_Jason": null
+      }
+    },
+    {
+      "id": "T01",
+      "title": "新旧编码一致",
+      "text": "同来源ID和详情URL，旧标题含����，重抓得到正常标题。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "canonical_count": 1,
+        "good_title_wins": true,
+        "public_encoding_errors": 0
+      }
+    },
+    {
+      "id": "T02",
+      "title": "瞬时来源故障",
+      "text": "来源此前成功，本轮503，暂无新快照。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "retain_last_good_data": true,
+        "mark_stale": true,
+        "report_failure": true,
+        "do_not_fake_zero_results": true
+      }
+    },
+    {
+      "id": "T03",
+      "title": "分页预算结束",
+      "text": "接口仍有next cursor，本轮预算结束。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "partial": true,
+        "cursor_saved": true,
+        "exhaustive": false,
+        "next_run_resumes": true
+      }
+    },
+    {
+      "id": "T04",
+      "title": "未配置密钥API",
+      "text": "SAM API key未设置。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "status": "CREDENTIAL_NOT_CONFIGURED",
+        "fake_live_pass": false,
+        "other_sources_continue": true
+      }
+    },
+    {
+      "id": "T05",
+      "title": "变更首个截止字段",
+      "text": "incoming保留投标时间A，却带来源B的原文。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "date_evidence_atomic": true,
+        "mixed_bundle_forbidden": true
+      }
+    },
+    {
+      "id": "T06",
+      "title": "私网重定向",
+      "text": "公共站返回Location http://127.0.0.1/admin。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "redirect_followed": false,
+        "blocked_before_request": true
+      }
+    },
+    {
+      "id": "T07",
+      "title": "表单入口误当公告",
+      "text": "点击发布招标跳到输入表单，没有买方项目。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "opportunity_count": 0
+      }
+    },
+    {
+      "id": "T08",
+      "title": "翻译失败",
+      "text": "真实英文文化订单，翻译接口失败。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "original_visible": true,
+        "hidden_due_translation": false
+      }
+    },
+    {
+      "id": "T09",
+      "title": "源目录与活动数据计数",
+      "text": "同一省政府采购目录老域名重定向到已集成平台。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "one_runtime_source": true,
+        "alias_recorded": true,
+        "count_as_two": false
+      }
+    },
+    {
+      "id": "T10",
+      "title": "架构回归",
+      "text": "采购关键词规则加入后，既有比赛记录与UI运行。",
+      "as_of": "2026-09-09T12:00:00+08:00",
+      "synthetic": true,
+      "expected": {
+        "competition_id_and_field_hash_unchanged": true,
+        "competition_memo_parity": true
+      }
+    }
+  ],
+  "count": 46,
+  "all_cases_synthetic": true
+}
