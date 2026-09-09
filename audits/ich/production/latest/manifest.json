@@ -1,6 +1,6 @@
 {
   "schema_version": "chanceping.ich.readonly-audit.v1",
-  "captured_at": "2026-09-09T05:32:07.743Z",
+  "captured_at": "2026-09-09T05:47:05.045Z",
   "base_url": "https://ich.chanceping.com",
   "production_commit": "95b4f2bcb6ad57581fd09734e88a31b1985ebf1e",
   "production_read_only": true,
@@ -57,31 +57,34 @@
   ],
   "counts": {
     "sources": 31,
-    "radar_competitions": 173,
-    "memo_competitions": 622,
+    "radar_competitions": 162,
+    "memo_competitions": 526,
     "memo_known_source_names": 31
   },
   "source_overview_summary": {
     "registered": 31,
     "enabled": 31,
-    "recent_success": 27,
+    "recent_success": 26,
     "failed": 1,
-    "needs_adapter": 3,
-    "current_contribution": 214
+    "needs_adapter": 4,
+    "current_contribution": 239
   },
-  "next_run_at": "2026-09-09T07:57:22.097Z",
+  "next_run_at": "2026-09-12T05:46:26.990Z",
   "checks": {
     "http_all_200": true,
     "source_pool_visible": true,
     "source_count": 31,
-    "home_competition_total": 173,
-    "radar_competition_total": 173,
-    "memo_total": 622,
+    "home_competition_total": 162,
+    "radar_competition_total": 162,
+    "memo_total": 526,
     "memo_json_markdown_same_ids": true,
     "memo_location_column_removed": true,
     "memo_noise_hidden": true,
-    "loewe_visible_once": false,
-    "loewe_sources": [],
+    "loewe_visible_once": true,
+    "loewe_sources": [
+      "loewe-craft-prize",
+      "asef-culture360-opportunities"
+    ],
     "named_sources_visible": [
       "Craft Scotland",
       "Heritage Crafts",
@@ -90,7 +93,7 @@
     "no_expired_default_radar": true,
     "home_and_radar_counts_match": true
   },
-  "complete": false,
+  "complete": true,
   "files": [
     "manifest.json",
     "checks.json",

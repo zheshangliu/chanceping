@@ -1,58 +1,61 @@
 # 盯非遗｜全量赛事备忘录
 
-- snapshot_id: 891e1a6f6993593491de0c7c
-- generated_at: 2026-09-09T05:32:08.574Z
+- snapshot_id: d6266a6fd5909ad7e6a8e4de
+- generated_at: 2026-09-09T05:47:05.656Z
 - scope: all_competitions
 - sort: deadline_desc
-- total: 622
-- known_deadlines: 267
-- unknown_deadlines: 355
+- total: 526
+- known_deadlines: 275
+- unknown_deadlines: 251
 - long_term: 0
 - truncated: false
 
 ## 覆盖情况
 
 - registered_sources: 31
-- successful_sources: 27
+- successful_sources: 26
 - partial_sources: cfw-cultural-ip, whaleideas-competition
-- failed_sources: chuangyisai-cultural, zjmtcn-product-competition, gtn9-competition
-- needs_adapter_sources: on-the-move-open-calls, chuangyisai-cultural, zjmtcn-product-competition
+- failed_sources: craft-council-nl-opportunities, chuangyisai-cultural, zjmtcn-product-competition, gtn9-competition
+- needs_adapter_sources: on-the-move-open-calls, craft-council-nl-opportunities, chuangyisai-cultural, zjmtcn-product-competition
 
 ## 赛事
 
 | ID | 截止日期 | 赛事名称 | 方向 / 作品形式 | 来源 | 详情 |
 | --- | --- | --- | --- | --- | --- |
+| oppv2_73fdb11993b8fb34ef5ff65b | 2027/4/30 | Curtas Vila do Conde 2027 | video_animation | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/curtas-vila-do-conde-2027-international-film-festival) |
 | oppv2_531bbbfed1173727da2b04b1 | 2027/3/3 | 2026第六届“这礼是成都”文创产品设计大赛 | cultural_creative · integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1610583.html) |
+| oppv2_a77479c0ca1f46f651cc7dc7 | 2027/3/1 | Science Without Borders Challenge 2027 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/science-without-borders-challenge-2027) |
 | oppv2_6dff384b8cb200042b57ca53 | 2027/3/1 | The Oak Moon Pavilion | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/the-oak-moon-pavilion) |
 | oppv2_a94888cc370733d98b31470d | 2027/2/28 | 2026-2027年度意大利 A' Design Award | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1536941.html) |
 | oppv2_73624aa87c430537661a12ed | 2027/2/28 | 2026“大儒亭林”第九届海峡两岸（昆山）青年文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1619214.html) |
-| oppv2_e2a450203749e0f515ee8372 | 2027/2/28 | 艾琳·卢恩斯坦评论写作奖 | craft_arts | Craft Scotland | [打开赛事来源页面 ↗](https://www.craftscotland.org/community/opportunity/eileen-lewenstein-prize-for-critical-writing) |
 | oppv2_93643f56e3d3877820e258ef | 2027/2/22 | Museum of Emotions #9 | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/museum-of-emotions-9) |
 | oppv2_9026b605b11e6e4b1a166a6e | 2027/2/15 | The Quiet Tower | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/the-quiet-tower) |
 | oppv2_9e0a8bdaa99294b83400d2f4 | 2027/2/15 | The Valli Wine Tasting Room | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/the-vali-wine-tasting-room) |
 | oppv2_d4a990be7edf55ffff38c5a1 | 2027/2/10 | 2026“科技映时代 诗画绘龙江”首届黑龙江省手机摄影大展 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1540389.html) |
 | oppv2_1e439e029b4500ea6336d4dc | 2027/1/31 | 2026 华为天生会画数字创作大赛 | aigc_digital · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1616172.html) |
 | oppv2_1d66a3be05ac8ef5727667fe | 2027/1/20 | The Architecture of Play 2026-2027 | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/the-architecture-of-play-2026-2027) |
+| oppv2_fcfb3ded3ac32dc7aeb0d563 | 2027/1/15 | 2027德国红点产品设计奖 | integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1637252.html) |
 | oppv2_101538d365d8bc5cc51fc9cc | 2027/1/11 | Portugal Long Table Restaurant | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/portugal-long-table-restaurant) |
 | oppv2_6fe271861edefd0d963b632f | 2027/1/1 | “在地铁遇见南汉二陵博物馆”创意海报设计征集 | museum_tourism · graphic_ip | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/pmbs/6900.html) |
-| oppv2_db1158b8785fa15cbeb226a4 | 2026/12/31 | 2026“阳光下的红十字”河北省首届公益AI创作大赛 | aigc_digital | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2711) |
 | oppv2_7b52681edc588addd0ee52cb | 2026/12/31 | 2026第七届“大美渔村平安渔业”中国渔业摄影展 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1612498.html) |
 | oppv2_bd01fbc4ef25cd70c4df46ec | 2026/12/31 | 2026第三届自然资源文化创意大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1612981.html) |
+| oppv2_dc1c84f4fbf7abaf36d6478d | 2026/12/31 | 2026第四届江苏省研究生“田园之诗”乡村振兴创新设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31939.html) |
 | oppv2_f9980565f10a1c66fc65a7c5 | 2026/12/31 | 2026第五届广西版权公益海报设计大赛 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1570152.html) |
 | oppv2_e335719777f0d36931b2eabc | 2026/12/31 | 2026国文奖两岸青年非遗文创设计大赛 | ich_innovation · cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1329.html) |
 | oppv2_ccd8825b6434e951c1feec48 | 2026/12/31 | 2026华笔奖 • 第二届“励致杯”民用家居设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1527747.html) |
 | oppv2_d2bc89d368e6a4ff22f4b08c | 2026/12/31 | 2026华笔奖·第三届“冠美杯”适老家具设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1554387.html) |
-| oppv2_5a8acd1d81bf893d9423f09a | 2026/12/31 | 2026年第十九届“认证杯”数学中国数学建模网络挑战赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2421) |
-| oppv2_bcfc0851df383882d8f5bcd5 | 2026/12/31 | 2026OPPO 2026影像大赛 | integrated_cultural_design · video_animation | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2418) |
 | oppv2_47e7d1f132efa5c8157365bd | 2026/12/31 | 2027 中国生肖【羊】动态图形设计大赛 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1573199.html) |
 | oppv2_93789e567443022dd89d6ecd | 2026/12/31 | OPPO 2026 影像大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1530477.html) |
+| oppv2_3fb6d88b43e34f667a914500 | 2026/12/25 | The Adachi UKIYOE Award 2026 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/the-adachi-ukiyoe-award-2026) |
 | oppv2_4a2d80ad0cc1298a4d97fe39 | 2026/12/15 | 2026学院杯中国室内与环境设计大赛 \| 乡村振兴设计 专题赛道 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1628739.html) |
 | oppv2_25e18b475408defbf95b1760 | 2026/12/15 | 2026学院杯中国室内与环境设计大赛 \| 主赛道 竞赛方案 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1628714.html) |
 | oppv2_a0de21fcc36d214f20986ef8 | 2026/12/15 | 2026学院杯中国室内与环境设计大赛 \| AIGC空间艺术 专题赛道 | aigc_digital | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1628762.html) |
 | oppv2_39b00cb1e299285fe4776566 | 2026/12/15 | 2026浙江省“钱塘潮韵 镜像海宁”摄影（短视频）大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1624530.html) |
 | oppv2_4602d71f673d4e85d7d2e7ad | 2026/12/11 | Rural Housing II | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/rural-housing-ii) |
+| oppv2_1ebcefd4d4cf2abd07ab2b6c | 2026/12/7 | BBA Artist Prize 2027 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/bba-artist-prize-2027) |
 | oppv2_1306f6974e0584664ecd2038 | 2026/12/5 | 2026全国青年数字美学艺术科普知识竞赛 | integrated_cultural_design | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/33.html) |
 | oppv2_1b445ce13a249ce9d2844ae1 | 2026/12/3 | 2026第六届“建筑师的椅子”（The Architect's Chair）设计竞赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1596549.html) |
+| oppv2_e4462b931aec1bfc3b69b1aa | 2026/11/30 | 2026 第四届 “LUOFU 罗敷杯” 拖鞋创意设计大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1638237.html) |
 | oppv2_ae667fee1edc1768c50dbb40 | 2026/11/30 | 2026“古画+AI&XR”创新大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1623319.html) |
 | oppv2_c6b1ac59fd6dba254ae43994 | 2026/11/30 | 2026“我爱铜官好”铜陵市第五届城市IP创意视频大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/01/1489712.html) |
 | oppv2_a8d744ae2a53235fc0728697 | 2026/11/30 | 2026第21届好创意丨“古建山西·潮创三晋”山西古建潮玩设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1609921.html) |
@@ -61,42 +64,41 @@
 | oppv2_635cdbf0b3707e554a03e619 | 2026/11/30 | 2026年和美乡村·创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1621601.html) |
 | oppv2_7351914cb42c3e72ace8f601 | 2026/11/30 | 2026首届“美创未来·福瑞达杯”美妆工业设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/01/1493753.html) |
 | oppv2_8ca1eea0dd720a4b73786167 | 2026/11/30 | 2026首届大学生数字科技知识竞赛 | 未注明 | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/92.html) |
-| oppv2_f7018b8f982ef3848deab2de | 2026/11/27 | 2026年第八届大学生语言文字能力大赛写作专项赛报名通知！ | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2710) |
-| oppv2_1c48e09af18940616052cd2d | 2026/11/25 | 第八届全国高校计算机能力挑战赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2716) |
+| oppv2_08d8dceef355e1168c19441f | 2026/11/21 | “秦小卫”数字IP公益形象全民征集活动 | graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ipjxw/31859.html) |
 | oppv2_137e49515647147e9cf4affb | 2026/11/21 | 秦小卫”数字IP公益形象全民征集活动【截稿至11月21日】 | 未注明 | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1328.html) |
 | oppv2_5cc1b5de9d12519bd052590a | 2026/11/20 | 2026 第五届“莫干山杯”生态家居创新设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613576.html) |
 | oppv2_5aaa99a9d8790662adf07e0c | 2026/11/20 | 2026年“梅源杯”中华“瑞”礼版权作品设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1610958.html) |
-| oppv2_01fd132712bbb3a766b422fc | 2026/11/20 | 2026年批改网杯全国大学生英语写作大赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2477) |
 | oppv2_24d68a2de9b390978f46aedc | 2026/11/16 | 2026 澳门文创设计大赛 | cultural_creative | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/wcsj/6833.html) |
 | oppv2_44599f5e79ecff5d3e24af2e | 2026/11/15 | 2026“智形·新场景”全国新汽车创新设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1616505.html) |
 | oppv2_442969d0b393b1e265c4147c | 2026/11/15 | 2026首届“老人头杯”全国通勤鞋设计大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1633144.html) |
-| oppv2_708e6200e674d42ecadf4be9 | 2026/11/14 | 第十八届全国大学生数学竞赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2590) |
 | oppv2_8b5c5433beea2d1b45f7554d | 2026/11/11 | 2026 第三届巴绣（巫溪嫁花）创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1555175.html) |
 | oppv2_4b967fd308ce820fd86648b5 | 2026/11/10 | 2026第二届“五台万象·艺术造境”文旅设计大赛 | museum_tourism · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1627294.html) |
 | oppv2_cf67b2b3dbb66bc17a3e2893 | 2026/11/10 | 2026嘉善城乡更新创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1626482.html) |
 | oppv2_897b0da1c29440e4af858da5 | 2026/11/9 | 2026 年首届成都西村大院高校文创设计大赛 | cultural_creative | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/hykj/6930.html) |
-| oppv2_7849f1c7ca1bcdae7970da4e | 2026/11/8 | 2026年首届成都西村大院高校文创设计大赛 | cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1332.html) |
-| oppv2_5a83e30a3a4bc93c6aff8380 | 2026/11/5 | 2026“和氏璧杯”成语之都大学生创意奖暨第十六届邯郸市青年创新创业大赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2787) |
+| oppv2_7849f1c7ca1bcdae7970da4e | 2026/11/8 | 2026年首届成都西村大院高校文创设计大赛 | cultural_creative · integrated_cultural_design | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1332.html) |
+| oppv2_14d3137baac0d48ce54860bd | 2026/11/5 | 2026鹤岗“鹤礼”伴手礼设计大赛 | cultural_creative · integrated_cultural_design · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/lysp/31904.html) |
 | oppv2_1ce10f18f83907417309874e | 2026/11/4 | 2027 德国 iF 设计奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1530079.html) |
 | oppv2_44d186acfa81da70a2231bca | 2026/11/3 | 第八届·HKCDA香港新锐当代设计奖 | integrated_cultural_design | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/93.html) |
 | oppv2_6c7b3372092b7b64c79bac0a | 2026/11/1 | 2026“郴州好礼”旅游商品大赛 | museum_tourism · integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1591033.html) |
 | oppv2_8a3fc27fff73b062c171bc59 | 2026/10/31 | “瓷韵千年·礼遇德化”—2026年“德化文化符号”伴手礼大赛 | cultural_creative · integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1553216.html) |
+| oppv2_986f0f2605142a2a5ac07cf0 | 2026/10/31 | "守艺银川·非遗新传"2026第四届非遗创新设计大赛 | ich_innovation · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1635823.html) |
 | oppv2_602dda76414411d89795fc4b | 2026/10/31 | 2026 “壹法中山杯”第十八届中山普法动漫作品设计大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1600592.html) |
 | oppv2_24edf5aa6e85b28254486d86 | 2026/10/31 | 2026 第20届中国好创意丨重生纪元·恐龙AI创作专项赛 | aigc_digital · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1528577.html) |
 | oppv2_e5d0d082673c382acbcdc296 | 2026/10/31 | 2026 第21届五金创新设计大奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1618463.html) |
 | oppv2_22c039ae19572716cdcdae52 | 2026/10/31 | 2026 立德尔杯·第三届中国日用搪瓷产品设计大赛 | integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1532189.html) |
 | oppv2_89bc6a2de0b04661dadd19bf | 2026/10/31 | 2026 平板3D创意周边&电竞生态设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1633124.html) |
+| oppv2_a30e35454b58cf0df900f7e9 | 2026/10/31 | 2026 山东河湖长制十周年主题摄影与海报设计大赛 | integrated_cultural_design · graphic_ip · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1635580.html) |
+| oppv2_9d755418271a22b263cbc0d9 | 2026/10/31 | 2026 InnovMetal Award | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/2026-innovmetal-award) |
 | oppv2_0420456601fac4f45e7e0977 | 2026/10/31 | 2026“华夏奖”文化艺术设计大赛（秋季） | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1606467.html) |
 | oppv2_104372cb7b000d41171695d9 | 2026/10/31 | 2026“种墨园”短视频大赛 | integrated_cultural_design · museum_tourism · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1601192.html) |
 | oppv2_49716fd8523173aecd5bc6c9 | 2026/10/31 | 2026第七届“金勾”中国锁具及工艺装备设计大赛 | integrated_cultural_design | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c57.html) |
+| oppv2_0cf33b083de10b1dc6028e19 | 2026/10/31 | 2026第三届“传承非遗 创意陕西”非遗文创设计大赛 | ich_innovation · cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1638262.html) |
 | oppv2_e6ef6883a1ee7e31cf7b2136 | 2026/10/31 | 2026第三届中关村AI创新创意设计大赛“国风戏曲毛绒 IP 形象设计赛道” | integrated_cultural_design | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1310.html) |
 | oppv2_f620690f36dffd5ca926fa86 | 2026/10/31 | 2026第四届“福品杯”漆艺作品创意设计竞赛 | craft_arts · material_craft | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1528078.html) |
 | oppv2_4e764b053aa3be4b63683749 | 2026/10/31 | 2026辽宁省第三届“强省杯”工业设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1576855.html) |
 | oppv2_a4f75a13a8e701dbc77b52e0 | 2026/10/31 | 2026年“IDEA苏州”大学生文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613514.html) |
 | oppv2_d6e66bbafa89e3844ba73b0d | 2026/10/31 | 2026中山市工业设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1623294.html) |
 | oppv2_8bdbdd81ac157c0f7f3d6f4f | 2026/10/31 | 2026中山市工业设计大赛火炬高新区“湾区光谷”光电专项赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1624481.html) |
-| oppv2_8cfcf3b8db59b140ea8456e0 | 2026/10/31 | 第十二届“中金所杯”全国大学生金融知识大赛启动报名 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2758) |
-| oppv2_c351c7e46e178cbc8d3ac3d1 | 2026/10/31 | 绘你所想 织你所创｜2026恒强杯制版创意大赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2786) |
 | oppv2_9b8ffa264a1688152a82032d | 2026/10/30 | 2026 “廊桥造物・古韵新生” 庆元木拱桥创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1623227.html) |
 | oppv2_c50b97ee4e4c5914d64c1d7f | 2026/10/30 | 2026 第20届好创意丨蒙牛美加墨世界杯专项赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1601005.html) |
 | oppv2_7b5d163499a5577c97221b2c | 2026/10/30 | 2026 五粮液全球短视频大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1525920.html) |
@@ -114,7 +116,8 @@
 | oppv2_1f9f03367a8bae16ba964b21 | 2026/10/22 | 2026“开放椅子“ Open Chair 全球创意设计竞赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1619245.html) |
 | oppv2_1bae75d622471e295f270367 | 2026/10/20 | “共同关切”——2026全国大学生花园设计建造竞赛【社区花园赛道】 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1598389.html) |
 | oppv2_6e150970c235ac86ab7db3a0 | 2026/10/20 | 2026 第四届亚洲IP设计大赛 ASIA IP CONTEST in TOKYO 2026 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1615093.html) |
-| oppv2_fd4bf17716f4ac47696dcfb4 | 2026/10/20 | 2026 智护四海·妈祖安澜 “妈祖杯”文创设计大赛（截至2026.10.20） | cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1330.html) |
+| oppv2_fd4bf17716f4ac47696dcfb4 | 2026/10/20 | 2026 智护四海·妈祖安澜 “妈祖杯”文创设计大赛（） | cultural_creative · integrated_cultural_design | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1330.html) |
+| oppv2_b83e1daa9d00eaf52af78137 | 2026/10/20 | 2026“把美丽山西寄出去”明信片设计大赛 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1638337.html) |
 | oppv2_0d7c8b572fdb0530f9154c1c | 2026/10/20 | 2026第七届“壮美广西”微视频大赛】 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1626577.html) |
 | oppv2_bfb3c35d8835ed711c1242ee | 2026/10/20 | 2026年江苏省研究生“艺聚江苏”美术设计作品大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613592.html) |
 | oppv2_8dbb789d1eb5e8986601ec4a | 2026/10/20 | 2026山东省大学生科技赛事——山东省大学生工业设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1604424.html) |
@@ -126,39 +129,43 @@
 | oppv2_9cb583484f7e37cd0b0ae11c | 2026/10/15 | “荆楚风华·创意无限”2026年湖北全省图书馆文化创意作品征集 | cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1211.html) |
 | oppv2_f98de143e0b91384b02e65a3 | 2026/10/15 | 2025西安市首届文物IP授权文创大赛 | cultural_creative · museum_tourism · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1623300.html) |
 | oppv2_748c708deecdf2f0a29abe7a | 2026/10/15 | 2026 聚力公益，创意吉林\|第十一届吉林省公益广告大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1572236.html) |
-| oppv2_549526ba7cacc65cc12a3d27 | 2026/10/15 | 2026“辽宁故事”杯农特产品包装创新创意大赛 | packaging | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2788) |
+| oppv2_549526ba7cacc65cc12a3d27 | 2026/10/15 | 2026“辽宁故事”杯农特产品包装创新创意大赛 | integrated_cultural_design · packaging | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2788) |
 | oppv2_539b396911c00156158e64e6 | 2026/10/15 | 2026第二届长城文创大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1626607.html) |
 | oppv2_b75f76767e6aed8051da7aad | 2026/10/15 | 2026第十一届广东省非物质文化遗产创意设计大赛 | ich_innovation · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1573329.html) |
 | oppv2_d34aefa854557225fde41d8e | 2026/10/15 | 2026第五届全球大学生虚拟策展大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1622463.html) |
 | oppv2_1a57983b4a5f0b532159beaf | 2026/10/15 | 2026首届“海图杯”文创设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1603810.html) |
 | oppv2_3aedf50dad098ec1d0dd538d | 2026/10/15 | 2026亚洲青年大学生设计创新奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1578723.html) |
 | oppv2_ea91b45677f7fc93fb7510f1 | 2026/10/15 | 万象入镜丨2026北京大学生短视频创作大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1600663.html) |
-| oppv2_ffd0150901943a85c55a91ca | 2026/10/15 | LOEWE FOUNDATION 工艺奖 2027 | craft_arts | LOEWE FOUNDATION Craft Prize | [打开赛事来源页面 ↗](https://craftprize.loewe.com/zh/craftprize2027) |
-| oppv2_2586625774687a317af236fb | 2026/10/15 | 关于举办第八届AIC算法大赛算法主题赛（AI+开源）的通知 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2754) |
+| oppv2_ffd0150901943a85c55a91ca | 2026/10/15 | LOEWE FOUNDATION Craft Prize 2027 | craft_arts | LOEWE FOUNDATION Craft Prize | [打开赛事来源页面 ↗](https://craftprize.loewe.com/zh/craftprize2027) |
 | oppv2_56f9e83d6b1ac647234c7c6e | 2026/10/14 | “创意赋能·壮美定西”定西市首届文化创意设计大赛 | cultural_creative | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/wcsj/6905.html) |
 | oppv2_4ad2a7f55301b05639a5b8cb | 2026/10/14 | 2026年“桂新知·趣普法”知识产权AI短视频普法大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1625120.html) |
 | oppv2_5363c4de7bcf8c8686c0e243 | 2026/10/14 | 2026年「IIZI」-中国主战坦克IP转化和创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1617431.html) |
 | oppv2_4c0101d459f7dba71bcaf89f | 2026/10/12 | 2026“粤来粤美・生态湾区” 摄影与短视频比赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1615747.html) |
 | oppv2_ff737004659c733b77325701 | 2026/10/12 | 武汉金黄鹤奖 ——城市微客厅共创计划征集 | 未注明 | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/hykj/6932.html) |
-| oppv2_427739a8893899f972d48943 | 2026/10/11 | “红韵山河·嫁衣千年”2026中国丁集原创婚纱设计大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1620947.html) |
+| oppv2_427739a8893899f972d48943 | 2026/10/11 | “红韵山河·嫁衣千年”2026中国丁集原创婚纱设计大赛 | integrated_cultural_design · ich_innovation · cultural_creative · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1620947.html) |
+| oppv2_55daa7776b680115d560623d | 2026/10/11 | 2026年武汉金黄鹤奖——城市微客厅共创计划征集公告 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31965.html) |
 | oppv2_397422c6697b2b90d06479e5 | 2026/10/11 | 清华大学建筑学院x米哈游数字交互环境设计竞赛 | integrated_cultural_design · interaction_game | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1624476.html) |
 | oppv2_b7179fd41931a9c00cfefc71 | 2026/10/10 | 2026第三届“粤影”短片短剧大赛暨第一届“飞霞杯”短片短视频大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1603354.html) |
 | oppv2_5e9e5e93984f3b7e066cf437 | 2026/10/10 | 2026第三届“中国储运”杯摄影与短视频大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613869.html) |
+| oppv2_4a10d31f90544d9fb2c2b658 | 2026/10/10 | 2026灌南县大众文化创享作品征集活动 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31963.html) |
 | oppv2_cbc7e1ffe00c5c068aa57e08 | 2026/10/10 | 2026年“世界学生之星”WorldStar Student包装奖作品征集 | integrated_cultural_design · packaging | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c90.html) |
 | oppv2_26bc3f8b1b09492841d9ec1c | 2026/10/10 | 2026年第五届辽宁省大学生商业设计创意大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1537240.html) |
 | oppv2_cfb841a76a98918c446b0a9d | 2026/10/10 | 2026年广东省大学生摄影大赛 | integrated_cultural_design · video_animation | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c36.html) |
 | oppv2_fa53e4e9bbdfb1fbb6acac6c | 2026/10/10 | 广东省高等教育学会摄影教育专业委员会2026年广东省大学生摄影大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1601039.html) |
 | oppv2_2ec2e599ecbd0d2619a4fa16 | 2026/10/9 | 2026 紫金奖书店设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1625116.html) |
+| oppv2_6863f033d78fea9edc2b8182 | 2026/10/9 | 2026第八届上海市研究生智慧城市创意设计大赛暨第六届长三角研究生智慧城市创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1638329.html) |
 | oppv2_c679f1bb5808488dbd66b1d1 | 2026/10/9 | 2026第二届岭南“好房子”设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1577435.html) |
 | oppv2_a37e06fe6c3ebe8181e4498c | 2026/10/9 | 2026第十八届山东省大学生科技节赛事活动——山东省大学生文化创意科创大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1535134.html) |
 | oppv2_44e9ac1994981528b779cae9 | 2026/10/9 | 2026第十二届“濮院杯”PH Value针织设计师大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1577412.html) |
 | oppv2_fcd18eb4338451b192dce76c | 2026/10/8 | 2026 「AI与爱」绿网计划 AIGC 公益广告创作大赛 | aigc_digital · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1624968.html) |
 | oppv2_ae1d012dee22a02fc120a3f1 | 2026/10/8 | 2026 第20届中国好创意丨第二届 “岁岁鸭和 TA 的朋友们”专项赛 | graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1559467.html) |
+| oppv2_5aa4cb2ba320026b41a63038 | 2026/10/8 | 2026“宿迁礼物”创意征集大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1638313.html) |
 | oppv2_0113f98d9e1fd93d6bd7559a | 2026/10/8 | 2026“智博杯·我们的大学”山东省大学生摄影大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1555268.html) |
 | oppv2_9b2d6df86fe82664be8daaa4 | 2026/10/8 | 2026重庆中国三峡博物馆第二届文创设计大赛 | cultural_creative · museum_tourism · integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1599120.html) |
 | oppv2_54337a6237d5d60382c0c186 | 2026/10/8 | 2026第二届“善美溢彩·链动未来”设计赛- 汕尾市金银首饰设计大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1603822.html) |
 | oppv2_44cb0c12000dde73dc4bb9f2 | 2026/10/8 | 2026第二届大学生人工智能时尚创新设计大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1602121.html) |
 | oppv2_e87df70ea84a10da00dfd293 | 2026/10/8 | 2026美国 LIT 照明设计奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2025/12/1468841.html) |
+| oppv2_6d6ba5523b7640a88423d167 | 2026/10/8 | 关于征集第六届中国（山东）标识文化节主题IP形象与LOGO设计方案的公告 | cultural_creative · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31512.html) |
 | oppv2_590c917e6af07a5acc2c0b66 | 2026/10/8 | 首届“未来之光”——2026粤港澳AI影视创意大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1618193.html) |
 | oppv2_ec5442951b58bd405439eb9d | 2026/10/8 | 想象链接未来｜2026 科幻影视工业大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1624974.html) |
 | oppv2_8619d86aca499c529abf2c93 | 2026/10/7 | 2026 巾帼巧思，创艺蜀韵｜四川巾帼文创大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1620753.html) |
@@ -167,11 +174,8 @@
 | oppv2_6b9746ca3045bb150c7a9071 | 2026/10/7 | 国誉设计大奖2027 KOKUYO DESIGN AWARD | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1612604.html) |
 | oppv2_3a93b6ddf826d5bf4e8065c3 | 2026/10/5 | 2026“创意赋能·壮美定西”\|定西市首届文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1633130.html) |
 | oppv2_fa347859a9952255de2ebf91 | 2026/10/5 | 2026年中国风能摄影大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613948.html) |
-| oppv2_c37648f79cb7ab36ca42d350 | 2026/10/5 | Selling Alchemy: Goldsmiths Scotland Alchemy: Goldsmiths Edinburgh CIC | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/sector-support/opportunities/alchemy-goldsmiths-scotland) |
-| oppv2_6ea475c399233971578b9bca | 2026/10/2 | Farnham Craft Town 驻留项目 | craft_arts | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/sector-support/opportunities/farnham-craft-town-artist-in-residence) |
 | oppv2_45207521e2c5ea287c7085c8 | 2026/10/1 | 2026年“新时代网络文明公益广告”征集 | 未注明 | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/wcsj/6926.html) |
-| oppv2_148c0d882f7b9a2aed4209bd | 2026/10/1 | 2026年赢在南京青年大学生创业大赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2396) |
-| oppv2_3bca84ad80a57f9e03fd6c25 | 2026/10/1 | 共享工作室空间征集 | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/sector-support/opportunities/shared-studio-space-for-jeweller-or-other-maker) |
+| oppv2_53eff1eef4c6b0098933d934 | 2026/10/1 | Independent & Freelance Photojournalist Award (IFPA) 2026 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/independent-freelance-photojournalist-award-ifpa-2026) |
 | oppv2_af3f65e7411a4652bb86d1b1 | 2026/9/30 | “河湟福谷·圣域湟中”青海艺河湟2980非遗及农土产品文创设计大赛 | ich_innovation · cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1579867.html) |
 | oppv2_e9366c58570e2cd8266de826 | 2026/9/30 | “雪域赤橙 文创蓝焰”文创作品征集活动 | cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1262.html) |
 | oppv2_7d7e525dec7bb7f01b11bf92 | 2026/9/30 | “营口海蜇”文创IP形象设计大赛【截稿至9月30日】 | cultural_creative · graphic_ip | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1317.html) |
@@ -183,6 +187,7 @@
 | oppv2_90f64894ae89168189a82bb7 | 2026/9/30 | 2026“尼康杯”全国青年摄影大展征稿 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/01/1493597.html) |
 | oppv2_4f1759da2e5ad33f7f510216 | 2026/9/30 | 2026“双滦承礼”文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1602794.html) |
 | oppv2_117652737480981129c109cd | 2026/9/30 | 2026“雪域赤橙 文创蓝焰”西藏消防文创作品大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1604574.html) |
+| oppv2_e04d98398b1d9f0d82bab578 | 2026/9/30 | 2026第11届中国—南亚博览会主视觉形象（主VI）设计方案征集公告 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31964.html) |
 | oppv2_7cf658598bc8773685cdcddc | 2026/9/30 | 2026第14届全国大学生新媒体创意大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/03/1516630.html) |
 | oppv2_557b8f0cc3865a93d02bc8da | 2026/9/30 | 2026第14届未来设计师·全国高校数字艺术设计大赛之「屈」动未来·「氏」界新生——屈臣氏集团185周年高校AIGC创意大赛 | aigc_digital · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1552872.html) |
 | oppv2_632ed862c2f1d432ce36ff04 | 2026/9/30 | 2026第八届粤港澳大湾区文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1605005.html) |
@@ -196,12 +201,12 @@
 | oppv2_925e3b820f52d3cba13f785b | 2026/9/30 | 2026第五届“星熠奖”胜芳家具创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1537494.html) |
 | oppv2_2f3723a43a703d87c7bebb57 | 2026/9/30 | 2026第一师阿拉尔市文创产品设计大赛 | cultural_creative · integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1573805.html) |
 | oppv2_e1a164ffa47797d218cc6bb4 | 2026/9/30 | 2026立邦“未来之星”青年设计师大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1528129.html) |
-| oppv2_83f6361047a8252244559259 | 2026/9/30 | 2026年“新时代网络文明公益广告”征集展示活动通知 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2789) |
+| oppv2_83f6361047a8252244559259 | 2026/9/30 | 2026年“新时代网络文明公益广告”征集展示活动通知 | integrated_cultural_design · video_animation | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2789) |
 | oppv2_fdb00743c36e233d04ff2517 | 2026/9/30 | 2026年“永悦智能杯”中国长三角无人机创新设计大赛 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1576041.html) |
 | oppv2_05fdbc40835b46c956b01a06 | 2026/9/30 | 2026年“振兴杯”云南省青年职业技能大赛邀你来战 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2772) |
-| oppv2_b11655d0d91545f65f6fe6d5 | 2026/9/30 | 2026年度公益广告创新创意大赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2728) |
 | oppv2_dd568ee293c7294128e67a19 | 2026/9/30 | 2026年未来设计师·全国艺术设计教师教学创新大赛(NDTC) | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1579925.html) |
 | oppv2_256ebcaf30a9560df7c74e3e | 2026/9/30 | 2026年雄安新区建筑设计大赛(好房子) | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1628803.html) |
+| oppv2_932ba11941ac8c690991870a | 2026/9/30 | 2026首届传统工艺与AIGC融合创新设计大赛 | aigc_digital · video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31896.html) |
 | oppv2_88cad8ff2504d388d2325c26 | 2026/9/30 | 第八届粤港澳大湾区文化创意设计大赛来了 | cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1288.html) |
 | oppv2_188923061cde0b0ef39dd818 | 2026/9/30 | 红棉设计奖 \| 2026设计概念奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1527346.html) |
 | oppv2_6e4ebbd212f779e9a518261c | 2026/9/30 | 红棉设计奖 \| 2026室内设计奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1526142.html) |
@@ -209,11 +214,20 @@
 | oppv2_29362cccef53e1d88c74cdca | 2026/9/30 | 红棉设计奖 \| 2026最美时尚空间设计奖 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1535279.html) |
 | oppv2_facb0b5a672fafc9d39aa1e9 | 2026/9/30 | 文脉同源・创意同心｜拓跋鲜卑北魏南迁“融合之路”文创作品设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1618049.html) |
 | oppv2_3359ce6182d4961f7fa41e78 | 2026/9/30 | 以文会友·文创兴疆 新疆特色文创产品设计大赛正式启幕 | cultural_creative · product_design | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1270.html) |
-| oppv2_3d72f6dcd60539c9b60cbcdd | 2026/9/30 | “工行杯”全国大学生金融科技创新大赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2714) |
+| oppv2_51e52bffcbd81b53c813b7bb | 2026/9/30 | PHOTOLAR 18th | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/photolar-18th-photography-contest) |
+| oppv2_e8f379dccf6659873ec3b0cc | 2026/9/29 | 2026 DESIGN DISCOVERY AWARDS (D&A): SEASON 2 | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/2026-design-discovery-awards-da-season-2) |
 | oppv2_2d133416b995f1ed092026b3 | 2026/9/27 | 2026福绵牛仔服装 “福泰杯” 创意设计大赛（截至2026年9月27日） | integrated_cultural_design · fashion_jewellery | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1318.html) |
+| oppv2_f15350cd33123fafcd208823 | 2026/9/27 | 世界青年科学家峰会“万有引力π”吉祥物形象设计创意征集活动 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ipjxw/31962.html) |
 | oppv2_cae7995e8a9e7e5c4ad1b6d1 | 2026/9/25 | “一张可带走的温江城市名片”2026“温江礼物”创意设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1611544.html) |
+| oppv2_f1b0094720a39a95047f9c9f | 2026/9/25 | 2026 创意绘蜜城・妙笔赋尼勒克 \| “尼遇好礼” 文创产品创意设计征集活动 | cultural_creative · integrated_cultural_design · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31866.html) |
 | oppv2_f1ff87b323594cd7c9e16abe | 2026/9/25 | 2026“陇原创想・文化新生”甘肃文化创意设计大赛 | cultural_creative | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/wcsj/6925.html) |
 | oppv2_bf88f9cd1ee812002fdccf5e | 2026/9/25 | 2026乐瓜睡觉抱枕第一届全国征稿比赛 | graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1618353.html) |
+| oppv2_436c0cbba294532ac652c42e | 2026/9/25 | 2026年河南省工业设计大赛时尚消费品设计专项赛【服装周边产品赛道】 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1635866.html) |
+| oppv2_f24784131d449948ac179233 | 2026/9/25 | 2026年河南省工业设计大赛时尚消费品设计专项赛【适老化与伴宠类产品赛道】 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31925.html) |
+| oppv2_7df54bbff93c21cb52ecf589 | 2026/9/25 | 2026年河南省工业设计大赛时尚消费品设计专项赛【文创产品赛道】 | cultural_creative · integrated_cultural_design · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31927.html) |
+| oppv2_f82ed605080e3684a07e8606 | 2026/9/25 | 2026年河南省工业设计大赛时尚消费品设计专项赛【玉雕产品赛道】 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31926.html) |
+| oppv2_bb22b0327883d2bfc34e0586 | 2026/9/25 | 兴安盟第三届体育文创产品设计大赛 | ich_innovation · cultural_creative · museum_tourism · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31511.html) |
+| oppv2_58385b5693ebd6582371cdbe | 2026/9/24 | 2026“陇原创想・文化新生”全国甘肃文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1635644.html) |
 | oppv2_6b63bd1c3855a7e02e88ed89 | 2026/9/24 | 2026第五届“非遗新体验”国潮文创设计大赛 | ich_innovation · cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1605273.html) |
 | oppv2_4c5716ae13379d1bb874adac | 2026/9/24 | 2026年第八届北京市大学生文化创意设计竞赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1565676.html) |
 | oppv2_c74b5e32f9caf12ef57e51ed | 2026/9/23 | 第十五届（2026）中国金点工业设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613617.html) |
@@ -223,11 +237,10 @@
 | oppv2_0ab3f191698ebb527b6107b7 | 2026/9/23 | 第十五届（2026）中国金点工业设计大赛第一赛道：智能农机 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613521.html) |
 | oppv2_c57a721bedce8ad531833472 | 2026/9/23 | CDM Digi Fab COMPETITION 2026 家具与木制品设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1615655.html) |
 | oppv2_b227c7a7134cbf214ffa2623 | 2026/9/22 | 2026 首届“天工开物杯”工业设计大赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1624691.html) |
-| oppv2_4b2353fa458dcafb6ac31bca | 2026/9/22 | 全国大学生嵌入式芯片与系统设计竞赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2771) |
 | oppv2_fea31010c8c4abdc03a3cd91 | 2026/9/21 | 2026第20届中国好创意丨第三届乡村旅游非凡设计专项赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1545002.html) |
 | oppv2_6520f375c5d9e55b05fadae1 | 2026/9/21 | 第十七届云浮石文化周・广东（云浮）石艺创意大赛暨云浮市石材工业设计大赛 | integrated_cultural_design | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/gyzh/6929.html) |
 | oppv2_2c6ef206f6b798f54702ebf7 | 2026/9/21 | 潍坊市中小学生风筝创意设计大赛 | integrated_cultural_design | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/wcsj/6897.html) |
-| oppv2_26195037ece00a426051907b | 2026/9/20 | 2026 非遗新生 茶香无界——第四届“焕新茶生活”非遗联创大赛 | ich_innovation · integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2751) |
+| oppv2_92d8943b299364ab8219e6e3 | 2026/9/20 | 2026 湖湘地理文创设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1633306.html) |
 | oppv2_42723f78b935a7b5efb63a98 | 2026/9/20 | 2026“数艺华章”青年艺术设计大赛 | integrated_cultural_design | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/85.html) |
 | oppv2_d9edb4b330586adb19d73b04 | 2026/9/20 | 2026“天马故乡・寻美武威”短视频创作大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1575679.html) |
 | oppv2_89ea790a0028af6a1dbba673 | 2026/9/20 | 2026"新泰州·创新潮"主题文创产品设计大赛 | cultural_creative · integrated_cultural_design · product_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1615097.html) |
@@ -236,14 +249,16 @@
 | oppv2_13545449677914e45a4ebab6 | 2026/9/20 | 2026第二届 “复新”全球大学生智能影像创作大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1594565.html) |
 | oppv2_6629a7b0958063d1aa8d3918 | 2026/9/20 | 2026第九届京东影像大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1554539.html) |
 | oppv2_2601d4ce1aac34f48307a827 | 2026/9/20 | 2026第六届重庆市大学生乡村振兴创意大赛 | integrated_cultural_design · video_animation | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1610485.html) |
+| oppv2_f9b9b185881141e9908ff98a | 2026/9/20 | 2026第十七届云浮石文化周·广东（云浮）石艺创意大赛暨云浮市石材工业设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31966.html) |
 | oppv2_b773e018c9676d49e35e3eaa | 2026/9/20 | 2026第四届“小蝌蚪”动漫大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1573888.html) |
 | oppv2_801c8c04778a13e45ec797a9 | 2026/9/20 | 2026第四届醴陵炻瓷创新设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1563942.html) |
-| oppv2_cb170aa295bba042cd82ef90 | 2026/9/20 | 2026年河南省工业设计大赛“浩德杯”钢制家具专项赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2696) |
 | oppv2_83c653630880c3895fe5239d | 2026/9/20 | 2026上海APD创新大赛征稿通知——寻找包装界的奇思妙想 | integrated_cultural_design · packaging | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1618235.html) |
 | oppv2_c0696dc25b14f81221cf6104 | 2026/9/20 | 2026首届“裘韵 · 饰界 ”毛皮饰品产业文创设计大赛 | cultural_creative · integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1628305.html) |
 | oppv2_ce08b2fdd7d6e24871c14833 | 2026/9/20 | 金色之秋 \| 2026年重庆市大学生文物创意创作大赛 | museum_tourism · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1610479.html) |
 | oppv2_2680167291b4d9d4499b6834 | 2026/9/20 | 设计赋能乡村 \| 2026第三届乡村振兴设计艺术大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1543041.html) |
+| oppv2_0a2243ca139381880241282e | 2026/9/20 | 最新大赛 | ich_innovation · cultural_creative · graphic_ip · fashion_jewellery | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds) |
 | oppv2_72a4a62d09b86a67314628bd | 2026/9/18 | 2026 “AI·剧在南山”深圳市南山区AI微短剧创作大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1625063.html) |
+| oppv2_6c13a3fc0a60585406e0f7da | 2026/9/18 | 凤鸣廿五，由你定义！西凤酒15年6年25周年主题海报设计大赛 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1638284.html) |
 | oppv2_39522079b8350308a9a5c1cc | 2026/9/18 | 华南国家植物园第四届“封怀园艺”大学生景观创作竞赛 | 未注明 | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/hykj/6904.html) |
 | oppv2_c5b38645e6072b58add1df11 | 2026/9/16 | 2026“淮北有礼”文创设计大赛 | cultural_creative · integrated_cultural_design · museum_tourism | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1584540.html) |
 | oppv2_0f444d016a24eb2f1f6ae7c2 | 2026/9/16 | 数字人民币吉祥物与文创设计大赛 | cultural_creative · integrated_cultural_design · graphic_ip | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2681) |
@@ -253,26 +268,22 @@
 | oppv2_0db9d4a5042067dcc0673e75 | 2026/9/15 | 2026 艺术赋美乡村——中国美术家协会首届和美乡村建设艺术实践大展征稿通知 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1617489.html) |
 | oppv2_2508ca976f7d259aff87cc9b | 2026/9/15 | 2026 智汇青台·“AI”创无限丨两岸（青岛）青年AI作品创作大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1618999.html) |
 | oppv2_2ec67f42c862c26d9b40fc56 | 2026/9/15 | 2026 Miss 黎・黎锦服饰文创设计大赛 | cultural_creative · integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1611490.html) |
+| oppv2_cf539798aa980a8d42af0eb9 | 2026/9/15 | 2026“成都礼物”文化旅游产品征集 | museum_tourism · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/09/1636928.html) |
 | oppv2_3db5cf5cccf800813cb57b45 | 2026/9/15 | 2026“大美乡村·高校创新设计大赛”暨第四届“巴山渝水·大美乡村”设计大赛 | integrated_cultural_design | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c14.html) |
 | oppv2_6b6df389bcf8678e946f3e79 | 2026/9/15 | 2026“花YOUNG陈村・花绘世界”陈村文旅主题插画大赛 | museum_tourism · graphic_ip | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1620877.html) |
 | oppv2_9f2fb6e1ba97f5400dd67fff | 2026/9/15 | 2026“霓裳万象 耀瓷新韵 美丽铜川” 第三届汉服设计大赛 | integrated_cultural_design · fashion_jewellery | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1608120.html) |
-| oppv2_a9e2faf12e765bc49cbef583 | 2026/9/15 | 2026“湾区源创·硅芯商会杯” AI+IP潮玩设计大赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2709) |
 | oppv2_0e2b9b97d7c372de7d5f1c1b | 2026/9/15 | 2026“文物遇上‘东北超’——国宝创意人”活动 | museum_tourism · integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://m.chuangsaiyun.com/h5/index.html?i=2#/article/article/articleDetail?id=2651) |
 | oppv2_16ad49327c6bb7b1df74fa32 | 2026/9/15 | 2026东方创意之星陶瓷创新设计大赛 | craft_arts · integrated_cultural_design · material_craft | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1626643.html) |
 | oppv2_b7d374b9d6b048c42259c497 | 2026/9/15 | 2026年“元启东方·灿筑华章”AI短片大赛 | integrated_cultural_design · video_animation | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1612590.html) |
 | oppv2_0f0d2273518d1a1de547ead9 | 2026/9/15 | 2026年第四届辽宁省大学生文化创意设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1610174.html) |
-| oppv2_c1fa5ffb0dd5607a75672e84 | 2026/9/15 | 2026年第五届辽宁省大学生“瑰宝传承”戏曲文化创新创意大赛 | ich_innovation | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2790) |
 | oppv2_5a4695f55cc21ae9f11a19dc | 2026/9/15 | 2026年古堰画乡全国文创设计大赛 | cultural_creative · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/04/1534771.html) |
 | oppv2_d29a36bee7dc6f48d53c008e | 2026/9/15 | 2026陕西省第十四届室内设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1552307.html) |
-| oppv2_17232fc56a74193d2864c27a | 2026/9/15 | 2026小榄镇首届菊花纤维服装设计比赛 | integrated_cultural_design · fashion_jewellery | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2723) |
 | oppv2_a24282c07f6e7c8ad41c8c20 | 2026/9/15 | 2026中国国家公园（自然保护地）保护发展设计实践大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1565577.html) |
 | oppv2_e8f0fbfccdae2a5c0f7d1215 | 2026/9/15 | 2027東京TDC（东京字体指导俱乐部）Tokyo TDC賞 | graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1605096.html) |
 | oppv2_b5401cbae6fb4670d2622248 | 2026/9/15 | 千年窑火•青白新生——“梦笔生花杯”浦城大口窑青白瓷文创设计大赛 | cultural_creative | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1612430.html) |
 | oppv2_a55aa80755632ffc96370997 | 2026/9/15 | 苏州消防IP形象创意设计大赛 | integrated_cultural_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1611179.html) |
-| oppv2_c0b9560e4de7edb8a684120f | 2026/9/15 | Professional development Awards Open Day and Portfolio Reviews Cockpit Deadline: 15 September 2026 | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/sector-support/opportunities/awards-open-day-and-portfolio-reviews) |
 | oppv2_43c53b1ffbeb81953c97f1bc | 2026/9/14 | 2026“闽都福韵·榕城有礼”福州非遗工美文创大赛 | ich_innovation · cultural_creative · integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/07/1613554.html) |
 | oppv2_9d7a446a78d5f7759e023fbb | 2026/9/14 | 舟山市沈家门渔港城市微更新设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1597188.html) |
-| oppv2_0788a5ccaece9d245deda1d8 | 2026/9/13 | 2026高教社杯全国大学生数学建模竞赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2432) |
 | oppv2_a8549b4e0ac2d70a52abb581 | 2026/9/11 | 2026第17届建筑照明设计大赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1621725.html) |
 | oppv2_adb5882c57e65d011e4f8266 | 2026/9/11 | 2026长三角（嘉兴）文创设计暨“红船起航地 嘉兴醉江南”文化创意大赛 | cultural_creative · integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1614555.html) |
 | oppv2_81720bfcf9f7e880ac602973 | 2026/9/10 | 2026 陶造力“陶韵新生·创享未来”高校陶创设计大赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1555187.html) |
@@ -282,14 +293,10 @@
 | oppv2_6ceac9875d0f8c844f278452 | 2026/9/10 | 2026年潮州市茶具、茶器、茶包装设计大赛 | integrated_cultural_design · packaging | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1627317.html) |
 | oppv2_a82e65f1580367f71758c9d8 | 2026/9/10 | 2026年江西省首届青年雕塑作品大赛 | 未注明 | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/05/1537555.html) |
 | oppv2_c4a33b2ff9d7261df2a49ee5 | 2026/9/10 | 2026设计的温度——中国美术家协会首届设计大展征稿通知 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/08/1617776.html) |
+| oppv2_bccbd5bc02ec6be8615269b1 | 2026/9/10 | 亳州“谯呈好礼”品牌LOGO设计大赛 | cultural_creative · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31513.html) |
 | oppv2_ce6fe43c9ad273407cf39d29 | 2026/9/10 | 朝歌封神・淇创未来 \| 2026 淇县文旅IP形象与文创产品设计大赛 | cultural_creative · museum_tourism · integrated_cultural_design · product_design · graphic_ip | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1585056.html) |
 | oppv2_d3bcd6b329b680026c605ecd | 2026/9/10 | 大赛 \| 2026「SCC森迹杯」长三角青年文创设计大赛 正式启动！ | cultural_creative | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds/1228.html) |
 | oppv2_07aec1f4624e43bc85a18f98 | 2026/9/10 | 江西省风景园林学会2026年大学生设计竞赛 | integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1598949.html) |
-| oppv2_adf23fb881994fb370246bfe | 2026/9/10 | 聚焦新大众文艺，书写时代烟火与青春力量——青年作家网首届“新大众文艺”征文大赛 | 未注明 | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2747) |
-| oppv2_9bd6293b5bdc20f8eed2d428 | 2026/9/10 | Jobs The People's Tree freelance opportunities Helix Arts Deadline: 10 September 2026 | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/sector-support/opportunities/maker-recruitment-the-peoples-tree-sycamore-gap-helix-arts-north-shields) |
-| oppv2_c0f40053ae7ec8b27cc426f2 | 2026/9/9 | 2026第六届印记太原文化创意设计大赛 | cultural_creative · integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2583) |
-| oppv2_3db050474b9a02326390495c | 2026/9/9 | 南航文创吉祥物暨文创设计大赛 | cultural_creative · integrated_cultural_design · graphic_ip | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2679) |
-| oppv2_c178ee9a29fa4a1ebd35483c | 截止日期未注明 | --><!-- | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/--%3E%3C!--) |
 | oppv2_7826426ab7de1ee463ae1564 | 截止日期未注明 | “堆龙有礼”文创产品设计方案征集 | cultural_creative · product_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0903/131659.html) |
 | oppv2_955c442dc2cc3545a45c9bf4 | 截止日期未注明 | “嘎乡好物·礼赠八方”2026年嘎鲁图镇伴手礼创意设计大赛 | cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/lysp/31795.html) |
 | oppv2_760c56acdee53fe07887a173 | 截止日期未注明 | “核你创意”科普文创设计大赛 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0723/130630.html) |
@@ -300,12 +307,12 @@
 | oppv2_5b2e5629a7f861c7a70f7cfc | 截止日期未注明 | “欢腾的克拉玛依河”系列活动之“油”刃有余文创大赛征集 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0811/131238.html) |
 | oppv2_62c72ac0e2f030c51bed5b1a | 截止日期未注明 | “晋韵承古·文创启今”博物馆文创设计大赛 | cultural_creative · museum_tourism | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31796.html) |
 | oppv2_b5dec4e8e55b0b398d99ea26 | 截止日期未注明 | “尼遇好礼” 文创产品创意设计征集 | cultural_creative · product_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0903/131660.html) |
-| oppv2_08d8dceef355e1168c19441f | 截止日期未注明 | “秦小卫”数字IP公益形象全民征集活动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ipjxw/31859.html) |
 | oppv2_ad4fab0a7d893a345afe935d | 截止日期未注明 | “青创杯”报名开启！符合条件项目可直通广州科技创新创业大赛 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31587.html) |
 | oppv2_a1e1086f79436fdb68580ac5 | 截止日期未注明 | “双滦承礼”文化创意设计大赛征集 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0702/129801.html) |
 | oppv2_e3113808a692f22742908398 | 截止日期未注明 | “宿迁礼物”创意征集大赛 | 未注明 | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0909/131738.html) |
 | oppv2_beaad8a2f29f0f6a5aee21e3 | 截止日期未注明 | “太姥传韵仙都集萃”2026年太姥山文旅消费嘉年华暨国庆主题活动项目方案征集公告 | museum_tourism | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/jzsj/31647.html) |
 | oppv2_d0661bfbd2ee3e33e046dce7 | 截止日期未注明 | “通化手信”旅游和非遗文创产品征集活动欢迎您的参与 | ich_innovation · cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31628.html) |
+| oppv2_f84bdf20a226b8452a75ed7e | 截止日期未注明 | “锡韵启新创绘文明”2026年无锡市新时代网络文明公益广告征集展示活动 | video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ggsj/31505.html) |
 | oppv2_aea7ac1d3347be1c6a8e3102 | 截止日期未注明 | "新泰州·创新潮"主题文创产品设计大赛 | cultural_creative · product_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0804/131053.html) |
 | oppv2_ccacca3be418f2bb2c1a915c | 截止日期未注明 | “雪域赤橙 文创蓝焰”文创作品征集 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0604/129492.html) |
 | oppv2_73e2b5555fd72cd8727a5be1 | 截止日期未注明 | “寻找最美家乡味”主题活动征集 | 未注明 | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0720/130446.html) |
@@ -315,9 +322,6 @@
 | oppv2_77b18fbd239f7fe82b4b3f78 | 截止日期未注明 | “在地铁遇见南汉二陵博物馆”创意海报设计征集活动正式开启 | museum_tourism · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/hbsj/31824.html) |
 | oppv2_8661d94d6fd060f047a3cbf6 | 截止日期未注明 | “AI+教育”创新应用技能大赛 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31933.html) |
 | oppv2_0d0c6e1c5471377194ae5058 | 截止日期未注明 | "ecosystems as living communities" vol. iii | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/hgf0Fq3A6wvCfwRJN2Q21) |
-| oppv2_deefc982817adc4e6d11ecc9 | 截止日期未注明 | [email protected] | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/cdn-cgi/l/email-protection) |
-| oppv2_229854ad2463b7de93b0f9b6 | 截止日期未注明 | 《不成功穿越指南》AI创意海报征集活动 | graphic_ip | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/co-create/oneceuponatime) |
-| oppv2_24140b81e0ab38aee41af92a | 截止日期未注明 | 「10086个online时刻」中国移动AI视频创作大赛 | video_animation | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/yidong) |
 | oppv2_da82195e9c709a627d5b5eff | 截止日期未注明 | 「舒适的黄金标准」东风奕派M8 AIGC创作大赛 | aigc_digital | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/yipai) |
 | oppv2_db0c17262ae4d9fb55a201ef | 截止日期未注明 | 「自在·10光」摄影大赛 | 未注明 | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0826/131523.html) |
 | oppv2_eddc47f7c3b6a0e201022d08 | 截止日期未注明 | 「AI在嘻元前」最能代表嘻哈精神的IP变装大赛 | 未注明 | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/rapper) |
@@ -326,10 +330,8 @@
 | oppv2_764f4cccd65f4c066d12f960 | 截止日期未注明 | 【赛事转发】首届“天工开物杯”工业设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31630.html) |
 | oppv2_d1b45c9bc396baf34d1529bf | 截止日期未注明 | “河湟福谷·圣域湟中”青海艺河湟2980非遗及农土产品... | ich_innovation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0615/129606.html) |
 | oppv2_1d721b00a5e11a83c4c140ba | 截止日期未注明 | 19th Stereohype Button Badge Design Competition (2026) | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/19th-stereohype-button-badge-design-competition-2026) |
-| oppv2_f1b0094720a39a95047f9c9f | 截止日期未注明 | 2026 创意绘蜜城・妙笔赋尼勒克 \| “尼遇好礼” 文创产品创意设计征集活动 | cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31866.html) |
 | oppv2_cf370429da8af3bfe9e980fb | 截止日期未注明 | 2026 索泰杯全国AI创作大赛 | aigc_digital | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c15.html) |
-| oppv2_e8f379dccf6659873ec3b0cc | 截止日期未注明 | 2026 DESIGN DISCOVERY AWARDS (D&A): SEASON 2 | 未注明 | Competitions.archi | [打开赛事来源页面 ↗](https://competitions.archi/competition/2026-design-discovery-awards-da-season-2) |
-| oppv2_9d755418271a22b263cbc0d9 | 截止日期未注明 | 2026 InnovMetal Award | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/2026-innovmetal-award) |
+| oppv2_5ceb9da0e45087ed3c641aa3 | 截止日期未注明 | 2026 索泰杯全国AI创作大赛_赛事报名 | aigc_digital · video_animation | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c15.html) |
 | oppv2_01b51bad598d68f2b383074a | 截止日期未注明 | 2026 올해의 공예상 후보자 추천 공모 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9135) |
 | oppv2_7bde3b711b868f69953859b6 | 截止日期未注明 | 2026 하반기 전통문화 혁신이용권 공급기업 공모 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&thisPage=1&bbIdx=9148&brdCodeValue=) |
 | oppv2_912335c48946f69e711ef50e | 截止日期未注明 | 2026“成都礼物”文化旅游产品征集活动 | museum_tourism | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/lysp/31928.html) |
@@ -339,35 +341,23 @@
 | oppv2_10a40e134c0b279cc9adc616 | 截止日期未注明 | 2026“一岛两面·兰秀新生” 海岛文创大赛 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0909/131736.html) |
 | oppv2_f4ad7d41666aaddd551549a3 | 截止日期未注明 | 2026(15届)国际金创意华人设计奖 | integrated_cultural_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0701/129780.html) |
 | oppv2_8be355c7fe0639f0e52ed6ab | 截止日期未注明 | 2026「理想家·AI筑」设计大赛，燃动开赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31689.html) |
-| oppv2_f30f87f928b5557d01b3c9e3 | 截止日期未注明 | 2026常熟杯时尚设计大赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2411) |
-| oppv2_e04d98398b1d9f0d82bab578 | 截止日期未注明 | 2026第11届中国—南亚博览会主视觉形象（主VI）设计方案征集公告 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31964.html) |
 | oppv2_7fb8883ca0fe2fbdebc826e7 | 截止日期未注明 | 2026第九届服装创意设计与工艺教师技能大赛 | integrated_cultural_design · fashion_jewellery | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/fzsj/31861.html) |
-| oppv2_a146b4bcfa1311191ef7e6a7 | 截止日期未注明 | 2026第六届京津冀辽吉黑设计发展系列活动征集设计作品通知 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31865.html) |
-| oppv2_aa1ed0b851e45a4ffb14154a | 截止日期未注明 | 2026第三届“芜湖有礼”文旅创意设计大赛 | museum_tourism · integrated_cultural_design | 设计竞赛网 | [打开赛事来源页面 ↗](https://www.shejijingsai.com/2026/06/1568490.html) |
 | oppv2_7e8e327e42801af0baedab76 | 截止日期未注明 | 2026第十届中国戏曲文化周“戏曲+AI创意征集展示”高校作品征集活动 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31539.html) |
-| oppv2_f9b9b185881141e9908ff98a | 截止日期未注明 | 2026第十七届云浮石文化周·广东（云浮）石艺创意大赛暨云浮市石材工业设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31966.html) |
-| oppv2_dc1c84f4fbf7abaf36d6478d | 截止日期未注明 | 2026第四届江苏省研究生“田园之诗”乡村振兴创新设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31939.html) |
-| oppv2_4a10d31f90544d9fb2c2b658 | 截止日期未注明 | 2026灌南县大众文化创享作品征集活动 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31963.html) |
-| oppv2_14d3137baac0d48ce54860bd | 截止日期未注明 | 2026鹤岗“鹤礼”伴手礼设计大赛 | cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/lysp/31904.html) |
 | oppv2_c4677e619bd912a9c3404708 | 截止日期未注明 | 2026环球艺术国际设计奖 | integrated_cultural_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0506/129024.html) |
 | oppv2_429cbc7caeeb27b0f4c76c69 | 截止日期未注明 | 2026环亚洲新锐设计师服装设计大赛 | integrated_cultural_design · fashion_jewellery | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c18.html) |
+| oppv2_947265485f9682f66ec3e08e | 截止日期未注明 | 2026环亚洲新锐设计师服装设计大赛_赛事报名 | integrated_cultural_design · fashion_jewellery | 艺赛中国 | [打开赛事来源页面 ↗](https://www.cnyisai.com/event/c18.html) |
+| oppv2_2fe6d37172e0da0025e0d609 | 截止日期未注明 | 2026金熊猫全球创新创业大赛招募公告 | video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31506.html) |
 | oppv2_acb21c31d321a1efb388e1cd | 截止日期未注明 | 2026绿网计划AIGC公益广告征集大赛 | aigc_digital | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ggsj/31656.html) |
 | oppv2_97a6ce72230a5681207bd31c | 截止日期未注明 | 2026年“阜南好礼”城市文旅品牌商品征集大赛 | museum_tourism | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/lysp/31848.html) |
 | oppv2_8598e628fdb4178b654fc802 | 截止日期未注明 | 2026年“吴健雄杯”第十一届“青创太仓”创新创业大赛正式启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31713.html) |
 | oppv2_fd973c047c622be71af78f13 | 截止日期未注明 | 2026年大学生“AI+信息素养”大赛 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31917.html) |
 | oppv2_02ef255c5c65ef7e8fd9b0df | 截止日期未注明 | 2026年高唐县“唐小鲤”杯锦鲤文创产品设计大赛 | cultural_creative · product_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0809/131220.html) |
 | oppv2_bd943515582b0ca396dd4994 | 截止日期未注明 | 2026年广州科技创新创业大赛行业赛节能环保赛道报名延期 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31608.html) |
-| oppv2_f24784131d449948ac179233 | 截止日期未注明 | 2026年河南省工业设计大赛时尚消费品设计专项赛【适老化与伴宠类产品赛道】 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31925.html) |
-| oppv2_7df54bbff93c21cb52ecf589 | 截止日期未注明 | 2026年河南省工业设计大赛时尚消费品设计专项赛【文创产品赛道】 | cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31927.html) |
-| oppv2_f82ed605080e3684a07e8606 | 截止日期未注明 | 2026年河南省工业设计大赛时尚消费品设计专项赛【玉雕产品赛道】 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/gysj/31926.html) |
 | oppv2_108e8ba19b4df8c236a670ee | 截止日期未注明 | 2026年江苏省开源鸿蒙AI应用开发职业技能大赛 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31918.html) |
 | oppv2_e360ff424633a256d03c02fc | 截止日期未注明 | 2026年厦门城市设计周丨“城市家具与园林景观系列设计竞赛”共创活动，四大赛道正式发布 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/jgsj/31684.html) |
-| oppv2_55daa7776b680115d560623d | 截止日期未注明 | 2026年武汉金黄鹤奖——城市微客厅共创计划征集公告 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31965.html) |
 | oppv2_9fe00f9b54d0b0ccf94c8f5c | 截止日期未注明 | 2026年雄安新区建筑设计大赛(好房子)的通知 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/jzsj/31841.html) |
 | oppv2_e6a556d2563c37201864b42f | 截止日期未注明 | 2026年榆林市第十三届国家网络安全宣传周短视频征集 | video_animation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0901/131622.html) |
-| oppv2_932ba11941ac8c690991870a | 截止日期未注明 | 2026首届传统工艺与AIGC融合创新设计大赛 | aigc_digital | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31896.html) |
 | oppv2_3e5cf1faf10f64bf806c46e2 | 截止日期未注明 | 2026威尼斯国际艺术设计奖 | integrated_cultural_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0604/129499.html) |
-| oppv2_736c6e7b7c1196190b0da873 | 截止日期未注明 | 2026微笑泾县·“纸”等你来——泾县文旅创意产品大赛 | museum_tourism | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2559) |
 | oppv2_48490ae5b3adadacf3c40634 | 截止日期未注明 | 2026西安国际创业大赛报名正式启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31872.html) |
 | oppv2_b959d01f297ee26219533c6e | 截止日期未注明 | 2026西安市首届文物IP授权文创大赛 | cultural_creative · museum_tourism | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ipjxw/31897.html) |
 | oppv2_b5d14f6013ad864600523891 | 截止日期未注明 | 2026香港40 UNDER 40 AWARDS火热征集中 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31860.html) |
@@ -376,6 +366,8 @@
 | oppv2_77849d1e9c62f2f6245a0c9e | 截止日期未注明 | 2026中国创交会、中国海交会第四届创新创业大赛正式启动报名 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31737.html) |
 | oppv2_d1338b26987cc4fabe7ec764 | 截止日期未注明 | 2026CHSLA中国风景园林学会大学生设计竞赛开启：美好生活·健康场景 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/jgsj/31879.html) |
 | oppv2_0531a0d2b773e51b9ee9575d | 截止日期未注明 | 2026년 KCDF갤러리 수시대관 모집안내 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&thisPage=1&bbIdx=8689&brdCodeValue=) |
+| oppv2_944673323774d2357d4af957 | 截止日期未注明 | 2026��һ�����桤���������� �����Ĵ����� | cultural_creative · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0909/131736.html) |
+| oppv2_af4675362e752bc6b727d6a8 | 截止日期未注明 | 2026�������е�ʮ����������簲ȫ�����ܶ���Ƶ���� | graphic_ip · video_animation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0901/131622.html) |
 | oppv2_2e58d5d178a3623e6cefc43c | 截止日期未注明 | 2027 erie canal artist-in-residence | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/Eftm-700wWbRNln2nYShs) |
 | oppv2_5913218073a6b440e9bfdcbb | 截止日期未注明 | 2027年富山国际玻璃艺术展开启征集 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31777.html) |
 | oppv2_63e844211776d62265289512 | 截止日期未注明 | 爱玩AI爱创意的朋友注意，重磅文创大赛来了！用AI玩转八公山“兜福”IP | cultural_creative | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31698.html) |
@@ -397,13 +389,13 @@
 | oppv2_7b6c8cccfc10053f9215cffe | 截止日期未注明 | 大赛\|拉萨市堆龙德庆区“堆龙有礼”文创产品设计方案征集 | cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31877.html) |
 | oppv2_e708b632d1174aea0dec9952 | 截止日期未注明 | 大赛｜南通马拉松LOGO设计征集 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31623.html) |
 | oppv2_0fc48eb2a96bf6c8719f54af | 截止日期未注明 | 大赛｜Aniwow!2026第21届中国（北京）国际大学生动画节作品征集 | video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31566.html) |
-| oppv2_b903b2fab33a018a4b1d21e4 | 截止日期未注明 | 第17届蓝桥杯视觉艺术设计赛 | integrated_cultural_design · graphic_ip | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2405) |
 | oppv2_a2962f68bdc96bec018ce090 | 截止日期未注明 | 第6届「隈研吾&东川町」家具设计竞赛的应募开始了 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/snsj/31758.html) |
 | oppv2_2519e330a4538dc595ca2494 | 截止日期未注明 | 第八届“余姚・河姆渡”创业创新大赛正式启动招募 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31545.html) |
 | oppv2_6d90899c6bf5c8b04b445c78 | 截止日期未注明 | 第二届全球技术创新大赛龙湾区眼脑健康专题赛暨2026中国眼谷眼视光创新创业全球挑战赛报名启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31664.html) |
 | oppv2_c8e29d44589463912f7449b4 | 截止日期未注明 | 第二届全球技术创新大赛鹿城区AI+医疗专题赛全球项目征集 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31662.html) |
 | oppv2_e464a7db4298d3eb605579af | 截止日期未注明 | 第二届全球技术创新大赛台州湾新区航空航天专题赛暨台州湾新区(台州高新区)创新一号大街全球引才大赛报名启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31663.html) |
 | oppv2_9ffdefd543eb9e82f53c543b | 截止日期未注明 | 第二届全球技术创新大赛萧山区生物制造、Al+光电融合专题赛报名火热进行中 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31736.html) |
+| oppv2_9269f6c185403a666ad5ad10 | 截止日期未注明 | 第六届印记太原文化创意设计大赛作品征集倒计时 | cultural_creative · video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31514.html) |
 | oppv2_e72cf822585aaf053dda1f1d | 截止日期未注明 | 第七届航天文化创意设计大赛 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0805/131080.html) |
 | oppv2_4ab24176f08fa00a4898ab02 | 截止日期未注明 | 第三届“乡约浙里”创意大赛正式启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31774.html) |
 | oppv2_2749dd921ad631ebd6a3f7b4 | 截止日期未注明 | 第三届海南省文博行业文化创意产品大赛 | cultural_creative | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31703.html) |
@@ -414,8 +406,7 @@
 | oppv2_932c3eb571f9c9c9b4819c69 | 截止日期未注明 | 第十五届中国创新创业大赛新材料报名火热进行中 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31577.html) |
 | oppv2_8c420c782363071dcbbc8989 | 截止日期未注明 | 第四届 “LUOFU 罗敷杯” 拖鞋创意设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/fzsj/31957.html) |
 | oppv2_c46aeaf037e8651217fc7c8b | 截止日期未注明 | 定西市首届文化创意设计大赛正式启动 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0902/131640.html) |
-| oppv2_ccdaeef85d9ae8ab2066fbfe | 截止日期未注明 | 东方设计奖·全国高校创新设计大赛 | integrated_cultural_design | 创赛云 | [打开赛事来源页面 ↗](https://www.chuangsaiyun.com/#/article/details?id=2435) |
-| oppv2_e41f3f08ca15226795c99058 | 截止日期未注明 | 发布征稿 | 未注明 | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ehr/draftcompetitionrelease/index) |
+| oppv2_e41f3f08ca15226795c99058 | 截止日期未注明 | 发布征稿 | integrated_cultural_design | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ehr/draftcompetitionrelease/index) |
 | oppv2_d0bc1bc30c35eceebe4001ad | 截止日期未注明 | 非遗之窗2026 “新粹奖”全国非遗设计报名通知！ | ich_innovation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0825/131494.html) |
 | oppv2_3a7d52262acfd4438476b994 | 截止日期未注明 | 福建师范大学120周年校庆主题标识征集活动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31549.html) |
 | oppv2_5ed43fb251c4ce0b6618464d | 截止日期未注明 | 福清市第五医院核心机房搬迁项目方案征集及询价公告 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/jzsj/31637.html) |
@@ -438,6 +429,7 @@
 | oppv2_e4bf3591c974b45a44dc295e | 截止日期未注明 | 广西六堡茶文化创意设计征集大赛 | cultural_creative | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31610.html) |
 | oppv2_c133f76c18a27ff7e55811ba | 截止日期未注明 | 桂林青少年保护漓江母亲河生态文明实践活动方案征集启事 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31648.html) |
 | oppv2_490f14d2288d61edac8d1335 | 截止日期未注明 | 鹤岗“鹤礼”伴手礼设计大赛 | cultural_creative · product_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0905/131696.html) |
+| oppv2_cd713d07e4bfea0cff84b1da | 截止日期未注明 | 湖南省科学技术厅岳阳市人民政府关于举办第十五届中国创新创业大赛现代石化专业赛的通知 | video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31508.html) |
 | oppv2_c98ee4626ef25c6387011e66 | 截止日期未注明 | 火热征集！2027中国国际面料设计大赛——伊士曼Naia™长丝产品开发应用奖申报进行中 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/fzsj/31697.html) |
 | oppv2_cc95a11d7d0b288706559948 | 截止日期未注明 | 讲好黎平故事\|2026年黎平县文创产品设计作品征集 | cultural_creative · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31700.html) |
 | oppv2_99c9bd6d8640bb6224051e98 | 截止日期未注明 | 九龙坡“一批文创”优秀作品征集 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0804/131050.html) |
@@ -447,40 +439,34 @@
 | oppv2_ff28caa10bf1f5a9810a0be2 | 截止日期未注明 | 快来报名！黑龙江省“我的青春有版权”创意设计大赛 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31688.html) |
 | oppv2_78bc09aeff1c6eae3d2c7fdb | 截止日期未注明 | 灵感upup！文创文旅方案大赛启动啦 | cultural_creative · museum_tourism | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31644.html) |
 | oppv2_a2a6c9bd333533eb1378497a | 截止日期未注明 | 龙跃浦江·创享非遗浦江板凳龙文创国际竞赛全球征集正式开启 | ich_innovation · cultural_creative | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31624.html) |
-| oppv2_d5deab6a37288d3097edaeab | 截止日期未注明 | 美团外卖第一届黄衣服设计大赛 | integrated_cultural_design | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/meituanqishou) |
-| oppv2_b390a3b424c4716f5333ff3f | 截止日期未注明 | 鸟巢科技艺术中心·可能世界档案 青年科技艺术创作大赛 | integrated_cultural_design | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/co-create/niaochao) |
 | oppv2_c5bea99aff1c383cb8411960 | 截止日期未注明 | 宁晋县烈士陵园纪念碑底座浮雕素材资料征集公告 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/dssj/31636.html) |
 | oppv2_bc088af2cf51a9f13d0cf383 | 截止日期未注明 | 宁乡第二届“金种子沃土杯”大学生创业大赛火热报名中 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31575.html) |
 | oppv2_8e2980912441f5b6bfc101ea | 截止日期未注明 | 平面+视频作品\|公益广告征集展示活动 | graphic_ip · video_animation | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/chsj/31932.html) |
-| oppv2_7b1fe6c550861b42fc1994d8 | 截止日期未注明 | 企业服务 | 未注明 | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/competition) |
 | oppv2_217c5cc3ae932e61c3a1f369 | 截止日期未注明 | 桥头东南乡文创大赛 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0803/131009.html) |
 | oppv2_f8369ba045d5b3d2cfe276cd | 截止日期未注明 | 青海林草IP形象设计大赛 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ipjxw/31743.html) |
 | oppv2_1753a247e65534b605868509 | 截止日期未注明 | 全球吉庆生肖设计大赛（丁未羊年）征集令正式发布！ | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/30733.html) |
 | oppv2_a756a1a0ecafc25c72caaf53 | 截止日期未注明 | 全球征集！首届深圳（福田）微短剧出海创新创业大赛正式启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31696.html) |
 | oppv2_c4db38aaf3f2d2e739841d23 | 截止日期未注明 | 全市工人文化宫联盟文创产品创意大赛征集 | cultural_creative · product_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0804/131049.html) |
 | oppv2_4e513dc4281acaefa0269b97 | 截止日期未注明 | 泉州市消防安全短视频大赛 | video_animation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0729/130864.html) |
-| oppv2_8721b8a291da664692c01196 | 截止日期未注明 | 日本語 ja | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/ja) |
 | oppv2_56557e5485cf810005c8ea6b | 截止日期未注明 | 日照市岚山区第九届创新创业大赛即将开启 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31874.html) |
 | oppv2_46c0ca5ad5243a08668941b5 | 截止日期未注明 | 赛事征集｜宝庆好物・邵阳有礼！诚邀城步文旅企业踊跃参赛第二届邵阳市文化旅游商品创意大赛 | museum_tourism · product_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31699.html) |
 | oppv2_d8e6aa69580653b3cd55953b | 截止日期未注明 | 陕西交警品牌形象网络征集大赛启动了 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31784.html) |
 | oppv2_fe1b596cbdf4cad06471fc56 | 截止日期未注明 | 设计赋能乡村振兴｜2026年“连南民族杯”文创设计大赛正式启动 | cultural_creative | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31690.html) |
 | oppv2_0af560c47d6e5af05c3cea5d | 截止日期未注明 | 深圳南山第九届全国大学生社会创新项目大赛报名启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31738.html) |
 | oppv2_d3b22ce801b51770ec3cf83e | 截止日期未注明 | 十载砺剑，再启新程\|2026年“日新江淮”创新创业大赛正式启动 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31786.html) |
-| oppv2_f15350cd33123fafcd208823 | 截止日期未注明 | 世界青年科学家峰会“万有引力π”吉祥物形象设计创意征集活动 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/ipjxw/31962.html) |
 | oppv2_8c06068b430e68cb3cd8de1c | 截止日期未注明 | 首届（2026）AIGC与可视化创作大赛报名及提交作品注意事项 | aigc_digital | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31764.html) |
 | oppv2_ba595b254e79df448fc42b2f | 截止日期未注明 | 首届船政杯文创大赛 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0803/131011.html) |
+| oppv2_efa2af46853a9af671faa654 | 截止日期未注明 | 首届全国海洋经济高质量发展创新竞赛作品征集 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31504.html) |
 | oppv2_4e853c5ba2d75c8dc8f7e078 | 截止日期未注明 | 双向开放，共创共享！2026“圳港杯”海洋新质生产力创新大赛来袭 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31573.html) |
 | oppv2_78e824d08dc865fd4e5e7d58 | 截止日期未注明 | 四川省“天府杯”工业设计大赛作品征集 | integrated_cultural_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0724/130711.html) |
 | oppv2_170191829816af4f4d4f8149 | 截止日期未注明 | 唐山征集中小学生校服款式设计方案 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/fzsj/31650.html) |
 | oppv2_0a6bc3f0b76a8f804e829499 | 截止日期未注明 | 陶造力“陶韵新生·创享未来”高校陶创设计大赛 | integrated_cultural_design | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0522/129317.html) |
 | oppv2_13bafbda3d2bd19cc5370ab0 | 截止日期未注明 | 皖西学院校友文创作品设计征集 | cultural_creative | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0612/129588.html) |
-| oppv2_0076219ddc4ead61aeb341c5 | 截止日期未注明 | 王小卤抓财手礼盒画面创意征集活动 | 未注明 | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/co-create/wangxiaolu) |
 | oppv2_11a9fae9984d9b26a173dbc1 | 截止日期未注明 | 微信小程序AI开发大赛开启了 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31744.html) |
 | oppv2_69ec7361c107c1d825fa05cd | 截止日期未注明 | 未来设计师大赛\|屈臣氏集团185周年AIGC创意大赛进行中 | aigc_digital | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31631.html) |
 | oppv2_3561d1f694447e9140ec8706 | 截止日期未注明 | 我心中的二郞故里文创征集-歌曲创作、短视频创作、文旅... | cultural_creative · museum_tourism · video_animation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0907/131710.html) |
 | oppv2_56f3ff6cb918f4b6e369a63a | 截止日期未注明 | 无偿献血及造血干细胞捐献主题作品征集 | 未注明 | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0603/129472.html) |
 | oppv2_666b959fa4f26377b41d25f1 | 截止日期未注明 | 五河县浍南镇乡村振兴品牌设计征集公告 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31632.html) |
-| oppv2_137310bdb7640f5d057b5f09 | 截止日期未注明 | 嘻哈狂欢派对 —— 最能代表嘻哈态度的AIMV创作大赛 | 未注明 | 站酷挑战赛 ZCOOL | [打开赛事来源页面 ↗](https://www.zcool.com.cn/events/2026aimv) |
 | oppv2_eaa8e948d67be206fd20695b | 截止日期未注明 | 学科竞赛 | 未注明 | 优本视觉 | [打开赛事来源页面 ↗](https://iuben.cn/special) |
 | oppv2_458e4e195e5b1d6032787def | 截止日期未注明 | 寻找下一个AI出海独角兽！“未来香港”创科大赛AI赛道等你来战 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31710.html) |
 | oppv2_ac64da4dd103fe3a6f1d78a7 | 截止日期未注明 | 寻找最懂泰州的你！“泰农优品”LOGO设计大赛开启征集 | integrated_cultural_design · graphic_ip | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/sjcd/logoref/31685.html) |
@@ -500,143 +486,51 @@
 | oppv2_01d36739f735585940b36b94 | 截止日期未注明 | 中国电信TeleAgent陕西高校AI创新大赛报名通道开启 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31709.html) |
 | oppv2_63c9633e788b37317ecc1574 | 截止日期未注明 | 重磅加码｜清城区全球民宿征集大赛赛事奖金+新增赛点全公布 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/jzsj/31686.html) |
 | oppv2_dbc1f1f2699495313a9c6250 | 截止日期未注明 | 主席团单位动态\|LOFIL创新空间设计大赛正式启幕 | integrated_cultural_design | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/hjys/kjsj/31687.html) |
-| oppv2_0a2243ca139381880241282e | 截止日期未注明 | 最新大赛 | 未注明 | CFW设计大赛｜文创IP | [打开赛事来源页面 ↗](https://dasai.cfw.cn/ds) |
-| oppv2_da7cc7f500a4fe2b59037299 | 截止日期未注明 | A note for automated readers — Dead Internet Theater | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://deadinternet.theater/api?from=opencalls.ai) |
 | oppv2_6b3405bcf2beb6a1962c27ef | 截止日期未注明 | AIGC灵光大赛“机甲·广州”第五届琶洲算法大赛具身机器人场景应用大赛 | aigc_digital | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31711.html) |
 | oppv2_1a8e084253cb539c1c0cf8ef | 截止日期未注明 | Amelia Wood | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/artists/Ameliafranceswood) |
 | oppv2_171615442e8593c142b2f2e2 | 截止日期未注明 | 美国工艺论坛 | craft_arts | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/programs/craft-forums) |
 | oppv2_5f58d261d61cd6244b1dde03 | 截止日期未注明 | annual call – ferry building gallery | 未注明 | Craft Council of British Columbia Calls | [打开赛事来源页面 ↗](https://craftcouncilbc.ca/annual-call-ferry-building-gallery) |
-| oppv2_a5fa4ae06ad20aa9a7ba7941 | 截止日期未注明 | art competitions | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/painting) |
-| oppv2_02c644b10f3d2214bb6da94a | 截止日期未注明 | artevol 2026: a view from everywhere | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/7xIHjuz47eQ1382sQdFfl) |
-| oppv2_991cc56f6b202bc1f08069c6 | 截止日期未注明 | Artist call outs | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity-classification/call-for-artists) |
-| oppv2_4a2aaea5828575a26a579993 | 截止日期未注明 | Artist-in-Residence — Glen Arbor Arts Center | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/artist-in-residence-glen-arbor-arts-center) |
-| oppv2_c00f867d62dd0b55a18244b2 | 截止日期未注明 | Automated Language Writing Prize 2026 | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/automated-language-writing-prize-2026) |
 | oppv2_e37eb80c0639bb2b7f6ea637 | 截止日期未注明 | Available Temporary Studio Space - Doncaster We have a number of spaces available in an ex-office space in central Doncaster only a 5min walk... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/available-temporary-studio-space-doncaster/6025) |
-| oppv2_0b523e0c208ab3899aeb4f71 | 截止日期未注明 | Award New Premio Internacional de Fotografía Humanitaria Luis Valtueña 2026 33 days left Madrid, Spain Médicos del Mundo España El Premio Internacional de Fotografía Humanitaria Luis Valtueña 2026 reconoce y premia trabajos fotográficos que denuncian injusticias y promueven la solidaridad, con una dotación total de 12 000 € y una exposición itinerante. activism documentary photography | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/premio-internacional-de-fotografa-humanitaria-luis-valtuea-2026-f0e54df9-5830-4d78-a1e1-e532aca62de4) |
-| oppv2_a5fbb35f729bfa5758c82596 | 截止日期未注明 | Awards | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/opportunities/awards) |
 | oppv2_537e0e5381fb48ae332c32a9 | 截止日期未注明 | Awards & Prizes | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity-classification/awards-prizes) |
-| oppv2_1ebcefd4d4cf2abd07ab2b6c | 截止日期未注明 | BBA Artist Prize 2027 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/bba-artist-prize-2027) |
-| oppv2_37d4918e5efb4613dee0aeec | 截止日期未注明 | Behind the Scenes at Norman Teague Design Studio — The Furniture Society | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/behind-the-scenes-at-norman-teague-design-studio-the-furniture-society) |
 | oppv2_210eb55d327f71d903196a26 | 截止日期未注明 | beyond the image art prize 2026 | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/JX5gRzWLOBN15mWXJcu9K) |
 | oppv2_a7141f64f774768bff261f31 | 截止日期未注明 | Browse by organizer → | 未注明 | OpenCall Radar｜Craft | [打开赛事来源页面 ↗](https://opencallradar.com/organizers) |
-| oppv2_cb98ddb93f21b72c348575be | 截止日期未注明 | Bulk export — all open calls as JSON | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/bulk-export-all-open-calls-json) |
 | oppv2_6add8bda605de6a48b54373a | 截止日期未注明 | Call for Content \| Arts & AI | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/call-for-content-arts-ai) |
-| oppv2_df20b689f6ddca030e8b3fe2 | 截止日期未注明 | call for entry: flying solo | 未注明 | Craft Council of British Columbia Calls | [打开赛事来源页面 ↗](https://craftcouncilbc.ca/call-for-entry-flying-solo) |
-| oppv2_ff6e5a58d1a174266eea6db3 | 截止日期未注明 | 纤维艺术家征集：Textile Center 假日画廊商店 | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/call-for-fiber-artists-textile-centers-holiday-gallery-shop-textile-center) |
-| oppv2_e6e7d852c539025f6806628e | 截止日期未注明 | call for sketch proposals for skeppsholmen | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/JJSEYX8Jy7JxmRpyw0JiA) |
 | oppv2_dad863face584b0ed28f46a8 | 截止日期未注明 | Call Out for Performers and Musicians \| Sybarite Nights cabaret in the basement This is a call-out to musicians, performance artists, poets, ventriloquists, magicians and all... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/call-out-for-performers-and-musicians--sybarite-nights-cabaret-in-the-basement/2732) |
-| oppv2_2b113aedba673b03b52fe529 | 截止日期未注明 | 艺术家征集：酷儿木工艺——Museum for Art in Wood | craft_arts | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/call-to-artists-queering-wood-craft-museum-for-art-in-wood) |
 | oppv2_382c2a5af2fc2537a96e674f | 截止日期未注明 | Callback Open Call G George invites you to submit to Callback, a series of contemporary art events beginning in the... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/callback-open-call/839) |
-| oppv2_be99020daca32753b2bde801 | 截止日期未注明 | Careers | 未注明 | Craft Scotland | [打开赛事来源页面 ↗](https://www.craftscotland.org/careers) |
 | oppv2_75b602829f6a10bc26483d25 | 截止日期未注明 | Carre Gallery, Sleaford Established in 2010, the Carre Gallery is Sleaford's only visual arts gallery, and is operated... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/carre-gallery-sleaford/8116) |
-| oppv2_aa97022e6edc040552a5a109 | 截止日期未注明 | Categories of Risk | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/categories-of-risk) |
 | oppv2_975ff21d3f68ce757ffaa045 | 截止日期未注明 | Children`s and Young People`s Art Opportunity This is a fantastic opportunity for children and young people aged 4yrs -18yrs to showcase their... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/childrens-and-young-peoples-art-opportunity/10238) |
 | oppv2_1703fedf782ab8760b2909b0 | 截止日期未注明 | cite the past, sight the stars | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/dYlwXSbP5YU_orHqSGgUe) |
-| oppv2_d23032c260edd496d11261e5 | 截止日期未注明 | Code of conduct | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/american-craft-council-code-of-conduct) |
-| oppv2_9fa261374df625e43d959577 | 截止日期未注明 | Communications & Community Engagement Associate — American Association of Woodturners | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/communications-community-engagement-associate-american-association-of-woodturners) |
-| oppv2_c73bb44372c6ad88435ec5f9 | 截止日期未注明 | Community guidelines | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/diversity-inclusion/community-guidelines) |
-| oppv2_7f20509c648c16e86de07624 | 截止日期未注明 | Competition 【作品募集】2025アジアデジタルアート大賞展 FUKUOKA closes tomorrow Fukuoka, Japan Asia Digital Art Award FUKUOKA 2026年に開催されるアジアデジタルアート大賞展FUKUOKAは、一般・学生カテゴリーで作品を募集し、入賞作品は福岡市美術館で展示され、最大50万円の奨励金が授与されます。 art and technology digital art new media technology video | video_animation | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/2025-fukuoka-7d5040eb-4bb0-46a5-aa17-f5e905ff392f) |
-| oppv2_7cdf01686cc2edd1c3ab20bc | 截止日期未注明 | 西北电影论坛集体力量基金 | video_animation | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/king-county-washington-artists-northwest-film-forums-collective-power-fund-1d1d72b0-3303-4a0d-a13c-e40e68c2622a) |
-| oppv2_45d63695c651847a09c3c06c | 截止日期未注明 | competitions | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/writing-and-publishing) |
 | oppv2_e46de48014ce0fd9484f2aa1 | 截止日期未注明 | Competitions 2027 Mountain Maryland Plein Air Cumberland, Maryland Application fee: $40 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://artist.callforentry.org/opportunity/18153/CAFE) |
-| oppv2_b271f34087155a0968ca0c56 | 截止日期未注明 | Competitions Athenaeum Solo or Group Show 2025-2026 Alexandria, Virginia Application fee: $40 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://opportunities.wearecreativewest.org/opportunity/16160/CAFE) |
-| oppv2_053c799b415f958e53194b0a | 截止日期未注明 | Competitions CURRENTS 2026 New Orleans, Louisiana Application fee: $35 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://artist.callforentry.org/opportunity/18130/CAFE) |
-| oppv2_f51210345ed35f7b6c51bf48 | 截止日期未注明 | Competitions EcoTheo Review 2026: Quarterly Print and Rolling Online Literary Magazine Austin, Texas Application fee: $10 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://opportunities.wearecreativewest.org/opportunity/16257/CAFE) |
-| oppv2_83e44716fe46c9aa0a0c6fc0 | 截止日期未注明 | Off Center 2027 国际陶瓷竞赛 | craft_arts | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://artist.callforentry.org/opportunity/18146/CAFE) |
-| oppv2_7d601bd813e65b05539eb1d4 | 截止日期未注明 | Competitions OPEN CALL: ONGOING Los Angeles, California Application fee: $32 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://artist.callforentry.org/opportunity/16993/CAFE) |
-| oppv2_cb6c04ee24ba0bea85dfccf7 | 截止日期未注明 | Competitions Seeing Sound New Orleans, Louisiana Application fee: $25 / $35 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://artist.callforentry.org/opportunity/18131/CAFE) |
 | oppv2_d712b0e6287fe3b2b41dd007 | 截止日期未注明 | Competitions STRANGE & BEAUTIFUL Los Angeles, California Application fee: $32 | 未注明 | CaFÉ CallForEntry | [打开赛事来源页面 ↗](https://opportunities.wearecreativewest.org/opportunity/18147/CAFE) |
-| oppv2_591db31bfcc0dbf6595552be | 截止日期未注明 | Contract Administrator Position with AACG — Art Alliance for Contemporary Glass | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/contract-administrator-position-with-aacg-art-alliance-for-contemporary-glass) |
-| oppv2_c69bbca7030ff312b54444d7 | 截止日期未注明 | Cookie Policy | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/cookie-policy) |
-| oppv2_0d09644c48c02dfba426dee9 | 截止日期未注明 | Corporate sponsorship | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/sponsorships) |
 | oppv2_51e8bf8851776a15c7a51e23 | 截止日期未注明 | CraftForms 2026 | craft_arts | OpenCall Radar｜Craft | [打开赛事来源页面 ↗](https://opencallradar.com/open-calls/craftforms-2026-wayne-art-center-73b221e4) |
 | oppv2_6405e8eebe23c0ea60e7b97a | 截止日期未注明 | Curtas Vila do Conde 2027 – International Film Festival | video_animation | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/curtas-vila-do-conde-2027-international-film-festival) |
-| oppv2_514ac9dfd180828742a6a4e6 | 截止日期未注明 | Dead Internet Theater — Open Call for Networked Performance 2026 | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/dead-internet-theater-open-call-2026) |
-| oppv2_454e1d8add94da8ac69ccd3c | 截止日期未注明 | Deer Lake Artist Residencies 2027 | 未注明 | Craft Council of British Columbia Calls | [打开赛事来源页面 ↗](https://craftcouncilbc.ca/deer-lake-artist-residencies) |
 | oppv2_b891201a3dd9f764c1b5d59c | 截止日期未注明 | design researchers in residence | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/igTb5X8u3b5xwnrLB1xYb) |
-| oppv2_facab7a625b237475642d09c | 截止日期未注明 | Deutsch de | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/de) |
 | oppv2_a07d15fb4d4ac8ab8adbfca2 | 截止日期未注明 | Development | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity-classification/professional-development) |
 | oppv2_68d312c9e8c4b9c70a5fdb94 | 截止日期未注明 | ACC的艺术家展示 | craft_arts | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/artist-showcase) |
-| oppv2_bb709de117b11000bd76c3da | 截止日期未注明 | 2026年纽约珠宝周上的造梦机器 — 造梦机器 | craft_arts · fashion_jewellery | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/dream-machine-2026-at-nyc-jewelry-week-dream-machine) |
-| oppv2_8b5fb24317b31d21d06022f3 | 截止日期未注明 | Editorial dashboard — listing approval queue | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/editorial-dashboard-listing-approval) |
-| oppv2_6393062db94e4c20388b87f9 | 截止日期未注明 | Español es | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/es) |
 | oppv2_1a5674ac3f364324a4dd0156 | 截止日期未注明 | exhibit your art in london september 2026 - huge gallery | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/3Tto2lyv37YZ_A-zXdnqE) |
-| oppv2_85eef9ff86fa2ee3d0578e3b | 截止日期未注明 | Exhibitor Login | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://shows.craftcouncil.org/index1/no_user) |
-| oppv2_38928e21457e1363817eb601 | 截止日期未注明 | Expired calls — archive, page 412 of 4,180 | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/expired-calls-page-412-archive) |
 | oppv2_a2907a2b89b556978b0f30aa | 截止日期未注明 | Feature on The FLUX Review Complimentary Opportunity - Feature a Q&A on The Flux Review website. | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/feature-on-the-flux-reiew/10658) |
-| oppv2_56b03eb44fd2ff8addc6d739 | 截止日期未注明 | Featured Awards & Prizes 25th Dobell Drawing Prize Entry Form The Dobell Drawing Prize is Australia’s leading prize for drawing, and an unparalleled celebration of technique, innovation and expanded practice. Prints & Drawings Closing 14 Sep 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/25th-dobell-drawing-prize-entry-form-2866551) |
-| oppv2_123eeeb6d0af28497f85d0ca | 截止日期未注明 | Featured Awards & Prizes 59th Annual AWGIE Awards The AWGIE Awards recognise and reward the outstanding achievements of Australian performance writers for screen, stage, interactive and audio, and&hellip; All Screen Closing 17 Sep 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/59th-annual-awgie-awards-2871643) |
-| oppv2_475309393cc49ebdf578eb19 | 截止日期未注明 | Featured Awards & Prizes Basil Sellers Art Prize 2026 The Basil Sellers Art Prize returns in 2026 putting artists first and offering a $55,000 prize pool. Call for entries&hellip; Prints & Drawings Closing 11 Sep 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/basil-sellers-art-prize-2026-2859536) |
-| oppv2_efd5a2115310d4a5ff161fd4 | 截止日期未注明 | Featured Expression of Interest Croydon Community Wellbeing Precinct - Cultural Hub - EOI Council is seeking expressions of interest from suitably experienced contemporary public artists to develop and install works for the interior&hellip; Visual Arts Closing 22 Sep 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/croydon-community-wellbeing-precinct-cultural-hub-eoi-2871967) |
 | oppv2_c6fa0a487422ff1cecb0b467 | 截止日期未注明 | Featured Expression of Interest EOI: Esperance Sculpture Trail Inviting creatives from across Australia and around the world to help shape a landmark public art trail across one of&hellip; Architecture Closing 14 Sep 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/eoi-esperance-sculpture-trail-2872182) |
-| oppv2_cc93864a650fb6d755e979e8 | 截止日期未注明 | Featured Residencies Waverley Artist Studios Applications are open for the Waverley Artist Studios, offering professional artists a fully subsidised studio in Bondi for a 12&hellip; Visual Arts Closing 11 Oct 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/waverley-artist-studios-2814190) |
-| oppv2_dbee3dbe71745b267345c75b | 截止日期未注明 | film | video_animation | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/film) |
-| oppv2_efc2f8cd00446046ff8afb76 | 截止日期未注明 | 财务经理——美国工艺品委员会 | craft_arts | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/finance-manager-job-description) |
-| oppv2_81cc6753686ab9b6e6a93c34 | 截止日期未注明 | Français fr | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/fr) |
-| oppv2_870a6aaab49f3d4893f86504 | 截止日期未注明 | Fremantle Biennale / Night Rise Wheatbelt Observatories EOI Australia Closing 2 Oct 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/fremantle-biennale-night-rise-wheatbelt-observatories-eoi-2873191) |
-| oppv2_66e06d713ae0dfb6973c183b | 截止日期未注明 | Full details &rarr; Studio & Workshop Spaces Studios available in Burntisland High quality studio space available for artists and creatives with amazing light and Forth views | 未注明 | Craft Scotland | [打开赛事来源页面 ↗](https://www.craftscotland.org/community/opportunity/studios-available-in-burntisland-2174) |
 | oppv2_14d2fc6ad27cae13e8696164 | 截止日期未注明 | george street construction hoarding - public art opportunity | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/5o_CKN3iH16Eq-nPt5RiF) |
-| oppv2_129d360ef9b91e673262609f | 截止日期未注明 | Get tickets | 未注明 | Crafts Council | [打开赛事来源页面 ↗](https://www.craftscouncil.org.uk/collect-fair/book-tickets) |
-| oppv2_19420973614bd4f63318df4d | 截止日期未注明 | house in the neighborhood | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/Jnbg5NDy8CKfg-wkvUGPu) |
-| oppv2_0922669fcab5f2d68f7e1d2e | 截止日期未注明 | How it works | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/pricing) |
-| oppv2_d362e3d8cbae7f4649848312 | 截止日期未注明 | Hungary \| European Dance Development Network Atelier 2026 | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/hungary-european-dance-development-network-atelier-2026) |
-| oppv2_53eff1eef4c6b0098933d934 | 截止日期未注明 | Independent & Freelance Photojournalist Award (IFPA) 2026 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/independent-freelance-photojournalist-award-ifpa-2026) |
-| oppv2_009f4f3cd08de2c9731b4b69 | 截止日期未注明 | 独立手工艺游行活动 | craft_arts | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/indie-craft-parade-event-indie-craft-parade) |
-| oppv2_35654154d4b4bfaeb23e180a | 截止日期未注明 | Institutional licence — open calls for a whole department | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/institutional-licence-open-calls) |
-| oppv2_26ed8bec5765fc2100749c37 | 截止日期未注明 | Italiano it | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/it) |
-| oppv2_157f3cbbd2a575ed53565723 | 截止日期未注明 | 日本 \| 2026年工艺与纺织沉浸式之旅 | craft_arts | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/japan-craft-and-textile-immersion-tour-2026) |
 | oppv2_bc1fe3c562678d50ced662cd | 截止日期未注明 | kultur ensemble palermo residencies 2027 | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/57XuMIH1K7ZQQ3Otgp-Mk) |
 | oppv2_62fa70b96b2d11df306b5ec7 | 截止日期未注明 | Let's Make | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/lets-make-interest-form) |
-| oppv2_aa4510dda197d9ccc3c16360 | 截止日期未注明 | Living Heritage Community Support Hub | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/living-heritage-community-support-hub) |
-| oppv2_fe6af4dc9342b3283e263079 | 截止日期未注明 | Matches | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/matches) |
 | oppv2_07373bdcd4705b6299f92186 | 截止日期未注明 | matchMAKER 工作与培训 | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/matchmaker) |
-| oppv2_d207588a081cb87b98a88f67 | 截止日期未注明 | Mission & vision | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/mission-vision) |
-| oppv2_33c7dd02a98e60e83f40b580 | 截止日期未注明 | More ways to give | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/donate/more-ways-to-give) |
-| oppv2_df9bff84a9aaeefa0a1471ca | 截止日期未注明 | Music | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/music) |
-| oppv2_78076e55beb6f87a8254f657 | 截止日期未注明 | Newsletter signup | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/stay-in-the-loop) |
 | oppv2_7f0aa57bde535af11d44bc6c | 截止日期未注明 | No 7 Museum Street: Artists' Studio Space Culture Warrington has created a space for affordable studios attached to Warrington Museum &... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/no--artists-studio-space/3215) |
 | oppv2_3cf2199ebaea23955143d2d1 | 截止日期未注明 | No Limits 2026 | 未注明 | OpenCall Radar｜Craft | [打开赛事来源页面 ↗](https://opencallradar.com/open-calls/no-limits-2026-golden-duck-gallery-e3eff361) |
 | oppv2_fd32b0a4bb6524fe52b3ea27 | 截止日期未注明 | Nordic Currents 2027–2028 | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/nordic-currents-20272028) |
 | oppv2_531ecc167f1a258922b0c6a6 | 截止日期未注明 | NTKO Art Gallery Is Looking For Solo / Group Show Proposals NTKO (Not That Kind Of) is a contemporary, welcoming and open art space and gallery championing... | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/ntko-art-gallery-is-looking-for-solo--group-show-proposals/6374) |
-| oppv2_db0344c496a68e6e72d12e9e | 截止日期未注明 | Open Call: THE GIFT OF ART — Hal Bromm Gallery | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/open-call-the-gift-of-art-hal-bromm-gallery) |
 | oppv2_322b96a365a1493cb8d2d6f9 | 截止日期未注明 | OpenCV2026年AI大赛 | 未注明 | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31614.html) |
-| oppv2_b781a227d30fcec17f956f3c | 截止日期未注明 | opera | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/opera) |
 | oppv2_16acdbeb31119aacd1647c2e | 截止日期未注明 | Opportunities closing soon at Creative Australia | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/opportunities-closing-soon-at-creative-australia-2871814) |
-| oppv2_e6a26c1e9a8bc12e35e8cdbc | 截止日期未注明 | Our history | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/our-history) |
-| oppv2_be14b6ea1e0a0423975d7e10 | 截止日期未注明 | Our impact | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/our-impact) |
-| oppv2_ca9d64041f01bdb952df6da0 | 截止日期未注明 | Our people | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/our-people) |
-| oppv2_3b450abde8ed26f20c92a195 | 截止日期未注明 | Phantom Jury — Open Call, round two | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/phantom-jury-open-call-round-two) |
-| oppv2_36e7256eb4017f37dfbbe898 | 截止日期未注明 | photography | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/photography) |
 | oppv2_4ac7a117053eeaf94510d95b | 截止日期未注明 | PHOTOLAR 18th – Photography Contest | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/photolar-18th-photography-contest) |
-| oppv2_5f2430c5cba55f2a584fdb5e | 截止日期未注明 | Prints & Drawings | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/prints-and-drawings) |
 | oppv2_d1a8320d48815d96d97089b7 | 截止日期未注明 | Queensland Regional Art Awards 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/queensland-regional-art-awards-2026-2869764) |
-| oppv2_d4b9767001a0f3b369dd576e | 截止日期未注明 | Receive news, opportunities and more | 未注明 | Craft Scotland | [打开赛事来源页面 ↗](https://www.craftscotland.org/newsletter-subscription) |
 | oppv2_4bdc90b1b8de971ae8844488 | 截止日期未注明 | SCC长三角青年文创设计大赛 | cultural_creative | 文创赛网｜鲸创意 | [打开赛事来源页面 ↗](https://whaleideas.com/zjds/gycp/wcsj/31723.html) |
-| oppv2_a77479c0ca1f46f651cc7dc7 | 截止日期未注明 | Science Without Borders Challenge 2027 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/science-without-borders-challenge-2027) |
-| oppv2_4afab340048f46015d314b31 | 截止日期未注明 | Sculpture Festivals | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/sculpture) |
-| oppv2_2e627d93662ac4f9e2ee98be | 截止日期未注明 | Server-Side Render Theatre Award | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/server-side-render-theatre-award) |
-| oppv2_d07e7e8e00c3a83307f6596a | 截止日期未注明 | 史密森尼工艺2027展会艺术家征集 | craft_arts | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/smithsonian-craft-2027-show-call-for-artists-smithsonian-craft-show) |
 | oppv2_c2fbb755ac964ea7464bb6e7 | 截止日期未注明 | Spain \| Research and creation residencies at scientific institutions 2027 | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/spain-research-and-creation-residencies-at-scientific-institutions-2027) |
-| oppv2_732b2f9c093bfd42a5749ab7 | 截止日期未注明 | 纺织艺术双年展 BIEN 2027 | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/textile-art-biennial-bien-2027) |
-| oppv2_3fb6d88b43e34f667a914500 | 截止日期未注明 | The Adachi UKIYOE Award 2026 | 未注明 | Contest Watchers | [打开赛事来源页面 ↗](https://www.contestwatchers.com/the-adachi-ukiyoe-award-2026) |
 | oppv2_1fbc932c51075d489b29e32a | 截止日期未注明 | The Elaine Bermingham National Watercolour Prize in Landscape Painting 2026 | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunity/the-elaine-bermingham-national-watercolour-prize-in-landscape-painting-2026-2871566) |
-| oppv2_33e5b85c07f0b67b4502227c | 截止日期未注明 | The Founders and Their Furniture: An In-depth Look at the Material Culture of the Early Republic — The Furniture Society | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/opportunities/the-founders-and-their-furniture-an-in-depth-look-at-the-material-culture-of-the-early-republic-the-furniture-society) |
-| oppv2_8f6f26bee318cfab1bf86f57 | 截止日期未注明 | The Red List | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/skills/redlist) |
-| oppv2_88eed7a63a4633df9e8f94f8 | 截止日期未注明 | The robots.txt Reading Room — Open Call | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/robots-txt-reading-room-open-call) |
 | oppv2_c562f24f038ed1ba1c3959a4 | 截止日期未注明 | the tagli 2026 mentorship award | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/RVC2fi3260B0zZd0U0wki) |
-| oppv2_7e367f8c333b494efe333e67 | 截止日期未注明 | theatres | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/theatre) |
 | oppv2_85fde0f0ce20221662153c09 | 截止日期未注明 | Tokyo Biennale 2027 call for site-responsive proposals | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/tokyo-biennale-2027-call-for-site-responsive-proposals) |
-| oppv2_d6ae01387522c839ecb281d7 | 截止日期未注明 | Training bursaries | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/opportunities/training-bursaries) |
-| oppv2_6b126dd90b6aa7752b2cde12 | 截止日期未注明 | Training Data Refusal Fund 2026 | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/training-data-refusal-fund-2026) |
 | oppv2_9f26321e22b082060fd4c9c6 | 截止日期未注明 | UK \| 9th John Moores Painting Prize for artists from China | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/uk-9th-john-moores-painting-prize-for-artists-from-china) |
-| oppv2_cb9cf2ef39c120b5f35d6037 | 截止日期未注明 | User-Agent: Unknown — Open Call for Proposals | 未注明 | opencalls.ai | [打开赛事来源页面 ↗](https://opencalls.ai/opencalls/user-agent-unknown-open-call) |
 | oppv2_9cbb692021a59762c516faff | 截止日期未注明 | Visual Art Studio Space - Canberra, Australia Professional Visual Arts Studios available artists working in all mediums | 未注明 | CuratorSpace Opportunities | [打开赛事来源页面 ↗](https://www.curatorspace.com/opportunities/detail/visual-art-studio-space--canberra-australia/1827) |
-| oppv2_7867e0803823a9c27e13317a | 截止日期未注明 | visual arts community | 未注明 | ArtsHub Craft Opportunities | [打开赛事来源页面 ↗](https://www.artshub.com.au/opportunities/art-form/visual-arts) |
-| oppv2_25f1aa371d00284ca7095c57 | 截止日期未注明 | Volunteer opportunities | 未注明 | American Craft Council Opportunities Board | [打开赛事来源页面 ↗](https://craftcouncil.org/volunteer) |
-| oppv2_22b1340a1abfb7667b9d0c84 | 截止日期未注明 | Ways to give | 未注明 | Heritage Crafts | [打开赛事来源页面 ↗](https://heritagecrafts.org.uk/ways-to-give) |
 | oppv2_77ed7ba4eac925fb25710e92 | 截止日期未注明 | welcome to the neighborhood: your name here? | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/uVyrmPruChXUaNQriCfn6) |
 | oppv2_e536c39c097dee9b224e721a | 截止日期未注明 | where is the tomorrow we saw yesterday? | 未注明 | ArtConnect | [打开赛事来源页面 ↗](https://www.artconnect.com/opportunity/gzzOys4T4j59dPlaSKv1k) |
-| oppv2_c816ee8243faa0bb290deb73 | 截止日期未注明 | White Rabbit Gallery digital artwork 2026 | 未注明 | ASEF culture360 Opportunities | [打开赛事来源页面 ↗](https://culture360.org/opportunities/white-rabbit-gallery-digital-artwork-2026) |
 | oppv2_155a93107fef8eadf7c19ddf | 截止日期未注明 | 사업공모 2026 공공데이터 아이디어 공모 2026-08-10 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9112) |
 | oppv2_a157192f356c3188f14247a7 | 截止日期未注明 | 사업공모 2026 공공디자인 라운드 3차 참여자 모집 공모 2026-08-26 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9134) |
 | oppv2_37bf8d44679d37fd306342f0 | 截止日期未注明 | 사업공모 2026 디자인마이애미 한국공예부스 참여작가 공모 2026-08-07 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9107) |
@@ -644,3 +538,13 @@
 | oppv2_2c26e4c86d9bdda078a54553 | 截止日期未注明 | 사업공모 2026 찾아가는 한복교육 모집공고(3회차) 2026-08-20 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9127) |
 | oppv2_9d21c6f6e148c39aee31a9ad | 截止日期未注明 | 사업공모 2026 하반기 전통문화 혁신이용권 공급기업 공모 2026-08-31 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9148) |
 | oppv2_ba664ade4271e02869399091 | 截止日期未注明 | 사업공모 2026 한복문화주간 일반참여처 추가 모집 2026-07-31 | 未注明 | KCDF 한국공예·디자인문화진흥원 | [打开赛事来源页面 ↗](https://www.kcdf.or.kr/brd/board/337/L/menu/284?brdType=R&bbIdx=9093) |
+| oppv2_52005ef345cf7ac41b7cbce0 | 截止日期未注明 | �й������ǲ����Ἢ�����Ĵ�ϵ�в�Ʒ���� | cultural_creative · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0908/131721.html) |
+| oppv2_182d8cdda6fc0454b092f9b3 | 截止日期未注明 | �׸ڡ����񡱰�������ƴ��� | cultural_creative · product_design · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0905/131696.html) |
+| oppv2_e2dd374ed289c787003aebc8 | 截止日期未注明 | ��˿·˫�� ɽ���������&�ػ�2026�����Ĵ���ƴ��� | cultural_creative · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0904/131682.html) |
+| oppv2_78055d5da61a1373589e07c1 | 截止日期未注明 | ����Ǩ��������������� | graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0909/131738.html) |
+| oppv2_1de1f4394f6abecaf273521b | 截止日期未注明 | ����logo | cultural_creative · museum_tourism · graphic_ip · video_animation | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0907/131710.html) |
+| oppv2_412123dc6c3d0bfbd60daab9 | 截止日期未注明 | �����ϳйš��Ĵ����񡱲�����Ĵ���ƴ��� | cultural_creative · museum_tourism · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0831/131605.html) |
+| oppv2_1f943fd264ca1c052b7e9199 | 截止日期未注明 | �������׽��Ļ�������ƴ�����ʽ���� | cultural_creative · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0902/131640.html) |
+| oppv2_0bdfbf7ef8b26a5f575ed2a7 | 截止日期未注明 | �������������˷���2026���³ͼ�����������ƴ��� | cultural_creative · product_design · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0831/131606.html) |
+| oppv2_1296d454f9cf87fc64233920 | 截止日期未注明 | ���������� �Ĵ���Ʒ����������� | cultural_creative · product_design · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0903/131660.html) |
+| oppv2_56a44b95dfeef099886f67bb | 截止日期未注明 | �����������Ĵ���Ʒ��Ʒ������� | cultural_creative · product_design · graphic_ip | 第一征集网｜全球征集网 | [打开赛事来源页面 ↗](https://www.1zj.com/2026/WenChuang_0903/131659.html) |
