@@ -18,7 +18,11 @@ async function main(): Promise<void> {
   const sourcesPath = path.join(temp, "sources.json");
   const poolPath = path.join(temp, "opportunities.json");
   const healthPath = path.join(temp, "source-health.json");
-  fs.copyFileSync(path.resolve("data/opportunity-v2/sources.json"), sourcesPath);
+  // Keep this fixture at the pre-migration shape so the test proves the
+  // runtime upsert from 31 persisted sources without mutating the repository
+  // seed file used by the current audit.
+  const persistedFixture = JSON.parse(fs.readFileSync(path.resolve("data/opportunity-v2/sources.json"), "utf8")) as { sources: Array<{ id: string }> };
+  fs.writeFileSync(sourcesPath, JSON.stringify({ ...persistedFixture, sources: persistedFixture.sources.filter((source) => !["proc-uk-fts", "proc-ca-canadabuys"].includes(source.id)) }));
   fs.writeFileSync(poolPath, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date(0).toISOString(), opportunities: [] }));
   const fixtureBySource: Record<string, string> = {
     "https://www.shejijingsai.com/liebiao": `<table><tr><td>传统工艺</td><td><a href="https://www.shejijingsai.com/detail/heritage">非遗传统工艺文创设计征集</a></td><td>2027年3月3日</td></tr><tr><td>摄影</td><td><a href="https://www.shejijingsai.com/detail/photo">纯摄影比赛</a></td><td>2027年3月4日</td></tr></table>`,

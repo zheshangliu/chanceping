@@ -610,6 +610,42 @@
       "enabled": true,
       "status": "ACTIVE",
       "last_fetch_at": "2026-09-08T14:09:00.743Z"
+    },
+    {
+      "id": "proc-uk-fts",
+      "name": "英国 Find a Tender（OCDS）",
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?limit=100",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "procurement",
+        "buyer_demand",
+        "official_api"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": null
+    },
+    {
+      "id": "proc-ca-canadabuys",
+      "name": "CanadaBuys Open Tenders CSV",
+      "url": "https://canadabuys.canada.ca/opendata/pub/openTenderNotice-ouvertAvisAppelOffres.csv",
+      "region": "GLOBAL",
+      "priority": "P0",
+      "types": [
+        "procurement",
+        "buyer_demand",
+        "open_data"
+      ],
+      "radars": [
+        "ich"
+      ],
+      "enabled": true,
+      "status": "ACTIVE",
+      "last_fetch_at": null
     }
   ]
 }

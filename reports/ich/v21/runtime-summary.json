@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-09T15:31:04.263Z",
-  "sources": 31,
-  "enabled_sources": 31,
+  "generated_at": "2026-09-10T01:19:27.428Z",
+  "sources": 33,
+  "enabled_sources": 33,
   "source_status": {
-    "ACTIVE": 20,
+    "ACTIVE": 22,
     "FAILED": 9,
     "NEEDS_ADAPTER": 2
   },
@@ -349,6 +349,8 @@
     "channel_collaboration": 4
   },
   "competition_pool": 1816,
+  "memo_competition_total": 528,
+  "memo_gt_radar": true,
   "public_radar": 144,
   "displayed": 144,
   "cn": 129,

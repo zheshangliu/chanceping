@@ -54,15 +54,54 @@ function resolved(filePath?: string): string {
 
 export function readOpportunityV2Sources(filePath?: string): OpportunityV2Source[] {
   const target = resolved(filePath);
-  if (!fs.existsSync(target)) return DEFAULT_OPPORTUNITY_V2_SOURCES.map((source) => ({ ...source, types: [...source.types], radars: [...source.radars] }));
+  if (!fs.existsSync(target)) return cloneOpportunityV2Sources(DEFAULT_OPPORTUNITY_V2_SOURCES);
   try {
     const value = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2Source[] } | OpportunityV2Source[];
     const sources = Array.isArray(value) ? value : value.sources;
-    if (!Array.isArray(sources)) return DEFAULT_OPPORTUNITY_V2_SOURCES;
-    return sources;
+    if (!Array.isArray(sources)) return cloneOpportunityV2Sources(DEFAULT_OPPORTUNITY_V2_SOURCES);
+    // The persisted file is authoritative for existing rows. The default
+    // seeds are only merged in memory here; the explicit migration below is
+    // what makes the upsert durable for a scheduler/runtime start.
+    return filePath === undefined ? mergeDefaultOpportunityV2Sources(sources).sources : sources;
   } catch {
-    return DEFAULT_OPPORTUNITY_V2_SOURCES;
+    return cloneOpportunityV2Sources(DEFAULT_OPPORTUNITY_V2_SOURCES);
   }
+}
+
+function cloneOpportunityV2Sources(sources: OpportunityV2Source[]): OpportunityV2Source[] {
+  return sources.map((source) => ({ ...source, types: [...source.types], radars: [...source.radars] }));
+}
+
+export function mergeDefaultOpportunityV2Sources(sources: OpportunityV2Source[]): { sources: OpportunityV2Source[]; added_ids: string[] } {
+  const existing = new Set(sources.map((source) => source.id));
+  const added = DEFAULT_OPPORTUNITY_V2_SOURCES.filter((source) => !existing.has(source.id));
+  return { sources: [...sources, ...cloneOpportunityV2Sources(added)], added_ids: added.map((source) => source.id) };
+}
+
+/**
+ * Idempotently materialize missing built-in seed sources into a persisted
+ * runtime file. Existing source objects are copied byte-for-byte at the
+ * field level, including administrator changes to URL, state, and metadata.
+ */
+export function migrateOpportunityV2Sources(filePath?: string): { before_count: number; after_count: number; added_ids: string[]; sources: OpportunityV2Source[] } {
+  const target = resolved(filePath);
+  return withJsonFileLock(target, () => {
+    let current: OpportunityV2Source[] = [];
+    if (fs.existsSync(target)) {
+      try {
+        const value = JSON.parse(fs.readFileSync(target, "utf8")) as { sources?: OpportunityV2Source[] } | OpportunityV2Source[];
+        const parsed = Array.isArray(value) ? value : value.sources;
+        if (Array.isArray(parsed)) current = parsed;
+      } catch {
+        current = [];
+      }
+    }
+    const merged = mergeDefaultOpportunityV2Sources(current);
+    if (merged.added_ids.length > 0 || !fs.existsSync(target)) {
+      atomicWriteJson(target, { schema_version: "chanceping-opportunity-v2.sources.v1", updated_at: new Date().toISOString(), sources: merged.sources });
+    }
+    return { before_count: current.length, after_count: merged.sources.length, added_ids: merged.added_ids, sources: merged.sources };
+  });
 }
 
 export function writeOpportunityV2Sources(sources: OpportunityV2Source[], filePath?: string): void {

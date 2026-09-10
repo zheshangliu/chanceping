@@ -48,6 +48,9 @@ async function main(): Promise<void> {
     };
   });
   const unmaterializedMissingCount = Math.max(0, reportedMissingCount - historicalMissingIds.length);
+  const baselineUnrecoverable = unmaterializedMissingCount > 0;
+  const classifications = rows.reduce<Record<string, number>>((counts, row) => { counts[row.classification] = (counts[row.classification] ?? 0) + 1; return counts; }, {});
+  if (baselineUnrecoverable) classifications.UNKNOWN = unmaterializedMissingCount;
   const summary = {
     baseline_count: regression.baseline_count,
     historical_after_count: regression.after_count,
@@ -57,13 +60,14 @@ async function main(): Promise<void> {
     unmaterialized_missing_count: unmaterializedMissingCount,
     input_count_mismatch: reportedMissingCount !== historicalMissingIds.length,
     procurement_count_in_same_audit: checks.procurement_count ?? null,
-    classifications: rows.reduce<Record<string, number>>((counts, row) => { counts[row.classification] = (counts[row.classification] ?? 0) + 1; return counts; }, {}),
+    classifications,
     legit_competition_missing: rows.filter((row) => row.classification === "LEGIT_COMPETITION_MISSING").length,
     unknown_missing: unmaterializedMissingCount,
+    baseline_status: baselineUnrecoverable ? "BASELINE_UNRECOVERABLE" : "RECOVERED",
     gate: unmaterializedMissingCount === 0 && rows.every((row) => row.classification !== "LEGIT_COMPETITION_MISSING") ? "PASS" : "BLOCKED",
     provenance: "753905a1a6c8e19471effedcc901817215afa5dc/audits/ich/procurement/latest/competition-regression.json",
   };
-  const report = { generated_at: new Date().toISOString(), summary, rows, note: "本报告只使用上游审计实际提供的 missing_ids；若 missing_count 大于该数组长度，额外数量不与 procurement_count 混同，保留为输入快照缺失身份的阻断证据。Hash 路由 detail_url 保留 fragment 参与同源身份匹配。" };
+  const report = { generated_at: new Date().toISOString(), summary, rows, note: "本报告只使用上游审计实际提供的 missing_ids；若 missing_count 大于该数组长度，额外数量不与 procurement_count 混同，保留为输入快照缺失身份的阻断证据。Hash 路由 detail_url 保留 fragment 参与同源身份匹配。当前 26 条额外身份在本地、Git 对象和已提交审计产物中均无完整旧快照，标记为 UNKNOWN / BASELINE_UNRECOVERABLE，不伪造赛事身份。" };
   const outputPath = path.resolve("reports/ich/v21/competition-missing-reconciliation.json");
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);

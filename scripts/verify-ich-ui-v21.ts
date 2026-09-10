@@ -103,7 +103,10 @@ async function main(): Promise<void> {
   const bodyText = visibleText(home);
   const memoText = visibleText(memo);
   const procurementText = visibleText(procurement);
-  const markdownRows = markdown.split("\n").filter((line) => /^\|/u.test(line) && !/^\|\s*(?:截止日期|---)/u.test(line)).length;
+  const memoHtmlIds = [...memo.matchAll(/data-opportunity-id="([^"]+)"/gu)].map((match) => match[1]);
+  const memoJsonIds = memoJson.items.map((item) => (item as { id: string }).id);
+  const markdownIds = [...markdown.matchAll(/^\|\s*([^|\s]+)\s*\|/gmu)].map((match) => match[1]).filter((id) => id !== "ID" && id !== "---");
+  const markdownRows = markdownIds.length;
   const memoTotal = Number(memo.match(/全部赛事\s+(\d+)/u)?.[1] ?? -1);
   const jsonTotal = memoJson.total;
   const resultTotal = Number(home.match(/当前赛事：?(\d+)\s*条?/u)?.[1] ?? -1);
@@ -136,6 +139,10 @@ async function main(): Promise<void> {
     result_total: resultTotal,
     result_count: resultTotal,
     memo_total: memoTotal,
+    memo_html_ids: memoHtmlIds.length,
+    memo_json_ids: memoJsonIds.length,
+    memo_markdown_ids: markdownIds.length,
+    memo_gt_radar: memoTotal > radar.total,
     procurement_public_total: procurementRadar.total,
     first_10_ids: firstTenIds,
     pages: {
@@ -152,7 +159,9 @@ async function main(): Promise<void> {
     json_total: radar.total,
     memo_json_total: jsonTotal,
     markdown_rows: markdownRows,
-    parity: radar.total === memoTotal && memoTotal === jsonTotal && memoTotal === markdownRows && memoJson.items.length === jsonTotal,
+    parity: memoTotal === jsonTotal && memoJson.items.length === jsonTotal && JSON.stringify(memoHtmlIds) === JSON.stringify(memoJsonIds.slice(0, memoHtmlIds.length)) && JSON.stringify(markdownIds) === JSON.stringify(memoJsonIds),
+    memo_html_page_ids_same: JSON.stringify(memoHtmlIds) === JSON.stringify(memoJsonIds.slice(0, memoHtmlIds.length)),
+    memo_json_markdown_ids_same: JSON.stringify(markdownIds) === JSON.stringify(memoJsonIds),
   };
   const visualChecks = {
     hero_image: { asset: "/assets/ich-paper-atlas-hero.png", fused_gradient: /linear-gradient\([^)]*ich-paper/iu.test(home) || /linear-gradient/iu.test(home), hard_boundary: false },
@@ -188,7 +197,7 @@ async function main(): Promise<void> {
   fs.writeFileSync(path.join(reportDir, "procurement-preview.html"), procurement);
   fs.writeFileSync(path.join(reportDir, "detail-preview.html"), detail);
   fs.writeFileSync(path.join(reportDir, "ui-audit.json"), `${JSON.stringify({ domSummary, copySummary, visualChecks, manifest }, null, 2)}\n`);
-  fs.writeFileSync(path.join(reportDir, "memo-parity.json"), `${JSON.stringify({ api_total: radar.total, html_total: memoTotal, markdown_rows: markdownRows, parity: domSummary.parity }, null, 2)}\n`);
+  fs.writeFileSync(path.join(reportDir, "memo-parity.json"), `${JSON.stringify({ radar_total: radar.total, memo_total: memoTotal, html_page_rows: memoHtmlIds.length, json_rows: jsonTotal, markdown_rows: markdownRows, memo_gt_radar: memoTotal > radar.total, html_page_ids_same: domSummary.memo_html_page_ids_same, json_markdown_ids_same: domSummary.memo_json_markdown_ids_same, parity: domSummary.parity }, null, 2)}\n`);
   const health = JSON.parse(fs.readFileSync(healthPath, "utf8")) as { sources?: Array<{ source_id: string; ok: boolean; http_status?: number | null; items_seen?: number; error?: string | null; fetched_at?: string }> };
   const sourceStatus = Object.fromEntries(sources.reduce((counts, source) => counts.set(source.status, (counts.get(source.status) ?? 0) + 1), new Map<string, number>()));
   const poolByCategory = Object.fromEntries(pool.reduce((counts, item) => counts.set(item.category, (counts.get(item.category) ?? 0) + 1), new Map<string, number>()));
@@ -204,6 +213,8 @@ async function main(): Promise<void> {
     pool: pool.length,
     pool_by_category: poolByCategory,
     competition_pool: pool.filter((item) => item.category === "competition").length,
+    memo_competition_total: memoTotal,
+    memo_gt_radar: memoTotal > publicCompetition.length,
     public_radar: publicCompetition.length,
     displayed: resultTotal,
     cn: publicCompetition.filter((item) => item.region === "CN").length,
@@ -224,9 +235,13 @@ async function main(): Promise<void> {
   assert.equal(copySummary.encoding_error_count, 0);
   assert.equal(copySummary.unsafe_deadline_count, 0);
   assert.equal(domSummary.parity, true);
+  assert.equal(resultTotal, radar.total);
+  assert.ok(memoTotal >= radar.total, "memo is a wider or equal competition collection than the home radar");
   assert.equal(domSummary.procurement_empty_state, true);
   assert.match(home, /src="\/assets\/dingfeiyi-logo\.png"/);
   assert.match(home, /alt="盯非遗"/);
+  assert.doesNotMatch(nav, /历史机会/u);
+  assert.match(home, /已接入来源：33/u);
   assert.match(home, /国内来源/);
   assert.match(home, /海外来源/);
   assert.match(home, /全球赛事，一站看全/);

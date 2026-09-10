@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import crypto from "node:crypto";
 import {
   getPublicIchOpportunity,
   isPublicIchOpportunity,
@@ -7,7 +8,7 @@ import {
   type PublicIchOpportunity,
 } from "../../ich/query";
 import { defaultIchStore, parseIchQuery, type IchReadRouteOptions } from "./public-ich";
-import { buildOpportunityV2Display, filterOpportunityV2Radar, formatOpportunityV2Date, opportunityV2LiveStatus, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
+import { buildOpportunityV2Display, filterOpportunityV2Radar, formatOpportunityV2Date, isRealCompetitionMemoItem, opportunityV2LiveStatus, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
 
 const ICH_ORIGIN = "https://ich.chanceping.com";
 
@@ -67,7 +68,7 @@ function shell(title: string, description: string, canonicalPath: string, body: 
 @media(max-width:820px){.ich-site{padding:0 18px 42px;overflow:hidden}.ich-meta{flex-wrap:wrap;gap:8px 18px}.ich-filters{overflow:hidden}.ich-pagination{overflow-x:auto}.ich-header{display:block;padding:12px 0 0}.ich-brand{gap:10px;min-height:42px;max-width:100%}.ich-brand-logo{height:32px;max-width:52vw}.ich-brand-subtitle{max-width:42vw;padding-left:10px;font-size:11px}.ich-nav{gap:20px;margin-top:10px;border-top:1px solid var(--line);font-size:12px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}.ich-nav::-webkit-scrollbar{display:none}.ich-nav a{flex:0 0 auto;padding:10px 0 8px}.ich-hero{min-height:0;background-position:70% center}.ich-hero-copy{width:100%;padding:38px 0 28px;background:linear-gradient(90deg,var(--paper) 0%,rgba(245,240,230,.9) 70%,rgba(245,240,230,.3) 100%)}.ich-hero h1{font-size:34px}.ich-category-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ich-filter-line{gap:12px}.ich-grid{display:block}.ich-card{grid-template-columns:32px minmax(0,1fr);gap:10px}.ich-card-actions{grid-column:2;flex-direction:row;border-top:1px solid var(--line);padding-top:10px}.ich-lower{display:block}.ich-lower section+section{margin-top:24px}}
 </style><style>.ich-detail{padding:40px 0 12px}.ich-detail-kicker{color:var(--celadon);font-size:13px;letter-spacing:.08em}.ich-detail h1{max-width:920px;margin:10px 0 16px;font:42px/1.25 "Songti SC","Noto Serif SC",serif}.ich-detail-lede{max-width:820px;color:#5f5a50;font:18px/1.7 serif}.ich-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:42px;margin-top:30px}.ich-detail-main,.ich-detail-aside{border-top:1px solid var(--line);padding-top:18px}.ich-detail-main h2,.ich-detail-aside h2{margin:0 0 10px;font:21px/1.3 serif}.ich-detail-main p{color:#5f5a50}.ich-detail-aside{font-size:13px}.ich-detail-aside dl{margin:0}.ich-detail-aside dt{color:var(--muted);margin-top:12px}.ich-detail-aside dd{margin:2px 0 0}.ich-source-box{margin-top:28px;padding:18px;background:var(--wash);border:1px solid var(--line)}.ich-source-box a{color:var(--indigo)}@media(max-width:820px){.ich-detail{padding-top:24px}.ich-detail h1{font-size:32px}.ich-detail-layout{display:block}.ich-detail-aside{margin-top:26px}}</style>
 <style>.ich-contact-page{padding:42px 0 12px}.ich-contact-hero{display:grid;grid-template-columns:220px minmax(0,1fr) 330px;gap:42px;padding:34px 0 38px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.ich-contact-heading h1{margin:8px 0 12px;font:34px/1.25 "Songti SC","Noto Serif SC",serif}.ich-contact-heading>p:last-child{color:var(--muted);font-family:serif}.ich-contact-copy>p{margin:0 0 20px;color:#544f46;font:17px/1.85 "Songti SC","Noto Serif SC",serif}.ich-contact-reasons{border-top:1px solid var(--line)}.ich-contact-reasons p{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;margin:0;padding:14px 0;border-bottom:1px solid var(--line)}.ich-contact-reasons span{color:var(--clay);font:18px/1.4 "Times New Roman",serif}.ich-contact-details{display:flex;align-items:center;gap:0;margin-top:22px;padding:13px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-style:normal;white-space:nowrap}.ich-contact-details>*{padding:0 18px}.ich-contact-details>*:first-child{padding-left:0}.ich-contact-details>*+*{border-left:1px solid var(--line)}.ich-contact-details a{color:var(--indigo);font-weight:700}.ich-contact-details span{color:var(--muted)}.ich-contact-name{color:var(--ink);font-family:"Songti SC","Noto Serif SC",serif;font-weight:700}.ich-contact-qr{margin:0;padding:12px;background:#fff;border:1px solid var(--line);align-self:start}.ich-contact-qr img{display:block;width:100%;height:auto}.ich-contact-qr figcaption{text-align:center;color:var(--muted);font-size:12px;padding:8px 0 2px}.ich-principles{display:grid;grid-template-columns:220px minmax(0,1fr);gap:42px;margin-top:28px;padding:30px;background:rgba(235,228,214,.52);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.ich-principles h2{margin:8px 0 0;font:28px/1.3 "Songti SC","Noto Serif SC",serif}.ich-principles-copy{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;color:var(--muted)}.ich-principles-copy p{margin:0;padding:4px 28px 4px 0}.ich-principles-copy p+p{padding-left:28px;border-left:1px solid var(--line)}@media(max-width:1040px){.ich-contact-hero{grid-template-columns:180px minmax(0,1fr) 280px}.ich-principles{grid-template-columns:180px minmax(0,1fr)}}@media(max-width:820px){.ich-contact-page{padding-top:24px}.ich-contact-hero{grid-template-columns:1fr;gap:22px;padding-top:24px}.ich-contact-heading h1{font-size:31px}.ich-contact-copy>p{font-size:16px}.ich-contact-qr{width:min(100%,360px);justify-self:center}.ich-contact-details{font-size:11px}.ich-contact-details>*{padding:0 8px}.ich-principles{grid-template-columns:1fr;gap:18px;padding:24px}.ich-principles h2{font-size:25px}.ich-principles-copy{grid-template-columns:1fr}.ich-principles-copy p{padding:0}.ich-principles-copy p+p{margin-top:14px;padding:14px 0 0;border-top:1px solid var(--line);border-left:0}}@media(max-width:520px){.ich-contact-details{overflow-x:auto;scrollbar-width:none}.ich-contact-details::-webkit-scrollbar{display:none}.ich-contact-reasons p{grid-template-columns:28px minmax(0,1fr)}}</style>
-</head><body><div class="ich-site"><header class="ich-header"><a class="ich-brand" href="/ich" aria-label="盯非遗，返回机会导航"><img class="ich-brand-logo" src="/assets/dingfeiyi-logo.png" alt="盯非遗"><span class="ich-brand-subtitle">全球文创・非遗・手工艺机会雷达</span></a><nav class="ich-nav"><a href="/ich"${navCurrent("/ich")}>机会导航</a><a href="/ich/memo"${navCurrent("/ich/memo")}>赛事备忘录</a><a href="/ich/history"${navCurrent("/ich/history")}>历史机会</a><a href="/ich/source-principles"${navCurrent("/ich/source-principles")}>联系作者</a><a href="/ich/submit"${navCurrent("/ich/submit")}>提交来源</a></nav></header>${body}
+</head><body><div class="ich-site"><header class="ich-header"><a class="ich-brand" href="/ich" aria-label="盯非遗，返回机会导航"><img class="ich-brand-logo" src="/assets/dingfeiyi-logo.png" alt="盯非遗"><span class="ich-brand-subtitle">全球文创・非遗・手工艺机会雷达</span></a><nav class="ich-nav"><a href="/ich"${navCurrent("/ich")}>机会导航</a><a href="/ich/memo"${navCurrent("/ich/memo")}>赛事备忘录</a><a href="/ich/source-principles"${navCurrent("/ich/source-principles")}>联系作者</a><a href="/ich/submit"${navCurrent("/ich/submit")}>提交来源</a></nav></header>${body}
 <footer class="ich-footer"><strong>盯非遗 · ChancePing</strong>：文创 · 非遗 · 手工艺机会导航。我们按 72 小时周期整理来源并保留原始链接，申请前请以来源页面的最新说明为准。<br><a href="/ich/source-principles">联系作者</a> · <a href="/ich/submit">提交一条来源</a></footer></div></body></html>`;
 }
 
@@ -118,6 +119,7 @@ interface V2IchPageResult {
   total_long_term: number;
   total_deadline_tbd: number;
   updated_at: string | null;
+  snapshot_id: string;
   translations: OpportunityV2Translation[];
 }
 
@@ -189,6 +191,7 @@ interface DisplayDeadline {
 function displayDeadline(item: OpportunityV2, summary: string): DisplayDeadline {
   if (item.is_long_term) return { text: "长期开放", conflict: false };
   if (!item.deadline) return { text: "截止日期待补", conflict: false };
+  if (item.deadline_conflict_unsafe === true) return { text: "截止时间待核实", conflict: true };
   const structured = dateKey(item.deadline);
   const evidence = explicitDeadlineKeys(summary, structured?.slice(0, 4));
   const conflict = Boolean(structured && evidence.length > 0 && !evidence.includes(structured));
@@ -264,7 +267,7 @@ function v2ListPage(result: V2IchPageResult, history: boolean): string {
   const chipHtml = chipItems.length ? chipItems.map(([label, key, value]) => activeChip(label, href({ [key]: value }))).join("") : '<span class="ich-filter-empty">全部机会</span>';
   const resultHeading = result.q ? `“${escapeHtml(result.q)}”的 ${result.total} 条结果` : `${result.total} 条${competitionView ? "可浏览赛事" : "可浏览机会"}`;
   const clearFilters = chipItems.length ? `<a href="${history ? "/ich/history" : "/ich"}">清空筛选</a>` : "";
-  const heroStats = competitionView ? `<span>当前赛事：${result.total}</span><span>海外赛事：${result.global_total}</span><span>数据源：${result.source_count}</span><span>每72小时更新</span>` : `<span>${procurementView ? "当前采购" : "当前机会"}：${result.total}</span><span>数据源：${result.source_count}</span><span>每72小时更新</span>`;
+  const heroStats = competitionView ? `<span>当前赛事：${result.total}</span><span>海外赛事：${result.global_total}</span><span>已接入来源：${result.source_count}</span><span>每72小时更新</span>` : `<span>${procurementView ? "当前采购" : "当前机会"}：${result.total}</span><span>已接入来源：${result.source_count}</span><span>每72小时更新</span>`;
   const uiStyle = `<style>.ich-card p{font-size:14px;line-height:1.75;color:#514d45}.ich-card-meta{font-size:13px;gap:10px 14px}.ich-source-count{color:var(--celadon);font-weight:600}.ich-data-warning{color:#8a4f33;font-weight:600}.ich-result-heading{font:19px/1.4 "Songti SC","Noto Serif SC",serif;color:var(--ink)}.ich-active-filters{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:8px}.ich-filter-label{color:var(--muted);font-size:12px}.ich-filter-chip{display:inline-flex;gap:5px;align-items:center;border:1px solid #b8c7ba;background:#edf2eb;color:#345347!important;padding:3px 8px;border-radius:999px;text-decoration:none!important;font-size:12px}.ich-filter-empty{color:var(--muted);font-size:12px}.ich-disclaimer{margin:8px 0 0;color:var(--muted);font-size:12px}.ich-empty-action{display:inline-block;margin-top:14px;color:var(--indigo);font-weight:600;text-decoration:none}.ich-procurement-empty{max-width:760px}.ich-format-filter{padding-bottom:12px}@media(max-width:820px){.ich-card p{font-size:15px}.ich-summary{align-items:flex-start}.ich-summary>a{white-space:nowrap}.ich-filter-line{overflow-x:auto}.ich-format-filter{display:flex}}</style>`;
   return `${uiStyle}<main><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">${kicker}</p><h1>${heading}</h1><p>${intro}</p><div class="ich-meta">${heroStats}<span>${publicDate(result.updated_at)}</span></div></div></section><form class="ich-search" method="get" action="${sortPath}">${searchHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索比赛、征集、文创、非遗、手工艺关键词" aria-label="搜索非遗机会"><button type="submit">搜索</button></form><div class="ich-filters"><div class="ich-category-row">${categoryHtml}</div><div class="ich-filter-line"><span>赛事方向：</span>${directionHtml}</div><div class="ich-filter-line ich-format-filter"><span>作品形式：</span>${formatHtml}</div><div class="ich-filter-line"><span>来源地区：</span>${regionHtml}</div><div class="ich-filter-line"><span>截止状态：</span>${statusHtml}<a${active(history)} href="/ich/history">历史机会</a>${sortHtml}</div></div><div class="ich-summary"><div><strong class="ich-result-heading">${resultHeading}</strong><div class="ich-active-filters" aria-label="当前筛选条件">${chipItems.length ? `<span class="ich-filter-label">当前筛选</span>${chipHtml}` : ""}</div><p class="ich-disclaimer">所有机会均保留来源页面，申请前请以原始发布信息为准。${competitionView ? ' · <a href="/ich/memo">查看赛事备忘录</a>' : ""}</p></div>${clearFilters}</div>${content}<div class="ich-pagination">${pagination || "<span>暂无分页</span>"}</div></main>`;
 }
@@ -274,19 +277,28 @@ function parseV2PageQuery(raw: Record<string, string>): { q: string; category: s
   return { q: (raw.q ?? "").trim().slice(0, 100), category: raw.category ?? "competition", region: raw.region ?? "all", status: raw.status ?? "browse", sort: raw.sort ?? "default", direction: raw.direction ?? "", work_format: raw.work_format ?? "", event_region: raw.event_region ?? "", source_id: raw.source_id ?? "", page };
 }
 
-function queryOpportunityV2ForIch(options: { q: string; category: string; region: string; status: string; sort: string; direction: string; work_format: string; event_region: string; source_id: string; page: number; pageSize: number; history: boolean; sourcesPath?: string; poolPath?: string }): V2IchPageResult {
+function hasInvalidV2EventRegion(query: ReturnType<typeof parseV2PageQuery>): boolean {
+  return Boolean(query.event_region) && !["mainland", "hkmt", "overseas", "unknown"].includes(query.event_region);
+}
+
+function queryOpportunityV2ForIch(options: { q: string; category: string; region: string; status: string; sort: string; direction: string; work_format: string; event_region: string; source_id: string; page: number; pageSize: number; history: boolean; includeIrrelevant?: boolean; sourcesPath?: string; poolPath?: string }): V2IchPageResult {
   const sources = readOpportunityV2Sources(options.sourcesPath);
   const pool = readOpportunityV2Pool(options.poolPath);
   const now = new Date();
   const region = ["overseas", "GLOBAL"].includes(options.region) ? "GLOBAL" : ["cn", "CN"].includes(options.region) ? "CN" : options.region === "all" ? undefined : ["guangzhou", "guangdong", "greater_bay_area", "nationwide", "online_or_unrestricted"].includes(options.region) ? "CN" : undefined;
   const status = options.history ? "history" : options.status === "browse" ? undefined : options.status;
-  let filtered = filterOpportunityV2Radar(pool.opportunities, sources, { q: options.q, ...(region ? { region: region as "CN" | "GLOBAL" } : {}), ...(options.source_id ? { source_id: options.source_id } : {}), ...(options.category !== "all" ? { category: options.category } : {}), ...(options.direction ? { direction: options.direction.split(",").filter(Boolean) } : {}), ...(options.work_format ? { work_format: options.work_format.split(",").filter(Boolean) } : {}), ...(options.event_region ? { event_region: options.event_region as "mainland" | "hkmt" | "overseas" | "unknown" } : {}), ...(status ? { status: status as "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history" } : {}), now });
+  let filtered = filterOpportunityV2Radar(pool.opportunities, sources, { q: options.q, ...(region ? { region: region as "CN" | "GLOBAL" } : {}), ...(options.source_id ? { source_id: options.source_id } : {}), ...(options.category !== "all" ? { category: options.category } : {}), ...(options.direction ? { direction: options.direction.split(",").filter(Boolean) } : {}), ...(options.work_format ? { work_format: options.work_format.split(",").filter(Boolean) } : {}), ...(options.event_region ? { event_region: options.event_region as "mainland" | "hkmt" | "overseas" | "unknown" } : {}), ...(status ? { status: status as "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history" } : {}), ...(options.includeIrrelevant ? { include_irrelevant: true } : {}), now });
   if (["guangzhou", "guangdong", "greater_bay_area"].includes(options.region)) {
     const needles: Record<string, string[]> = { guangzhou: ["广州", "guangzhou"], guangdong: ["广东", "guangdong"], greater_bay_area: ["大湾区", "粤港澳", "greater bay"] };
     filtered = filtered.filter((item) => item.event_location && needles[options.region].some((needle) => item.event_location?.toLowerCase().includes(needle.toLowerCase())));
   }
   if (options.region === "nationwide") filtered = filtered.filter((item) => item.participation_scope === "nationwide");
   if (options.region === "online_or_unrestricted") filtered = filtered.filter((item) => item.participation_mode === "online");
+  if (options.includeIrrelevant) {
+    filtered = filtered.filter(isRealCompetitionMemoItem);
+    if (options.sort === "newest") filtered.sort((a, b) => b.first_seen_at.localeCompare(a.first_seen_at) || a.title.localeCompare(b.title, "zh-CN"));
+    else filtered = sortOpportunityV2Memo(filtered);
+  }
   if (options.sort === "newest") filtered.sort((a, b) => b.first_seen_at.localeCompare(a.first_seen_at));
   const total = filtered.length;
   const totalKnownDeadline = filtered.filter((item) => Boolean(item.deadline) && opportunityV2LiveStatus(item, now) !== "EXPIRED").length;
@@ -296,10 +308,13 @@ function queryOpportunityV2ForIch(options: { q: string; category: string; region
   const page = Math.min(options.page, totalPages);
   const weekStart = new Date(now); weekStart.setHours(0, 0, 0, 0); weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
   const newThisWeek = filtered.filter((item) => new Date(item.first_seen_at).getTime() >= weekStart.getTime()).length;
-  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, direction: options.direction, work_format: options.work_format, event_region: options.event_region, source_id: options.source_id, new_this_week: newThisWeek, global_total: filtered.filter((item) => item.region === "GLOBAL").length, source_count: sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).length, total_known_deadline: totalKnownDeadline, total_long_term: totalLongTerm, total_deadline_tbd: totalDeadlineTbd, updated_at: pool.updated_at, translations: readOpportunityV2Translations() };
+  const snapshot_id = crypto.createHash("sha256").update(`all_competitions\n${pool.updated_at}\n${options.includeIrrelevant ? (options.sort === "newest" ? "newest" : "deadline_desc") : options.sort}\n${filtered.map((item) => `${item.id}|${item.deadline ?? ""}|${item.last_seen_at}|${item.title}`).join("\n")}`, "utf8").digest("hex").slice(0, 24);
+  return { items: filtered.slice((page - 1) * options.pageSize, page * options.pageSize), page, page_size: options.pageSize, total, total_pages: totalPages, q: options.q, category: options.category, region: options.region, status: options.status, sort: options.sort, direction: options.direction, work_format: options.work_format, event_region: options.event_region, source_id: options.source_id, new_this_week: newThisWeek, global_total: filtered.filter((item) => item.region === "GLOBAL").length, source_count: sources.length, total_known_deadline: totalKnownDeadline, total_long_term: totalLongTerm, total_deadline_tbd: totalDeadlineTbd, updated_at: pool.updated_at, snapshot_id, translations: readOpportunityV2Translations() };
 }
 
-function memoDate(item: OpportunityV2): string {
+function memoDate(item: OpportunityV2, displaySummary: string): string {
+  const deadline = displayDeadline(item, `${item.summary}\n${displaySummary}`);
+  if (deadline.conflict) return "截止时间待核实";
   if (item.is_long_term) return "长期开放";
   if (!item.deadline) return "日期待补";
   return formatOpportunityV2Date(item.deadline);
@@ -316,7 +331,7 @@ function v2MemoPageBody(result: V2IchPageResult): string {
     const detailLabel = `查看 ${display.title} 详情`;
     const sourceLabel = `打开 ${display.title} 来源原文`;
     const sourceCount = discoveryLabel(item);
-    return `<tr><td>${escapeHtml(deadline.text)}${deadline.conflict ? `<small class="ich-data-warning">来源日期冲突，待核实</small>` : `<small>${escapeHtml(v2StatusLabel(item))}</small>`}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td>${escapeHtml(dimensions)}</td><td>${escapeHtml(item.source_name)}${sourceCount ? `<small>${escapeHtml(sourceCount)}</small>` : ""}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">查看详情</a><br><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></td></tr>`;
+    return `<tr data-opportunity-id="${escapeHtml(item.id)}"><td>${escapeHtml(deadline.text)}${deadline.conflict ? `<small class="ich-data-warning">来源日期冲突，待核实</small>` : `<small>${escapeHtml(v2StatusLabel(item))}</small>`}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td>${escapeHtml(dimensions)}</td><td>${escapeHtml(item.source_name)}${sourceCount ? `<small>${escapeHtml(sourceCount)}</small>` : ""}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">查看详情</a><br><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></td></tr>`;
   }).join("");
   const knownDeadline = result.total_known_deadline;
   const longTerm = result.total_long_term;
@@ -325,14 +340,16 @@ function v2MemoPageBody(result: V2IchPageResult): string {
   const href = (patch: Record<string, string>) => { const next = new URLSearchParams(queryParams); Object.entries(patch).forEach(([key, value]) => value ? next.set(key, value) : next.delete(key)); if (!("page" in patch)) next.delete("page"); return `/ich/memo?${next.toString()}`; };
   const searchHidden = Object.entries({ category: "competition", region: result.region, status: result.status, sort: result.sort, direction: result.direction, work_format: result.work_format, event_region: result.event_region, source_id: result.source_id }).map(([key, value]) => `<input type="hidden" name="${key}" value="${escapeHtml(value)}">`).join("");
   const searchForm = `<form class="ich-search" method="get" action="/ich/memo">${searchHidden}<input name="q" value="${escapeHtml(result.q)}" placeholder="搜索赛事名称、方向或来源" aria-label="搜索赛事备忘录"><button type="submit">搜索</button></form>`;
+  const memoHasFilters = Boolean(result.q || result.region !== "all" || result.status !== "browse" || result.sort !== "default" || result.direction || result.work_format || result.event_region || result.source_id);
+  const clearMemoFilters = memoHasFilters ? `<div class="ich-active-filters"><a href="/ich/memo">清空全部筛选</a></div>` : "";
   const start = result.total === 0 ? 0 : (result.page - 1) * result.page_size + 1;
   const end = Math.min(result.page * result.page_size, result.total);
   const pageLinks = Array.from(new Set([1, result.page - 1, result.page, result.page + 1, result.total_pages])).filter((page) => page >= 1 && page <= result.total_pages).sort((a, b) => a - b).map((page) => page === result.page ? `<span class="current" aria-current="page">${page}</span>` : `<a href="${href({ page: String(page) })}">${page}</a>`).join("");
   const pagination = result.total_pages > 1 ? `<nav class="ich-pagination" aria-label="赛事备忘录分页"><span>${start}-${end} / ${result.total} 条</span>${result.page > 1 ? `<a href="${href({ page: String(result.page - 1) })}">上一页</a>` : ""}${pageLinks}${result.page < result.total_pages ? `<a href="${href({ page: String(result.page + 1) })}">下一页</a>` : ""}</nav>` : `<div class="ich-memo-count">${result.total} 条赛事</div>`;
   const sortHref = href({ sort: result.sort === "newest" ? "default" : "newest" });
   const stats = `<span>全部赛事 ${result.total}</span><span>已知截止 ${knownDeadline}</span><span>日期待补 ${tbd}</span>${longTerm > 0 ? `<span>长期开放 ${longTerm}</span>` : ""}`;
-  const toolbar = `<div class="ich-memo-toolbar"><span class="ich-memo-toolbar-group"><strong>排序</strong><a href="${sortHref}">${result.sort === "newest" ? "按截止时间" : "按最新收录"}</a></span><span class="ich-memo-toolbar-group"><strong>视图</strong><a href="/ich/memo">表格</a><a href="/ich">卡片</a></span><span class="ich-memo-toolbar-group"><strong>导出</strong><a href="/api/opportunity-v2/radar?category=competition">JSON</a><a href="/ich/memo?format=markdown">Markdown</a></span></div>`;
-  return `<main class="ich-memo"><section class="ich-memo-head"><div><p class="ich-kicker">赛事备忘录</p><h1>赛事备忘录</h1><p>国内外文创、非遗与手工艺赛事总表，按截止日期统一整理。</p></div>${toolbar}</section>${searchForm}<div class="ich-memo-stats">${stats}</div><div class="ich-filter-line"><span>赛事方向：</span><a class="${result.direction === "" ? "is-active" : ""}" href="${href({ direction: "" })}">全部方向</a><a class="${result.direction === "craft_arts" ? "is-active" : ""}" href="${href({ direction: "craft_arts" })}">工艺美术</a><a class="${result.direction === "cultural_creative" ? "is-active" : ""}" href="${href({ direction: "cultural_creative" })}">文创设计</a><a class="${result.direction === "aigc_digital" ? "is-active" : ""}" href="${href({ direction: "aigc_digital" })}">AIGC / 数字创作</a></div><table class="ich-memo-table"><caption class="sr-only">赛事备忘录列表</caption><thead><tr><th>截止时间</th><th>赛事名称</th><th>方向 / 作品形式</th><th>来源</th><th>操作</th></tr></thead><tbody>${rows || `<tr><td colspan="5">暂无可浏览赛事</td></tr>`}</tbody></table><div class="ich-memo-mobile">${items.map((item) => { const display = buildOpportunityV2Display(item, result.translations); const deadline = displayDeadline(item, `${item.summary}\n${display.summary}`); return `<article><strong>${escapeHtml(deadline.text)}</strong><a aria-label="查看 ${escapeHtml(display.title)} 详情" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a><small>${escapeHtml(item.source_name)}${discoveryLabel(item) ? ` · ${escapeHtml(discoveryLabel(item))}` : ""}</small></article>`; }).join("")}</div>${pagination}<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.ich-memo-count{padding:18px 0;color:var(--muted)}@media(max-width:700px){.ich-memo-head{display:block}.ich-memo-toolbar{margin-top:14px}.ich-memo-table{display:none}.ich-memo-mobile{display:block;margin-top:18px}.ich-memo-mobile article{display:grid;gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}.ich-memo-mobile strong{color:var(--clay);font-size:13px}.ich-memo-mobile a{font:18px/1.4 "Songti SC","Noto Serif SC",serif;text-decoration:none}.ich-memo-mobile small{color:var(--muted)}}@media print{.ich-header,.ich-footer,.ich-memo-toolbar,.ich-filter-line{display:none!important}.ich-site{padding:0}.ich-memo-table{font-size:12px}}</style></main>`;
+  const toolbar = `<div class="ich-memo-toolbar"><span class="ich-memo-toolbar-group"><strong>排序</strong><a href="${sortHref}">${result.sort === "newest" ? "按截止时间" : "按最新收录"}</a></span><span class="ich-memo-toolbar-group"><strong>视图</strong><a href="/ich/memo">表格</a><a href="/ich">卡片</a></span><span class="ich-memo-toolbar-group"><strong>导出</strong><a href="/ich/memo.json">JSON</a><a href="/ich/memo?format=markdown">Markdown</a></span></div>`;
+  return `<main class="ich-memo"><section class="ich-memo-head"><div><p class="ich-kicker">赛事备忘录</p><h1>赛事备忘录</h1><p>国内外文创、非遗与手工艺赛事总表，按截止日期统一整理。</p></div>${toolbar}</section>${searchForm}${clearMemoFilters}<div class="ich-memo-stats">${stats}</div><div class="ich-filter-line"><span>赛事方向：</span><a class="${result.direction === "" ? "is-active" : ""}" href="${href({ direction: "" })}">全部方向</a><a class="${result.direction === "craft_arts" ? "is-active" : ""}" href="${href({ direction: "craft_arts" })}">工艺美术</a><a class="${result.direction === "cultural_creative" ? "is-active" : ""}" href="${href({ direction: "cultural_creative" })}">文创设计</a><a class="${result.direction === "aigc_digital" ? "is-active" : ""}" href="${href({ direction: "aigc_digital" })}">AIGC / 数字创作</a></div><table class="ich-memo-table"><caption class="sr-only">赛事备忘录列表</caption><thead><tr><th>截止时间</th><th>赛事名称</th><th>方向 / 作品形式</th><th>来源</th><th>操作</th></tr></thead><tbody>${rows || `<tr><td colspan="5">暂无可浏览赛事</td></tr>`}</tbody></table><div class="ich-memo-mobile">${items.map((item) => { const display = buildOpportunityV2Display(item, result.translations); const deadline = displayDeadline(item, `${item.summary}\n${display.summary}`); return `<article><strong>${escapeHtml(deadline.text)}</strong><a aria-label="查看 ${escapeHtml(display.title)} 详情" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a><small>${escapeHtml(item.source_name)}${discoveryLabel(item) ? ` · ${escapeHtml(discoveryLabel(item))}` : ""}</small></article>`; }).join("")}</div>${pagination}<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.ich-memo-count{padding:18px 0;color:var(--muted)}@media(max-width:700px){.ich-memo-head{display:block}.ich-memo-toolbar{margin-top:14px}.ich-memo-table{display:none}.ich-memo-mobile{display:block;margin-top:18px}.ich-memo-mobile article{display:grid;gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}.ich-memo-mobile strong{color:var(--clay);font-size:13px}.ich-memo-mobile a{font:18px/1.4 "Songti SC","Noto Serif SC",serif;text-decoration:none}.ich-memo-mobile small{color:var(--muted)}}@media print{.ich-header,.ich-footer,.ich-memo-toolbar,.ich-filter-line{display:none!important}.ich-site{padding:0}.ich-memo-table{font-size:12px}}</style></main>`;
 }
 
 function v2MemoPage(result: V2IchPageResult): string {
@@ -340,12 +357,12 @@ function v2MemoPage(result: V2IchPageResult): string {
 }
 
 function v2MemoMarkdown(result: V2IchPageResult): string {
-  const lines = ["# 赛事备忘录", "", "国内外文创、非遗与手工艺赛事总表，按截止日期统一整理。", "", `- 全部赛事：${result.total}`, `- 已知截止：${result.total_known_deadline}`, `- 日期待补：${result.total_deadline_tbd}`, "", "| 截止日期 | 赛事名称 | 方向 / 作品形式 | 来源 |", "| --- | --- | --- | --- |"];
+  const lines = ["# 赛事备忘录", "", "国内外文创、非遗与手工艺赛事总表，按截止日期统一整理。", "", `- snapshot_id: ${result.snapshot_id}`, "- scope: all_competitions", `- 全部赛事：${result.total}`, `- 已知截止：${result.total_known_deadline}`, `- 日期待补：${result.total_deadline_tbd}`, "", "| ID | 截止日期 | 赛事名称 | 方向 / 作品形式 | 来源 |", "| --- | --- | --- | --- | --- |"];
   for (const item of result.items) {
     const display = buildOpportunityV2Display(item, result.translations);
     const directions = (item.directions ?? []).join("、");
     const formats = (item.work_formats ?? []).join("、");
-    lines.push(`| ${memoDate(item)} | [${display.title}](${item.detail_url}) | ${directions}${formats ? ` / ${formats}` : ""} | ${item.source_name} |`);
+    lines.push(`| ${item.id} | ${memoDate(item, display.summary)} | [${display.title}](/ich/opportunities/${encodeURIComponent(item.id)}) | ${directions}${formats ? ` / ${formats}` : ""} | ${item.source_name} |`);
   }
   return `${lines.join("\n")}\n`;
 }
@@ -353,12 +370,17 @@ function v2MemoMarkdown(result: V2IchPageResult): string {
 function v2MemoJson(result: V2IchPageResult): Record<string, unknown> {
   return {
     generated_at: new Date().toISOString(),
+    snapshot_id: result.snapshot_id,
+    scope: "all_competitions",
     total: result.total,
+    returned_count: result.items.length,
+    truncated: false,
     known_deadlines: result.total_known_deadline,
     unknown_deadlines: result.total_deadline_tbd,
     long_term: result.total_long_term,
     items: result.items.map((item) => {
       const display = buildOpportunityV2Display(item, result.translations);
+      const deadline = displayDeadline(item, `${item.summary}\n${display.summary}`);
       return {
         id: item.id,
         title: display.title,
@@ -367,8 +389,8 @@ function v2MemoJson(result: V2IchPageResult): Record<string, unknown> {
         directions: item.directions ?? [],
         work_formats: item.work_formats ?? [],
         region: item.region,
-        deadline: item.deadline,
-        deadline_text: item.deadline_text ?? null,
+        deadline: deadline.conflict ? null : item.deadline,
+        deadline_text: deadline.conflict ? "截止时间待核实" : item.deadline_text ?? null,
         status: opportunityV2LiveStatus(item),
         source_name: item.source_name,
         source_id: item.source_id,
@@ -436,6 +458,7 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   app.get("/", (c) => {
     if (options.opportunityV2) {
       const query = parseV2PageQuery(c.req.query());
+      if (hasInvalidV2EventRegion(query)) return c.text("Invalid event region", 400);
       const result = queryOpportunityV2ForIch({ ...query, pageSize: 8, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
       const title = "盯非遗｜文创、非遗与手工艺赛事机会导航";
       const description = "文创 · 非遗 · 手工艺机会导航，持续发现国内外赛事、征集与合作机会。";
@@ -454,28 +477,32 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   app.get("/memo", (c) => {
     if (!options.opportunityV2) return c.redirect("/ich?category=competition");
     const query = parseV2PageQuery(c.req.query());
+    if (query.event_region || hasInvalidV2EventRegion(query)) return c.text("Invalid event region", 400);
     const format = c.req.query("format");
-    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: query.page, pageSize: format === "markdown" ? 10000 : 50, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: query.page, pageSize: format === "markdown" ? 10000 : 50, history: false, includeIrrelevant: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     if (format === "markdown") {
       return c.text(v2MemoMarkdown(result), 200, { "Content-Type": "text/markdown; charset=UTF-8", "Content-Disposition": "attachment; filename=ich-memo.md" });
     }
-    return c.html(shell("赛事备忘录｜盯非遗", "按截止时间查看同一赛事池中的全部可浏览赛事。", "/ich/memo", v2MemoPage(result), { structuredData: collectionStructuredData("赛事备忘录", "按截止时间查看可浏览赛事。", "/ich/memo") }));
+    return c.html(shell("赛事备忘录｜盯非遗", "按截止时间查看当前已采集的全部真实、未过期赛事。", "/ich/memo", v2MemoPage(result), { structuredData: collectionStructuredData("赛事备忘录", "按截止时间查看当前已采集的真实、未过期赛事。", "/ich/memo") }));
   });
   app.get("/memo.json", (c) => {
     if (!options.opportunityV2) return c.json({ error: "memo unavailable" }, 404);
     const query = parseV2PageQuery(c.req.query());
-    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: 1, pageSize: 10000, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    if (query.event_region || hasInvalidV2EventRegion(query)) return c.json({ error: "Invalid event region" }, 400);
+    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: 1, pageSize: 10000, history: false, includeIrrelevant: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     return c.json(v2MemoJson(result));
   });
   app.get("/memo.md", (c) => {
     if (!options.opportunityV2) return c.text("memo unavailable", 404);
     const query = parseV2PageQuery(c.req.query());
-    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: 1, pageSize: 10000, history: false, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
+    if (query.event_region || hasInvalidV2EventRegion(query)) return c.text("Invalid event region", 400);
+    const result = queryOpportunityV2ForIch({ ...query, category: "competition", page: 1, pageSize: 10000, history: false, includeIrrelevant: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
     return c.text(v2MemoMarkdown(result), 200, { "Content-Type": "text/markdown; charset=UTF-8", "Content-Disposition": "attachment; filename=ich-memo.md" });
   });
   app.get("/history", (c) => {
     if (options.opportunityV2) {
       const query = parseV2PageQuery(c.req.query());
+      if (hasInvalidV2EventRegion(query)) return c.text("Invalid event region", 400);
       const result = queryOpportunityV2ForIch({ ...query, status: "history", pageSize: 8, history: true, sourcesPath: options.opportunityV2SourcesPath, poolPath: options.opportunityV2PoolPath });
       const title = "盯非遗｜历史机会";
       const description = "查看已截止的文创、非遗与手工艺机会。";

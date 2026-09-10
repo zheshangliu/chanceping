@@ -32,7 +32,10 @@ export function isLikelyGenericNavigationItem(title: string, detailUrl: string):
     if (/\.(?:gif|jpe?g|png|webp)(?:$|\?)/iu.test(target.pathname) || /(?:instagram|facebook|twitter|linkedin)\.com$/iu.test(target.hostname)) return true;
     if (pathname === "") return true;
     if (/\/(?:about|category|categories|country|countries|login|register|search|submit|tag|tags)$/iu.test(pathname)) return true;
-    if (/\/(?:artists?|about|benefactors?|category|categories|craft-directory|craft-map|crafts?|forgot-password|guides?|hybrid-residencies|join|makers?(?:-list)?|membership|new-opportunities|opportunities|popular|resources?|skills?|upcoming-deadlines|questions|subscribe|terms|privacy|refund|impressum|events?|donate(?:-now)?|ccbcgallery|signature-events|artist-resources|shop|studio-guide|studio-guide-info|return-policy|checkout|favourites|benefits|directory|dashboard|library)$/iu.test(pathname)) return true;
+    // Keep singular /craft available for real detail pages; the old `crafts?`
+    // alternative incorrectly hid opportunities whose slug is simply
+    // `/opportunities/craft`.
+    if (/\/(?:artists?|about|benefactors?|category|categories|craft-directory|craft-map|crafts|forgot-password|guides?|hybrid-residencies|join|makers?(?:-list)?|membership|new-opportunities|opportunities|popular|resources?|skills?|upcoming-deadlines|questions|subscribe|terms|privacy|refund|impressum|events?|donate(?:-now)?|ccbcgallery|signature-events|artist-resources|shop|studio-guide|studio-guide-info|return-policy|checkout|favourites|benefits|directory|dashboard|library)$/iu.test(pathname)) return true;
     if (/\/opportunities\/index\/page\//iu.test(pathname) || /\/open-calls\/(?:discipline|country|monthly)\//iu.test(pathname)) return true;
     if (/\/report$/iu.test(pathname)) return true;
     if (CLEAR_CONTENT_PATH.test(pathname)) return true;

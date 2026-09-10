@@ -6,7 +6,7 @@
     "hero_eyebrow": "国内外文创・非遗・手工艺赛事覆盖最全",
     "hero_subtitle": "持续聚合国内外设计、文创、非遗与手工艺赛事，并逐步扩展采购、合作、资助、市集与研修机会，让手艺人、设计师、工作室和文创团队更快找到值得行动的项目。",
     "nav": [
-      "机会导航 赛事备忘录 历史机会 联系作者 提交来源"
+      "机会导航 赛事备忘录 联系作者 提交来源"
     ],
     "channels": [
       "赛事 / 征集 比赛与作品征集",
@@ -23,13 +23,17 @@
       "截止状态： 全部可浏览 正在征集 近期截止 即将开始 长期征集 日期待补 历史机会 排序：截止时间（近→远） 排序：最新收录"
     ],
     "stats": {
-      "text": "当前赛事：144 海外赛事：15 数据源：29 每72小时更新 最近更新：2026年9月8日",
+      "text": "当前赛事：144 海外赛事：15 已接入来源：33 每72小时更新 最近更新：2026年9月8日",
       "result_total": 144,
-      "source_count": 31
+      "source_count": 33
     },
     "result_total": 144,
     "result_count": 144,
-    "memo_total": 144,
+    "memo_total": 528,
+    "memo_html_ids": 50,
+    "memo_json_ids": 528,
+    "memo_markdown_ids": 528,
+    "memo_gt_radar": true,
     "procurement_public_total": 0,
     "first_10_ids": [
       "oppv2_5ee24bd5d2d86b5ad31e3e3e",
@@ -53,9 +57,11 @@
     },
     "procurement_empty_state": true,
     "json_total": 144,
-    "memo_json_total": 144,
-    "markdown_rows": 144,
-    "parity": true
+    "memo_json_total": 528,
+    "markdown_rows": 528,
+    "parity": true,
+    "memo_html_page_ids_same": true,
+    "memo_json_markdown_ids_same": true
   },
   "copySummary": {
     "raw_iso_timestamp_count": 0,
@@ -99,10 +105,10 @@
       "detail": "audits/ich/ui/latest/competition-detail.png",
       "source_manager": "audits/ich/ui/latest/source-manager.png"
     },
-    "captured_at": "2026-09-09T15:47:46.569Z"
+    "captured_at": "2026-09-10T01:21:00.333Z"
   },
   "manifest": {
-    "generated_at": "2026-09-09T15:46:30.656Z",
+    "generated_at": "2026-09-10T01:19:27.385Z",
     "base": "rescue/mvp-codex",
     "pages": [
       "/ich",

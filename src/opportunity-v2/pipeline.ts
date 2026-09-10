@@ -11,7 +11,7 @@ import { enrichGenericItem, isLikelySourceListingNoise, parseCfwDetailDate, pars
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
 import { parseProcurementPayload, isCurrentProcurement } from "./procurement";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
-import { DEFAULT_OPPORTUNITY_V2_SOURCES, findOpportunityV2Source, isPublicHttpUrl, isPublicIp, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
+import { findOpportunityV2Source, isPublicHttpUrl, isPublicIp, migrateOpportunityV2Sources, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
@@ -416,10 +416,8 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   const now = options.now ?? new Date();
   const startedAt = now.toISOString();
   const fetcher = options.fetcher ?? defaultOpportunityV2Fetcher;
+  if (!options.sourcesPath) migrateOpportunityV2Sources();
   const sources = readOpportunityV2Sources(options.sourcesPath);
-  if (!options.sourcesPath) for (const seed of DEFAULT_OPPORTUNITY_V2_SOURCES) {
-    if (!sources.some((source) => source.id === seed.id)) sources.push({ ...seed, types: [...seed.types], radars: [...seed.radars] });
-  }
   const selectedSources = options.sourceId
     ? sources.filter((source) => source.id === options.sourceId && source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status))
     : sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status));

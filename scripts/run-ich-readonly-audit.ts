@@ -73,6 +73,7 @@ async function main(): Promise<void> {
   const radarItems = radar?.opportunities ?? [];
   const sourceNames = new Set((sources?.sources ?? []).map((source) => source.name));
   const memoIds = new Set(memoItems.map((item) => item.id));
+  const memoHtmlIds = [...memoHtml.body.matchAll(/data-opportunity-id="([^"]+)"/gu)].map((match) => match[1]);
   const markdownIds = [...memoMarkdown.body.matchAll(/^\|\s*(oppv2_[^|\s]+)\s*\|/gmu)].map((match) => match[1]);
   const noisyTitle = /^(?:privacy policy|terms(?: of use| of sale)?|press(?: & media)?|advertising|archives?|renew my membership|submit a listing|podcast|中文\s*zh)$/iu;
   const loewe = memoItems.filter((item) => /loewe.*craft prize|craft prize.*loewe/iu.test(item.title));
@@ -83,6 +84,8 @@ async function main(): Promise<void> {
     home_competition_total: Number(home.body.match(/(?:可浏览赛事|可浏览机会)：\s*(\d+)/u)?.[1] ?? NaN),
     radar_competition_total: radar?.total ?? null,
     memo_total: memo?.total ?? null,
+    memo_gt_radar: (memo?.total ?? 0) > (radar?.total ?? 0),
+    memo_html_json_same_ids: JSON.stringify(memoHtmlIds) === JSON.stringify(memoItems.slice(0, memoHtmlIds.length).map((item) => item.id)),
     memo_json_markdown_same_ids: memoIds.size === markdownIds.length && [...memoIds].every((id) => markdownIds.includes(id)),
     memo_location_column_removed: !/赛事所在地|地点待补充/gu.test(memoHtml.body),
     memo_noise_hidden: memoItems.every((item) => !noisyTitle.test(item.title)),
@@ -154,7 +157,7 @@ async function main(): Promise<void> {
     const markdownIdsForRoute = markdown ? [...markdown.body.matchAll(/^\|\s*(oppv2_[^|\s]+)\s*\|/gmu)].map((match) => match[1]) : [];
     const htmlIds = html ? [...html.body.matchAll(/data-opportunity-id="([^"]+)"/gu)].map((match) => match[1]) : [];
     const likelyFilter = key !== "memo" && !key.startsWith("sort_");
-    return { key, url: `${baseUrl}${route}`, status: html?.status ?? 0, total: parsed?.total ?? htmlIds.length, first10_ids: jsonIds.slice(0, 10), html_ids_same: JSON.stringify(htmlIds) === JSON.stringify(jsonIds), json_markdown_ids_same: JSON.stringify(jsonIds) === JSON.stringify(markdownIdsForRoute), suspicious_unchanged: likelyFilter && jsonIds.length === memoIds.size && jsonIds.every((id) => memoIds.has(id)) };
+    return { key, url: `${baseUrl}${route}`, status: html?.status ?? 0, total: parsed?.total ?? htmlIds.length, first10_ids: jsonIds.slice(0, 10), html_ids_same: JSON.stringify(htmlIds) === JSON.stringify(jsonIds.slice(0, htmlIds.length)), json_markdown_ids_same: JSON.stringify(jsonIds) === JSON.stringify(markdownIdsForRoute), suspicious_unchanged: likelyFilter && jsonIds.length === memoIds.size && jsonIds.every((id) => memoIds.has(id)) };
   });
   const deadlineCoverage = { memo_total: memo?.total ?? memoItems.length, known_deadline: memoItems.filter((item) => item.deadline).length, unknown_deadline: memoItems.filter((item) => !item.deadline).length, coverage_rate: memoItems.length ? Number(((memoItems.filter((item) => item.deadline).length / memoItems.length) * 100).toFixed(2)) : 0 };
   const sourceCoverage = { captured_at: capturedAt, sources: sources?.sources ?? [], overview: overview?.summary ?? null };
@@ -194,7 +197,7 @@ async function main(): Promise<void> {
     filter_matrix: filterMatrix,
     checks,
     encoding_quality: encodingQuality,
-    complete: checks.http_all_200 && checks.source_pool_visible && checks.memo_json_markdown_same_ids && checks.memo_location_column_removed && checks.memo_noise_hidden && checks.loewe_visible_once && checks.home_and_radar_counts_match && encodingQuality.gate,
+    complete: checks.http_all_200 && checks.source_pool_visible && checks.memo_html_json_same_ids && checks.memo_json_markdown_same_ids && checks.memo_location_column_removed && checks.memo_noise_hidden && checks.loewe_visible_once && checks.home_and_radar_counts_match && encodingQuality.gate,
     files: ["manifest.json", "checks.json", "home.html", "memo.html", "memo.json", "memo.md", "radar.json", "sources.json", "source-overview.json", "deadline-resolution.json", "source-coverage.json", "filter-matrix.json", "encoding-quality.json"],
   };
   write("manifest.json", `${JSON.stringify(manifest, null, 2)}\n`);
