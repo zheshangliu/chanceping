@@ -28,5 +28,7 @@
     "no_history_top_nav": true,
     "no_raw_iso": true,
     "procurement_empty": true
-  }
+  },
+  "procurement_no_leakage": true,
+  "procurement_leakage_count": 0
 }

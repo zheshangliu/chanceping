@@ -1,0 +1,24 @@
+{
+  "schema_version": "chanceping.ich.production-audit-consistency.v1",
+  "generated_at": "2026-09-10T09:04:17.052Z",
+  "status": "PASS",
+  "errors": [],
+  "gates": {
+    "ui_no_history_top_nav": {
+      "production-summary.ui.no_history_top_nav": true,
+      "production-summary.gates.ui.no_history_top_nav": true,
+      "checks.ui.no_history_top_nav": true,
+      "manifest.gates.ui.no_history_top_nav": true
+    },
+    "procurement_no_leakage": {
+      "production-summary.gates.procurement_no_leakage": true,
+      "checks.procurement_no_leakage": true,
+      "manifest.gates.procurement_no_leakage": true
+    },
+    "procurement_leakage_count": {
+      "production-summary.gates.procurement_leakage_count": 0,
+      "checks.procurement_leakage_count": 0,
+      "manifest.gates.procurement_leakage_count": 0
+    }
+  }
+}

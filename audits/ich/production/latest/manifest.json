@@ -105,7 +105,6 @@
     "memo_gt_radar": true,
     "public_encoding_errors": 0,
     "public_unsafe_exact_deadline_display": 0,
-    "procurement_leakage": true,
     "ui": {
       "brand_dingfeiyi": true,
       "header_chanceping_absent": true,
@@ -115,7 +114,9 @@
       "no_history_top_nav": true,
       "no_raw_iso": true,
       "procurement_empty": true
-    }
+    },
+    "procurement_no_leakage": true,
+    "procurement_leakage_count": 0
   },
   "historical_provenance": "PARTIAL_UNRECOVERABLE",
   "timer_status": {
