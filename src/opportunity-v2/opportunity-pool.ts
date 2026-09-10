@@ -345,7 +345,12 @@ function deadlineFields(selected: DeadlineBundle, unsafe: boolean): Pick<Opportu
 export function reconcileOpportunityV2Deadlines(items: OpportunityV2[], now = new Date()): OpportunityV2[] {
   return items.map((item) => {
     const base = deadlineBundleFromOpportunity(item);
-    if (!(item.deadline_conflicts?.length)) return withEncodingMetadata({ ...item, ...deadlineFields(base, false) });
+    if (!(item.deadline_conflicts?.length)) {
+      // Unsafe is fail-closed. A previous reconciliation may have retained
+      // the flag after evidence was compacted; the absence of the compacted
+      // conflict list is not proof that the date became safe.
+      return withEncodingMetadata({ ...item, ...deadlineFields(base, item.deadline_conflict_unsafe === true) });
+    }
     const conflicts = normalizedDeadlineConflicts(item.deadline_conflicts);
     const candidates = [base, ...conflicts.map((conflict) => deadlineBundleFromConflict(conflict, base))];
     const selection = selectDeadlineBundle(candidates, now);
@@ -354,8 +359,9 @@ export function reconcileOpportunityV2Deadlines(items: OpportunityV2[], now = ne
     // reported the same day). Keep only real alternatives after selecting the
     // atomic evidence bundle.
     const allConflicts = conflicts.reduce((acc, conflict, index) => appendDeadlineConflict(acc, selection.selected, candidates[index + 1]), [] as V2DeadlineConflict[]);
-    const status = selection.selected.deadline ? opportunityStatus(selection.selected.deadline, now) : "UNKNOWN_DEADLINE";
-    return withEncodingMetadata({ ...item, ...deadlineFields(selection.selected, selection.unsafe), deadline_conflicts: allConflicts, status });
+    const unsafe = item.deadline_conflict_unsafe === true || selection.unsafe;
+    const status = unsafe || !selection.selected.deadline ? "UNKNOWN_DEADLINE" : opportunityStatus(selection.selected.deadline, now);
+    return withEncodingMetadata({ ...item, ...deadlineFields(selection.selected, unsafe), deadline_conflicts: allConflicts, status });
   });
 }
 

@@ -29,6 +29,7 @@ function values(value: string | string[] | undefined): string[] {
 }
 
 function liveStatus(item: OpportunityV2, now: Date): OpportunityV2["status"] {
+  if (item.deadline_conflict_unsafe === true) return "UNKNOWN_DEADLINE";
   const structured = opportunityStatus(item.deadline, now);
   return structured === "UNKNOWN_DEADLINE" ? item.status : structured;
 }
@@ -98,8 +99,8 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => eventRegionMatches(item, query.event_region))
     .filter((item) => !q || `${item.title} ${item.encoding_error_fields?.includes("summary") ? "" : item.summary} ${item.source_name} ${item.tags.join(" ")} ${(item.directions ?? []).join(" ")} ${item.event_location ?? ""} ${translations.get(item.id)?.title_zh ?? ""} ${translations.get(item.id)?.summary_zh ?? ""}`.toLowerCase().includes(q));
   return deduplicateOpportunityV2(filtered).opportunities.sort((a, b) => {
-      const aDeadline = a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER;
-      const bDeadline = b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER;
+      const aDeadline = a.deadline_conflict_unsafe ? Number.MAX_SAFE_INTEGER : (a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER);
+      const bDeadline = b.deadline_conflict_unsafe ? Number.MAX_SAFE_INTEGER : (b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER);
       return aDeadline - bDeadline || b.first_seen_at.localeCompare(a.first_seen_at);
     });
 }

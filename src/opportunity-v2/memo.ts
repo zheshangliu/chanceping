@@ -5,6 +5,7 @@ import { filterOpportunityV2Radar, type OpportunityV2RadarQuery } from "./radar-
 import { readOpportunityV2Pool } from "./opportunity-pool";
 import { readOpportunityV2Sources } from "./source-pool";
 import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
+import { publicOpportunityV2Deadline } from "./public-deadline";
 import type { OpportunityV2, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 export const OPPORTUNITY_V2_MEMO_SCOPE = "all_competitions" as const;
@@ -74,11 +75,11 @@ export function readOpportunityV2Health(filePath?: string): OpportunityV2SourceH
 
 export function sortOpportunityV2Memo(items: OpportunityV2[]): OpportunityV2[] {
   return [...items].sort((a, b) => {
-    const aKnown = Boolean(a.deadline);
-    const bKnown = Boolean(b.deadline);
+    const aKnown = Boolean(publicOpportunityV2Deadline(a).deadline);
+    const bKnown = Boolean(publicOpportunityV2Deadline(b).deadline);
     if (aKnown !== bKnown) return aKnown ? -1 : 1;
     if (aKnown && bKnown) {
-      const byDeadline = new Date(b.deadline as string).getTime() - new Date(a.deadline as string).getTime();
+      const byDeadline = new Date(publicOpportunityV2Deadline(b).deadline as string).getTime() - new Date(publicOpportunityV2Deadline(a).deadline as string).getTime();
       if (Number.isFinite(byDeadline) && byDeadline !== 0) return byDeadline;
     }
     return a.title.localeCompare(b.title, "zh-CN") || a.id.localeCompare(b.id);
@@ -125,7 +126,7 @@ export function buildOpportunityV2MemoSnapshot(options: {
   const clean = filtered.filter(isRealCompetitionMemoItem);
   const sort = options.sort ?? "deadline_desc";
   const items = sort === "deadline_asc"
-    ? [...clean].sort((a, b) => (a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER) - (b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title, "zh-CN"))
+    ? [...clean].sort((a, b) => (publicOpportunityV2Deadline(a).deadline ? new Date(publicOpportunityV2Deadline(a).deadline as string).getTime() : Number.MAX_SAFE_INTEGER) - (publicOpportunityV2Deadline(b).deadline ? new Date(publicOpportunityV2Deadline(b).deadline as string).getTime() : Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title, "zh-CN"))
     : sort === "newest"
       ? [...clean].sort((a, b) => b.first_seen_at.localeCompare(a.first_seen_at) || a.title.localeCompare(b.title, "zh-CN"))
       : sortOpportunityV2Memo(clean);
@@ -140,8 +141,8 @@ export function buildOpportunityV2MemoSnapshot(options: {
     total: items.length,
     returned_count: items.length,
     truncated: false,
-    known_deadlines: items.filter((item) => Boolean(item.deadline)).length,
-    unknown_deadlines: items.filter((item) => !item.deadline && !item.is_long_term).length,
+    known_deadlines: items.filter((item) => Boolean(publicOpportunityV2Deadline(item).deadline)).length,
+    unknown_deadlines: items.filter((item) => !publicOpportunityV2Deadline(item).deadline && !item.is_long_term).length,
     long_term: items.filter((item) => item.is_long_term).length,
     coverage: coverage(sources, health, items),
     items,

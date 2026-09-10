@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, runOpportunityV2Source, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 
 export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
 
@@ -98,17 +98,17 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   });
   app.get("/opportunities", (c) => {
     const items = filterOpportunityV2Radar(pool().opportunities, sources(), queryOf(c.req.query()));
-    return c.json({ schema_version: "chanceping-opportunity-v2.v1", total: items.length, opportunities: items });
+    return c.json({ schema_version: "chanceping-opportunity-v2.v1", total: items.length, opportunities: items.map(serializeOpportunityV2Public) });
   });
   app.get("/radar", (c) => {
     const sourcePool = sources();
     const items = filterOpportunityV2Radar(pool().opportunities, sourcePool, queryOf(c.req.query()));
-    return c.json({ radar_id: "ich", name: "非遗机会雷达", source_pool: sourcePool.filter((source) => source.enabled), total: items.length, opportunities: items });
+    return c.json({ radar_id: "ich", name: "非遗机会雷达", source_pool: sourcePool.filter((source) => source.enabled), total: items.length, opportunities: items.map(serializeOpportunityV2Public) });
   });
   app.get("/opportunities/:id", (c) => {
     const item = pool().opportunities.find((candidate) => candidate.id === c.req.param("id"));
     if (!item) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
-    return c.json(item);
+    return c.json(serializeOpportunityV2Public(item));
   });
   app.post("/run", async (c) => { const denied = requireAdmin(c); if (denied) return denied; return c.json(await runOpportunityV2({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, fetcher: options.fetcher })); });
   return app;

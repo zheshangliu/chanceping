@@ -153,6 +153,7 @@
     "verify:ich:deadline-round1": "tsx scripts/verify-ich-deadline-round1.ts",
     "verify:ich:encoding": "tsx scripts/verify-opportunity-v2-encoding-hygiene.ts",
     "verify:ich:deadline-conflict": "tsx scripts/verify-ich-deadline-conflict.ts",
+    "verify:ich:unsafe-deadline-public": "tsx scripts/verify-ich-unsafe-deadline-public.ts",
     "audit:ich:v13:readonly": "tsx scripts/run-ich-readonly-audit.ts",
     "audit:ich:deadline-coverage": "tsx scripts/audit-ich-deadline-coverage.ts",
     "verify:ich:competition-module": "tsx scripts/verify-ich-competition-module.ts",

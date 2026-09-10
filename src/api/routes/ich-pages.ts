@@ -8,7 +8,7 @@ import {
   type PublicIchOpportunity,
 } from "../../ich/query";
 import { defaultIchStore, parseIchQuery, type IchReadRouteOptions } from "./public-ich";
-import { buildOpportunityV2Display, filterOpportunityV2Radar, formatOpportunityV2Date, isRealCompetitionMemoItem, opportunityV2LiveStatus, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
+import { buildOpportunityV2Display, filterOpportunityV2Radar, formatOpportunityV2Date, isRealCompetitionMemoItem, opportunityV2LiveStatus, publicOpportunityV2Deadline, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
 
 const ICH_ORIGIN = "https://ich.chanceping.com";
 
@@ -190,12 +190,13 @@ interface DisplayDeadline {
 
 function displayDeadline(item: OpportunityV2, summary: string): DisplayDeadline {
   if (item.is_long_term) return { text: "长期开放", conflict: false };
-  if (!item.deadline) return { text: "截止日期待补", conflict: false };
-  if (item.deadline_conflict_unsafe === true) return { text: "截止时间待核实", conflict: true };
-  const structured = dateKey(item.deadline);
+  const publicDeadline = publicOpportunityV2Deadline(item);
+  if (publicDeadline.unsafe) return { text: "截止时间待核实", conflict: true };
+  if (!publicDeadline.deadline) return { text: "截止日期待补", conflict: false };
+  const structured = dateKey(publicDeadline.deadline);
   const evidence = explicitDeadlineKeys(summary, structured?.slice(0, 4));
   const conflict = Boolean(structured && evidence.length > 0 && !evidence.includes(structured));
-  return { text: conflict ? "截止时间待核实" : formatOpportunityV2Date(item.deadline), conflict };
+  return { text: conflict ? "截止时间待核实" : formatOpportunityV2Date(publicDeadline.deadline), conflict };
 }
 
 function discoveryLabel(item: OpportunityV2): string {
@@ -301,9 +302,9 @@ function queryOpportunityV2ForIch(options: { q: string; category: string; region
   }
   if (options.sort === "newest") filtered.sort((a, b) => b.first_seen_at.localeCompare(a.first_seen_at));
   const total = filtered.length;
-  const totalKnownDeadline = filtered.filter((item) => Boolean(item.deadline) && opportunityV2LiveStatus(item, now) !== "EXPIRED").length;
+  const totalKnownDeadline = filtered.filter((item) => Boolean(publicOpportunityV2Deadline(item).deadline) && opportunityV2LiveStatus(item, now) !== "EXPIRED").length;
   const totalLongTerm = filtered.filter((item) => item.is_long_term).length;
-  const totalDeadlineTbd = filtered.filter((item) => !item.deadline && !item.is_long_term).length;
+  const totalDeadlineTbd = filtered.filter((item) => !publicOpportunityV2Deadline(item).deadline && !item.is_long_term).length;
   const totalPages = Math.max(1, Math.ceil(total / options.pageSize));
   const page = Math.min(options.page, totalPages);
   const weekStart = new Date(now); weekStart.setHours(0, 0, 0, 0); weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
@@ -389,8 +390,8 @@ function v2MemoJson(result: V2IchPageResult): Record<string, unknown> {
         directions: item.directions ?? [],
         work_formats: item.work_formats ?? [],
         region: item.region,
-        deadline: deadline.conflict ? null : item.deadline,
-        deadline_text: deadline.conflict ? "截止时间待核实" : item.deadline_text ?? null,
+        deadline: deadline.conflict ? null : publicOpportunityV2Deadline(item).deadline,
+        deadline_text: deadline.conflict ? "截止时间待核实" : publicOpportunityV2Deadline(item).deadline_text,
         status: opportunityV2LiveStatus(item),
         source_name: item.source_name,
         source_id: item.source_id,
