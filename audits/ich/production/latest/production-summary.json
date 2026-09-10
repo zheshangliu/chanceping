@@ -65,6 +65,18 @@
       "provider": "DeepSeek",
       "qwen_used": false,
       "pending": 0
+    },
+    "timer_status": {
+      "unit": "chanceping-opportunity-v2.timer",
+      "enabled": true,
+      "active": true,
+      "interval": "72h",
+      "on_boot_sec": "15min",
+      "persistent": true,
+      "next_run_at": "2026-09-13 14:13:25 CST",
+      "scheduler_registry": 33,
+      "scheduler_file_next_run_at": "2026-09-13T07:42:14.083Z",
+      "verified_read_only": true
     }
   },
   "public": {
@@ -105,5 +117,17 @@
       "procurement_empty": true
     }
   },
-  "historical_provenance": "PARTIAL_UNRECOVERABLE"
+  "historical_provenance": "PARTIAL_UNRECOVERABLE",
+  "timer_status": {
+    "unit": "chanceping-opportunity-v2.timer",
+    "enabled": true,
+    "active": true,
+    "interval": "72h",
+    "on_boot_sec": "15min",
+    "persistent": true,
+    "next_run_at": "2026-09-13 14:13:25 CST",
+    "scheduler_registry": 33,
+    "scheduler_file_next_run_at": "2026-09-13T07:42:14.083Z",
+    "verified_read_only": true
+  }
 }
