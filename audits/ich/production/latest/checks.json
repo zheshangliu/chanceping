@@ -1,25 +1,32 @@
 {
   "http_all_200": true,
-  "source_pool_visible": true,
-  "source_count": 31,
-  "home_competition_total": 206,
-  "radar_competition_total": 206,
-  "memo_total": 576,
+  "source_count": 33,
+  "scheduler_registry": 33,
+  "successful_sources": 28,
+  "raw_items": 2781,
+  "pool_items": 2241,
+  "public_competition_total": 219,
+  "public_cn": 211,
+  "public_global": 8,
+  "memo_total": 558,
   "memo_json_markdown_same_ids": true,
-  "memo_location_column_removed": true,
-  "memo_noise_hidden": true,
+  "memo_html_prefix_same": true,
   "loewe_visible_once": true,
   "loewe_sources": [
     "loewe-craft-prize",
     "asef-culture360-opportunities"
   ],
-  "named_sources_visible": [
-    "Craft Scotland",
-    "Heritage Crafts",
-    "ASEF culture360 Opportunities"
-  ],
-  "no_expired_default_radar": true,
-  "home_and_radar_counts_match": true,
-  "encoding_quality_memo_errors": 0,
-  "encoding_quality_radar_errors": 0
+  "procurement_public_total": 0,
+  "public_encoding_errors": 0,
+  "public_unsafe_exact_deadline_display": 0,
+  "ui": {
+    "brand_dingfeiyi": true,
+    "header_chanceping_absent": true,
+    "hero": true,
+    "broad_copy": true,
+    "source_label_33": true,
+    "no_history_top_nav": true,
+    "no_raw_iso": true,
+    "procurement_empty": true
+  }
 }

@@ -100,7 +100,7 @@
       "hero": true,
       "broad_copy": true,
       "source_label_33": true,
-      "no_history_top_nav": true,
+      "no_history_top_nav": false,
       "no_raw_iso": true,
       "procurement_empty": true
     }

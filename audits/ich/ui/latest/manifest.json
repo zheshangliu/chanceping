@@ -27,5 +27,6 @@
     "audits/ich/ui/latest/memo-mobile.png",
     "audits/ich/ui/latest/source-manager.png",
     "audits/ich/ui/latest/competition-detail.png"
-  ]
+  ],
+  "capture_method": "domcontentloaded"
 }

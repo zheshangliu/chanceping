@@ -1,29 +1,16 @@
 {
-  "pool_encoding_errors": 3,
-  "memo_encoding_errors": 0,
-  "radar_encoding_errors": 0,
-  "by_source": {
-    "pool": {
-      "1zj-cultural-competition": {
-        "errors": 3,
-        "sample_ids": [
-          "oppv2_e2dd374ed289c787003aebc8",
-          "oppv2_0bdfbf7ef8b26a5f575ed2a7",
-          "oppv2_412123dc6c3d0bfbd60daab9"
-        ]
-      }
-    },
-    "memo": {},
-    "radar": {}
-  },
-  "sample_ids": {
-    "pool": [
-      "oppv2_e2dd374ed289c787003aebc8",
-      "oppv2_0bdfbf7ef8b26a5f575ed2a7",
-      "oppv2_412123dc6c3d0bfbd60daab9"
-    ],
-    "memo": [],
-    "radar": []
-  },
-  "gate": true
+  "pool_encoding_errors": 2,
+  "public_encoding_errors": 0,
+  "public_gate": true,
+  "scanned_endpoints": [
+    "/health",
+    "/ich",
+    "/ich/memo",
+    "/ich/memo.json",
+    "/ich/memo.md",
+    "/api/opportunity-v2/radar?category=competition",
+    "/api/opportunity-v2/sources",
+    "/api/opportunity-v2/sources/overview",
+    "/opportunity-v2/admin/sources"
+  ]
 }

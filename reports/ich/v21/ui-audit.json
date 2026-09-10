@@ -23,16 +23,16 @@
       "截止状态： 全部可浏览 正在征集 近期截止 即将开始 长期征集 日期待补 历史机会 排序：截止时间（近→远） 排序：最新收录"
     ],
     "stats": {
-      "text": "当前赛事：144 海外赛事：15 已接入来源：33 每72小时更新 最近更新：2026年9月8日",
-      "result_total": 144,
+      "text": "当前赛事：219 海外赛事：8 已接入来源：33 每72小时更新",
+      "result_total": 219,
       "source_count": 33
     },
-    "result_total": 144,
-    "result_count": 144,
-    "memo_total": 528,
+    "result_total": 219,
+    "result_count": 219,
+    "memo_total": 558,
     "memo_html_ids": 50,
-    "memo_json_ids": 528,
-    "memo_markdown_ids": 528,
+    "memo_json_ids": 558,
+    "memo_markdown_ids": 558,
     "memo_gt_radar": true,
     "procurement_public_total": 0,
     "first_10_ids": [
@@ -56,9 +56,9 @@
       "source_manager": 200
     },
     "procurement_empty_state": true,
-    "json_total": 144,
-    "memo_json_total": 528,
-    "markdown_rows": 528,
+    "json_total": 219,
+    "memo_json_total": 558,
+    "markdown_rows": 558,
     "parity": true,
     "memo_html_page_ids_same": true,
     "memo_json_markdown_ids_same": true
@@ -105,7 +105,19 @@
       "detail": "audits/ich/ui/latest/competition-detail.png",
       "source_manager": "audits/ich/ui/latest/source-manager.png"
     },
-    "captured_at": "2026-09-10T01:21:00.333Z"
+    "captured_at": "2026-09-10T07:56:14.996Z",
+    "http_status": {
+      "home-desktop": 200,
+      "home-mobile": 200,
+      "overseas-desktop": 200,
+      "procurement-desktop": 200,
+      "procurement-mobile": 200,
+      "memo-desktop": 200,
+      "memo-mobile": 200,
+      "source-manager": 200,
+      "competition-detail": 200
+    },
+    "capture_method": "domcontentloaded"
   },
   "manifest": {
     "generated_at": "2026-09-10T01:19:27.385Z",
@@ -136,6 +148,116 @@
       "audits/ich/ui/latest/memo-mobile.png",
       "audits/ich/ui/latest/source-manager.png",
       "audits/ich/ui/latest/competition-detail.png"
-    ]
+    ],
+    "capture_method": "domcontentloaded"
+  },
+  "productionAudit": {
+    "schema_version": "chanceping.ich.production-deploy-audit.v2",
+    "generated_at": "2026-09-10T08:03:21.812Z",
+    "production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+    "release": "/opt/chanceping/releases/20260910T073608Z-643a791cf383",
+    "previous_release": "/opt/chanceping/releases/20260909T123241Z-7644cb1a6c24",
+    "runtime_backup": "/var/lib/chanceping/backups/opportunity-v2-pre-20260910-20260910T073541Z",
+    "production_read_only_after_deploy": true,
+    "source_migration": {
+      "first": {
+        "before": 31,
+        "after": 33,
+        "added": [
+          "proc-uk-fts",
+          "proc-ca-canadabuys"
+        ]
+      },
+      "second": {
+        "before": 33,
+        "after": 33,
+        "added": []
+      },
+      "admin_config_preserved": true
+    },
+    "runtime": {
+      "production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+      "release": "/opt/chanceping/releases/20260910T073608Z-643a791cf383",
+      "previous_release": "/opt/chanceping/releases/20260909T123241Z-7644cb1a6c24",
+      "runtime_backup": "/var/lib/chanceping/backups/opportunity-v2-pre-20260910-20260910T073541Z",
+      "sources": 33,
+      "successful_sources": 28,
+      "source_health_rows": 32,
+      "raw_items": 2781,
+      "pool_items": 2241,
+      "procurement_pool": 75,
+      "pool_encoding_errors": 2,
+      "deadline_conflict_count": 68,
+      "unsafe_internal_count": 2,
+      "scheduler_registry": 33,
+      "scheduler": {
+        "interval_hours": 72,
+        "last_run_at": "2026-09-10T07:42:14.083Z",
+        "next_run_at": "2026-09-13T07:42:14.083Z",
+        "migration_idempotence": {
+          "first": {
+            "before": 31,
+            "after": 33,
+            "added": [
+              "proc-uk-fts",
+              "proc-ca-canadabuys"
+            ]
+          },
+          "second": {
+            "before": 33,
+            "after": 33,
+            "added": []
+          },
+          "admin_config_preserved": true
+        }
+      },
+      "translation": {
+        "translated": 494,
+        "reused": 493,
+        "failed": 51,
+        "provider": "DeepSeek",
+        "qwen_used": false,
+        "pending": 0
+      }
+    },
+    "public": {
+      "competition_total": 219,
+      "cn": 211,
+      "global": 8,
+      "memo_total": 558,
+      "memo_known": 464,
+      "memo_unknown": 94,
+      "memo_json_ids": 558,
+      "memo_markdown_ids": 558,
+      "memo_html_page_ids": 50,
+      "memo_json_markdown_parity": true,
+      "memo_html_prefix_parity": true,
+      "procurement_total": 0,
+      "loewe_visible": 1,
+      "loewe_discovered_by_sources": [
+        "loewe-craft-prize",
+        "asef-culture360-opportunities"
+      ]
+    },
+    "gates": {
+      "http_all_200": true,
+      "source_registry_33": true,
+      "scheduler_registry_33": true,
+      "memo_gt_radar": true,
+      "public_encoding_errors": 0,
+      "public_unsafe_exact_deadline_display": 0,
+      "procurement_leakage": true,
+      "ui": {
+        "brand_dingfeiyi": true,
+        "header_chanceping_absent": true,
+        "hero": true,
+        "broad_copy": true,
+        "source_label_33": true,
+        "no_history_top_nav": true,
+        "no_raw_iso": true,
+        "procurement_empty": true
+      }
+    },
+    "historical_provenance": "PARTIAL_UNRECOVERABLE"
   }
 }

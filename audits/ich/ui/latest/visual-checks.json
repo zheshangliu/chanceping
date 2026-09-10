@@ -29,5 +29,17 @@
     "detail": "audits/ich/ui/latest/competition-detail.png",
     "source_manager": "audits/ich/ui/latest/source-manager.png"
   },
-  "captured_at": "2026-09-10T01:21:00.333Z"
+  "captured_at": "2026-09-10T07:56:14.996Z",
+  "http_status": {
+    "home-desktop": 200,
+    "home-mobile": 200,
+    "overseas-desktop": 200,
+    "procurement-desktop": 200,
+    "procurement-mobile": 200,
+    "memo-desktop": 200,
+    "memo-mobile": 200,
+    "source-manager": 200,
+    "competition-detail": 200
+  },
+  "capture_method": "domcontentloaded"
 }

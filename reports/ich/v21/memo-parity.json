@@ -1,11 +1,10 @@
 {
-  "radar_total": 144,
-  "memo_total": 528,
-  "html_page_rows": 50,
-  "json_rows": 528,
-  "markdown_rows": 528,
-  "memo_gt_radar": true,
-  "html_page_ids_same": true,
-  "json_markdown_ids_same": true,
-  "parity": true
+  "production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+  "memo_total": 558,
+  "json_ids": 558,
+  "markdown_ids": 558,
+  "html_current_page_ids": 50,
+  "json_markdown_parity": true,
+  "html_json_prefix_parity": true,
+  "complete_id_set_stored": true
 }

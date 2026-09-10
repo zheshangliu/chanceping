@@ -1,11 +1,9 @@
-# 盯非遗生产只读巡检快照
+# ICH production audit
 
-- 抓取时间：2026-09-09T09:24:14.855Z
-- 生产地址：https://ich.chanceping.com
-- 生产 commit：8e163490012c3c83f8c60818d1141ae28f76134c
-- 只读：是；运行时写入：否
-- 完整性：**通过**
+This directory is a read-only audit snapshot generated after deployment of the approved immutable release.
 
-机器结果见 [manifest.json](./manifest.json)、[checks.json](./checks.json) 和 [encoding-quality.json](./encoding-quality.json)。页面副本见 [home.html](./home.html)、[memo.html](./memo.html)，接口副本见 [memo.json](./memo.json)、[memo.md](./memo.md)、[radar.json](./radar.json)。
-
-生产 runtime 额外核验：pool 有 3 条 1zj 历史乱码记录，但 memo/radar 均为 0；Deadline Conflict 的 unsafe_selected_deadline_count=0。
+- Production commit: 643a791cf3832c4f9387047e662379af1d7bb931
+- Release: /opt/chanceping/releases/20260910T073608Z-643a791cf383
+- Runtime backup: /var/lib/chanceping/backups/opportunity-v2-pre-20260910-20260910T073541Z
+- No post-deploy code or DNS mutation was performed.
+- Historical provenance remains PARTIAL_UNRECOVERABLE for the legacy 26-record gap.

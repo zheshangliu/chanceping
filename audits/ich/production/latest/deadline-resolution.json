@@ -1,16 +1,80 @@
 {
-  "captured_at": "2026-09-09T09:24:14.855Z",
-  "production_commit": "8e163490012c3c83f8c60818d1141ae28f76134c",
-  "runtime_path": "/var/lib/chanceping/opportunity-v2",
-  "current_memo_conflict_count": 37,
-  "date_conflict_resolution_count": 5,
-  "application_deadline_conflicts": 13,
-  "unsafe_selected_deadline_count": 0,
-  "safe_conflicts": 32,
-  "downgraded_to_deadline_unknown": 5,
-  "memo_total": 576,
-  "known_deadline": 442,
-  "unknown_deadline": 134,
-  "coverage_rate": 76.74,
-  "gate": "PASS"
+  "pool_conflict_records": 68,
+  "unsafe_internal_records": 2,
+  "public_unsafe_exact_deadline_display": 0,
+  "unsafe_public_audit": [
+    {
+      "id": "oppv2_58ab1be328f414b6c6ee937f",
+      "memo_json": {
+        "deadline": null,
+        "deadline_text": "截止时间待核实",
+        "status": "UNKNOWN_DEADLINE",
+        "exact": false
+      },
+      "memo_html": {
+        "status": 200,
+        "exact": false
+      },
+      "memo_markdown": {
+        "present": true,
+        "exact": false
+      },
+      "detail_html": {
+        "status": 200,
+        "exact": false
+      },
+      "radar_api": {
+        "status": 200,
+        "exact": false
+      },
+      "opportunity_api": {
+        "status": 200,
+        "exact": false
+      },
+      "detail_api": {
+        "status": 200,
+        "deadline": null,
+        "deadline_text": "截止时间待核实",
+        "exact": false
+      }
+    },
+    {
+      "id": "oppv2_05fdbc40835b46c956b01a06",
+      "memo_json": {
+        "deadline": null,
+        "deadline_text": "截止时间待核实",
+        "status": "UNKNOWN_DEADLINE",
+        "exact": false
+      },
+      "memo_html": {
+        "status": 200,
+        "exact": false
+      },
+      "memo_markdown": {
+        "present": true,
+        "exact": false
+      },
+      "detail_html": {
+        "status": 200,
+        "exact": false
+      },
+      "radar_api": {
+        "status": 200,
+        "exact": false
+      },
+      "opportunity_api": {
+        "status": 200,
+        "exact": false
+      },
+      "detail_api": {
+        "status": 200,
+        "deadline": null,
+        "deadline_text": "截止时间待核实",
+        "exact": false
+      }
+    }
+  ],
+  "target_historical_fault": "oppv2_58ab1be328f414b6c6ee937f",
+  "target_historical_exact_date": "2026-10-31",
+  "fail_closed_gate": true
 }

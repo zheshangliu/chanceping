@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-09-10T08:03:21.812Z",
+  "endpoints": {
+    "/health": {
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    "/ich": {
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8"
+    },
+    "/ich/memo": {
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8"
+    },
+    "/ich/memo.json": {
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    "/ich/memo.md": {
+      "status": 200,
+      "content_type": "text/markdown; charset=UTF-8"
+    },
+    "/api/opportunity-v2/radar?category=competition": {
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    "/api/opportunity-v2/sources": {
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    "/api/opportunity-v2/sources/overview": {
+      "status": 200,
+      "content_type": "application/json; charset=UTF-8"
+    },
+    "/opportunity-v2/admin/sources": {
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8"
+    }
+  },
+  "procurement_radar": {
+    "status": 200
+  },
+  "all_http_200": true
+}
