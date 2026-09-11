@@ -1,0 +1,22 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2a2.v1",
+  "generated_at": "2026-09-11T08:58:25.617Z",
+  "environment": "development-isolated-main-pipeline-live",
+  "git_sha": "b48dcb0c4d2a6cc54336ee7eb712337e268136fd",
+  "remote_head": "e9f69b1b0fe71213f8956da9991a8d05009a5334",
+  "production_deployed": false,
+  "source_count": 5,
+  "run_1": {
+    "raw": 240,
+    "pool": 240,
+    "public_candidate": 5,
+    "successful_sources": 5
+  },
+  "run_2": {
+    "raw": 240,
+    "pool": 240,
+    "public_candidate": 5,
+    "successful_sources": 5
+  },
+  "five_of_five_main_pipeline_success": true
+}

@@ -1,0 +1,38 @@
+{
+  "default_seed_count": 38,
+  "five_new_seeds": [
+    {
+      "id": "proc-cn-ccgp",
+      "url": "https://www.ccgp.gov.cn/cggg/dfgg/index.htm",
+      "enabled": false,
+      "status": "PENDING"
+    },
+    {
+      "id": "proc-cn-cib",
+      "url": "https://cg.cib.com.cn/cms/default/webfile/index.html",
+      "enabled": false,
+      "status": "PENDING"
+    },
+    {
+      "id": "proc-global-ocp",
+      "url": "https://data.open-contracting.org/en/publication/119/download?name=2026.jsonl.gz",
+      "enabled": false,
+      "status": "PENDING"
+    },
+    {
+      "id": "proc-eu-ted",
+      "url": "https://api.ted.europa.eu/v3/notices/search",
+      "enabled": false,
+      "status": "PENDING"
+    },
+    {
+      "id": "proc-wb",
+      "url": "https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00979&resourceId=RS00909&type=json",
+      "enabled": false,
+      "status": "PENDING"
+    }
+  ],
+  "all_five_disabled": true,
+  "proc_uk_fts_preserved": true,
+  "proc_ca_canadabuys_preserved": true
+}

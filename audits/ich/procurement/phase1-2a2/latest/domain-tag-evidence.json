@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-09-11T08:58:26.637Z",
+  "public_items": [
+    {
+      "opportunity_id": "oppv2_4afb6fa99de064c2f14cd9e8",
+      "source_id": "proc-wb",
+      "title": "Comprehensive exhibition layout of Cicheng green,low carbon community regeneration",
+      "evidence": [
+        {
+          "tag": "展陈",
+          "matched": [
+            "exhibition"
+          ]
+        }
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_674df7c4a452f7353f9288b3",
+      "source_id": "proc-global-ocp",
+      "title": "Festive Pantomime Maesteg Town Hall & The Met, Abertillery 2026/27",
+      "evidence": [
+        {
+          "tag": "文化服务",
+          "matched": [
+            "Pantomime",
+            "Cultural",
+            "theatre",
+            "pantomime",
+            "Theatre"
+          ]
+        }
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_aa11866264ec5fc5e4097e58",
+      "source_id": "proc-global-ocp",
+      "title": "Amgueddfa Cymru - Events Production Sain Ffagan - Christmas 2026",
+      "evidence": [
+        {
+          "tag": "文化服务",
+          "matched": [
+            "Museum"
+          ]
+        }
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_d2c65dd989da92a6eb2bfb6d",
+      "source_id": "proc-eu-ted",
+      "title": "Austria – Exhibition, fair and congress organisation services – Erbringung von Eventagenturleistungen",
+      "evidence": [
+        {
+          "tag": "展陈",
+          "matched": [
+            "Exhibition",
+            "fair",
+            "congress"
+          ]
+        }
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_a86f5d4faaf6099a1f976fe1",
+      "source_id": "proc-eu-ted",
+      "title": "France – Cultural event organisation services – Mise en place du concours \"Les Chanté Nwel en Île-de-France\" Pour 2026-2027-2028-2029",
+      "evidence": [
+        {
+          "tag": "文化服务",
+          "matched": [
+            "Cultural"
+          ]
+        }
+      ]
+    }
+  ]
+}

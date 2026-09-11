@@ -1,0 +1,114 @@
+{
+  "approved_domain_tags": [
+    "文创产品",
+    "非遗活动",
+    "礼赠",
+    "展陈",
+    "文化服务",
+    "绿植",
+    "花艺",
+    "活动执行",
+    "文旅推广",
+    "传统文化体验"
+  ],
+  "public_procurement_count": 5,
+  "public_with_approved_domain_tag": 5,
+  "public_missing_approved_domain_tag": 0,
+  "public_only_generic_procurement_tag": 0,
+  "by_tag": {
+    "文创产品": 0,
+    "非遗活动": 0,
+    "礼赠": 0,
+    "展陈": 2,
+    "文化服务": 3,
+    "绿植": 0,
+    "花艺": 0,
+    "活动执行": 0,
+    "文旅推广": 0,
+    "传统文化体验": 0
+  },
+  "public_items": [
+    {
+      "opportunity_id": "oppv2_4afb6fa99de064c2f14cd9e8",
+      "source_id": "proc-wb",
+      "title": "Comprehensive exhibition layout of Cicheng green,low carbon community regeneration",
+      "tags": [
+        "procurement",
+        "展陈"
+      ],
+      "matched_procurement_domain_tags": [
+        "展陈"
+      ],
+      "matched_evidence_terms": [
+        "exhibition"
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_674df7c4a452f7353f9288b3",
+      "source_id": "proc-global-ocp",
+      "title": "Festive Pantomime Maesteg Town Hall & The Met, Abertillery 2026/27",
+      "tags": [
+        "procurement",
+        "文化服务"
+      ],
+      "matched_procurement_domain_tags": [
+        "文化服务"
+      ],
+      "matched_evidence_terms": [
+        "Pantomime",
+        "Cultural",
+        "theatre",
+        "pantomime",
+        "Theatre"
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_aa11866264ec5fc5e4097e58",
+      "source_id": "proc-global-ocp",
+      "title": "Amgueddfa Cymru - Events Production Sain Ffagan - Christmas 2026",
+      "tags": [
+        "procurement",
+        "文化服务"
+      ],
+      "matched_procurement_domain_tags": [
+        "文化服务"
+      ],
+      "matched_evidence_terms": [
+        "Museum"
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_d2c65dd989da92a6eb2bfb6d",
+      "source_id": "proc-eu-ted",
+      "title": "Austria – Exhibition, fair and congress organisation services – Erbringung von Eventagenturleistungen",
+      "tags": [
+        "procurement",
+        "展陈"
+      ],
+      "matched_procurement_domain_tags": [
+        "展陈"
+      ],
+      "matched_evidence_terms": [
+        "Exhibition",
+        "fair",
+        "congress"
+      ]
+    },
+    {
+      "opportunity_id": "oppv2_a86f5d4faaf6099a1f976fe1",
+      "source_id": "proc-eu-ted",
+      "title": "France – Cultural event organisation services – Mise en place du concours \"Les Chanté Nwel en Île-de-France\" Pour 2026-2027-2028-2029",
+      "tags": [
+        "procurement",
+        "文化服务"
+      ],
+      "matched_procurement_domain_tags": [
+        "文化服务"
+      ],
+      "matched_evidence_terms": [
+        "Cultural"
+      ]
+    }
+  ],
+  "negative_fixture_blocked": true
+}

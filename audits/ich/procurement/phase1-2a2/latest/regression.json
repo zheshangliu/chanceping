@@ -1,0 +1,26 @@
+{
+  "typecheck": "PASS",
+  "verify_all": "PASS",
+  "legacy_and_targeted_tests": "PASS",
+  "main_pipeline_live_parity": "PASS",
+  "semantic_public_audit": "PASS",
+  "targeted_commands": {
+    "verify:ich:procurement": "PASS",
+    "verify:ich:procurement:phase1": "PASS",
+    "verify:ich:procurement:phase1:1": "PASS",
+    "verify:ich:procurement:phase1:2a": "PASS",
+    "verify:ich:procurement:semantic": "PASS",
+    "verify:ich:encoding": "PASS",
+    "verify:ich:deadline-conflict": "PASS",
+    "verify:ich:unsafe-deadline-public": "PASS",
+    "verify:ich:competition-module": "PASS",
+    "verify:ich:v13": "PASS",
+    "verify:ich:ui-v21": "PASS"
+  },
+  "known_preexisting_failures": {
+    "verify:ich:v211": "FAIL: legacy assertion expects 33 default sources; current default registry is 38",
+    "verify:ich:competition-reconciliation": "BLOCKED: historical baseline remains BASELINE_UNRECOVERABLE with UNKNOWN=26",
+    "verify:ich:v12": "FAIL: pre-existing memo mobile assertion at scripts/verify-ich-v12-memo.ts:75"
+  },
+  "notes": "All writes were isolated. The known failures above are outside the Phase 1.2A.2 procurement semantic scope and were not changed."
+}

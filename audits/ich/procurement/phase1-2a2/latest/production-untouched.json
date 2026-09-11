@@ -1,0 +1,8 @@
+{
+  "production_deployed": false,
+  "production_source_migration": false,
+  "production_scheduler_run": false,
+  "production_files_written": false,
+  "runtime_directory": "/var/folders/yq/r2frrbzd7jj0jhhsr4mpszch0000gn/T/chanceping-proc-phase1-2a-live-0qygxT",
+  "note": "All writes were confined to the isolated temp runtime and audit directory."
+}
