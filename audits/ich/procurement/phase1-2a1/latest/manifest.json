@@ -1,0 +1,24 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2a1.v1",
+  "generated_at": "2026-09-11T07:51:37.653Z",
+  "environment": "development-isolated-main-pipeline-live",
+  "git_sha": "f139cfc5f69f6044b38765b1c305341b5c28806a",
+  "remote_head": "07e164797e12ba1abef6a9a3fa9483c10b1d43c9",
+  "live_run_code_sha": "304352c55eee57cadc0154741fedcedd7d314dce",
+  "snapshot_provenance": "The successful 5/5 live double-run was executed after the functional 304352c fix was applied; f139cfc contains audit-output metadata only.",
+  "production_deployed": false,
+  "source_count": 5,
+  "run_1": {
+    "raw": 242,
+    "pool": 242,
+    "public_candidate": 6,
+    "successful_sources": 5
+  },
+  "run_2": {
+    "raw": 242,
+    "pool": 242,
+    "public_candidate": 6,
+    "successful_sources": 5
+  },
+  "five_of_five_main_pipeline_success": true
+}
