@@ -3,6 +3,7 @@ import path from "node:path";
 import { hasEncodingCorruption } from "../src/ich/aggregation/adapters/common";
 import { deduplicateOpportunityV2, normalizeOpportunityV2 } from "../src/opportunity-v2/opportunity-pool";
 import { isPublicProcurementOpportunity } from "../src/opportunity-v2/procurement-sources";
+import { hasProcurementDomainTag } from "../src/opportunity-v2/procurement";
 
 const out = path.resolve(process.env.CHANCEPING_PROCUREMENT_PHASE1_1_AUDIT_DIR ?? "audits/ich/procurement/phase1-1/latest");
 const baselinePath = path.resolve("audits/ich/production/latest/production-summary.json");
@@ -34,7 +35,6 @@ function qualityRow(item: any) {
   const normalizedSourceDay = sourceDay ? (() => { const parts = sourceDay.split("-"); return `${parts[0]}-${parts[1].padStart(2, "0")}-${parts[2].padStart(2, "0")}`; })() : null;
   const deadlineMatchesSourceText = !deadline || !normalizedSourceDay || deadline.slice(0, 10) === normalizedSourceDay;
   const deadlinePrecision = !deadline ? "missing" : !hasDate ? "not_observed" : hasClock ? "exact" : /^(20\d{2}-\d{2}-\d{2})$/u.test(deadline) ? "date_only" : "fake_deadline_time";
-  const domainTags = (item.tags ?? []).filter((tag: string) => tag !== "procurement");
   const sourceExpectedCountry = knownCountrySources.has(item.source_id);
   const canonical = String(item.detail_url ?? "");
   const aggregatorPublicWithoutOfficialEvidence = item.source_id === "proc-global-ocp" && (!canonical || /data\.open-contracting\.org/iu.test(canonical));
@@ -49,7 +49,7 @@ function qualityRow(item: any) {
     deadline_matches_source_text: deadlineMatchesSourceText,
     country_resolved: Boolean(procurement.country_code),
     known_country_as_global: sourceExpectedCountry && !procurement.country_code,
-    domain_tag_present: domainTags.length > 0,
+    domain_tag_present: hasProcurementDomainTag(item.tags ?? []),
     canonical_evidence_present: Boolean(canonical) && !aggregatorPublicWithoutOfficialEvidence,
     aggregator_public_without_official_evidence: aggregatorPublicWithoutOfficialEvidence,
     source_item_id_stable: Boolean(item.source_item_id?.trim()),

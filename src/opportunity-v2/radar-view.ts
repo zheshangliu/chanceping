@@ -2,6 +2,7 @@ import { deduplicateOpportunityV2, opportunityStatus } from "./opportunity-pool"
 import { readOpportunityV2Translations } from "./display";
 import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import { isLikelySourceListingNoise } from "../ich/aggregation/adapters/generic-listing";
+import { hasProcurementDomainTag } from "./procurement";
 import { isPublicProcurementText } from "./procurement-sources";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
@@ -88,6 +89,9 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     // or an unrelated notice. Keep it in the Pool for later reconciliation,
     // but require the bounded procurement parser plus ICH relevance for Radar.
     .filter((item) => item.category !== "procurement_project" || isPublicProcurementText(`${item.title} ${item.summary}`, item.procurement, item.deadline, now))
+    // `procurement` is only a category marker. Public procurement cards must
+    // also carry at least one approved business-domain tag.
+    .filter((item) => item.category !== "procurement_project" || hasProcurementDomainTag(item.tags))
     .filter((item) => query.include_irrelevant === true || item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
     .filter((item) => statusMatches(item, query.status, now))
     .filter((item) => !query.region || item.region === query.region)

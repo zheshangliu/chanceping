@@ -160,6 +160,7 @@
     "verify:ich:deadline-conflict": "tsx scripts/verify-ich-deadline-conflict.ts",
     "verify:ich:unsafe-deadline-public": "tsx scripts/verify-ich-unsafe-deadline-public.ts",
     "verify:ich:procurement:phase1:2a": "tsx scripts/verify-ich-procurement-phase1-2a.ts",
+    "verify:ich:procurement:domain-tags": "tsx scripts/verify-ich-procurement-domain-tags.ts",
     "audit:ich:v13:readonly": "tsx scripts/run-ich-readonly-audit.ts",
     "audit:ich:deadline-coverage": "tsx scripts/audit-ich-deadline-coverage.ts",
     "verify:ich:competition-module": "tsx scripts/verify-ich-competition-module.ts",

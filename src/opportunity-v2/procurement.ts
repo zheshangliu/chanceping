@@ -30,17 +30,36 @@ function stageOf(text: string, rawStatus?: unknown): ProcurementStage {
 }
 
 /** Deterministic labels for the procurement domain; these are not scores. */
+export const PROCUREMENT_DOMAIN_TAGS = [
+  "文创产品",
+  "非遗活动",
+  "礼赠",
+  "展陈",
+  "文化服务",
+  "绿植",
+  "花艺",
+  "活动执行",
+  "文旅推广",
+  "传统文化体验",
+] as const;
+
+const PROCUREMENT_DOMAIN_TAG_SET: ReadonlySet<string> = new Set(PROCUREMENT_DOMAIN_TAGS);
+
+export function hasProcurementDomainTag(tags: readonly string[]): boolean {
+  return tags.some((tag) => PROCUREMENT_DOMAIN_TAG_SET.has(tag));
+}
+
 export function procurementDomainTags(text: string): string[] {
   const tags: Array<[string, RegExp]> = [
-    ["文创产品", /文创|cultural[ -]+creative|gift[ -]+design|souvenir|product[ -]+design/iu],
+    ["文创产品", /文创|cultural[ -]+creative|gift[ -]+design|souvenir|craft|handmade|textile|ceramic|pottery|jewell?ery|fashion|product[ -]+design|packaging[ -]+design|graphic[ -]+design|brand[ -]+design|ip[ -]+(?:design|development)|手工|工艺|工艺品|包装设计|产品设计|공예|전통공예/iu],
     ["非遗活动", /非遗|非物质文化遗产|intangible[ -]+cultural[ -]+heritage/iu],
-    ["礼赠", /礼品|礼赠|伴手礼|gift|souvenir|promotional[ -]+items/iu],
+    ["礼赠", /礼品|礼赠|伴手礼|gift|souvenir|promotional[ -]+items|기념품/iu],
     ["展陈", /展陈|展览|展会|exhibition|fair|congress|museum[ -]+display/iu],
-    ["文化服务", /文化|文化服务|展演|演出|剧目|cultural|heritage|museum|gallery|theatre|pantomime/iu],
+    ["文化服务", /文化|文化服务|展演|演出|剧目|cultural|heritage|museum|gallery|theatre|pantomime|문화콘텐츠|전시/iu],
     ["绿植", /绿植|植物布置|植物租赁|green[ -]+plants?|plant[ -]+rental|indoor[ -]+plants?/iu],
     ["花艺", /花艺|鲜花|花卉|floral|flowers?|flower[ -]+arrangement/iu],
-    ["活动执行", /活动执行|活动管理|活动制作|展演|演出|节庆|event[ -]+(?:management|production)|festival/iu],
-    ["文旅推广", /文旅|旅游推广|旅游商品|tourism|visitor[ -]+experience/iu],
+    ["活动执行", /活动执行|活动管理|活动制作|展演|演出|节庆|event[ -]+(?:management|production)|festival|행사운영/iu],
+    ["文旅推广", /文旅|旅游推广|旅游商品|tourism|visitor[ -]+experience|관광상품/iu],
     ["传统文化体验", /传统文化体验|traditional[ -]+culture[ -]+experience|cultural[ -]+experience/iu],
   ];
   return tags.filter(([, pattern]) => pattern.test(text)).map(([tag]) => tag);

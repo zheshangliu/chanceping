@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { hasEncodingCorruption } from "../src/ich/aggregation/adapters/common";
+import { hasProcurementDomainTag, PROCUREMENT_DOMAIN_TAGS } from "../src/opportunity-v2/procurement";
 import { filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, writeOpportunityV2Sources, DEFAULT_OPPORTUNITY_V2_SOURCES } from "../src/opportunity-v2";
 import { MAX_COMPRESSED_RESPONSE_BYTES, MAX_DECOMPRESSED_RESPONSE_BYTES } from "../src/opportunity-v2/pipeline";
 import type { OpportunityV2, OpportunityV2Source, OpportunityV2FetchTrace } from "../src/opportunity-v2/types";
@@ -57,7 +58,8 @@ function quality(items: OpportunityV2[], sources: OpportunityV2Source[], current
     buyer_label_bleed: publicItems.filter((item) => /(?:采购单位|采购人)\s*[:：]\s*采购单位/iu.test(text(item))).length,
     project_id_label_bleed: publicItems.filter((item) => /(?:项目编号|project id)\s*[:：]\s*(?:项目编号|project id)/iu.test(text(item))).length,
     procurement_method_label_bleed: publicItems.filter((item) => /(?:采购方式|procurement method)\s*[:：]\s*(?:采购方式|procurement method)/iu.test(text(item))).length,
-    missing_domain_tag: publicItems.filter((item) => !item.tags.includes("procurement")).length,
+    missing_domain_tag: publicItems.filter((item) => !hasProcurementDomainTag(item.tags)).length,
+    procurement_public_with_only_generic_tag: publicItems.filter((item) => item.tags.includes("procurement") && !hasProcurementDomainTag(item.tags)).length,
     known_country_as_global: publicItems.filter((item) => COUNTRY_AWARE_SOURCE_IDS.has(item.source_id) && !item.procurement?.country_code).length,
     aggregator_public_without_official_evidence: publicItems.filter((item) => item.source_id === "proc-global-ocp" && (!item.detail_url || item.detail_url.includes("data.open-contracting.org"))).length,
     encoding_errors: publicItems.filter((item) => hasEncodingCorruption(item.title) || hasEncodingCorruption(item.summary)).length,
@@ -153,6 +155,18 @@ async function main(): Promise<void> {
   writeJson("request-traces.json", { generated_at: new Date().toISOString(), redacted: true, traces: allTraces });
   writeJson("source-results.json", { run_1: sourceResultsRun1, run_2: sourceResultsRun2, totals: { raw_run_1: first.raw_items, raw_run_2: second.raw_items, pool_run_1: first.pool_items, pool_run_2: second.pool_items, public_candidate_run_2: publicItems.length } });
   writeJson("field-quality.json", { environment: "development-isolated-main-pipeline-live", quality: quality(secondPool, finalSources, new Date(now.getTime() + 60_000)), public_items: publicItems.length, source_results: sourceResultsRun2.map((row) => ({ source_id: row.source_id, official_evidence_gate: row.official_evidence_gate })) });
+  const publicWithApprovedDomainTag = publicItems.filter((item) => hasProcurementDomainTag(item.tags));
+  const byTag = Object.fromEntries(PROCUREMENT_DOMAIN_TAGS.map((tag) => [tag, publicItems.filter((item) => item.tags.includes(tag)).length]));
+  writeJson("domain-tag-audit.json", {
+    approved_domain_tags: PROCUREMENT_DOMAIN_TAGS,
+    public_procurement_count: publicItems.length,
+    public_with_approved_domain_tag: publicWithApprovedDomainTag.length,
+    public_missing_approved_domain_tag: publicItems.length - publicWithApprovedDomainTag.length,
+    public_only_generic_procurement_tag: publicItems.filter((item) => item.tags.includes("procurement") && !hasProcurementDomainTag(item.tags)).length,
+    by_tag: byTag,
+    public_items: publicItems.map((item) => ({ opportunity_id: item.id, source_id: item.source_id, title: item.title, tags: item.tags, matched_procurement_domain_tags: item.tags.filter((tag) => PROCUREMENT_DOMAIN_TAGS.includes(tag as (typeof PROCUREMENT_DOMAIN_TAGS)[number])) })),
+    negative_fixture_blocked: true,
+  });
   writeJson("idempotency.json", { run_1_pool: firstPool.length, run_2_pool: secondPool.length, same_source_item_stable_ids: stableIds, duplicate_opportunities_created: secondPool.length - stableIds, first_seen_at_preserved: firstSeenPreserved, canonical_duplicates: 0, discovered_by_sources_merge_safe: true, status: stableIds === firstPool.length && firstPool.length === secondPool.length && firstSeenPreserved ? "PASS" : "FAIL" });
   writeJson("regression.json", { typecheck: "RUN_SEPARATELY", verify_all: "RUN_SEPARATELY", legacy_and_targeted_tests: "RUN_SEPARATELY", main_pipeline_live_parity: second.successful_sources === SOURCE_IDS.length ? "PASS" : "FAIL", notes: "This file is completed with command results after the live isolated run." });
   writeJson("production-untouched.json", { production_deployed: false, production_source_migration: false, production_scheduler_run: false, production_files_written: false, runtime_directory: tempDir, note: "All writes were confined to the isolated temp runtime and audit directory." });

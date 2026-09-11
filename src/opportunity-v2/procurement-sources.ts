@@ -1,5 +1,5 @@
 import { extractAnchors, extractDeadlineEvidence, htmlToText, identityHash, parseDateText, type ParsedAggregationItem, type ProcurementMetadata } from "../ich/aggregation/adapters/common";
-import { parseProcurementPayload, isCurrentProcurement, isCraftRelevantProcurement } from "./procurement";
+import { hasProcurementDomainTag, parseProcurementPayload, procurementDomainTags, isCurrentProcurement, isCraftRelevantProcurement } from "./procurement";
 import type { OpportunityV2FetchOptions } from "./types";
 
 /**
@@ -577,6 +577,7 @@ export function isPublicProcurementText(text: string, procurement?: { direction?
   if (/(?:车辆(?:采购|租赁|服务|购买)|车队(?:采购|租赁)|汽车(?:采购|租赁)|\b(?:vehicles?|fleet)\b|farming|fishery|council tax|telephone system|licen[cs]es?|finance support|insurance|legal support|staffing|estate management|refrigeration|endoscopes|engineering services|data centre|energy|housing|highways?|fire training|social care|consultancy|audio equipment|lighting equipment|AV design and installation|miscellaneous furnishing|office furniture|furniture)/iu.test(text)) return false;
   if (deadline && procurementDateIsPast(deadline, now)) return false;
   const craftRelevant = isCraftRelevantProcurement(text);
+  if (!hasProcurementDomainTag(procurementDomainTags(text))) return false;
   const culturalEvent = /(?:文化|展演|博览会|节庆|艺术|旅游|cultural|heritage|museum|gallery|theatre|pavilion|castle)/iu.test(text)
     && /(?:展演|博览会|节庆|艺术|旅游|cultural trust|exhibition|event production|event|festival|theatre|pantomime|signage|wayfinding|design|craft|heritage|museum|gallery|pavilion)/iu.test(text);
   return craftRelevant && !/(?:^|\s)cultural\s+(?:contributions?|study|research|services?)(?:\s|$)/iu.test(text) || culturalEvent;
