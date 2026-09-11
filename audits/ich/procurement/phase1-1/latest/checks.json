@@ -1,0 +1,12 @@
+{
+  "field_quality_all_zero": true,
+  "core_source_adapters_live": true,
+  "ccgp_exact_deadline_and_clean_labels": true,
+  "cib_exact_local_deadline": true,
+  "ocp_official_evidence": true,
+  "ted_country_codes": true,
+  "worldbank_official_api": true,
+  "competition_regression": true,
+  "memo_parity": true,
+  "ready_for_first_production_candidate": true
+}

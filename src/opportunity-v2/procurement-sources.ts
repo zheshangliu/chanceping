@@ -21,7 +21,7 @@ const SOURCE_LISTING_URLS: Record<string, string> = {
   "proc-us-sam": "https://api.sam.gov/opportunities/v2/search",
   "proc-kr-koneps": "https://www.data.go.kr/data/15129394/openapi.do",
   "proc-un-ungm": "https://www.ungm.org/Public/Notice",
-  "proc-wb": "https://projects.worldbank.org/en/projects-operations/procurement",
+  "proc-wb": "https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00979&resourceId=RS00909&type=json",
 };
 
 function asText(value: unknown): string {
@@ -59,10 +59,17 @@ function pageText(html: string): string {
   return htmlToText(html).replace(/\s+/gu, " ").trim();
 }
 
-function labeledText(text: string, labels: string[]): string {
+const CCGP_LABELS = [
+  "采购项目名称", "品目", "采购单位", "采购人", "行政区域", "公告时间", "获取采购文件时间",
+  "响应文件递交地点", "响应文件开启时间", "响应文件开启地点", "预算金额", "联系人及联系方式",
+  "项目编号", "项目名称", "采购方式", "采购需求", "活动时间", "活动日期", "响应文件提交", "响应文件接收截止时间", "截止时间",
+];
+
+function labeledText(text: string, labels: string[], boundaryLabels = CCGP_LABELS): string {
   const label = labels.map((value) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")).join("|");
-  const match = text.match(new RegExp(`(?:${label})\\s*[:：]?\\s*([^，,；;。\\n]{1,180})`, "iu"));
-  return match?.[1]?.trim() ?? "";
+  const boundary = boundaryLabels.map((value) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")).join("|");
+  const match = text.match(new RegExp(`(?:${label})\\s*[:：]?\\s*([\\s\\S]{1,180}?)(?=\\s*(?:${boundary})\\s*[:：]?|$)`, "iu"));
+  return match?.[1]?.replace(/[：:]$/u, "").trim() ?? "";
 }
 
 function parseMoney(text: string): { amount: number | null; currency: string | null } {
@@ -74,19 +81,77 @@ function parseMoney(text: string): { amount: number | null; currency: string | n
   return { amount: /万元|万/u.test(unit) ? base * 10000 : base, currency: /元|人民币/u.test(unit) ? "CNY" : unit || null };
 }
 
-function dateFromEvidence(text: string, context: string): { deadline: string | null; raw: string | null; kind: ParsedAggregationItem["deadline_kind"] } {
-  const evidence = extractDeadlineEvidence(text, new Date(), context);
-  const primary = evidence.find((candidate) => candidate.deadline_at) ?? evidence[0];
-  return { deadline: primary?.deadline_at ?? null, raw: primary?.raw_text ?? primary?.text ?? null, kind: primary?.kind ?? null };
+function dateOnly(year: number, month: number, day: number): string | null {
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-function cibDeadlineFromEvidence(text: string, context: string): { deadline: string | null; raw: string | null; kind: ParsedAggregationItem["deadline_kind"] } {
+function monthNumber(value: string): number | null {
+  const month = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].indexOf(value.slice(0, 3).toLowerCase());
+  return month < 0 ? null : month + 1;
+}
+
+/** Procurement dates keep date-only values date-only; clock values are normalized to UTC. */
+function parseProcurementDateText(value: string | null, now = new Date(), context = ""): string | null {
+  if (!value?.trim()) return null;
+  const raw = value.replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/gu, "-").replace(/年/g, "-").replace(/月/g, "-").replace(/日/g, "").replace(/[./]/g, "-").replace(/\s+/gu, " ").trim();
+  const clock = raw.match(/(?:T|\s+)(\d{1,2})[:：](\d{2})(?::\d{2})?/u) ?? raw.match(/\s(\d{1,2})\s*时(?:\s*(\d{1,2})\s*分?)?/u);
+  const timezone = raw.match(/(?:Z|[+-]\d{2}:?\d{2})$/u)?.[0] ?? null;
+  const iso = raw.match(/(?<!\d)(20\d{2})-(\d{1,2})-(\d{1,2})/u);
+  let year: number | null = iso ? Number(iso[1]) : null;
+  let month: number | null = iso ? Number(iso[2]) : null;
+  let day: number | null = iso ? Number(iso[3]) : null;
+  const worldBank = raw.match(/(?<!\d)(\d{1,2})-([A-Za-z]{3,9})-(20\d{2})(?!\d)/u);
+  if (!iso && worldBank) {
+    day = Number(worldBank[1]);
+    month = monthNumber(worldBank[2]);
+    year = Number(worldBank[3]);
+  }
+  const chinese = raw.match(/(?<!\d)(20\d{2})-(\d{1,2})-(\d{1,2})(?!\d)/u);
+  if (!year) {
+    const monthDay = raw.match(/(?<!\d)(\d{1,2})-(\d{1,2})(?!\d)/u);
+    year = Number(value.match(/20\d{2}/u)?.[0] ?? context.match(/20\d{2}/u)?.[0] ?? now.getFullYear());
+    month = chinese ? Number(chinese[2]) : monthDay ? Number(monthDay[1]) : null;
+    day = chinese ? Number(chinese[3]) : monthDay ? Number(monthDay[2]) : null;
+  }
+  if (!year || !month || !day) {
+    const fallback = parseDateText(value, now, context);
+    return fallback ? (clock || /T\d{1,2}:/u.test(value) ? fallback : fallback.slice(0, 10)) : null;
+  }
+  const calendarDay = dateOnly(year, month, day);
+  if (!calendarDay) return null;
+  if (!clock) return calendarDay;
+  const hour = Number(clock[1]);
+  const minute = Number(clock[2] ?? "0");
+  if (hour > 23 || minute > 59) return null;
+  if (timezone) {
+    const parsed = new Date(`${calendarDay}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00${timezone === "Z" ? "Z" : timezone}`);
+    return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
+  }
+  return new Date(Date.UTC(year, month - 1, day, hour, minute) - 8 * 60 * 60 * 1000).toISOString();
+}
+
+function dateFromEvidence(text: string, context: string, now = new Date()): { deadline: string | null; raw: string | null; kind: ParsedAggregationItem["deadline_kind"] } {
+  const evidence = extractDeadlineEvidence(text, now, context);
+  const primary = evidence
+    .filter((candidate) => candidate.deadline_at || candidate.text)
+    .sort((left, right) => Number(/(?:\d{1,2}[:：]\d{2}|\d{1,2}\s*时)/u.test(right.text)) - Number(/(?:\d{1,2}[:：]\d{2}|\d{1,2}\s*时)/u.test(left.text)) || left.priority - right.priority || left.marker_index - right.marker_index)[0] ?? evidence[0];
+  if (!primary) return { deadline: null, raw: null, kind: null };
+  const markerTail = text.slice(primary.marker_index);
+  const exact = markerTail.match(/(?<!\d)((?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{1,2}[月./-]\d{1,2}日?|\d{1,2}-[A-Za-z]{3,9}-20\d{2})(?:\s+\d{1,2}(?::|：)\d{2}(?::\d{2})?|\s+\d{1,2}\s*时(?:\s*\d{1,2}\s*分?)?)?)/u)?.[1] ?? null;
+  const selectedText = exact && /(?:\d{1,2}[:：]\d{2}|\d{1,2}\s*时)/u.test(exact) ? exact : primary.text;
+  const raw = exact && selectedText === exact ? `${text.slice(primary.marker_index, primary.marker_index + text.slice(primary.marker_index).indexOf(exact) + exact.length)}`.trim() : primary.raw_text ?? primary.text;
+  return { deadline: parseProcurementDateText(selectedText ?? null, now, `${context} ${text}`), raw, kind: primary.kind ?? null };
+}
+
+function cibDeadlineFromEvidence(text: string, context: string, now = new Date()): { deadline: string | null; raw: string | null; kind: ParsedAggregationItem["deadline_kind"] } {
   const preferred = text.match(/(?:征集|寻源)(?:截止时间|截止日期)\s*[:：]?\s*((?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{1,2}[月./-]\d{1,2}日?)(?:\s*\d{1,2}[:：]\d{2})?)/u);
   if (preferred) {
-    const deadline = parseDateText(preferred[1], new Date(), text);
+    const deadline = parseProcurementDateText(preferred[1], now, text);
     if (deadline) return { deadline, raw: preferred[0], kind: "deadline" };
   }
-  return dateFromEvidence(text, context);
+  return dateFromEvidence(text, context, now);
 }
 
 function procurementStage(text: string, deadline: string | null, now = new Date()): ProcurementMetadata["stage"] {
@@ -94,10 +159,21 @@ function procurementStage(text: string, deadline: string | null, now = new Date(
   const hasAwardSignal = /(?:中标|成交|结果公告|award(?:ed)?|contract(?:ed|\s+(?:signed|completed|award)))/iu.test(text) && !/contract\s+notice/iu.test(text);
   const hypotheticalAward = /(?:若|如|如果|if)\s*(?:中标|成交|award)/iu.test(text);
   if (hasAwardSignal && !hypotheticalAward) return "awarded";
-  if (deadline && new Date(deadline).getTime() < now.getTime()) return "closed";
+  if (deadline && procurementDateIsPast(deadline, now)) return "closed";
   if (/(?:预资格|资格预审|pre[- ]?qualification)/iu.test(text)) return "prequalification";
   if (/(?:采购意向|market research|市场调研|prior information|计划)/iu.test(text)) return "planned";
   return "open";
+}
+
+export function procurementDateIsPast(value: string, now: Date): boolean {
+  const day = value.match(/^(20\d{2}-\d{2}-\d{2})$/u)?.[1];
+  if (day) {
+    const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(now);
+    const today = `${parts.find((part) => part.type === "year")?.value}-${parts.find((part) => part.type === "month")?.value}-${parts.find((part) => part.type === "day")?.value}`;
+    return day < today;
+  }
+  const timestamp = new Date(value).getTime();
+  return Number.isFinite(timestamp) && timestamp < now.getTime();
 }
 
 function procurementItem(args: {
@@ -116,6 +192,8 @@ function procurementItem(args: {
   projectId?: string | null;
   buyer?: string | null;
   method?: string | null;
+  countryCode?: string | null;
+  countryName?: string | null;
   budget?: { amount: number | null; currency: string | null };
   region: "CN" | "GLOBAL";
 }): ParsedAggregationItem {
@@ -128,6 +206,8 @@ function procurementItem(args: {
     project_id: projectId,
     buyer_name: args.buyer || null,
     procurement_method: args.method || null,
+    country_code: args.countryCode || null,
+    country_name: args.countryName || null,
     budget_amount: args.budget?.amount ?? null,
     budget_currency: args.budget?.currency ?? null,
     milestones: [
@@ -163,28 +243,28 @@ function parseCcgPDetail(html: string, sourceUrl: string, detailUrl = sourceUrl,
   const text = pageText(html);
   const title = pageTitle(html);
   if (!title) return null;
-  const deadlineEvidence = dateFromEvidence(text, title);
+  const deadlineEvidence = dateFromEvidence(text, title, now);
   const published = firstString(metaContent(html, "PubDate"), text.match(/公告时间\s*[:：]?\s*(20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}(?:日)?(?:\s+\d{1,2}[:：]\d{2})?)/u)?.[1]);
-  const publishedAt = parseDateText(published, now, text);
+  const publishedAt = parseProcurementDateText(published, now, text);
   const buyer = labeledText(text, ["采购单位", "采购人"]);
   const projectId = labeledText(text, ["项目编号"]);
   const method = labeledText(text, ["采购方式"]);
   const budget = parseMoney(text);
-  return procurementItem({ sourceId: "proc-cn-ccgp", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "buyer_demand", stage: procurementStage(text, deadlineEvidence.deadline, now), noticeType: /磋商/u.test(text) ? "tender" : "tender", projectId: projectId || null, buyer: buyer || null, method: method || null, budget: { amount: budget.amount, currency: budget.currency ?? "CNY" }, region: "CN" });
+  return procurementItem({ sourceId: "proc-cn-ccgp", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "buyer_demand", stage: procurementStage(text, deadlineEvidence.deadline, now), noticeType: /磋商/u.test(text) ? "tender" : "tender", projectId: projectId || null, buyer: buyer || null, method: method || null, countryCode: "CN", countryName: "China", budget: { amount: budget.amount, currency: budget.currency ?? "CNY" }, region: "CN" });
 }
 
 function parseCibDetail(html: string, sourceUrl: string, detailUrl = sourceUrl, now = new Date()): ParsedAggregationItem | null {
   const text = pageText(html);
   const title = pageTitle(html);
   if (!title) return null;
-  const deadlineEvidence = cibDeadlineFromEvidence(text, title);
+  const deadlineEvidence = cibDeadlineFromEvidence(text, title, now);
   const published = firstString(text.match(/发布日期\s*[:：]?\s*(20\d{2}[-./]\d{1,2}[-./]\d{1,2})/u)?.[1]);
-  const publishedAt = parseDateText(published, now, text);
+  const publishedAt = parseProcurementDateText(published, now, text);
   const projectId = detailUrl.match(/\/([^/]+)\.html(?:$|\?)/iu)?.[1] ?? null;
   const sourcingOpen = /(?:供应商征集|供应商报名|寻源|征集报名)/iu.test(text)
     && (!deadlineEvidence.deadline || new Date(deadlineEvidence.deadline).getTime() >= now.getTime());
   const stage = sourcingOpen ? "open" : procurementStage(text, deadlineEvidence.deadline, now);
-  return procurementItem({ sourceId: "proc-cn-cib", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "supplier_application", stage, noticeType: "tender", projectId, buyer: labeledText(text, ["采购单位", "采购人"]) || null, method: "supplier sourcing", budget: parseMoney(text), region: "CN" });
+  return procurementItem({ sourceId: "proc-cn-cib", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "supplier_application", stage, noticeType: "tender", projectId, buyer: labeledText(text, ["采购单位", "采购人"]) || null, method: "supplier sourcing", countryCode: "CN", countryName: "China", budget: parseMoney(text), region: "CN" });
 }
 
 function parseHtmlListing(sourceId: string, html: string, sourceUrl: string): ParsedAggregationItem[] {
@@ -211,6 +291,31 @@ function stringValue(value: unknown): string {
   return "";
 }
 
+const COUNTRY_NAMES: Record<string, string> = {
+  austria: "AT", france: "FR", "united kingdom": "GB", uk: "GB", wales: "GB", england: "GB", scotland: "GB",
+  germany: "DE", italy: "IT", spain: "ES", canada: "CA", "united states": "US", korea: "KR", "south korea": "KR",
+  china: "CN", ghana: "GH", vietnam: "VN", philippines: "PH",
+  aut: "AT", fra: "FR", gbr: "GB", deu: "DE", ita: "IT", esp: "ES", can: "CA", usa: "US", kor: "KR", chn: "CN", gha: "GH",
+};
+
+function normalizeCountryCode(value: unknown): string | null {
+  const text = asText(value);
+  if (!text) return null;
+  const code = text.match(/\b([A-Z]{2})\b/u)?.[1];
+  if (code) return code;
+  return COUNTRY_NAMES[text.toLowerCase()] ?? null;
+}
+
+function countryFromOcds(raw: Record<string, unknown>, sourceId: string, sourceUrl: string): { code: string | null; name: string | null } {
+  const buyer = raw.buyer && typeof raw.buyer === "object" ? raw.buyer as Record<string, unknown> : {};
+  const address = buyer.address && typeof buyer.address === "object" ? buyer.address as Record<string, unknown> : {};
+  const name = firstString(raw.country_name, raw.countryName, raw.country, raw.country_code, raw.countryCode, address.country, address.countryName);
+  const code = normalizeCountryCode(firstString(raw.country_code, raw.countryCode, address.countryCode, address.country, raw.country_name, raw.countryName, raw.country));
+  if (code) return { code, name: name || code };
+  if (sourceId === "proc-global-ocp" && /publication\/119|sell2wales|wales/iu.test(`${sourceUrl} ${JSON.stringify(raw)}`)) return { code: "GB", name: "United Kingdom" };
+  return { code: null, name: name || null };
+}
+
 function parseOcdsRecord(raw: Record<string, unknown>, sourceId: string, sourceUrl: string, region: "CN" | "GLOBAL", now = new Date()): ParsedAggregationItem | null {
   const tender = raw.tender && typeof raw.tender === "object" ? raw.tender as Record<string, unknown> : raw;
   const buyer = raw.buyer && typeof raw.buyer === "object" ? raw.buyer as Record<string, unknown> : {};
@@ -219,7 +324,7 @@ function parseOcdsRecord(raw: Record<string, unknown>, sourceId: string, sourceU
   const description = firstString(tender.description, raw.description, raw.summary);
   const text = `${title} ${description}`.replace(/\s+/gu, " ").trim();
   const tenderPeriod = tender.tenderPeriod && typeof tender.tenderPeriod === "object" ? tender.tenderPeriod as Record<string, unknown> : {};
-  const deadline = parseDateText(firstString(tenderPeriod.endDate, raw.tenderClosingDate, raw.deadline, raw.responseDeadLine, raw.bidClseDt), now, text);
+  const deadline = parseProcurementDateText(firstString(tenderPeriod.endDate, raw.tenderClosingDate, raw.deadline, raw.responseDeadLine, raw.bidClseDt), now, text);
   const projectId = firstString(raw.ocid, raw.id, raw.project_id, raw.noticeId, raw.solicitationNumber, raw.bidNtceNo) || null;
   const documents = Array.isArray(tender.documents) ? tender.documents : Array.isArray(raw.documents) ? raw.documents : [];
   const official = documents.map((value) => value && typeof value === "object" ? stringValue((value as Record<string, unknown>).url) : "").find((value) => /^https?:/iu.test(value)) ?? "";
@@ -231,7 +336,8 @@ function parseOcdsRecord(raw: Record<string, unknown>, sourceId: string, sourceU
   const status = firstString(tender.status, raw.status);
   const hasAwardOrContract = (Array.isArray(raw.awards) && raw.awards.length > 0) || (Array.isArray(raw.contracts) && raw.contracts.length > 0);
   const stage = hasAwardOrContract ? "awarded" : procurementStage(`${status} ${text}`, deadline, now);
-  return procurementItem({ sourceId, sourceUrl, detailUrl, title, text, publishedAt: parseDateText(firstString(raw.date, raw.datePublished, raw.publishedDate, raw.postedDate, raw.bidNtceDt), now, text), deadline, deadlineRaw: deadline ? `tender deadline ${deadline.slice(0, 10)}` : null, direction: "buyer_demand", stage, noticeType: stage === "awarded" ? "award" : "tender", projectId, buyer: firstString(stringValue(buyer.name), raw.fullParentPathName, raw.department, raw.dminsttNm), method: stringValue(tender.procurementMethod ?? raw.type), budget: parseMoney(text), region });
+  const country = countryFromOcds(raw, sourceId, sourceUrl);
+  return procurementItem({ sourceId, sourceUrl, detailUrl, title, text, publishedAt: parseProcurementDateText(firstString(raw.date, raw.datePublished, raw.publishedDate, raw.postedDate, raw.bidNtceDt), now, text), deadline, deadlineRaw: deadline ? `tender deadline ${deadline.slice(0, 10)}` : null, direction: "buyer_demand", stage, noticeType: stage === "awarded" ? "award" : "tender", projectId, buyer: firstString(stringValue(buyer.name), raw.fullParentPathName, raw.department, raw.dminsttNm), method: stringValue(tender.procurementMethod ?? raw.type), countryCode: country.code, countryName: country.name, budget: parseMoney(text), region });
 }
 
 function parseOcdsText(text: string, sourceId: string, sourceUrl: string, region: "CN" | "GLOBAL", now = new Date()): ParsedAggregationItem[] {
@@ -263,12 +369,13 @@ function parseTedNotice(raw: Record<string, unknown>, sourceUrl: string, now = n
   const id = firstString(raw.ND, raw.noticeId, raw.id) || identityHash("proc-eu-ted", title);
   const deadlineValue = Array.isArray(raw.DT) ? raw.DT[0] : firstString(raw.DT, raw.deadline, raw.responseDeadline);
   const published = firstString(raw.PD, raw.publicationDate, raw.publishedDate);
-  const deadline = parseDateText(deadlineValue, now, title);
-  const publishedAt = parseDateText(published, now, title);
+  const deadline = parseProcurementDateText(deadlineValue, now, title);
+  const publishedAt = parseProcurementDateText(published, now, title);
   const text = `${title} ${stringValue(raw.DS ?? raw.description ?? "")}`;
   const country = stringValue(raw.CY ?? raw.country ?? "");
+  const countryCode = normalizeCountryCode(country);
   const detailUrl = firstString(raw.url, raw.officialUrl, `https://ted.europa.eu/en/notice/-/detail/${id}`);
-  return procurementItem({ sourceId: "proc-eu-ted", sourceUrl, detailUrl, title, text, publishedAt, deadline, deadlineRaw: deadline ? `deadline ${deadline.slice(0, 10)}` : null, direction: "buyer_demand", stage: procurementStage(`${stringValue(raw.TD)} ${stringValue(raw.FT)} ${text}`, deadline, now), noticeType: "tender", projectId: id, buyer: stringValue(raw.buyer ?? raw.BY ?? ""), method: stringValue(raw.procedure ?? ""), budget: parseMoney(text), region: country ? "GLOBAL" : "GLOBAL" });
+  return procurementItem({ sourceId: "proc-eu-ted", sourceUrl, detailUrl, title, text, publishedAt, deadline, deadlineRaw: deadline ? `deadline ${deadline.slice(0, 10)}` : null, direction: "buyer_demand", stage: procurementStage(`${stringValue(raw.TD)} ${stringValue(raw.FT)} ${text}`, deadline, now), noticeType: "tender", projectId: id, buyer: stringValue(raw.buyer ?? raw.BY ?? ""), method: stringValue(raw.procedure ?? ""), countryCode, countryName: country || countryCode, budget: parseMoney(text), region: "GLOBAL" });
 }
 
 function parseTedText(text: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
@@ -276,6 +383,52 @@ function parseTedText(text: string, sourceUrl: string, now = new Date()): Parsed
     const root = JSON.parse(text) as Record<string, unknown>;
     return (Array.isArray(root.notices) ? root.notices : []).flatMap((value) => value && typeof value === "object" ? [parseTedNotice(value as Record<string, unknown>, sourceUrl, now)].filter((item): item is ParsedAggregationItem => Boolean(item)) : []);
   } catch { return []; }
+}
+
+function parseWorldBankRecord(raw: Record<string, unknown>, sourceUrl: string, now = new Date()): ParsedAggregationItem | null {
+  const title = firstString(raw.bid_description, raw.project_title, raw.title, raw.description);
+  if (!title) return null;
+  const noticeType = firstString(raw.notice_type, raw.noticeType);
+  // Sector facets are broad classification metadata (for example, a World
+  // Bank record can carry `Tourism` while being an unrelated goods purchase).
+  // Keep the public relevance decision grounded in the notice itself and its
+  // procurement fields, not a broad project-sector facet.
+  const text = [title, raw.project_title, raw.procurement_category, raw.procurement_method, noticeType].map(asText).filter(Boolean).join(" | ");
+  const deadlineValue = firstString(raw.deadline_date, raw.deadlineDate);
+  const deadline = parseProcurementDateText(deadlineValue, now, text);
+  const publishedAt = parseProcurementDateText(firstString(raw.publication_date, raw.publicationDate), now, text);
+  const stage = procurementStage(`${noticeType} ${text}`, deadline, now);
+  const detailUrl = firstString(raw.url, raw.notice_url, raw.noticeUrl) || `https://projects.worldbank.org/en/projects-operations/procurement-detail/OP${String(raw.id ?? "").padStart(8, "0")}`;
+  const countryName = firstString(raw.country_name, raw.countryName);
+  const countryCode = normalizeCountryCode(firstString(raw.country_code, raw.countryCode, countryName));
+  return procurementItem({
+    sourceId: "proc-wb",
+    sourceUrl,
+    detailUrl,
+    title,
+    text,
+    publishedAt,
+    deadline,
+    deadlineRaw: deadline ? `deadline ${deadlineValue}` : null,
+    direction: "buyer_demand",
+    stage,
+    noticeType: /award|contract\s+award/iu.test(noticeType) ? "award" : "tender",
+    projectId: firstString(raw.id, raw.project_id, raw.projectId) || null,
+    buyer: firstString(raw.implementing_agency, raw.implementingAgency, raw.buyer, raw.agency) || null,
+    countryCode,
+    countryName: countryName || countryCode,
+    region: "GLOBAL",
+  });
+}
+
+function parseWorldBankJson(text: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
+  try {
+    const root = JSON.parse(text) as Record<string, unknown>;
+    const rows = Array.isArray(root.data) ? root.data : Array.isArray(root.records) ? root.records : [];
+    return rows.flatMap((row) => row && typeof row === "object" ? [parseWorldBankRecord(row as Record<string, unknown>, sourceUrl, now)].filter((item): item is ParsedAggregationItem => Boolean(item)) : []);
+  } catch {
+    return [];
+  }
 }
 
 function parseWorldBankHtml(html: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
@@ -287,7 +440,8 @@ function parseWorldBankHtml(html: string, sourceUrl: string, now = new Date()): 
     const title = cells[0];
     const text = cells.join(" | ");
     const stage = procurementStage(`${cells[3] ?? ""} ${text}`, null, now);
-    items.push(procurementItem({ sourceId: "proc-wb", sourceUrl, detailUrl: new URL(detail, sourceUrl).toString(), title, text, publishedAt: parseDateText(cells[4] ?? "", now, text), direction: "buyer_demand", stage, noticeType: "tender", projectId: identityHash("proc-wb", title, detail), buyer: cells[1] || null, region: "GLOBAL" }));
+    const countryCode = normalizeCountryCode(cells[1]);
+    items.push(procurementItem({ sourceId: "proc-wb", sourceUrl, detailUrl: new URL(detail, sourceUrl).toString(), title, text, publishedAt: parseProcurementDateText(cells[4] ?? "", now, text), direction: "buyer_demand", stage, noticeType: "tender", projectId: identityHash("proc-wb", title, detail), buyer: cells[1] || null, countryCode, countryName: cells[1] || null, region: "GLOBAL" }));
   }
   return items;
 }
@@ -319,7 +473,7 @@ export function parseProcurementSource(sourceId: string, payload: string, source
   if (sourceId === "proc-eu-ted") return parseTedText(payload, sourceUrl, now);
   if (sourceId === "proc-us-sam") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
   if (sourceId === "proc-kr-koneps") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
-  if (sourceId === "proc-wb") return parseWorldBankHtml(payload, sourceUrl, now);
+  if (sourceId === "proc-wb") return /^\s*(?:\{|\[)/u.test(payload) ? parseWorldBankJson(payload, sourceUrl, now) : parseWorldBankHtml(payload, sourceUrl, now);
   if (sourceId === "proc-un-ungm") return parseUngmHtml(payload, sourceUrl, now);
   return parseProcurementPayload(payload, sourceId, sourceUrl, sourceId.startsWith("proc-cn-") ? "CN" : "GLOBAL");
 }
@@ -344,7 +498,7 @@ export function isPublicProcurementText(text: string, procurement?: { direction?
   if (/(?:服务器|交换机|防火墙|软件系统|网络设备|信息化平台|数据库|机房|金融终端|generic IT|software development|software licence|backup solution|digital weight management|technology and associated services|소프트웨어 개발|네트워크 장비)/iu.test(text)) return false;
   if (/(?:保洁|清洁服务|食堂|餐饮服务|物业服务|cleaning|catering|portable toilets|security service|医疗|medical|dental|oral surgery|palliative care|mental health|care services|childcare|prison|health board|청소|구내식당)/iu.test(text)) return false;
   if (/(?:车辆(?:采购|租赁|服务|购买)|车队(?:采购|租赁)|汽车(?:采购|租赁)|\b(?:vehicles?|fleet)\b|farming|fishery|council tax|telephone system|licen[cs]es?|finance support|insurance|legal support|staffing|estate management|refrigeration|endoscopes|engineering services|data centre|energy|housing|highways?|fire training|social care|consultancy|audio equipment|lighting equipment|AV design and installation|miscellaneous furnishing|office furniture|furniture)/iu.test(text)) return false;
-  if (deadline && new Date(deadline).getTime() < now.getTime()) return false;
+  if (deadline && procurementDateIsPast(deadline, now)) return false;
   const craftRelevant = isCraftRelevantProcurement(text);
   const culturalEvent = /(?:文化|展演|博览会|节庆|艺术|旅游|cultural|heritage|museum|gallery|theatre|pavilion|castle)/iu.test(text)
     && /(?:展演|博览会|节庆|艺术|旅游|cultural trust|exhibition|event production|event|festival|theatre|pantomime|signage|wayfinding|design|craft|heritage|museum|gallery|pavilion)/iu.test(text);

@@ -1,7 +1,7 @@
 {
   "schema_version": "chanceping.procurement.phase1-source-registry.v1",
   "not_production_seed": true,
-  "observed_at": null,
+  "observed_at": "2026-09-11T04:27:28.843Z",
   "sources": [
     {
       "source_id": "proc-cn-ccgp",
@@ -25,7 +25,15 @@
       "attachment_available": true,
       "update_frequency": "daily or source publication",
       "adapter_id": "procurement-proc-cn-ccgp",
-      "status": "LIVE_OK"
+      "status": "LIVE_OK",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "LIVE_OK",
+      "live_http": 200,
+      "live_raw_items": 5,
+      "live_current": 4,
+      "live_pool": 4,
+      "live_public": 2,
+      "live_blocker": null
     },
     {
       "source_id": "proc-cn-cib",
@@ -49,7 +57,15 @@
       "attachment_available": true,
       "update_frequency": "source publication",
       "adapter_id": "procurement-proc-cn-cib",
-      "status": "LIVE_OK"
+      "status": "LIVE_OK",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "LIVE_OK",
+      "live_http": 200,
+      "live_raw_items": 3,
+      "live_current": 1,
+      "live_pool": 1,
+      "live_public": 1,
+      "live_blocker": null
     },
     {
       "source_id": "proc-cn-ggzy",
@@ -74,7 +90,15 @@
       "update_frequency": "not determined",
       "adapter_id": "procurement-proc-cn-ggzy",
       "status": "BLOCKED_PUBLIC_ENDPOINT",
-      "blocker": "official page returned a client shell without a bounded structured listing; no WAF/CAPTCHA bypass or guessed private API used"
+      "blocker": "official page returned a client shell without a bounded structured listing; no WAF/CAPTCHA bypass or guessed private API used",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "HTTP_FAIL",
+      "live_http": null,
+      "live_raw_items": 0,
+      "live_current": 0,
+      "live_pool": 0,
+      "live_public": 0,
+      "live_blocker": "bounded public probe failed (fetch failed); no structured public endpoint was confirmed"
     },
     {
       "source_id": "proc-global-ocp",
@@ -98,7 +122,15 @@
       "attachment_available": true,
       "update_frequency": "publisher-specific",
       "adapter_id": "procurement-proc-global-ocp",
-      "status": "LIVE_OK"
+      "status": "LIVE_OK",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "LIVE_OK",
+      "live_http": 200,
+      "live_raw_items": 353,
+      "live_current": 26,
+      "live_pool": 26,
+      "live_public": 2,
+      "live_blocker": null
     },
     {
       "source_id": "proc-eu-ted",
@@ -122,7 +154,15 @@
       "attachment_available": true,
       "update_frequency": "continuous publication",
       "adapter_id": "procurement-proc-eu-ted",
-      "status": "LIVE_OK"
+      "status": "LIVE_OK",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "LIVE_OK",
+      "live_http": 200,
+      "live_raw_items": 10,
+      "live_current": 10,
+      "live_pool": 10,
+      "live_public": 2,
+      "live_blocker": null
     },
     {
       "source_id": "proc-us-sam",
@@ -147,7 +187,15 @@
       "update_frequency": "daily active updates",
       "adapter_id": "procurement-proc-us-sam",
       "status": "FIXTURE_OK_LIVE_KEY_MISSING",
-      "blocker": "SAM_GOV_API_KEY not configured; no live request or fixture-as-live count"
+      "blocker": "SAM_GOV_API_KEY not configured; no live request or fixture-as-live count",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "FIXTURE_OK_LIVE_KEY_MISSING",
+      "live_http": null,
+      "live_raw_items": 0,
+      "live_current": 0,
+      "live_pool": 0,
+      "live_public": 0,
+      "live_blocker": "credential missing (SAM_GOV_API_KEY)"
     },
     {
       "source_id": "proc-kr-koneps",
@@ -172,7 +220,15 @@
       "update_frequency": "API dataset-specific",
       "adapter_id": "procurement-proc-kr-koneps",
       "status": "FIXTURE_OK_LIVE_KEY_MISSING",
-      "blocker": "KONEPS_SERVICE_KEY not configured; no live request or fixture-as-live count"
+      "blocker": "KONEPS_SERVICE_KEY not configured; no live request or fixture-as-live count",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "FIXTURE_OK_LIVE_KEY_MISSING",
+      "live_http": null,
+      "live_raw_items": 0,
+      "live_current": 0,
+      "live_pool": 0,
+      "live_public": 0,
+      "live_blocker": "credential missing (KONEPS_SERVICE_KEY)"
     },
     {
       "source_id": "proc-un-ungm",
@@ -197,7 +253,15 @@
       "update_frequency": "source publication",
       "adapter_id": "procurement-proc-un-ungm",
       "status": "BLOCKED_AUTH_SCOPE",
-      "blocker": "developer portal did not establish a supplier-side public opportunity API scope; public HTML fallback is client-rendered and remains discovery-only until endpoint/scope is documented"
+      "blocker": "developer portal did not establish a supplier-side public opportunity API scope; public HTML fallback is client-rendered and remains discovery-only until endpoint/scope is documented",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "BLOCKED_AUTH_SCOPE",
+      "live_http": 200,
+      "live_raw_items": 0,
+      "live_current": 0,
+      "live_pool": 0,
+      "live_public": 0,
+      "live_blocker": "Public page is reachable, but the developer/OAuth scope is not verified for supplier-side API reuse; HTML response is a client-rendered search shell"
     },
     {
       "source_id": "proc-wb",
@@ -221,7 +285,15 @@
       "attachment_available": null,
       "update_frequency": "daily",
       "adapter_id": "procurement-proc-wb",
-      "status": "LIVE_OK"
+      "status": "LIVE_OK",
+      "observed_at": "2026-09-11T04:27:28.806Z",
+      "live_status": "LIVE_OK",
+      "live_http": 200,
+      "live_raw_items": 998,
+      "live_current": 182,
+      "live_pool": 182,
+      "live_public": 1,
+      "live_blocker": null
     }
   ]
 }

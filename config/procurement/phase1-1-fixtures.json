@@ -1,0 +1,78 @@
+{
+  "schema_version": "chanceping.procurement.phase1-1-fixtures.v1",
+  "as_of": "2026-09-11T12:00:00+08:00",
+  "cases": [
+    {
+      "id": "CCGP-EXACT-FIELDS",
+      "source_id": "proc-cn-ccgp",
+      "html": "<meta name=\"ArticleTitle\" content=\"2026苏州世界文创大会采购公告\"><meta name=\"PubDate\" content=\"2026-09-08 15:29\"><h2 class=\"tc\">2026苏州世界文创大会采购公告</h2><p>项目编号：JSZC-320500-SZCH-C2026-0043</p><p>采购方式：竞争性磋商</p><p>预算金额：100.000000万元</p><p>采购单位：苏州市文化广电和旅游局</p><p>活动时间：2026-09-30</p><p>响应文件接收截止时间：2026-09-21 13:30</p>",
+      "expected": {
+        "deadline": "2026-09-21T05:30:00.000Z",
+        "published_at": "2026-09-08T07:29:00.000Z",
+        "buyer_name": "苏州市文化广电和旅游局",
+        "project_id": "JSZC-320500-SZCH-C2026-0043",
+        "procurement_method": "竞争性磋商"
+      }
+    },
+    {
+      "id": "CCGP-DEADLINE-DUFU",
+      "source_id": "proc-cn-ccgp",
+      "html": "<meta name=\"ArticleTitle\" content=\"渝哈《杜甫》展演活动采购公告\"><h2 class=\"tc\">渝哈《杜甫》展演活动采购公告</h2><p>采购单位：哈密市文化馆</p><p>活动日期：2026-10-01</p><p>响应文件接收截止时间：2026-09-16 10:30</p>",
+      "expected": { "deadline": "2026-09-16T02:30:00.000Z", "buyer_name": "哈密市文化馆" }
+    },
+    {
+      "id": "CIB-DEADLINE-BEIJING",
+      "source_id": "proc-cn-cib",
+      "html": "<div class=\"c-title\"><h1>兴业银行深圳分行2026年中秋节营销活动宣传品采购供应商征集公告</h1></div><div>发布日期：2026-09-04</div><div>活动日期：2026-10-01</div><div>征集截止时间：2026-09-18 23:59</div>",
+      "expected": { "deadline": "2026-09-18T15:59:00.000Z" }
+    },
+    {
+      "id": "DATE-ONLY-NO-FAKE-TIME",
+      "source_id": "proc-global-ocp",
+      "json": { "ocid": "ocds-phase1-1-date-only", "date": "2026-09-08", "buyer": { "name": "City Museum" }, "tender": { "title": "Craft exhibition services", "description": "Open tender for a heritage craft exhibition", "status": "active", "tenderPeriod": { "endDate": "2026-10-01" }, "documents": [{ "url": "https://official.example.gov/tenders/date-only" }] } },
+      "expected": { "deadline": "2026-10-01", "public": true }
+    },
+    {
+      "id": "WORLDBANK-JSON-CURRENT",
+      "source_id": "proc-wb",
+      "json": { "data": [{ "id": 467701, "bid_description": "Cultural heritage museum exhibition services", "country_code": "GHA", "country_name": "Ghana", "deadline_date": "20-Sep-2026", "notice_type": "Request for Expression of Interest", "project_id": "WB-P-467701", "publication_date": "08-Sep-2026", "procurement_category": "Services", "procurement_method": "Open", "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP467701" }] },
+      "expected": { "deadline": "2026-09-20", "country_code": "GH", "public": true }
+    },
+    {
+      "id": "WORLDBANK-JSON-CLOSED",
+      "source_id": "proc-wb",
+      "json": { "data": [{ "id": 467702, "bid_description": "Cultural heritage exhibition services", "country_code": "GHA", "deadline_date": "01-Sep-2026", "notice_type": "Request for Expression of Interest", "project_id": "WB-P-467702", "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP467702" }] },
+      "expected": { "stage": "closed", "public": false }
+    },
+    {
+      "id": "WORLDBANK-JSON-AWARDED",
+      "source_id": "proc-wb",
+      "json": { "data": [{ "id": 467703, "bid_description": "Awarded cultural heritage exhibition contract", "country_code": "GHA", "deadline_date": "20-Sep-2026", "notice_type": "Contract Award", "project_id": "WB-P-467703", "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP467703" }] },
+      "expected": { "stage": "awarded", "public": false }
+    },
+    {
+      "id": "WORLDBANK-JSON-CONSTRUCTION",
+      "source_id": "proc-wb",
+      "json": { "data": [{ "id": 467704, "bid_description": "Construction of cultural heritage museum", "country_code": "GHA", "deadline_date": "20-Sep-2026", "notice_type": "Request for Expression of Interest", "project_id": "WB-P-467704", "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP467704" }] },
+      "expected": { "public": false }
+    },
+    {
+      "id": "WORLDBANK-SECTOR-ONLY-NOT-RELEVANT",
+      "source_id": "proc-wb",
+      "json": { "data": [{ "id": 467705, "bid_description": "Supply of beekeeping kits", "country_code": "MDG", "deadline_date": "20-Sep-2026", "notice_type": "Request for Bids", "project_id": "WB-P-467705", "sector": "Tourism; Agricultural markets", "procurement_category": "Goods", "url": "https://projects.worldbank.org/en/projects-operations/procurement-detail/OP467705" }] },
+      "expected": { "public": false }
+    },
+    {
+      "id": "DOMAIN-TAGS",
+      "source_id": "proc-us-sam",
+      "json": { "data": [{ "id": "tag-1", "title": "Traditional craft exhibition gift design services", "description": "Intangible cultural heritage event production", "closingDate": "2026-10-01", "status": "open" }] },
+      "expected": { "domain_tags": ["文创产品", "非遗活动", "礼赠", "展陈", "文化服务", "活动执行"] }
+    },
+    {
+      "id": "COUNTRY-CODES",
+      "source_id": "proc-eu-ted",
+      "json": { "notices": [{ "ND": "TED-AT-1", "PD": "2026-09-08", "DT": ["2026-10-01"], "TI": { "eng": "Austria cultural exhibition services" }, "DS": { "eng": "Museum craft exhibition" }, "CY": "AUT", "FT": "Contract notice" }, { "ND": "TED-FR-1", "PD": "2026-09-08", "DT": ["2026-10-01"], "TI": { "eng": "France cultural exhibition services" }, "DS": { "eng": "Museum craft exhibition" }, "CY": "FRA", "FT": "Contract notice" }] },
+      "expected": { "country_codes": ["AT", "FR"] }
+    }
+  ]
+}

@@ -29,6 +29,23 @@ function stageOf(text: string, rawStatus?: unknown): ProcurementStage {
   return "unknown";
 }
 
+/** Deterministic labels for the procurement domain; these are not scores. */
+export function procurementDomainTags(text: string): string[] {
+  const tags: Array<[string, RegExp]> = [
+    ["文创产品", /文创|cultural[ -]+creative|gift[ -]+design|souvenir|product[ -]+design/iu],
+    ["非遗活动", /非遗|非物质文化遗产|intangible[ -]+cultural[ -]+heritage/iu],
+    ["礼赠", /礼品|礼赠|伴手礼|gift|souvenir|promotional[ -]+items/iu],
+    ["展陈", /展陈|展览|展会|exhibition|fair|congress|museum[ -]+display/iu],
+    ["文化服务", /文化|文化服务|展演|演出|剧目|cultural|heritage|museum|gallery|theatre|pantomime/iu],
+    ["绿植", /绿植|植物布置|植物租赁|green[ -]+plants?|plant[ -]+rental|indoor[ -]+plants?/iu],
+    ["花艺", /花艺|鲜花|花卉|floral|flowers?|flower[ -]+arrangement/iu],
+    ["活动执行", /活动执行|活动管理|活动制作|展演|演出|节庆|event[ -]+(?:management|production)|festival/iu],
+    ["文旅推广", /文旅|旅游推广|旅游商品|tourism|visitor[ -]+experience/iu],
+    ["传统文化体验", /传统文化体验|traditional[ -]+culture[ -]+experience|cultural[ -]+experience/iu],
+  ];
+  return tags.filter(([, pattern]) => pattern.test(text)).map(([tag]) => tag);
+}
+
 function noticeTypeOf(raw: unknown, text: string): ProcurementNoticeType {
   const value = `${asText(raw)} ${text}`;
   if (/(?:request for information|market engagement|采购意向)/iu.test(value)) return "request_for_information";
@@ -153,5 +170,5 @@ export function isCurrentProcurement(item: ParsedAggregationItem): boolean {
 
 /** Narrow ICH domain guard; generic public procurement remains auditable in the pool but is not presented as an ICH opportunity. */
 export function isCraftRelevantProcurement(text: string): boolean {
-  return /\b(?:craft|heritage|cultural|museum|gallery|gift|souvenir|handmade|textile|ceramic|pottery|jewell?ery|fashion|exhibition|tourism|floral|flowers|flower\s+arrangement|plants|plant\s+rental|indoor\s+plants|event\s+management|event\s+production)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|文创|非遗|手工|工艺|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|文旅|市集|工艺品|纪念品|鲜花|花艺|绿植|植物布置|绿植租赁|节庆花卉|文化행사|무형유산|전통공예|공예|기념품|홍보물|관광상품|전시|행사운영|문화콘텐츠|화훼|꽃장식|식물임대/iu.test(text);
+  return /\b(?:craft|heritage|cultural|museum|gallery|gift|souvenir|handmade|textile|ceramic|pottery|jewell?ery|fashion|exhibition|tourism|floral|flowers|flower\s+arrangement|plants|plant\s+rental|indoor\s+plants|event\s+management|event\s+production)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|文创|非遗|手工|工艺|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|展演|文化服务|文旅|市集|工艺品|纪念品|鲜花|花艺|绿植|植物布置|绿植租赁|节庆花卉|文化행사|무형유산|전통공예|공예|기념품|홍보물|관광상품|전시|행사운영|문화콘텐츠|화훼|꽃장식|식물임대/iu.test(text);
 }

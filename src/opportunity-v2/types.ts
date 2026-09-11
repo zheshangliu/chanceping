@@ -14,7 +14,7 @@ export type V2EncodingErrorField = "title" | "summary";
 export type V2ProcurementDirection = "buyer_demand" | "supplier_application" | "market_engagement" | "seller_offer" | "unknown";
 export type V2ProcurementStage = "planned" | "prequalification" | "open" | "ongoing_intake" | "awarded" | "closed" | "cancelled" | "unknown";
 export interface V2ProcurementMilestone { kind: string; date: string | null; text?: string; }
-export interface V2ProcurementMetadata { direction: V2ProcurementDirection; stage: V2ProcurementStage; notice_type: string; project_id: string | null; lot_id?: string | null; buyer_name?: string | null; procurement_method?: string | null; budget_amount?: number | null; budget_currency?: string | null; milestones: V2ProcurementMilestone[]; source_record_id?: string | null; }
+export interface V2ProcurementMetadata { direction: V2ProcurementDirection; stage: V2ProcurementStage; notice_type: string; project_id: string | null; lot_id?: string | null; buyer_name?: string | null; procurement_method?: string | null; country_code?: string | null; country_name?: string | null; budget_amount?: number | null; budget_currency?: string | null; milestones: V2ProcurementMilestone[]; source_record_id?: string | null; }
 
 export interface V2DeadlineConflict {
   stored_deadline: string | null;

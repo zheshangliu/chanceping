@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { gunzipSync } from "node:zlib";
-import { isPublicProcurementOpportunity, parseProcurementDetail, parseProcurementSource } from "../src/opportunity-v2/procurement-sources";
+import { isPublicProcurementOpportunity, parseProcurementDetail, parseProcurementSource, procurementDateIsPast } from "../src/opportunity-v2/procurement-sources";
 import { PHASE1_PROCUREMENT_SOURCE_IDS, readProcurementSourceRegistry, type ProcurementSourceRegistryEntry, type ProcurementSourceStatus } from "../src/opportunity-v2/procurement-registry";
 import { deduplicateOpportunityV2, normalizeOpportunityV2 } from "../src/opportunity-v2/opportunity-pool";
 
@@ -69,8 +69,18 @@ async function fetchGzip(url: string): Promise<FetchResult> {
   return { status: response.status, url: response.url, content_type: response.headers.get("content-type"), bytes: compressed.byteLength, text };
 }
 
+async function fetchWorldBankLatest(entry: ProcurementSourceRegistryEntry): Promise<{ response: FetchResult; text: string; count: number; skip: number }> {
+  const probe = await fetchBounded(`${entry.official_url}&top=1`);
+  const probeJson = JSON.parse(probe.text) as { count?: number; data?: unknown[] };
+  const count = Number(probeJson.count ?? 0);
+  const top = 1000;
+  const skip = Math.max(0, count - top);
+  const response = await fetchBounded(`${entry.official_url}&top=${top}&skip=${skip}`);
+  return { response, text: response.text, count, skip };
+}
+
 function resultFor(entry: ProcurementSourceRegistryEntry, response: FetchResult | null, items: ReturnType<typeof parseProcurementSource>, errors: string[] = []): SourceResult {
-  const current = items.filter((item) => !["awarded", "closed", "cancelled"].includes(item.procurement?.stage ?? "") && (!item.deadline_at || new Date(item.deadline_at).getTime() >= now.getTime()));
+  const current = items.filter((item) => !["awarded", "closed", "cancelled"].includes(item.procurement?.stage ?? "") && (!item.deadline_at || !procurementDateIsPast(item.deadline_at, now)));
   const publicItems = current.filter((item) => isPublicProcurementOpportunity(item, now));
   const officialBacklinks = items.filter((item) => item.detail_url && item.detail_url !== entry.official_url && !item.detail_url.startsWith(entry.official_url)).length;
   return {
@@ -159,8 +169,14 @@ async function runLive(): Promise<{ results: SourceResult[]; allItems: ReturnTyp
   catch (error) { results.push({ ...resultFor(ggzyEntry, null, [], [String(error)]), live_status: "HTTP_FAIL", blocker: `bounded public probe failed (${error instanceof Error ? error.message : String(error)}); no structured public endpoint was confirmed` }); }
 
   const wbEntry = byId.get("proc-wb")!;
-  try { const r = await fetchBounded(wbEntry.official_url); const items = r.status >= 200 && r.status < 400 ? parseProcurementSource("proc-wb", r.text, wbEntry.official_url, now) : []; results.push({ ...resultFor(wbEntry, r, items), live_status: items.length ? "LIVE_OK" : "BLOCKED_PUBLIC_ENDPOINT", blocker: "HTTP page is client-rendered and returned Loading without a bounded notice table" }); }
-  catch (error) { results.push({ ...resultFor(wbEntry, null, [], [String(error)]), live_status: "HTTP_FAIL" }); }
+  try {
+    const wb = await fetchWorldBankLatest(wbEntry);
+    const items = wb.response.status >= 200 && wb.response.status < 400 ? parseProcurementSource("proc-wb", wb.text, wbEntry.official_url, now) : [];
+    allItems.push(...items);
+    results.push({ ...resultFor(wbEntry, wb.response, items), format: "WORLDBANK_JSON", fixture_status: "WORLDBANK_API_LIVE", blocker: undefined });
+    notes.worldbank = { endpoint: wbEntry.official_url, response_format: "JSON { count, data[] }", count: wb.count, top: 1000, skip: wb.skip, query: "latest bounded page; current/future and domain relevance are filtered locally", license: "CC BY 4.0", update_frequency: "daily" };
+    for (const item of items) lineage.push({ opportunity_id: item.source_item_id, discovery_source: wbEntry.official_url, evidence_source: item.detail_url, canonical_source: item.detail_url, project_id: item.procurement?.project_id ?? null });
+  } catch (error) { results.push({ ...resultFor(wbEntry, null, [], [String(error)]), live_status: "HTTP_FAIL", blocker: `Finances One API request failed: ${error instanceof Error ? error.message : String(error)}` }); }
 
   const ungmEntry = byId.get("proc-un-ungm")!;
   try { const r = await fetchBounded(ungmEntry.official_url); const items = r.status >= 200 && r.status < 400 ? parseProcurementSource("proc-un-ungm", r.text, ungmEntry.official_url, now) : []; results.push({ ...resultFor(ungmEntry, r, items), live_status: "BLOCKED_AUTH_SCOPE", fixture_status: "PUBLIC_HTML_FIXTURE_PASS", blocker: "Public page is reachable, but the developer/OAuth scope is not verified for supplier-side API reuse; HTML response is a client-rendered search shell" }); }
@@ -190,7 +206,7 @@ async function main(): Promise<void> {
   const resultById = new Map(run.results.map((row) => [row.source_id, row]));
   const sources = registry.sources.map((entry) => ({ ...entry, observed_at: new Date().toISOString(), live_status: resultById.get(entry.source_id)?.live_status ?? "DISABLED_PENDING_REVIEW", live_http: resultById.get(entry.source_id)?.http ?? null, live_raw_items: resultById.get(entry.source_id)?.raw_items ?? 0, live_current: resultById.get(entry.source_id)?.current ?? 0, live_pool: resultById.get(entry.source_id)?.pool ?? 0, live_public: resultById.get(entry.source_id)?.public ?? 0, live_blocker: resultById.get(entry.source_id)?.blocker ?? null }));
   const publicItems = run.allItems.filter((item) => isPublicProcurementOpportunity(item, now));
-  const currentItems = run.allItems.filter((item) => !["awarded", "closed", "cancelled"].includes(item.procurement?.stage ?? "") && (!item.deadline_at || new Date(item.deadline_at).getTime() >= now.getTime()));
+  const currentItems = run.allItems.filter((item) => !["awarded", "closed", "cancelled"].includes(item.procurement?.stage ?? "") && (!item.deadline_at || !procurementDateIsPast(item.deadline_at, now)));
   const filterMatrix = {
     rejected_construction_only: run.allItems.filter((item) => /建筑工程|工程施工|装修(?:工程|项目)?|construction|renovation|civil works|building works|adaptation works/iu.test(item.raw_text)).length,
     rejected_generic_it: run.allItems.filter((item) => /服务器|交换机|软件系统|网络设备|software development|software licence|backup solution|digital weight management/iu.test(item.raw_text)).length,

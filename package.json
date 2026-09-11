@@ -143,6 +143,7 @@
     "preview:ich:procurement": "tsx scripts/build-ich-procurement-preview.ts",
     "verify:ich:procurement": "tsx scripts/verify-ich-procurement.ts",
     "verify:ich:procurement:phase1": "tsx scripts/verify-ich-procurement-phase1.ts",
+    "verify:ich:procurement:phase1:1": "tsx scripts/verify-ich-procurement-phase1-1.ts",
     "run:ich:procurement:phase1": "tsx scripts/run-ich-procurement-phase1.ts",
     "audit:ich:procurement:phase1": "tsx scripts/audit-ich-procurement-phase1.ts",
     "opportunity:v2:display": "tsx scripts/run-opportunity-v2-display.ts",

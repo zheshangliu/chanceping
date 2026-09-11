@@ -282,6 +282,8 @@ export interface ProcurementMetadata {
   lot_id?: string | null;
   buyer_name?: string | null;
   procurement_method?: string | null;
+  country_code?: string | null;
+  country_name?: string | null;
   budget_amount?: number | null;
   budget_currency?: string | null;
   milestones: ProcurementMilestone[];

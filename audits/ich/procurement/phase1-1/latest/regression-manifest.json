@@ -1,0 +1,21 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-1-regression-manifest.v1",
+  "generated_at": "2026-09-11T04:27:29.749Z",
+  "production_deployed": false,
+  "files": [
+    "manifest.json",
+    "source-results.json",
+    "opportunities.json",
+    "public-examples.json",
+    "lineage.json",
+    "filter-matrix.json",
+    "field-quality.json",
+    "regression.json",
+    "checks.json"
+  ],
+  "baseline_production_summary": "/private/tmp/chanceping-proc-phase1.hMZPiU/audits/ich/production/latest/production-summary.json",
+  "source_count": 9,
+  "procurement_raw": 1369,
+  "procurement_pool": 223,
+  "procurement_public": 8
+}

@@ -5,7 +5,7 @@ import { cleanGenericListingTitle } from "../ich/aggregation/adapters/generic-li
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2, OpportunityV2PoolFile, V2DeadlineConflict, V2DeadlineKind, V2DeadlineResolution, V2OpportunityStatus } from "./types";
 import { classifyV2Dimensions, classifyV2RadarRelevance } from "./keywords";
-import { isCraftRelevantProcurement } from "./procurement";
+import { isCraftRelevantProcurement, procurementDomainTags } from "./procurement";
 
 function poolPath(filePath?: string): string {
   const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_POOL_PATH;
@@ -278,7 +278,15 @@ function safeResolution(bundle: DeadlineBundle, crossSource: boolean): V2Deadlin
 }
 
 function isPastDeadline(bundle: DeadlineBundle, now: Date): boolean {
-  return Boolean(bundle.deadline && new Date(bundle.deadline).getTime() < now.getTime());
+  if (!bundle.deadline) return false;
+  const day = bundle.deadline.match(/^(20\d{2}-\d{2}-\d{2})$/u)?.[1];
+  if (day) {
+    const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(now);
+    const today = `${parts.find((part) => part.type === "year")?.value}-${parts.find((part) => part.type === "month")?.value}-${parts.find((part) => part.type === "day")?.value}`;
+    return day < today;
+  }
+  const timestamp = new Date(bundle.deadline).getTime();
+  return Number.isFinite(timestamp) && timestamp < now.getTime();
 }
 
 /**
@@ -412,8 +420,9 @@ function mergeOpportunityRecords(prior: OpportunityV2, item: OpportunityV2, now:
   const derived = classifyV2Dimensions(mergedTitle, mergedSummary, category);
   const procurement = item.procurement ?? prior.procurement;
   const procurementRelevant = procurement ? isCraftRelevantProcurement(`${mergedTitle} ${mergedSummary}`) : false;
+  const procurementTags = procurement ? procurementDomainTags(`${mergedTitle} ${mergedSummary}`) : [];
   const relevance = category === "procurement_project" && procurement && procurement.direction !== "seller_offer" && procurementRelevant
-    ? { relevance: "RELEVANT" as const, tags: ["procurement"] }
+    ? { relevance: "RELEVANT" as const, tags: ["procurement", ...procurementTags] }
     : classifyV2RadarRelevance(mergedTitle, mergedSummary, category);
   const sameSource = item.source_id === prior.source_id;
   const mergedStatus = deadlineSelection.selected.deadline ? opportunityStatus(deadlineSelection.selected.deadline, now) : deadlineSelection.unsafe ? "UNKNOWN_DEADLINE" : mergedStatusWithoutConflict(prior, item, sameSource, now);
@@ -455,8 +464,9 @@ export function normalizeOpportunityV2(input: ParsedAggregationItem, source: { i
   const categoryInput = [input.source_category, ...(source.types ?? [])].filter(Boolean).join(" ");
   const category = classifyCategory(categoryInput, input.title);
   const procurementRelevant = input.procurement ? isCraftRelevantProcurement(`${title} ${summary}`) : false;
+  const procurementTags = input.procurement ? procurementDomainTags(`${title} ${summary}`) : [];
   const relevance = category === "procurement_project" && input.procurement && input.procurement.direction !== "seller_offer" && procurementRelevant
-    ? { relevance: "RELEVANT" as const, tags: ["procurement"] }
+    ? { relevance: "RELEVANT" as const, tags: ["procurement", ...procurementTags] }
     : classifyV2RadarRelevance(title, summary, input.source_category ?? "");
   const dimensions = classifyV2Dimensions(title, summary, category);
   const parsedDeadline = deadlineBundleFromParsed(input, source.id);

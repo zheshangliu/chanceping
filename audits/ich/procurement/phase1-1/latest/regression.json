@@ -1,0 +1,20 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-1-regression.v1",
+  "environment": "development-isolated-copy",
+  "production_deployed": false,
+  "baseline_production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+  "competition_public_total_before": 219,
+  "competition_public_total_after": 219,
+  "memo_total_before": 558,
+  "memo_total_after": 558,
+  "loewe_before": 1,
+  "loewe_after": 1,
+  "unexplained_competition_loss": 0,
+  "competition_memo_unchanged": true,
+  "memo_json_markdown_parity": true,
+  "memo_html_prefix_parity": true,
+  "public_encoding_errors": 0,
+  "public_unsafe_exact_deadline_display": 0,
+  "procurement_public_before": 0,
+  "procurement_public_after": 8
+}

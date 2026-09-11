@@ -1,0 +1,22 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-audit.v1",
+  "generated_at": "2026-09-11T04:27:28.843Z",
+  "environment": "development-isolated-copy",
+  "production_deployed": false,
+  "source_count": 9,
+  "procurement_raw": 1369,
+  "procurement_pool": 223,
+  "procurement_public": 8,
+  "fixture_public_excluded": 2,
+  "source_statuses": {
+    "proc-cn-ccgp": "LIVE_OK",
+    "proc-cn-cib": "LIVE_OK",
+    "proc-cn-ggzy": "HTTP_FAIL",
+    "proc-global-ocp": "LIVE_OK",
+    "proc-eu-ted": "LIVE_OK",
+    "proc-us-sam": "FIXTURE_OK_LIVE_KEY_MISSING",
+    "proc-kr-koneps": "FIXTURE_OK_LIVE_KEY_MISSING",
+    "proc-un-ungm": "BLOCKED_AUTH_SCOPE",
+    "proc-wb": "LIVE_OK"
+  }
+}
