@@ -1,0 +1,13 @@
+{
+  "typecheck": "PASS",
+  "verify_all": "PASS",
+  "verify_ich_procurement_phase1": "PASS",
+  "verify_ich_procurement_phase1_1": "PASS",
+  "verify_ich_procurement": "PASS",
+  "verify_opportunity_v2": "PASS",
+  "verify_ich_procurement_phase1_2a": "PASS",
+  "legacy_and_targeted_tests": "PASS",
+  "main_pipeline_live_parity": "PASS",
+  "production_deployed": false,
+  "notes": "All listed commands were run against the committed candidate; production was not deployed or mutated."
+}

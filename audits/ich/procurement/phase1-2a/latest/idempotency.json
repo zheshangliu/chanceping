@@ -1,0 +1,10 @@
+{
+  "run_1_pool": 239,
+  "run_2_pool": 239,
+  "same_source_item_stable_ids": 239,
+  "duplicate_opportunities_created": 0,
+  "first_seen_at_preserved": true,
+  "canonical_duplicates": 0,
+  "discovered_by_sources_merge_safe": true,
+  "status": "PASS"
+}

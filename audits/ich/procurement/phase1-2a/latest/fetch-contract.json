@@ -1,0 +1,15 @@
+{
+  "backward_compatible_fetcher_url_only": true,
+  "options": [
+    "method",
+    "headers",
+    "body",
+    "decompress"
+  ],
+  "post": true,
+  "gzip": true,
+  "max_compressed_response_bytes": 10000000,
+  "max_decompressed_response_bytes": 50000000,
+  "ssrf_and_redirect_revalidation": true,
+  "public_schema_changed": false
+}
