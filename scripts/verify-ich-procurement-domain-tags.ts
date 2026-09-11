@@ -83,14 +83,63 @@ assert.equal(culturalTags.includes("展陈"), true);
 assert.equal(culturalTags.includes("文化服务"), true);
 assert.equal(culturalTags.includes("活动执行"), true);
 
+const outboundText = [
+  "兴业银行信用卡中心关于外呼业务支撑服务项目供应商征集调研公告",
+  "为保障语音外呼相关业务有序开展，采购IVR语音和智能机器人技术、电话外拨、手工外呼、预览外呼、预测外呼、机器人呼叫、通话录音。",
+].join(" ");
+const outbound = { ...item("outbound-call-center", "兴业银行信用卡中心关于外呼业务支撑服务项目供应商征集调研公告", ["procurement", "文创产品"]), summary: outboundText };
+assert.equal(procurementDomainTags(outboundText).includes("文创产品"), false, "手工外呼 must not map to 文创产品");
+assert.equal(isCraftRelevantProcurement(outboundText), false, "call-center wording must not be craft relevant");
+assert.equal(filterOpportunityV2Radar([outbound], [source], { now }).length, 0, "call-center procurement must stay out of public Radar");
+
+for (const [label, text] of [
+  ["手工录入", "客服系统手工录入服务"],
+  ["手工操作", "后台手工操作服务"],
+  ["工艺流程", "生产工艺流程管理服务"],
+  ["施工工艺", "施工工艺咨询服务"],
+  ["制造工艺", "制造工艺流程服务"],
+  ["客服外包", "客服外包服务"],
+  ["呼叫中心", "呼叫中心服务"],
+  ["电话营销", "电话营销服务"],
+  ["催收服务", "催收服务"],
+  ["软件运维", "软件运维服务"],
+  ["网络设备", "网络设备采购"],
+] as const) {
+  assert.equal(isCraftRelevantProcurement(text), false, `${label} must not be craft relevant`);
+  assert.equal(procurementDomainTags(text).includes("文创产品"), false, `${label} must not map to 文创产品`);
+}
+
+const handcraftTags = procurementDomainTags("传统手工艺展览");
+assert.equal(handcraftTags.includes("文创产品"), true);
+assert.equal(isCraftRelevantProcurement("传统手工艺展览"), true);
+const handmadeProductTags = procurementDomainTags("手工艺品采购");
+assert.equal(handmadeProductTags.includes("文创产品"), true);
+const artTags = procurementDomainTags("工艺美术作品采购");
+assert.equal(artTags.includes("文创产品"), true);
+const heritageSkillTags = procurementDomainTags("非遗传统技艺活动");
+assert.equal(heritageSkillTags.includes("文创产品"), true);
+const ceramicTags = procurementDomainTags("陶瓷工艺品采购");
+assert.equal(ceramicTags.includes("文创产品"), true);
+const handmadeGiftTags = procurementDomainTags("手作礼品采购");
+assert.equal(handmadeGiftTags.includes("文创产品"), true);
+assert.equal(handmadeGiftTags.includes("礼赠"), true);
+
 console.log(JSON.stringify({
   gate: "PASS",
   generic_procurement_only: "PASS",
   relevant_but_domain_untagged_blocked: "PASS",
+  semantic_negative_fixture: "PASS",
+  semantic_positive_fixture: "PASS",
   positive_mappings: {
     product_design: productTags,
     packaging: packagingTags,
     plants: plantTags,
     cultural_event: culturalTags,
+    traditional_handcraft: handcraftTags,
+    handmade_product: handmadeProductTags,
+    craft_art: artTags,
+    heritage_skill: heritageSkillTags,
+    ceramic: ceramicTags,
+    handmade_gift: handmadeGiftTags,
   },
 }, null, 2));

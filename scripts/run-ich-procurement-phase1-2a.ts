@@ -3,14 +3,14 @@ import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { hasEncodingCorruption } from "../src/ich/aggregation/adapters/common";
-import { hasProcurementDomainTag, PROCUREMENT_DOMAIN_TAGS } from "../src/opportunity-v2/procurement";
+import { hasProcurementDomainTag, isCraftRelevantProcurement, procurementDomainTagEvidence, PROCUREMENT_DOMAIN_TAGS } from "../src/opportunity-v2/procurement";
 import { filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, writeOpportunityV2Sources, DEFAULT_OPPORTUNITY_V2_SOURCES } from "../src/opportunity-v2";
 import { MAX_COMPRESSED_RESPONSE_BYTES, MAX_DECOMPRESSED_RESPONSE_BYTES } from "../src/opportunity-v2/pipeline";
 import type { OpportunityV2, OpportunityV2Source, OpportunityV2FetchTrace } from "../src/opportunity-v2/types";
 
 const SOURCE_IDS = ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"];
 const COUNTRY_AWARE_SOURCE_IDS = new Set(SOURCE_IDS);
-const auditDir = path.resolve(process.env.CHANCEPING_PROCUREMENT_PHASE1_2A_AUDIT_DIR ?? "audits/ich/procurement/phase1-2a/latest");
+const auditDir = path.resolve(process.env.CHANCEPING_PROCUREMENT_PHASE1_2A_AUDIT_DIR ?? "audits/ich/procurement/phase1-2a2/latest");
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-proc-phase1-2a-live-"));
 const sourcesPath = path.join(tempDir, "sources.json");
 const poolPath = path.join(tempDir, "opportunities.json");
@@ -42,9 +42,28 @@ function publicProcurement(items: OpportunityV2[], sources: OpportunityV2Source[
   return filterOpportunityV2Radar(items, sources, { category: "procurement_project", now: currentNow });
 }
 
+function publicSemanticAudit(items: OpportunityV2[]): Array<Record<string, unknown>> {
+  return items.map((item) => {
+    const text = `${item.title} ${item.summary}`;
+    const evidence = procurementDomainTagEvidence(text);
+    const hardNegative = /手工(?:外呼|录入|操作|处理|审核|记账|录单)|工艺流程|施工工艺|制造工艺|生产工艺|客服外包|呼叫中心|电话营销|催收服务|软件运维|网络设备/iu.test(text);
+    const matchedDomainTags = evidence.map((row) => row.tag);
+    return {
+      opportunity_id: item.id,
+      source_id: item.source_id,
+      title: item.title,
+      tags: item.tags,
+      matched_domain_tags: matchedDomainTags,
+      matched_evidence_terms: evidence.flatMap((row) => row.matched),
+      semantic_relevance: isCraftRelevantProcurement(text) && hasProcurementDomainTag(item.tags) && !hardNegative ? "PASS" : "FAIL",
+    };
+  });
+}
+
 function quality(items: OpportunityV2[], sources: OpportunityV2Source[], currentNow: Date): Record<string, number> {
   const publicItems = publicProcurement(items, sources, currentNow);
   const text = (item: OpportunityV2) => `${item.title} ${item.summary}`;
+  const semanticAudit = publicSemanticAudit(publicItems);
   return {
     seller_offer_leakage: publicItems.filter((item) => item.procurement?.direction === "seller_offer").length,
     awarded_public: publicItems.filter((item) => item.procurement?.stage === "awarded").length,
@@ -63,6 +82,10 @@ function quality(items: OpportunityV2[], sources: OpportunityV2Source[], current
     known_country_as_global: publicItems.filter((item) => COUNTRY_AWARE_SOURCE_IDS.has(item.source_id) && !item.procurement?.country_code).length,
     aggregator_public_without_official_evidence: publicItems.filter((item) => item.source_id === "proc-global-ocp" && (!item.detail_url || item.detail_url.includes("data.open-contracting.org"))).length,
     encoding_errors: publicItems.filter((item) => hasEncodingCorruption(item.title) || hasEncodingCorruption(item.summary)).length,
+    known_false_positive_call_center: publicItems.filter((item) => /外呼|呼叫中心|电话外拨|机器人呼叫|call\s+center/iu.test(text(item))).length,
+    manual_operation_keyword_false_positive: publicItems.filter((item) => /手工(?:外呼|录入|操作|处理|审核|记账|录单)/iu.test(text(item))).length,
+    generic_process_keyword_false_positive: publicItems.filter((item) => /工艺流程|施工工艺|制造工艺|生产工艺/iu.test(text(item))).length,
+    public_semantic_false_positive: semanticAudit.filter((row) => row.semantic_relevance !== "PASS").length,
   };
 }
 
@@ -120,11 +143,14 @@ async function main(): Promise<void> {
   const sourceResultsRun2 = sourceResultsFor(second, secondPool, finalSources, new Date(now.getTime() + 60_000), "run_2");
 
   const allTraces = tracesFor(first, "run_1").concat(tracesFor(second, "run_2"));
+  const semanticAudit = publicSemanticAudit(publicItems);
+  const semanticPass = semanticAudit.filter((row) => row.semantic_relevance === "PASS").length;
+  const semanticFail = semanticAudit.length - semanticPass;
   const firstSeenPreserved = [...firstByIdentity.entries()].every(([key, item]) => secondByIdentity.get(key)?.first_seen_at === item.first_seen_at);
   const sourceSeedRows = DEFAULT_OPPORTUNITY_V2_SOURCES.filter((source) => SOURCE_IDS.includes(source.id));
   fs.mkdirSync(auditDir, { recursive: true });
   writeJson("manifest.json", {
-    schema_version: "chanceping.ich.procurement.phase1-2a1.v1",
+    schema_version: "chanceping.ich.procurement.phase1-2a2.v1",
     generated_at: new Date().toISOString(),
     environment: "development-isolated-main-pipeline-live",
     git_sha: gitValue(["rev-parse", "HEAD"]),
@@ -164,13 +190,25 @@ async function main(): Promise<void> {
     public_missing_approved_domain_tag: publicItems.length - publicWithApprovedDomainTag.length,
     public_only_generic_procurement_tag: publicItems.filter((item) => item.tags.includes("procurement") && !hasProcurementDomainTag(item.tags)).length,
     by_tag: byTag,
-    public_items: publicItems.map((item) => ({ opportunity_id: item.id, source_id: item.source_id, title: item.title, tags: item.tags, matched_procurement_domain_tags: item.tags.filter((tag) => PROCUREMENT_DOMAIN_TAGS.includes(tag as (typeof PROCUREMENT_DOMAIN_TAGS)[number])) })),
+    public_items: semanticAudit.map((row) => ({ opportunity_id: row.opportunity_id, source_id: row.source_id, title: row.title, tags: row.tags, matched_procurement_domain_tags: row.matched_domain_tags, matched_evidence_terms: row.matched_evidence_terms })),
     negative_fixture_blocked: true,
   });
+  writeJson("domain-tag-evidence.json", {
+    generated_at: new Date().toISOString(),
+    public_items: publicItems.map((item) => ({ opportunity_id: item.id, source_id: item.source_id, title: item.title, evidence: procurementDomainTagEvidence(`${item.title} ${item.summary}`) })),
+  });
+  writeJson("public-semantic-audit.json", {
+    generated_at: new Date().toISOString(),
+    public_procurement_count: publicItems.length,
+    semantic_pass: semanticPass,
+    semantic_fail: semanticFail,
+    public_semantic_false_positive: semanticFail,
+    items: semanticAudit,
+  });
   writeJson("idempotency.json", { run_1_pool: firstPool.length, run_2_pool: secondPool.length, same_source_item_stable_ids: stableIds, duplicate_opportunities_created: secondPool.length - stableIds, first_seen_at_preserved: firstSeenPreserved, canonical_duplicates: 0, discovered_by_sources_merge_safe: true, status: stableIds === firstPool.length && firstPool.length === secondPool.length && firstSeenPreserved ? "PASS" : "FAIL" });
-  writeJson("regression.json", { typecheck: "RUN_SEPARATELY", verify_all: "RUN_SEPARATELY", legacy_and_targeted_tests: "RUN_SEPARATELY", main_pipeline_live_parity: second.successful_sources === SOURCE_IDS.length ? "PASS" : "FAIL", notes: "This file is completed with command results after the live isolated run." });
+  writeJson("regression.json", { typecheck: "RUN_SEPARATELY", verify_all: "RUN_SEPARATELY", legacy_and_targeted_tests: "RUN_SEPARATELY", main_pipeline_live_parity: second.successful_sources === SOURCE_IDS.length ? "PASS" : "FAIL", semantic_public_audit: semanticFail === 0 ? "PASS" : "FAIL", notes: "This file is completed with command results after the live isolated run." });
   writeJson("production-untouched.json", { production_deployed: false, production_source_migration: false, production_scheduler_run: false, production_files_written: false, runtime_directory: tempDir, note: "All writes were confined to the isolated temp runtime and audit directory." });
-  fs.writeFileSync(path.join(auditDir, "README.md"), `# Procurement Radar Phase 1.2A.1\n\nThis audit uses the shared OpportunityV2 main pipeline against five enabled copies in an isolated runtime. Production source files, pool, health, scheduler, and release were not touched. Public procurement additionally requires at least one approved business-domain tag; the generic procurement marker alone is not sufficient.\n\n- Run 1 successful sources: ${first.successful_sources}/${SOURCE_IDS.length}\n- Run 2 successful sources: ${second.successful_sources}/${SOURCE_IDS.length}\n- Run 1 raw/pool: ${first.raw_items}/${first.pool_items}\n- Run 2 raw/pool: ${second.raw_items}/${second.pool_items}\n- Public candidate: ${publicItems.length}\n- Approved domain-tag coverage: ${publicWithApprovedDomainTag.length}/${publicItems.length}\n- Generic-only public procurement: ${publicItems.filter((item) => item.tags.includes("procurement") && !hasProcurementDomainTag(item.tags)).length}\n- Idempotency: ${stableIds === firstPool.length && firstPool.length === secondPool.length && firstSeenPreserved ? "PASS" : "FAIL"}\n`);
+  fs.writeFileSync(path.join(auditDir, "README.md"), `# Procurement Radar Phase 1.2A.2\n\nThis audit uses the shared OpportunityV2 main pipeline against five enabled copies in an isolated runtime. Production source files, pool, health, scheduler, and release were not touched. Public procurement additionally requires at least one approved business-domain tag; the generic procurement marker alone is not sufficient. Semantic evidence is recorded separately so manual-operation and manufacturing-process words cannot publish false positives.\n\n- Run 1 successful sources: ${first.successful_sources}/${SOURCE_IDS.length}\n- Run 2 successful sources: ${second.successful_sources}/${SOURCE_IDS.length}\n- Run 1 raw/pool: ${first.raw_items}/${first.pool_items}\n- Run 2 raw/pool: ${second.raw_items}/${second.pool_items}\n- Public candidate: ${publicItems.length}\n- Approved domain-tag coverage: ${publicWithApprovedDomainTag.length}/${publicItems.length}\n- Semantic PASS/FAIL: ${semanticPass}/${semanticFail}\n- Generic-only public procurement: ${publicItems.filter((item) => item.tags.includes("procurement") && !hasProcurementDomainTag(item.tags)).length}\n- Idempotency: ${stableIds === firstPool.length && firstPool.length === secondPool.length && firstSeenPreserved ? "PASS" : "FAIL"}\n`);
   console.log(JSON.stringify({ output: auditDir, temp_runtime: tempDir, run_1: { successful_sources: first.successful_sources, raw: first.raw_items, pool: first.pool_items }, run_2: { successful_sources: second.successful_sources, raw: second.raw_items, pool: second.pool_items }, public_candidate: publicItems.length, source_results: sourceResultsRun2.map((row) => ({ source_id: row.source_id, http: row.http, items_seen: row.items_seen, method: row.method, error: row.error })), idempotency: { duplicate_opportunities_created: secondPool.length - stableIds, first_seen_at_preserved: firstSeenPreserved } }, null, 2));
 }
 

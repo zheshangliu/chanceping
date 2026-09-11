@@ -146,6 +146,7 @@
     "verify:ich:procurement:phase1:1": "tsx scripts/verify-ich-procurement-phase1-1.ts",
     "run:ich:procurement:phase1": "tsx scripts/run-ich-procurement-phase1.ts",
     "run:ich:procurement:phase1:2a": "tsx scripts/run-ich-procurement-phase1-2a.ts",
+    "verify:ich:procurement:semantic": "tsx scripts/verify-ich-procurement-domain-tags.ts",
     "audit:ich:procurement:phase1": "tsx scripts/audit-ich-procurement-phase1.ts",
     "opportunity:v2:display": "tsx scripts/run-opportunity-v2-display.ts",
     "verify:opportunity:v2:translation": "tsx scripts/verify-opportunity-v2-translation.ts",

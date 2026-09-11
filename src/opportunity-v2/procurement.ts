@@ -45,24 +45,39 @@ export const PROCUREMENT_DOMAIN_TAGS = [
 
 const PROCUREMENT_DOMAIN_TAG_SET: ReadonlySet<string> = new Set(PROCUREMENT_DOMAIN_TAGS);
 
+// Keep Chinese craft evidence precise. Bare "手工" and "工艺" also describe
+// manual operations and manufacturing processes, so they must not publish a
+// generic procurement notice as an ICH opportunity.
+const CREATIVE_PRODUCT_SIGNAL_PATTERN = /文创|cultural[ -]+creative|gift[ -]+design|souvenir|craft|handmade|textile|ceramic|pottery|jewell?ery|fashion|product[ -]+design|packaging[ -]+design|graphic[ -]+design|brand[ -]+design|ip[ -]+(?:design|development)|手工艺|手工艺品|手工制作|手工作品|手工产品|手作(?:产品|体验)?|传统手工艺?|传统工艺|民间工艺|工艺美术|工艺品|传统技艺|非遗技艺|包装设计|产品设计|공예|전통공예/iu;
+
+const PROCUREMENT_DOMAIN_TAG_PATTERNS: ReadonlyArray<readonly [string, RegExp]> = [
+  ["文创产品", CREATIVE_PRODUCT_SIGNAL_PATTERN],
+  ["非遗活动", /非遗|非物质文化遗产|intangible[ -]+cultural[ -]+heritage/iu],
+  ["礼赠", /礼品|礼赠|伴手礼|gift|souvenir|promotional[ -]+items|기념품/iu],
+  ["展陈", /展陈|展览|展会|exhibition|fair|congress|museum[ -]+display/iu],
+  ["文化服务", /文化|文化服务|展演|演出|剧目|cultural|heritage|museum|gallery|theatre|pantomime|문화콘텐츠|전시/iu],
+  ["绿植", /绿植|植物布置|植物租赁|green[ -]+plants?|plant[ -]+rental|indoor[ -]+plants?/iu],
+  ["花艺", /花艺|鲜花|花卉|floral|flowers?|flower[ -]+arrangement/iu],
+  ["活动执行", /活动执行|活动管理|活动制作|展演|演出|节庆|event[ -]+(?:management|production)|festival|행사운영/iu],
+  ["文旅推广", /文旅|旅游推广|旅游商品|tourism|visitor[ -]+experience|관광상품/iu],
+  ["传统文化体验", /传统文化体验|traditional[ -]+culture[ -]+experience|cultural[ -]+experience/iu],
+];
+
 export function hasProcurementDomainTag(tags: readonly string[]): boolean {
   return tags.some((tag) => PROCUREMENT_DOMAIN_TAG_SET.has(tag));
 }
 
 export function procurementDomainTags(text: string): string[] {
-  const tags: Array<[string, RegExp]> = [
-    ["文创产品", /文创|cultural[ -]+creative|gift[ -]+design|souvenir|craft|handmade|textile|ceramic|pottery|jewell?ery|fashion|product[ -]+design|packaging[ -]+design|graphic[ -]+design|brand[ -]+design|ip[ -]+(?:design|development)|手工|工艺|工艺品|包装设计|产品设计|공예|전통공예/iu],
-    ["非遗活动", /非遗|非物质文化遗产|intangible[ -]+cultural[ -]+heritage/iu],
-    ["礼赠", /礼品|礼赠|伴手礼|gift|souvenir|promotional[ -]+items|기념품/iu],
-    ["展陈", /展陈|展览|展会|exhibition|fair|congress|museum[ -]+display/iu],
-    ["文化服务", /文化|文化服务|展演|演出|剧目|cultural|heritage|museum|gallery|theatre|pantomime|문화콘텐츠|전시/iu],
-    ["绿植", /绿植|植物布置|植物租赁|green[ -]+plants?|plant[ -]+rental|indoor[ -]+plants?/iu],
-    ["花艺", /花艺|鲜花|花卉|floral|flowers?|flower[ -]+arrangement/iu],
-    ["活动执行", /活动执行|活动管理|活动制作|展演|演出|节庆|event[ -]+(?:management|production)|festival|행사운영/iu],
-    ["文旅推广", /文旅|旅游推广|旅游商品|tourism|visitor[ -]+experience|관광상품/iu],
-    ["传统文化体验", /传统文化体验|traditional[ -]+culture[ -]+experience|cultural[ -]+experience/iu],
-  ];
-  return tags.filter(([, pattern]) => pattern.test(text)).map(([tag]) => tag);
+  return PROCUREMENT_DOMAIN_TAG_PATTERNS.filter(([, pattern]) => pattern.test(text)).map(([tag]) => tag);
+}
+
+/** Test/audit-only evidence for why a deterministic domain tag was assigned. */
+export function procurementDomainTagEvidence(text: string): Array<{ tag: string; matched: string[] }> {
+  return PROCUREMENT_DOMAIN_TAG_PATTERNS.flatMap(([tag, pattern]) => {
+    const flags = pattern.flags.includes("g") ? pattern.flags : `${pattern.flags}g`;
+    const matched = [...text.matchAll(new RegExp(pattern.source, flags))].map((match) => match[0]);
+    return matched.length ? [{ tag, matched: [...new Set(matched)] }] : [];
+  });
 }
 
 function noticeTypeOf(raw: unknown, text: string): ProcurementNoticeType {
@@ -189,5 +204,5 @@ export function isCurrentProcurement(item: ParsedAggregationItem): boolean {
 
 /** Narrow ICH domain guard; generic public procurement remains auditable in the pool but is not presented as an ICH opportunity. */
 export function isCraftRelevantProcurement(text: string): boolean {
-  return /\b(?:craft|heritage|cultural|museum|gallery|gift|souvenir|handmade|textile|ceramic|pottery|jewell?ery|fashion|exhibition|tourism|floral|flowers|flower\s+arrangement|plants|plant\s+rental|indoor\s+plants|event\s+management|event\s+production)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|文创|非遗|手工|工艺|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|展演|文化服务|文旅|市集|工艺品|纪念品|鲜花|花艺|绿植|植物布置|绿植租赁|节庆花卉|文化행사|무형유산|전통공예|공예|기념품|홍보물|관광상품|전시|행사운영|문화콘텐츠|화훼|꽃장식|식물임대/iu.test(text);
+  return CREATIVE_PRODUCT_SIGNAL_PATTERN.test(text) || /\b(?:heritage|cultural|museum|gallery|gift|exhibition|tourism|floral|flowers|flower\s+arrangement|plants|plant\s+rental|indoor\s+plants|event\s+management|event\s+production)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|非遗|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|展演|文化服务|文旅|市集|纪念品|鲜花|花艺|绿植|植物布置|绿植租赁|节庆花卉|文化행사|무형유산|전통공예|공예|기념품|홍보물|관광상품|전시|행사운영|文化콘텐츠|화훼|꽃장식|식물임대/iu.test(text);
 }
