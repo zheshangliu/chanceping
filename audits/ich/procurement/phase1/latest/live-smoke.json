@@ -1,0 +1,88 @@
+{
+  "observed_at": "2026-09-11T00:46:51.222Z",
+  "source_results": [
+    {
+      "source_id": "proc-cn-ccgp",
+      "http": 200,
+      "live_status": "LIVE_OK",
+      "raw_items": 5,
+      "current": 4,
+      "public": 2,
+      "errors": []
+    },
+    {
+      "source_id": "proc-cn-cib",
+      "http": 200,
+      "live_status": "LIVE_OK",
+      "raw_items": 3,
+      "current": 1,
+      "public": 1,
+      "errors": []
+    },
+    {
+      "source_id": "proc-global-ocp",
+      "http": 200,
+      "live_status": "LIVE_OK",
+      "raw_items": 353,
+      "current": 26,
+      "public": 2,
+      "errors": []
+    },
+    {
+      "source_id": "proc-eu-ted",
+      "http": 200,
+      "live_status": "LIVE_OK",
+      "raw_items": 10,
+      "current": 10,
+      "public": 2,
+      "errors": []
+    },
+    {
+      "source_id": "proc-cn-ggzy",
+      "http": null,
+      "live_status": "HTTP_FAIL",
+      "raw_items": 0,
+      "current": 0,
+      "public": 0,
+      "errors": [
+        "TypeError: fetch failed"
+      ]
+    },
+    {
+      "source_id": "proc-wb",
+      "http": 200,
+      "live_status": "BLOCKED_PUBLIC_ENDPOINT",
+      "raw_items": 0,
+      "current": 0,
+      "public": 0,
+      "errors": []
+    },
+    {
+      "source_id": "proc-un-ungm",
+      "http": 200,
+      "live_status": "BLOCKED_AUTH_SCOPE",
+      "raw_items": 0,
+      "current": 0,
+      "public": 0,
+      "errors": []
+    },
+    {
+      "source_id": "proc-us-sam",
+      "http": null,
+      "live_status": "FIXTURE_OK_LIVE_KEY_MISSING",
+      "raw_items": 0,
+      "current": 0,
+      "public": 0,
+      "errors": []
+    },
+    {
+      "source_id": "proc-kr-koneps",
+      "http": null,
+      "live_status": "FIXTURE_OK_LIVE_KEY_MISSING",
+      "raw_items": 0,
+      "current": 0,
+      "public": 0,
+      "errors": []
+    }
+  ]
+}

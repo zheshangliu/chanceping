@@ -10,4 +10,6 @@ export * from "./display";
 export * from "./translation-provider";
 export * from "./memo";
 export * from "./procurement";
+export * from "./procurement-sources";
+export * from "./procurement-registry";
 export * from "./public-deadline";

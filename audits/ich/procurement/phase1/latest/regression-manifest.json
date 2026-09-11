@@ -1,0 +1,11 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-regression-audit.v1",
+  "generated_at": "2026-09-11T00:46:51.513Z",
+  "environment": "development-isolated-copy",
+  "production_deployed": false,
+  "baseline_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+  "competition_public_unchanged": true,
+  "memo_unchanged": true,
+  "procurement_public": 7,
+  "fixture_items_excluded": 2
+}

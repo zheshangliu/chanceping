@@ -2,7 +2,7 @@ import { deduplicateOpportunityV2, opportunityStatus } from "./opportunity-pool"
 import { readOpportunityV2Translations } from "./display";
 import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import { isLikelySourceListingNoise } from "../ich/aggregation/adapters/generic-listing";
-import { isCraftRelevantProcurement } from "./procurement";
+import { isPublicProcurementText } from "./procurement-sources";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
 export type OpportunityV2StatusFilter = "browse" | "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history";
@@ -87,7 +87,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     // metadata is not safe to publish: it could be a supplier page, an award,
     // or an unrelated notice. Keep it in the Pool for later reconciliation,
     // but require the bounded procurement parser plus ICH relevance for Radar.
-    .filter((item) => item.category !== "procurement_project" || Boolean(item.procurement && item.procurement.direction !== "seller_offer" && isCraftRelevantProcurement(`${item.title} ${item.summary}`)))
+    .filter((item) => item.category !== "procurement_project" || isPublicProcurementText(`${item.title} ${item.summary}`, item.procurement, item.deadline, now))
     .filter((item) => query.include_irrelevant === true || item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
     .filter((item) => statusMatches(item, query.status, now))
     .filter((item) => !query.region || item.region === query.region)

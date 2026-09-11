@@ -1,0 +1,362 @@
+import { extractAnchors, extractDeadlineEvidence, htmlToText, identityHash, parseDateText, type ParsedAggregationItem, type ProcurementMetadata } from "../ich/aggregation/adapters/common";
+import { parseProcurementPayload, isCurrentProcurement, isCraftRelevantProcurement } from "./procurement";
+
+/**
+ * Small, source-aware procurement parsing boundary.
+ *
+ * The existing generic OCDS/CSV parser remains the fallback for the two
+ * already-seeded procurement feeds.  These adapters only add the first-phase
+ * sources whose public shapes are materially different; they do not change
+ * the OpportunityV2 pipeline or public UI contract.
+ */
+
+export type ProcurementAdapterFormat = "DEDICATED_HTML" | "OCDS_JSON" | "OCDS_JSONL" | "TED_JSON" | "PUBLIC_HTML";
+
+const SOURCE_LISTING_URLS: Record<string, string> = {
+  "proc-cn-ccgp": "https://www.ccgp.gov.cn/cggg/dfgg/index.htm",
+  "proc-cn-cib": "https://cg.cib.com.cn/cms/default/webfile/index.html",
+  "proc-cn-ggzy": "https://data.ggzy.gov.cn/",
+  "proc-global-ocp": "https://data.open-contracting.org/en/search/",
+  "proc-eu-ted": "https://api.ted.europa.eu/v3/notices/search",
+  "proc-us-sam": "https://api.sam.gov/opportunities/v2/search",
+  "proc-kr-koneps": "https://www.data.go.kr/data/15129394/openapi.do",
+  "proc-un-ungm": "https://www.ungm.org/Public/Notice",
+  "proc-wb": "https://projects.worldbank.org/en/projects-operations/procurement",
+};
+
+function asText(value: unknown): string {
+  if (typeof value === "string") return value.replace(/\s+/gu, " ").trim();
+  if (value == null) return "";
+  return String(value).replace(/\s+/gu, " ").trim();
+}
+
+function firstString(...values: unknown[]): string {
+  for (const value of values) {
+    const text = asText(value);
+    if (text) return text;
+  }
+  return "";
+}
+
+function metaContent(html: string, name: string): string {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const match = html.match(new RegExp(`<meta\\b[^>]*(?:name|property)=["']${escaped}["'][^>]*content=["']([^"']+)["'][^>]*>`, "iu"))
+    ?? html.match(new RegExp(`<meta\\b[^>]*content=["']([^"']+)["'][^>]*(?:name|property)=["']${escaped}["'][^>]*>`, "iu"));
+  return match ? htmlToText(match[1]) : "";
+}
+
+function pageTitle(html: string): string {
+  return firstString(
+    metaContent(html, "ArticleTitle"),
+    html.match(/<h1\b[^>]*class=["'][^"']*c-title[^"']*["'][^>]*>([\s\S]*?)<\/h1>/iu)?.[1],
+    html.match(/<[^>]+class=["'][^"']*c-title[^"']*["'][^>]*>[\s\S]*?<h1\b[^>]*>([\s\S]*?)<\/h1>/iu)?.[1],
+    html.match(/<h2\b[^>]*class=["'][^"']*tc[^"']*["'][^>]*>([\s\S]*?)<\/h2>/iu)?.[1],
+    html.match(/<title[^>]*>([\s\S]*?)<\/title>/iu)?.[1],
+  ).replace(/\s*(?:采购公告|供应商征集公告)\s*$/u, "").trim();
+}
+
+function pageText(html: string): string {
+  return htmlToText(html).replace(/\s+/gu, " ").trim();
+}
+
+function labeledText(text: string, labels: string[]): string {
+  const label = labels.map((value) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")).join("|");
+  const match = text.match(new RegExp(`(?:${label})\\s*[:：]?\\s*([^，,；;。\\n]{1,180})`, "iu"));
+  return match?.[1]?.trim() ?? "";
+}
+
+function parseMoney(text: string): { amount: number | null; currency: string | null } {
+  const match = text.match(/(?:预算金额|预算|estimated value|value)[^\d£$€¥￥]{0,40}(?:[£$€¥￥]\s*)?([\d,.]+)\s*(万元|万|元|人民币|GBP|USD|EUR|CNY|CAD)?/iu);
+  if (!match) return { amount: null, currency: null };
+  const base = Number(match[1].replace(/,/gu, ""));
+  if (!Number.isFinite(base)) return { amount: null, currency: null };
+  const unit = match[2]?.toUpperCase() ?? "";
+  return { amount: /万元|万/u.test(unit) ? base * 10000 : base, currency: /元|人民币/u.test(unit) ? "CNY" : unit || null };
+}
+
+function dateFromEvidence(text: string, context: string): { deadline: string | null; raw: string | null; kind: ParsedAggregationItem["deadline_kind"] } {
+  const evidence = extractDeadlineEvidence(text, new Date(), context);
+  const primary = evidence.find((candidate) => candidate.deadline_at) ?? evidence[0];
+  return { deadline: primary?.deadline_at ?? null, raw: primary?.raw_text ?? primary?.text ?? null, kind: primary?.kind ?? null };
+}
+
+function cibDeadlineFromEvidence(text: string, context: string): { deadline: string | null; raw: string | null; kind: ParsedAggregationItem["deadline_kind"] } {
+  const preferred = text.match(/(?:征集|寻源)(?:截止时间|截止日期)\s*[:：]?\s*((?:20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?|\d{1,2}[月./-]\d{1,2}日?)(?:\s*\d{1,2}[:：]\d{2})?)/u);
+  if (preferred) {
+    const deadline = parseDateText(preferred[1], new Date(), text);
+    if (deadline) return { deadline, raw: preferred[0], kind: "deadline" };
+  }
+  return dateFromEvidence(text, context);
+}
+
+function procurementStage(text: string, deadline: string | null, now = new Date()): ProcurementMetadata["stage"] {
+  if (/(?:项目|采购|征集|招标|合同|公告)[^。；;]{0,30}(?:取消|终止|撤销)|(?:取消|终止|撤销)[^。；;]{0,20}(?:项目|采购|征集|招标|合同|公告)|\b(?:cancel(?:led|ed)?|terminate(?:d)?|withdrawn)\b/iu.test(text)) return "cancelled";
+  const hasAwardSignal = /(?:中标|成交|结果公告|award(?:ed)?|contract(?:ed|\s+(?:signed|completed|award)))/iu.test(text) && !/contract\s+notice/iu.test(text);
+  const hypotheticalAward = /(?:若|如|如果|if)\s*(?:中标|成交|award)/iu.test(text);
+  if (hasAwardSignal && !hypotheticalAward) return "awarded";
+  if (deadline && new Date(deadline).getTime() < now.getTime()) return "closed";
+  if (/(?:预资格|资格预审|pre[- ]?qualification)/iu.test(text)) return "prequalification";
+  if (/(?:采购意向|market research|市场调研|prior information|计划)/iu.test(text)) return "planned";
+  return "open";
+}
+
+function procurementItem(args: {
+  sourceId: string;
+  sourceUrl: string;
+  detailUrl: string;
+  title: string;
+  text: string;
+  publishedAt?: string | null;
+  deadline?: string | null;
+  deadlineRaw?: string | null;
+  deadlineKind?: ParsedAggregationItem["deadline_kind"];
+  direction: ProcurementMetadata["direction"];
+  stage: ProcurementMetadata["stage"];
+  noticeType?: ProcurementMetadata["notice_type"];
+  projectId?: string | null;
+  buyer?: string | null;
+  method?: string | null;
+  budget?: { amount: number | null; currency: string | null };
+  region: "CN" | "GLOBAL";
+}): ParsedAggregationItem {
+  const projectId = args.projectId || identityHash(args.sourceId, args.detailUrl, args.title);
+  const deadline = args.deadline ?? null;
+  const metadata: ProcurementMetadata = {
+    direction: args.direction,
+    stage: args.stage,
+    notice_type: args.noticeType ?? "tender",
+    project_id: projectId,
+    buyer_name: args.buyer || null,
+    procurement_method: args.method || null,
+    budget_amount: args.budget?.amount ?? null,
+    budget_currency: args.budget?.currency ?? null,
+    milestones: [
+      ...(args.publishedAt ? [{ kind: "publication" as const, date: args.publishedAt }] : []),
+      ...(deadline ? [{ kind: "submission" as const, date: deadline, text: args.deadlineRaw ?? "submission deadline" }] : []),
+    ],
+    source_record_id: projectId,
+  };
+  return {
+    source_item_id: `${args.sourceId}:${projectId}`,
+    title: args.title,
+    source_category: "procurement_project",
+    source_status: args.stage,
+    detail_url: args.detailUrl,
+    source_url: args.sourceUrl,
+    published_at: args.publishedAt ?? null,
+    deadline_text: deadline ? args.deadlineRaw ?? deadline.slice(0, 10) : null,
+    deadline_at: deadline,
+    deadline_source_url: deadline ? args.detailUrl : null,
+    deadline_raw_text: args.deadlineRaw ?? null,
+    deadline_checked_at: deadline ? new Date().toISOString() : null,
+    deadline_resolution: deadline ? "found_detail" : "source_has_no_date",
+    deadline_kind: args.deadlineKind ?? "deadline",
+    organizer: args.buyer ?? null,
+    application_url: args.detailUrl,
+    raw_text: args.text.slice(0, 12000),
+    participation_scope: args.region === "GLOBAL" ? "global" : "nationwide",
+    procurement: metadata,
+  };
+}
+
+function parseCcgPDetail(html: string, sourceUrl: string, detailUrl = sourceUrl, now = new Date()): ParsedAggregationItem | null {
+  const text = pageText(html);
+  const title = pageTitle(html);
+  if (!title) return null;
+  const deadlineEvidence = dateFromEvidence(text, title);
+  const published = firstString(metaContent(html, "PubDate"), text.match(/公告时间\s*[:：]?\s*(20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}(?:日)?(?:\s+\d{1,2}[:：]\d{2})?)/u)?.[1]);
+  const publishedAt = parseDateText(published, now, text);
+  const buyer = labeledText(text, ["采购单位", "采购人"]);
+  const projectId = labeledText(text, ["项目编号"]);
+  const method = labeledText(text, ["采购方式"]);
+  const budget = parseMoney(text);
+  return procurementItem({ sourceId: "proc-cn-ccgp", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "buyer_demand", stage: procurementStage(text, deadlineEvidence.deadline, now), noticeType: /磋商/u.test(text) ? "tender" : "tender", projectId: projectId || null, buyer: buyer || null, method: method || null, budget: { amount: budget.amount, currency: budget.currency ?? "CNY" }, region: "CN" });
+}
+
+function parseCibDetail(html: string, sourceUrl: string, detailUrl = sourceUrl, now = new Date()): ParsedAggregationItem | null {
+  const text = pageText(html);
+  const title = pageTitle(html);
+  if (!title) return null;
+  const deadlineEvidence = cibDeadlineFromEvidence(text, title);
+  const published = firstString(text.match(/发布日期\s*[:：]?\s*(20\d{2}[-./]\d{1,2}[-./]\d{1,2})/u)?.[1]);
+  const publishedAt = parseDateText(published, now, text);
+  const projectId = detailUrl.match(/\/([^/]+)\.html(?:$|\?)/iu)?.[1] ?? null;
+  const sourcingOpen = /(?:供应商征集|供应商报名|寻源|征集报名)/iu.test(text)
+    && (!deadlineEvidence.deadline || new Date(deadlineEvidence.deadline).getTime() >= now.getTime());
+  const stage = sourcingOpen ? "open" : procurementStage(text, deadlineEvidence.deadline, now);
+  return procurementItem({ sourceId: "proc-cn-cib", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "supplier_application", stage, noticeType: "tender", projectId, buyer: labeledText(text, ["采购单位", "采购人"]) || null, method: "supplier sourcing", budget: parseMoney(text), region: "CN" });
+}
+
+function parseHtmlListing(sourceId: string, html: string, sourceUrl: string): ParsedAggregationItem[] {
+  const anchors = extractAnchors(html, sourceUrl);
+  const allowed = sourceId === "proc-cn-ccgp" ? /\/cggg\//iu : sourceId === "proc-cn-cib" ? /\/gyszj\/\d{8}\/[^/]+\.html(?:$|\?)/iu : /(?:采购|招标|tender|notice|公告)/iu;
+  const seen = new Set<string>();
+  return anchors.flatMap((anchor) => {
+    if (!allowed.test(anchor.href) || seen.has(anchor.href)) return [];
+    seen.add(anchor.href);
+    const text = `${anchor.text} ${anchor.href}`;
+    const stage = procurementStage(text, null);
+    const direction: ProcurementMetadata["direction"] = sourceId === "proc-cn-cib" ? "supplier_application" : "buyer_demand";
+    return [procurementItem({ sourceId, sourceUrl, detailUrl: anchor.href, title: anchor.text, text, direction, stage, region: sourceId === "proc-cn-cib" || sourceId === "proc-cn-ccgp" ? "CN" : "GLOBAL" })];
+  });
+}
+
+function stringValue(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value.map(stringValue).find(Boolean) ?? "";
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return firstString(record.eng, record.en, record.english, record.zh, record.zho, record.fra, ...Object.values(record));
+  }
+  return "";
+}
+
+function parseOcdsRecord(raw: Record<string, unknown>, sourceId: string, sourceUrl: string, region: "CN" | "GLOBAL", now = new Date()): ParsedAggregationItem | null {
+  const tender = raw.tender && typeof raw.tender === "object" ? raw.tender as Record<string, unknown> : raw;
+  const buyer = raw.buyer && typeof raw.buyer === "object" ? raw.buyer as Record<string, unknown> : {};
+  const title = firstString(tender.title, raw.title, raw.bidNtceNm, raw.title_eng, raw["title-titre-eng"], raw.description);
+  if (!title) return null;
+  const description = firstString(tender.description, raw.description, raw.summary);
+  const text = `${title} ${description}`.replace(/\s+/gu, " ").trim();
+  const tenderPeriod = tender.tenderPeriod && typeof tender.tenderPeriod === "object" ? tender.tenderPeriod as Record<string, unknown> : {};
+  const deadline = parseDateText(firstString(tenderPeriod.endDate, raw.tenderClosingDate, raw.deadline, raw.responseDeadLine, raw.bidClseDt), now, text);
+  const projectId = firstString(raw.ocid, raw.id, raw.project_id, raw.noticeId, raw.solicitationNumber, raw.bidNtceNo) || null;
+  const documents = Array.isArray(tender.documents) ? tender.documents : Array.isArray(raw.documents) ? raw.documents : [];
+  const official = documents.map((value) => value && typeof value === "object" ? stringValue((value as Record<string, unknown>).url) : "").find((value) => /^https?:/iu.test(value)) ?? "";
+  const embeddedOfficial = (text.match(/https?:\/\/(?:www\.)?sell2wales\.gov\.wales\/[^\s)]+/iu)?.[0] ?? "").replace(/[.,;:]+$/u, "");
+  const canonicalLink = Array.isArray(raw.links)
+    ? raw.links.map((value) => value && typeof value === "object" ? firstString((value as Record<string, unknown>).href, (value as Record<string, unknown>).url) : "").find((value) => /^https?:/iu.test(value)) ?? ""
+    : "";
+  const detailUrl = official || embeddedOfficial || canonicalLink || firstString(raw.url, raw.publication_url, raw.uiLink, raw.bidNtceUrl, sourceId === "proc-us-sam" && projectId ? `https://sam.gov/opp/${projectId}/view` : "", sourceUrl);
+  const status = firstString(tender.status, raw.status);
+  const hasAwardOrContract = (Array.isArray(raw.awards) && raw.awards.length > 0) || (Array.isArray(raw.contracts) && raw.contracts.length > 0);
+  const stage = hasAwardOrContract ? "awarded" : procurementStage(`${status} ${text}`, deadline, now);
+  return procurementItem({ sourceId, sourceUrl, detailUrl, title, text, publishedAt: parseDateText(firstString(raw.date, raw.datePublished, raw.publishedDate, raw.postedDate, raw.bidNtceDt), now, text), deadline, deadlineRaw: deadline ? `tender deadline ${deadline.slice(0, 10)}` : null, direction: "buyer_demand", stage, noticeType: stage === "awarded" ? "award" : "tender", projectId, buyer: firstString(stringValue(buyer.name), raw.fullParentPathName, raw.department, raw.dminsttNm), method: stringValue(tender.procurementMethod ?? raw.type), budget: parseMoney(text), region });
+}
+
+function parseOcdsText(text: string, sourceId: string, sourceUrl: string, region: "CN" | "GLOBAL", now = new Date()): ParsedAggregationItem[] {
+  const records: Record<string, unknown>[] = [];
+  try {
+    const root = JSON.parse(text) as Record<string, unknown>;
+    if (Array.isArray(root.releases)) records.push(...root.releases.filter((x): x is Record<string, unknown> => Boolean(x && typeof x === "object")));
+    else if (Array.isArray(root.records)) records.push(...root.records.filter((x): x is Record<string, unknown> => Boolean(x && typeof x === "object")));
+    else if (Array.isArray(root.notices)) records.push(...root.notices.filter((x): x is Record<string, unknown> => Boolean(x && typeof x === "object")));
+    else if (Array.isArray(root.opportunitiesData)) records.push(...root.opportunitiesData.filter((x): x is Record<string, unknown> => Boolean(x && typeof x === "object")));
+    else if (Array.isArray(root.data)) records.push(...root.data.filter((x): x is Record<string, unknown> => Boolean(x && typeof x === "object")));
+    else if (root.ocid || root.title || root.bidNtceNm || root.noticeId) records.push(root);
+  } catch {
+    for (const line of text.split(/\r?\n/gu).map((value) => value.trim()).filter(Boolean)) {
+      try { const value = JSON.parse(line); if (value && typeof value === "object") records.push(value as Record<string, unknown>); } catch { /* not JSONL */ }
+    }
+  }
+  const unique = new Map<string, ParsedAggregationItem>();
+  for (const record of records) {
+    const item = parseOcdsRecord(record, sourceId, sourceUrl, region, now);
+    if (item) unique.set(item.source_item_id, item);
+  }
+  return [...unique.values()];
+}
+
+function parseTedNotice(raw: Record<string, unknown>, sourceUrl: string, now = new Date()): ParsedAggregationItem | null {
+  const title = stringValue(raw.TI ?? raw.title ?? raw.noticeTitle);
+  if (!title) return null;
+  const id = firstString(raw.ND, raw.noticeId, raw.id) || identityHash("proc-eu-ted", title);
+  const deadlineValue = Array.isArray(raw.DT) ? raw.DT[0] : firstString(raw.DT, raw.deadline, raw.responseDeadline);
+  const published = firstString(raw.PD, raw.publicationDate, raw.publishedDate);
+  const deadline = parseDateText(deadlineValue, now, title);
+  const publishedAt = parseDateText(published, now, title);
+  const text = `${title} ${stringValue(raw.DS ?? raw.description ?? "")}`;
+  const country = stringValue(raw.CY ?? raw.country ?? "");
+  const detailUrl = firstString(raw.url, raw.officialUrl, `https://ted.europa.eu/en/notice/-/detail/${id}`);
+  return procurementItem({ sourceId: "proc-eu-ted", sourceUrl, detailUrl, title, text, publishedAt, deadline, deadlineRaw: deadline ? `deadline ${deadline.slice(0, 10)}` : null, direction: "buyer_demand", stage: procurementStage(`${stringValue(raw.TD)} ${stringValue(raw.FT)} ${text}`, deadline, now), noticeType: "tender", projectId: id, buyer: stringValue(raw.buyer ?? raw.BY ?? ""), method: stringValue(raw.procedure ?? ""), budget: parseMoney(text), region: country ? "GLOBAL" : "GLOBAL" });
+}
+
+function parseTedText(text: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
+  try {
+    const root = JSON.parse(text) as Record<string, unknown>;
+    return (Array.isArray(root.notices) ? root.notices : []).flatMap((value) => value && typeof value === "object" ? [parseTedNotice(value as Record<string, unknown>, sourceUrl, now)].filter((item): item is ParsedAggregationItem => Boolean(item)) : []);
+  } catch { return []; }
+}
+
+function parseWorldBankHtml(html: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
+  const items: ParsedAggregationItem[] = [];
+  for (const row of html.matchAll(/<tr\b[\s\S]*?<\/tr>/giu)) {
+    const cells = [...row[0].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/giu)].map((match) => htmlToText(match[1]));
+    if (cells.length < 3 || /description|country|project title/iu.test(cells.join(" "))) continue;
+    const detail = row[0].match(/href=["']([^"']+)["']/iu)?.[1] ?? sourceUrl;
+    const title = cells[0];
+    const text = cells.join(" | ");
+    const stage = procurementStage(`${cells[3] ?? ""} ${text}`, null, now);
+    items.push(procurementItem({ sourceId: "proc-wb", sourceUrl, detailUrl: new URL(detail, sourceUrl).toString(), title, text, publishedAt: parseDateText(cells[4] ?? "", now, text), direction: "buyer_demand", stage, noticeType: "tender", projectId: identityHash("proc-wb", title, detail), buyer: cells[1] || null, region: "GLOBAL" }));
+  }
+  return items;
+}
+
+function parseGgzyHtml(html: string, sourceUrl: string): ParsedAggregationItem[] {
+  return parseHtmlListing("proc-cn-ggzy", html, sourceUrl).filter((item) => isCraftRelevantProcurement(`${item.title} ${item.raw_text}`));
+}
+
+function parseUngmHtml(html: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
+  const items: ParsedAggregationItem[] = [];
+  for (const anchor of extractAnchors(html, sourceUrl)) {
+    if (!/\/Public\/Notice\//iu.test(anchor.href) || !anchor.text || anchor.text.length < 8) continue;
+    items.push(procurementItem({ sourceId: "proc-un-ungm", sourceUrl, detailUrl: anchor.href, title: anchor.text, text: anchor.text, direction: "buyer_demand", stage: "open", noticeType: "tender", projectId: identityHash("proc-un-ungm", anchor.href), region: "GLOBAL" }));
+  }
+  return items;
+}
+
+export function parseProcurementSource(sourceId: string, payload: string, sourceUrl = SOURCE_LISTING_URLS[sourceId] ?? "", now = new Date()): ParsedAggregationItem[] {
+  if (sourceId === "proc-cn-ccgp") {
+    const detail = /(?:ArticleTitle|项目编号|采购单位|响应文件(?:接收)?截止时间)/iu.test(payload) ? parseCcgPDetail(payload, sourceUrl, sourceUrl, now) : null;
+    return detail ? [detail] : parseHtmlListing(sourceId, payload, sourceUrl);
+  }
+  if (sourceId === "proc-cn-cib") {
+    const detail = /(?:class=["'][^"']*c-title|发布日期|征集截止时间|寻源截止时间)/iu.test(payload) ? parseCibDetail(payload, sourceUrl, sourceUrl, now) : null;
+    return detail ? [detail] : parseHtmlListing(sourceId, payload, sourceUrl);
+  }
+  if (sourceId === "proc-cn-ggzy") return parseGgzyHtml(payload, sourceUrl);
+  if (sourceId === "proc-global-ocp") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
+  if (sourceId === "proc-eu-ted") return parseTedText(payload, sourceUrl, now);
+  if (sourceId === "proc-us-sam") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
+  if (sourceId === "proc-kr-koneps") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
+  if (sourceId === "proc-wb") return parseWorldBankHtml(payload, sourceUrl, now);
+  if (sourceId === "proc-un-ungm") return parseUngmHtml(payload, sourceUrl, now);
+  return parseProcurementPayload(payload, sourceId, sourceUrl, sourceId.startsWith("proc-cn-") ? "CN" : "GLOBAL");
+}
+
+/** Detail parser used by the existing bounded enrichment pass. */
+export function parseProcurementDetail(sourceId: string, payload: string, detailUrl: string, now = new Date()): ParsedAggregationItem | null {
+  if (sourceId === "proc-cn-ccgp") return parseCcgPDetail(payload, SOURCE_LISTING_URLS[sourceId], detailUrl, now);
+  if (sourceId === "proc-cn-cib") return parseCibDetail(payload, SOURCE_LISTING_URLS[sourceId], detailUrl, now);
+  return parseProcurementSource(sourceId, payload, detailUrl, now)[0] ?? null;
+}
+
+/** Public gate for procurement cards; internal Pool records are not deleted. */
+export function isPublicProcurementOpportunity(item: ParsedAggregationItem, now = new Date()): boolean {
+  if (!isCurrentProcurement(item)) return false;
+  return isPublicProcurementText(`${item.title} ${item.raw_text}`, item.procurement, item.deadline_at, now);
+}
+
+export function isPublicProcurementText(text: string, procurement?: { direction?: string; stage?: string }, deadline?: string | null, now = new Date()): boolean {
+  if (procurement && !["buyer_demand", "supplier_application", "market_engagement"].includes(procurement.direction ?? "")) return false;
+  if (procurement && ["awarded", "closed", "cancelled"].includes(procurement.stage ?? "")) return false;
+  if (/(?:建筑工程|工程施工|施工总承包|装修(?:工程|项目)?|土建工程|道路工程|桥梁工程|水利工程|机电安装|改造工程|construction(?:[- ]only)?|renovation(?:[- ]only)?|civil works|general construction|building works|building maintenance|adaptation works|construction manager|highway|건설|토목|리모델링 공사|인테리어 공사)/iu.test(text)) return false;
+  if (/(?:服务器|交换机|防火墙|软件系统|网络设备|信息化平台|数据库|机房|金融终端|generic IT|software development|software licence|backup solution|digital weight management|technology and associated services|소프트웨어 개발|네트워크 장비)/iu.test(text)) return false;
+  if (/(?:保洁|清洁服务|食堂|餐饮服务|物业服务|cleaning|catering|portable toilets|security service|医疗|medical|dental|oral surgery|palliative care|mental health|care services|childcare|prison|health board|청소|구내식당)/iu.test(text)) return false;
+  if (/(?:车辆(?:采购|租赁|服务|购买)|车队(?:采购|租赁)|汽车(?:采购|租赁)|\b(?:vehicles?|fleet)\b|farming|fishery|council tax|telephone system|licen[cs]es?|finance support|insurance|legal support|staffing|estate management|refrigeration|endoscopes|engineering services|data centre|energy|housing|highways?|fire training|social care|consultancy|audio equipment|lighting equipment|AV design and installation|miscellaneous furnishing|office furniture|furniture)/iu.test(text)) return false;
+  if (deadline && new Date(deadline).getTime() < now.getTime()) return false;
+  const craftRelevant = isCraftRelevantProcurement(text);
+  const culturalEvent = /(?:文化|展演|博览会|节庆|艺术|旅游|cultural|heritage|museum|gallery|theatre|pavilion|castle)/iu.test(text)
+    && /(?:展演|博览会|节庆|艺术|旅游|cultural trust|exhibition|event production|event|festival|theatre|pantomime|signage|wayfinding|design|craft|heritage|museum|gallery|pavilion)/iu.test(text);
+  return craftRelevant && !/(?:^|\s)cultural\s+(?:contributions?|study|research|services?)(?:\s|$)/iu.test(text) || culturalEvent;
+}
+
+export function procurementSourceListingUrl(sourceId: string): string {
+  return SOURCE_LISTING_URLS[sourceId] ?? "";
+}
+
+export function procurementSourceIds(): string[] {
+  return Object.keys(SOURCE_LISTING_URLS);
+}
+
+export { isCurrentProcurement };

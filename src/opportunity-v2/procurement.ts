@@ -153,5 +153,5 @@ export function isCurrentProcurement(item: ParsedAggregationItem): boolean {
 
 /** Narrow ICH domain guard; generic public procurement remains auditable in the pool but is not presented as an ICH opportunity. */
 export function isCraftRelevantProcurement(text: string): boolean {
-  return /\b(?:craft|heritage|cultural|museum|gallery|gift|souvenir|handmade|textile|ceramic|pottery|jewell?ery|fashion|exhibition|tourism)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|文创|非遗|手工|工艺|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|文旅|市集|工艺品|纪念品/iu.test(text);
+  return /\b(?:craft|heritage|cultural|museum|gallery|gift|souvenir|handmade|textile|ceramic|pottery|jewell?ery|fashion|exhibition|tourism|floral|flowers|flower\s+arrangement|plants|plant\s+rental|indoor\s+plants|event\s+management|event\s+production)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|文创|非遗|手工|工艺|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|文旅|市集|工艺品|纪念品|鲜花|花艺|绿植|植物布置|绿植租赁|节庆花卉|文化행사|무형유산|전통공예|공예|기념품|홍보물|관광상품|전시|행사운영|문화콘텐츠|화훼|꽃장식|식물임대/iu.test(text);
 }

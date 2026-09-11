@@ -9,7 +9,7 @@ import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artc
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { enrichGenericItem, isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
-import { parseProcurementPayload, isCurrentProcurement } from "./procurement";
+import { parseProcurementSource, parseProcurementDetail, isCurrentProcurement } from "./procurement-sources";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { findOpportunityV2Source, isPublicHttpUrl, isPublicIp, migrateOpportunityV2Sources, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
@@ -172,7 +172,7 @@ function writeHealth(rows: OpportunityV2SourceHealth[], filePath?: string): void
 
 function parseSource(source: OpportunityV2Source, text: string, listingUrl: string): { items: ParsedAggregationItem[]; format: "DEDICATED" | "RSS" | "HTML_LISTING" | null } {
   if (source.id.startsWith("proc-")) {
-    const parsed = parseProcurementPayload(text, source.id, listingUrl, source.region).filter(isCurrentProcurement);
+    const parsed = parseProcurementSource(source.id, text, listingUrl).filter(isCurrentProcurement);
     return { items: parsed, format: parsed.length ? "DEDICATED" : null };
   }
   try {
@@ -284,9 +284,12 @@ async function enrichDetailDates(source: OpportunityV2Source, items: ParsedAggre
         item.deadline_checked_at = new Date().toISOString();
         continue;
       }
+      const procurementDetail = source.id.startsWith("proc-") ? parseProcurementDetail(source.id, response.text, item.detail_url) : null;
       const parsed = source.id === "cfw-cultural-ip" ? parseCfwDetailDate(response.text) : null;
       const enriched = parsed
         ? { ...item, deadline_text: parsed.raw, deadline_at: parsed.deadlineAt, raw_text: `${item.raw_text} ${parsed.raw}`.trim().slice(0, 8000) }
+        : procurementDetail
+        ? procurementDetail
         : (detailEnricher ? detailEnricher(item, response.text, item.detail_url) : enrichGenericItem(item, response.text, item.detail_url));
       Object.assign(item, enriched);
       item.deadline_source_url = item.detail_url;

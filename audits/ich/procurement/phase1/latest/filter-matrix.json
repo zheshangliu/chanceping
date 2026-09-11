@@ -1,0 +1,10 @@
+{
+  "rejected_construction_only": 29,
+  "rejected_generic_it": 5,
+  "rejected_cleaning_catering": 28,
+  "rejected_closed": 93,
+  "rejected_awarded": 237,
+  "rejected_cancelled": 0,
+  "seller_offer_leakage": 0,
+  "public_encoding_errors": 0
+}
