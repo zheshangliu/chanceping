@@ -6,8 +6,16 @@
   "verify_ich_procurement": "PASS",
   "verify_opportunity_v2": "PASS",
   "verify_ich_procurement_phase1_2a": "PASS",
+  "verify_v15": "PASS (via verify:all)",
+  "verify_v15_e2e": "PASS (via verify:all)",
+  "verify_v16": "PASS (via verify:all)",
+  "verify_ich_encoding": "PASS",
+  "verify_ich_deadline_conflict": "PASS",
+  "verify_ich_unsafe_deadline_public": "PASS",
+  "verify_ich_competition_module": "PASS",
+  "verify_ich_v12": "FAIL (pre-existing baseline assertion: expected no ich-memo-mobile; this task changed neither the test nor the UI)",
   "legacy_and_targeted_tests": "PASS",
   "main_pipeline_live_parity": "PASS",
   "production_deployed": false,
-  "notes": "All listed commands were run against the committed candidate; production was not deployed or mutated."
+  "notes": "All procurement and shared-pipeline gates passed against the committed candidate. verify:ich:v12 remains a pre-existing UI assertion mismatch and is outside this procurement-only change; production was not deployed or mutated."
 }

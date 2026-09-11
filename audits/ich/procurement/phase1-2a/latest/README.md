@@ -15,4 +15,6 @@ This audit uses the shared OpportunityV2 main pipeline against five enabled copi
 - `npm run verify:all`: PASS
 - Procurement Phase 1, Phase 1.1, and OpportunityV2 regression: PASS
 - Phase 1.2A contract/idempotency fixture: PASS
+- Encoding, deadline-conflict, unsafe-deadline-public, and competition-module checks: PASS
+- `verify:ich:v12`: FAIL on an unchanged baseline UI assertion (`ich-memo-mobile`); no UI files were modified in this task
 - Production deployment, source migration, scheduler execution: NOT RUN
