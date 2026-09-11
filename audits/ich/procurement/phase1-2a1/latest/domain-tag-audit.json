@@ -101,5 +101,5 @@
       ]
     }
   ],
-  "negative_fixture_blocked": "RUN_SEPARATELY"
+  "negative_fixture_blocked": true
 }
