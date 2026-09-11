@@ -1,0 +1,35 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-deployment.v1",
+  "attempted_at": "2026-09-11T05:31:59Z",
+  "deployment_head": "f25cacd7372e7a7496a8c6f9bcc317fc66076aef",
+  "deployment_revision": "/opt/chanceping/releases/20260911T053159Z-f25cacd7372e",
+  "production_deployed": true,
+  "rolled_back": true,
+  "rollback_at": "2026-09-11T05:33:00Z",
+  "current_production_commit_after_rollback": "7cdf6cb4a0f3517235ed51dfc885eb77c656308e",
+  "current_release_after_rollback": "/opt/chanceping/releases/20260910T234032Z-7cdf6cb4a0f3",
+  "previous_release_before_attempt": "/opt/chanceping/releases/20260910T234032Z-7cdf6cb4a0f3",
+  "dns_changed": false,
+  "source_migration": {
+    "attempted": false,
+    "before": 33,
+    "after": 33,
+    "added_ids": [],
+    "reason": "Stopped before runtime mutation because the existing production OpportunityV2 pipeline has no POST/gzip path for the Phase 1.2 sources."
+  },
+  "ready_core": [
+    "proc-cn-ccgp",
+    "proc-cn-cib",
+    "proc-global-ocp",
+    "proc-eu-ted",
+    "proc-wb"
+  ],
+  "must_remain_disabled": [
+    "proc-us-sam",
+    "proc-kr-koneps",
+    "proc-un-ungm",
+    "proc-cn-ggzy"
+  ],
+  "rollback_reason": "Production wiring Gate failed: main scheduler is GET-only, while TED requires POST and OCP Phase 1.1 data is gzip JSONL; no safe existing production path was available without business-code changes.",
+  "rollback_health": 200
+}

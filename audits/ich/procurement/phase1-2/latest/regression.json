@@ -1,0 +1,34 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-regression.v1",
+  "environment": "production-after-rollback",
+  "production_run": false,
+  "before": {
+    "production_commit": "7cdf6cb4a0f3517235ed51dfc885eb77c656308e",
+    "source_count": 33,
+    "pool_items": 2241,
+    "competition_public": 206,
+    "memo_total": 535,
+    "procurement_public": 0,
+    "loewe_visible": 1
+  },
+  "after_rollback": {
+    "production_commit": "7cdf6cb4a0f3517235ed51dfc885eb77c656308e",
+    "source_count": 33,
+    "pool_items": 2241,
+    "competition_public": 206,
+    "memo_total": 535,
+    "procurement_public": 0,
+    "loewe_visible": 1
+  },
+  "checks": {
+    "existing_source_membership_loss": 0,
+    "competition_unexplained_loss": 0,
+    "memo_parity": true,
+    "loewe_regression": false,
+    "runtime_files_changed": false,
+    "public_encoding_errors": 0,
+    "public_unsafe_exact_deadline_display": 0,
+    "procurement_leakage": 0
+  },
+  "status": "PASS_AFTER_ROLLBACK"
+}

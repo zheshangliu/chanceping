@@ -1,0 +1,24 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-smoke.v1",
+  "environment": "production-after-rollback",
+  "observed_at": "2026-09-11T05:40:51Z",
+  "all_http_200": true,
+  "http": {
+    "/health": 200,
+    "/ich": 200,
+    "/ich/memo": 200,
+    "/ich/memo.json": 200,
+    "/ich/memo.md": 200,
+    "/api/opportunity-v2/radar": 200,
+    "/opportunity-v2/admin/sources": 200
+  },
+  "timer": {
+    "enabled": true,
+    "active": true,
+    "interval": "72h",
+    "persistent": true,
+    "next_run_at": "2026-09-13T07:42:14.083Z",
+    "note": "Application scheduler.json supplied the wall-clock next run; systemd exposed only the monotonic next-elapse"
+  },
+  "status": "PASS_AFTER_ROLLBACK"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-rollback-readiness.v1",
+  "rollback_git_sha": "7cdf6cb4a0f3517235ed51dfc885eb77c656308e",
+  "rollback_deployment_revision": "/opt/chanceping/releases/20260910T234032Z-7cdf6cb4a0f3",
+  "runtime_backup": "/var/lib/chanceping/backups/opportunity-v2-phase1-2-pre-20260911T053139Z",
+  "source_registry_backup": "/var/lib/chanceping/backups/opportunity-v2-phase1-2-pre-20260911T053139Z/sources.json",
+  "source_level_disable_available": true,
+  "full_rollback_available": true,
+  "rollback_triggered": true,
+  "rollback_path_verified": true,
+  "health_after_rollback": 200,
+  "runtime_file_comparison": {
+    "sources.json": "SAME",
+    "opportunities.json": "SAME",
+    "source-health.json": "SAME",
+    "translations.json": "SAME",
+    "scheduler.json": "SAME"
+  }
+}

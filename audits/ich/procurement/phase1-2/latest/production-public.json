@@ -1,0 +1,41 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-production-public.v1",
+  "environment": "production-after-rollback",
+  "observed_at": "2026-09-11T05:40:51Z",
+  "current_release": "/opt/chanceping/releases/20260910T234032Z-7cdf6cb4a0f3",
+  "source_count": 33,
+  "pool_items": 2241,
+  "competition_public": 206,
+  "competition_cn": 198,
+  "competition_global": 8,
+  "memo_total": 535,
+  "memo_known_deadlines": 441,
+  "memo_unknown_deadlines": 94,
+  "procurement_public": 0,
+  "loewe": {
+    "visible": 1,
+    "id": "oppv2_ffd0150901943a85c55a91ca",
+    "discovered_by_sources": ["loewe-craft-prize", "asef-culture360-opportunities"]
+  },
+  "public_encoding_errors": 0,
+  "public_unsafe_exact_deadline_display": 0,
+  "endpoints": {
+    "/health": 200,
+    "/ich": 200,
+    "/ich/memo": 200,
+    "/ich/memo.json": 200,
+    "/ich/memo.md": 200,
+    "/api/opportunity-v2/radar?category=competition": 200,
+    "/api/opportunity-v2/radar?category=procurement_project": 200,
+    "/api/opportunity-v2/sources": 200,
+    "/opportunity-v2/admin/sources": 200
+  },
+  "memo_parity": {
+    "json_items": 535,
+    "markdown_ids": 535,
+    "json_markdown_parity": true,
+    "html_prefix_items": 50,
+    "html_prefix_missing": 0,
+    "html_prefix_parity": true
+  }
+}

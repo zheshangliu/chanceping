@@ -1,0 +1,28 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-source-results.v1",
+  "environment": "development-isolated-copy",
+  "production_run": false,
+  "observed_at": "2026-09-11T05:23:24.200Z",
+  "runner": "scripts/run-ich-procurement-phase1.ts",
+  "summary": {
+    "registry_sources": 9,
+    "ready_core_sources": 5,
+    "ready_core_successful": 5,
+    "raw": 1369,
+    "current": 223,
+    "public_candidate": 8,
+    "duplicates_collapsed": 0,
+    "volume_circuit_breaker": "PASS"
+  },
+  "sources": [
+    { "source_id": "proc-cn-ccgp", "status": "LIVE_OK", "http": 200, "raw": 5, "current": 4, "public": 2, "canonical_evidence": 5, "official_backlinks": 0 },
+    { "source_id": "proc-cn-cib", "status": "LIVE_OK", "http": 200, "raw": 3, "current": 1, "public": 1, "canonical_evidence": 3, "official_backlinks": 3 },
+    { "source_id": "proc-global-ocp", "status": "LIVE_OK", "http": 200, "raw": 353, "current": 26, "public": 2, "canonical_evidence": 353, "official_backlinks": 272, "note": "isolated runner downloaded and decompressed the verified 2026 JSONL; this was not executed in production" },
+    { "source_id": "proc-eu-ted", "status": "LIVE_OK", "http": 200, "raw": 10, "current": 10, "public": 2, "canonical_evidence": 10, "official_backlinks": 10, "note": "isolated runner used the verified POST search request; production pipeline is GET-only" },
+    { "source_id": "proc-wb", "status": "LIVE_OK", "http": 200, "raw": 998, "current": 182, "public": 1, "canonical_evidence": 998, "official_backlinks": 998 },
+    { "source_id": "proc-cn-ggzy", "status": "HTTP_FAIL", "http": null, "raw": 0, "current": 0, "public": 0, "disabled": true, "blocker": "no bounded structured public endpoint confirmed" },
+    { "source_id": "proc-us-sam", "status": "FIXTURE_OK_LIVE_KEY_MISSING", "http": null, "raw": 0, "current": 0, "public": 0, "disabled": true, "blocker": "SAM_GOV_API_KEY missing" },
+    { "source_id": "proc-kr-koneps", "status": "FIXTURE_OK_LIVE_KEY_MISSING", "http": null, "raw": 0, "current": 0, "public": 0, "disabled": true, "blocker": "KONEPS_SERVICE_KEY missing" },
+    { "source_id": "proc-un-ungm", "status": "BLOCKED_AUTH_SCOPE", "http": 200, "raw": 0, "current": 0, "public": 0, "disabled": true, "blocker": "supplier-side public API scope not verified" }
+  ]
+}

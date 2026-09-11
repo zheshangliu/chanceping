@@ -1,0 +1,9 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-idempotency.v1",
+  "status": "NOT_RUN_BLOCKED",
+  "first_production_run": "NOT_RUN",
+  "second_production_run": "NOT_RUN",
+  "duplicate_opportunities_created": null,
+  "stable_source_record_ids": null,
+  "reason": "The rollout stopped before source migration because the current production OpportunityV2 Scheduler cannot safely execute the POST TED adapter or decompress the OCP gzip JSONL adapter without a business-code change."
+}

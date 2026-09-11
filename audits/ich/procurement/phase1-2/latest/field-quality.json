@@ -1,0 +1,26 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2-field-quality.v1",
+  "environment": "development-isolated-copy",
+  "production_run": false,
+  "ready_core_only": true,
+  "gates": {
+    "seller_offer_leakage": 0,
+    "awarded_public": 0,
+    "closed_public": 0,
+    "cancelled_public": 0,
+    "construction_only_public": 0,
+    "generic_it_public": 0,
+    "unsafe_exact_deadline": 0,
+    "fake_exact_deadline": 0,
+    "deadline_source_mismatch": 0,
+    "buyer_label_bleed": 0,
+    "project_id_label_bleed": 0,
+    "procurement_method_label_bleed": 0,
+    "missing_domain_tag": 0,
+    "known_country_as_global": 0,
+    "aggregator_public_without_official_evidence": 0,
+    "encoding_errors": 0
+  },
+  "all_zero": true,
+  "note": "Phase 1.1 field-quality gates were rechecked against the current isolated live run; no production procurement item was published."
+}
