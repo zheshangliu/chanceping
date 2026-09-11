@@ -116,15 +116,39 @@ export interface OpportunityV2RunResult {
   sources: OpportunityV2Source[];
   source_health: OpportunityV2SourceHealth[];
   radar_opportunities: OpportunityV2[];
+  request_traces?: OpportunityV2FetchTrace[];
 }
 
 export interface OpportunityV2FetchResponse {
   status: number;
   final_url: string;
   text: string;
+  trace?: OpportunityV2FetchTrace;
 }
 
-export type OpportunityV2Fetcher = (url: string) => Promise<OpportunityV2FetchResponse>;
+export interface OpportunityV2FetchOptions {
+  method?: "GET" | "POST";
+  headers?: Record<string, string>;
+  body?: string | Buffer;
+  decompress?: "auto" | "gzip" | "none";
+}
+
+/** Safe, secret-free transport facts retained for isolated audits. */
+export interface OpportunityV2FetchTrace {
+  source_id?: string;
+  method: "GET" | "POST";
+  request_url: string;
+  final_url: string;
+  status: number;
+  request_body_bytes: number;
+  content_type: string | null;
+  content_encoding: string | null;
+  response_bytes: number;
+  decompressed_bytes: number;
+  decompression: "gzip" | "none";
+}
+
+export type OpportunityV2Fetcher = (url: string, options?: OpportunityV2FetchOptions) => Promise<OpportunityV2FetchResponse>;
 
 // Short aliases keep the pool vocabulary convenient for adapters and callers.
 export type Source = OpportunityV2Source;

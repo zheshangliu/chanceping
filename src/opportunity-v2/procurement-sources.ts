@@ -1,5 +1,6 @@
 import { extractAnchors, extractDeadlineEvidence, htmlToText, identityHash, parseDateText, type ParsedAggregationItem, type ProcurementMetadata } from "../ich/aggregation/adapters/common";
 import { parseProcurementPayload, isCurrentProcurement, isCraftRelevantProcurement } from "./procurement";
+import type { OpportunityV2FetchOptions } from "./types";
 
 /**
  * Small, source-aware procurement parsing boundary.
@@ -23,6 +24,52 @@ const SOURCE_LISTING_URLS: Record<string, string> = {
   "proc-un-ungm": "https://www.ungm.org/Public/Notice",
   "proc-wb": "https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00979&resourceId=RS00909&type=json",
 };
+
+export const TED_PROCUREMENT_QUERY = "PD>=today(-7) AND PD<=today(0) AND FT~cultural";
+
+/**
+ * The acquisition boundary uses this small source-specific plan while the
+ * parser remains shared. Detail enrichment deliberately calls the same
+ * fetcher without a plan, so detail URLs stay ordinary bounded GETs.
+ */
+export function procurementFetchOptions(sourceId: string): OpportunityV2FetchOptions {
+  if (sourceId === "proc-eu-ted") {
+    return {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({
+        query: TED_PROCUREMENT_QUERY,
+        fields: ["ND", "TI", "PD", "DT", "FT", "DS", "CY"],
+        limit: 10,
+        paginationMode: "PAGE_NUMBER",
+        page: 1,
+      }),
+    };
+  }
+  if (sourceId === "proc-global-ocp") return { method: "GET", headers: { accept: "application/gzip" }, decompress: "gzip" };
+  return { method: "GET" };
+}
+
+export function worldBankRequestUrls(sourceUrl: string): { probe: string; latest: (count: number) => string } {
+  const base = new URL(sourceUrl);
+  base.searchParams.delete("top");
+  base.searchParams.delete("skip");
+  const probe = new URL(base);
+  probe.searchParams.set("top", "1");
+  return { probe: probe.toString(), latest: (count: number) => {
+    const latest = new URL(base);
+    latest.searchParams.set("top", "1000");
+    latest.searchParams.set("skip", String(Math.max(0, count - 1000)));
+    return latest.toString();
+  } };
+}
+
+export function parseWorldBankCount(payload: string): number {
+  const root = JSON.parse(payload) as { count?: unknown };
+  const count = Number(root.count);
+  if (!Number.isInteger(count) || count < 0) throw new Error("World Bank response did not provide a bounded count");
+  return count;
+}
 
 function asText(value: unknown): string {
   if (typeof value === "string") return value.replace(/\s+/gu, " ").trim();
@@ -257,6 +304,11 @@ function parseCibDetail(html: string, sourceUrl: string, detailUrl = sourceUrl, 
   const text = pageText(html);
   const title = pageTitle(html);
   if (!title) return null;
+  return parseCibContent(title, text, sourceUrl, detailUrl, now);
+}
+
+function parseCibContent(title: string, text: string, sourceUrl: string, detailUrl: string, now = new Date()): ParsedAggregationItem | null {
+  if (!title || !detailUrl) return null;
   const deadlineEvidence = cibDeadlineFromEvidence(text, title, now);
   const published = firstString(text.match(/发布日期\s*[:：]?\s*(20\d{2}[-./]\d{1,2}[-./]\d{1,2})/u)?.[1]);
   const publishedAt = parseProcurementDateText(published, now, text);
@@ -265,6 +317,24 @@ function parseCibDetail(html: string, sourceUrl: string, detailUrl = sourceUrl, 
     && (!deadlineEvidence.deadline || new Date(deadlineEvidence.deadline).getTime() >= now.getTime());
   const stage = sourcingOpen ? "open" : procurementStage(text, deadlineEvidence.deadline, now);
   return procurementItem({ sourceId: "proc-cn-cib", sourceUrl, detailUrl, title, text, publishedAt, deadline: deadlineEvidence.deadline, deadlineRaw: deadlineEvidence.raw, deadlineKind: deadlineEvidence.kind, direction: "supplier_application", stage, noticeType: "tender", projectId, buyer: labeledText(text, ["采购单位", "采购人"]) || null, method: "supplier sourcing", countryCode: "CN", countryName: "China", budget: parseMoney(text), region: "CN" });
+}
+
+function parseCibApiPayload(payload: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
+  try {
+    const root = JSON.parse(payload) as { res?: { rows?: Array<Record<string, unknown>> } };
+    const rows = Array.isArray(root.res?.rows) ? root.res.rows : [];
+    return rows.flatMap((row) => {
+      const title = asText(row.title);
+      const rawBody = asText(row.text);
+      const detailValue = firstString(row.url, row.detailUrl, row.link);
+      if (!title || !detailValue) return [];
+      const detailUrl = new URL(detailValue, sourceUrl).toString();
+      const item = parseCibContent(title, pageText(rawBody), sourceUrl, detailUrl, now);
+      return item ? [item] : [];
+    });
+  } catch {
+    return [];
+  }
 }
 
 function parseHtmlListing(sourceId: string, html: string, sourceUrl: string): ParsedAggregationItem[] {
@@ -461,10 +531,14 @@ function parseUngmHtml(html: string, sourceUrl: string, now = new Date()): Parse
 
 export function parseProcurementSource(sourceId: string, payload: string, sourceUrl = SOURCE_LISTING_URLS[sourceId] ?? "", now = new Date()): ParsedAggregationItem[] {
   if (sourceId === "proc-cn-ccgp") {
-    const detail = /(?:ArticleTitle|项目编号|采购单位|响应文件(?:接收)?截止时间)/iu.test(payload) ? parseCcgPDetail(payload, sourceUrl, sourceUrl, now) : null;
+    const detail = /<meta\b[^>]*(?:name|property)=["']ArticleTitle["']/iu.test(payload) ? parseCcgPDetail(payload, sourceUrl, sourceUrl, now) : null;
     return detail ? [detail] : parseHtmlListing(sourceId, payload, sourceUrl);
   }
   if (sourceId === "proc-cn-cib") {
+    if (/^\s*\{/u.test(payload)) {
+      const apiItems = parseCibApiPayload(payload, sourceUrl, now).filter(isCurrentProcurement);
+      if (apiItems.length) return apiItems;
+    }
     const detail = /(?:class=["'][^"']*c-title|发布日期|征集截止时间|寻源截止时间)/iu.test(payload) ? parseCibDetail(payload, sourceUrl, sourceUrl, now) : null;
     return detail ? [detail] : parseHtmlListing(sourceId, payload, sourceUrl);
   }
@@ -488,6 +562,9 @@ export function parseProcurementDetail(sourceId: string, payload: string, detail
 /** Public gate for procurement cards; internal Pool records are not deleted. */
 export function isPublicProcurementOpportunity(item: ParsedAggregationItem, now = new Date()): boolean {
   if (!isCurrentProcurement(item)) return false;
+  // The OCP registry is a discovery dataset. A record without a publisher
+  // notice URL may remain in the internal pool, but it is never a public card.
+  if (item.source_url.includes("data.open-contracting.org") && (!item.detail_url || item.detail_url.includes("data.open-contracting.org"))) return false;
   return isPublicProcurementText(`${item.title} ${item.raw_text}`, item.procurement, item.deadline_at, now);
 }
 

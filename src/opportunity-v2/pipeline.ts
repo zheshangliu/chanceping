@@ -4,21 +4,23 @@ import https from "node:https";
 import net from "node:net";
 import path from "node:path";
 import dns from "node:dns/promises";
+import { gunzipSync } from "node:zlib";
 import { getAggregationAdapter } from "../ich/aggregation/adapters";
 import { isRealArtConnectOpportunityUrl } from "../ich/aggregation/adapters/artconnect";
 import { parseRssItems } from "../ich/aggregation/adapters/rss";
 import { enrichGenericItem, isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../ich/aggregation/adapters/generic-listing";
 import { extractAnchors, type ParsedAggregationItem } from "../ich/aggregation/adapters/common";
-import { parseProcurementSource, parseProcurementDetail, isCurrentProcurement } from "./procurement-sources";
+import { parseProcurementSource, parseProcurementDetail, isCurrentProcurement, parseWorldBankCount, procurementFetchOptions, worldBankRequestUrls } from "./procurement-sources";
 import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, readOpportunityV2Pool, writeOpportunityV2Pool } from "./opportunity-pool";
 import { findOpportunityV2Source, isPublicHttpUrl, isPublicIp, migrateOpportunityV2Sources, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
-import type { OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
+import type { OpportunityV2FetchOptions, OpportunityV2FetchResponse, OpportunityV2FetchTrace, OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
 const DEFAULT_TIMEOUT_MS = 30_000;
-const MAX_RESPONSE_BYTES = 10_000_000;
+export const MAX_COMPRESSED_RESPONSE_BYTES = 10_000_000;
+export const MAX_DECOMPRESSED_RESPONSE_BYTES = 50_000_000;
 
 interface PinnedAddress {
   address: string;
@@ -39,9 +41,31 @@ async function resolvePublicAddress(target: string): Promise<PinnedAddress> {
   return { address: selected.address, family: selected.family as 4 | 6 };
 }
 
-async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ status: number; headers: http.IncomingHttpHeaders; text: string }> {
+function headerValue(headers: http.IncomingHttpHeaders, name: string): string {
+  const value = headers[name.toLowerCase()];
+  return Array.isArray(value) ? value.join(",") : String(value ?? "");
+}
+
+function bodyBuffer(value: string | Buffer | undefined): Buffer {
+  return value === undefined ? Buffer.alloc(0) : Buffer.isBuffer(value) ? value : Buffer.from(value);
+}
+
+interface PinnedResponse {
+  status: number;
+  headers: http.IncomingHttpHeaders;
+  body: Buffer;
+}
+
+async function fetchPinned(target: string, resolved: PinnedAddress, options: OpportunityV2FetchOptions = {}): Promise<PinnedResponse> {
   const parsed = new URL(target);
   const transport = parsed.protocol === "https:" ? https : http;
+  const requestBody = bodyBuffer(options.body);
+  const headers: Record<string, string> = {
+    "user-agent": "ChancePing-OpportunityV2/1.0",
+    accept: "text/html,application/rss+xml,application/json,application/xml;q=0.9,*/*;q=0.8",
+    ...(options.headers ?? {}),
+  };
+  if (requestBody.length && !Object.keys(headers).some((name) => name.toLowerCase() === "content-length")) headers["content-length"] = String(requestBody.length);
   return new Promise((resolve, reject) => {
     let settled = false;
     const fail = (error: Error): void => {
@@ -54,8 +78,8 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
       hostname: parsed.hostname,
       port: parsed.port || undefined,
       path: `${parsed.pathname}${parsed.search}`,
-      method: "GET",
-      headers: { "user-agent": "ChancePing-OpportunityV2/1.0", accept: "text/html,application/rss+xml,application/xml;q=0.9,*/*;q=0.8" },
+      method: options.method ?? "GET",
+      headers,
       servername: net.isIP(parsed.hostname.replace(/^\[|\]$/gu, "")) ? undefined : parsed.hostname,
       lookup: (_hostname, options, callback) => {
         if (options.all) callback(null, [{ address: resolved.address, family: resolved.family }]);
@@ -63,7 +87,7 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
       },
     }, (response) => {
       const contentLength = Number(response.headers["content-length"] ?? 0);
-      if (contentLength > MAX_RESPONSE_BYTES) {
+      if (contentLength > MAX_COMPRESSED_RESPONSE_BYTES) {
         response.resume();
         request.destroy();
         fail(new Error("source response is too large"));
@@ -74,7 +98,7 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
       response.on("data", (chunk: Buffer | string) => {
         const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
         total += buffer.length;
-        if (total > MAX_RESPONSE_BYTES) {
+        if (total > MAX_COMPRESSED_RESPONSE_BYTES) {
           request.destroy();
           fail(new Error("source response is too large"));
           return;
@@ -87,13 +111,12 @@ async function fetchPinned(target: string, resolved: PinnedAddress): Promise<{ s
         if (settled) return;
         settled = true;
         const body = Buffer.concat(chunks);
-        const contentType = String(response.headers["content-type"] ?? "");
-        resolve({ status: response.statusCode ?? 0, headers: response.headers, text: decodeOpportunityResponseBody(body, contentType, parsed.hostname) });
+        resolve({ status: response.statusCode ?? 0, headers: response.headers, body });
       });
     });
     request.setTimeout(DEFAULT_TIMEOUT_MS, () => request.destroy(new Error("source request timed out")));
     request.on("error", (error) => fail(error));
-    request.end();
+    request.end(requestBody.length ? requestBody : undefined);
   });
 }
 
@@ -133,21 +156,73 @@ export function decodeOpportunityResponseBody(body: Buffer, contentType: string,
   }
 }
 
-export async function defaultOpportunityV2Fetcher(url: string): Promise<{ status: number; final_url: string; text: string }> {
+function shouldGunzip(body: Buffer, headers: http.IncomingHttpHeaders, target: string, mode: OpportunityV2FetchOptions["decompress"]): boolean {
+  if (mode === "none") return false;
+  if (mode === "gzip") return true;
+  const encoding = headerValue(headers, "content-encoding");
+  const contentType = headerValue(headers, "content-type");
+  return /\bgzip\b/iu.test(encoding) || /gzip|x-gzip/iu.test(contentType) || /\.gz(?:$|[?#])/iu.test(target) || body.subarray(0, 2).equals(Buffer.from([0x1f, 0x8b]));
+}
+
+function decodeTransportBody(body: Buffer, headers: http.IncomingHttpHeaders, target: string, options: OpportunityV2FetchOptions): { body: Buffer; decompression: "gzip" | "none" } {
+  if (!shouldGunzip(body, headers, target, options.decompress)) {
+    if (body.length > MAX_DECOMPRESSED_RESPONSE_BYTES) throw new Error("source decompressed response is too large");
+    return { body, decompression: "none" };
+  }
+  if (options.decompress === "gzip" && !body.subarray(0, 2).equals(Buffer.from([0x1f, 0x8b]))) throw new Error("source response was not valid gzip");
+  try {
+    const decompressed = gunzipSync(body, { maxOutputLength: MAX_DECOMPRESSED_RESPONSE_BYTES });
+    return { body: decompressed, decompression: "gzip" };
+  } catch (error) {
+    throw new Error(`source gzip response could not be safely decompressed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/** Narrow transport helper kept exportable for the bounded decompression tests. */
+export function decompressOpportunityV2Body(body: Buffer, mode: "auto" | "gzip" | "none" = "auto"): Buffer {
+  return decodeTransportBody(body, {}, "fixture.gz", { decompress: mode }).body;
+}
+
+function redirectedOptions(status: number, options: OpportunityV2FetchOptions): OpportunityV2FetchOptions {
+  if (status !== 303 && status !== 301 && status !== 302) return options;
+  if ((options.method ?? "GET") === "GET") return options;
+  const headers = Object.fromEntries(Object.entries(options.headers ?? {}).filter(([name]) => !["content-length", "content-type"].includes(name.toLowerCase())));
+  return { ...options, method: "GET", body: undefined, headers };
+}
+
+export async function defaultOpportunityV2Fetcher(url: string, options: OpportunityV2FetchOptions = {}): Promise<OpportunityV2FetchResponse> {
   if (!isPublicHttpUrl(url)) throw new Error("source URL must be a public HTTP(S) URL");
   let current = url;
+  let currentOptions = options;
   for (let hop = 0; hop <= 4; hop += 1) {
     if (!isPublicHttpUrl(current)) throw new Error("redirected source URL is not public");
     const resolved = await resolvePublicAddress(current);
-    const response = await fetchPinned(current, resolved);
+    const requestMethod = currentOptions.method ?? "GET";
+    const requestBody = bodyBuffer(currentOptions.body);
+    const response = await fetchPinned(current, resolved, currentOptions);
     if (response.status >= 300 && response.status < 400) {
       const location = response.headers.location;
       if (!location) throw new Error("source redirect has no location");
       if (hop === 4) throw new Error("source redirect limit exceeded");
       current = new URL(Array.isArray(location) ? location[0] : location, current).toString();
+      currentOptions = redirectedOptions(response.status, currentOptions);
       continue;
     }
-    return { status: response.status, final_url: current, text: response.text };
+    const decoded = decodeTransportBody(response.body, response.headers, current, currentOptions);
+    const contentType = headerValue(response.headers, "content-type");
+    const trace: OpportunityV2FetchTrace = {
+      method: requestMethod,
+      request_url: current,
+      final_url: current,
+      status: response.status,
+      request_body_bytes: requestBody.length,
+      content_type: contentType || null,
+      content_encoding: headerValue(response.headers, "content-encoding") || null,
+      response_bytes: response.body.length,
+      decompressed_bytes: decoded.body.length,
+      decompression: decoded.decompression,
+    };
+    return { status: response.status, final_url: current, text: decodeOpportunityResponseBody(decoded.body, contentType, new URL(current).hostname), trace };
   }
   throw new Error("source redirect limit exceeded");
 }
@@ -234,6 +309,7 @@ interface SourceFetchResult {
   error: string | null;
   partial: boolean;
   next_page: number | null;
+  request_traces: OpportunityV2FetchTrace[];
 }
 
 const DETAIL_BUDGET_BY_SOURCE: Record<string, number> = {
@@ -266,7 +342,93 @@ function paginationStartPage(source: OpportunityV2Source, healthPath?: string): 
 
 export { paginationStartPage };
 
-async function enrichDetailDates(source: OpportunityV2Source, items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher, budget: number): Promise<void> {
+function traceForFetch(url: string, options: OpportunityV2FetchOptions, response: OpportunityV2FetchResponse, sourceId?: string): OpportunityV2FetchTrace {
+  if (response.trace) return sourceId && !response.trace.source_id ? { ...response.trace, source_id: sourceId } : response.trace;
+  const body = bodyBuffer(options.body);
+  const responseBytes = Buffer.byteLength(response.text, "utf8");
+  return {
+    source_id: sourceId,
+    method: options.method ?? "GET",
+    request_url: url,
+    final_url: response.final_url || url,
+    status: response.status,
+    request_body_bytes: body.length,
+    content_type: null,
+    content_encoding: null,
+    response_bytes: responseBytes,
+    decompressed_bytes: responseBytes,
+    decompression: "none",
+  };
+}
+
+function cibHiddenValue(html: string, className: string, fallback: string): string {
+  const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const input = html.match(new RegExp(`<input\\b[^>]*class=["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*>`, "iu"))?.[0] ?? "";
+  return input.match(/\bvalue=["']([^"']*)["']/iu)?.[1] ?? fallback;
+}
+
+function cibApiRequest(listingHtml: string, listingUrl: string): { url: string; options: OpportunityV2FetchOptions } {
+  const body = {
+    pageNo: 1,
+    pageSize: Number(cibHiddenValue(listingHtml, "pageSize", "10")) || 10,
+    dto: {
+      siteId: Number(cibHiddenValue(listingHtml, "chunkSiteId", "725")) || 725,
+      categoryId: Number(cibHiddenValue(listingHtml, "channelCategoryId", "201")) || 201,
+      bidType: "", province: "", city: "", county: "", publishDays: "", purchaseMode: "",
+      publishOrganization: "", agentCompanyId: "", secondCompanyId: "", agentCompanyName: "",
+      secondCompanyName: "", mainCode: "", title: "", cgTitleParams: "", zjTitleParams: "",
+      beginDate: "", endDate: "",
+    },
+  };
+  return {
+    url: new URL("/cms/api/dynamicData/queryContentPage", listingUrl).toString(),
+    options: { method: "POST", headers: { "content-type": "application/json; charset=utf-8", accept: "application/json" }, body: JSON.stringify(body) },
+  };
+}
+
+interface SourcePageResponse {
+  response: OpportunityV2FetchResponse;
+  traces: OpportunityV2FetchTrace[];
+}
+
+async function fetchSourcePage(source: OpportunityV2Source, url: string, fetcher: OpportunityV2Fetcher): Promise<SourcePageResponse> {
+  if (source.id === "proc-cn-cib") {
+    const homeOptions = procurementFetchOptions(source.id);
+    const home = await fetcher(url, homeOptions);
+    const traces = [traceForFetch(url, homeOptions, home, source.id)];
+    const supplierListing = extractAnchors(home.text, home.final_url || url).find((anchor) => /\/gyszj\/index\.html(?:$|\?)/iu.test(anchor.href));
+    if (!supplierListing) return { response: home, traces };
+    const listingOptions = procurementFetchOptions(source.id);
+    const listing = await fetcher(supplierListing.href, listingOptions);
+    traces.push(traceForFetch(supplierListing.href, listingOptions, listing, source.id));
+    const api = cibApiRequest(listing.text, listing.final_url || supplierListing.href);
+    const apiResponse = await fetcher(api.url, api.options);
+    traces.push(traceForFetch(api.url, api.options, apiResponse, source.id));
+    return { response: apiResponse, traces };
+  }
+  if (source.id !== "proc-wb") {
+    const options = procurementFetchOptions(source.id);
+    const response = await fetcher(url, options);
+    return { response, traces: [traceForFetch(url, options, response, source.id)] };
+  }
+
+  // Probe the current count, then request the bounded latest page. This is
+  // intentionally inside the shared acquisition boundary, not a side runner.
+  const urls = worldBankRequestUrls(source.url);
+  const probeOptions = procurementFetchOptions(source.id);
+  const probe = await fetcher(urls.probe, probeOptions);
+  const traces = [traceForFetch(urls.probe, probeOptions, probe, source.id)];
+  if (probe.status < 200 || probe.status >= 400) throw Object.assign(new Error(`HTTP ${probe.status}`), { responseStatus: probe.status });
+  const count = parseWorldBankCount(probe.text);
+  const latestUrl = urls.latest(count);
+  const latestOptions = procurementFetchOptions(source.id);
+  const response = await fetcher(latestUrl, latestOptions);
+  traces.push(traceForFetch(latestUrl, latestOptions, response, source.id));
+  if (response.status < 200 || response.status >= 400) throw Object.assign(new Error(`HTTP ${response.status}`), { responseStatus: response.status });
+  return { response, traces };
+}
+
+async function enrichDetailDates(source: OpportunityV2Source, items: ParsedAggregationItem[], fetcher: OpportunityV2Fetcher, budget: number, requestTraces: OpportunityV2FetchTrace[] = []): Promise<void> {
   let attempted = 0;
   let detailEnricher: ((item: ParsedAggregationItem, detailHtml: string, detailUrl: string) => ParsedAggregationItem) | undefined;
   try { detailEnricher = getAggregationAdapter(source.id).enrichItem; } catch { /* generic detail fallback */ }
@@ -278,6 +440,7 @@ async function enrichDetailDates(source: OpportunityV2Source, items: ParsedAggre
     attempted += 1;
     try {
       const response = await fetcher(item.detail_url);
+      requestTraces.push(traceForFetch(item.detail_url, {}, response, source.id));
       if (response.status < 200 || response.status >= 400) {
         item.deadline_resolution = "fetch_failed";
         item.deadline_source_url = item.detail_url;
@@ -316,12 +479,15 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
   let format: SourceFetchResult["format"] = null;
   let partial = false;
   let nextPage: number | null = null;
+  const requestTraces: OpportunityV2FetchTrace[] = [];
   for (let offset = 0; offset < pages; offset += 1) {
     const page = firstPage + offset;
     const pageUrl = page === 1 ? firstUrl : plan!.pageUrl(page);
     let response: Awaited<ReturnType<OpportunityV2Fetcher>>;
     try {
-      response = await fetcher(pageUrl);
+      const fetched = await fetchSourcePage(source, pageUrl, fetcher);
+      response = fetched.response;
+      requestTraces.push(...fetched.traces);
     } catch (error) {
       if (page === 1) throw error;
       partial = true;
@@ -349,7 +515,7 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       break;
     }
   }
-  await enrichDetailDates(source, parsed, fetcher, detailBudgetForSource(source.id));
+  await enrichDetailDates(source, parsed, fetcher, detailBudgetForSource(source.id), requestTraces);
   return {
     parsed,
     format,
@@ -358,6 +524,7 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
     error: parsed.length ? (partial ? `Partial pagination; next page ${nextPage}` : null) : "No RSS or HTML listing items recognized",
     partial,
     next_page: nextPage,
+    request_traces: requestTraces,
   };
 }
 
@@ -428,10 +595,12 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   const pool = readOpportunityV2Pool(options.poolPath);
   const fetched: ReturnType<typeof normalizeOpportunityV2>[] = [];
   const health: OpportunityV2SourceHealth[] = [];
+  const requestTraces: OpportunityV2FetchTrace[] = [];
   let successfulSources = 0;
   for (const source of selectedSources) {
     try {
       const result = await fetchAndParseSource(source, fetcher, paginationStartPage(source, options.healthPath));
+      requestTraces.push(...result.request_traces);
       // Do not silently cap discovery. maxItems remains an explicit caller-controlled
       // safety valve for fixtures or bounded one-off runs only.
       const parsed = options.maxItems === undefined ? result.parsed : result.parsed.slice(0, options.maxItems);
@@ -515,6 +684,7 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
     sources,
     source_health: health,
     radar_opportunities: radarOpportunities,
+    request_traces: requestTraces,
   };
 }
 
