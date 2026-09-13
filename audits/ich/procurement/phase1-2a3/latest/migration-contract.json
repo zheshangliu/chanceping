@@ -1,0 +1,31 @@
+{
+  "historical_fixture_before": 31,
+  "expected_added_ids": [
+    "proc-ca-canadabuys",
+    "proc-cn-ccgp",
+    "proc-cn-cib",
+    "proc-eu-ted",
+    "proc-global-ocp",
+    "proc-uk-fts",
+    "proc-wb"
+  ],
+  "actual_added_ids": [
+    "proc-ca-canadabuys",
+    "proc-cn-ccgp",
+    "proc-cn-cib",
+    "proc-eu-ted",
+    "proc-global-ocp",
+    "proc-uk-fts",
+    "proc-wb"
+  ],
+  "after_first_migration": 38,
+  "after_second_migration": 38,
+  "second_added_ids": [],
+  "phase1_new_sources_registered": 5,
+  "phase1_new_sources_disabled": 5,
+  "phase1_new_sources_pending": 5,
+  "phase1_new_sources_fetched_while_disabled": 0,
+  "admin_customization_preserved": true,
+  "existing_source_membership_loss": 0,
+  "status": "PASS"
+}

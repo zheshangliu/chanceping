@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -7,6 +8,21 @@ import { migrateOpportunityV2Sources, readOpportunityV2Sources, runOpportunityV2
 import type { OpportunityV2, OpportunityV2Source } from "../src/opportunity-v2/types";
 
 const now = new Date("2026-09-10T00:00:00.000Z");
+const PHASE1_PROCUREMENT_IDS = ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"] as const;
+const EXPECTED_ADDED_IDS = [
+  "proc-uk-fts",
+  "proc-ca-canadabuys",
+  ...PHASE1_PROCUREMENT_IDS,
+].sort();
+
+function gitValue(args: string[]): string {
+  try { return execFileSync("git", args, { encoding: "utf8", timeout: 5_000 }).trim(); } catch { return "unknown"; }
+}
+
+function writeAuditJson(auditDir: string, name: string, value: unknown): void {
+  fs.mkdirSync(auditDir, { recursive: true });
+  fs.writeFileSync(path.join(auditDir, name), `${JSON.stringify(value, null, 2)}\n`);
+}
 
 const source: OpportunityV2Source = {
   id: "fixture-v211-source",
@@ -88,16 +104,30 @@ async function main(): Promise<void> {
   assert.equal(readOpportunityV2Sources(migrationPath).length, 31);
   const migrated = migrateOpportunityV2Sources(migrationPath);
   assert.equal(migrated.before_count, 31);
-  assert.equal(migrated.after_count, 33);
-  assert.deepEqual(migrated.added_ids, ["proc-uk-fts", "proc-ca-canadabuys"]);
+  assert.equal(migrated.after_count, 38);
+  assert.deepEqual([...migrated.added_ids].sort(), EXPECTED_ADDED_IDS);
+  const migratedById = new Map(migrated.sources.map((candidate) => [candidate.id, candidate]));
+  for (const sourceId of PHASE1_PROCUREMENT_IDS) {
+    const candidate = migratedById.get(sourceId);
+    assert.ok(candidate, `${sourceId} must be registered by migration`);
+    assert.equal(candidate.enabled, false, `${sourceId} must remain disabled until explicit enablement`);
+    assert.equal(candidate.status, "PENDING", `${sourceId} must remain PENDING until explicit enablement`);
+  }
   const idempotent = migrateOpportunityV2Sources(migrationPath);
-  assert.equal(idempotent.before_count, 33);
-  assert.equal(idempotent.after_count, 33);
+  assert.equal(idempotent.before_count, 38);
+  assert.equal(idempotent.after_count, 38);
   assert.deepEqual(idempotent.added_ids, []);
   const schedulerPool = path.join(temp, "scheduler-pool.json");
   fs.writeFileSync(schedulerPool, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: now.toISOString(), opportunities: [] }));
-  const scheduled = await runOpportunityV2({ now, sourcesPath: migrationPath, poolPath: schedulerPool, healthPath: path.join(temp, "scheduler-health.json"), fetcher: async (url) => ({ status: 200, final_url: url, text: "" }) });
-  assert.equal(scheduled.sources.length, 33, "next scheduler reads the migrated 33-source registry");
+  const schedulerCalls: string[] = [];
+  const scheduled = await runOpportunityV2({ now, sourcesPath: migrationPath, poolPath: schedulerPool, healthPath: path.join(temp, "scheduler-health.json"), fetcher: async (url) => { schedulerCalls.push(url); return { status: 200, final_url: url, text: "" }; } });
+  assert.equal(scheduled.sources.length, 38, "next scheduler reads the migrated 38-source registry");
+  const disabledPhase1Urls = new Set(PHASE1_PROCUREMENT_IDS.map((sourceId) => migratedById.get(sourceId)?.url).filter((url): url is string => Boolean(url)));
+  assert.equal(schedulerCalls.filter((url) => disabledPhase1Urls.has(url)).length, 0, "disabled Phase 1 procurement seeds must not be fetched");
+
+  const baselineIds = new Set(baselineSources.map((candidate) => candidate.id));
+  const migratedIds = new Set(migrated.sources.map((candidate) => candidate.id));
+  assert.equal([...baselineIds].filter((id) => !migratedIds.has(id)).length, 0, "migration must not lose existing source membership");
 
   const customizedPath = path.join(temp, "customized-sources.json");
   fs.copyFileSync(migrationPath, customizedPath);
@@ -111,7 +141,51 @@ async function main(): Promise<void> {
   assert.equal(reconciliation.summary.legit_competition_missing, 0);
   assert.equal(reconciliation.summary.unknown_missing, 26);
   assert.equal(reconciliation.summary.classifications.UNKNOWN, 26);
-  console.log(JSON.stringify({ gate: "pass", memo_only_item: "memo-only", home_ids: homeIds, memo_ids: htmlIds, memo_total: json.total, migration: { before: migrated.before_count, after: migrated.after_count, added: migrated.added_ids, idempotent_after: idempotent.after_count }, scheduler_registry_sources: scheduled.sources.length, admin_config_preserved: true, reconciliation: { status: reconciliation.summary.baseline_status, legit_competition_missing: reconciliation.summary.legit_competition_missing, unknown: reconciliation.summary.unknown_missing } }, null, 2));
+  const migration = {
+    historical_fixture_before: baselineSources.length,
+    expected_added_ids: EXPECTED_ADDED_IDS,
+    actual_added_ids: [...migrated.added_ids].sort(),
+    after_first_migration: migrated.after_count,
+    after_second_migration: idempotent.after_count,
+    second_added_ids: idempotent.added_ids,
+    phase1_new_sources_registered: PHASE1_PROCUREMENT_IDS.filter((sourceId) => migratedById.has(sourceId)).length,
+    phase1_new_sources_disabled: PHASE1_PROCUREMENT_IDS.filter((sourceId) => migratedById.get(sourceId)?.enabled === false).length,
+    phase1_new_sources_pending: PHASE1_PROCUREMENT_IDS.filter((sourceId) => migratedById.get(sourceId)?.status === "PENDING").length,
+    phase1_new_sources_fetched_while_disabled: schedulerCalls.filter((url) => disabledPhase1Urls.has(url)).length,
+    admin_customization_preserved: true,
+    existing_source_membership_loss: [...baselineIds].filter((id) => !migratedIds.has(id)).length,
+    status: "PASS",
+  };
+  const auditDir = path.resolve("audits/ich/procurement/phase1-2a3/latest");
+  writeAuditJson(auditDir, "manifest.json", {
+    schema_version: "chanceping.ich.procurement.phase1-2a3.v1",
+    generated_at: new Date().toISOString(),
+    git_sha: gitValue(["rev-parse", "HEAD"]),
+    remote_head: gitValue(["ls-remote", "origin", "refs/heads/rescue/mvp-codex"]).split("\t")[0] || "unknown",
+    production_deployed: false,
+    migration_contract: migration,
+  });
+  writeAuditJson(auditDir, "migration-contract.json", migration);
+  writeAuditJson(auditDir, "regression.json", {
+    verifier: "PASS",
+    migration_contract: "PASS",
+    scheduler_disabled_seed_gate: "PASS",
+    admin_customization: "PASS",
+    production_untouched: "PASS",
+    typecheck: "RUN_SEPARATELY",
+    verify_all: "RUN_SEPARATELY",
+    notes: "Competition UNKNOWN=26 remains the documented historical baseline limitation; verify:ich:v12 remains an unrelated UI failure."
+  });
+  writeAuditJson(auditDir, "production-untouched.json", {
+    production_deployed: false,
+    production_source_migration: false,
+    production_scheduler_run: false,
+    production_commit_changed: false,
+    dns_changed: false,
+    note: "All migration and scheduler checks used local temporary files and a fake fetcher."
+  });
+  fs.writeFileSync(path.join(auditDir, "README.md"), `# Procurement Radar Phase 1.2A.3\n\nThis isolated contract audit verifies idempotent source migration from the historical 31-source fixture to the current 38-source registry. The five Phase 1 procurement seeds are registered but remain disabled/PENDING, so the scheduler does not fetch them. Production, DNS, production migration, and production scheduler were not touched.\n\n- First migration: ${migration.historical_fixture_before} → ${migration.after_first_migration}\n- Exact added IDs: ${migration.actual_added_ids.join(", ")}\n- Second migration: ${migration.after_first_migration} → ${migration.after_second_migration}\n- Phase 1 seeds disabled/PENDING: ${migration.phase1_new_sources_disabled}/${PHASE1_PROCUREMENT_IDS.length}, ${migration.phase1_new_sources_pending}/${PHASE1_PROCUREMENT_IDS.length}\n- Disabled Phase 1 seeds fetched: ${migration.phase1_new_sources_fetched_while_disabled}\n- Admin customization preserved: ${migration.admin_customization_preserved}\n`);
+  console.log(JSON.stringify({ gate: "pass", memo_only_item: "memo-only", home_ids: homeIds, memo_ids: htmlIds, memo_total: json.total, migration, scheduler_registry_sources: scheduled.sources.length, admin_config_preserved: true, reconciliation: { status: reconciliation.summary.baseline_status, legit_competition_missing: reconciliation.summary.legit_competition_missing, unknown: reconciliation.summary.unknown_missing } }, null, 2));
 }
 
 void main().catch((error) => { console.error(error); process.exitCode = 1; });
