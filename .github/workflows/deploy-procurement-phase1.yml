@@ -13,14 +13,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: chanceping-procurement-phase1
+  group: chanceping-production
   cancel-in-progress: false
 
 jobs:
-  verify:
-    name: Verify procurement rollout control
+  candidate-verify:
+    name: Verify immutable procurement candidate
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - name: Restrict rollout to exact procurement candidate
         env:
@@ -47,11 +47,29 @@ jobs:
       - run: npm run verify:v15
       - run: npm run verify:v16
       - run: npm run verify:all
+      - run: npm run verify:ich:v211
+      - run: npm run verify:ich:procurement:semantic
+
+  control-plane-verify:
+    name: Verify procurement control plane
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
       - run: npm run verify:procurement:phase1:rollout-control
 
   deploy:
     name: SWAS transactional rollout
-    needs: verify
+    needs: [candidate-verify, control-plane-verify]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     environment:
@@ -60,7 +78,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: main
+          ref: ${{ github.sha }}
 
       - uses: actions/setup-node@v5
         with:
@@ -80,3 +98,8 @@ jobs:
           CHANCEPING_SERVER_REPO_DIR: /opt/chanceping
         run: node scripts/invoke-aliyun-swas-procurement-phase1.cjs
 
+      - name: Verify public production paths
+        env:
+          CHANCEPING_DEPLOY_BASE_URL: https://www.chanceping.com
+          NODE_OPTIONS: --tls-max-v1.2
+        run: npm ci --no-audit --no-fund && npm run verify:q7:aliyun-remote-smoke

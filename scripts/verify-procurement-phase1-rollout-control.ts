@@ -18,21 +18,47 @@ function check(id: string, passed: boolean, detail: string): Check {
 }
 
 const workflowPath = ".github/workflows/deploy-procurement-phase1.yml";
+const productionWorkflowPath = ".github/workflows/deploy-production.yml";
 const invokeScriptPath = "scripts/invoke-aliyun-swas-procurement-phase1.cjs";
 
 const workflow = readText(workflowPath);
+const productionWorkflow = readText(productionWorkflowPath);
 const invoke = readText(invokeScriptPath);
+const candidateStart = workflow.indexOf("candidate-verify:");
+const controlPlaneStart = workflow.indexOf("control-plane-verify:");
+const deployStart = workflow.indexOf("\n  deploy:");
+const candidateSection = workflow.slice(candidateStart, controlPlaneStart);
+const controlPlaneSection = workflow.slice(controlPlaneStart, deployStart);
+const phaseB = invoke.indexOf("# ----- Phase B: freeze timer and wait for scheduler quiescence -----");
+const phaseC = invoke.indexOf("# ----- Phase C: runtime backup and read-only snapshot -----");
+const phaseDeploy = invoke.indexOf("# ----- Phase C/D: exact target resolved and release deploy -----");
+const phaseF = invoke.indexOf("# ----- Phase F: persistent migration ----");
+const run1Quality = invoke.indexOf("# ----- Run 1 production quality gate -----");
+const run2 = invoke.indexOf("capture_pool_identities run_2");
+const timerRestore = invoke.indexOf("restore_timer_state", run2);
+const applySourceStateStart = invoke.indexOf("apply_source_state() {");
+const runDirectSourceStart = invoke.indexOf("run_direct_source() {", applySourceStateStart);
+const applySourceStateSection = invoke.slice(applySourceStateStart, runDirectSourceStart);
+const firstIndexAfter = (needle: string, start: number): number => invoke.indexOf(needle, start);
 
 const checks: Check[] = [
   check("workflow name", /name:\s*Deploy procurement Phase 1/.test(workflow), "workflow name should be Deploy procurement Phase 1"),
   check("workflow input default", workflow.includes(`default: ${REQUIRED_TAG}`), "workflow default must be the fixed procurement tag"),
   check("workflow dispatch", workflow.includes("workflow_dispatch"), "workflow_dispatch trigger must exist"),
+  check("candidate verify job", workflow.includes("candidate-verify:"), "candidate verification must be a separate job"),
+  check("control-plane verify job", workflow.includes("control-plane-verify:"), "control-plane verification must be a separate job"),
+  check("candidate checkout is immutable input", workflow.includes("ref: ${{ inputs.git_ref }}"), "candidate verification must checkout the immutable input ref"),
+  check("control-plane checkout is immutable run sha", workflow.includes("ref: ${{ github.sha }}"), "control-plane verification/deploy must checkout the workflow commit"),
+  check("candidate gates", ["npm run typecheck", "npm run verify:v15:e2e", "npm run verify:v15", "npm run verify:v16", "npm run verify:all", "npm run verify:ich:v211", "npm run verify:ich:procurement:semantic"].every((command) => candidateSection.includes(command)), "candidate job must run the complete candidate gate set"),
+  check("candidate excludes control-plane gate", !candidateSection.includes("verify:procurement:phase1:rollout-control"), "immutable candidate must not run the control-plane-only verifier"),
+  check("control-plane gate", controlPlaneSection.includes("npm run verify:procurement:phase1:rollout-control"), "control-plane job must run the rollout-control verifier"),
+  check("deploy waits for both verification jobs", workflow.includes("needs: [candidate-verify, control-plane-verify]"), "deploy must require both candidate and control-plane verification"),
   check(
     "governed verification",
     workflow.includes("npm run verify:procurement:phase1:rollout-control"),
     "workflow must run rollout-control verification command",
   ),
-  check("deploy checkout main", /ref:\s*main/.test(workflow), "deploy job should checkout main"),
+  check("production concurrency", workflow.includes("group: chanceping-production") && productionWorkflow.includes("group: chanceping-production"), "both production workflows must share the production concurrency group"),
   check("no ssh", !workflow.includes("ssh -"), "workflow should not invoke SSH"),
   check(
     "no strict host key bypass",
@@ -46,7 +72,7 @@ const checks: Check[] = [
     "invoke script must hardcode the expected tag and commit",
   ),
   check("phase marker a", invoke.includes("# ----- Phase A: preflight -----"), "should include preflight phase marker"),
-  check("phase marker b", invoke.includes("# ----- Phase B: freeze timer -----"), "should include timer-freeze phase marker"),
+  check("phase marker b", invoke.includes("# ----- Phase B: freeze timer and wait for scheduler quiescence -----"), "should include timer-freeze phase marker"),
   check("phase marker c", invoke.includes("# ----- Phase C/D: exact target resolved and release deploy -----"), "should include deploy phase marker"),
   check("phase marker f", invoke.includes("# ----- Phase F: persistent migration ----"), "should include migration phase marker"),
   check("preflight snapshot", invoke.includes("collect_snapshot"), "should collect preflight snapshot"),
@@ -60,6 +86,39 @@ const checks: Check[] = [
   ),
   check("smoke checks", invoke.includes("run_http \\\"$BASE_URL/api/opportunity-v2/radar\\\""), "should run smoke check on radar API"),
   check("migration", invoke.includes("Phase F: persistent migration"), "migration block should exist"),
+  check("business migration helper", invoke.includes("migrateOpportunityV2Sources"), "migration must call the business source migration helper"),
+  check("migration membership validation", invoke.includes("unexpected added source ids") && invoke.includes("source membership loss"), "migration must validate membership preservation and unexpected additions"),
+  check("required canary state validation", invoke.includes("proc-cn-ccgp") && invoke.includes("enabled") && invoke.includes("PENDING"), "migration must validate procurement canary state"),
+  check("business source state helper", invoke.includes("setOpportunityV2SourceState"), "canary state changes must use the business source state helper"),
+  check("missing source stops rollout", invoke.includes("Source not found") || invoke.includes("source missing"), "missing canary sources must stop the rollout"),
+  check("direct canary runner", invoke.includes("runOpportunityV2Source"), "canaries must invoke the runtime runner directly"),
+  check("canary result validation", invoke.includes("fetched_sources") && invoke.includes("successful_sources") && invoke.includes("source_health") && invoke.includes("items_seen"), "canaries must validate source run results"),
+  check("exported runtime paths", invoke.includes("export SOURCES_PATH") && invoke.includes("export OPPORTUNITIES_PATH") && invoke.includes("export BACKUP_PRE_FLIGHT"), "shell paths used by Node must be exported"),
+  check("no HTTP canary", !invoke.includes("curl -fsS -X POST") && !invoke.includes("/api/opportunity-v2/sources/$source_id/run"), "canaries must not use the HTTP admin run endpoint"),
+  check("no manual source registry", !invoke.includes("REQUIRED_SOURCE_IDS") && !invoke.includes("requiredSources = [") && !invoke.includes("set_source_state() {"), "source migration/state must not manually rewrite a registry"),
+  check("no direct source-state write", !invoke.includes("fs.writeFileSync(process.env.SOURCES_PATH") && !applySourceStateSection.includes("writeFileSync"), "source state must be changed only through the business helper"),
+  check("scheduler quiescence hard stop", invoke.includes("QUIESCE_TIMEOUT_SECONDS") && invoke.includes("while systemctl is-active \\\"$OP_SERVICE\\\" --quiet") && invoke.includes("stopping rollout before deploy"), "scheduler must be inactive before backup/deploy and timeout must stop rollout"),
+  check("timer freeze before backup", phaseB >= 0 && firstIndexAfter("systemctl stop", phaseB) >= 0 && phaseC > firstIndexAfter("systemctl stop", phaseB) && firstIndexAfter("backup_runtime_file", phaseC) > phaseC, "timer freeze must precede runtime backup"),
+  check("backup before exact deploy", firstIndexAfter("backup_runtime_file", phaseC) >= 0 && phaseDeploy > firstIndexAfter("backup_runtime_file", phaseC), "runtime backup must precede exact release deploy"),
+  check("exact runtime absent-state backup", invoke.includes("EXISTS >") && invoke.includes("ABSENT >") && invoke.includes("rm -f -- \\\"$target\\\""), "runtime backup/restore must preserve absent and existing states"),
+  check("rollback checksum verification", invoke.includes("verify_all_restored_runtime") && invoke.includes("ROLLBACK_FAILED") && invoke.includes("restored runtime checksum mismatch"), "rollback must verify restored runtime checksums and fail explicitly"),
+  check("release manifest rollback", invoke.includes("backup_runtime_file \\\"$RELEASE_MANIFEST\\\" release-manifest.json") && invoke.includes("restore_runtime_file \\\"$RELEASE_MANIFEST\\\" \\\"$BACKUP_MANIFEST\\\""), "rollback must restore the predeploy manifest"),
+  check("no manifest self-copy", !invoke.includes("cp \\\"$RELEASE_MANIFEST\\\" \\\"$RUN_REPO_DIR/release-manifest.json\\\""), "rollback must not copy the active manifest onto itself"),
+  check("FETCH_HEAD exact commit", invoke.includes("rev-parse --verify 'FETCH_HEAD^{commit}'") && !invoke.includes("rev-parse --verify \"$DEPLOY_TAG^{commit}\""), "deploy must resolve the fetched commit from FETCH_HEAD"),
+  check("active timer restore", invoke.includes("timer_before_active") && invoke.includes("if [ \\\"$timer_before_active\\\" = \\\"1\\\" ]; then") && invoke.includes("restore_timer_state"), "success and rollback must restore timer active state independently"),
+  check("timer state assertion", invoke.includes("verify_timer_state()") && invoke.includes("timer enabled state mismatch") && invoke.includes("timer active state mismatch"), "timer restoration must be verified, not only requested"),
+  check("run1 quality gate before run2", run1Quality > 0 && run2 > run1Quality && invoke.includes("quality_result") && invoke.includes("gates"), "Run 1 must pass the production quality gate before Run 2"),
+  check("run2 idempotency before timer restore", run2 > 0 && invoke.includes("compare_run_idempotency") && timerRestore > run2, "Run 2 idempotency must be checked before timer restore"),
+  check("source-level checkpoint", invoke.includes("checkpoint_canary") && invoke.includes("checkpoints/${pass_name}-${source_id}"), "each canary must checkpoint sources, pool, and health"),
+  check("pool opportunities key", invoke.includes("parsed[key]") && invoke.includes("readSafe(poolPath, 'opportunities')") && !invoke.includes("parsed.sources || []"), "pool snapshot must read opportunities, not sources"),
+  check("business regression identity snapshot", ["competition_ids", "memo_ids", "procurement_public_ids", "loewe", "pool"].every((field) => invoke.includes(field)), "predeploy snapshot must preserve complete business regression identities"),
+  check("competition memo loewe regression", ["capture_postdeploy_public", "competition_unexplained_loss", "memo_unexplained_loss", "memo_parity", "loewe_preserved"].every((field) => invoke.includes(field)), "postdeploy regression must cover Competition, Memo parity, and LOEWE"),
+  check("historical limitation recorded", invoke.includes("KNOWN_HISTORICAL_BASELINE_LIMITATION"), "historical baseline limitation must remain explicit"),
+  check("full rollback canary policy", invoke.includes("CANARY_FAILURE_POLICY=FULL_ROLLBACK"), "canary failure must use an explicit full rollback policy"),
+  check("production quality gate", ["seller_offer_leakage", "awarded_public", "closed_public", "cancelled_public", "construction_only_public", "generic_it_public", "unsafe_exact_deadline", "fake_exact_deadline", "deadline_source_mismatch", "buyer_label_bleed", "project_id_label_bleed", "procurement_method_label_bleed", "missing_domain_tag", "known_country_as_global", "aggregator_public_without_official_evidence", "encoding_errors", "known_false_positive_call_center", "manual_operation_keyword_false_positive", "generic_process_keyword_false_positive", "public_semantic_false_positive"].every((gate) => invoke.includes(gate)), "production must run every listed procurement quality gate"),
+  check("cross-source dedup audit", invoke.includes("procurementSourceIds") && ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted"].every((id) => invoke.includes(id)), "Run 2 must audit cross-source procurement canonical duplicates"),
+  check("post-rollout remote smoke", workflow.includes("npm run verify:q7:aliyun-remote-smoke") && workflow.includes("CHANCEPING_DEPLOY_BASE_URL: https://www.chanceping.com"), "workflow must require the public remote smoke after rollout"),
+  check("persistent timer follow-up", invoke.includes("persistent timer-triggered scheduler") && invoke.includes("post_restore_quality") && invoke.includes("capture_postdeploy_public"), "a Persistent timer-triggered run must be awaited and re-audited"),
   check("canary pass1", invoke.includes("run_canary_pass pass1"), "must run canary pass1"),
   check("canary pass2", invoke.includes("run_canary_pass pass2"), "must run canary pass2"),
   check("stable state marker", invoke.includes("write_audit STABLE \\\"rollout completed\\\""), "should emit stable status on success"),
@@ -72,11 +131,12 @@ const checks: Check[] = [
   ),
   check(
     "required procurement ids",
-    ["proc-uk-fts", "proc-ca-canadabuys", "proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"].every((id) =>
+    ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"].every((id) =>
       invoke.includes(`'${id}'`) || invoke.includes(`\"${id}\"`) || invoke.includes(` ${id} `),
     ),
-    "migration/canary source IDs should be present",
+    "canary source IDs should be present while migration IDs remain owned by the business registry",
   ),
+  check("migration uses business default registry", invoke.includes("DEFAULT_OPPORTUNITY_V2_SOURCES"), "migration must derive expected additions from the business default registry"),
   check(
     "canary dual pass",
     invoke.includes("run_canary_pass pass1") && invoke.includes("run_canary_pass pass2"),
