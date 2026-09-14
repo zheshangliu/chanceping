@@ -35,7 +35,14 @@ const phaseDeploy = invoke.indexOf("# ----- Phase C/D: exact target resolved and
 const phaseF = invoke.indexOf("# ----- Phase F: persistent migration ----");
 const run1Quality = invoke.indexOf("# ----- Run 1 production quality gate -----");
 const run2 = invoke.indexOf("capture_pool_identities run_2");
+const pass1 = invoke.indexOf("run_canary_pass pass1");
+const pass2 = invoke.indexOf("run_canary_pass pass2");
+const run2Quality = invoke.indexOf("# ----- Run 2 production quality gate -----");
+const idempotency = invoke.indexOf("compare_run_idempotency", pass2);
+const crossSourceAudit = invoke.indexOf("cross-source-dedup.json");
 const timerRestore = invoke.indexOf("restore_timer_state", run2);
+const stableMarker = invoke.indexOf("write_audit STABLE");
+const finalStableAssertion = invoke.lastIndexOf("assert_phase1_stable_state");
 const applySourceStateStart = invoke.indexOf("apply_source_state() {");
 const runDirectSourceStart = invoke.indexOf("run_direct_source() {", applySourceStateStart);
 const applySourceStateSection = invoke.slice(applySourceStateStart, runDirectSourceStart);
@@ -97,6 +104,15 @@ const checks: Check[] = [
   check("no HTTP canary", !invoke.includes("curl -fsS -X POST") && !invoke.includes("/api/opportunity-v2/sources/$source_id/run"), "canaries must not use the HTTP admin run endpoint"),
   check("no manual source registry", !invoke.includes("REQUIRED_SOURCE_IDS") && !invoke.includes("requiredSources = [") && !invoke.includes("set_source_state() {"), "source migration/state must not manually rewrite a registry"),
   check("no direct source-state write", !invoke.includes("fs.writeFileSync(process.env.SOURCES_PATH") && !applySourceStateSection.includes("writeFileSync"), "source state must be changed only through the business helper"),
+  check("successful canary keeps active state", invoke.includes("apply_source_state \\\"$source_id\\\" 1 ACTIVE") && !invoke.includes("original_enabled") && !invoke.includes("original_status"), "successful canaries must remain enabled and ACTIVE instead of restoring disabled/PENDING"),
+  check("READY_CORE state gate", invoke.includes("assert_ready_core_state()") && ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"].every((id) => invoke.includes(id)), "must assert all five READY_CORE source states"),
+  check("run1 quality after activation", pass1 >= 0 && run1Quality > pass1 && invoke.includes("assert_ready_core_state run1") && invoke.indexOf("assert_ready_core_state run1", pass1) < run1Quality, "Run 1 quality must run after READY_CORE activation"),
+  check("no pending restore before run1 quality", run1Quality >= 0 && !invoke.slice(pass1, run1Quality).includes("PENDING\""), "successful canary must not restore PENDING before Run 1 quality"),
+  check("run2 quality gate", run2Quality > pass2 && invoke.includes("run_production_quality_gate run2"), "Run 2 must execute the shared production quality gate"),
+  check("run2 quality ordering", run2Quality > pass2 && idempotency > run2Quality && timerRestore > idempotency, "Run 2 quality must precede idempotency and timer restoration"),
+  check("seven-source cross-source audit", crossSourceAudit > 0 && ["proc-uk-fts", "proc-ca-canadabuys", "proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"].every((id) => invoke.includes(id)), "cross-source audit must cover existing UK/Canada and all procurement canaries"),
+  check("business dedup audit", invoke.includes("deduplicateOpportunityV2") && invoke.includes("merged_discovered_by_sources") && invoke.includes("canonical_duplicate_count"), "cross-source audit must reuse business dedup semantics"),
+  check("final stable gate ordering", finalStableAssertion > 0 && stableMarker > finalStableAssertion && invoke.includes("duplicate_opportunities") && invoke.includes("first_seen_at_preserved") && invoke.includes("discovered_by_sources_safe"), "STABLE must be written only after the final state and regression gate"),
   check("scheduler quiescence hard stop", invoke.includes("QUIESCE_TIMEOUT_SECONDS") && invoke.includes("while systemctl is-active \\\"$OP_SERVICE\\\" --quiet") && invoke.includes("stopping rollout before deploy"), "scheduler must be inactive before backup/deploy and timeout must stop rollout"),
   check("timer freeze before backup", phaseB >= 0 && firstIndexAfter("systemctl stop", phaseB) >= 0 && phaseC > firstIndexAfter("systemctl stop", phaseB) && firstIndexAfter("backup_runtime_file", phaseC) > phaseC, "timer freeze must precede runtime backup"),
   check("backup before exact deploy", firstIndexAfter("backup_runtime_file", phaseC) >= 0 && phaseDeploy > firstIndexAfter("backup_runtime_file", phaseC), "runtime backup must precede exact release deploy"),
@@ -116,9 +132,9 @@ const checks: Check[] = [
   check("historical limitation recorded", invoke.includes("KNOWN_HISTORICAL_BASELINE_LIMITATION"), "historical baseline limitation must remain explicit"),
   check("full rollback canary policy", invoke.includes("CANARY_FAILURE_POLICY=FULL_ROLLBACK"), "canary failure must use an explicit full rollback policy"),
   check("production quality gate", ["seller_offer_leakage", "awarded_public", "closed_public", "cancelled_public", "construction_only_public", "generic_it_public", "unsafe_exact_deadline", "fake_exact_deadline", "deadline_source_mismatch", "buyer_label_bleed", "project_id_label_bleed", "procurement_method_label_bleed", "missing_domain_tag", "known_country_as_global", "aggregator_public_without_official_evidence", "encoding_errors", "known_false_positive_call_center", "manual_operation_keyword_false_positive", "generic_process_keyword_false_positive", "public_semantic_false_positive"].every((gate) => invoke.includes(gate)), "production must run every listed procurement quality gate"),
-  check("cross-source dedup audit", invoke.includes("procurementSourceIds") && ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted"].every((id) => invoke.includes(id)), "Run 2 must audit cross-source procurement canonical duplicates"),
+  check("cross-source dedup audit", invoke.includes("cross_source_dedup_audit") && invoke.includes("cross-source-dedup.json") && ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted"].every((id) => invoke.includes(id)), "Run 2 must audit cross-source procurement canonical duplicates"),
   check("post-rollout remote smoke", workflow.includes("npm run verify:q7:aliyun-remote-smoke") && workflow.includes("CHANCEPING_DEPLOY_BASE_URL: https://www.chanceping.com"), "workflow must require the public remote smoke after rollout"),
-  check("persistent timer follow-up", invoke.includes("persistent timer-triggered scheduler") && invoke.includes("post_restore_quality") && invoke.includes("capture_postdeploy_public"), "a Persistent timer-triggered run must be awaited and re-audited"),
+  check("persistent timer follow-up", invoke.includes("persistent timer-triggered scheduler") && invoke.includes("run_production_quality_gate post-restore") && invoke.includes("capture_postdeploy_public"), "a Persistent timer-triggered run must be awaited and re-audited"),
   check("canary pass1", invoke.includes("run_canary_pass pass1"), "must run canary pass1"),
   check("canary pass2", invoke.includes("run_canary_pass pass2"), "must run canary pass2"),
   check("stable state marker", invoke.includes("write_audit STABLE \\\"rollout completed\\\""), "should emit stable status on success"),
