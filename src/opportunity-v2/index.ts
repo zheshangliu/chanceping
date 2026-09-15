@@ -17,3 +17,4 @@ export * from "./procurement-workbench";
 export * from "./procurement-followup-store";
 export * from "./procurement-change-feed";
 export * from "./procurement-export";
+export * from "./opportunity-coverage";

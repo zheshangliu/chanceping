@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { readProcurementChangeFeed, renderProcurementDigestMarkdown } from "../../opportunity-v2/procurement-change-feed";
-import { procurementWorkbenchDetailPage, procurementWorkbenchPage, type ProcurementWorkbenchRouteOptions } from "./procurement-workbench";
+import { coverageWorkbenchDetailPage, coverageWorkbenchPage, procurementWorkbenchDetailPage, procurementWorkbenchPage, type ProcurementWorkbenchRouteOptions } from "./procurement-workbench";
 
 function escapeHtml(value: unknown): string { return String(value ?? "").replace(/[&<>"']/gu, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char] ?? char)); }
 
@@ -17,6 +17,12 @@ export function procurementWorkbenchPageRoutes(options: ProcurementWorkbenchRout
   app.get("/procurement/:id", (c) => {
     const html = procurementWorkbenchDetailPage(options, c.req.param("id"));
     return c.html(html, html.includes("采购机会不存在") ? 404 : 200);
+  });
+  app.get("/opportunities", (c) => c.html(coverageWorkbenchPage(options, c.req.query())));
+  app.get("/opportunities/:id", async (c, next) => {
+    const html = coverageWorkbenchDetailPage(options, c.req.param("id"));
+    if (html.includes("综合机会不存在")) return next();
+    return c.html(html, 200);
   });
   return app;
 }

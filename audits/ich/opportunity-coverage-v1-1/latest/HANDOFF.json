@@ -1,0 +1,36 @@
+{
+  "schema": "chanceping.nextpack.handoff.v1",
+  "previous_package": "ChancePing_Procurement_V1_Autonomous_20260915",
+  "previous_final_status": "SHIPPED_WITH_BACKLOG",
+  "previous_finished_at": "2026-09-15",
+  "production_safe_state_verified": true,
+  "deployed_business_sha": "f514ee6b624dc2bb5abf12bb317cb30c37bedb5d",
+  "previous_delivery_sha": "fb3a6edcac2dbee826ea6bb13d70a01374961397",
+  "source_branch": "codex/opportunity-coverage-v1-1",
+  "current_commit": "fb3a6edcac2dbee826ea6bb13d70a01374961397",
+  "branch_descends_from_deployed_release": false,
+  "existing_paths": {
+    "source_registry": "src/opportunity-v2/source-pool.ts",
+    "opportunity_pool": "src/opportunity-v2/opportunity-pool.ts",
+    "assessment": "src/opportunity-v2/opportunity-coverage.ts",
+    "followup": "src/opportunity-v2/procurement-followup-store.ts",
+    "change_feed": "src/opportunity-v2/procurement-change-feed.ts",
+    "export": "src/opportunity-v2/procurement-export.ts",
+    "ui": "src/api/routes/procurement-workbench-pages.ts"
+  },
+  "reused_features": [
+    "shared OpportunityV2 identity",
+    "procurement workbench",
+    "private follow-up sidecar",
+    "change feed",
+    "CSV/Markdown export",
+    "existing source registry and scheduler"
+  ],
+  "carry_over_backlog": [
+    "previous M0 strict LOEWE once product convergence was a backlog",
+    "production has not received this branch",
+    "historical baseline provenance remains partial/unrecoverable"
+  ],
+  "next_mode": "SHIPPED_WITH_BACKLOG",
+  "writes_allowed": false
+}

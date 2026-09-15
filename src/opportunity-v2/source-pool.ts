@@ -48,6 +48,8 @@ export const DEFAULT_OPPORTUNITY_V2_SOURCES: OpportunityV2Source[] = [
   { id: "proc-cn-csg", name: "南方电网供应链统一服务平台", url: "https://www.bidding.csg.cn/", region: "CN", priority: "P0", types: ["procurement", "buyer_demand", "official_listing"], radars: ["ich"], enabled: false, status: "PENDING", last_fetch_at: null },
   { id: "proc-cn-gz-wglj", name: "广州市文化广电旅游局招标采购", url: "https://wglj.gz.gov.cn/tzgg/zbcg/", region: "CN", priority: "P0", types: ["procurement", "buyer_demand", "official_listing"], radars: ["ich"], enabled: false, status: "PENDING", last_fetch_at: null },
   { id: "proc-uk-contracts-finder", name: "UK Contracts Finder", url: "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?limit=100&stages=planning,tender", region: "GLOBAL", priority: "P1", types: ["procurement", "buyer_demand", "official_api", "ocds"], radars: ["ich"], enabled: false, status: "PENDING", last_fetch_at: null },
+  { id: "cnaf-guides", name: "国家艺术基金申报指南", url: "https://www.cnaf.cn/guide.html", region: "CN", priority: "P0", types: ["grant", "funding", "official_listing"], radars: ["ich"], enabled: false, status: "PENDING", last_fetch_at: null },
+  { id: "een-partnering", name: "EEN合作机会", url: "https://een.ec.europa.eu/partnering-opportunities", region: "GLOBAL", priority: "P1", types: ["partnership", "market_channel", "official_listing"], radars: ["ich"], enabled: false, status: "PENDING", last_fetch_at: null },
 ];
 
 // These are the built-in seed IDs exported for compatibility. They are not an allowlist:

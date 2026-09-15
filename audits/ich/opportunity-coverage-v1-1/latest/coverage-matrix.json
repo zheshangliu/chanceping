@@ -1,0 +1,129 @@
+{
+  "schema_version": "chanceping.opportunity-coverage.matrix.v1",
+  "generated_at": "2026-09-15T00:00:00.000Z",
+  "selected_source_count": 8,
+  "independent_n2_candidates": [
+    "cnaf-guides",
+    "een-partnering"
+  ],
+  "view_types": [
+    "grant_funding",
+    "exhibition_showcase",
+    "market_channel",
+    "residency_learning",
+    "partnership_commission",
+    "recognition_incubation"
+  ],
+  "rows": [
+    {
+      "source_id": "on-the-move-open-calls",
+      "name": "On the Move Open Calls",
+      "family": "on-the-move.org",
+      "registered_in_persisted_snapshot": true,
+      "configured_status": "NEEDS_ADAPTER",
+      "pool_items": 2,
+      "assessment_items": 0,
+      "current_or_early_items": 0,
+      "view_type_counts": {},
+      "evidence": "runtime pool snapshot"
+    },
+    {
+      "source_id": "curatorspace-opportunities",
+      "name": "CuratorSpace Opportunities",
+      "family": "www.curatorspace.com",
+      "registered_in_persisted_snapshot": true,
+      "configured_status": "ACTIVE",
+      "pool_items": 21,
+      "assessment_items": 10,
+      "current_or_early_items": 5,
+      "view_type_counts": {
+        "exhibition_showcase": 5,
+        "market_channel": 1,
+        "residency_learning": 1
+      },
+      "evidence": "runtime source-health snapshot"
+    },
+    {
+      "source_id": "american-craft-council-opportunities",
+      "name": "American Craft Council Opportunities Board",
+      "family": "craftcouncil.org",
+      "registered_in_persisted_snapshot": true,
+      "configured_status": "FAILED",
+      "pool_items": 47,
+      "assessment_items": 4,
+      "current_or_early_items": 1,
+      "view_type_counts": {
+        "exhibition_showcase": 1,
+        "market_channel": 1
+      },
+      "evidence": "runtime source-health snapshot"
+    },
+    {
+      "source_id": "craft-scotland-opportunities",
+      "name": "Craft Scotland",
+      "family": "www.craftscotland.org",
+      "registered_in_persisted_snapshot": true,
+      "configured_status": "FAILED",
+      "pool_items": 19,
+      "assessment_items": 4,
+      "current_or_early_items": 4,
+      "view_type_counts": {
+        "exhibition_showcase": 2,
+        "market_channel": 2,
+        "residency_learning": 2
+      },
+      "evidence": "runtime source-health snapshot"
+    },
+    {
+      "source_id": "artconnect-opportunities",
+      "name": "ArtConnect",
+      "family": "www.artconnect.com",
+      "registered_in_persisted_snapshot": true,
+      "configured_status": "ACTIVE",
+      "pool_items": 28,
+      "assessment_items": 8,
+      "current_or_early_items": 2,
+      "view_type_counts": {
+        "exhibition_showcase": 2
+      },
+      "evidence": "runtime source-health snapshot"
+    },
+    {
+      "source_id": "kcdf-opportunities",
+      "name": "KCDF 한국공예·디자인문화진흥원",
+      "family": "www.kcdf.or.kr",
+      "registered_in_persisted_snapshot": true,
+      "configured_status": "ACTIVE",
+      "pool_items": 10,
+      "assessment_items": 0,
+      "current_or_early_items": 0,
+      "view_type_counts": {},
+      "evidence": "runtime source-health snapshot"
+    },
+    {
+      "source_id": "cnaf-guides",
+      "name": "国家艺术基金申报指南",
+      "family": "www.cnaf.cn",
+      "registered_in_persisted_snapshot": false,
+      "configured_status": "PENDING",
+      "pool_items": 0,
+      "assessment_items": 0,
+      "current_or_early_items": 0,
+      "view_type_counts": {},
+      "evidence": "runtime pool snapshot"
+    },
+    {
+      "source_id": "een-partnering",
+      "name": "EEN合作机会",
+      "family": "een.ec.europa.eu",
+      "registered_in_persisted_snapshot": false,
+      "configured_status": "PENDING",
+      "pool_items": 0,
+      "assessment_items": 0,
+      "current_or_early_items": 0,
+      "view_type_counts": {},
+      "evidence": "runtime pool snapshot"
+    }
+  ],
+  "note": "Counts are read-only snapshot observations; source families are not multiplied when the hostname is shared."
+}

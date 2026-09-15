@@ -16,6 +16,7 @@ import { findOpportunityV2Source, isPublicHttpUrl, isPublicIp, migrateOpportunit
 import { filterOpportunityV2Radar } from "./radar-view";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import { recordProcurementChangeFeed } from "./procurement-change-feed";
+import { assessOpportunityCoverage } from "./opportunity-coverage";
 import type { OpportunityV2FetchOptions, OpportunityV2FetchResponse, OpportunityV2FetchTrace, OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
@@ -683,7 +684,8 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   writeOpportunityV2Sources(sources, options.sourcesPath);
   writeHealth(health, options.healthPath);
   const changeFeedPath = options.changeFeedPath ?? (options.poolPath ? path.join(path.dirname(path.resolve(options.poolPath)), "procurement-change-feed.json") : undefined);
-  const procurementChangeEvents = recordProcurementChangeFeed(merged.filter((item) => item.category === "procurement_project"), health, changeFeedPath, new Date().toISOString());
+  const trackedChangeItems = merged.filter((item) => item.category === "procurement_project" || ["current", "early"].includes(assessOpportunityCoverage(item).lane));
+  const procurementChangeEvents = recordProcurementChangeFeed(trackedChangeItems, health, changeFeedPath, new Date().toISOString());
   const radarOpportunities = filterOpportunityV2Radar(merged, sources);
   const finishedAt = new Date().toISOString();
   return {

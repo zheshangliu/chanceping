@@ -8,6 +8,7 @@ import { parseLoeweCraftPrize } from "./loewe";
 import type { ParsedAggregationItem } from "./common";
 import { parseCnyisaiListing, parse1zjListing, parseChuangyisaiListing, parseZjmtListing } from "./round2-domestic";
 import { parseCuratorSpaceListing, enrichCuratorSpaceItem } from "./curatorspace";
+import { parseCnafGuidesListing, parseEenPartneringListing } from "./coverage-sources";
 
 export interface AggregationAdapter {
   adapter_id: string;
@@ -38,6 +39,8 @@ export const AGGREGATION_ADAPTERS: AggregationAdapter[] = [
   { adapter_id: "chuangyisai-cultural-v1", source_id: "chuangyisai-cultural", parseListing: parseChuangyisaiListing },
   { adapter_id: "zjmtcn-product-competition-v1", source_id: "zjmtcn-product-competition", parseListing: parseZjmtListing },
   { adapter_id: "curatorspace-opportunities-v1", source_id: "curatorspace-opportunities", parseListing: parseCuratorSpaceListing, enrichItem: enrichCuratorSpaceItem },
+  { adapter_id: "cnaf-guides-v1", source_id: "cnaf-guides", parseListing: parseCnafGuidesListing },
+  { adapter_id: "een-partnering-v1", source_id: "een-partnering", parseListing: parseEenPartneringListing },
 ];
 
 export function getAggregationAdapter(sourceId: string): AggregationAdapter {

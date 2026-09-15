@@ -1,0 +1,40 @@
+{
+  "schema_version": "chanceping.opportunity-coverage.live-probes.v1",
+  "generated_at": "2026-09-15T00:00:00.000Z",
+  "probes": [
+    {
+      "source_id": "cnaf-guides",
+      "url": "https://www.cnaf.cn/guide.html",
+      "request": "GET",
+      "http_status": 200,
+      "bytes": 39245,
+      "elapsed_ms": 155,
+      "parser": "cnaf-guides-v1",
+      "parsed_items": 6,
+      "sample_titles": [
+        "国家艺术基金（一般项目）2027年度舞台艺术创作资助项目申报指南",
+        "国家艺术基金（一般项目）2027年度美术创作资助项目申报指南",
+        "国家艺术基金（一般项目）2027年度传播交流推广资助项目申报指南"
+      ],
+      "status": "PIPELINE_VERIFIED",
+      "blocker": null,
+      "production_status": "NOT_DEPLOYED"
+    },
+    {
+      "source_id": "een-partnering",
+      "url": "https://een.ec.europa.eu/partnering-opportunities",
+      "request": "GET",
+      "http_status": 200,
+      "bytes": 191534,
+      "elapsed_ms": 923,
+      "parser": "een-partnering-v1",
+      "parsed_items": 0,
+      "sample_titles": [],
+      "status": "WEB_OBSERVED",
+      "blocker": "当前抓取页没有与文创/非遗/手工艺相关的 Business Request 正例；保留观察，不进入公开覆盖",
+      "production_status": "NOT_DEPLOYED"
+    }
+  ],
+  "credentialed": false,
+  "production_mutated": false
+}

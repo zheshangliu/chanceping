@@ -1,0 +1,238 @@
+{
+  "schema_version": "chanceping.opportunity-coverage.source-family-dedupe.v1",
+  "generated_at": "2026-09-15T00:00:00.000Z",
+  "groups": [
+    {
+      "host": "www.shejijingsai.com",
+      "source_ids": [
+        "shejijingsai-list"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.xiacansai.com",
+      "source_ids": [
+        "chuangsaiyun-competition-list"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.contestwatchers.com",
+      "source_ids": [
+        "contest-watchers-open"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.craftscouncil.org.uk",
+      "source_ids": [
+        "crafts-council-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.artconnect.com",
+      "source_ids": [
+        "artconnect-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "competitions.archi",
+      "source_ids": [
+        "competitions-archi"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "craftprize.loewe.com",
+      "source_ids": [
+        "loewe-craft-prize"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "opencallradar.com",
+      "source_ids": [
+        "opencall-radar-craft"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "opencalls.ai",
+      "source_ids": [
+        "opencalls-ai"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "craftcouncil.org",
+      "source_ids": [
+        "american-craft-council-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.craftscotland.org",
+      "source_ids": [
+        "craft-scotland-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.kcdf.or.kr",
+      "source_ids": [
+        "kcdf-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "heritagecrafts.org.uk",
+      "source_ids": [
+        "heritage-crafts-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.homofaber.com",
+      "source_ids": [
+        "homo-faber-calls"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "culture360.org",
+      "source_ids": [
+        "asef-culture360-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "on-the-move.org",
+      "source_ids": [
+        "on-the-move-open-calls"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.curatorspace.com",
+      "source_ids": [
+        "curatorspace-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "artist.callforentry.org",
+      "source_ids": [
+        "cafe-call-for-entry"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.artshub.com.au",
+      "source_ids": [
+        "artshub-craft-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "craftcouncilbc.ca",
+      "source_ids": [
+        "craft-council-bc-calls"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.craftcouncilnl.ca",
+      "source_ids": [
+        "craft-council-nl-opportunities"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "dasai.cfw.cn",
+      "source_ids": [
+        "cfw-cultural-ip"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "whaleideas.com",
+      "source_ids": [
+        "whaleideas-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.1zj.com",
+      "source_ids": [
+        "1zj-cultural-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.chuangyisai.com",
+      "source_ids": [
+        "chuangyisai-cultural"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.zcool.com.cn",
+      "source_ids": [
+        "zcool-challenges"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.zjmtcn.com",
+      "source_ids": [
+        "zjmtcn-product-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "iuben.cn",
+      "source_ids": [
+        "iuben-cultural-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.everyart.cn",
+      "source_ids": [
+        "everyart-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.gtn9.com",
+      "source_ids": [
+        "gtn9-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.cnyisai.com",
+      "source_ids": [
+        "cnyisai-competition"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "www.find-tender.service.gov.uk",
+      "source_ids": [
+        "proc-uk-fts"
+      ],
+      "duplicate_family": false
+    },
+    {
+      "host": "canadabuys.canada.ca",
+      "source_ids": [
+        "proc-ca-canadabuys"
+      ],
+      "duplicate_family": false
+    }
+  ],
+  "rule": "same public hostname is a review hint only; it does not merge OpportunityV2 records or count a family twice for N2"
+}

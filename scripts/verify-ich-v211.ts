@@ -17,6 +17,8 @@ const EXPECTED_ADDED_IDS = [
   "proc-cn-csg",
   "proc-cn-gz-wglj",
   "proc-uk-contracts-finder",
+  "cnaf-guides",
+  "een-partnering",
 ].sort();
 
 function gitValue(args: string[]): string {
@@ -108,7 +110,7 @@ async function main(): Promise<void> {
   assert.equal(readOpportunityV2Sources(migrationPath).length, 31);
   const migrated = migrateOpportunityV2Sources(migrationPath);
   assert.equal(migrated.before_count, 31);
-  assert.equal(migrated.after_count, 42);
+  assert.equal(migrated.after_count, 44);
   assert.deepEqual([...migrated.added_ids].sort(), EXPECTED_ADDED_IDS);
   const migratedById = new Map(migrated.sources.map((candidate) => [candidate.id, candidate]));
   for (const sourceId of PHASE1_PROCUREMENT_IDS) {
@@ -118,14 +120,14 @@ async function main(): Promise<void> {
     assert.equal(candidate.status, "PENDING", `${sourceId} must remain PENDING until explicit enablement`);
   }
   const idempotent = migrateOpportunityV2Sources(migrationPath);
-  assert.equal(idempotent.before_count, 42);
-  assert.equal(idempotent.after_count, 42);
+  assert.equal(idempotent.before_count, 44);
+  assert.equal(idempotent.after_count, 44);
   assert.deepEqual(idempotent.added_ids, []);
   const schedulerPool = path.join(temp, "scheduler-pool.json");
   fs.writeFileSync(schedulerPool, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: now.toISOString(), opportunities: [] }));
   const schedulerCalls: string[] = [];
   const scheduled = await runOpportunityV2({ now, sourcesPath: migrationPath, poolPath: schedulerPool, healthPath: path.join(temp, "scheduler-health.json"), fetcher: async (url) => { schedulerCalls.push(url); return { status: 200, final_url: url, text: "" }; } });
-  assert.equal(scheduled.sources.length, 42, "next scheduler reads the migrated 42-source registry");
+  assert.equal(scheduled.sources.length, 44, "next scheduler reads the migrated 44-source registry");
   const disabledPhase1Urls = new Set(PHASE1_PROCUREMENT_IDS.map((sourceId) => migratedById.get(sourceId)?.url).filter((url): url is string => Boolean(url)));
   assert.equal(schedulerCalls.filter((url) => disabledPhase1Urls.has(url)).length, 0, "disabled Phase 1 procurement seeds must not be fetched");
 

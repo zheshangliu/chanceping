@@ -2,9 +2,11 @@ import { Hono } from "hono";
 import { filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, type OpportunityV2Fetcher } from "../../opportunity-v2";
 import { hasProcurementDomainTag, isCraftRelevantProcurement } from "../../opportunity-v2/procurement";
 import { assessProcurement, publicWorkbenchAssessment, type ProcurementBusinessProfile, type WorkbenchAssessment } from "../../opportunity-v2/procurement-workbench";
+export { coverageWorkbenchDetailPage, coverageWorkbenchPage } from "../../opportunity-v2/procurement-workbench";
 import { createProcurementFollowupStore, type FollowupStatus } from "../../opportunity-v2/procurement-followup-store";
 import { readProcurementChangeFeed } from "../../opportunity-v2/procurement-change-feed";
-import { renderProcurementCsv, renderProcurementMarkdown } from "../../opportunity-v2/procurement-export";
+import { renderOpportunityCoverageCsv, renderOpportunityCoverageMarkdown, renderProcurementCsv, renderProcurementMarkdown } from "../../opportunity-v2/procurement-export";
+import { filterOpportunityCoverage, publicOpportunityCoverageAssessment, type OpportunityCoverageAssessment, type OpportunityCoverageQuery } from "../../opportunity-v2/opportunity-coverage";
 import type { OpportunityV2, OpportunityV2Source } from "../../opportunity-v2/types";
 
 export interface ProcurementWorkbenchRouteOptions {
@@ -44,6 +46,26 @@ function buildAssessments(options: ProcurementWorkbenchRouteOptions): WorkbenchA
   return publicProcurementItems(opportunities, sources).map((item) => assessProcurement(item, profile, { now: options.now })).filter((item) => item.lane !== "excluded");
 }
 
+function activeCoverageItems(opportunities: OpportunityV2[], sources: OpportunityV2Source[]): OpportunityV2[] {
+  const sourceIds = new Set(sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
+  return opportunities.filter((item) => sourceIds.has(item.source_id));
+}
+
+function coverageQuery(raw: Record<string, string>): OpportunityCoverageQuery {
+  const viewTypes = ["grant_funding", "exhibition_showcase", "market_channel", "residency_learning", "partnership_commission", "recognition_incubation"] as const;
+  const viewType = viewTypes.includes(raw.view_type as typeof viewTypes[number]) ? raw.view_type as typeof viewTypes[number] : undefined;
+  const lanes = ["current", "early", "review", "research", "excluded"] as const;
+  const lane = lanes.includes(raw.lane as typeof lanes[number]) ? raw.lane as typeof lanes[number] : undefined;
+  const region = raw.region === "CN" || raw.region === "GLOBAL" ? raw.region : undefined;
+  return { ...(raw.q ? { q: raw.q } : {}), ...(viewType ? { view_type: viewType } : {}), ...(lane ? { lane } : {}), ...(region ? { region } : {}), ...(raw.source_id ? { source_id: raw.source_id } : {}) };
+}
+
+function buildCoverageAssessments(options: ProcurementWorkbenchRouteOptions): OpportunityCoverageAssessment[] {
+  const opportunities = options.opportunities ?? readOpportunityV2Pool().opportunities;
+  const sources = options.sources ?? readOpportunityV2Sources();
+  return filterOpportunityCoverage(activeCoverageItems(opportunities, sources), {}, { now: options.now });
+}
+
 function ownerOf(c: { req: { header: (name: string) => string | undefined } }): string { return c.req.header("x-business-user")?.trim() ?? ""; }
 function unauthorized(): Response { return new Response(JSON.stringify({ error: { code: "UNAUTHORIZED", message: "需要登录用户身份" } }), { status: 401, headers: { "content-type": "application/json" } }); }
 
@@ -53,6 +75,24 @@ export function procurementWorkbenchRoutes(options: ProcurementWorkbenchRouteOpt
   app.get("/opportunities", (c) => {
     const items = queryFilter(buildAssessments(options), c.req.query());
     return c.json({ schema_version: "chanceping-procurement-workbench.v1", total: items.length, opportunities: items.map(publicWorkbenchAssessment) });
+  });
+  app.get("/coverage", (c) => {
+    const opportunities = options.opportunities ?? readOpportunityV2Pool().opportunities;
+    const sources = options.sources ?? readOpportunityV2Sources();
+    const items = filterOpportunityCoverage(activeCoverageItems(opportunities, sources), coverageQuery(c.req.query()), { now: options.now });
+    return c.json({ schema_version: "chanceping-opportunity-coverage.v1", total: items.length, opportunities: items.map(publicOpportunityCoverageAssessment) });
+  });
+  app.get("/coverage/:id", (c) => {
+    const item = buildCoverageAssessments(options).find((candidate) => candidate.opportunity_id === c.req.param("id"));
+    if (!item) return c.json({ error: { code: "NOT_FOUND", message: "综合机会不存在" } }, 404);
+    return c.json(publicOpportunityCoverageAssessment(item));
+  });
+  app.get("/coverage/export", (c) => {
+    const opportunities = options.opportunities ?? readOpportunityV2Pool().opportunities;
+    const sources = options.sources ?? readOpportunityV2Sources();
+    const items = filterOpportunityCoverage(activeCoverageItems(opportunities, sources), coverageQuery(c.req.query()), { now: options.now });
+    if (c.req.query("format") === "csv") return new Response(renderOpportunityCoverageCsv(items), { status: 200, headers: { "content-type": "text/csv; charset=utf-8", "content-disposition": "attachment; filename=opportunity-coverage.csv" } });
+    return new Response(renderOpportunityCoverageMarkdown(items), { status: 200, headers: { "content-type": "text/markdown; charset=utf-8", "content-disposition": "attachment; filename=opportunity-coverage.md" } });
   });
   app.get("/opportunities/:id", (c) => {
     const item = buildAssessments(options).find((candidate) => candidate.opportunity_id === c.req.param("id"));

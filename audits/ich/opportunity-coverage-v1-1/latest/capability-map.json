@@ -1,0 +1,27 @@
+{
+  "schema_version": "chanceping.opportunity-coverage.capability-map.v1",
+  "views": [
+    "grant_funding",
+    "exhibition_showcase",
+    "market_channel",
+    "residency_learning",
+    "partnership_commission",
+    "recognition_incubation"
+  ],
+  "shared_paths": {
+    "classify": "src/opportunity-v2/opportunity-coverage.ts",
+    "api": "/api/opportunity-v2/workbench/coverage",
+    "page": "/ich/opportunities",
+    "followups": "/api/opportunity-v2/workbench/followups",
+    "changes": "/api/opportunity-v2/workbench/changes",
+    "export": "/api/opportunity-v2/workbench/export"
+  },
+  "safety": [
+    "body evidence required for type",
+    "ambiguous is review",
+    "seller offer excluded from public coverage",
+    "results/news/holiday content retained only as research or excluded",
+    "unsafe deadlines use shared public serializer"
+  ],
+  "no_new_db_or_scheduler": true
+}
