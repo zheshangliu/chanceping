@@ -1,8 +1,8 @@
 # 盯非遗｜综合机会覆盖 V1.1 业务摘要
 
 生成时间：2026-09-15T00:00:00.000Z
-分支：codex/opportunity-coverage-v1-1
-commit：c3ff6f757f7aa8dcd4cbfc9cd936902babe80e12
+分支：rescue/mvp-codex
+commit：2461151a567dfff3cbc11fd8a53a8ceaf808167b
 
 ## 承接状态
 

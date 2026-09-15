@@ -1015,7 +1015,7 @@
       "request": "GET",
       "http_status": 200,
       "bytes": 39245,
-      "elapsed_ms": 230,
+      "elapsed_ms": 278,
       "parser": "cnaf-guides-v1",
       "parsed_items": 6,
       "sample_titles": [
@@ -1033,7 +1033,7 @@
       "request": "GET",
       "http_status": 200,
       "bytes": 191534,
-      "elapsed_ms": 953,
+      "elapsed_ms": 1013,
       "parser": "een-partnering-v1",
       "parsed_items": 0,
       "sample_titles": [],
