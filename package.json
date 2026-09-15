@@ -85,6 +85,7 @@
     "verify:procurement:phase1:rollout-control": "tsx scripts/verify-procurement-phase1-rollout-control.ts",
     "verify:procurement:bootstrap-posix": "tsx scripts/verify-procurement-bootstrap-posix.ts",
     "verify:procurement:preflight-legacy": "tsx scripts/verify-procurement-preflight-legacy.ts",
+    "verify:procurement:memo-parity": "tsx scripts/verify-procurement-memo-parity.ts",
     "verify:llm-retry": "tsx scripts/verify-llm-retry.ts",
     "verify:search-cost-guard": "tsx scripts/verify-search-cost-guard.ts",
     "verify:q3": "tsx scripts/verify-q3-saveable-failed-run.ts",
