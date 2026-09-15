@@ -41,8 +41,10 @@ function buildBootstrapCommand(options = {}) {
     throw new Error("CHANCEPING_CONTROL_PLANE_COMMIT must be a full git SHA");
   }
   return [
-    "set -Eeuo pipefail",
-    "set -o pipefail",
+    // Alibaba Cloud Assistant invokes the bootstrap with /bin/sh. Keep this
+    // wrapper POSIX-compatible; the downloaded rollout helper is explicitly
+    // executed with bash below and retains its own strict-mode settings.
+    "set -eu",
     `export CONTROL_PLANE_COMMIT=${shellQuote(controlPlaneCommit)}`,
     `export DEPLOY_REF=${shellQuote(deployRef)}`,
     `export EXPECTED_COMMIT=${shellQuote(expectedCommit)}`,
