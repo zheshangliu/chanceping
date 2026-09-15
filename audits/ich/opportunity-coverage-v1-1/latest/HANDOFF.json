@@ -7,7 +7,7 @@
   "deployed_business_sha": "f514ee6b624dc2bb5abf12bb317cb30c37bedb5d",
   "previous_delivery_sha": "fb3a6edcac2dbee826ea6bb13d70a01374961397",
   "source_branch": "codex/opportunity-coverage-v1-1",
-  "current_commit": "fb3a6edcac2dbee826ea6bb13d70a01374961397",
+  "current_commit": "c3ff6f757f7aa8dcd4cbfc9cd936902babe80e12",
   "branch_descends_from_deployed_release": false,
   "existing_paths": {
     "source_registry": "src/opportunity-v2/source-pool.ts",

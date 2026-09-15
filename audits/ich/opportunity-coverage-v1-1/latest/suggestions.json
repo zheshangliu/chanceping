@@ -106,23 +106,6 @@
       "detail_url": "https://www.shejijingsai.com/2026/08/1619022.html"
     },
     {
-      "opportunity_id": "oppv2_7ecd1a07715569e3e8fb12be",
-      "title": "2026年“世界之星”WorldStar包装奖 作品征集通知",
-      "view_types": [
-        "exhibition_showcase",
-        "market_channel"
-      ],
-      "lane": "current",
-      "source": "设计竞赛网",
-      "deadline": "2026-09-20T23:59:00.000Z",
-      "money_flow": "unknown",
-      "qualification_gaps": [
-        "供货/选品条件与申请主体待核验"
-      ],
-      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
-      "detail_url": "https://www.shejijingsai.com/2026/07/1612434.html"
-    },
-    {
       "opportunity_id": "oppv2_1405f73cb9b42e79fb5f4a11",
       "title": "“文藏徽州”公共品牌VI设计征集公告",
       "view_types": [
@@ -172,6 +155,23 @@
       ],
       "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
       "detail_url": "https://www.shejijingsai.com/2026/06/1600758.html"
+    },
+    {
+      "opportunity_id": "oppv2_14af2a6603c4993f8d5d0c00",
+      "title": "2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "source": "设计竞赛网",
+      "deadline": "2026-09-30T23:59:00.000Z",
+      "money_flow": "unknown",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "detail_url": "https://www.shejijingsai.com/2026/05/1551048.html"
     }
   ]
 }

@@ -10,15 +10,15 @@
   "memo_current": 515,
   "memo_known_deadlines": 213,
   "memo_unknown_deadlines": 302,
-  "coverage_assessments": 180,
+  "coverage_assessments": 176,
   "lanes": {
-    "current": 127,
-    "research": 15,
+    "current": 125,
+    "research": 13,
     "review": 38
   },
   "view_type_counts": {
-    "exhibition_showcase": 129,
-    "market_channel": 107,
+    "exhibition_showcase": 125,
+    "market_channel": 103,
     "partnership_commission": 6,
     "grant_funding": 12,
     "residency_learning": 11

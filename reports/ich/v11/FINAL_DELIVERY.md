@@ -15,11 +15,11 @@
 ## 3. 六类覆盖
 
 - 当前 snapshot Opportunity Pool：2098
-- 综合机会 assessment：180（去重仍按 opportunity_id）
-- 分区：current 127 · research 15 · review 38
+- 综合机会 assessment：176（去重仍按 opportunity_id）
+- 分区：current 125 · research 13 · review 38
 - grant_funding：12 条（assessment 可多标签重叠）
-- exhibition_showcase：129 条（assessment 可多标签重叠）
-- market_channel：107 条（assessment 可多标签重叠）
+- exhibition_showcase：125 条（assessment 可多标签重叠）
+- market_channel：103 条（assessment 可多标签重叠）
 - residency_learning：11 条（assessment 可多标签重叠）
 - partnership_commission：6 条（assessment 可多标签重叠）
 - recognition_incubation：0 条（assessment 可多标签重叠）
@@ -34,10 +34,10 @@
 - 4. 青海林业和草原局 青海林草IP形象征集启事｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-15T23:59:00.000Z｜https://www.shejijingsai.com/2026/08/1627075.html
 - 5. 2026第四届中国（吉林）动漫大会优秀动漫作品推介活动征集通知｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-20T23:59:00.000Z｜https://www.shejijingsai.com/2026/08/1627333.html
 - 6. 2026景德镇城市礼物征集公告｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-20T23:59:00.000Z｜https://www.shejijingsai.com/2026/08/1619022.html
-- 7. 2026年“世界之星”WorldStar包装奖 作品征集通知｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-20T23:59:00.000Z｜https://www.shejijingsai.com/2026/07/1612434.html
-- 8. “文藏徽州”公共品牌VI设计征集公告｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-27T23:59:00.000Z｜https://www.shejijingsai.com/2026/08/1627059.html
-- 9. “雪域赤橙 文创蓝焰”文创作品征集活动｜exhibition_showcase、market_channel｜CFW设计大赛｜文创IP｜2026-09-30T23:59:00.000Z｜https://dasai.cfw.cn/ds/1262.html
-- 10. “印象中国”2026短视频征集展示活动作品征集｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-30T23:59:00.000Z｜https://www.shejijingsai.com/2026/06/1600758.html
+- 7. “文藏徽州”公共品牌VI设计征集公告｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-27T23:59:00.000Z｜https://www.shejijingsai.com/2026/08/1627059.html
+- 8. “雪域赤橙 文创蓝焰”文创作品征集活动｜exhibition_showcase、market_channel｜CFW设计大赛｜文创IP｜2026-09-30T23:59:00.000Z｜https://dasai.cfw.cn/ds/1262.html
+- 9. “印象中国”2026短视频征集展示活动作品征集｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-30T23:59:00.000Z｜https://www.shejijingsai.com/2026/06/1600758.html
+- 10. 2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动｜exhibition_showcase、market_channel｜设计竞赛网｜2026-09-30T23:59:00.000Z｜https://www.shejijingsai.com/2026/05/1551048.html
 
 ## 5. 来源贡献和取舍
 

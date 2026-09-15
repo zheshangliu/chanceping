@@ -2,7 +2,7 @@
 
 生成时间：2026-09-15T00:00:00.000Z
 分支：codex/opportunity-coverage-v1-1
-commit：fb3a6edcac2dbee826ea6bb13d70a01374961397
+commit：c3ff6f757f7aa8dcd4cbfc9cd936902babe80e12
 
 ## 承接状态
 
@@ -15,9 +15,9 @@ commit：fb3a6edcac2dbee826ea6bb13d70a01374961397
 - persisted Source Pool：33
 - effective defaults in memory：44
 - Opportunity Pool：2098
-- 覆盖 assessment：180
-- 分区：current 127 · research 15 · review 38
-- 类型映射（多标签可重叠）：exhibition_showcase 129 · market_channel 107 · partnership_commission 6 · grant_funding 12 · residency_learning 11
+- 覆盖 assessment：176
+- 分区：current 125 · research 13 · review 38
+- 类型映射（多标签可重叠）：exhibition_showcase 125 · market_channel 103 · partnership_commission 6 · grant_funding 12 · residency_learning 11
 
 ## 六类覆盖建议
 
@@ -85,17 +85,7 @@ commit：fb3a6edcac2dbee826ea6bb13d70a01374961397
 - 下一步：打开来源原文，核验资格、材料、费用与截止日期后再决定申请
 - 原文：https://www.shejijingsai.com/2026/08/1619022.html
 
-### 7. 2026年“世界之星”WorldStar包装奖 作品征集通知
-- 类型：exhibition_showcase、market_channel
-- 分区：current
-- 来源：设计竞赛网
-- 截止：2026-09-20T23:59:00.000Z
-- 钱的方向：unknown
-- 资格缺口：供货/选品条件与申请主体待核验
-- 下一步：打开来源原文，核验资格、材料、费用与截止日期后再决定申请
-- 原文：https://www.shejijingsai.com/2026/07/1612434.html
-
-### 8. “文藏徽州”公共品牌VI设计征集公告
+### 7. “文藏徽州”公共品牌VI设计征集公告
 - 类型：exhibition_showcase、market_channel
 - 分区：current
 - 来源：设计竞赛网
@@ -105,7 +95,7 @@ commit：fb3a6edcac2dbee826ea6bb13d70a01374961397
 - 下一步：打开来源原文，核验资格、材料、费用与截止日期后再决定申请
 - 原文：https://www.shejijingsai.com/2026/08/1627059.html
 
-### 9. “雪域赤橙 文创蓝焰”文创作品征集活动
+### 8. “雪域赤橙 文创蓝焰”文创作品征集活动
 - 类型：exhibition_showcase、market_channel
 - 分区：current
 - 来源：CFW设计大赛｜文创IP
@@ -115,7 +105,7 @@ commit：fb3a6edcac2dbee826ea6bb13d70a01374961397
 - 下一步：打开来源原文，核验资格、材料、费用与截止日期后再决定申请
 - 原文：https://dasai.cfw.cn/ds/1262.html
 
-### 10. “印象中国”2026短视频征集展示活动作品征集
+### 9. “印象中国”2026短视频征集展示活动作品征集
 - 类型：exhibition_showcase、market_channel
 - 分区：current
 - 来源：设计竞赛网
@@ -124,6 +114,16 @@ commit：fb3a6edcac2dbee826ea6bb13d70a01374961397
 - 资格缺口：供货/选品条件与申请主体待核验
 - 下一步：打开来源原文，核验资格、材料、费用与截止日期后再决定申请
 - 原文：https://www.shejijingsai.com/2026/06/1600758.html
+
+### 10. 2026 第五届北京天文馆 “聚星杯”天文创意产品征集活动
+- 类型：exhibition_showcase、market_channel
+- 分区：current
+- 来源：设计竞赛网
+- 截止：2026-09-30T23:59:00.000Z
+- 钱的方向：unknown
+- 资格缺口：供货/选品条件与申请主体待核验
+- 下一步：打开来源原文，核验资格、材料、费用与截止日期后再决定申请
+- 原文：https://www.shejijingsai.com/2026/05/1551048.html
 
 ## N2 有界来源验证
 
