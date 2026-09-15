@@ -82,6 +82,7 @@
     "verify:live-mvp": "CHANCEPING_LOAD_API_ENV=true DATA_MODE=live LLM_MODE=mock tsx scripts/verify-live-mvp.ts",
     "verify:live-provider-health": "CHANCEPING_LOAD_API_ENV=true tsx scripts/verify-live-provider-health.ts",
     "verify:live-llm": "CHANCEPING_LOAD_API_ENV=true CHANCEPING_ENABLE_LOCAL_LIVE_LLM=true CHANCEPING_LLM_PROFILE=contest DATA_MODE=mock LLM_MODE=live tsx scripts/verify-live-llm.ts",
+    "verify:procurement:phase1:rollout-control": "tsx scripts/verify-procurement-phase1-rollout-control.ts",
     "verify:llm-retry": "tsx scripts/verify-llm-retry.ts",
     "verify:search-cost-guard": "tsx scripts/verify-search-cost-guard.ts",
     "verify:q3": "tsx scripts/verify-q3-saveable-failed-run.ts",
