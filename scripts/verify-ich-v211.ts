@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { ichPagesRoutes } from "../src/api/routes/ich-pages";
-import { migrateOpportunityV2Sources, readOpportunityV2Sources, runOpportunityV2, writeOpportunityV2Sources } from "../src/opportunity-v2";
+import { DEFAULT_OPPORTUNITY_V2_SOURCES, migrateOpportunityV2Sources, readOpportunityV2Sources, runOpportunityV2, writeOpportunityV2Sources } from "../src/opportunity-v2";
 import type { OpportunityV2, OpportunityV2Source } from "../src/opportunity-v2/types";
 
 const now = new Date("2026-09-10T00:00:00.000Z");
@@ -13,6 +13,10 @@ const EXPECTED_ADDED_IDS = [
   "proc-uk-fts",
   "proc-ca-canadabuys",
   ...PHASE1_PROCUREMENT_IDS,
+  "proc-cn-gzsun",
+  "proc-cn-csg",
+  "proc-cn-gz-wglj",
+  "proc-uk-contracts-finder",
 ].sort();
 
 function gitValue(args: string[]): string {
@@ -104,7 +108,7 @@ async function main(): Promise<void> {
   assert.equal(readOpportunityV2Sources(migrationPath).length, 31);
   const migrated = migrateOpportunityV2Sources(migrationPath);
   assert.equal(migrated.before_count, 31);
-  assert.equal(migrated.after_count, 38);
+  assert.equal(migrated.after_count, 42);
   assert.deepEqual([...migrated.added_ids].sort(), EXPECTED_ADDED_IDS);
   const migratedById = new Map(migrated.sources.map((candidate) => [candidate.id, candidate]));
   for (const sourceId of PHASE1_PROCUREMENT_IDS) {
@@ -114,14 +118,14 @@ async function main(): Promise<void> {
     assert.equal(candidate.status, "PENDING", `${sourceId} must remain PENDING until explicit enablement`);
   }
   const idempotent = migrateOpportunityV2Sources(migrationPath);
-  assert.equal(idempotent.before_count, 38);
-  assert.equal(idempotent.after_count, 38);
+  assert.equal(idempotent.before_count, 42);
+  assert.equal(idempotent.after_count, 42);
   assert.deepEqual(idempotent.added_ids, []);
   const schedulerPool = path.join(temp, "scheduler-pool.json");
   fs.writeFileSync(schedulerPool, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: now.toISOString(), opportunities: [] }));
   const schedulerCalls: string[] = [];
   const scheduled = await runOpportunityV2({ now, sourcesPath: migrationPath, poolPath: schedulerPool, healthPath: path.join(temp, "scheduler-health.json"), fetcher: async (url) => { schedulerCalls.push(url); return { status: 200, final_url: url, text: "" }; } });
-  assert.equal(scheduled.sources.length, 38, "next scheduler reads the migrated 38-source registry");
+  assert.equal(scheduled.sources.length, 42, "next scheduler reads the migrated 42-source registry");
   const disabledPhase1Urls = new Set(PHASE1_PROCUREMENT_IDS.map((sourceId) => migratedById.get(sourceId)?.url).filter((url): url is string => Boolean(url)));
   assert.equal(schedulerCalls.filter((url) => disabledPhase1Urls.has(url)).length, 0, "disabled Phase 1 procurement seeds must not be fetched");
 
@@ -184,7 +188,7 @@ async function main(): Promise<void> {
     dns_changed: false,
     note: "All migration and scheduler checks used local temporary files and a fake fetcher."
   });
-  fs.writeFileSync(path.join(auditDir, "README.md"), `# Procurement Radar Phase 1.2A.3\n\nThis isolated contract audit verifies idempotent source migration from the historical 31-source fixture to the current 38-source registry. The five Phase 1 procurement seeds are registered but remain disabled/PENDING, so the scheduler does not fetch them. Production, DNS, production migration, and production scheduler were not touched.\n\n- First migration: ${migration.historical_fixture_before} → ${migration.after_first_migration}\n- Exact added IDs: ${migration.actual_added_ids.join(", ")}\n- Second migration: ${migration.after_first_migration} → ${migration.after_second_migration}\n- Phase 1 seeds disabled/PENDING: ${migration.phase1_new_sources_disabled}/${PHASE1_PROCUREMENT_IDS.length}, ${migration.phase1_new_sources_pending}/${PHASE1_PROCUREMENT_IDS.length}\n- Disabled Phase 1 seeds fetched: ${migration.phase1_new_sources_fetched_while_disabled}\n- Admin customization preserved: ${migration.admin_customization_preserved}\n`);
+  fs.writeFileSync(path.join(auditDir, "README.md"), `# Procurement Radar Phase 1.2A.3\n\nThis isolated contract audit verifies idempotent source migration from the historical 31-source fixture to the current ${DEFAULT_OPPORTUNITY_V2_SOURCES.length}-source registry. The Phase 1 and autonomous procurement seeds are registered but remain disabled/PENDING, so the scheduler does not fetch them. Production, DNS, production migration, and production scheduler were not touched.\n\n- First migration: ${migration.historical_fixture_before} → ${migration.after_first_migration}\n- Exact added IDs: ${migration.actual_added_ids.join(", ")}\n- Second migration: ${migration.after_first_migration} → ${migration.after_second_migration}\n- Phase 1 seeds disabled/PENDING: ${migration.phase1_new_sources_disabled}/${PHASE1_PROCUREMENT_IDS.length}, ${migration.phase1_new_sources_pending}/${PHASE1_PROCUREMENT_IDS.length}\n- Disabled Phase 1 seeds fetched: ${migration.phase1_new_sources_fetched_while_disabled}\n- Admin customization preserved: ${migration.admin_customization_preserved}\n`);
   console.log(JSON.stringify({ gate: "pass", memo_only_item: "memo-only", home_ids: homeIds, memo_ids: htmlIds, memo_total: json.total, migration, scheduler_registry_sources: scheduled.sources.length, admin_config_preserved: true, reconciliation: { status: reconciliation.summary.baseline_status, legit_competition_missing: reconciliation.summary.legit_competition_missing, unknown: reconciliation.summary.unknown_missing } }, null, 2));
 }
 

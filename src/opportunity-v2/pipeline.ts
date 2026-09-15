@@ -15,6 +15,7 @@ import { deduplicateOpportunityV2, mergeOpportunityV2, normalizeOpportunityV2, r
 import { findOpportunityV2Source, isPublicHttpUrl, isPublicIp, migrateOpportunityV2Sources, readOpportunityV2Sources, updateOpportunityV2Source, writeOpportunityV2Sources } from "./source-pool";
 import { filterOpportunityV2Radar } from "./radar-view";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
+import { recordProcurementChangeFeed } from "./procurement-change-feed";
 import type { OpportunityV2FetchOptions, OpportunityV2FetchResponse, OpportunityV2FetchTrace, OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
@@ -392,6 +393,17 @@ interface SourcePageResponse {
 }
 
 async function fetchSourcePage(source: OpportunityV2Source, url: string, fetcher: OpportunityV2Fetcher): Promise<SourcePageResponse> {
+  if (source.id === "proc-cn-csg") {
+    const homeOptions = procurementFetchOptions(source.id);
+    const home = await fetcher(url, homeOptions);
+    const traces = [traceForFetch(url, homeOptions, home, source.id)];
+    const noticeListing = extractAnchors(home.text, home.final_url || url).find((anchor) => /\/(?:zbgg|zbcg)\/index\.jhtml(?:$|\?)/iu.test(anchor.href));
+    if (!noticeListing) return { response: home, traces };
+    const listingOptions = procurementFetchOptions(source.id);
+    const listing = await fetcher(noticeListing.href, listingOptions);
+    traces.push(traceForFetch(noticeListing.href, listingOptions, listing, source.id));
+    return { response: listing, traces };
+  }
   if (source.id === "proc-cn-cib") {
     const homeOptions = procurementFetchOptions(source.id);
     const home = await fetcher(url, homeOptions);
@@ -582,7 +594,7 @@ export async function testOpportunityV2Source(options: { sourceId: string; fetch
   }
 }
 
-export async function runOpportunityV2(options: { now?: Date; fetcher?: OpportunityV2Fetcher; maxItems?: number; sourcesPath?: string; poolPath?: string; healthPath?: string; sourceId?: string } = {}): Promise<OpportunityV2RunResult> {
+export async function runOpportunityV2(options: { now?: Date; fetcher?: OpportunityV2Fetcher; maxItems?: number; sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; sourceId?: string } = {}): Promise<OpportunityV2RunResult> {
   const now = options.now ?? new Date();
   const startedAt = now.toISOString();
   const fetcher = options.fetcher ?? defaultOpportunityV2Fetcher;
@@ -670,6 +682,8 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   writeOpportunityV2Pool({ schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date().toISOString(), opportunities: merged }, options.poolPath);
   writeOpportunityV2Sources(sources, options.sourcesPath);
   writeHealth(health, options.healthPath);
+  const changeFeedPath = options.changeFeedPath ?? (options.poolPath ? path.join(path.dirname(path.resolve(options.poolPath)), "procurement-change-feed.json") : undefined);
+  const procurementChangeEvents = recordProcurementChangeFeed(merged.filter((item) => item.category === "procurement_project"), health, changeFeedPath, new Date().toISOString());
   const radarOpportunities = filterOpportunityV2Radar(merged, sources);
   const finishedAt = new Date().toISOString();
   return {
@@ -685,9 +699,10 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
     source_health: health,
     radar_opportunities: radarOpportunities,
     request_traces: requestTraces,
+    procurement_change_events: procurementChangeEvents.map((event) => ({ event_id: event.event_id, opportunity_id: event.opportunity_id, event_type: event.event_type })),
   };
 }
 
-export async function runOpportunityV2Source(options: { sourceId: string; now?: Date; fetcher?: OpportunityV2Fetcher; maxItems?: number; sourcesPath?: string; poolPath?: string; healthPath?: string }): Promise<OpportunityV2RunResult> {
+export async function runOpportunityV2Source(options: { sourceId: string; now?: Date; fetcher?: OpportunityV2Fetcher; maxItems?: number; sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string }): Promise<OpportunityV2RunResult> {
   return runOpportunityV2(options);
 }

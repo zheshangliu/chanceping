@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 
-export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
+export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
 
 function queryOf(raw: Record<string, string>): OpportunityV2RadarQuery {
   const region = raw.region === "CN" || raw.region === "GLOBAL" ? raw.region : undefined;
@@ -40,13 +40,14 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
 
   app.get("/sources", (c) => c.json({ sources: sources() }));
   app.get("/sources/overview", (c) => c.json(buildOpportunityV2SourceOverview({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath })));
+  app.get("/procurement/changes", (c) => c.json(readProcurementChangeFeed(options.changeFeedPath)));
   app.post("/sources", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
     try {
       const source = createOpportunityV2Source(sourceInput(await bodyOf(c)));
       appendOpportunityV2Source(source, options.sourcesPath);
       const test = await testOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath });
-      const run = test.ok ? await runOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath }) : null;
+      const run = test.ok ? await runOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }) : null;
       return c.json({ source: findOpportunityV2Source(source.id, options.sourcesPath), test, run });
     } catch (error) {
       return c.json({ error: { code: "INVALID_SOURCE", message: error instanceof Error ? error.message : String(error) } }, 400);
@@ -94,7 +95,7 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   app.post("/sources/:id/run", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
     if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    return c.json(await runOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath }));
+    return c.json(await runOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }));
   });
   app.get("/opportunities", (c) => {
     const items = filterOpportunityV2Radar(pool().opportunities, sources(), queryOf(c.req.query()));
@@ -110,6 +111,6 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
     if (!item) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
     return c.json(serializeOpportunityV2Public(item));
   });
-  app.post("/run", async (c) => { const denied = requireAdmin(c); if (denied) return denied; return c.json(await runOpportunityV2({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, fetcher: options.fetcher })); });
+  app.post("/run", async (c) => { const denied = requireAdmin(c); if (denied) return denied; return c.json(await runOpportunityV2({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath, fetcher: options.fetcher })); });
   return app;
 }

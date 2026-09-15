@@ -4,17 +4,7 @@
   "scheduler_disabled_seed_gate": "PASS",
   "admin_customization": "PASS",
   "production_untouched": "PASS",
-  "typecheck": "PASS",
-  "verify_all": "PASS",
-  "verify:ich:v211": "PASS",
-  "verify:ich:ui-v21": "PASS",
-  "verify:ich:procurement": "PASS",
-  "verify:ich:procurement:phase1": "PASS",
-  "verify:ich:procurement:phase1:1": "PASS",
-  "verify:ich:procurement:phase1:2a": "PASS",
-  "verify:ich:procurement:semantic": "PASS",
-  "verify:ich:competition-module": "PASS",
-  "known_historical_baseline_limitation": "competition UNKNOWN=26, legit_competition_missing=0",
-  "known_unrelated_failure": "verify:ich:v12 ich-memo-mobile assertion",
-  "notes": "No new failures were introduced. Competition UNKNOWN=26 remains the documented historical baseline limitation; verify:ich:v12 remains an unrelated UI failure."
+  "typecheck": "RUN_SEPARATELY",
+  "verify_all": "RUN_SEPARATELY",
+  "notes": "Competition UNKNOWN=26 remains the documented historical baseline limitation; verify:ich:v12 remains an unrelated UI failure."
 }

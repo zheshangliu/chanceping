@@ -124,7 +124,7 @@ async function main(): Promise<void> {
   assert.deepEqual(defaults.filter((source) => phase1Ids.includes(source.id)).map((source) => [source.enabled, source.status]), phase1Ids.map(() => [false, "PENDING"]));
   assert.ok(defaults.some((source) => source.id === "proc-uk-fts"));
   assert.ok(defaults.some((source) => source.id === "proc-ca-canadabuys"));
-  assert.equal(defaults.length, 38);
+  assert.equal(defaults.length, 42);
   assert.deepEqual(procurementFetchOptions("proc-eu-ted").method, "POST");
 
   const idempotentSource = activeSource("proc-cn-ccgp", ccgpListing, "CN");

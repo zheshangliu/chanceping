@@ -1,0 +1,58 @@
+[
+  {
+    "source_id": "proc-cn-gzsun",
+    "name": "广州阳光采购服务平台",
+    "url": "https://www.gzsun.com.cn/",
+    "status": "ACTIVE",
+    "http_status": 200,
+    "ok": true,
+    "format": "DEDICATED",
+    "items_seen": 6,
+    "deadline_resolved": 3,
+    "deadline_unknown": 3,
+    "error": null,
+    "evidence_level": "LIVE_READ"
+  },
+  {
+    "source_id": "proc-cn-csg",
+    "name": "南方电网供应链统一服务平台",
+    "url": "https://www.bidding.csg.cn/",
+    "status": "ACTIVE",
+    "http_status": 200,
+    "ok": true,
+    "format": "DEDICATED",
+    "items_seen": 12,
+    "deadline_resolved": 3,
+    "deadline_unknown": 9,
+    "error": null,
+    "evidence_level": "LIVE_READ"
+  },
+  {
+    "source_id": "proc-cn-gz-wglj",
+    "name": "广州市文化广电旅游局招标采购",
+    "url": "https://wglj.gz.gov.cn/tzgg/zbcg/",
+    "status": "ACTIVE",
+    "http_status": 200,
+    "ok": true,
+    "format": "DEDICATED",
+    "items_seen": 11,
+    "deadline_resolved": 2,
+    "deadline_unknown": 9,
+    "error": null,
+    "evidence_level": "LIVE_READ"
+  },
+  {
+    "source_id": "proc-uk-contracts-finder",
+    "name": "UK Contracts Finder",
+    "url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?limit=100&stages=planning,tender",
+    "status": "ACTIVE",
+    "http_status": 200,
+    "ok": true,
+    "format": "DEDICATED",
+    "items_seen": 62,
+    "deadline_resolved": 62,
+    "deadline_unknown": 0,
+    "error": null,
+    "evidence_level": "LIVE_READ"
+  }
+]

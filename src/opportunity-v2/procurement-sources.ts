@@ -23,6 +23,10 @@ const SOURCE_LISTING_URLS: Record<string, string> = {
   "proc-kr-koneps": "https://www.data.go.kr/data/15129394/openapi.do",
   "proc-un-ungm": "https://www.ungm.org/Public/Notice",
   "proc-wb": "https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00979&resourceId=RS00909&type=json",
+  "proc-cn-gzsun": "https://www.gzsun.com.cn/",
+  "proc-cn-csg": "https://www.bidding.csg.cn/",
+  "proc-cn-gz-wglj": "https://wglj.gz.gov.cn/tzgg/zbcg/",
+  "proc-uk-contracts-finder": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?limit=100&stages=planning,tender",
 };
 
 export const TED_PROCUREMENT_QUERY = "PD>=today(-7) AND PD<=today(0) AND FT~cultural";
@@ -47,6 +51,7 @@ export function procurementFetchOptions(sourceId: string): OpportunityV2FetchOpt
     };
   }
   if (sourceId === "proc-global-ocp") return { method: "GET", headers: { accept: "application/gzip" }, decompress: "gzip" };
+  if (sourceId === "proc-uk-contracts-finder") return { method: "GET", headers: { accept: "application/json" } };
   return { method: "GET" };
 }
 
@@ -351,6 +356,34 @@ function parseHtmlListing(sourceId: string, html: string, sourceUrl: string): Pa
   });
 }
 
+const AUTONOMOUS_HTML_PATHS: Record<string, RegExp> = {
+  "proc-cn-gzsun": /\/cgdt\/001002\/001002001\/\d{8}\/[^/?#"']+\.html(?:$|[?#])/iu,
+  "proc-cn-csg": /\/(?:zbcg|zbgg|fzbgg)\/\d+\.jhtml(?:$|[?#])/iu,
+  "proc-cn-gz-wglj": /\/tzgg\/zbcg\/content\/post_\d+\.html(?:$|[?#])/iu,
+};
+
+function parseAutonomousHtmlListing(sourceId: string, html: string, sourceUrl: string, now = new Date()): ParsedAggregationItem[] {
+  const allowed = AUTONOMOUS_HTML_PATHS[sourceId];
+  if (!allowed) return [];
+  const unique = new Map<string, ParsedAggregationItem>();
+  for (const anchor of extractAnchors(html, sourceUrl)) {
+    if (!allowed.test(anchor.href) || anchor.text.length < 8 || /^(?:更多|more|首页|上一页|下一页)$/iu.test(anchor.text)) continue;
+    const text = `${anchor.text} ${anchor.href}`;
+    const item = procurementItem({ sourceId, sourceUrl, detailUrl: anchor.href, title: anchor.text, text, direction: "buyer_demand", stage: procurementStage(text, null, now), noticeType: "tender", projectId: identityHash(sourceId, anchor.href), region: "CN" });
+    unique.set(item.source_item_id, item);
+  }
+  return [...unique.values()];
+}
+
+function parseAutonomousHtmlDetail(sourceId: string, payload: string, sourceUrl: string, detailUrl: string, now = new Date()): ParsedAggregationItem | null {
+  const title = pageTitle(payload);
+  if (!title) return null;
+  const text = pageText(payload);
+  const evidence = dateFromEvidence(text, title, now);
+  const region = sourceId === "proc-cn-gz-wglj" || sourceId.startsWith("proc-cn-") ? "CN" : "GLOBAL";
+  return procurementItem({ sourceId, sourceUrl, detailUrl, title, text, publishedAt: parseProcurementDateText(text.match(/(?:发布日期|发布时间)\s*[:：]?\s*([^\s]{8,24})/u)?.[1] ?? null, now, text), deadline: evidence.deadline, deadlineRaw: evidence.raw, deadlineKind: evidence.kind, direction: "buyer_demand", stage: procurementStage(text, evidence.deadline, now), noticeType: "tender", projectId: identityHash(sourceId, detailUrl), buyer: labeledText(text, ["采购单位", "采购人", "招标人"]) || null, budget: parseMoney(text), region });
+}
+
 function stringValue(value: unknown): string {
   if (typeof value === "string") return value;
   if (Array.isArray(value)) return value.map(stringValue).find(Boolean) ?? "";
@@ -549,6 +582,8 @@ export function parseProcurementSource(sourceId: string, payload: string, source
   if (sourceId === "proc-kr-koneps") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
   if (sourceId === "proc-wb") return /^\s*(?:\{|\[)/u.test(payload) ? parseWorldBankJson(payload, sourceUrl, now) : parseWorldBankHtml(payload, sourceUrl, now);
   if (sourceId === "proc-un-ungm") return parseUngmHtml(payload, sourceUrl, now);
+  if (sourceId === "proc-uk-contracts-finder") return parseOcdsText(payload, sourceId, sourceUrl, "GLOBAL", now);
+  if (AUTONOMOUS_HTML_PATHS[sourceId]) return parseAutonomousHtmlListing(sourceId, payload, sourceUrl, now);
   return parseProcurementPayload(payload, sourceId, sourceUrl, sourceId.startsWith("proc-cn-") ? "CN" : "GLOBAL");
 }
 
@@ -556,6 +591,7 @@ export function parseProcurementSource(sourceId: string, payload: string, source
 export function parseProcurementDetail(sourceId: string, payload: string, detailUrl: string, now = new Date()): ParsedAggregationItem | null {
   if (sourceId === "proc-cn-ccgp") return parseCcgPDetail(payload, SOURCE_LISTING_URLS[sourceId], detailUrl, now);
   if (sourceId === "proc-cn-cib") return parseCibDetail(payload, SOURCE_LISTING_URLS[sourceId], detailUrl, now);
+  if (AUTONOMOUS_HTML_PATHS[sourceId]) return parseAutonomousHtmlDetail(sourceId, payload, SOURCE_LISTING_URLS[sourceId], detailUrl, now);
   return parseProcurementSource(sourceId, payload, detailUrl, now)[0] ?? null;
 }
 

@@ -117,6 +117,7 @@ export interface OpportunityV2RunResult {
   source_health: OpportunityV2SourceHealth[];
   radar_opportunities: OpportunityV2[];
   request_traces?: OpportunityV2FetchTrace[];
+  procurement_change_events?: Array<{ event_id: string; opportunity_id: string; event_type: string }>;
 }
 
 export interface OpportunityV2FetchResponse {

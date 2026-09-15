@@ -1,0 +1,252 @@
+[
+  {
+    "id": "oppv2_677c9242685f361d7e7f718f",
+    "title": "GB-London: Three Rivers Local Evaluation Partner",
+    "summary": "Peabody Trust (the Client) invites tenders from suitably qualified and experienced suppliers in relation to entering into an agreement (the Contract) to provide External Evaluation services for the Three Rivers Creative People and Places Programme (Hello Earth), and evaluation of 4 x Peabody cultural pilot projects (the Requirements). Additional information:",
+    "source_id": "proc-uk-contracts-finder",
+    "source_item_id": "proc-uk-contracts-finder:ocds-b5fd17-cc55ed9c-0d21-43c8-b72c-ee735459ab85",
+    "source_name": "UK Contracts Finder",
+    "source_url": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?limit=100&stages=planning,tender",
+    "detail_url": "https://www.contractsfinder.service.gov.uk/Notice/640cf7db-3487-4127-85f5-8722398d4312",
+    "category": "procurement_project",
+    "region": "GLOBAL",
+    "tags": [
+      "procurement",
+      "文化服务"
+    ],
+    "deadline": "2026-10-02T13:00:00.000Z",
+    "deadline_text": "tender deadline 2026-10-02",
+    "deadline_source_url": "https://www.contractsfinder.service.gov.uk/Notice/640cf7db-3487-4127-85f5-8722398d4312",
+    "deadline_raw_text": "tender deadline 2026-10-02",
+    "deadline_checked_at": "2026-09-15T04:37:31.462Z",
+    "deadline_resolution": "found_detail",
+    "deadline_kind": "deadline",
+    "deadline_conflict_unsafe": false,
+    "deadline_conflicts": [],
+    "status": "CURRENT",
+    "first_seen_at": "2026-09-15T04:37:24.762Z",
+    "last_seen_at": "2026-09-15T04:37:24.762Z",
+    "discovered_by_sources": [
+      "proc-uk-contracts-finder"
+    ],
+    "radar_relevance": "RELEVANT",
+    "organizer": "Peabody Trust",
+    "application_url": "https://www.contractsfinder.service.gov.uk/Notice/640cf7db-3487-4127-85f5-8722398d4312",
+    "directions": [],
+    "work_formats": [],
+    "event_location": null,
+    "participation_scope": "global",
+    "participation_mode": "unspecified",
+    "is_long_term": false,
+    "starts_at": null,
+    "procurement": {
+      "direction": "buyer_demand",
+      "stage": "open",
+      "notice_type": "tender",
+      "project_id": "ocds-b5fd17-cc55ed9c-0d21-43c8-b72c-ee735459ab85",
+      "buyer_name": "Peabody Trust",
+      "procurement_method": "open",
+      "country_code": null,
+      "country_name": null,
+      "budget_amount": null,
+      "budget_currency": null,
+      "milestones": [
+        {
+          "kind": "publication",
+          "date": "2026-09-11T17:00:00.000Z"
+        },
+        {
+          "kind": "submission",
+          "date": "2026-10-02T13:00:00.000Z",
+          "text": "tender deadline 2026-10-02"
+        }
+      ],
+      "source_record_id": "ocds-b5fd17-cc55ed9c-0d21-43c8-b72c-ee735459ab85"
+    },
+    "encoding_error": false,
+    "encoding_error_fields": []
+  },
+  {
+    "id": "oppv2_a072ff848b23a9c087c8e64a",
+    "title": "2026年度文化旅游宣传资料采编设计项目（项目编号：HXGZ202608C967）竞争性磋商公告",
+    "summary": "--> 返回导航页 | 广州市文化广电旅游局.资讯频道 | 无障碍浏览 | --> 长者助手 | --> 适老版 无障碍浏览 | --> 网站无障碍 微信 | 微博 | 登录 --> 搜索 --> 政务首页 政务公开 信息公开目录 工作动态 通知公告 交流互动 政务服务 重点领域 --> 政务首页 政务公开 信息公开目录 工作动态 通知公告 交流互动 政务服务 重点领域 公开指南 依申请公开 信息公开 组织机构 部门文件 行政执法 办事指南 工作动态 财政预决算 政府信息公开工作年度报告 其他 社会公益事业建设 信用信息双公示 行政许可 行政处罚 市场管理 其他 --> 政务信息 文旅资讯 通知公示公告 招标采购 12345热线 网民留言 对外办事窗口 接访群众窗口 微博微信 财政预决算 馆务公开 广州艺术博物",
+    "source_id": "proc-cn-gz-wglj",
+    "source_item_id": "proc-cn-gz-wglj:bc73ce4d096b7d207aa381d2",
+    "source_name": "广州市文化广电旅游局招标采购",
+    "source_url": "https://wglj.gz.gov.cn/tzgg/zbcg/",
+    "detail_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10986779.html",
+    "category": "procurement_project",
+    "region": "CN",
+    "tags": [
+      "procurement",
+      "文化服务",
+      "文旅推广"
+    ],
+    "deadline": null,
+    "deadline_text": null,
+    "deadline_source_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10986779.html",
+    "deadline_raw_text": "截止时间 2026 年 09 月 14 日",
+    "deadline_checked_at": "2026-09-15T04:37:29.031Z",
+    "deadline_resolution": "source_has_no_date",
+    "deadline_kind": "deadline",
+    "deadline_conflict_unsafe": false,
+    "deadline_conflicts": [],
+    "status": "UNKNOWN_DEADLINE",
+    "first_seen_at": "2026-09-15T04:37:24.762Z",
+    "last_seen_at": "2026-09-15T04:37:24.762Z",
+    "discovered_by_sources": [
+      "proc-cn-gz-wglj"
+    ],
+    "radar_relevance": "RELEVANT",
+    "application_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10986779.html",
+    "directions": [
+      "museum_tourism"
+    ],
+    "work_formats": [
+      "interaction_game"
+    ],
+    "event_location": null,
+    "participation_scope": "nationwide",
+    "participation_mode": "unspecified",
+    "is_long_term": false,
+    "starts_at": null,
+    "procurement": {
+      "direction": "buyer_demand",
+      "stage": "open",
+      "notice_type": "tender",
+      "project_id": "bc73ce4d096b7d207aa381d2",
+      "buyer_name": null,
+      "procurement_method": null,
+      "country_code": null,
+      "country_name": null,
+      "budget_amount": 990000,
+      "budget_currency": "CNY",
+      "milestones": [
+        {
+          "kind": "publication",
+          "date": "2026-09-01"
+        }
+      ],
+      "source_record_id": "bc73ce4d096b7d207aa381d2"
+    },
+    "encoding_error": false,
+    "encoding_error_fields": []
+  },
+  {
+    "id": "oppv2_c9fd4a865f26dfb87ea72131",
+    "title": "“文旅体验经济创新发展研究”课题（GZSW26162FC3130）自主竞争性磋商公告",
+    "summary": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10985182.html",
+    "source_id": "proc-cn-gz-wglj",
+    "source_item_id": "proc-cn-gz-wglj:59cfd2ddb63008757be165bd",
+    "source_name": "广州市文化广电旅游局招标采购",
+    "source_url": "https://wglj.gz.gov.cn/tzgg/zbcg/",
+    "detail_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10985182.html",
+    "category": "procurement_project",
+    "region": "CN",
+    "tags": [
+      "procurement",
+      "文旅推广"
+    ],
+    "deadline": null,
+    "deadline_text": null,
+    "deadline_source_url": null,
+    "deadline_raw_text": null,
+    "deadline_checked_at": null,
+    "deadline_resolution": "source_has_no_date",
+    "deadline_kind": "deadline",
+    "deadline_conflict_unsafe": false,
+    "deadline_conflicts": [],
+    "status": "UNKNOWN_DEADLINE",
+    "first_seen_at": "2026-09-15T04:37:24.762Z",
+    "last_seen_at": "2026-09-15T04:37:24.762Z",
+    "discovered_by_sources": [
+      "proc-cn-gz-wglj"
+    ],
+    "radar_relevance": "RELEVANT",
+    "application_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10985182.html",
+    "directions": [
+      "museum_tourism"
+    ],
+    "work_formats": [],
+    "event_location": null,
+    "participation_scope": "nationwide",
+    "participation_mode": "unspecified",
+    "is_long_term": false,
+    "starts_at": null,
+    "procurement": {
+      "direction": "buyer_demand",
+      "stage": "open",
+      "notice_type": "tender",
+      "project_id": "59cfd2ddb63008757be165bd",
+      "buyer_name": null,
+      "procurement_method": null,
+      "country_code": null,
+      "country_name": null,
+      "budget_amount": null,
+      "budget_currency": null,
+      "milestones": [],
+      "source_record_id": "59cfd2ddb63008757be165bd"
+    },
+    "encoding_error": false,
+    "encoding_error_fields": []
+  },
+  {
+    "id": "oppv2_987f2471ad4d3753ccbeb519",
+    "title": "广州国际友城文化艺术团赴瑙鲁、澳大利亚交流演出项目招标公告",
+    "summary": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10965286.html",
+    "source_id": "proc-cn-gz-wglj",
+    "source_item_id": "proc-cn-gz-wglj:162942cf3592130cb8a7141a",
+    "source_name": "广州市文化广电旅游局招标采购",
+    "source_url": "https://wglj.gz.gov.cn/tzgg/zbcg/",
+    "detail_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10965286.html",
+    "category": "procurement_project",
+    "region": "CN",
+    "tags": [
+      "procurement",
+      "文化服务",
+      "活动执行"
+    ],
+    "deadline": null,
+    "deadline_text": null,
+    "deadline_source_url": null,
+    "deadline_raw_text": null,
+    "deadline_checked_at": null,
+    "deadline_resolution": "source_has_no_date",
+    "deadline_kind": "deadline",
+    "deadline_conflict_unsafe": false,
+    "deadline_conflicts": [],
+    "status": "UNKNOWN_DEADLINE",
+    "first_seen_at": "2026-09-15T04:37:24.762Z",
+    "last_seen_at": "2026-09-15T04:37:24.762Z",
+    "discovered_by_sources": [
+      "proc-cn-gz-wglj"
+    ],
+    "radar_relevance": "RELEVANT",
+    "application_url": "http://wglj.gz.gov.cn/tzgg/zbcg/content/post_10965286.html",
+    "directions": [
+      "integrated_cultural_design"
+    ],
+    "work_formats": [],
+    "event_location": null,
+    "participation_scope": "nationwide",
+    "participation_mode": "unspecified",
+    "is_long_term": false,
+    "starts_at": null,
+    "procurement": {
+      "direction": "buyer_demand",
+      "stage": "open",
+      "notice_type": "tender",
+      "project_id": "162942cf3592130cb8a7141a",
+      "buyer_name": null,
+      "procurement_method": null,
+      "country_code": null,
+      "country_name": null,
+      "budget_amount": null,
+      "budget_currency": null,
+      "milestones": [],
+      "source_record_id": "162942cf3592130cb8a7141a"
+    },
+    "encoding_error": false,
+    "encoding_error_fields": []
+  }
+]

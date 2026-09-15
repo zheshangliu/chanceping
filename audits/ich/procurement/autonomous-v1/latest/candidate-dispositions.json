@@ -1,0 +1,68 @@
+{
+  "schema_version": "chanceping.procurement.autonomous-v1.candidate-dispositions.v1",
+  "generated_at": "2026-09-15T04:26:07.764Z",
+  "evidence_level": "LIVE_READ",
+  "new_source_count": 4,
+  "minimum_target_met": true,
+  "stretch_target_met": false,
+  "dispositions": [
+    {
+      "source_id": "proc-cn-gzsun",
+      "status": "LIVE_OK",
+      "reason": "official homepage and detail reads succeeded through the procurement pipeline; 6 items observed",
+      "http_status": 200,
+      "items_seen": 6
+    },
+    {
+      "source_id": "proc-cn-csg",
+      "status": "LIVE_OK",
+      "reason": "official homepage navigation to /zbgg or /zbcg listing succeeded; 12 items observed",
+      "http_status": 200,
+      "items_seen": 12
+    },
+    {
+      "source_id": "proc-cn-gz-wglj",
+      "status": "LIVE_OK",
+      "reason": "official government procurement listing and detail reads succeeded; 11 items observed",
+      "http_status": 200,
+      "items_seen": 11
+    },
+    {
+      "source_id": "proc-uk-contracts-finder",
+      "status": "LIVE_OK",
+      "reason": "official OCDS endpoint returned a bounded JSON page; 62 items observed",
+      "http_status": 200,
+      "items_seen": 62
+    },
+    {
+      "source_id": "proc-cn-gdgpo",
+      "status": "EXTERNAL_BLOCKED",
+      "reason": "official entry direct fetch timed out; no live adapter was claimed",
+      "integration": "NOT_INTEGRATED"
+    },
+    {
+      "source_id": "proc-hk-gld",
+      "status": "RESEARCH_BLOCKED",
+      "reason": "official page was identified, but a reusable public API or stable listing contract was not confirmed",
+      "integration": "NOT_INTEGRATED"
+    },
+    {
+      "source_id": "proc-cn-sz-sunshine",
+      "status": "EXTERNAL_BLOCKED",
+      "reason": "official references were found, but the new portal could not be opened reliably in this run",
+      "integration": "NOT_INTEGRATED"
+    },
+    {
+      "source_id": "proc-cn-eebidding",
+      "status": "NOT_INTEGRATED_DEFERRED",
+      "reason": "official agency evidence exists, but this round did not promote it into the main pipeline",
+      "integration": "NOT_INTEGRATED"
+    },
+    {
+      "source_id": "proc-aiib",
+      "status": "NOT_INTEGRATED_DEFERRED",
+      "reason": "official RSS catalog was found, but the feed response was not tested and cultural relevance was not established",
+      "integration": "NOT_INTEGRATED"
+    }
+  ]
+}

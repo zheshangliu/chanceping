@@ -33,6 +33,8 @@ import { internalIchSubmissionRoutes } from "./routes/internal-ich-submissions";
 import { internalIchOperationsRoutes } from "./routes/internal-ich-operations";
 import { opportunityV2Routes } from "./routes/opportunity-v2";
 import { opportunityV2PagesRoutes } from "./routes/opportunity-v2-pages";
+import { procurementWorkbenchPageRoutes } from "./routes/procurement-workbench-pages";
+import { procurementWorkbenchRoutes } from "./routes/procurement-workbench";
 import type { ApiResponse } from "./types";
 
 /** 从 package.json 读取版本号（启动时一次性读取，避免每次请求读文件） */
@@ -88,7 +90,9 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/internal/ich", internalIchSubmissionRoutes());
   app.route("/api/internal/ich", internalIchOperationsRoutes());
   app.route("/api/opportunity-v2", opportunityV2Routes({ adminToken: process.env.CHANCEPING_ICH_ADMIN_TOKEN || undefined, adminRequired: process.env.NODE_ENV === "production" }));
+  app.route("/api/opportunity-v2/workbench", procurementWorkbenchRoutes());
   app.route("/ich/admin", ichAdminPagesRoutes());
+  app.route("/ich", procurementWorkbenchPageRoutes());
   app.route("/ich", ichPagesRoutes({ opportunityV2: true }));
   app.route("/opportunity-v2", opportunityV2PagesRoutes());
   app.route("/opportunity-v2/", opportunityV2PagesRoutes());
