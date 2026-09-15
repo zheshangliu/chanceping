@@ -238,6 +238,17 @@ run_http() {
   curl -fsS "$url" >/dev/null
 }
 
+capture_optional_json() {
+  local url="$1"
+  local output="$2"
+  if ! curl -fsS "$url" > "$output"; then
+    # The first procurement rollout may start from a legacy production that
+    # does not expose V2 endpoints yet. Keep the pre-deploy regression input
+    # valid without weakening the mandatory post-deploy smoke gates.
+    printf '%s\n' '{"items":[]}' > "$output"
+  fi
+}
+
 read_source_state() {
   local source_id="$1"
   (
@@ -505,8 +516,8 @@ backup_runtime_file "$SOURCE_HEALTH_PATH" source-health.json
 backup_runtime_file "$SCHEDULER_PATH" scheduler.json
 backup_runtime_file "$RELEASE_MANIFEST" release-manifest.json
 backup_ready=1
-curl -fsS "$BASE_URL/api/opportunity-v2/radar" > "$BACKUP_ROOT/public-radar-before.json"
-curl -fsS "$BASE_URL/ich/memo.json" > "$BACKUP_ROOT/public-memo-before.json"
+capture_optional_json "$BASE_URL/api/opportunity-v2/radar" "$BACKUP_ROOT/public-radar-before.json"
+capture_optional_json "$BASE_URL/ich/memo.json" "$BACKUP_ROOT/public-memo-before.json"
 collect_snapshot
 write_audit STAGED "preflight complete"
 
