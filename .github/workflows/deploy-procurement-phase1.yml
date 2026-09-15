@@ -68,6 +68,7 @@ jobs:
       - run: npm run verify:procurement:phase1:rollout-control
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     name: SWAS transactional rollout
     needs: [candidate-verify, control-plane-verify]
     runs-on: ubuntu-latest
@@ -95,6 +96,7 @@ jobs:
           CHANCEPING_SWAS_INSTANCE: ${{ secrets.CHANCEPING_SWAS_INSTANCE }}
           CHANCEPING_SWAS_REGION: ${{ vars.CHANCEPING_SWAS_REGION }}
           CHANCEPING_DEPLOY_REF: ${{ inputs.git_ref }}
+          CHANCEPING_CONTROL_PLANE_COMMIT: ${{ github.sha }}
           CHANCEPING_SERVER_REPO_DIR: /opt/chanceping
         run: node scripts/invoke-aliyun-swas-procurement-phase1.cjs
 

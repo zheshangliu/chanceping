@@ -1,4 +1,6 @@
 import fs from "node:fs";
+import path from "node:path";
+import { createRequire } from "node:module";
 
 type Check = {
   id: string;
@@ -20,33 +22,58 @@ function check(id: string, passed: boolean, detail: string): Check {
 const workflowPath = ".github/workflows/deploy-procurement-phase1.yml";
 const productionWorkflowPath = ".github/workflows/deploy-production.yml";
 const invokeScriptPath = "scripts/invoke-aliyun-swas-procurement-phase1.cjs";
+const rolloutScriptPath = "scripts/procurement-phase1-production-rollout.sh";
 
 const workflow = readText(workflowPath);
 const productionWorkflow = readText(productionWorkflowPath);
-const invoke = readText(invokeScriptPath);
+const controller = readText(invokeScriptPath);
+const rollout = fs.existsSync(rolloutScriptPath) ? readText(rolloutScriptPath) : "";
+const escapedRollout = rollout.replaceAll('"', '\\"');
+const invoke = `${controller}\n${rollout}\n${escapedRollout}`;
+const transaction = rollout || controller;
+const requireFromVerifier = createRequire(path.resolve("scripts/verify-procurement-phase1-rollout-control.ts"));
+let bootstrapCommand = "";
+try {
+  const invokeModule = requireFromVerifier(path.resolve(invokeScriptPath)) as {
+    buildBootstrapCommand?: (options: Record<string, string>) => string;
+  };
+  if (typeof invokeModule.buildBootstrapCommand === "function") {
+    bootstrapCommand = invokeModule.buildBootstrapCommand({
+      deployRef: REQUIRED_TAG,
+      expectedCommit: REQUIRED_COMMIT,
+      controlPlaneCommit: "0123456789abcdef0123456789abcdef01234567",
+      repoDir: "/opt/chanceping",
+      canaryEnabled: "1",
+    });
+  }
+} catch {
+  bootstrapCommand = "";
+}
+const bootstrapPlaintextBytes = Buffer.byteLength(bootstrapCommand, "utf8");
+const bootstrapBase64Bytes = Buffer.byteLength(Buffer.from(bootstrapCommand, "utf8").toString("base64"), "utf8");
 const candidateStart = workflow.indexOf("candidate-verify:");
 const controlPlaneStart = workflow.indexOf("control-plane-verify:");
 const deployStart = workflow.indexOf("\n  deploy:");
 const candidateSection = workflow.slice(candidateStart, controlPlaneStart);
 const controlPlaneSection = workflow.slice(controlPlaneStart, deployStart);
-const phaseB = invoke.indexOf("# ----- Phase B: freeze timer and wait for scheduler quiescence -----");
-const phaseC = invoke.indexOf("# ----- Phase C: runtime backup and read-only snapshot -----");
-const phaseDeploy = invoke.indexOf("# ----- Phase C/D: exact target resolved and release deploy -----");
-const phaseF = invoke.indexOf("# ----- Phase F: persistent migration ----");
-const run1Quality = invoke.indexOf("# ----- Run 1 production quality gate -----");
-const run2 = invoke.indexOf("capture_pool_identities run_2");
-const pass1 = invoke.indexOf("run_canary_pass pass1");
-const pass2 = invoke.indexOf("run_canary_pass pass2");
-const run2Quality = invoke.indexOf("# ----- Run 2 production quality gate -----");
-const idempotency = invoke.indexOf("compare_run_idempotency", pass2);
-const crossSourceAudit = invoke.indexOf("cross-source-dedup.json");
-const timerRestore = invoke.indexOf("restore_timer_state", run2);
-const stableMarker = invoke.indexOf("write_audit STABLE");
-const finalStableAssertion = invoke.lastIndexOf("assert_phase1_stable_state");
-const applySourceStateStart = invoke.indexOf("apply_source_state() {");
-const runDirectSourceStart = invoke.indexOf("run_direct_source() {", applySourceStateStart);
-const applySourceStateSection = invoke.slice(applySourceStateStart, runDirectSourceStart);
-const firstIndexAfter = (needle: string, start: number): number => invoke.indexOf(needle, start);
+const phaseB = transaction.indexOf("# ----- Phase B: freeze timer and wait for scheduler quiescence -----");
+const phaseC = transaction.indexOf("# ----- Phase C: runtime backup and read-only snapshot -----");
+const phaseDeploy = transaction.indexOf("# ----- Phase C/D: exact target resolved and release deploy -----");
+const phaseF = transaction.indexOf("# ----- Phase F: persistent migration ----");
+const run1Quality = transaction.indexOf("# ----- Run 1 production quality gate -----");
+const run2 = transaction.indexOf("capture_pool_identities run_2");
+const pass1 = transaction.indexOf("run_canary_pass pass1");
+const pass2 = transaction.indexOf("run_canary_pass pass2");
+const run2Quality = transaction.indexOf("# ----- Run 2 production quality gate -----");
+const idempotency = transaction.indexOf("compare_run_idempotency", pass2);
+const crossSourceAudit = transaction.indexOf("cross-source-dedup.json");
+const timerRestore = transaction.indexOf("restore_timer_state", run2);
+const stableMarker = transaction.indexOf("write_audit STABLE");
+const finalStableAssertion = transaction.lastIndexOf("assert_phase1_stable_state");
+const applySourceStateStart = transaction.indexOf("apply_source_state() {");
+const runDirectSourceStart = transaction.indexOf("run_direct_source() {", applySourceStateStart);
+const applySourceStateSection = transaction.slice(applySourceStateStart, runDirectSourceStart);
+const firstIndexAfter = (needle: string, start: number): number => transaction.indexOf(needle, start);
 
 const checks: Check[] = [
   check("workflow name", /name:\s*Deploy procurement Phase 1/.test(workflow), "workflow name should be Deploy procurement Phase 1"),
@@ -65,6 +92,16 @@ const checks: Check[] = [
     workflow.includes("npm run verify:procurement:phase1:rollout-control"),
     "workflow must run rollout-control verification command",
   ),
+  check("standalone rollout script", rollout.includes("# ----- Phase A: preflight -----") && rollout.includes("# ----- Phase F: persistent migration ----") && rollout.includes("rollback() {"), "full transactional rollout must live in the standalone server-side script"),
+  check("bootstrap only", !controller.includes("PRODUCTION_QUALITY_GATE") && !controller.includes("CROSS_SOURCE_DEDUP_GATE") && !controller.includes("run_canary_pass() {") && !controller.includes("rollback() {") && controller.includes("scripts/procurement-phase1-production-rollout.sh"), "SWAS RunCommand must contain only the pinned helper bootstrap"),
+  check("control-plane commit pinned", workflow.includes("CHANCEPING_CONTROL_PLANE_COMMIT: ${{ github.sha }}") && controller.includes("CONTROL_PLANE_COMMIT") && controller.includes("FETCH_HEAD") && controller.includes("scripts/procurement-phase1-production-rollout.sh"), "bootstrap must fetch and verify the exact workflow control-plane commit"),
+  check("business release commit unchanged", controller.includes(REQUIRED_TAG) && controller.includes(REQUIRED_COMMIT) && rollout.includes(REQUIRED_TAG) && rollout.includes(REQUIRED_COMMIT), "business candidate tag and commit must remain immutable"),
+  check("SWAS payload gate", bootstrapPlaintextBytes > 0 && bootstrapPlaintextBytes <= 8192 && bootstrapBase64Bytes > 0 && bootstrapBase64Bytes <= 8192, `bootstrap payload must be <= 8192 bytes (plaintext=${bootstrapPlaintextBytes}, base64=${bootstrapBase64Bytes})`),
+  check("rollback restart hard gate", rollout.includes('systemctl restart "$SERVICE_NAME"') && !rollout.includes('systemctl restart "$SERVICE_NAME" || true'), "rollback must fail when chanceping.service restart fails"),
+  check("rollback /health hard gate", rollout.includes('run_http "$BASE_URL/health"') && !rollout.includes('run_http "$BASE_URL/health" || true'), "rollback must fail when /health fails"),
+  check("rollback /ich hard gate", rollout.includes('run_http "$BASE_URL/ich"') && !rollout.includes('run_http "$BASE_URL/ich" || true'), "rollback must fail when /ich fails"),
+  check("rollback failed path", rollout.includes("ROLLBACK_FAILED") && rollout.includes("runtime checksum mismatch") && rollout.includes("exit 1"), "rollback failures must be audited as ROLLBACK_FAILED and exit non-zero"),
+  check("default-main dispatch guard", workflow.includes("if: github.ref == 'refs/heads/main'"), "production deploy job must only run when dispatched from main"),
   check("production concurrency", workflow.includes("group: chanceping-production") && productionWorkflow.includes("group: chanceping-production"), "both production workflows must share the production concurrency group"),
   check("no ssh", !workflow.includes("ssh -"), "workflow should not invoke SSH"),
   check(
@@ -106,7 +143,7 @@ const checks: Check[] = [
   check("no direct source-state write", !invoke.includes("fs.writeFileSync(process.env.SOURCES_PATH") && !applySourceStateSection.includes("writeFileSync"), "source state must be changed only through the business helper"),
   check("successful canary keeps active state", invoke.includes("apply_source_state \\\"$source_id\\\" 1 ACTIVE") && !invoke.includes("original_enabled") && !invoke.includes("original_status"), "successful canaries must remain enabled and ACTIVE instead of restoring disabled/PENDING"),
   check("READY_CORE state gate", invoke.includes("assert_ready_core_state()") && ["proc-cn-ccgp", "proc-cn-cib", "proc-global-ocp", "proc-eu-ted", "proc-wb"].every((id) => invoke.includes(id)), "must assert all five READY_CORE source states"),
-  check("run1 quality after activation", pass1 >= 0 && run1Quality > pass1 && invoke.includes("assert_ready_core_state run1") && invoke.indexOf("assert_ready_core_state run1", pass1) < run1Quality, "Run 1 quality must run after READY_CORE activation"),
+  check("run1 quality after activation", pass1 >= 0 && run1Quality > pass1 && transaction.includes("assert_ready_core_state run1") && transaction.indexOf("assert_ready_core_state run1", pass1) < run1Quality, "Run 1 quality must run after READY_CORE activation"),
   check("no pending restore before run1 quality", run1Quality >= 0 && !invoke.slice(pass1, run1Quality).includes("PENDING\""), "successful canary must not restore PENDING before Run 1 quality"),
   check("run2 quality gate", run2Quality > pass2 && invoke.includes("run_production_quality_gate run2"), "Run 2 must execute the shared production quality gate"),
   check("run2 quality ordering", run2Quality > pass2 && idempotency > run2Quality && timerRestore > idempotency, "Run 2 quality must precede idempotency and timer restoration"),
