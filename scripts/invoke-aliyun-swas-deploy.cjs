@@ -45,7 +45,10 @@ if (!Number.isInteger(commandTimeout) || commandTimeout < 60 || commandTimeout >
 const quotedRef = shellQuote(deployRef);
 const quotedRepo = shellQuote(repoDir);
 const command = [
-  "set -Eeuo pipefail",
+  // Cloud Assistant invokes the outer command through /bin/sh. Keep this
+  // wrapper POSIX-compatible; the release script itself is explicitly run
+  // with bash below.
+  "set -eu",
   `cd ${quotedRepo}`,
   `git fetch --no-tags origin ${quotedRef}`,
   "commit=$(git rev-parse --verify 'FETCH_HEAD^{commit}')",
