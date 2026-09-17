@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-09-17T06:48:26.019Z",
+  "status": "NOT_DEPLOYED",
+  "gates": {
+    "competition_leakage_in_coverage": 0,
+    "expired_current_public": 0,
+    "result_or_editorial_current_public": 0,
+    "seller_offer_public": 0,
+    "procurement_leakage_public": 0,
+    "missing_source_evidence_public": 0,
+    "encoding_errors_pool": 0,
+    "encoding_errors_public": 0,
+    "unsafe_deadline_internal": 30,
+    "unsafe_deadline_public_exact": 0,
+    "duplicate_pool_ids": 0,
+    "memo_greater_than_radar": true,
+    "memo_known_deadlines": 405,
+    "memo_unknown_deadlines": 132,
+    "source_profiles_valid": true,
+    "scheduler_interval_hours": 72,
+    "scheduler_next_run_at": "2026-09-20T06:12:37.968Z"
+  },
+  "production_required_before_release": [
+    "PR/CI",
+    "release backup",
+    "real production fetch",
+    "HTTP and UI smoke",
+    "production runtime audit"
+  ],
+  "no_production_mutation": true
+}

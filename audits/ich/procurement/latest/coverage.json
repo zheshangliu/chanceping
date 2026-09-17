@@ -1,0 +1,1256 @@
+{
+  "schema_version": "chanceping.procurement.coverage-matrix.v1",
+  "research_date": "2026-09-09",
+  "complete_worldwide": false,
+  "regions": [
+    {
+      "area": "北京政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-beijing"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "上海政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-shanghai"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "天津政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-tianjin"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "重庆政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-chongqing"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "河北政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-hebei"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "河南政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-henan"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "湖北政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-hubei"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "湖南政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-hunan"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "山西政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-shanxi"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "山东政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-shandong"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "黑龙江政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-heilongj"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "吉林政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-jilin"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "辽宁政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-liaoning"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "广东政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-guangdong"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "海南政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-hainan"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "内蒙古政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-neimenggu"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "陕西政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-shaanxi"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "甘肃政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-gansu"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "青海政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-qinghai"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "宁夏政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-ningxia"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "江西政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-jiangxi"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "新疆政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-xinjiang"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "西藏政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-xizang"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "四川政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-sichuan"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "江苏政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-jiangsu"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "浙江政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-zhejiang"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "广西政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-guangxi"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "云南政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-yunnan"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "福建政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-fujian"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "贵州政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-guizhou"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "安徽政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-anhui"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "深圳政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-shenzhen"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "大连政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-dalian"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "厦门政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-xiamen"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "青岛政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-qingdao"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "宁波政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-ningbo"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "新疆生产建设兵团政府采购分网（目录起点）",
+      "level": "中国地方分网",
+      "catalog_ids": [
+        "proc-cn-region-bingtuan"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "discovery_url": "https://www.ccgp.gov.cn/?code=43",
+      "next_action": "确认目录旧域名到现行财政厅/交易平台的公开入口；与已有现代门户归并，再抓相关采购及变更。"
+    },
+    {
+      "area": "中国香港／澳门／台湾",
+      "level": "区域采购",
+      "catalog_ids": [
+        "proc-hk-gld",
+        "proc-hk-etb",
+        "proc-mo-pcp",
+        "proc-mo-gazette",
+        "proc-tw-pcc"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "依当前官方公告和统一平台，投标资格另外提取。"
+    },
+    {
+      "area": "欧盟跨国公告",
+      "level": "跨国聚合",
+      "catalog_ids": [
+        "proc-eu-ted"
+      ],
+      "status": "DOC_VERIFIED_NEEDS_LIVE",
+      "next_action": "先TED Search API；不能据此声称覆盖所有成员国低额或地方采购。"
+    },
+    {
+      "area": "英国与爱尔兰",
+      "level": "国家及分区",
+      "catalog_ids": [
+        "proc-uk-fts",
+        "proc-uk-cf",
+        "proc-gb-scotland",
+        "proc-gb-wales",
+        "proc-gb-ni",
+        "proc-ie-etenders"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "开放数据优先，NI先补直接入口。"
+    },
+    {
+      "area": "欧洲已登记国家",
+      "level": "国家",
+      "catalog_ids": [
+        "proc-fr-boamp",
+        "proc-fr-place",
+        "proc-nl-tenderned",
+        "proc-no-doffin",
+        "proc-fi-hilma",
+        "proc-de-bund",
+        "proc-es-placsp",
+        "proc-it-consip",
+        "proc-pt-base",
+        "proc-be-eproc",
+        "proc-ch-simap"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "各国列表/数据与TED去重；关注本国小额需求。"
+    },
+    {
+      "area": "欧洲下一层缺口",
+      "level": "国家",
+      "catalog_ids": [],
+      "status": "EXPLICIT_GAP",
+      "next_action": "通过TED发布者/国家官方导航补奥地利、瑞典、丹麦、冰岛、卢森堡、波兰、捷克、斯洛伐克、匈牙利、罗马尼亚、保加利亚、克罗地亚、斯洛文尼亚、希腊、塞浦路斯、马耳他、波罗的海三国、乌克兰及西巴尔干现行入口；不猜API。"
+    },
+    {
+      "area": "美国联邦及聚合",
+      "level": "国家/平台",
+      "catalog_ids": [
+        "proc-us-sam",
+        "proc-us-opengov",
+        "proc-us-bidnet",
+        "proc-us-demandstar",
+        "discovery-us-naspo"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "SAM需要API key；州/市/学区另由公开门户和NASPO资料下沉。"
+    },
+    {
+      "area": "加拿大联邦及省区",
+      "level": "国家/目录",
+      "catalog_ids": [
+        "proc-ca-canadabuys",
+        "proc-ca-merx",
+        "discovery-ca-subnational"
+      ],
+      "status": "DIRECTORY_CONFIRMED_RUNTIME_UNTESTED",
+      "next_action": "联邦CSV优先；13省区逐项从官方目录发现，MERX/商业门户不默认免费。"
+    },
+    {
+      "area": "澳大利亚与新西兰",
+      "level": "国家及州",
+      "catalog_ids": [
+        "proc-au-austender",
+        "proc-au-nsw",
+        "proc-au-vic",
+        "proc-nz-gets",
+        "proc-nz-bettergets"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "补QLD/WA/SA/TAS/ACT/NT及地方采购；BetterGETS是发现/辅助，官方GETS状态优先。"
+    },
+    {
+      "area": "亚洲已登记",
+      "level": "国家",
+      "catalog_ids": [
+        "proc-sg-gebiz",
+        "proc-jp-jetro",
+        "proc-jp-pps",
+        "proc-kr-koneps",
+        "proc-in-cppp",
+        "proc-id-inaproc",
+        "proc-ph-philgeps"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "本国语言关键词、公开列表与申请资格分别处理。"
+    },
+    {
+      "area": "亚洲下一层缺口",
+      "level": "国家",
+      "catalog_ids": [],
+      "status": "EXPLICIT_GAP",
+      "next_action": "官方目录补马来西亚ePerolehan、泰国e-GP、越南国家招标系统、印度GeM、孟加拉、巴基斯坦、斯里兰卡等；不得用旧API库存代替现行可抓性。"
+    },
+    {
+      "area": "中东已登记",
+      "level": "国家",
+      "catalog_ids": [
+        "proc-ae-mof",
+        "proc-sa-etimad",
+        "proc-qa-monaqasat"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "公开公告与供应商登录区分；注册门槛照原文。"
+    },
+    {
+      "area": "中东下一层缺口",
+      "level": "地区",
+      "catalog_ids": [],
+      "status": "EXPLICIT_GAP",
+      "next_action": "补迪拜、阿布扎比地方平台，巴林、阿曼、科威特、约旦与土耳其官方入口；记录语言及账户限制。"
+    },
+    {
+      "area": "非洲已登记",
+      "level": "国家",
+      "catalog_ids": [
+        "proc-za-etenders",
+        "proc-ke-ppip",
+        "proc-ma-marches",
+        "proc-afdb"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "国家平台+发展银行；别把工程需求因含文化机构名称而纳入。"
+    },
+    {
+      "area": "非洲下一层缺口",
+      "level": "国家",
+      "catalog_ids": [],
+      "status": "EXPLICIT_GAP",
+      "next_action": "经OCP/官方目录继续查加纳、尼日利亚、卢旺达、乌干达、坦桑尼亚、赞比亚、毛里求斯、突尼斯、埃及；检查数据集最新发布日期。"
+    },
+    {
+      "area": "拉丁美洲已登记",
+      "level": "国家",
+      "catalog_ids": [
+        "proc-cl-mp",
+        "proc-cl-api",
+        "proc-br-pncp",
+        "proc-co-secop"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "西/葡语查询；SECOP旧采集器已移除，找现行官方路径。"
+    },
+    {
+      "area": "拉美与加勒比下一层缺口",
+      "level": "国家",
+      "catalog_ids": [],
+      "status": "EXPLICIT_GAP",
+      "next_action": "补墨西哥现行采购系统、秘鲁、阿根廷、厄瓜多尔、巴拉圭、乌拉圭、巴拿马、哥斯达黎加、洪都拉斯及加勒比主要公共采购；目录旧链接需重新确认。"
+    },
+    {
+      "area": "联合国与发展金融",
+      "level": "国际组织",
+      "catalog_ids": [
+        "proc-un-ungm",
+        "proc-un-undp",
+        "proc-un-secretariat",
+        "proc-wb",
+        "proc-adb",
+        "proc-afdb",
+        "proc-ebrd"
+      ],
+      "status": "LISTED_NEEDS_PROBE",
+      "next_action": "UNGM与机构页关联去重，分支项目通知不可冒充机构统一无限覆盖。"
+    },
+    {
+      "area": "Alberta",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "British Columbia",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Manitoba",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "New Brunswick",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Newfoundland and Labrador",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Northwest Territories",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Nova Scotia",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Nunavut",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Ontario",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Prince Edward Island",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Québec",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Saskatchewan",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Yukon",
+      "level": "加拿大省区",
+      "catalog_ids": [
+        "discovery-ca-subnational"
+      ],
+      "status": "OFFICIAL_DIRECTORY_LINK_NOT_INDIVIDUALLY_TESTED",
+      "discovery_url": "https://canadabuys.canada.ca/en/other-tendering-websites",
+      "next_action": "沿官方目录对应省区链接确认现行公告地址；不把目录名称当已运行Source。"
+    },
+    {
+      "area": "Alabama",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Alaska",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Arizona",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Arkansas",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "California",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Colorado",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Connecticut",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Delaware",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Florida",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Georgia",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Hawaii",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Idaho",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Illinois",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Indiana",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Iowa",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Kansas",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Kentucky",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Louisiana",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Maine",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Maryland",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Massachusetts",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Michigan",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Minnesota",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Mississippi",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Missouri",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Montana",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Nebraska",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Nevada",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "New Hampshire",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "New Jersey",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "New Mexico",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "New York",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "North Carolina",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "North Dakota",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Ohio",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Oklahoma",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Oregon",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Pennsylvania",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Rhode Island",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "South Carolina",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "South Dakota",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Tennessee",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Texas",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Utah",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Vermont",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Virginia",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Washington",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "West Virginia",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Wisconsin",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "Wyoming",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    },
+    {
+      "area": "District of Columbia",
+      "level": "美国州/DC",
+      "catalog_ids": [
+        "discovery-us-naspo"
+      ],
+      "status": "GEOGRAPHIC_CHECKLIST_NOT_A_VERIFIED_ENDPOINT",
+      "discovery_url": "https://www.naspo.org/states/",
+      "next_action": "由NASPO州资料或本州官方采购机关确认现行门户；公共聚合平台已有覆盖时记录复用，不重复开发。"
+    }
+  ],
+  "sectors": [
+    {
+      "sector": "政府和公共机构",
+      "coverage": "全国+地方分网，招标/磋商/询价/小额采购/采购意向",
+      "next_action": "以项目对象过滤，不只按文化机构名。"
+    },
+    {
+      "sector": "银行与金融机构",
+      "coverage": "13个具名入口+金融采购聚合",
+      "next_action": "继续补招商、民生、光大、平安、华夏、中信、浙商、邮储专属入口、保险和地方城商/农商；先从金采及代理平台反查持续来源。"
+    },
+    {
+      "sector": "博物馆/美术馆/文化馆/图书馆",
+      "coverage": "招采、开发合作、选品入库",
+      "next_action": "优先国家/省/重点城市机构；不穷举全部官网首页；从有真实内容的采购栏目下沉。"
+    },
+    {
+      "sector": "景区/文旅集团/酒店/机场/航空/港口",
+      "coverage": "文创采购、节庆活动、礼品、商业空间陈设",
+      "next_action": "从国企平台抽买方，再补实际独有公告源；不抓客房销售广告。"
+    },
+    {
+      "sector": "学校/高校/科研机构",
+      "coverage": "文化活动、纪念品、文化空间和课程采购",
+      "next_action": "文化服务保留；纯网络硬件、医用设备、建筑施工排除。"
+    },
+    {
+      "sector": "企业/工会/品牌",
+      "coverage": "节日礼赠、手作体验、宣传物料、定制",
+      "next_action": "公开采购或已授权RFQ；不抓私人聊天，不把产品目录当订单。"
+    },
+    {
+      "sector": "海外艺术委托",
+      "coverage": "公共艺术、插画、文化空间制作、community arts commission",
+      "next_action": "明确付费委托与展位收费、奖学金、职位招聘分开。"
+    },
+    {
+      "sector": "批发/选品渠道",
+      "coverage": "真实供应商产品提交、买方询盘",
+      "next_action": "申请渠道本身不是金额确定的项目；记录销售模式/佣金不明。"
+    }
+  ],
+  "notes": [
+    "目录节点与地理检查项不是独立已接通Source。",
+    "没有列出的国家、市县、机构仍是开放缺口；以全球聚合/官方目录持续扩展，不能宣称全网无遗漏。",
+    "所有扩展均沿首方来源确认、运行探测并写回登记表；不用拼域名生成成功数据。"
+  ]
+}

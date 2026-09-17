@@ -14,6 +14,9 @@ import { ICH_PRIMARY_CATEGORIES } from "../../ich/types";
 export interface IchReadRouteOptions {
   store?: IchOpportunityStore;
   now?: () => Date;
+  opportunityV2?: boolean;
+  opportunityV2SourcesPath?: string;
+  opportunityV2PoolPath?: string;
 }
 
 export function defaultIchStore(): IchOpportunityStore {

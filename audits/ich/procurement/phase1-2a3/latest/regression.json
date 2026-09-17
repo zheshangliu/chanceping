@@ -1,0 +1,10 @@
+{
+  "verifier": "PASS",
+  "migration_contract": "PASS",
+  "scheduler_disabled_seed_gate": "PASS",
+  "admin_customization": "PASS",
+  "production_untouched": "PASS",
+  "typecheck": "RUN_SEPARATELY",
+  "verify_all": "RUN_SEPARATELY",
+  "notes": "Competition UNKNOWN=26 remains the documented historical baseline limitation; verify:ich:v12 remains an unrelated UI failure."
+}

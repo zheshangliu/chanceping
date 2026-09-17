@@ -1,0 +1,67 @@
+{
+  "production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+  "release": "/opt/chanceping/releases/20260910T073608Z-643a791cf383",
+  "sources": 33,
+  "successful_sources": 28,
+  "raw_items": 2781,
+  "pool_items": 2241,
+  "public_competition": 219,
+  "public_cn": 211,
+  "public_global": 8,
+  "memo_total": 558,
+  "memo_known": 464,
+  "memo_unknown": 94,
+  "procurement_pool": 75,
+  "procurement_public": 0,
+  "loewe_visible": 1,
+  "loewe_discovered_by_sources": [
+    "loewe-craft-prize",
+    "asef-culture360-opportunities"
+  ],
+  "pool_encoding_errors": 2,
+  "public_encoding_errors": 0,
+  "deadline_conflict_count": 68,
+  "unsafe_internal_count": 2,
+  "public_unsafe_exact_deadline_display": 0,
+  "translation": {
+    "translated": 494,
+    "reused": 493,
+    "failed": 51,
+    "provider": "DeepSeek",
+    "qwen_used": false,
+    "pending": 0
+  },
+  "scheduler": {
+    "interval_hours": 72,
+    "last_run_at": "2026-09-10T07:42:14.083Z",
+    "next_run_at": "2026-09-13T07:42:14.083Z",
+    "migration_idempotence": {
+      "first": {
+        "before": 31,
+        "after": 33,
+        "added": [
+          "proc-uk-fts",
+          "proc-ca-canadabuys"
+        ]
+      },
+      "second": {
+        "before": 33,
+        "after": 33,
+        "added": []
+      },
+      "admin_config_preserved": true
+    }
+  },
+  "timer_status": {
+    "unit": "chanceping-opportunity-v2.timer",
+    "enabled": true,
+    "active": true,
+    "interval": "72h",
+    "on_boot_sec": "15min",
+    "persistent": true,
+    "next_run_at": "2026-09-13 14:13:25 CST",
+    "scheduler_registry": 33,
+    "scheduler_file_next_run_at": "2026-09-13T07:42:14.083Z",
+    "verified_read_only": true
+  }
+}

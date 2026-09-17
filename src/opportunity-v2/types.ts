@@ -1,0 +1,156 @@
+export const OPPORTUNITY_V2_SCHEMA = "chanceping-opportunity-v2.v1" as const;
+
+export type V2SourcePriority = "P0" | "P1";
+export type V2SourceStatus = "ACTIVE" | "BLOCKED" | "PENDING" | "PAUSED" | "FAILED" | "NEEDS_ADAPTER";
+export type V2OpportunityStatus = "CURRENT" | "EXPIRED" | "UNKNOWN_DEADLINE";
+export type V2RadarRelevance = "RELEVANT" | "IRRELEVANT" | "UNCERTAIN";
+export type V2OpportunityDirection = "ich_innovation" | "cultural_creative" | "craft_arts" | "museum_tourism" | "integrated_cultural_design" | "aigc_digital";
+export type V2WorkFormat = "material_craft" | "product_design" | "graphic_ip" | "packaging" | "fashion_jewellery" | "video_animation" | "interaction_game" | "mixed_media";
+export type V2ParticipationScope = "nationwide" | "global" | "regional" | "unspecified";
+export type V2ParticipationMode = "online" | "physical" | "onsite" | "unspecified";
+export type V2DeadlineResolution = "found" | "found_listing" | "found_detail" | "found_cross_source" | "long_term" | "source_has_no_date" | "detail_fetch_failed" | "date_conflict" | "relative_only" | "not_attempted" | "fetch_failed" | "image_only" | "ambiguous" | "not_stated";
+export type V2DeadlineKind = "submission_deadline" | "application_deadline" | "registration_deadline" | "deadline";
+export type V2EncodingErrorField = "title" | "summary";
+export type V2ProcurementDirection = "buyer_demand" | "supplier_application" | "market_engagement" | "seller_offer" | "unknown";
+export type V2ProcurementStage = "planned" | "prequalification" | "open" | "ongoing_intake" | "awarded" | "closed" | "cancelled" | "unknown";
+export interface V2ProcurementMilestone { kind: string; date: string | null; text?: string; }
+export interface V2ProcurementMetadata { direction: V2ProcurementDirection; stage: V2ProcurementStage; notice_type: string; project_id: string | null; lot_id?: string | null; buyer_name?: string | null; procurement_method?: string | null; country_code?: string | null; country_name?: string | null; budget_amount?: number | null; budget_currency?: string | null; milestones: V2ProcurementMilestone[]; source_record_id?: string | null; }
+
+export interface V2DeadlineConflict {
+  stored_deadline: string | null;
+  conflicting_deadline: string;
+  evidence: string;
+  source_url?: string | null;
+  kind?: V2DeadlineKind | null;
+}
+
+export interface OpportunityV2Source {
+  id: string;
+  name: string;
+  url: string;
+  region: "CN" | "GLOBAL";
+  priority: V2SourcePriority;
+  types: string[];
+  radars: string[];
+  enabled: boolean;
+  status: V2SourceStatus;
+  last_fetch_at: string | null;
+}
+
+export interface OpportunityV2 {
+  id: string;
+  title: string;
+  summary: string;
+  source_id: string;
+  source_item_id?: string;
+  source_name: string;
+  source_url: string;
+  detail_url: string;
+  category: string;
+  region: "CN" | "GLOBAL";
+  tags: string[];
+  deadline: string | null;
+  deadline_text?: string | null;
+  deadline_source_url?: string | null;
+  deadline_raw_text?: string | null;
+  deadline_checked_at?: string | null;
+  deadline_resolution?: V2DeadlineResolution;
+  deadline_kind?: V2DeadlineKind | null;
+  deadline_conflicts?: V2DeadlineConflict[];
+  deadline_conflict_unsafe?: boolean;
+  encoding_error?: boolean;
+  encoding_error_fields?: V2EncodingErrorField[];
+  status: V2OpportunityStatus;
+  first_seen_at: string;
+  last_seen_at: string;
+  discovered_by_sources: string[];
+  radar_relevance: V2RadarRelevance;
+  directions?: V2OpportunityDirection[];
+  work_formats?: V2WorkFormat[];
+  event_location?: string | null;
+  participation_scope?: V2ParticipationScope;
+  participation_mode?: V2ParticipationMode;
+  is_long_term?: boolean;
+  starts_at?: string | null;
+  official_url?: string;
+  application_url?: string;
+  organizer?: string;
+  procurement?: V2ProcurementMetadata;
+}
+
+export interface OpportunityV2PoolFile {
+  schema_version: typeof OPPORTUNITY_V2_SCHEMA;
+  updated_at: string;
+  opportunities: OpportunityV2[];
+}
+
+export interface OpportunityV2SourceHealth {
+  source_id: string;
+  fetched_at: string;
+  ok: boolean;
+  http_status: number | null;
+  items_seen: number;
+  error: string | null;
+  format?: "DEDICATED" | "RSS" | "HTML_LISTING" | null;
+  partial?: boolean;
+  next_page?: number | string | null;
+  source_item_ids?: string[];
+  canonical_records?: number;
+  merged_duplicates?: number;
+  reconciliation_status?: "complete" | "partial" | "failed" | "unknown";
+  deadline_attempted?: number;
+  deadline_resolved?: number;
+  deadline_unknown?: number;
+  deadline_conflicts?: number;
+}
+
+export interface OpportunityV2RunResult {
+  run_id: string;
+  started_at: string;
+  finished_at: string;
+  fetched_sources: number;
+  successful_sources: number;
+  raw_items: number;
+  pool_items: number;
+  radar_items: number;
+  sources: OpportunityV2Source[];
+  source_health: OpportunityV2SourceHealth[];
+  radar_opportunities: OpportunityV2[];
+  request_traces?: OpportunityV2FetchTrace[];
+  procurement_change_events?: Array<{ event_id: string; opportunity_id: string; event_type: string }>;
+}
+
+export interface OpportunityV2FetchResponse {
+  status: number;
+  final_url: string;
+  text: string;
+  trace?: OpportunityV2FetchTrace;
+}
+
+export interface OpportunityV2FetchOptions {
+  method?: "GET" | "POST";
+  headers?: Record<string, string>;
+  body?: string | Buffer;
+  decompress?: "auto" | "gzip" | "none";
+}
+
+/** Safe, secret-free transport facts retained for isolated audits. */
+export interface OpportunityV2FetchTrace {
+  source_id?: string;
+  method: "GET" | "POST";
+  request_url: string;
+  final_url: string;
+  status: number;
+  request_body_bytes: number;
+  content_type: string | null;
+  content_encoding: string | null;
+  response_bytes: number;
+  decompressed_bytes: number;
+  decompression: "gzip" | "none";
+}
+
+export type OpportunityV2Fetcher = (url: string, options?: OpportunityV2FetchOptions) => Promise<OpportunityV2FetchResponse>;
+
+// Short aliases keep the pool vocabulary convenient for adapters and callers.
+export type Source = OpportunityV2Source;
+export type Opportunity = OpportunityV2;

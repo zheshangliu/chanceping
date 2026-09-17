@@ -1,0 +1,15 @@
+{
+  "schema": "chanceping.opportunity-v12.audit.v1",
+  "generated_at": "2026-09-17T06:48:26.019Z",
+  "branch": "codex/opportunity-v12-real-coverage",
+  "commit": "b3fcda3cdd5113ba7388dfd37c5cdc853eda8b0f",
+  "base": "origin/main",
+  "production_deployed": false,
+  "files": [
+    "baseline.json",
+    "source-activation.json",
+    "coverage.json",
+    "checks.json",
+    "production-readiness.json"
+  ]
+}

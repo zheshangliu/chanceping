@@ -1,0 +1,2081 @@
+{
+  "generated_at": "2026-09-17T06:48:26.019Z",
+  "coverage_assessments": 159,
+  "lane_counts": {
+    "current": 84,
+    "research": 36,
+    "review": 39
+  },
+  "type_counts": {
+    "grant_funding": 16,
+    "exhibition_showcase": 87,
+    "market_channel": 51,
+    "residency_learning": 16,
+    "partnership_commission": 6,
+    "recognition_incubation": 0
+  },
+  "samples": [
+    {
+      "opportunity_id": "oppv2_bab41c89d30a1abc42b1a7a2",
+      "view_types": [
+        "grant_funding",
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "receive",
+      "fees": [],
+      "funding": [
+        "基金"
+      ],
+      "deadline": "2026-11-18T23:59:00.000Z",
+      "deadline_text": null,
+      "deadline_status": "CURRENT",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到grant_funding",
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "2026中国美术家协会第二届插画艺术展览征稿通知 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 征稿中 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 剩 -- 天 -- : -- : -- ↗ 展览 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "2026中国美术家协会第二届插画艺术展览征稿通知 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 征稿中 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 剩 -- 天 -- : -- : -- ↗ 展览 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 剩 -- 天 -- : -- : -- ↗ 展览 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "2026中国美术家协会第二届插画艺术展览征稿通知",
+          "status": "derived"
+        },
+        {
+          "field": "deadline",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "2026-11-18T23:59:00.000Z",
+          "status": "source_stated"
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "基金",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+          "raw_excerpt": "2026中国美术家协会第二届插画艺术展览征稿通知 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 征稿中 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 剩 -- 天 -- : -- : -- ↗ 展览 exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_bab41c89d30a1abc42b1a7a2",
+        "title": "2026中国美术家协会第二届插画艺术展览征稿通知",
+        "summary": "中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 征稿中 中国美术家协会、中国文学艺术基金会 中国美术家协会与中国文学艺术基金会共同主办第二届插画… 剩 -- 天 -- : -- : -- ↗",
+        "source_id": "shejijingsai-list",
+        "source_name": "设计竞赛网",
+        "source_url": "https://www.shejijingsai.com/liebiao",
+        "detail_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+        "category": "exhibition_market",
+        "region": "CN",
+        "tags": [
+          "展览",
+          "exhibition",
+          "market"
+        ],
+        "deadline": "2026-11-18T23:59:00.000Z",
+        "status": "CURRENT",
+        "first_seen_at": "2026-09-06T07:57:12.839Z",
+        "last_seen_at": "2026-09-17T06:05:05.118Z",
+        "discovered_by_sources": [
+          "shejijingsai-list",
+          "cnyisai-competition"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "work_formats": [
+          "graphic_ip"
+        ],
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": "https://www.shejijingsai.com/2026/08/1618190.html",
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "found",
+        "deadline_kind": "deadline",
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": [],
+        "source_item_id": "90d48eca82aa78a306b8f997",
+        "deadline_conflicts": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_578f11bd633e14019483dccb",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "unknown",
+      "fees": [],
+      "funding": [],
+      "deadline": "2026-10-08T23:59:00.000Z",
+      "deadline_text": null,
+      "deadline_status": "CURRENT",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+          "raw_excerpt": "中国美术家协会2026中轴线文化青年数字艺术展览征稿通知 【影像艺术】 | | 2026年10月8日 展览 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+          "raw_excerpt": "中国美术家协会2026中轴线文化青年数字艺术展览征稿通知 【影像艺术】 | | 2026年10月8日 展览 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+          "raw_excerpt": "中国美术家协会2026中轴线文化青年数字艺术展览征稿通知",
+          "status": "derived"
+        },
+        {
+          "field": "deadline",
+          "source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+          "raw_excerpt": "2026-10-08T23:59:00.000Z",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+          "raw_excerpt": "中国美术家协会2026中轴线文化青年数字艺术展览征稿通知 【影像艺术】 | | 2026年10月8日 展览 exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_578f11bd633e14019483dccb",
+        "title": "中国美术家协会2026中轴线文化青年数字艺术展览征稿通知",
+        "summary": "【影像艺术】 | | 2026年10月8日",
+        "source_id": "shejijingsai-list",
+        "source_name": "设计竞赛网",
+        "source_url": "https://www.shejijingsai.com/liebiao",
+        "detail_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+        "category": "exhibition_market",
+        "region": "CN",
+        "tags": [
+          "展览",
+          "exhibition",
+          "market"
+        ],
+        "deadline": "2026-10-08T23:59:00.000Z",
+        "status": "CURRENT",
+        "first_seen_at": "2026-09-06T07:57:12.839Z",
+        "last_seen_at": "2026-09-17T06:05:05.118Z",
+        "discovered_by_sources": [
+          "shejijingsai-list"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "work_formats": [
+          "video_animation"
+        ],
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": "https://www.shejijingsai.com/2026/08/1623347.html",
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "found",
+        "deadline_kind": "deadline",
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": [],
+        "source_item_id": "51611355670062e3472d2170",
+        "deadline_conflicts": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_c36816c3c38090904224e96b",
+      "view_types": [
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "unknown",
+      "fees": [],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opencallradar.com/open-calls/open-call-for-residencies-2027-what-is-real-platform-dal-fbd996bd",
+          "raw_excerpt": "Open call for residencies 2027: What is real? Open call for residencies 2027: What is real? open call",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opencallradar.com/open-calls/open-call-for-residencies-2027-what-is-real-platform-dal-fbd996bd",
+          "raw_excerpt": "Open call for residencies 2027: What is real?",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opencallradar.com/open-calls/open-call-for-residencies-2027-what-is-real-platform-dal-fbd996bd",
+          "raw_excerpt": "Open call for residencies 2027: What is real? Open call for residencies 2027: What is real? open call",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_c36816c3c38090904224e96b",
+        "title": "Open call for residencies 2027: What is real?",
+        "summary": "Open call for residencies 2027: What is real?",
+        "source_id": "opencall-radar-craft",
+        "source_name": "OpenCall Radar｜Craft",
+        "source_url": "https://opencallradar.com/open-calls/discipline/craft",
+        "detail_url": "https://opencallradar.com/open-calls/open-call-for-residencies-2027-what-is-real-platform-dal-fbd996bd",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "open call"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-06T16:00:00.000Z",
+        "discovered_by_sources": [
+          "opencall-radar-craft"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_b88811790c51a70288620df9",
+      "view_types": [
+        "grant_funding",
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "receive",
+      "fees": [],
+      "funding": [
+        "fund"
+      ],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到grant_funding",
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": "Radar · Curated with love in Berlin 🖤 About Guides Q&A Pricing Terms Privacy Refund Impressum Cookies Home / Open calls / Exhibitions Type Exhibitions for artists Quick answer There are 5 active opportunities for exhibitions on OpenCall Ra",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": "Exhibitions Exhibitions OpenCall Radar Search Pricing Sign in © 2026 OpenCall Radar · Curated with love in Berlin 🖤 About Guides Q&A Pricing Terms Privacy Refu",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": " on OpenCall Radar. Deadlines span September 2026 to September 2027. exhibition market open call",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": "Exhibitions",
+          "status": "derived"
+        },
+        {
+          "field": "funding",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": "fund",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opencallradar.com/open-calls/type/exhibitions",
+          "raw_excerpt": "Exhibitions Exhibitions OpenCall Radar Search Pricing Sign in © 2026 OpenCall Radar · Curated with love in Berlin 🖤 About Guides Q&A Pricing Terms Privacy Refund Impressum Cookies Hom",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_b88811790c51a70288620df9",
+        "title": "Exhibitions",
+        "summary": "Exhibitions OpenCall Radar Search Pricing Sign in © 2026 OpenCall Radar · Curated with love in Berlin 🖤 About Guides Q&A Pricing Terms Privacy Refund Impressum Cookies Home / Open calls / Exhibitions Type Exhibitions for artists Quick answer There are 5 active opportunities for exhibitions on OpenCall Radar. Deadlines span September 2026 to September 2027.",
+        "source_id": "opencall-radar-craft",
+        "source_name": "OpenCall Radar｜Craft",
+        "source_url": "https://opencallradar.com/open-calls/discipline/craft",
+        "detail_url": "https://opencallradar.com/open-calls/type/exhibitions",
+        "category": "policy_funding",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition",
+          "market",
+          "open call"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-17T06:05:05.118Z",
+        "discovered_by_sources": [
+          "opencall-radar-craft"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": [],
+        "source_item_id": "f25260e6368973a6ce279aab",
+        "deadline_conflicts": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_05e60c41c6ebabae19e84fbc",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "unknown",
+      "fees": [],
+      "funding": [],
+      "deadline": "2026-10-12T23:59:00.000Z",
+      "deadline_text": null,
+      "deadline_status": "CURRENT",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+          "raw_excerpt": "Project Open Call: Made of Fife Made of Fife: A Call for Material Makers, Researchers and Practitioners 来源页面未提供更详细摘要。 maker makers open call exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+          "raw_excerpt": ", Researchers and Practitioners 来源页面未提供更详细摘要。 maker makers open call exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+          "raw_excerpt": "Project Open Call: Made of Fife Made of Fife: A Call for Material Makers, Researchers and Practitioners",
+          "status": "derived"
+        },
+        {
+          "field": "deadline",
+          "source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+          "raw_excerpt": "2026-10-12T23:59:00.000Z",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+          "raw_excerpt": "Project Open Call: Made of Fife Made of Fife: A Call for Material Makers, Researchers and Practitioners 来源页面未提供更详细摘要。 maker makers open call exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_05e60c41c6ebabae19e84fbc",
+        "title": "Project Open Call: Made of Fife Made of Fife: A Call for Material Makers, Researchers and Practitioners",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "craft-scotland-opportunities",
+        "source_name": "Craft Scotland",
+        "source_url": "https://www.craftscotland.org/community",
+        "detail_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+        "category": "international",
+        "region": "GLOBAL",
+        "tags": [
+          "maker",
+          "makers",
+          "open call",
+          "exhibition",
+          "market"
+        ],
+        "deadline": "2026-10-12T23:59:00.000Z",
+        "status": "CURRENT",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-17T06:05:05.118Z",
+        "discovered_by_sources": [
+          "craft-scotland-opportunities"
+        ],
+        "radar_relevance": "RELEVANT",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": "https://www.craftscotland.org/community/opportunity/open-call-made-of-fife-2340",
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "found",
+        "deadline_kind": "deadline",
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": [],
+        "source_item_id": "4a7c139a1fab0ea7cc78869e",
+        "deadline_conflicts": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_b7a4f27ee9cec2d9ab5855c8",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "unknown",
+      "fees": [],
+      "funding": [],
+      "deadline": "2026-10-05T23:59:00.000Z",
+      "deadline_text": null,
+      "deadline_status": "CURRENT",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+          "raw_excerpt": "er in Scotland. Closing date: 5 Oct 2026 来源页面未提供更详细摘要。 jewellery goldsmith fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+          "raw_excerpt": "and. Closing date: 5 Oct 2026 来源页面未提供更详细摘要。 jewellery goldsmith fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+          "raw_excerpt": "Full details &rarr; Exhibit & Sell Applications Open for Alchemy: Goldsmiths Scotland Alchemy: Goldsmiths Scotland is a new fair of contemporary jewellery and silver in Scotland. Closing date: 5 Oct 2026",
+          "status": "derived"
+        },
+        {
+          "field": "deadline",
+          "source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+          "raw_excerpt": "2026-10-05T23:59:00.000Z",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+          "raw_excerpt": "Full details &rarr; Exhibit & Sell Applications Open for Alchemy: Goldsmiths Scotland Alchemy: Goldsmiths Scotland is a new fair of contemporary jewellery and silver in Scotland. Closing date: 5 ",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_b7a4f27ee9cec2d9ab5855c8",
+        "title": "Full details &rarr; Exhibit & Sell Applications Open for Alchemy: Goldsmiths Scotland Alchemy: Goldsmiths Scotland is a new fair of contemporary jewellery and silver in Scotland. Closing date: 5 Oct 2026",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "craft-scotland-opportunities",
+        "source_name": "Craft Scotland",
+        "source_url": "https://www.craftscotland.org/community",
+        "detail_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "jewellery",
+          "goldsmith",
+          "fair",
+          "exhibition",
+          "market"
+        ],
+        "deadline": "2026-10-05T23:59:00.000Z",
+        "status": "CURRENT",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "craft-scotland-opportunities"
+        ],
+        "radar_relevance": "RELEVANT",
+        "directions": [
+          "craft_arts"
+        ],
+        "work_formats": [
+          "fashion_jewellery"
+        ],
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": "https://www.craftscotland.org/community/opportunity/alchemy-goldsmiths-scotland-2334",
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "found",
+        "deadline_kind": "deadline",
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_bccd73d895249d63c59f09fd",
+      "view_types": [
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "unknown",
+      "fees": [],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://www.curatorspace.com/opportunities/detail/aura-open-call/6198",
+          "raw_excerpt": "AURA: Open Call Open Call for artists and writers to submit their work to a feminist online zine based on... AURA: Open Call Open Call for artists and writers to subm",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://www.curatorspace.com/opportunities/detail/aura-open-call/6198",
+          "raw_excerpt": "AURA: Open Call Open Call for artists and writers to submit their work to a feminist online zine based on...",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://www.curatorspace.com/opportunities/detail/aura-open-call/6198",
+          "raw_excerpt": "AURA: Open Call Open Call for artists and writers to submit their work to a feminist online zine based on... AURA: Open Call Open Call for artists and writers to subm",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_bccd73d895249d63c59f09fd",
+        "title": "AURA: Open Call Open Call for artists and writers to submit their work to a feminist online zine based on...",
+        "summary": "AURA: Open Call Open Call for artists and writers to submit their work to a feminist online zine based on...",
+        "source_id": "curatorspace-opportunities",
+        "source_name": "CuratorSpace Opportunities",
+        "source_url": "https://www.curatorspace.com/opportunities?orderBy=latest",
+        "detail_url": "https://www.curatorspace.com/opportunities/detail/aura-open-call/6198",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "open call"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-06T17:00:39.893Z",
+        "discovered_by_sources": [
+          "curatorspace-opportunities"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_a6ebbee3217a85d9ba7254a6",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $30 来源页面未提供更详细摘要"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+          "raw_excerpt": "sington Art Fair 2027 Milford, Michigan Application fee: $30 来源页面未提供更详细摘要。 fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+          "raw_excerpt": " Fair 2027 Milford, Michigan Application fee: $30 来源页面未提供更详细摘要。 fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+          "raw_excerpt": "Fairs/Festivals Kensington Art Fair 2027 Milford, Michigan Application fee: $30",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+          "raw_excerpt": "Application fee: $30 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+          "raw_excerpt": "Fairs/Festivals Kensington Art Fair 2027 Milford, Michigan Application fee: $30 来源页面未提供更详细摘要。 fair exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_a6ebbee3217a85d9ba7254a6",
+        "title": "Fairs/Festivals Kensington Art Fair 2027 Milford, Michigan Application fee: $30",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/14740/ZAPP",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "fair",
+          "exhibition",
+          "market"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_46e94b3e129952d1812d9b58",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $15 来源页面未提供更详细摘要"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+          "raw_excerpt": "Exhibition Draw the Line Chico, California Application fee: $15 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+          "raw_excerpt": "n Draw the Line Chico, California Application fee: $15 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+          "raw_excerpt": "Exhibition Draw the Line Chico, California Application fee: $15",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+          "raw_excerpt": "Application fee: $15 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+          "raw_excerpt": "Exhibition Draw the Line Chico, California Application fee: $15 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_46e94b3e129952d1812d9b58",
+        "title": "Exhibition Draw the Line Chico, California Application fee: $15",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/18149/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition",
+          "market"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_c3fceef86ca283ac3c958cc3",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $35 来源页面未提供更详细摘要"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+          "raw_excerpt": "27, 42nd Annual Ridgway, Colorado Application fee: $35 来源页面未提供更详细摘要。 craft fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+          "raw_excerpt": "nual Ridgway, Colorado Application fee: $35 来源页面未提供更详细摘要。 craft fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+          "raw_excerpt": "Fairs/Festivals Ridgway Rendezvous Arts & Craft Festival 2027, 42nd Annual Ridgway, Colorado Application fee: $35",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+          "raw_excerpt": "Application fee: $35 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+          "raw_excerpt": "ls Ridgway Rendezvous Arts & Craft Festival 2027, 42nd Annual Ridgway, Colorado Application fee: $35 来源页面未提供更详细摘要。 craft fair exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_c3fceef86ca283ac3c958cc3",
+        "title": "Fairs/Festivals Ridgway Rendezvous Arts & Craft Festival 2027, 42nd Annual Ridgway, Colorado Application fee: $35",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/14882/ZAPP",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "craft",
+          "fair",
+          "exhibition",
+          "market"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "RELEVANT",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "directions": [
+          "craft_arts"
+        ],
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_8bb8560c951bac7415ac847d",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $0 来源页面未提供更详细摘要"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+          "raw_excerpt": "Exhibition \"Photografique - The Best Of Photographic Art\" Issue 004 Seattle, Washington Application fee: $0 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+          "raw_excerpt": "Art\" Issue 004 Seattle, Washington Application fee: $0 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+          "raw_excerpt": "Exhibition \"Photografique - The Best Of Photographic Art\" Issue 004 Seattle, Washington Application fee: $0",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+          "raw_excerpt": "Application fee: $0 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+          "raw_excerpt": "on \"Photografique - The Best Of Photographic Art\" Issue 004 Seattle, Washington Application fee: $0 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_8bb8560c951bac7415ac847d",
+        "title": "Exhibition \"Photografique - The Best Of Photographic Art\" Issue 004 Seattle, Washington Application fee: $0",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/18141/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition",
+          "market"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "work_formats": [
+          "graphic_ip"
+        ],
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_8cb823bc222cbf6ec1a61575",
+      "view_types": [
+        "grant_funding",
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "mixed",
+      "fees": [
+        "Application fee: $0 Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 exhibition grant"
+      ],
+      "funding": [
+        "Fund",
+        "Grant",
+        "grant"
+      ],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到grant_funding",
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+          "raw_excerpt": "Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 exhibition grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+          "raw_excerpt": "Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 exhibi",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+          "raw_excerpt": "Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+          "raw_excerpt": "Application fee: $0 Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 exhibition grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "funding",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+          "raw_excerpt": "Fund；Grant；grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+          "raw_excerpt": "Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0 exhibition grant",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_8cb823bc222cbf6ec1a61575",
+        "title": "Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0",
+        "summary": "Exhibition 12 x 12 Museum Fundraiser Grants Pass, Oregon Application fee: $0",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/18124/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition",
+          "grant"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-06T16:00:00.000Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_99ceaa216b532306c6c72bbc",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $35 来源页面未提供更详细摘要"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+          "raw_excerpt": " 1, 2026 by Hot Works Sarasota, Florida Application fee: $35 来源页面未提供更详细摘要。 fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+          "raw_excerpt": " Hot Works Sarasota, Florida Application fee: $35 来源页面未提供更详细摘要。 fair exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+          "raw_excerpt": "Fairs/Festivals Sarasota Fine Art Show - October 31 & November 1, 2026 by Hot Works Sarasota, Florida Application fee: $35",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+          "raw_excerpt": "Application fee: $35 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+          "raw_excerpt": "ta Fine Art Show - October 31 & November 1, 2026 by Hot Works Sarasota, Florida Application fee: $35 来源页面未提供更详细摘要。 fair exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_99ceaa216b532306c6c72bbc",
+        "title": "Fairs/Festivals Sarasota Fine Art Show - October 31 & November 1, 2026 by Hot Works Sarasota, Florida Application fee: $35",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/14618/ZAPP",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "fair",
+          "exhibition",
+          "market"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-17T06:05:05.118Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": [],
+        "source_item_id": "eb7ce12b88279c5f45ef9fed",
+        "deadline_conflicts": [],
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null
+      }
+    },
+    {
+      "opportunity_id": "oppv2_80d95fc9d68554561a204136",
+      "view_types": [
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $35 Exhibition Open Call",
+        "Application fee: $35 open call exhibition"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17698/CAFE",
+          "raw_excerpt": "Exhibition Open Call . Greater Los Angeles Los Angeles, California Application fee: $35 Exhibition Open Call . Greater Los Angeles Los Angeles, California Appli",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17698/CAFE",
+          "raw_excerpt": "Exhibition Open Call . Greater Los Angeles Los Angeles, California Application fee: $35",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17698/CAFE",
+          "raw_excerpt": "Application fee: $35 Exhibition Open Call；Application fee: $35 open call exhibition",
+          "status": "source_stated"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17698/CAFE",
+          "raw_excerpt": "Exhibition Open Call . Greater Los Angeles Los Angeles, California Application fee: $35 Exhibition Open Call . Greater Los Angeles Los Angeles, California Application fee:",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_80d95fc9d68554561a204136",
+        "title": "Exhibition Open Call . Greater Los Angeles Los Angeles, California Application fee: $35",
+        "summary": "Exhibition Open Call . Greater Los Angeles Los Angeles, California Application fee: $35",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/17698/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "open call",
+          "exhibition"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-06T16:00:00.000Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_34b6fa32542aec30e0883fec",
+      "view_types": [
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $35 Exhibition Los Angeles",
+        "Application fee: $35 exhibition"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17863/CAFE",
+          "raw_excerpt": "Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: $35 Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: ",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17863/CAFE",
+          "raw_excerpt": "Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: $35",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17863/CAFE",
+          "raw_excerpt": "Application fee: $35 Exhibition Los Angeles；Application fee: $35 exhibition",
+          "status": "source_stated"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17863/CAFE",
+          "raw_excerpt": "Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: $35 Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: $35 exhibition",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_34b6fa32542aec30e0883fec",
+        "title": "Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: $35",
+        "summary": "Exhibition Los Angeles . Gallery Row Los Angeles, California Application fee: $35",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/17863/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-06T15:41:27.859Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_d3367b71d5f79a1b6cb99e71",
+      "view_types": [
+        "grant_funding",
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "mixed",
+      "fees": [
+        "Application fee: $25 / $35 来源页面未提供更详细摘要"
+      ],
+      "funding": [
+        "Grant",
+        "grant"
+      ],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到grant_funding",
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+          "raw_excerpt": "Grants 2026 National Juried Photography Exhibition Frederick, Maryland Application fee: $25 / $35 来源页面未提供更详细摘要。 exhibition grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+          "raw_excerpt": "Grants 2026 National Juried Photography Exhibition Frederick, Maryland Application fee: $25 / $35 来源页面未提供更详细摘要。 exhibition grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+          "raw_excerpt": "Grants 2026 National Juried Photography Exhibition Frederick, Maryland Application fee: $25 / $35",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+          "raw_excerpt": "Application fee: $25 / $35 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "funding",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+          "raw_excerpt": "Grant；grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+          "raw_excerpt": "Grants 2026 National Juried Photography Exhibition Frederick, Maryland Application fee: $25 / $35 来源页面未提供更详细摘要。 exhibition grant",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_d3367b71d5f79a1b6cb99e71",
+        "title": "Grants 2026 National Juried Photography Exhibition Frederick, Maryland Application fee: $25 / $35",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/17456/CAFE",
+        "category": "policy_funding",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition",
+          "grant"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_70433021fb54cdfc900a1c06",
+      "view_types": [
+        "grant_funding",
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "mixed",
+      "fees": [
+        "Application fee: $14 Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14 open call grant"
+      ],
+      "funding": [
+        "Grant",
+        "grant"
+      ],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到grant_funding",
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+          "raw_excerpt": "Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14 Grants Winter 2027 'Vintage' Issue: Open Call for ",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+          "raw_excerpt": "Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14 Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvan",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+          "raw_excerpt": "Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+          "raw_excerpt": "Application fee: $14 Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14 open call grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "funding",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+          "raw_excerpt": "Grant；grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+          "raw_excerpt": "Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14 Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvan",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_70433021fb54cdfc900a1c06",
+        "title": "Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14",
+        "summary": "Grants Winter 2027 'Vintage' Issue: Open Call for Submissions Philadelphia, Pennsylvania Application fee: $14",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/17400/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "open call",
+          "grant"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-06T16:00:00.000Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_75bce8d0694c47e3f93693bf",
+      "view_types": [
+        "exhibition_showcase",
+        "market_channel"
+      ],
+      "lane": "current",
+      "money_flow": "pay",
+      "fees": [
+        "Application fee: $25 来源页面未提供更详细摘要"
+      ],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NEEDS_REVIEW",
+      "qualification_gaps": [
+        "供货/选品条件与申请主体待核验"
+      ],
+      "buyer_demand": true,
+      "guaranteed_order": false,
+      "guaranteed_contract": null,
+      "our_role": "applicant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase",
+        "正文行动证据映射到market_channel"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+          "raw_excerpt": "Exhibition Handheld for the Holidays 2026 Roseville, California Application fee: $25 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+          "raw_excerpt": "lidays 2026 Roseville, California Application fee: $25 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+          "raw_excerpt": "Exhibition Handheld for the Holidays 2026 Roseville, California Application fee: $25",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+          "raw_excerpt": "Application fee: $25 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "eligibility",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+          "raw_excerpt": "供货/选品条件与申请主体待核验",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+          "raw_excerpt": "Exhibition Handheld for the Holidays 2026 Roseville, California Application fee: $25 来源页面未提供更详细摘要。 exhibition market",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_75bce8d0694c47e3f93693bf",
+        "title": "Exhibition Handheld for the Holidays 2026 Roseville, California Application fee: $25",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/16888/CAFE",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "exhibition",
+          "market"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-17T06:05:05.118Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": [],
+        "source_item_id": "0bc78a55c63c0f2be2169e93",
+        "deadline_conflicts": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_42d0af8784cafbfe9881da8d",
+      "view_types": [
+        "grant_funding"
+      ],
+      "lane": "current",
+      "money_flow": "mixed",
+      "fees": [
+        "Application fee: $45 来源页面未提供更详细摘要"
+      ],
+      "funding": [
+        "Grant",
+        "grant"
+      ],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到grant_funding"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17726/CAFE",
+          "raw_excerpt": "Grants 31st Annual Gateway to the Rockies Art Show Aurora, Colorado Application fee: $45 来源页面未提供更详细摘要。 grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17726/CAFE",
+          "raw_excerpt": "Grants 31st Annual Gateway to the Rockies Art Show Aurora, Colorado Application fee: $45",
+          "status": "derived"
+        },
+        {
+          "field": "fees",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17726/CAFE",
+          "raw_excerpt": "Application fee: $45 来源页面未提供更详细摘要",
+          "status": "source_stated"
+        },
+        {
+          "field": "funding",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17726/CAFE",
+          "raw_excerpt": "Grant；grant",
+          "status": "source_stated"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://opportunities.wearecreativewest.org/opportunity/17726/CAFE",
+          "raw_excerpt": "Grants 31st Annual Gateway to the Rockies Art Show Aurora, Colorado Application fee: $45 来源页面未提供更详细摘要。 grant",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_42d0af8784cafbfe9881da8d",
+        "title": "Grants 31st Annual Gateway to the Rockies Art Show Aurora, Colorado Application fee: $45",
+        "summary": "来源页面未提供更详细摘要。",
+        "source_id": "cafe-call-for-entry",
+        "source_name": "CaFÉ CallForEntry",
+        "source_url": "https://opportunities.wearecreativewest.org/",
+        "detail_url": "https://opportunities.wearecreativewest.org/opportunity/17726/CAFE",
+        "category": "policy_funding",
+        "region": "GLOBAL",
+        "tags": [
+          "grant"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:09:52.855Z",
+        "last_seen_at": "2026-09-08T13:57:27.451Z",
+        "discovered_by_sources": [
+          "cafe-call-for-entry"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "event_location": null,
+        "participation_scope": "unspecified",
+        "participation_mode": "unspecified",
+        "is_long_term": false,
+        "starts_at": null,
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    },
+    {
+      "opportunity_id": "oppv2_facc4bc078314f9d851188a0",
+      "view_types": [
+        "exhibition_showcase"
+      ],
+      "lane": "current",
+      "money_flow": "unknown",
+      "fees": [],
+      "funding": [],
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_status": "UNKNOWN_DEADLINE",
+      "rolling": false,
+      "eligibility_status": "NOT_ASSESSED",
+      "qualification_gaps": [],
+      "buyer_demand": false,
+      "guaranteed_order": null,
+      "guaranteed_contract": null,
+      "our_role": "participant",
+      "fit_basis": [
+        "正文行动证据映射到exhibition_showcase"
+      ],
+      "next_action": "打开来源原文，核验资格、材料、费用与截止日期后再决定申请",
+      "evidence": [
+        {
+          "field": "type",
+          "source_url": "https://www.curatorspace.com/opportunities/detail/the-light-frame-gallery/9757",
+          "raw_excerpt": "The Light Frame Gallery | Open Call for Guest Writers (Museums, Photography & Community) Seeking guest writers for our new online journal. We want rigorous, research‑informed articles...",
+          "status": "source_stated"
+        },
+        {
+          "field": "lane",
+          "source_url": "https://www.curatorspace.com/opportunities/detail/the-light-frame-gallery/9757",
+          "raw_excerpt": "The Light Frame Gallery | Open Call for Guest Writers (Museums, Photography & Community) Seeking guest writers for our new online journal. We want rigorous, research‑informed articles...",
+          "status": "derived"
+        },
+        {
+          "field": "application_action",
+          "source_url": "https://www.curatorspace.com/opportunities/detail/the-light-frame-gallery/9757",
+          "raw_excerpt": "The Light Frame Gallery | Open Call for Guest Writers (Museums, Photography & Community) Seeking guest writers for our new online journal. We want rigorous, research‑informed articles...",
+          "status": "source_stated"
+        }
+      ],
+      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "rules_version": "opportunity-coverage.v1",
+      "opportunity": {
+        "id": "oppv2_facc4bc078314f9d851188a0",
+        "title": "The Light Frame Gallery | Open Call for Guest Writers (Museums, Photography & Community) Seeking guest writers for our new online journal. We want rigorous, research‑informed articles...",
+        "summary": "The Light Frame Gallery | Open Call for Guest Writers (Museums, Photography & Community) Seeking guest writers for our new online journal. We want rigorous, research‑informed articles...",
+        "source_id": "curatorspace-opportunities",
+        "source_name": "CuratorSpace Opportunities",
+        "source_url": "https://www.curatorspace.com/opportunities?orderBy=latest",
+        "detail_url": "https://www.curatorspace.com/opportunities/detail/the-light-frame-gallery/9757",
+        "category": "exhibition_market",
+        "region": "GLOBAL",
+        "tags": [
+          "open call"
+        ],
+        "deadline": null,
+        "status": "UNKNOWN_DEADLINE",
+        "first_seen_at": "2026-09-06T15:12:49.439Z",
+        "last_seen_at": "2026-09-06T16:00:00.000Z",
+        "discovered_by_sources": [
+          "curatorspace-opportunities"
+        ],
+        "radar_relevance": "UNCERTAIN",
+        "deadline_text": null,
+        "deadline_source_url": null,
+        "deadline_raw_text": null,
+        "deadline_checked_at": null,
+        "deadline_resolution": "not_attempted",
+        "deadline_kind": null,
+        "deadline_conflict_unsafe": false,
+        "encoding_error": false,
+        "encoding_error_fields": []
+      }
+    }
+  ],
+  "exclusions": {
+    "creative_competition_in_coverage_ids": [],
+    "result_or_editorial_current_public_ids": [],
+    "seller_offer_public_ids": [],
+    "procurement_leakage_public_ids": [],
+    "missing_source_evidence_public_ids": []
+  }
+}
