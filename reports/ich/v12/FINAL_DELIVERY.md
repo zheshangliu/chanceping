@@ -5,7 +5,7 @@
 ## S0 基线与承接
 
 - branch: codex/opportunity-v12-real-coverage
-- commit: b3fcda3cdd5113ba7388dfd37c5cdc853eda8b0f
+- commit: 369c928b6b7366aee636d79a50395d23bb60f323
 - base: origin/main（本轮 clean worktree）
 - Procurement Phase 1：复用 main 上已验证 control plane，未重跑旧 33→38 rollout
 - 赛事 Radar / Memo：复用 V1.1 选择性移植的 OpportunityV2 身份、来源、去重、截止日期和旧 UI 路径

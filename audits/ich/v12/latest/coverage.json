@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T06:48:26.019Z",
+  "generated_at": "2026-09-17T06:51:30.637Z",
   "coverage_assessments": 159,
   "lane_counts": {
     "current": 84,
@@ -96,7 +96,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_bab41c89d30a1abc42b1a7a2",
@@ -208,7 +208,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_578f11bd633e14019483dccb",
@@ -297,7 +297,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_c36816c3c38090904224e96b",
@@ -406,7 +406,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_b88811790c51a70288620df9",
@@ -514,7 +514,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_05e60c41c6ebabae19e84fbc",
@@ -624,7 +624,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_b7a4f27ee9cec2d9ab5855c8",
@@ -716,7 +716,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_bccd73d895249d63c59f09fd",
@@ -817,7 +817,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_a6ebbee3217a85d9ba7254a6",
@@ -925,7 +925,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_46e94b3e129952d1812d9b58",
@@ -1032,7 +1032,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_c3fceef86ca283ac3c958cc3",
@@ -1144,7 +1144,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_8bb8560c951bac7415ac847d",
@@ -1256,7 +1256,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_8cb823bc222cbf6ec1a61575",
@@ -1358,7 +1358,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_99ceaa216b532306c6c72bbc",
@@ -1453,7 +1453,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_80d95fc9d68554561a204136",
@@ -1540,7 +1540,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_34b6fa32542aec30e0883fec",
@@ -1642,7 +1642,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_d3367b71d5f79a1b6cb99e71",
@@ -1750,7 +1750,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_70433021fb54cdfc900a1c06",
@@ -1852,7 +1852,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_75bce8d0694c47e3f93693bf",
@@ -1954,7 +1954,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_42d0af8784cafbfe9881da8d",
@@ -2036,7 +2036,7 @@
           "status": "source_stated"
         }
       ],
-      "assessed_at": "2026-09-17T06:48:26.019Z",
+      "assessed_at": "2026-09-17T06:51:30.637Z",
       "rules_version": "opportunity-coverage.v1",
       "opportunity": {
         "id": "oppv2_facc4bc078314f9d851188a0",
