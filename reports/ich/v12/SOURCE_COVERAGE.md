@@ -1,0 +1,49 @@
+# V1.2 来源覆盖
+
+- persisted/effective sources: 44/44
+- fetched/successful sources: 31/27
+
+- shejijingsai-list：PIPELINE_VERIFIED；Pool 338
+- chuangsaiyun-competition-list：PIPELINE_VERIFIED；Pool 1
+- contest-watchers-open：PIPELINE_VERIFIED；Pool 18
+- crafts-council-opportunities：BLOCKED_OR_EMPTY；Pool 0
+- artconnect-opportunities：PIPELINE_VERIFIED；Pool 39
+- competitions-archi：PIPELINE_VERIFIED；Pool 14
+- loewe-craft-prize：PIPELINE_VERIFIED；Pool 1
+- opencall-radar-craft：PIPELINE_VERIFIED；Pool 11
+- opencalls-ai：BLOCKED_OR_EMPTY；Pool 0
+- american-craft-council-opportunities：PIPELINE_VERIFIED；Pool 38
+- craft-scotland-opportunities：PIPELINE_VERIFIED；Pool 15
+- kcdf-opportunities：PIPELINE_VERIFIED；Pool 14
+- heritage-crafts-opportunities：PIPELINE_VERIFIED；Pool 11
+- homo-faber-calls：PIPELINE_VERIFIED；Pool 2
+- asef-culture360-opportunities：PIPELINE_VERIFIED；Pool 22
+- on-the-move-open-calls：PIPELINE_VERIFIED；Pool 25
+- curatorspace-opportunities：PIPELINE_VERIFIED；Pool 30
+- cafe-call-for-entry：PIPELINE_VERIFIED；Pool 60
+- artshub-craft-opportunities：BLOCKED_OR_EMPTY；Pool 0
+- craft-council-bc-calls：PIPELINE_VERIFIED；Pool 8
+- craft-council-nl-opportunities：BLOCKED_OR_EMPTY；Pool 0
+- cfw-cultural-ip：PIPELINE_VERIFIED；Pool 47
+- whaleideas-competition：PIPELINE_VERIFIED；Pool 153
+- 1zj-cultural-competition：PIPELINE_VERIFIED；Pool 1153
+- chuangyisai-cultural：BLOCKED_OR_EMPTY；Pool 0
+- zcool-challenges：PIPELINE_VERIFIED；Pool 12
+- zjmtcn-product-competition：BLOCKED_OR_EMPTY；Pool 62
+- iuben-cultural-competition：PIPELINE_VERIFIED；Pool 10
+- everyart-competition：PIPELINE_VERIFIED；Pool 11
+- gtn9-competition：BLOCKED_OR_EMPTY；Pool 0
+- cnyisai-competition：PIPELINE_VERIFIED；Pool 82
+- proc-uk-fts：PIPELINE_VERIFIED；Pool 1
+- proc-ca-canadabuys：PIPELINE_VERIFIED；Pool 71
+- proc-cn-ccgp：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-cn-cib：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-global-ocp：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-eu-ted：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-wb：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-cn-gzsun：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-cn-csg：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-cn-gz-wglj：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- proc-uk-contracts-finder：REGISTERED_NO_RUN_EVIDENCE；Pool 0
+- cnaf-guides：PIPELINE_VERIFIED；Pool 6
+- een-partnering：REGISTERED_NO_RUN_EVIDENCE；Pool 0

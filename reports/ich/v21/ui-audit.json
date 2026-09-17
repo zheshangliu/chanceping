@@ -1,0 +1,263 @@
+{
+  "domSummary": {
+    "brand_text": "盯非遗",
+    "brand_asset": "/assets/dingfeiyi-logo.png",
+    "hero_h1": "全球赛事，一站看全",
+    "hero_eyebrow": "国内外文创・非遗・手工艺赛事覆盖最全",
+    "hero_subtitle": "持续聚合国内外设计、文创、非遗与手工艺赛事，并逐步扩展采购、合作、资助、市集与研修机会，让手艺人、设计师、工作室和文创团队更快找到值得行动的项目。",
+    "nav": [
+      "机会导航 赛事备忘录 联系作者 提交来源"
+    ],
+    "channels": [
+      "赛事 / 征集 比赛与作品征集",
+      "市集 / 展销 市集、展会与展销",
+      "采购 / 订单 采购与项目需求",
+      "渠道 / 合作 入驻与联名",
+      "资助 / 扶持 政策与资金",
+      "研修 / 交流 研学、驻地与交流"
+    ],
+    "filters": [
+      "赛事方向： 全部赛事 非遗创新 文创设计 工艺美术 文博文旅 综合文化设计 AIGC / 数字创作",
+      "作品形式： 全部形式 实物工艺 产品设计方案 平面 / 插画 / IP 包装设计 服饰 / 首饰 视频 / 动画 交互 / 游戏 综合媒介",
+      "来源地区： 全部来源 国内来源 海外来源",
+      "截止状态： 全部可浏览 正在征集 近期截止 即将开始 长期征集 日期待补 历史机会 排序：截止时间（近→远） 排序：最新收录"
+    ],
+    "stats": {
+      "text": "当前赛事：219 海外赛事：8 已接入来源：33 每72小时更新",
+      "result_total": 219,
+      "source_count": 33
+    },
+    "result_total": 219,
+    "result_count": 219,
+    "memo_total": 558,
+    "memo_html_ids": 50,
+    "memo_json_ids": 558,
+    "memo_markdown_ids": 558,
+    "memo_gt_radar": true,
+    "procurement_public_total": 0,
+    "first_10_ids": [
+      "oppv2_5ee24bd5d2d86b5ad31e3e3e",
+      "oppv2_ce6fe43c9ad273407cf39d29",
+      "oppv2_6b65f314231648bd47919ae1",
+      "oppv2_adb5882c57e65d011e4f8266",
+      "oppv2_43c53b1ffbeb81953c97f1bc",
+      "oppv2_5a4695f55cc21ae9f11a19dc",
+      "oppv2_0f0d2273518d1a1de547ead9",
+      "oppv2_a96f1da67139eb5d973adf1c"
+    ],
+    "pages": {
+      "home": 200,
+      "overseas": 200,
+      "memo": 200,
+      "procurement": 200,
+      "detail": 200,
+      "submit": 200,
+      "source_principles": 200,
+      "source_manager": 200
+    },
+    "procurement_empty_state": true,
+    "json_total": 219,
+    "memo_json_total": 558,
+    "markdown_rows": 558,
+    "parity": true,
+    "memo_html_page_ids_same": true,
+    "memo_json_markdown_ids_same": true
+  },
+  "copySummary": {
+    "raw_iso_timestamp_count": 0,
+    "ChancePing_visible_count": 0,
+    "待确认_count": 0,
+    "more_filters_desktop_count": 0,
+    "duplicate_summary_bar_count": 0,
+    "memo_mobile_hidden_by_default": 1,
+    "encoding_error_count": 0,
+    "unsafe_deadline_count": 0,
+    "bottom_redundant_modules_visible": 0
+  },
+  "visualChecks": {
+    "hero_image": {
+      "asset": "/assets/ich-paper-atlas-hero.png",
+      "fused_gradient": true,
+      "hard_boundary": false
+    },
+    "hero_text_width": "CSS constrained to 60% desktop / 100% mobile",
+    "filter_row_count": 4,
+    "repeated_summary_block_count": 0,
+    "horizontal_overflow": {
+      "home-desktop": false,
+      "home-mobile": false,
+      "overseas-desktop": false,
+      "procurement-desktop": false,
+      "procurement-mobile": false,
+      "memo-desktop": false,
+      "memo-mobile": false,
+      "source-manager": false,
+      "competition-detail": false
+    },
+    "screenshots": {
+      "home_desktop": "audits/ich/ui/latest/home-desktop.png",
+      "home_mobile": "audits/ich/ui/latest/home-mobile.png",
+      "overseas_desktop": "audits/ich/ui/latest/overseas-desktop.png",
+      "procurement_desktop": "audits/ich/ui/latest/procurement-desktop.png",
+      "procurement_mobile": "audits/ich/ui/latest/procurement-mobile.png",
+      "memo_desktop": "audits/ich/ui/latest/memo-desktop.png",
+      "memo_mobile": "audits/ich/ui/latest/memo-mobile.png",
+      "detail": "audits/ich/ui/latest/competition-detail.png",
+      "source_manager": "audits/ich/ui/latest/source-manager.png"
+    },
+    "captured_at": "2026-09-10T07:56:14.996Z",
+    "http_status": {
+      "home-desktop": 200,
+      "home-mobile": 200,
+      "overseas-desktop": 200,
+      "procurement-desktop": 200,
+      "procurement-mobile": 200,
+      "memo-desktop": 200,
+      "memo-mobile": 200,
+      "source-manager": 200,
+      "competition-detail": 200
+    },
+    "capture_method": "domcontentloaded"
+  },
+  "manifest": {
+    "generated_at": "2026-09-10T01:19:27.385Z",
+    "base": "rescue/mvp-codex",
+    "pages": [
+      "/ich",
+      "/ich?region=GLOBAL",
+      "/ich?category=procurement_project",
+      "/ich/memo",
+      "/ich/opportunities/oppv2_5ee24bd5d2d86b5ad31e3e3e",
+      "/ich/submit",
+      "/ich/source-principles",
+      "/opportunity-v2/admin/sources"
+    ],
+    "artifacts": [
+      "dom-summary.json",
+      "copy-summary.json",
+      "visual-checks.json"
+    ],
+    "screenshot_status": "captured-and-inspected",
+    "screenshots": [
+      "audits/ich/ui/latest/home-desktop.png",
+      "audits/ich/ui/latest/home-mobile.png",
+      "audits/ich/ui/latest/overseas-desktop.png",
+      "audits/ich/ui/latest/procurement-desktop.png",
+      "audits/ich/ui/latest/procurement-mobile.png",
+      "audits/ich/ui/latest/memo-desktop.png",
+      "audits/ich/ui/latest/memo-mobile.png",
+      "audits/ich/ui/latest/source-manager.png",
+      "audits/ich/ui/latest/competition-detail.png"
+    ],
+    "capture_method": "domcontentloaded"
+  },
+  "productionAudit": {
+    "schema_version": "chanceping.ich.production-deploy-audit.v2",
+    "generated_at": "2026-09-10T08:03:21.812Z",
+    "production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+    "release": "/opt/chanceping/releases/20260910T073608Z-643a791cf383",
+    "previous_release": "/opt/chanceping/releases/20260909T123241Z-7644cb1a6c24",
+    "runtime_backup": "/var/lib/chanceping/backups/opportunity-v2-pre-20260910-20260910T073541Z",
+    "production_read_only_after_deploy": true,
+    "source_migration": {
+      "first": {
+        "before": 31,
+        "after": 33,
+        "added": [
+          "proc-uk-fts",
+          "proc-ca-canadabuys"
+        ]
+      },
+      "second": {
+        "before": 33,
+        "after": 33,
+        "added": []
+      },
+      "admin_config_preserved": true
+    },
+    "runtime": {
+      "production_commit": "643a791cf3832c4f9387047e662379af1d7bb931",
+      "release": "/opt/chanceping/releases/20260910T073608Z-643a791cf383",
+      "previous_release": "/opt/chanceping/releases/20260909T123241Z-7644cb1a6c24",
+      "runtime_backup": "/var/lib/chanceping/backups/opportunity-v2-pre-20260910-20260910T073541Z",
+      "sources": 33,
+      "successful_sources": 28,
+      "source_health_rows": 32,
+      "raw_items": 2781,
+      "pool_items": 2241,
+      "procurement_pool": 75,
+      "pool_encoding_errors": 2,
+      "deadline_conflict_count": 68,
+      "unsafe_internal_count": 2,
+      "scheduler_registry": 33,
+      "scheduler": {
+        "interval_hours": 72,
+        "last_run_at": "2026-09-10T07:42:14.083Z",
+        "next_run_at": "2026-09-13T07:42:14.083Z",
+        "migration_idempotence": {
+          "first": {
+            "before": 31,
+            "after": 33,
+            "added": [
+              "proc-uk-fts",
+              "proc-ca-canadabuys"
+            ]
+          },
+          "second": {
+            "before": 33,
+            "after": 33,
+            "added": []
+          },
+          "admin_config_preserved": true
+        }
+      },
+      "translation": {
+        "translated": 494,
+        "reused": 493,
+        "failed": 51,
+        "provider": "DeepSeek",
+        "qwen_used": false,
+        "pending": 0
+      }
+    },
+    "public": {
+      "competition_total": 219,
+      "cn": 211,
+      "global": 8,
+      "memo_total": 558,
+      "memo_known": 464,
+      "memo_unknown": 94,
+      "memo_json_ids": 558,
+      "memo_markdown_ids": 558,
+      "memo_html_page_ids": 50,
+      "memo_json_markdown_parity": true,
+      "memo_html_prefix_parity": true,
+      "procurement_total": 0,
+      "loewe_visible": 1,
+      "loewe_discovered_by_sources": [
+        "loewe-craft-prize",
+        "asef-culture360-opportunities"
+      ]
+    },
+    "gates": {
+      "http_all_200": true,
+      "source_registry_33": true,
+      "scheduler_registry_33": true,
+      "memo_gt_radar": true,
+      "public_encoding_errors": 0,
+      "public_unsafe_exact_deadline_display": 0,
+      "procurement_leakage": true,
+      "ui": {
+        "brand_dingfeiyi": true,
+        "header_chanceping_absent": true,
+        "hero": true,
+        "broad_copy": true,
+        "source_label_33": true,
+        "no_history_top_nav": true,
+        "no_raw_iso": true,
+        "procurement_empty": true
+      }
+    },
+    "historical_provenance": "PARTIAL_UNRECOVERABLE"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-09-17T06:51:30.637Z",
+  "commit": "369c928b6b7366aee636d79a50395d23bb60f323",
+  "branch": "codex/opportunity-v12-real-coverage",
+  "source_count_persisted": 44,
+  "source_count_effective": 44,
+  "pool_count": 2255,
+  "public_radar_count": 253,
+  "public_competition_count": 192,
+  "memo_total": 537,
+  "memo_known_deadlines": 405,
+  "memo_unknown_deadlines": 132,
+  "cn_public_competition": 163,
+  "global_public_competition": 29,
+  "raw_items": 1623,
+  "source_listing_items": 1518,
+  "loewe": {
+    "pool_count": 2,
+    "public_count": 2,
+    "discovered_by_sources": [
+      "loewe-craft-prize",
+      "asef-culture360-opportunities",
+      "craft-scotland-opportunities"
+    ]
+  },
+  "procurement_public": 0,
+  "current_pool_status": {
+    "CURRENT": 536,
+    "UNKNOWN_DEADLINE": 343,
+    "EXPIRED": 1376
+  },
+  "current_public_status": {
+    "CURRENT": 180,
+    "UNKNOWN_DEADLINE": 73
+  },
+  "scheduler": {
+    "schema_version": "chanceping-opportunity-v2.scheduler.v1",
+    "timezone": "Asia/Shanghai",
+    "interval_hours": 72,
+    "last_run_at": "2026-09-17T06:12:37.968Z",
+    "next_run_at": "2026-09-20T06:12:37.968Z"
+  }
+}

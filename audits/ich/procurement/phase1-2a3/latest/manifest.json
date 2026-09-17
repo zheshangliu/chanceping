@@ -1,0 +1,50 @@
+{
+  "schema_version": "chanceping.ich.procurement.phase1-2a3.v1",
+  "generated_at": "2026-09-17T06:36:48.426Z",
+  "git_sha": "b3fcda3cdd5113ba7388dfd37c5cdc853eda8b0f",
+  "remote_head": "78f54649efd1501a09ffa30970c3097a03b74d32",
+  "production_deployed": false,
+  "migration_contract": {
+    "historical_fixture_before": 31,
+    "expected_added_ids": [
+      "cnaf-guides",
+      "een-partnering",
+      "proc-ca-canadabuys",
+      "proc-cn-ccgp",
+      "proc-cn-cib",
+      "proc-cn-csg",
+      "proc-cn-gz-wglj",
+      "proc-cn-gzsun",
+      "proc-eu-ted",
+      "proc-global-ocp",
+      "proc-uk-contracts-finder",
+      "proc-uk-fts",
+      "proc-wb"
+    ],
+    "actual_added_ids": [
+      "cnaf-guides",
+      "een-partnering",
+      "proc-ca-canadabuys",
+      "proc-cn-ccgp",
+      "proc-cn-cib",
+      "proc-cn-csg",
+      "proc-cn-gz-wglj",
+      "proc-cn-gzsun",
+      "proc-eu-ted",
+      "proc-global-ocp",
+      "proc-uk-contracts-finder",
+      "proc-uk-fts",
+      "proc-wb"
+    ],
+    "after_first_migration": 44,
+    "after_second_migration": 44,
+    "second_added_ids": [],
+    "phase1_new_sources_registered": 5,
+    "phase1_new_sources_disabled": 5,
+    "phase1_new_sources_pending": 5,
+    "phase1_new_sources_fetched_while_disabled": 0,
+    "admin_customization_preserved": true,
+    "existing_source_membership_loss": 0,
+    "status": "PASS"
+  }
+}

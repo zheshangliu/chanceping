@@ -1,0 +1,8 @@
+{
+  "production_deployed": false,
+  "production_source_migration": false,
+  "production_scheduler_run": false,
+  "production_commit_changed": false,
+  "dns_changed": false,
+  "note": "All migration and scheduler checks used local temporary files and a fake fetcher."
+}

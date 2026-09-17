@@ -1,0 +1,88 @@
+import { getIchSourceRegistryV2 } from "./source-registry-v2";
+import type { IchPrimaryCategory } from "./types";
+
+export const ICH_DS7_SOURCE_WORKFLOW_SCHEMA = "ich-ds7-source-workflow.v1" as const;
+export type IchDs7WorkflowMode = "adapter" | "manual";
+
+export interface IchDs7SourceWorkflow {
+  workflow_id: string;
+  source_id: string;
+  mode: IchDs7WorkflowMode;
+  discovery_url: string;
+  categories: IchPrimaryCategory[];
+  geography: string[];
+  scan_frequency: "daily" | "every_3_days" | "weekly";
+  status: "ready";
+  candidate_contract: string[];
+  collection_steps: string[];
+}
+
+const registry = getIchSourceRegistryV2();
+const source = (sourceId: string) => {
+  const item = registry.sources.find((candidate) => candidate.id === sourceId);
+  if (!item) throw new Error(`DS7 source is not registered: ${sourceId}`);
+  return item;
+};
+const contract = ["具体详情页 URL", "标题", "主办方", "截止或长期有效证据", "地区", "参与资格", "行动方式", "字段 provenance", "原始快照哈希"];
+const manualSteps = ["打开来源入口", "定位当前公告/机会详情页", "保存原始 URL 与页面快照", "逐字段填写候选表", "回到第一方页面复核后提交 DS3"];
+const make = (workflowId: string, sourceId: string, mode: IchDs7WorkflowMode): IchDs7SourceWorkflow => {
+  const item = source(sourceId);
+  return { workflow_id: workflowId, source_id: item.id, mode, discovery_url: item.canonical_url, categories: [...item.categories], geography: [...item.geography], scan_frequency: item.scan_frequency, status: "ready", candidate_contract: contract, collection_steps: mode === "manual" ? manualSteps : ["运行来源适配器", "保存原始快照和哈希", "输出候选及字段 provenance", "提交 DS3 质量分层"] };
+};
+
+const explicitWorkflows: IchDs7SourceWorkflow[] = [
+  make("adapter-ccgp-procurement", "ccgp", "adapter"),
+  make("adapter-gd-culture-notices", "gd-culture", "adapter"),
+  make("adapter-yuexiu-notices", "yuexiu-notices", "adapter"),
+  make("adapter-mct-notices", "mct-notices", "adapter"),
+  make("adapter-cnaf-guides", "cnaf", "adapter"),
+  make("adapter-ichina-notices", "ichina", "adapter"),
+  make("adapter-gmfyg-events", "gmfyg", "adapter"),
+  make("adapter-gz-culture-notices", "gz-culture", "adapter"),
+  make("adapter-cnacs-competitions", "cnacs", "adapter"),
+  make("adapter-gdmuseum-announcements", "gdmuseum", "adapter"),
+  make("adapter-gdmoa-exhibitions", "gdmoa", "adapter"),
+  make("adapter-unesco-ich-news", "unesco-ich", "adapter"),
+  // The registered ICH expansion sources are intentionally explicit here.
+  // Keeping one workflow per registered source prevents DS7 from drifting
+  // away from Source Registry v2 as the profile grows.
+  make("adapter-gba-design", "gba-design", "adapter"),
+  make("adapter-china-design-award", "china-design-award", "adapter"),
+  make("adapter-dia-award", "dia-award", "adapter"),
+  make("adapter-loewe-craft-prize", "loewe-craft-prize", "adapter"),
+  make("adapter-if-design-award", "if-design-award", "adapter"),
+  make("adapter-gyeongnam-k-design", "gyeongnam-k-design", "adapter"),
+  make("manual-zhe-li-chengdu", "zhe-li-chengdu", "manual"),
+  make("manual-zhuhai-gift", "zhuhai-gift", "manual"),
+  make("manual-cd-museum", "cd-museum", "manual"),
+  make("manual-gd-procurement", "gd-procurement", "manual"),
+  make("manual-ggzy", "ggzy", "manual"),
+  make("manual-gz-public-resources", "gz-ggzy", "manual"),
+  make("manual-cnicif", "cnicif", "manual"),
+  make("manual-crafts-council", "crafts-council-uk", "manual"),
+  make("manual-shenzhen-public-resources", "sz-ggzy", "manual"),
+  make("manual-shenzhen-culture", "sz-culture", "manual"),
+  make("manual-china-ich-association", "chinaich", "manual"),
+  make("manual-cnaca", "cnaca", "manual"),
+  make("manual-guangzhou-museum", "gz-museum", "manual"),
+  make("manual-asef-culture360", "asef-culture360", "manual"),
+  make("manual-japan-foundation", "japan-foundation", "manual"),
+  make("manual-kcdf", "kcdf", "manual"),
+  make("manual-creative-europe", "creative-europe", "manual"),
+  make("manual-res-artis", "res-artis", "manual"),
+  make("manual-transartists", "transartists", "manual"),
+  make("manual-heritage-crafts", "heritage-crafts", "manual"),
+  make("manual-center-for-craft", "center-for-craft", "manual"),
+  make("manual-wcc-international", "wcc-international", "manual"),
+];
+
+/**
+ * Keep DS7 total by construction: every newly registered source gets a
+ * conservative manual workflow until a tested adapter is explicitly added.
+ */
+const explicitSourceIds = new Set(explicitWorkflows.map((workflow) => workflow.source_id));
+const generatedWorkflows = registry.sources
+  .filter((item) => !explicitSourceIds.has(item.id))
+  .map((item) => make(`${item.operational_status === "adapter_ready" ? "adapter" : "manual"}-${item.id}`, item.id, item.operational_status === "adapter_ready" ? "adapter" : "manual"));
+
+export const ICH_DS7_SOURCE_WORKFLOWS: IchDs7SourceWorkflow[] = [...explicitWorkflows, ...generatedWorkflows];

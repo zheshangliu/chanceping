@@ -961,6 +961,27 @@ function buildMvpOpportunityDetails(opps: OpportunityCard[]): string {
   return lines.join("\n");
 }
 
+/**
+ * Keep field-level evidence visible even when every card is excluded from the
+ * ranked S/A/B/C sections (for example a mock run whose cards are all D or
+ * hidden). The report must still describe what was found and what remains to
+ * be acted on; this does not promote an excluded card into the recommendation
+ * sections.
+ */
+function buildMvpStatusCoverage(opps: OpportunityCard[]): string {
+  const lines = ["## 4A. 证据与行动状态", ""];
+  if (opps.length === 0) {
+    lines.push("- 本轮没有机会卡片可供状态说明。", "");
+    return lines.join("\n");
+  }
+  lines.push("| 机会 | 证据状态 | 行动状态 |", "|---|---|---|");
+  opps.slice(0, 8).forEach((opp) => {
+    lines.push(`| ${opp.title} | ${fmtStr(opp.evidence_status || "needs_review")} | ${fmtStr(opp.action_status || "prepare")} |`);
+  });
+  lines.push("");
+  return lines.join("\n");
+}
+
 function buildMvpWatchPool(excluded: Array<{ opp: OpportunityCard; reason: string }>): string {
   const lines = ["## 6. 不建议投入或需复核的机会", ""];
   if (excluded.length === 0) {
@@ -1575,6 +1596,7 @@ export function generateRadarReport(input: RadarReportInput): RadarReportResult 
     ...(aiEventHeroDemoBrief ? [aiEventHeroDemoBrief] : []),
     buildMvpOpportunityTable(rankedOpps),
     buildMvpOpportunityDetails(rankedOpps),
+    buildMvpStatusCoverage(opportunities),
     buildMvpActionList(rankedOpps),
     buildMvpWatchPool(excluded),
     buildMvpSourceIndex(input, input.sourceCandidates ?? []),

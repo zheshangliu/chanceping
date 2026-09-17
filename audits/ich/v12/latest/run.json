@@ -1,0 +1,19 @@
+{
+  "run_id": "opportunity-v2-20260917061237",
+  "generated_at": "2026-09-17T06:51:30.637Z",
+  "fetched_sources": 31,
+  "successful_sources": 27,
+  "raw_items": 1623,
+  "source_listing_items": 1518,
+  "pool_items": 2255,
+  "public_radar_items": 253,
+  "public_competition_items": 192,
+  "memo_items": 537,
+  "scheduler": {
+    "schema_version": "chanceping-opportunity-v2.scheduler.v1",
+    "timezone": "Asia/Shanghai",
+    "interval_hours": 72,
+    "last_run_at": "2026-09-17T06:12:37.968Z",
+    "next_run_at": "2026-09-20T06:12:37.968Z"
+  }
+}
