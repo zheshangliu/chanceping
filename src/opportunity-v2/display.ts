@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import type { OpportunityV2 } from "./types";
-import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
+import { hasEncodingCorruption, htmlToText } from "../ich/aggregation/adapters/common";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
@@ -35,8 +35,29 @@ export interface OpportunityV2Display {
   translation_status: "translated" | "pending" | "failed" | "not_needed";
 }
 
+export function cleanOpportunityDisplayText(value: string | null | undefined): string {
+  const navigation = /(?:^|\s)(?:首页|热门推荐|联系客服|广告投放|浏览量|阅读量|菜单|导航|返回首页|menu|login|sign\s+in|pricing|about\s+us|our\s+work|projects|reports|home|full\s+details?)(?=\s|$)/giu;
+  let text = htmlToText(String(value ?? ""))
+    .replace(/\u00a0/gu, " ")
+    .replace(/\s+/gu, " ")
+    .trim();
+  text = text
+    .replace(/(?:浏览量|阅读量|views?|page\s+views?)\s*[:：]?\s*[\d,]+/giu, " ")
+    .replace(/来源页面未提供(?:更详细|可直接使用的)?(?:赛事)?(?:摘要|简介)[，,。.]?请打开来源原文查看完整要求[。.]?/giu, " ")
+    .replace(/来源页面未提供(?:更详细|可直接使用的)?(?:摘要|简介)[。.]?/giu, " ")
+    .replace(navigation, " ")
+    .replace(/\s+&\s+/gu, " ｜ ")
+    .replace(/\s+/gu, " ")
+    .trim();
+  if (!text || /^[\s\d|｜·,，:：;；/\\-]+$/u.test(text)) return "";
+  if (/(?:founded|established)\s+in\s+20\d{2}/iu.test(text)
+    && /supports?\s+(?:craft|culture|artists?)/iu.test(text)
+    && !/(?:submit|apply|application|call|open|deadline|project|作品|报名|申请|征集|展览|参赛|市场|grant|award)/iu.test(text)) return "";
+  return text;
+}
+
 function displaySummary(item: Pick<OpportunityV2, "summary" | "encoding_error_fields">): string {
-  return item.encoding_error_fields?.includes("summary") || hasEncodingCorruption(item.summary) ? "" : item.summary;
+  return item.encoding_error_fields?.includes("summary") || hasEncodingCorruption(item.summary) ? "" : cleanOpportunityDisplayText(item.summary);
 }
 
 function translationPath(filePath?: string): string {
@@ -44,7 +65,24 @@ function translationPath(filePath?: string): string {
 }
 
 export function opportunityV2SourceHash(item: Pick<OpportunityV2, "title" | "summary">): string {
+  return crypto.createHash("sha256").update(`${cleanOpportunityDisplayText(item.title)}\n${cleanOpportunityDisplayText(item.summary)}`, "utf8").digest("hex");
+}
+
+/** Hash used by V1.2 caches; accepted only for safe cache reuse during migration. */
+export function opportunityV2LegacySourceHash(item: Pick<OpportunityV2, "title" | "summary">): string {
   return crypto.createHash("sha256").update(`${item.title}\n${item.summary}`, "utf8").digest("hex");
+}
+
+export function isReusableOpportunityV2Translation(
+  item: Pick<OpportunityV2, "id" | "title" | "summary">,
+  entry: Pick<OpportunityV2Translation, "opportunity_id" | "source_hash" | "target_language" | "strategy_version" | "status" | "title_zh">,
+): boolean {
+  return entry.opportunity_id === item.id
+    && (entry.source_hash === opportunityV2SourceHash(item) || entry.source_hash === opportunityV2LegacySourceHash(item))
+    && entry.target_language === "zh-CN"
+    && entry.strategy_version === OPPORTUNITY_V2_DISPLAY_STRATEGY
+    && entry.status === "translated"
+    && Boolean(entry.title_zh?.trim());
 }
 
 export function readOpportunityV2Translations(filePath?: string): OpportunityV2Translation[] {
@@ -72,8 +110,8 @@ function latinCount(value: string): number { return (value.match(/[A-Za-z]/gu) ?
 
 /** Mixed CJK/Latin records are foreign when either field is substantively non-Chinese. */
 export function isForeignLanguageOpportunity(item: Pick<OpportunityV2, "title" | "summary">): boolean {
-  const title = item.title.trim();
-  const summary = item.summary.trim();
+  const title = cleanOpportunityDisplayText(item.title);
+  const summary = cleanOpportunityDisplayText(item.summary);
   if (hasKana(title) || hasHangul(title)) return true;
   const titleLatin = latinCount(title);
   const titleChinese = (title.match(/[\u3400-\u9fff]/gu) ?? []).length;
@@ -148,14 +186,15 @@ function isAcceptableUnchangedProperTitle(value: string): boolean {
 export function validateOpportunityV2Translation(item: OpportunityV2, title: string, summary: string): string[] {
   const errors: string[] = [];
   if (!title.trim()) errors.push("empty translated title");
-  if (!summary.trim()) errors.push("empty translated summary");
   if (/<(?:script|style)\b/iu.test(`${title} ${summary}`)) errors.push("markup is not allowed");
-  for (const token of factualTokens(stripDeadlineFragments(`${item.title}\n${item.summary}`))) {
+  const sourceTitle = cleanOpportunityDisplayText(item.title);
+  const sourceSummary = cleanOpportunityDisplayText(item.summary);
+  for (const token of factualTokens(stripDeadlineFragments(`${sourceTitle}\n${sourceSummary}`))) {
     const normalizedToken = token.replace(/[.,]+$/u, "");
     if (!containsFactualToken(`${title} ${summary}`, normalizedToken)) errors.push(`missing factual token ${token}`);
   }
-  if (title.trim().toLocaleLowerCase() === item.title.trim().toLocaleLowerCase() && !isAcceptableUnchangedProperTitle(title.trim())) errors.push("translated title is unchanged");
-  const originalWords = new Set((`${item.title} ${item.summary}`.match(/[A-Za-z]{3,}/gu) ?? []).map((word) => word.toLocaleLowerCase()));
+  if (title.trim().toLocaleLowerCase() === sourceTitle.trim().toLocaleLowerCase() && !isAcceptableUnchangedProperTitle(title.trim())) errors.push("translated title is unchanged");
+  const originalWords = new Set((`${sourceTitle} ${sourceSummary}`.match(/[A-Za-z]{3,}/gu) ?? []).map((word) => word.toLocaleLowerCase()));
   const residualWords = (title + " " + summary).match(/[A-Za-z]{4,}/gu) ?? [];
   const common = new Set(["this", "that", "with", "from", "for", "the", "and", "application", "apply", "call", "craft", "prize", "award"]);
   const residualContent = residualWords.filter((word) => !originalWords.has(word.toLocaleLowerCase()) && !common.has(word.toLocaleLowerCase()) && !/^[A-Z]{2,}$/u.test(word));
@@ -182,15 +221,16 @@ export function createTranslatedOpportunityV2Translation(item: OpportunityV2, va
 }
 
 export function buildOpportunityV2Display(item: OpportunityV2, translations: OpportunityV2Translation[] = []): OpportunityV2Display {
+  const title = cleanOpportunityDisplayText(item.title);
   const summary = displaySummary(item);
   if (!isForeignLanguageOpportunity(item)) {
-    return { title: item.title, original_title: null, summary, original_summary: null, translated: false, translation_status: "not_needed" };
+    return { title: title || item.title, original_title: null, summary, original_summary: null, translated: false, translation_status: "not_needed" };
   }
-  const cached = translations.find((entry) => entry.opportunity_id === item.id && entry.source_hash === opportunityV2SourceHash(item) && entry.target_language === "zh-CN" && entry.strategy_version === OPPORTUNITY_V2_DISPLAY_STRATEGY);
-  if (cached?.status === "translated" && cached.title_zh && cached.summary_zh) {
-    return { title: cached.title_zh, original_title: item.title, summary: cached.summary_zh, original_summary: summary || null, translated: true, translation_status: "translated" };
+  const cached = translations.find((entry) => isReusableOpportunityV2Translation(item, entry));
+  if (cached?.title_zh) {
+    return { title: cleanOpportunityDisplayText(cached.title_zh), original_title: item.title, summary: cleanOpportunityDisplayText(cached.summary_zh), original_summary: summary || null, translated: true, translation_status: "translated" };
   }
-  return { title: item.title, original_title: item.title, summary, original_summary: summary || null, translated: false, translation_status: cached?.status ?? "pending" };
+  return { title: title || item.title, original_title: item.title, summary, original_summary: summary || null, translated: false, translation_status: cached?.status ?? "pending" };
 }
 
 export function isLikelyForeignText(value: string): boolean {
