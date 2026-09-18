@@ -48,13 +48,16 @@ function main(): void {
       ids: members.map((target) => target.item.id),
     };
   });
-  const failedEntries = translations.filter((entry) => entry.status === "failed").map((entry) => ({
-    opportunity_id: entry.opportunity_id,
+  const currentFailed = targets.map((target) => ({ target, entry: findCurrentOpportunityV2Translation(target.item, translations) }))
+    .filter((value): value is { target: typeof targets[number]; entry: OpportunityV2Translation } => Boolean(value.entry?.status === "failed"));
+  const failedEntries = currentFailed.map(({ target, entry }) => ({
+    opportunity_id: target.item.id,
     failure_code: entry.failure_code ?? "UNKNOWN",
     validation_errors: entry.validation_errors ?? [],
     error: entry.error ?? null,
     attempt_count: entry.attempt_count ?? 0,
     next_retry_at: entry.next_retry_at ?? null,
+    surfaces: target.surfaces,
   }));
   const runPath = process.env.CHANCEPING_TRANSLATION_RUN_JSON;
   const run = runPath ? readJson<Record<string, unknown>>(path.resolve(runPath), {}) : {};
