@@ -3,7 +3,7 @@ import { DeepSeekAdapter } from "../agents/deepseek-adapter";
 import { QwenAdapter } from "../agents/qwen-adapter";
 import { loadLocalApiEnv } from "../config/local-env";
 import { resolveLiveLlmProfile, type LiveLlmApiProfile } from "../config/live-llm-profile";
-import { cleanOpportunityDisplayText, createTranslatedOpportunityV2Translation, type OpportunityV2Translation } from "./display";
+import { cleanOpportunityDisplayText, createFailedOpportunityV2Translation, createTranslatedOpportunityV2Translation, type OpportunityV2Translation } from "./display";
 import type { OpportunityV2 } from "./types";
 
 export interface OpportunityTranslationInput {
@@ -155,6 +155,8 @@ export interface TranslationAttemptResult {
   fallback_to_deepseek: boolean;
   characters_sent_to_free_provider: number;
   attempts: string[];
+  request_count: number;
+  validation_errors?: string[];
 }
 
 export async function translateWithProviderChain(
@@ -165,6 +167,7 @@ export async function translateWithProviderChain(
   const attempts: string[] = [];
   let characters = 0;
   let sawFreeFailure = false;
+  const validationErrors: string[] = [];
   for (const provider of providers) {
     if (provider.free) {
       characters += item.title.length + item.summary.length;
@@ -174,15 +177,44 @@ export async function translateWithProviderChain(
       const result = await provider.translate({ title: cleanOpportunityDisplayText(item.title), summary: cleanOpportunityDisplayText(item.summary), targetLanguage: "zh-CN" });
       const translation = createTranslatedOpportunityV2Translation(item, result, now);
       if (translation.status !== "translated") {
-        attempts.push(`${provider.id}:quality_rejected`);
+        const errors = translation.validation_errors ?? [translation.error ?? "quality rejected"];
+        validationErrors.push(...errors);
+        attempts.push(`${provider.id}:quality_rejected:${errors.join(",")}`);
         continue;
       }
       attempts.push(`${provider.id}:translated`);
-      return { translation, provider_id: provider.id, fallback_to_deepseek: sawFreeFailure && provider.id === "deepseek", characters_sent_to_free_provider: characters, attempts };
+      return {
+        translation: { ...translation, provider: provider.id, attempt_count: attempts.length, last_attempt_at: now.toISOString(), retryable: false },
+        provider_id: provider.id,
+        fallback_to_deepseek: sawFreeFailure && provider.id === "deepseek",
+        characters_sent_to_free_provider: characters,
+        attempts,
+        request_count: attempts.length,
+        validation_errors: translation.validation_errors,
+      };
     } catch (error) {
       attempts.push(`${provider.id}:${error instanceof Error ? error.message : String(error)}`);
     }
   }
   const error = attempts.length ? attempts.join(" | ") : "translation provider is not configured";
-  return { translation: { ...createTranslatedOpportunityV2Translation(item, { title_zh: "", summary_zh: "" }, now), status: "failed", error: error.slice(0, 240) }, provider_id: null, fallback_to_deepseek: false, characters_sent_to_free_provider: characters, attempts };
+  const failureCode = !providers.length ? "CREDENTIAL_NOT_CONFIGURED" : /quality_rejected/iu.test(error) ? "QUALITY_REJECTED" : /timeout/i.test(error) ? "TIMEOUT" : "PROVIDER_UNAVAILABLE";
+  const nextRetry = new Date(now.getTime() + 60 * 60 * 1000).toISOString();
+  const failed = createFailedOpportunityV2Translation(item, error, now);
+  return {
+    translation: {
+      ...failed,
+      failure_code: failureCode,
+      attempt_count: attempts.length,
+      last_attempt_at: now.toISOString(),
+      retryable: true,
+      next_retry_at: nextRetry,
+      validation_errors: [...new Set(validationErrors)],
+    },
+    provider_id: null,
+    fallback_to_deepseek: false,
+    characters_sent_to_free_provider: characters,
+    attempts,
+    request_count: attempts.length,
+    validation_errors: [...new Set(validationErrors)],
+  };
 }

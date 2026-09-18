@@ -7,6 +7,7 @@ export * from "./pipeline";
 export * from "./scheduler";
 export * from "./source-overview";
 export * from "./display";
+export * from "./translation-targets";
 export * from "./translation-provider";
 export * from "./memo";
 export * from "./procurement";
