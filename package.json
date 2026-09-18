@@ -189,6 +189,8 @@
     "opportunity:v2:run": "tsx scripts/run-opportunity-v2.ts",
     "opportunity:v2:display": "tsx scripts/run-opportunity-v2-display.ts",
     "verify:opportunity:v13:display": "tsx scripts/verify-opportunity-v13-display.ts",
+    "verify:opportunity:v13:closeout": "tsx scripts/verify-opportunity-v13-closeout.ts",
+    "audit:opportunity:v13:closeout": "tsx scripts/run-opportunity-v13-closeout-audit.ts",
     "verify:opportunity:v12": "tsx scripts/verify-opportunity-v12.ts",
     "audit:opportunity:v12": "tsx scripts/run-opportunity-v12-audit.ts",
     "verify:opportunity:coverage": "tsx scripts/verify-opportunity-coverage.ts",

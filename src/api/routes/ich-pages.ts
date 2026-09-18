@@ -206,6 +206,38 @@ function activeChip(label: string, href: string): string {
   return `<a class="ich-filter-chip" href="${href}">${escapeHtml(label)} <span aria-hidden="true">×</span></a>`;
 }
 
+const DISPLAY_TAG_LABELS: Record<string, string> = {
+  craft: "手工艺",
+  crafts: "手工艺",
+  exhibition: "展览",
+  open_call: "公开征集",
+  award: "奖项",
+  grant: "资助",
+  residency: "驻留",
+  market: "市集",
+  design: "设计",
+  culture: "文化",
+  heritage: "非遗",
+  procurement: "采购",
+  buyer_demand: "买方需求",
+  seller_offer: "供应方报价",
+  supplier_application: "供应商征集",
+};
+
+function displaySourceName(item: Pick<OpportunityV2, "source_id" | "source_name">): string {
+  const value = `${item.source_id} ${item.source_name}`.toLowerCase();
+  if (/world[- ]?bank/u.test(value)) return "世界银行采购公告";
+  if (/\bted\b|ted-/u.test(value)) return "TED 欧盟招标公告";
+  if (/sell2wales|wales|open contract/u.test(value)) return "开放合同数据登记｜威尔士 Sell2Wales";
+  if (/ccgp|中国政府采购/u.test(value)) return "中国政府采购网";
+  if (/cib|文化和旅游/u.test(value)) return "文化和旅游部采购";
+  return item.source_name;
+}
+
+function displayTagLabel(value: string): string {
+  return DISPLAY_TAG_LABELS[value.toLowerCase()] ?? value;
+}
+
 function v2Card(item: OpportunityV2, index: number, translations: OpportunityV2Translation[]): string {
   const categoryLabels: Record<string, string> = { competition: "赛事 / 征集", exhibition_market: "市集 / 展销", procurement_project: "采购 / 订单", channel_collaboration: "渠道 / 合作", policy_funding: "资助 / 扶持", international: "研修 / 交流" };
   const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
@@ -215,7 +247,8 @@ function v2Card(item: OpportunityV2, index: number, translations: OpportunityV2T
   const internalTags = new Set(["competition", "procurement_project", "exhibition_market", "channel_collaboration", "policy_funding", "international", "design", "open_call"]);
   const tags = [...(item.directions ?? []).map((tag) => directions[tag] ?? tag), ...item.tags]
     .filter((tag) => !internalTags.has(tag.toLowerCase()))
-    .slice(0, 3)
+    .map(displayTagLabel)
+    .slice(0, 2)
     .map((tag) => `<span class="ich-tag">${escapeHtml(tag)}</span>`)
     .join("");
   const detailUrl = `/ich/opportunities/${encodeURIComponent(item.id)}`;
@@ -226,7 +259,7 @@ function v2Card(item: OpportunityV2, index: number, translations: OpportunityV2T
   const detailLabel = `查看 ${display.title} 详情`;
   const sourceLabel = `打开 ${display.title} 来源原文`;
   return `<article class="ich-card"><div class="ich-card-index" aria-hidden="true">${String(index).padStart(2, "0")}</div><div class="ich-card-main"><div class="ich-card-top"><span class="ich-category">${escapeHtml(categoryLabels[item.category] ?? item.category)}</span><span class="ich-status">${escapeHtml(v2StatusLabel(item))}</span></div>
-<h2><a aria-label="${escapeHtml(detailLabel)}" href="${detailUrl}">${escapeHtml(display.title)}</a></h2>${translationLabel}${original}${summary ? `<p>${escapeHtml(summary)}</p>` : ""}<div class="ich-card-meta"><span>来源：${escapeHtml(item.source_name)}</span>${sourceCount ? `<span class="ich-source-count">${escapeHtml(sourceCount)}</span>` : ""}<span class="ich-card-deadline">${escapeHtml(deadline.text)}</span>${deadlineWarning}</div><div class="ich-tags">${tags}</div></div><div class="ich-card-actions"><a aria-label="${escapeHtml(detailLabel)}" href="${detailUrl}">查看详情</a><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></div></article>`;
+<h2><a aria-label="${escapeHtml(detailLabel)}" href="${detailUrl}">${escapeHtml(display.title)}</a></h2>${translationLabel}${original}${summary ? `<p>${escapeHtml(summary)}</p>` : ""}<div class="ich-card-meta"><span>来源：${escapeHtml(displaySourceName(item))}</span>${sourceCount ? `<span class="ich-source-count">${escapeHtml(sourceCount)}</span>` : ""}<span class="ich-card-deadline">${escapeHtml(deadline.text)}</span>${deadlineWarning}</div><div class="ich-tags">${tags}</div></div><div class="ich-card-actions"><a aria-label="${escapeHtml(detailLabel)}" href="${detailUrl}">查看详情</a><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></div></article>`;
 }
 
 function v2ListPage(result: V2IchPageResult, history: boolean): string {
@@ -332,7 +365,7 @@ function v2MemoPageBody(result: V2IchPageResult): string {
     const detailLabel = `查看 ${display.title} 详情`;
     const sourceLabel = `打开 ${display.title} 来源原文`;
     const sourceCount = discoveryLabel(item);
-    return `<tr data-opportunity-id="${escapeHtml(item.id)}"><td>${escapeHtml(deadline.text)}${deadline.conflict ? `<small class="ich-data-warning">来源日期冲突，待核实</small>` : `<small>${escapeHtml(v2StatusLabel(item))}</small>`}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td>${escapeHtml(dimensions)}</td><td>${escapeHtml(item.source_name)}${sourceCount ? `<small>${escapeHtml(sourceCount)}</small>` : ""}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">查看详情</a><br><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></td></tr>`;
+    return `<tr data-opportunity-id="${escapeHtml(item.id)}"><td>${escapeHtml(deadline.text)}${deadline.conflict ? `<small class="ich-data-warning">来源日期冲突，待核实</small>` : `<small>${escapeHtml(v2StatusLabel(item))}</small>`}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">${escapeHtml(display.title)}</a>${display.original_title ? `<small>${escapeHtml(display.original_title)}</small>` : ""}</td><td>${escapeHtml(dimensions)}</td><td>${escapeHtml(displaySourceName(item))}${sourceCount ? `<small>${escapeHtml(sourceCount)}</small>` : ""}</td><td><a aria-label="${escapeHtml(detailLabel)}" href="/ich/opportunities/${encodeURIComponent(item.id)}">查看详情</a><br><a aria-label="${escapeHtml(sourceLabel)}" rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">来源原文</a></td></tr>`;
   }).join("");
   const knownDeadline = result.total_known_deadline;
   const longTerm = result.total_long_term;
@@ -363,7 +396,7 @@ function v2MemoMarkdown(result: V2IchPageResult): string {
     const display = buildOpportunityV2Display(item, result.translations);
     const directions = (item.directions ?? []).join("、");
     const formats = (item.work_formats ?? []).join("、");
-    lines.push(`| ${item.id} | ${memoDate(item, display.summary)} | [${display.title}](/ich/opportunities/${encodeURIComponent(item.id)}) | ${directions}${formats ? ` / ${formats}` : ""} | ${item.source_name} |`);
+    lines.push(`| ${item.id} | ${memoDate(item, display.summary)} | [${display.title}](/ich/opportunities/${encodeURIComponent(item.id)}) | ${directions}${formats ? ` / ${formats}` : ""} | ${displaySourceName(item)} |`);
   }
   return `${lines.join("\n")}\n`;
 }
