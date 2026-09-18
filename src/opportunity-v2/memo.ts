@@ -5,6 +5,7 @@ import { filterOpportunityV2Radar, type OpportunityV2RadarQuery } from "./radar-
 import { readOpportunityV2Pool } from "./opportunity-pool";
 import { readOpportunityV2Sources } from "./source-pool";
 import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
+import { cleanOpportunityDisplayText } from "./display";
 import { publicOpportunityV2Deadline } from "./public-deadline";
 import type { OpportunityV2, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
@@ -39,7 +40,7 @@ const NON_COMPETITION_TITLE = /(?:^|[\s|:：/])(?:about(?: us)?|advertising?|alu
 // Do not blanket-block `/events/`: several configured sources use that path
 // for their actual competition detail pages. Only block navigation/archive
 // paths that are unambiguously non-opportunity pages.
-const NON_COMPETITION_PATH = /\/(?:about|archive|blog|contact|craft-happenings|craft-champions-circle|craft-directory|directory|journal|magazine|podcasts?|resources?|residenc(?:y|ies)|studios?|support|workshops?)(?:\/|$)/iu;
+const NON_COMPETITION_PATH = /\/(?:about|archive|artist-showcase|blog|categories-of-risk|contact|cookie-policy|craft-happenings|craft-champions-circle|craft-directory|directory|journal|lets-make|magazine|mission-vision|our-community|our-people|podcasts?|programs?|resources?|residenc(?:y|ies)|skills\/redlist|studios?|support|ways-to-give|workshops?)(?:\/|$)/iu;
 
 /**
  * The memo is broader than the home radar, but it is still a competition
@@ -52,7 +53,7 @@ export function isRealCompetitionMemoItem(item: Pick<OpportunityV2, "category" |
   // Legitimate competition summaries often begin with editorial copy such as
   // “About the awards”; using the whole summary here would drop the actual
   // opportunity even though its title is a competition.
-  const title = item.title.trim();
+  const title = cleanOpportunityDisplayText(item.title);
   if (hasEncodingCorruption(title)) return false;
   if (NON_COMPETITION_TITLE.test(title) || NON_COMPETITION_PATH.test(item.detail_url)) return false;
   if (/^(?:press|archives?|stories?|news|contact|about|advertis(?:e|ing)|submit|privacy|terms|renew|alumni|recipients?)\b/iu.test(title)) return false;

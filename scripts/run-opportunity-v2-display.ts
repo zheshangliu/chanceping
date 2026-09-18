@@ -2,14 +2,14 @@ import { loadLocalApiEnv } from "../src/config/local-env";
 import {
   buildOpportunityV2Display,
   filterOpportunityV2Radar,
+  isRealCompetitionMemoItem,
   isForeignLanguageOpportunity,
-  opportunityV2SourceHash,
+  isReusableOpportunityV2Translation,
   readOpportunityV2Pool,
   readOpportunityV2Sources,
   readOpportunityV2Translations,
   translateWithProviderChain,
   writeOpportunityV2Translations,
-  OPPORTUNITY_V2_DISPLAY_STRATEGY,
   type OpportunityV2,
   type OpportunityV2Translation,
 } from "../src/opportunity-v2";
@@ -33,9 +33,12 @@ async function main(): Promise<void> {
   const all = process.argv.includes("--all");
   const pool = readOpportunityV2Pool();
   const sources = readOpportunityV2Sources();
-  const currentIds = new Set(filterOpportunityV2Radar(pool.opportunities, sources, { now }).map((item) => item.id));
+  const currentRadarIds = new Set(filterOpportunityV2Radar(pool.opportunities, sources, { now }).map((item) => item.id));
+  const memoIds = new Set(pool.opportunities.filter((item) => isRealCompetitionMemoItem(item)).map((item) => item.id));
   const foreign = pool.opportunities.filter(isForeignLanguageOpportunity);
-  const candidates = all ? foreign : foreign.filter((item) => currentIds.has(item.id));
+  const visibleIds = new Set([...currentRadarIds, ...memoIds]);
+  const candidates = (all ? foreign : foreign.filter((item) => visibleIds.has(item.id)))
+    .slice(0, Number.parseInt(process.env.CHANCEPING_TRANSLATION_MAX_ITEMS ?? "200", 10) || 200);
   const candidateIds = new Set(candidates.map((item) => item.id));
   const previous = new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry]));
   const providerConfig = configuredTranslationProviders(process.env);
@@ -45,13 +48,13 @@ async function main(): Promise<void> {
   for (const entry of previous.values()) if (!candidateIds.has(entry.opportunity_id)) retained.push(entry);
   for (const item of candidates) {
     const existing = previous.get(item.id);
-    if (existing?.source_hash === opportunityV2SourceHash(item) && existing.strategy_version === OPPORTUNITY_V2_DISPLAY_STRATEGY && existing.status === "translated" && existing.title_zh && existing.summary_zh) {
+    if (existing && isReusableOpportunityV2Translation(item, existing)) {
       retained.push(existing);
       reused += 1;
     } else pending.push(item);
   }
   const stats = { translated: 0, failed: 0, pending: 0, fallback_to_deepseek: 0, characters_sent_to_free_provider: 0, providers: {} as Record<string, number> };
-  const processed = await mapWithConcurrency(pending, 3, async (item) => {
+  const processed = await mapWithConcurrency(pending, 2, async (item) => {
     const result = await translateWithProviderChain(item, providerConfig.providers, now);
     if (result.translation.status === "translated") stats.translated += 1;
     else if (result.translation.status === "failed") stats.failed += 1;
@@ -71,7 +74,7 @@ async function main(): Promise<void> {
     pool: pool.opportunities.length,
     sources: sources.length,
     foreign_records: foreign.length,
-    current_foreign_records: foreign.filter((item) => currentIds.has(item.id)).length,
+    current_foreign_records: foreign.filter((item) => visibleIds.has(item.id)).length,
     candidates: candidates.length,
     translated: stats.translated + reused,
     reused,
