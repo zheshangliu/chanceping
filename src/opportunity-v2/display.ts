@@ -234,6 +234,14 @@ function isAcceptableUnchangedProperTitle(value: string): boolean {
   return value.length <= 32 && words.length <= 2;
 }
 
+function hasUnexplainedEnglishRun(value: string, originalWords: Set<string>, common: Set<string>): boolean {
+  const runs = value.match(/[A-Za-z]{4,}(?:\s+[A-Za-z]{4,}){3,}/gu) ?? [];
+  return runs.some((run) => run.split(/\s+/u).some((word) => {
+    const normalized = word.toLocaleLowerCase();
+    return !originalWords.has(normalized) && !common.has(normalized) && !/^[A-Z]{2,}$/u.test(word);
+  }));
+}
+
 export function validateOpportunityV2Translation(
   item: OpportunityV2,
   title: string,
@@ -259,7 +267,7 @@ export function validateOpportunityV2Translation(
   const residualWords = translatedText.match(/[A-Za-z]{4,}/gu) ?? [];
   const common = new Set(["this", "that", "with", "from", "for", "the", "and", "application", "apply", "call", "craft", "prize", "award"]);
   const residualContent = residualWords.filter((word) => !originalWords.has(word.toLocaleLowerCase()) && !common.has(word.toLocaleLowerCase()) && !/^[A-Z]{2,}$/u.test(word));
-  if (residualContent.length >= 6 || /(?:[A-Za-z]{4,}\s+){3,}[A-Za-z]{4,}/u.test(translatedText)) errors.push("long non-proper English residue");
+  if (residualContent.length >= 6 || hasUnexplainedEnglishRun(translatedText, originalWords, common)) errors.push("long non-proper English residue");
   if (field !== "title" && /^(?:海外机会|来自.+的(?:赛事|资助申请|驻留或研修申请|市集或活动参与)信息)/u.test(summary.trim())) errors.push("template summary is not a translation");
   return errors;
 }

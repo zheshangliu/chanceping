@@ -9,6 +9,7 @@ import {
   readOpportunityV2Pool,
   readOpportunityV2Sources,
   readOpportunityV2Translations,
+  shouldRecoverOpportunityV2Translation,
   translateWithProviderChain,
   writeOpportunityV2Translations,
   type OpportunityV2,
@@ -56,6 +57,9 @@ async function main(): Promise<void> {
     const existing = findCurrentOpportunityV2Translation(target.item, allPrevious);
     if (existing && isReusableOpportunityV2Translation(target.item, existing)) {
       reused += 1;
+      continue;
+    }
+    if (existing && process.env.CHANCEPING_TRANSLATION_RECOVERY === "targeted" && !shouldRecoverOpportunityV2Translation(existing)) {
       continue;
     }
     if (existing && isOpportunityV2TranslationRetryCooling(existing, now)) {

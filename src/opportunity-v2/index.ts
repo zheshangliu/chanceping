@@ -9,6 +9,7 @@ export * from "./source-overview";
 export * from "./display";
 export * from "./translation-targets";
 export * from "./translation-provider";
+export * from "./translation-recovery";
 export * from "./memo";
 export * from "./procurement";
 export * from "./procurement-sources";
