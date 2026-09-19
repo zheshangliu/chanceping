@@ -11,6 +11,7 @@ import {
   isOpportunityV2TranslationRetryCooling,
   isForeignLanguageOpportunity,
   isReusableOpportunityV2Translation,
+  shouldRecoverOpportunityV2Translation,
   writeOpportunityV2Translations,
   readOpportunityV2Translations,
   type OpportunityV2,
@@ -107,6 +108,19 @@ check("F01 title survives summary failure", titleOnly.status === "translated" &&
 check("F01 failed summary omitted", titleOnlyDisplay.title === "中文项目 2026" && titleOnlyDisplay.summary === "", JSON.stringify(titleOnlyDisplay));
 check("F02 pure timestamp omitted", cleanOpportunityDisplayText("2026-09-10+02:00") === "", cleanOpportunityDisplayText("2026-09-10+02:00"));
 check("F02 timestamp with Z omitted", cleanOpportunityDisplayText("2026-09-10T02:00:00Z") === "", cleanOpportunityDisplayText("2026-09-10T02:00:00Z"));
+
+const recoverableQuality = {
+  ...createFailedOpportunityV2Translation(item("recoverable"), "long non-proper English residue", now),
+  failure_code: "QUALITY_REJECTED" as const,
+  attempt_count: 1,
+};
+check("targeted recovery retries current quality evidence", shouldRecoverOpportunityV2Translation(recoverableQuality), JSON.stringify(recoverableQuality));
+const historicalQwen = {
+  ...createFailedOpportunityV2Translation(item("historic-qwen"), "Qwen API call failed after retry", now),
+  failure_code: "UNKNOWN" as const,
+  attempt_count: 0,
+};
+check("targeted recovery skips historical Qwen evidence", !shouldRecoverOpportunityV2Translation(historicalQwen), JSON.stringify(historicalQwen));
 
 // C03: the writer merges under the lock, so two workers cannot erase each other.
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-v13-closeout-"));
