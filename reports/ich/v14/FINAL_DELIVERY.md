@@ -13,7 +13,7 @@
 - `origin/main` 起始 SHA：`615680cbf6ff9b1fe2a083a56ec542944e6da910`。
 - 生产报告 SHA / release：`0174f78f323a739bd430f755988159575e660347` / `20260919T022422Z-0174f78f323a`（部署证据核验值；公开 `/health` 只报告版本 `1.3.0`，不能独立证明当前服务器 commit）。
 - 合流基线 `53b4cf5beedca33a283eb2cc37699de31e802cc1`；生产线当时领先5、main领先2。仅选择性移植4个生产修复提交，无整支 rescue 合并；`main` 未直接修改，未强推，生产 runtime 未写。
-- V1.4 候选分支：`codex/ich-v14-trusted-operations`；M0 `bdb2a7d`、M1 `15a426a`、M2 `6a6e59f`、M3 `5e103c1`。M4 报告/审计提交、push 与 PR 状态见本轮 Git 回报。
+- V1.4 候选分支：`codex/ich-v14-trusted-operations`；M0 `bdb2a7d`、M1 `15a426a`、M2 `6a6e59f`、M3 `5e103c1`；M4 审计/报告提交 `a13270eb51739be47d7caf768341fc03267f5b77` 已推送，Draft PR [#13](https://github.com/zheshangliu/chanceping/pull/13) 已创建。PR 未合并，未部署。
 - 合法生产作业入口：未找到。`POST /api/opportunity-v2/run` 返回 `403 FORBIDDEN`（“需要后台权限”）；这只能证明本次调用没有有效调用者权限，不能据此推断服务端 secret 未配置。现有受保护 deploy workflow 不是 runtime 抓取/翻译 runner。
 - 生产实际执行：本轮只读 HTTP/API 审计；**抓取0、DeepSeek请求0、翻译写入0、生产文件写入0**。生产截图与候选本地预览截图分别标注。
 - 72h：公开来源总览给出的下次时间 `2026-10-07T06:20:16.531Z`（上海时间 10-07 14:20:16）。timer 的 systemd enabled/active 状态和近7天日志不能从公开 API 验证；不将计划时间写成实际触发证明。

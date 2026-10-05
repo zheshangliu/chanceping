@@ -31,8 +31,11 @@
     "public_opportunity_ids_complete_not_truncated": true
   },
   "release": {
-    "feature_push": "PENDING",
-    "pull_request": "PENDING",
+    "feature_push": "PUSHED",
+    "feature_push_commit": "a13270eb51739be47d7caf768341fc03267f5b77",
+    "pull_request": "DRAFT_OPEN",
+    "pull_request_number": 13,
+    "pull_request_url": "https://github.com/zheshangliu/chanceping/pull/13",
     "merge": "NOT_PERFORMED",
     "deployment": "NOT_PERFORMED",
     "dns_change": false
