@@ -1,0 +1,34 @@
+{
+  "schema_version": "chanceping.ich.v14.lineage.v1",
+  "observed_at": "2026-10-05T15:10:13.539Z",
+  "origin_main": "615680cbf6ff9b1fe2a083a56ec542944e6da910",
+  "reported_production_commit": "0174f78f323a739bd430f755988159575e660347",
+  "reported_production_release": "20260919T022422Z-0174f78f323a",
+  "common_ancestor": "53b4cf5beedca33a283eb2cc37699de31e802cc1",
+  "comparison": {
+    "status": "diverged",
+    "production_ahead_by": 5,
+    "main_ahead_by": 2,
+    "production_commit_chain": [
+      "fecdcb8a394a13d3e005e010a6454b261de123cb",
+      "3dbb22c0eb0bcbbd0c5fd3657dd4a20beac24e27",
+      "2e9eb9c16ddaa7b53c0502ae39f156b554a07f99",
+      "7a4fd7f8baeb9976334439af7462ecb8d206f41c",
+      "0174f78f323a739bd430f755988159575e660347"
+    ],
+    "main_integration": "The fecdcb8 tree is already present in origin/main via PR #11; the remaining four production-only commits were selectively cherry-picked onto the isolated feature branch. No rescue branch was merged."
+  },
+  "protected_production_changes_carried": [
+    "Chinese display coverage closeout and recoverable queue changes",
+    "scope translation audit to records visible on current surfaces",
+    "translation quality recovery, ArtConnect audit and mobile Hero rendering",
+    "mobile Hero text containment"
+  ],
+  "release_policy": {
+    "main_modified_directly": false,
+    "rescue_branch_merged_wholesale": false,
+    "force_push_used": false,
+    "production_runtime_overwritten": false
+  },
+  "note": "The reported production SHA and release were independently checked against the previous deployment evidence; the public health endpoint currently reports app version 1.3.0. Production-only divergence must remain preserved through protected PR integration."
+}

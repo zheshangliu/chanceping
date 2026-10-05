@@ -195,6 +195,8 @@
     "audit:opportunity:v13:artconnect": "tsx scripts/run-v13-artconnect-audit.ts",
     "verify:opportunity:v12": "tsx scripts/verify-opportunity-v12.ts",
     "audit:opportunity:v12": "tsx scripts/run-opportunity-v12-audit.ts",
+    "audit:ich:v14:production-baseline": "tsx scripts/run-ich-v14-production-baseline.ts",
+    "verify:ich:v14:baseline": "tsx scripts/verify-ich-v14-baseline.ts",
     "verify:opportunity:coverage": "tsx scripts/verify-opportunity-coverage.ts",
     "verify:opportunity:coverage:sources": "tsx scripts/verify-opportunity-coverage-sources.ts",
     "audit:opportunity:coverage": "tsx scripts/run-opportunity-coverage-audit.ts",

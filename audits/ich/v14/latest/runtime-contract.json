@@ -1,0 +1,22 @@
+{
+  "schema_version": "chanceping.ich.v14.runtime-contract.v1",
+  "generated_at": "2026-10-05T15:18:22.800Z",
+  "expected_production_paths_from_existing_contract": [
+    "/var/lib/chanceping/opportunity-v2/sources.json",
+    "/var/lib/chanceping/opportunity-v2/opportunities.json",
+    "/var/lib/chanceping/opportunity-v2/source-health.json",
+    "/var/lib/chanceping/opportunity-v2/translations.json",
+    "/var/lib/chanceping/opportunity-v2/scheduler.json",
+    "/var/lib/chanceping/opportunity-v2/procurement-followups.json",
+    "/var/lib/chanceping/opportunity-v2/procurement-change-feed.json"
+  ],
+  "public_observations": {
+    "source_registry_count": 44,
+    "public_pool_count": 269,
+    "scheduler_next_run_at": "2026-10-07T06:20:16.531Z"
+  },
+  "application_process_path_verified": false,
+  "translation_cli_runtime_path_verified": false,
+  "scheduler_file_path_and_timer_state_verified": false,
+  "same_runtime_read_write_contract": "NOT_VERIFIED; public API cannot expose file paths or hashes"
+}
