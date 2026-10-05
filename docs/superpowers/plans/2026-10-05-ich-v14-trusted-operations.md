@@ -46,13 +46,13 @@
 - Consumes: production read-only API results; runtime paths from deployed source; GitHub production release SHA and `origin/main` SHA.
 - Produces: exact baseline timestamp, source/pool/page IDs, translation coverage counts, production-vs-main commit/diff inventory, and an explicit `ACCESS_BLOCKED` or verified authorized run path.
 
-- [ ] Capture read-only production version, overview, all-page visible ID sets, memo parity, known translation states and next scheduled time; never write production.
-- [ ] Record the 403 response code and separately test/document unconfigured-token behavior in local fixture; do not infer configuration from 403.
-- [ ] Inspect the deployed CLI/runtime path and locate an authorized server-side run entry; if none exists, record one consolidated blocker and keep production work disabled.
-- [ ] Selectively transplant only verified production Chinese/mobile fixes to the clean feature branch and run their focused checks.
-- [ ] Record whether the historical 477-ID translation baseline is recoverable; do not invent IDs.
-- [ ] Run `npm run typecheck`, `npm run verify:opportunity:v13:display`, `npm run verify:opportunity:v13:closeout`, and `npm run verify:opportunity:v13:artconnect-mobile` where present.
-- [ ] Commit the M0 baseline and compatibility fixes.
+- [x] Capture read-only production version, overview, all-page visible ID sets, memo parity, known translation states and next scheduled time; never write production.
+- [x] Record the 403 response code and separately test/document unconfigured-token behavior in local fixture; do not infer configuration from 403.
+- [x] Inspect the deployed CLI/runtime path and locate an authorized server-side run entry; if none exists, record one consolidated blocker and keep production work disabled.
+- [x] Selectively transplant only verified production Chinese/mobile fixes to the clean feature branch and run their focused checks.
+- [x] Record whether the historical 477-ID translation baseline is recoverable; do not invent IDs.
+- [x] Run `npm run typecheck`, `npm run verify:opportunity:v13:display`, `npm run verify:opportunity:v13:closeout`, and `npm run verify:opportunity:v13:artconnect-mobile` where present.
+- [x] Commit the M0 baseline and compatibility fixes.
 
 ### Task 2: M1 Bounded incremental Chinese operation
 
@@ -65,12 +65,12 @@
 - Consumes: M0 production baseline and authorized path status; existing translation sidecar and provider contracts.
 - Produces: dry-run queue selection before provider calls; bounded run summary with unique IDs, attempts, cache/revalidation outcomes, failures, provider, token/cost evidence where actually available, and exact runtime path/hash.
 
-- [ ] Add a failing fixture with 200 cached records ahead of a translatable queue-tail item and assert the tail is selected without re-calling cached rows.
-- [ ] Add tests for request-budget reservation across concurrent calls/retries and maximum two attempts per record.
-- [ ] Add tests proving stale-hash completions, failed/empty results and low-quality output cannot overwrite current or human-edited translations.
-- [ ] Add quality fixtures for proper nouns, untranslated English with appended Chinese, title-success/summary-failure, ambiguous `$`, staged fees, and malicious source instructions.
-- [ ] Implement the smallest changes in existing queue/cache/provider modules; keep DeepSeek as the only provider and the task limits unchanged.
-- [ ] Run focused fixtures and V1.3 display verification; record whether production translation remains blocked or was genuinely performed.
+- [x] Add a failing fixture with 200 cached records ahead of a translatable queue-tail item and assert the tail is selected without re-calling cached rows.
+- [x] Add tests for request-budget reservation across concurrent calls/retries and maximum two attempts per record.
+- [x] Add tests proving stale-hash completions, failed/empty results and low-quality output cannot overwrite current or human-edited translations.
+- [x] Add quality fixtures for proper nouns, untranslated English with appended Chinese, title-success/summary-failure, ambiguous `$`, staged fees, and malicious source instructions.
+- [x] Implement the smallest changes in existing queue/cache/provider modules; keep DeepSeek as the only provider and the task limits unchanged.
+- [x] Run focused fixtures and V1.3 display verification; record that production translation remains blocked; no production translation was performed.
 - [ ] Commit M1 independently.
 
 ### Task 3: M2 Source permissions, freshness and evidence trust

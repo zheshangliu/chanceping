@@ -14,6 +14,10 @@ function poolPath(filePath?: string): string {
   return path.resolve(fs.existsSync(path.dirname(runtimePath)) ? runtimePath : "data/opportunity-v2/opportunities.json");
 }
 
+export function resolveOpportunityV2PoolPath(filePath?: string): string {
+  return poolPath(filePath);
+}
+
 export function emptyOpportunityV2Pool(): OpportunityV2PoolFile {
   return { schema_version: "chanceping-opportunity-v2.v1", updated_at: new Date(0).toISOString(), opportunities: [] };
 }

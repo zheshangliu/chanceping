@@ -63,6 +63,10 @@ function resolved(filePath?: string): string {
   return path.resolve(fs.existsSync(path.dirname(runtimePath)) ? runtimePath : "data/opportunity-v2/sources.json");
 }
 
+export function resolveOpportunityV2SourcesPath(filePath?: string): string {
+  return resolved(filePath);
+}
+
 export function readOpportunityV2Sources(filePath?: string): OpportunityV2Source[] {
   const target = resolved(filePath);
   if (!fs.existsSync(target)) return cloneOpportunityV2Sources(DEFAULT_OPPORTUNITY_V2_SOURCES);

@@ -4,6 +4,7 @@ import path from "node:path";
 import type { OpportunityV2 } from "./types";
 import { hasEncodingCorruption, htmlToText } from "../ich/aggregation/adapters/common";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
+import { resolveOpportunityV2PoolPath } from "./opportunity-pool";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
 export type OpportunityV2TranslationStatus = "translated" | "pending" | "failed";
@@ -81,7 +82,7 @@ function displaySummary(item: Pick<OpportunityV2, "summary" | "encoding_error_fi
   return item.encoding_error_fields?.includes("summary") || hasEncodingCorruption(item.summary) ? "" : cleanOpportunityDisplayText(item.summary);
 }
 
-function translationPath(filePath?: string): string {
+export function resolveOpportunityV2TranslationPath(filePath?: string): string {
   return path.resolve(filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH ?? "data/opportunity-v2/translations.json");
 }
 
@@ -122,28 +123,61 @@ export function isOpportunityV2TranslationRetryCooling(entry: OpportunityV2Trans
 
 export function readOpportunityV2Translations(filePath?: string): OpportunityV2Translation[] {
   try {
-    const parsed = JSON.parse(fs.readFileSync(translationPath(filePath), "utf8")) as OpportunityV2TranslationFile;
+    const parsed = JSON.parse(fs.readFileSync(resolveOpportunityV2TranslationPath(filePath), "utf8")) as OpportunityV2TranslationFile;
     return Array.isArray(parsed.translations) ? parsed.translations : [];
   } catch {
     return [];
   }
 }
 
-export function writeOpportunityV2Translations(translations: OpportunityV2Translation[], filePath?: string): void {
-  const target = translationPath(filePath);
-  withJsonFileLock(target, () => {
+export interface OpportunityV2TranslationWriteOptions { guardAgainstPool?: boolean; poolPath?: string; }
+export interface OpportunityV2TranslationWriteResult { written_count: number; skipped_stale_count: number; preserved_success_count: number; }
+
+export function writeOpportunityV2Translations(translations: OpportunityV2Translation[], filePath?: string, options: OpportunityV2TranslationWriteOptions = {}): OpportunityV2TranslationWriteResult {
+  const target = resolveOpportunityV2TranslationPath(filePath);
+  const writeLocked = (currentItems?: OpportunityV2[]): OpportunityV2TranslationWriteResult => withJsonFileLock(target, () => {
     let existing: OpportunityV2Translation[] = [];
     try {
       const parsed = JSON.parse(fs.readFileSync(target, "utf8")) as OpportunityV2TranslationFile;
       if (Array.isArray(parsed.translations)) existing = parsed.translations;
     } catch { /* first writer */ }
     const merged = new Map(existing.map((entry) => [entry.opportunity_id, entry]));
-    for (const entry of translations) merged.set(entry.opportunity_id, entry);
+    const currentById = currentItems ? new Map(currentItems.map((item) => [item.id, item])) : undefined;
+    let writtenCount = 0;
+    let skippedStaleCount = 0;
+    let preservedSuccessCount = 0;
+    for (const entry of translations) {
+      const current = currentById?.get(entry.opportunity_id);
+      if (currentById && (!current || entry.source_hash !== opportunityV2SourceHash(current))) {
+        skippedStaleCount += 1;
+        continue;
+      }
+      const previous = merged.get(entry.opportunity_id);
+      if (previous?.status === "translated" && previous.source_hash === entry.source_hash) {
+        preservedSuccessCount += 1;
+        continue;
+      }
+      if (previous?.status === "translated" && entry.status !== "translated") {
+        preservedSuccessCount += 1;
+        continue;
+      }
+      merged.set(entry.opportunity_id, entry);
+      writtenCount += 1;
+    }
     atomicWriteJson(target, {
       schema_version: "chanceping-opportunity-v2.translation.v1",
       updated_at: new Date().toISOString(),
       translations: [...merged.values()].sort((a, b) => a.opportunity_id.localeCompare(b.opportunity_id)),
     });
+    return { written_count: writtenCount, skipped_stale_count: skippedStaleCount, preserved_success_count: preservedSuccessCount };
+  });
+  if (!options.guardAgainstPool) return writeLocked();
+  const poolTarget = resolveOpportunityV2PoolPath(options.poolPath);
+  if (!fs.existsSync(poolTarget)) throw new Error(`Translation write refused: current opportunity pool is missing: ${poolTarget}`);
+  return withJsonFileLock(poolTarget, () => {
+    const pool = JSON.parse(fs.readFileSync(poolTarget, "utf8")) as { opportunities?: OpportunityV2[] };
+    if (!Array.isArray(pool.opportunities)) throw new Error(`Translation write refused: current opportunity pool is invalid: ${poolTarget}`);
+    return writeLocked(pool.opportunities);
   });
 }
 
@@ -257,6 +291,13 @@ export function validateOpportunityV2Translation(
   const sourceSummary = cleanOpportunityDisplayText(item.summary);
   const sourceFacts = field === "title" ? sourceTitle : field === "summary" ? sourceSummary : `${sourceTitle}\n${sourceSummary}`;
   const translatedFacts = field === "title" ? title : field === "summary" ? summary : `${title} ${summary}`;
+  if (field !== "summary") {
+    const englishWords = title.match(/[A-Za-z]{3,}/gu) ?? [];
+    const chineseCharacters = (title.match(/[\u3400-\u9fff]/gu) ?? []).length;
+    if (englishWords.length >= 4 && chineseCharacters <= 2 && title.trim().toLocaleLowerCase() !== sourceTitle.trim().toLocaleLowerCase()) {
+      errors.push("title remains untranslated with appended Chinese");
+    }
+  }
   for (const token of factualTokens(stripDeadlineFragments(sourceFacts))) {
     const normalizedToken = token.replace(/[.,]+$/u, "");
     if (!containsFactualToken(translatedFacts, normalizedToken)) errors.push(`missing factual token ${token}`);
@@ -269,6 +310,14 @@ export function validateOpportunityV2Translation(
   const residualContent = residualWords.filter((word) => !originalWords.has(word.toLocaleLowerCase()) && !common.has(word.toLocaleLowerCase()) && !/^[A-Z]{2,}$/u.test(word));
   if (residualContent.length >= 6 || hasUnexplainedEnglishRun(translatedText, originalWords, common)) errors.push("long non-proper English residue");
   if (field !== "title" && /^(?:海外机会|来自.+的(?:赛事|资助申请|驻留或研修申请|市集或活动参与)信息)/u.test(summary.trim())) errors.push("template summary is not a translation");
+  if (field !== "title") {
+    const sourceHasBareDollar = /(?<![A-Za-z])\$\s?\d[\d,.]*/u.test(sourceFacts);
+    const sourceNamesUsd = /\bUSD\b|US\s?\$|U\.S\.\s+dollars?|\bdollars?\b/iu.test(sourceFacts);
+    if (sourceHasBareDollar && !sourceNamesUsd && /美元/u.test(translatedFacts)) errors.push("ambiguous dollar currency was expanded");
+    const sourceChargesAfterSelection = /(?:selected|chosen|upon selection|if selected)[^.。!?！？]{0,120}(?:fee|pay|charged)/iu.test(sourceFacts);
+    const targetClaimsFreeParticipation = /免费(?:参展|展览|参加|参与|参赛|展位|摊位)|(?:参展|展览|参加|参与|参赛|展位|摊位)(?:完全)?免费/u.test(translatedFacts);
+    if (sourceChargesAfterSelection && targetClaimsFreeParticipation && !/(?:入选|获选|选中|录取)(?:后|之后)/u.test(translatedFacts)) errors.push("post-selection fee was omitted or contradicted");
+  }
   return errors;
 }
 

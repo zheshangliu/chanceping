@@ -264,6 +264,7 @@ export class DeepSeekAdapter implements LLMAdapter {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
       try {
+        request.onRequestStart?.();
         const response = await fetch(url, {
           signal: controller.signal,
           method: "POST",

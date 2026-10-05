@@ -1,137 +1,173 @@
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { loadLocalApiEnv } from "../src/config/local-env";
 import {
   buildOpportunityV2Display,
   collectOpportunityV2TranslationTargets,
-  findCurrentOpportunityV2Translation,
-  isOpportunityV2TranslationRetryCooling,
-  isForeignLanguageOpportunity,
-  isReusableOpportunityV2Translation,
   readOpportunityV2Pool,
   readOpportunityV2Sources,
   readOpportunityV2Translations,
-  shouldRecoverOpportunityV2Translation,
+  resolveOpportunityV2PoolPath,
+  resolveOpportunityV2SourcesPath,
+  resolveOpportunityV2TranslationPath,
   translateWithProviderChain,
   writeOpportunityV2Translations,
-  type OpportunityV2,
   type OpportunityV2Translation,
 } from "../src/opportunity-v2";
+import { TranslationRequestBudget } from "../src/opportunity-v2/translation-budget";
+import { selectOpportunityV2TranslationQueue } from "../src/opportunity-v2/translation-queue";
 import { configuredTranslationProviders } from "../src/opportunity-v2/translation-provider";
 
-interface QueueEntry { item: OpportunityV2; priority: number; surfaces: string[]; existing?: OpportunityV2Translation; }
+const MAX_ITEMS = 200;
+const MAX_REQUESTS = 250;
+const MAX_CONCURRENCY = 2;
 
-function mapWithConcurrency<T, R>(items: T[], workerCount: number, worker: (item: T) => Promise<R>): Promise<R[]> {
-  const result: R[] = [];
-  let cursor = 0;
-  async function run(): Promise<void> {
-    while (cursor < items.length) {
-      const index = cursor++;
-      result[index] = await worker(items[index]);
-    }
-  }
-  return Promise.all(Array.from({ length: Math.min(workerCount, items.length || 1) }, () => run())).then(() => result);
+function cappedPositiveInteger(value: string | undefined, fallback: number, ceiling: number): number {
+  const parsed = Number.parseInt(value ?? "", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.min(parsed, ceiling) : fallback;
 }
 
-function numberEnv(name: string, fallback: number): number {
-  const value = Number.parseInt(process.env[name] ?? "", 10);
-  return Number.isFinite(value) && value > 0 ? value : fallback;
+function sha256(filePath: string): string | null {
+  try { return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex"); }
+  catch { return null; }
+}
+
+function writeReport(report: Record<string, unknown>): void {
+  const target = path.resolve(process.env.CHANCEPING_V14_TRANSLATION_RUN_PATH ?? "audits/ich/v14/latest/translation-run.json");
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`);
+  console.log(JSON.stringify({ report_path: target, ...report }, null, 2));
 }
 
 async function main(): Promise<void> {
-  loadLocalApiEnv({ enabled: true });
+  const execute = process.argv.includes("--execute");
+  const dryRun = !execute || process.argv.includes("--dry-run");
+  const allSurfaces = process.argv.includes("--all");
   const now = new Date();
-  const all = process.argv.includes("--all");
-  const pool = readOpportunityV2Pool();
-  const sources = readOpportunityV2Sources();
+
+  // Loading a local secret file is opt-in and never turns on the live-LLM gate.
+  const localEnv = execute && process.env.CHANCEPING_LOAD_API_ENV === "true"
+    ? loadLocalApiEnv({ enabled: true })
+    : { loaded: false, reason: "disabled" as const };
+
+  const poolPath = resolveOpportunityV2PoolPath();
+  const sourcesPath = resolveOpportunityV2SourcesPath();
+  const translationsPath = resolveOpportunityV2TranslationPath();
+  const pool = readOpportunityV2Pool(poolPath);
+  const sources = readOpportunityV2Sources(sourcesPath);
   const targets = collectOpportunityV2TranslationTargets(pool.opportunities, sources, now);
-  const selectedTargets = all
+  const targetSet = allSurfaces
     ? targets
     : targets.filter((target) => target.surfaces.some((surface) => ["main", "memo", "procurement", "overseas"].includes(surface)));
-  const previous = new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry]));
-  const allPrevious = [...previous.values()];
-  const providerConfig = configuredTranslationProviders(process.env);
-  const foreign = selectedTargets.filter((target) => isForeignLanguageOpportunity(target.item));
-  const pending: QueueEntry[] = [];
-  let reused = 0;
-  let cooling = 0;
-  for (const target of foreign) {
-    const existing = findCurrentOpportunityV2Translation(target.item, allPrevious);
-    if (existing && isReusableOpportunityV2Translation(target.item, existing)) {
-      reused += 1;
-      continue;
-    }
-    if (existing && process.env.CHANCEPING_TRANSLATION_RECOVERY === "targeted" && !shouldRecoverOpportunityV2Translation(existing)) {
-      continue;
-    }
-    if (existing && isOpportunityV2TranslationRetryCooling(existing, now)) {
-      cooling += 1;
-      continue;
-    }
-    pending.push({ item: target.item, priority: target.priority, surfaces: target.surfaces, existing });
-  }
-  pending.sort((a, b) => a.priority - b.priority || a.item.first_seen_at.localeCompare(b.item.first_seen_at) || a.item.id.localeCompare(b.item.id));
-
-  const maxItems = numberEnv("CHANCEPING_TRANSLATION_MAX_ITEMS", 200);
-  const maxRequests = numberEnv("CHANCEPING_TRANSLATION_MAX_REQUESTS", 250);
-  let reservedRequests = 0;
-  let translated = 0;
-  let failed = 0;
-  let pendingCount = 0;
-  let attemptedRecords = 0;
-  let actualRequests = 0;
-  let fallbackToDeepSeek = 0;
-  let charactersSentToFreeProvider = 0;
-  const providers: Record<string, number> = {};
-  const processed = await mapWithConcurrency(pending.slice(0, maxItems), 2, async (entry) => {
-    if (reservedRequests >= maxRequests) return null;
-    reservedRequests += 1;
-    attemptedRecords += 1;
-    const result = await translateWithProviderChain(entry.item, providerConfig.providers, now);
-    actualRequests += result.request_count;
-    reservedRequests += Math.max(0, result.request_count - 1);
-    if (result.translation.status === "translated") translated += 1;
-    else if (result.translation.status === "failed") failed += 1;
-    else pendingCount += 1;
-    if (result.provider_id) providers[result.provider_id] = (providers[result.provider_id] ?? 0) + 1;
-    if (result.fallback_to_deepseek) fallbackToDeepSeek += 1;
-    charactersSentToFreeProvider += result.characters_sent_to_free_provider;
-    return result.translation;
+  const previous = readOpportunityV2Translations(translationsPath);
+  const maxItems = cappedPositiveInteger(process.env.CHANCEPING_TRANSLATION_MAX_ITEMS, MAX_ITEMS, MAX_ITEMS);
+  const maxRequests = cappedPositiveInteger(process.env.CHANCEPING_TRANSLATION_MAX_REQUESTS, MAX_REQUESTS, MAX_REQUESTS);
+  const queue = selectOpportunityV2TranslationQueue(targetSet, previous, {
+    now,
+    recoveryMode: process.env.CHANCEPING_TRANSLATION_RECOVERY === "targeted" ? "targeted" : "all",
+    maxItems,
   });
-  const writes = processed.filter((entry): entry is OpportunityV2Translation => Boolean(entry));
-  writeOpportunityV2Translations(writes);
-  const allTranslations = readOpportunityV2Translations();
-  const visibleWithChinese = foreign.filter((target) => buildOpportunityV2Display(target.item, allTranslations).translated).length;
-  const unattempted = Math.max(0, foreign.length - reused - cooling - attemptedRecords);
-  const currentStatus = foreign.reduce((out, target) => {
-    const entry = findCurrentOpportunityV2Translation(target.item, allTranslations);
-    const status = entry?.status ?? "pending";
-    out[status] = (out[status] ?? 0) + 1;
-    return out;
-  }, {} as Record<string, number>);
-  console.log(JSON.stringify({
-    mode: all ? "all" : "current",
-    pool: pool.opportunities.length,
-    sources: sources.length,
-    visible_union: selectedTargets.length,
-    visible_surfaces: [...new Set(selectedTargets.flatMap((target) => target.surfaces))],
-    foreign_records: foreign.length,
-    candidates: foreign.length,
-    translated: translated + reused,
-    reused,
+  const providerConfig = configuredTranslationProviders(process.env);
+  const deepseek = providerConfig.providers.find((provider) => provider.id === "deepseek");
+  const budget = new TranslationRequestBudget(maxRequests);
+
+  const common = {
+    schema_version: "chanceping-ich-v14-translation-run.v1",
+    created_at: now.toISOString(),
+    mode: dryRun ? "dry_run" : "execute",
+    scope: allSurfaces ? "all_public_surfaces" : "primary_visible_surfaces",
+    runtime_paths: { pool: poolPath, sources: sourcesPath, translations: translationsPath },
+    input_sha256: { pool: sha256(poolPath), sources: sha256(sourcesPath), translations: sha256(translationsPath) },
+    source_count: sources.length,
+    pool_count: pool.opportunities.length,
+    visible_target_count: targetSet.length,
+    foreign_count: queue.foreign_count,
+    cache_reused: queue.reused,
+    cooling: queue.cooling,
+    skipped_not_retryable: queue.skipped_not_retryable,
+    eligible_pending: queue.pending.length,
+    selected_unique_ids: queue.selected.map((entry) => entry.item.id),
+    selected_surfaces: Object.fromEntries(queue.selected.map((entry) => [entry.item.id, entry.surfaces])),
+    limits: { max_unique_items: maxItems, max_requests: maxRequests, max_attempts_per_item: 2, concurrency: MAX_CONCURRENCY, timeout_ms: 30_000 },
+    provider: "deepseek",
+    provider_configured: Boolean(deepseek),
+    provider_gate: providerConfig.status,
+    local_env_loaded: localEnv.loaded,
+    local_env_load_reason: localEnv.reason,
+    budget_before: budget.summary(),
+    token_usage: { available: false, reason: "current provider adapter does not expose token usage" },
+    cost: { available: false, reason: "current provider adapter does not expose billed cost" },
+  };
+
+  if (dryRun) {
+    writeReport({ ...common, status: "DRY_RUN_ONLY", actual_requests: 0, attempted_records: 0, written_count: 0, failure_counts: {}, output_sha256: { translations: sha256(translationsPath) }, production_operations: "not performed" });
+    return;
+  }
+  if (!deepseek) {
+    writeReport({ ...common, status: "ACCESS_BLOCKED", blocker: "No authorized DeepSeek provider is active in the current runtime profile; no provider calls or translation writes were performed.", actual_requests: 0, attempted_records: 0, written_count: 0, failure_counts: {}, output_sha256: { translations: sha256(translationsPath) }, production_operations: "not performed" });
+    return;
+  }
+
+  const results: OpportunityV2Translation[] = [];
+  const failureCounts: Record<string, number> = {};
+  const providerRecords: Record<string, number> = {};
+  let cursor = 0;
+  let inFlight = 0;
+  let attemptedRecords = 0;
+  let waiters: Array<() => void> = [];
+  const worker = async (): Promise<void> => {
+    while (true) {
+      const ticket = budget.reserve(2);
+      if (!ticket) {
+        if (inFlight === 0) return;
+        await new Promise<void>((resolve) => waiters.push(resolve));
+        continue;
+      }
+      if (cursor >= queue.selected.length) { ticket.finish(); return; }
+      const entry = queue.selected[cursor++];
+      inFlight += 1;
+      attemptedRecords += 1;
+      try {
+        const result = await translateWithProviderChain(entry.item, [deepseek], now, { onRequestStart: () => ticket.requestStarted() });
+        results.push(result.translation);
+        if (result.translation.status === "failed") {
+          const reason = result.translation.failure_code ?? "UNKNOWN";
+          failureCounts[reason] = (failureCounts[reason] ?? 0) + 1;
+        }
+        if (result.provider_id) providerRecords[result.provider_id] = (providerRecords[result.provider_id] ?? 0) + 1;
+      } finally {
+        ticket.finish();
+        inFlight -= 1;
+        const ready = waiters;
+        waiters = [];
+        ready.forEach((resolve) => resolve());
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: MAX_CONCURRENCY }, () => worker()));
+
+  const writes = results.length
+    ? writeOpportunityV2Translations(results, translationsPath, { guardAgainstPool: true, poolPath })
+    : { written_count: 0, skipped_stale_count: 0, preserved_success_count: 0 };
+  const currentTranslations = readOpportunityV2Translations(translationsPath);
+  const visibleChinese = targetSet.filter((target) => buildOpportunityV2Display(target.item, currentTranslations).translated).length;
+  const summary = budget.summary();
+  writeReport({
+    ...common,
+    status: "COMPLETED_LOCAL_OR_AUTHORIZED_RUNTIME",
+    actual_requests: summary.actual_requests,
+    budget_after: summary,
     attempted_records: attemptedRecords,
-    actual_requests: actualRequests,
-    pending: pendingCount,
-    failed,
-    cooling,
-    unattempted,
-    budget: { max_items: maxItems, max_requests: maxRequests, reserved_requests: reservedRequests },
-    fallback_to_deepseek: fallbackToDeepSeek,
-    characters_sent_to_free_provider: charactersSentToFreeProvider,
-    provider_used: providers,
-    current_status: currentStatus,
-    current_with_chinese_display: visibleWithChinese,
-    live_status: providerConfig.status,
-    configured_free_providers: providerConfig.configuredFreeProviders,
-  }, null, 2));
+    translated_records: results.filter((entry) => entry.status === "translated").length,
+    failure_counts: failureCounts,
+    provider_records: providerRecords,
+    write_result: writes,
+    visible_with_chinese: visibleChinese,
+    unattempted_selected: Math.max(0, queue.selected.length - attemptedRecords),
+    output_sha256: { translations: sha256(translationsPath) },
+    production_operations: "not inferred; identify exact runtime paths and execution environment",
+  });
 }
 
-void main();
+void main().catch((error) => { console.error(error); process.exitCode = 1; });
