@@ -8,7 +8,8 @@ import {
   type PublicIchOpportunity,
 } from "../../ich/query";
 import { defaultIchStore, parseIchQuery, type IchReadRouteOptions } from "./public-ich";
-import { buildOpportunityV2Display, cleanOpportunityDisplayText, filterOpportunityV2Radar, formatOpportunityV2Date, isRealCompetitionMemoItem, opportunityV2LiveStatus, publicOpportunityV2Deadline, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
+import { buildOpportunityV2Display, cleanOpportunityDisplayText, filterOpportunityV2Radar, formatOpportunityV2Date, isOpportunityV2PublicCopyAllowed, isRealCompetitionMemoItem, opportunityV2LiveStatus, publicOpportunityV2Deadline, publicOpportunityV2DiscoverySources, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
+import { assessOpportunityCoverage } from "../../opportunity-v2/opportunity-coverage";
 
 const ICH_ORIGIN = "https://ich.chanceping.com";
 
@@ -30,6 +31,12 @@ function publicDate(value: string | null | undefined): string {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return "持续更新中";
   return `最近更新：${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+}
+
+function formatAuditTimestamp(value: string): string {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "时间格式未知";
+  return new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(date);
 }
 
 function absoluteUrl(pathname: string): string {
@@ -198,7 +205,7 @@ function displayDeadline(item: OpportunityV2, summary: string): DisplayDeadline 
 }
 
 function discoveryLabel(item: OpportunityV2): string {
-  const count = new Set(item.discovered_by_sources).size;
+  const count = new Set(publicOpportunityV2DiscoverySources(item.discovered_by_sources)).size;
   return count > 1 ? `另有 ${count - 1} 个发现来源` : "";
 }
 
@@ -430,7 +437,7 @@ function v2MemoJson(result: V2IchPageResult): Record<string, unknown> {
         source_name: item.source_name,
         source_id: item.source_id,
         detail_url: item.detail_url,
-        discovered_by_sources: item.discovered_by_sources,
+        discovered_by_sources: publicOpportunityV2DiscoverySources(item.discovered_by_sources),
       };
     }),
   };
@@ -556,9 +563,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   app.get("/opportunities/:slug", (c) => {
     if (options.opportunityV2) {
       const item = readOpportunityV2Pool(options.opportunityV2PoolPath).opportunities.find((candidate) => candidate.id === c.req.param("slug"));
-      if (!item) return c.html(shell("机会未找到｜盯非遗", "该机会不存在或已不在当前机会池。", c.req.path, "<main><h1>机会未找到</h1><p>该机会不存在或已不在当前机会池。</p></main>", { noindex: true }), 404);
+      if (!item || !isOpportunityV2PublicCopyAllowed(item)) return c.html(shell("机会未找到｜盯非遗", "该机会不存在或已不在当前机会池。", c.req.path, "<main><h1>机会未找到</h1><p>该机会不存在或已不在当前机会池。</p></main>", { noindex: true }), 404);
       const display = buildOpportunityV2Display(item, readOpportunityV2Translations());
-      const sources = readOpportunityV2Sources(options.opportunityV2SourcesPath).filter((source) => item.discovered_by_sources.includes(source.id));
+      const sources = readOpportunityV2Sources(options.opportunityV2SourcesPath).filter((source) => item.discovered_by_sources.includes(source.id) && source.id !== "artconnect-opportunities");
       const categoryLabels: Record<string, string> = { competition: "赛事 / 征集", exhibition_market: "市集 / 展销", procurement_project: "采购 / 订单", channel_collaboration: "渠道 / 合作", policy_funding: "资助 / 扶持", international: "研修 / 交流" };
       const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
       const formats: Record<string, string> = { material_craft: "实物工艺", product_design: "产品设计方案", graphic_ip: "平面 / 插画 / IP", packaging: "包装设计", fashion_jewellery: "服饰 / 首饰", video_animation: "视频 / 动画", interaction_game: "交互 / 游戏", mixed_media: "综合媒介" };
@@ -566,6 +573,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       const deadlineInfo = displayDeadline(item, `${item.summary}\n${display.summary}`);
       const summary = safeOpportunitySummary(display.summary, deadlineInfo.conflict);
       const deadline = deadlineInfo.text;
+      const publicDeadline = publicOpportunityV2Deadline(item);
+      const deadlineUnsafe = publicDeadline.unsafe || deadlineInfo.conflict;
+      const trustedAssessment = assessOpportunityCoverage(item);
       const sourceLinks = (sources.length ? sources : [{ id: item.source_id, name: item.source_name, url: item.source_url }]).map((source) => `<li><a rel="nofollow noopener" href="${escapeHtml(source.url)}">${escapeHtml(source.name)}</a></li>`).join("");
       const directionText = (item.directions ?? []).map((key) => directions[key] ?? key).join(" · ");
       const formatText = (item.work_formats ?? []).map((key) => formats[key] ?? key).join(" · ");
@@ -576,7 +586,23 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       const translationLabel = display.translation_status === "pending" ? `<span class="ich-translation-status">当前显示来源原文</span>` : display.translation_status === "failed" ? `<span class="ich-translation-status">中文翻译暂不可用，当前显示来源原文</span>` : "";
       const deadlineWarning = deadlineInfo.conflict ? `<p class="ich-data-warning">来源页面中的截止日期与结构化日期不一致，当前不显示不安全的精确日期，请打开来源原文核对。</p>` : "";
       const originalSourceSummary = item.summary.trim() ? `<details class="ich-original"><summary>查看来源原文摘要</summary><p>${escapeHtml(item.summary)}</p></details>` : "";
-      const detailBody = `<main class="ich-detail"><p class="ich-detail-kicker">${escapeHtml(categoryLabels[item.category] ?? item.category)}</p><span class="ich-status">${escapeHtml(v2StatusLabel(item))}</span>${translationLabel}<h1>${escapeHtml(display.title)}</h1>${display.original_title && display.translated ? `<details class="ich-original"><summary>查看原名</summary><p>${escapeHtml(display.original_title)}</p></details>` : ""}<p class="ich-detail-lede">${escapeHtml(summary)}</p><div class="ich-detail-layout"><section class="ich-detail-main"><h2>${factsHeading}</h2><p>${facts || "来源页面未提供结构化字段，请打开来源原文查看完整要求。"}</p><h2>报名与材料</h2><p>${item.application_url ? `<a rel="nofollow noopener" href="${escapeHtml(item.application_url)}">${item.category === "procurement_project" ? "响应入口" : "报名入口"}</a>` : "请打开来源原文查看提交材料、格式、费用及资格要求。"}</p>${originalSourceSummary}${deadlineWarning}<p class="ich-detail-note">更多报名条件、材料要求和最新变更，请打开赛事来源页面查看。</p><div class="ich-source-box"><h2>来源原文</h2><ul>${sourceLinks}</ul><p><a rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">打开赛事来源页面 ↗</a></p></div></section><aside class="ich-detail-aside"><h2>关键节点</h2><dl><dt>${item.category === "procurement_project" ? "响应截止" : "截止时间"}</dt><dd>${escapeHtml(deadline)}</dd>${location ? `<dt>举办地</dt><dd>${escapeHtml(location)}</dd>` : ""}${item.organizer ? `<dt>主办方 / 买方</dt><dd>${escapeHtml(item.organizer)}</dd>` : ""}<dt>发现来源</dt><dd>${escapeHtml(sources.map((source) => source.name).join("、") || item.source_name)}${discoveryLabel(item) ? `（${escapeHtml(discoveryLabel(item))}）` : ""}</dd></dl></aside></div></main>`;
+      const deadlineKindLabels: Record<string, string> = { submission_deadline: "作品提交截止", application_deadline: "申请截止", registration_deadline: "报名截止", deadline: "来源截止时间" };
+      const deadlineRaw = deadlineUnsafe ? "存在日期冲突；精确原文仅供内部核对" : item.deadline_raw_text || item.deadline_text || "来源未给出明确截止原文";
+      const deadlineEvidence = !deadlineUnsafe && item.deadline_source_url ? `<a rel="nofollow noopener" href="${escapeHtml(item.deadline_source_url)}">查看截止日期出处</a>` : "截止日期出处尚未公开核验";
+      const deadlineChecked = !deadlineUnsafe && item.deadline_checked_at ? `最近核对：${escapeHtml(formatAuditTimestamp(item.deadline_checked_at))}` : "最近核对时间：未记录";
+      const qualificationLabel = ({ NOT_ASSESSED: "尚未评估", NEEDS_REVIEW: "需要人工核验", POTENTIALLY_ELIGIBLE: "规则提示可能符合（非资格确认）", INELIGIBLE: "规则发现潜在不符项（需回看原文）" } as Record<string, string>)[trustedAssessment.eligibility_status] ?? "尚未评估";
+      const factRow = (label: string, value: string): string => `<dt>${escapeHtml(label)}</dt><dd>${value}</dd>`;
+      const verifiedOfficialEntry = item.official_url ? `<a rel="nofollow noopener" href="${escapeHtml(item.official_url)}">打开已标注的主办方入口 ↗</a>` : "未确认独立主办方/官方申请入口";
+      const recordedEntry = item.application_url ? `<a rel="nofollow noopener" href="${escapeHtml(item.application_url)}">来源记录的提交入口 ↗</a><small>入口归属尚未独立核验。</small>` : "来源未提供独立提交入口";
+      const moneyText = [
+        trustedAssessment.funding.length ? `来源文字识别到：${escapeHtml(trustedAssessment.funding.join("；"))}` : "奖金/资助/预算：未披露或未结构化核验",
+        trustedAssessment.fees.length ? `费用线索：${escapeHtml(trustedAssessment.fees.join("；"))}` : "报名/投稿/参展/运输费用：未披露或未结构化核验",
+        `资金方向：${({ receive: "可能获得资金", pay: "可能需支付费用", mixed: "可能同时有资金与费用", noncash: "非现金支持线索", unknown: "未知" } as Record<string, string>)[trustedAssessment.money_flow]}`,
+      ].join("<br>");
+      const eligibilityGaps = trustedAssessment.qualification_gaps.length ? trustedAssessment.qualification_gaps.join("；") : "个人/企业、地区与专业资格仍须以主办方条款为准。";
+      const deadlinePrecision = !deadlineUnsafe && item.deadline_raw_text && /(?:\d{1,2}:\d{2}|\d{1,2}\s*(?:am|pm))/iu.test(item.deadline_raw_text) ? "来源文字含具体时分；其时区未必明确" : "仅按日期展示；来源未说明时区和具体时刻";
+      const trustedFacts = `<section class="ich-trusted-facts"><h2>信息依据与待核事项</h2><dl>${factRow("主办方 / 买方", escapeHtml(item.organizer || "来源未明确"))}${factRow("官方申请入口", verifiedOfficialEntry)}${factRow("提交入口", recordedEntry)}${factRow(deadlineKindLabels[item.deadline_kind ?? "deadline"] ?? "截止类型", `${escapeHtml(deadlineRaw)}<br>${escapeHtml(deadlinePrecision)}<br>${deadlineEvidence}<br>${deadlineChecked}`)}${factRow("地点 / 参与范围", `${escapeHtml(location || "地点未核验")} · ${escapeHtml(scopeText || "申请范围未核验；不从来源地区推断全球可报")}`)}${factRow("线上 / 现场形式", escapeHtml(modeText || "未核验"))}${factRow("资金与费用", moneyText)}${factRow("申请资格", `${escapeHtml(qualificationLabel)}<br>${escapeHtml(eligibilityGaps)}<br><small>规则提示不替代申请主体资格审查。</small>`)}${factRow("作品权利 / 首发要求", "未结构化核验；请查看主办方原文，勿按默认条件推断。")}${factRow("建议下一步", escapeHtml(trustedAssessment.next_action))}</dl></section>`;
+      const detailBody = `<main class="ich-detail"><p class="ich-detail-kicker">${escapeHtml(categoryLabels[item.category] ?? item.category)}</p><span class="ich-status">${escapeHtml(v2StatusLabel(item))}</span>${translationLabel}<h1>${escapeHtml(display.title)}</h1>${display.original_title && display.translated ? `<details class="ich-original"><summary>查看原名</summary><p>${escapeHtml(display.original_title)}</p></details>` : ""}<p class="ich-detail-lede">${escapeHtml(summary)}</p><div class="ich-detail-layout"><section class="ich-detail-main"><h2>${factsHeading}</h2><p>${facts || "来源页面未提供结构化字段，请打开来源原文查看完整要求。"}</p><h2>报名与材料</h2><p>${item.application_url ? recordedEntry : "请打开来源原文查看提交材料、格式、费用及资格要求。"}</p>${trustedFacts}${originalSourceSummary}${deadlineWarning}<p class="ich-detail-note">未明确的信息均保持待核状态。完整条款、附件及后续更正请以主办方来源页面为准。</p><div class="ich-source-box"><h2>发现来源与原文</h2><ul>${sourceLinks}</ul><p><a rel="nofollow noopener" href="${escapeHtml(item.detail_url || item.source_url)}">打开发现来源页面 ↗</a></p></div></section><aside class="ich-detail-aside"><h2>关键节点</h2><dl><dt>${item.category === "procurement_project" ? "响应截止" : "截止时间"}</dt><dd>${escapeHtml(deadline)}</dd>${location ? `<dt>举办地</dt><dd>${escapeHtml(location)}</dd>` : ""}${item.organizer ? `<dt>主办方 / 买方</dt><dd>${escapeHtml(item.organizer)}</dd>` : ""}<dt>发现来源</dt><dd>${escapeHtml(sources.map((source) => source.name).join("、") || item.source_name)}${discoveryLabel(item) ? `（${escapeHtml(discoveryLabel(item))}）` : ""}</dd></dl></aside></div></main>`;
       return c.html(shell(`${display.title}｜盯非遗`, summary, c.req.path, detailBody));
     }
     const loaded = store.load();

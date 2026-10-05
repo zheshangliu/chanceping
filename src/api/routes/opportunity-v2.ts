@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, getOpportunityV2SourcePermission, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 
 export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
 
@@ -75,6 +75,7 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   app.post("/sources/:id/enable", (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
     if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+    if (getOpportunityV2SourcePermission(c.req.param("id")) === "COMPLIANCE_HOLD") return c.json({ error: { code: "COMPLIANCE_HOLD", message: "该来源尚无自动采集与公开转载授权，暂不能启用抓取" } }, 409);
     return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: true, status: "ACTIVE" }, options.sourcesPath) });
   });
   app.post("/sources/:id/pause", (c) => {
@@ -90,11 +91,13 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   app.post("/sources/:id/test", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
     if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+    if (getOpportunityV2SourcePermission(c.req.param("id")) === "COMPLIANCE_HOLD") return c.json({ error: { code: "COMPLIANCE_HOLD", message: "该来源尚无自动采集与公开转载授权，暂不能测试" } }, 409);
     return c.json(await testOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath }));
   });
   app.post("/sources/:id/run", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
     if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+    if (getOpportunityV2SourcePermission(c.req.param("id")) === "COMPLIANCE_HOLD") return c.json({ error: { code: "COMPLIANCE_HOLD", message: "该来源尚无自动采集与公开转载授权，暂不能抓取" } }, 409);
     return c.json(await runOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }));
   });
   app.get("/opportunities", (c) => {
@@ -104,11 +107,11 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   app.get("/radar", (c) => {
     const sourcePool = sources();
     const items = filterOpportunityV2Radar(pool().opportunities, sourcePool, queryOf(c.req.query()));
-    return c.json({ radar_id: "ich", name: "非遗机会雷达", source_pool: sourcePool.filter((source) => source.enabled), total: items.length, opportunities: items.map(serializeOpportunityV2Public) });
+    return c.json({ radar_id: "ich", name: "非遗机会雷达", source_pool: sourcePool.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id)), total: items.length, opportunities: items.map(serializeOpportunityV2Public) });
   });
   app.get("/opportunities/:id", (c) => {
     const item = pool().opportunities.find((candidate) => candidate.id === c.req.param("id"));
-    if (!item) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
+    if (!item || !isOpportunityV2PublicCopyAllowed(item)) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
     return c.json(serializeOpportunityV2Public(item));
   });
   app.post("/run", async (c) => { const denied = requireAdmin(c); if (denied) return denied; return c.json(await runOpportunityV2({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath, fetcher: options.fetcher })); });

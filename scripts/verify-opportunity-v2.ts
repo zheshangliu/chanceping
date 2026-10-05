@@ -6,7 +6,7 @@ import { createApp } from "../src/api/app";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
 import { isLikelySourceListingNoise, parseCfwDetailDate, parseGenericListing } from "../src/ich/aggregation/adapters/generic-listing";
 import { extractDeadlineText, parseCfwDateRange, parseDateText } from "../src/ich/aggregation/adapters/common";
-import { canonicalOpportunityTitle, filterOpportunityV2Radar, mergeOpportunityV2, normalizeOpportunityV2, opportunityStatus, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
+import { canonicalOpportunityTitle, filterOpportunityV2Radar, isOpportunityV2SourceCollectionAllowed, mergeOpportunityV2, normalizeOpportunityV2, opportunityStatus, opportunityV2NextRunAt, opportunityV2ShouldRun, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, validateOpportunityV2Sources, writeOpportunityV2Sources } from "../src/opportunity-v2";
 
 async function jsonRequest(app: ReturnType<typeof opportunityV2Routes>, url: string, method: string, body?: Record<string, unknown>): Promise<{ status: number; data: any }> {
   const response = await app.request(`http://localhost${url}`, { method, headers: body ? { "content-type": "application/json" } : undefined, body: body ? JSON.stringify(body) : undefined });
@@ -63,7 +63,7 @@ async function main(): Promise<void> {
   writeOpportunityV2Sources(initialSources.map((source) => ["kcdf-opportunities", "homo-faber-calls"].includes(source.id) ? { ...source, status: "ACTIVE" } : source), sourcesPath);
   const result = await runOpportunityV2({ now: new Date("2026-09-06T00:00:00.000Z"), sourcesPath, poolPath, healthPath, fetcher });
   assert.equal(validateOpportunityV2Sources(readOpportunityV2Sources(sourcesPath)).length, 0);
-  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).length);
+  assert.equal(result.fetched_sources, initialSources.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id) && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).length);
   assert.ok(result.successful_sources >= 1);
   assert.ok(result.raw_items >= 6);
   assert.ok(result.pool_items < result.raw_items);

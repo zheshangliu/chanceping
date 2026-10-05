@@ -48,7 +48,7 @@ async function main(): Promise<void> {
   const poolPath = path.join(root, "opportunities.json");
   const healthPath = path.join(root, "source-health.json");
   const opportunities = [
-    item("future-2027", "Future Craft Prize 2027", "2027-03-03T23:59:00.000Z"),
+    item("future-2027", "Future Craft Prize 2027", "2027-03-03T23:59:00.000Z", { deadline_raw_text: "Closing date 3 March 2027", deadline_source_url: "https://example.com/official-deadline", deadline_checked_at: "2026-09-09T00:00:00.000Z", deadline_kind: "application_deadline", participation_scope: "unspecified" }),
     item("future-2026", "Future Craft Prize 2026", "2026-12-31T23:59:00.000Z"),
     item("future-oct", "Future Craft Prize October", "2026-10-15T23:59:00.000Z"),
     item("event-page", "Craft Design Competition 2027", "2027-01-15T23:59:00.000Z", { detail_url: "https://example.com/events/craft-design-competition-2027" }),
@@ -95,9 +95,17 @@ async function main(): Promise<void> {
   const detail = await app.request("http://local/opportunities/future-2027");
   assert.equal(detail.status, 200);
   const detailHtml = await detail.text();
-  assert.match(detailHtml, /打开赛事来源页面/gu);
+  assert.match(detailHtml, /打开发现来源页面/gu);
   assert.equal(detailHtml.includes("https://example.com/opportunities\""), true);
   assert.ok((detailHtml.match(/ich-source-box/gu) ?? []).length >= 1);
+  assert.match(detailHtml, /官方申请入口/u);
+  assert.match(detailHtml, /时区/u);
+  assert.match(detailHtml, /资金与费用/u);
+  assert.match(detailHtml, /申请资格/u);
+  assert.match(detailHtml, /作品权利 \/ 首发要求/u);
+  assert.match(detailHtml, /未确认独立主办方\/官方申请入口/u);
+  assert.match(detailHtml, /最近核对：/u);
+  assert.doesNotMatch(detailHtml, /2026-09-09T00:00:00\.000Z/u, "fact timestamps must not leak raw ISO text into the detail page");
 
   const sitemap = await app.request("http://local/sitemap.xml");
   assert.equal(sitemap.status, 200);

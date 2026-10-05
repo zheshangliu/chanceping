@@ -3,7 +3,7 @@ import { buildOpportunityV2SourceOverview, filterOpportunityV2Radar, readOpportu
 import type { OpportunityV2RouteOptions } from "./opportunity-v2";
 
 function escapeHtml(value: unknown): string { return String(value ?? "").replace(/[&<>"']/gu, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] ?? char); }
-function statusLabel(value: string): string { return ({ ACTIVE: "正常", FAILED: "抓取失败", NEEDS_ADAPTER: "待适配", PAUSED: "已暂停", PENDING: "待测试", BLOCKED: "已阻断" } as Record<string, string>)[value] ?? value; }
+function statusLabel(value: string): string { return ({ ACTIVE: "正常", STALE: "数据过期", COMPLIANCE_HOLD: "合规待授权", FAILED: "抓取失败", NEEDS_ADAPTER: "待适配", PAUSED: "已暂停", PENDING: "待测试", BLOCKED: "已阻断" } as Record<string, string>)[value] ?? value; }
 function card(item: OpportunityV2): string { const deadline = item.status === "UNKNOWN_DEADLINE" ? "截止时间待确认" : new Date(item.deadline as string).toLocaleDateString("zh-CN"); return `<article class="card"><div class="eyebrow">${escapeHtml(item.category)} · ${escapeHtml(item.region)}</div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.summary)}</p><div class="meta"><span>来源：${escapeHtml(item.source_name)}</span><span>截止：${escapeHtml(deadline)}</span></div><a href="${escapeHtml(item.detail_url)}" rel="noreferrer" target="_blank">查看详情 ↗</a></article>`; }
 
 function radarPage(options: OpportunityV2RouteOptions, c: Context): Response {
