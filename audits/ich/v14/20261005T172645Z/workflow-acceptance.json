@@ -1,0 +1,35 @@
+{
+  "schema_version": "chanceping.ich.v14.workflow-acceptance.v1",
+  "generated_at": "2026-10-05T17:32:21Z",
+  "candidate_commit": "5e103c1952d348418d4ef1cab0179540240bef4b",
+  "production_flow": {
+    "public_page_read": "PASS",
+    "real_production_private_followup": "BLOCKED_NO_SERVER_IDENTITY_ADAPTER",
+    "unauthorized_production_header_probe": {
+      "endpoint": "/api/opportunity-v2/workbench/followups/oppv2-v14-placeholder",
+      "forged_header": "x-business-user",
+      "http_status": 200,
+      "response_body_read": false,
+      "interpretation": "Production accepts caller-supplied identity; this proves an identity-control gap but does not establish what private data the response contained."
+    }
+  },
+  "isolated_synthetic_flow": {
+    "private_identity_source": "Injected server-side resolver fixture; no client header/query/body identity accepted",
+    "anonymous_read_write": "PASS_REJECTED_401",
+    "forged_header_query_body": "PASS_REJECTED_401",
+    "owner_scoped_persistence_and_inbox": "PASS",
+    "read_marker_owner_scoped": "PASS",
+    "canonical_alias_followup_preserved": "PASS",
+    "semantic_change_events_idempotent": "PASS",
+    "weekly_actions_bounded_without_minimum": "PASS",
+    "polluted_unrelated_procurement_excluded": "PASS",
+    "public_export_private_field_isolation": "PASS",
+    "production_opportunity_modified": false
+  },
+  "evidence": [
+    "npm run verify:ich:v14:source-governance",
+    "npx tsx scripts/verify-procurement-change-feed.ts",
+    "npx tsx scripts/verify-procurement-workbench.ts",
+    "npm run verify:opportunity:coverage"
+  ]
+}

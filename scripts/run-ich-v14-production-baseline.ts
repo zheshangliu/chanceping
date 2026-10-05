@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { extractCardTranslationStatuses, extractMemoTranslationStatuses, extractOpportunityIds, sameStringSet, uniqueSortedIds } from "../src/opportunity-v2/v14-baseline";
+import { extractCardTranslationStatuses, extractMemoTranslationStatuses, extractOpportunityIds, extractProductionHealthVersion, sameStringSet, uniqueSortedIds } from "../src/opportunity-v2/v14-baseline";
 import { isForeignLanguageOpportunity } from "../src/opportunity-v2/display";
 import type { OpportunityV2 } from "../src/opportunity-v2/types";
 
@@ -29,6 +29,12 @@ function jsonOf(result: HttpObservation): JsonObject {
 async function get(pathname: string): Promise<HttpObservation> {
   const response = await fetch(new URL(pathname, `${baseUrl}/`), { signal: AbortSignal.timeout(30000), redirect: "follow" });
   return { status: response.status, content_type: response.headers.get("content-type") ?? "", body: await response.text() };
+}
+async function probeStatusOnly(pathname: string, headers?: Record<string, string>): Promise<number> {
+  const response = await fetch(new URL(pathname, `${baseUrl}/`), { headers, signal: AbortSignal.timeout(30000), redirect: "follow" });
+  const status = response.status;
+  await response.body?.cancel();
+  return status;
 }
 
 async function crawlHtml(pathname: string): Promise<PageObservation> {
@@ -87,6 +93,13 @@ async function main(): Promise<void> {
   const pages = Object.fromEntries(pageEntries) as Record<string, PageObservation>;
   const memoMarkdown = await get("/ich/memo.md");
   observations.memo_markdown = memoMarkdown;
+  const privateFollowupProbes = {
+    anonymous_list_http: await probeStatusOnly("/api/opportunity-v2/workbench/followups"),
+    forged_query_http: await probeStatusOnly("/api/opportunity-v2/workbench/followups?user_id=v14-audit-placeholder"),
+    forged_header_http: await probeStatusOnly("/api/opportunity-v2/workbench/followups/oppv2-v14-placeholder", { "x-business-user": "v14-audit-placeholder" }),
+    response_bodies_read: false,
+    placeholder_identity: "v14-audit-placeholder",
+  };
   const radar = jsonOf(radarResponse);
   const memo = jsonOf(memoResponse);
   const sourceOverview = jsonOf(sourceResponse);
@@ -156,6 +169,7 @@ async function main(): Promise<void> {
       memo_json_markdown_parity: memoIds.length > 0 && sameStringSet(memoIds, memoMarkdownIds),
       memo_html_is_subset_of_json: memoHtmlIds.every((id) => memoIds.includes(id)),
     },
+    private_followup_access_probes: privateFollowupProbes,
     translation_visibility: {
       ...renderedTranslation,
       limitation: "Production translation sidecar and per-ID internal failure codes are not exposed by public endpoints; no private runtime was read.",
@@ -177,7 +191,7 @@ async function main(): Promise<void> {
     generated_at: generatedAt,
     candidate_head: head,
     known_existing: ["OpportunityV2 public APIs", "V2 source overview and scheduler timestamp", "DeepSeek display translation CLI", "translation sidecar support in code", "procurement and coverage workbench", "follow-up sidecar and change feed", "protected GitHub production workflow"],
-    production_observed: { health_version: productionVersion.version ?? null, source_count: sourceSummary.registered ?? null, pool_count: radar.total ?? null, memo_count: memo.total ?? null, page_sets: Object.fromEntries(Object.entries(pages).map(([key, value]) => [key, value.ids.length])) },
+    production_observed: { health_version: extractProductionHealthVersion(productionVersion), source_count: sourceSummary.registered ?? null, pool_count: radar.total ?? null, memo_count: memo.total ?? null, page_sets: Object.fromEntries(Object.entries(pages).map(([key, value]) => [key, value.ids.length])) },
     not_publicly_observable: ["private translation sidecar contents and per-ID quality failure codes", "actual systemd timer enabled/active state", "production runtime files and file hashes", "server-side authenticated end-user identity", "ArtConnect written automation/redistribution authorization"],
     endpoints_with_non_200: failedEndpoints,
   });

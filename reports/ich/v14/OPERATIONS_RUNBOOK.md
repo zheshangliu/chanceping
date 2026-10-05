@@ -1,28 +1,23 @@
-# 盯非遗 V1.4 中文显示运行手册
+# V1.4 运行与安全操作手册
 
-## 运行边界
+## 当前生产状态
 
-- `npm run opportunity:v2:display` 默认为 dry-run；它先生成目标/缓存/预算清单，不请求模型、不写翻译缓存。
-- `npm run opportunity:v2:display:execute` 只调用运行时配置已授权的 DeepSeek；不启用或覆盖 `CHANCEPING_ENABLE_LOCAL_LIVE_LLM` / `CHANCEPING_ENABLE_PRODUCTION_LIVE_LLM`，不允许 Qwen 或其他 fallback。
-- 运行前先核对 `CHANCEPING_OPPORTUNITY_V2_POOL_PATH`、`CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH`、`CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH` 指向预期的运行时副本。生产操作只能通过经授权的服务器端 runner 执行，不可从开发机把生产 JSON 当成本地缓存覆盖。
-- 要加载本地 `api.env`，必须显式设置 `CHANCEPING_LOAD_API_ENV=true`；这不会打开 live-LLM 授权开关。
+- 本轮没有抓取、翻译、持久化文件写入、部署或 DNS 修改。
+- 生产公开接口显示下一计划时间 `2026-10-07T06:20:16.531Z`；这不是 systemd timer 状态/触发日志证明。
+- 生产运行入口目前未验证；不要直接 POST 不带授权的 `/api/opportunity-v2/run`，不要在 URL、shell历史、前端 JS 或报告中放 admin token。
 
-## 有界翻译合同
+## 获得运行授权后
 
-- 每次最多 200 个唯一机会；先检查可复用的成功缓存、cooldown 和 retryability，再选队列，因此缓存记录不能占满前 N 个槽位、饿死队尾。
-- 每条记录最多 2 次真实 HTTP 请求；请求在网络调用前计入共享预算。全轮最多 250 次请求、最多 2 个并发、单次超时最多 30 秒。
-- provider 固定 DeepSeek。授权配置缺失时返回 `ACCESS_BLOCKED`，不能回退 Qwen、模拟响应或写“翻译成功”。
-- 译文按 source hash 校验后写入；当前原文已变、机会已删除、已有人工/成功译文时，迟到结果、失败结果或同版本重放不能覆盖当前成功结果。
-- 标题与摘要分别验收；标题质量通过而摘要失败时，标题仍可用，摘要为空并记录字段级失败。模型 token 与账单用量当前无法由 adapter 获得，因此报告明确标记 unavailable，不估算。
+1. 先确认受保护 runner 使用部署版本与 `/var/lib/chanceping/opportunity-v2/` runtime一致，另确认没有并发 writer。
+2. Dry-run 输出目标记录、最大200 unique records/250 requests、DeepSeek唯一provider、并发≤2、每条最多2次、30秒超时；先备份/校验现有翻译 sidecar指纹。
+3. 将缓存复用/原文 hash、provider、每次尝试、失败原因、实际请求数和实际文件写入分别记录；不要从公开汇总推断私有 cache 内容。
+4. 来源解析失败单独降级：403记失败；HTTP成功但无支持格式记 `NEEDS_ADAPTER`；已识别格式但0个机会可为正常空结果；保留 last-known-good 数据且不刷新内容核验时间。
+5. 仅在有真实登录身份 resolver 时允许私有跟进/API。任何请求参数、body 或 caller-defined header 都不能决定 owner。部署前验证匿名/伪造身份401、两个用户不可跨读、公开导出无备注。
+6. 公开纠正截止、取消或资格更改之前，保存旧值/新值/出处；unsafe conflict只显示待核，不提醒精确日期。处理变更事件必须幂等。
+7. ArtConnect在没有书面许可前维持 `COMPLIANCE_HOLD`，不抓取、不公开复制；恢复前需由负责人员核验许可范围。
 
-## 运行步骤
+## 回滚/观察
 
-1. 在隔离副本设置三个数据路径并执行 `npm run opportunity:v2:display`。
-2. 检查输出报告中的输入路径、SHA-256、目标 ID、缓存重用数、eligible 队列和 provider 授权状态。默认产物为 `audits/ich/v14/latest/translation-run.json`；可用 `CHANCEPING_V14_TRANSLATION_RUN_PATH` 指定报告路径。
-3. 若当前任务没有获准的 DeepSeek 运行身份，不执行 live 命令。获准运行才显式调用 `npm run opportunity:v2:display:execute`；该命令仍遵守既有 live-profile 门禁。
-4. 检查 `status`、`actual_requests`、`write_result`、失败分类及输出哈希，然后在同一数据副本重新 dry-run，确认成功记录被 cache-reuse 而非重复调用。
-5. 生产运行报告必须来自生产 runner 的实际 runtime 路径和执行回执。开发机影子结果不得标记成 production refresh。
-
-## 本轮运行状态
-
-2026-10-05 基线核验只读确认了公开抓取更新时间/下一次调度，但未找到获准的生产端翻译/刷新 runner；未执行生产翻译、生产数据写入或发布。请通过现有受保护运维渠道提供 runner/身份后，由值班操作者执行上述有界流程。不得粘贴部署密钥或 DeepSeek API key 到任务对话。
+- 只经仓库受保护部署workflow及其备份/manifest执行；不得在 live release 目录原位改文件。
+- 回滚时同时恢复对应业务代码与它实际修改过的 runtime sidecar，但不得覆盖备份后新产生的用户跟进。验证文件 schema/hash、健康检查、私有隔离和Memo parity。
+- Release成功后保留7天和至少两次自然72h scheduler触发证据。单源失败可降级，不将页面访问时间当成功核验时间。

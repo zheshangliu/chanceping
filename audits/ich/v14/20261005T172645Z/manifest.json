@@ -1,0 +1,45 @@
+{
+  "schema_version": "chanceping.ich.v14.audit-manifest.v1",
+  "run_id": "20261005T172645Z",
+  "generated_at": "2026-10-05T17:32:21Z",
+  "status": "ACCESS_BLOCKED",
+  "production_write_performed": false,
+  "production_fetch_performed": false,
+  "production_translation_performed": false,
+  "production_base_url": "https://ich.chanceping.com",
+  "reported_production_commit": "0174f78f323a739bd430f755988159575e660347",
+  "reported_production_release": "20260919T022422Z-0174f78f323a",
+  "origin_main_at_start": "615680cbf6ff9b1fe2a083a56ec542944e6da910",
+  "feature_branch": "codex/ich-v14-trusted-operations",
+  "candidate_business_commit": "5e103c1952d348418d4ef1cab0179540240bef4b",
+  "production_read_time": "2026-10-05T17:30:07.706Z",
+  "evidence_files": [
+    "baseline.json",
+    "capability-inventory.json",
+    "runtime-contract.json",
+    "permissions-readiness.json",
+    "translation-failures.json",
+    "source-governance.json",
+    "source-contribution-matrix.json",
+    "evidence-quality.json",
+    "workflow-acceptance.json"
+  ],
+  "privacy": {
+    "production_private_response_bodies_read": false,
+    "secrets_recorded": false,
+    "private_user_notes_recorded": false,
+    "public_opportunity_ids_complete_not_truncated": true
+  },
+  "release": {
+    "feature_push": "PENDING",
+    "pull_request": "PENDING",
+    "merge": "NOT_PERFORMED",
+    "deployment": "NOT_PERFORMED",
+    "dns_change": false
+  },
+  "blocking_gates": [
+    "No authorized production refresh/translation runner was found; POST /api/opportunity-v2/run returned 403 FORBIDDEN.",
+    "No verified server-side end-user identity resolver is wired; live forged x-business-user request returned HTTP 200.",
+    "Historical 477 translation IDs and the production private translation sidecar are unavailable to public read-only audit."
+  ]
+}

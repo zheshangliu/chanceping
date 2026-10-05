@@ -71,7 +71,7 @@
 - [x] Add quality fixtures for proper nouns, untranslated English with appended Chinese, title-success/summary-failure, ambiguous `$`, staged fees, and malicious source instructions.
 - [x] Implement the smallest changes in existing queue/cache/provider modules; keep DeepSeek as the only provider and the task limits unchanged.
 - [x] Run focused fixtures and V1.3 display verification; record that production translation remains blocked; no production translation was performed.
-- [ ] Commit M1 independently.
+- [x] Commit M1 independently (`15a426a`).
 
 ### Task 3: M2 Source permissions, freshness and evidence trust
 
@@ -84,12 +84,12 @@
 - Consumes: M0 source identities and real per-source last-success/item counts.
 - Produces: separate permission state, last fetch success, last verified content, partial/cursor state, publishable contribution and `STALE` after 72h+6h without successful read; no guessed global eligibility or exact timezone.
 
-- [ ] Add failing tests distinguishing zero-result success from parser failure and scheduler-active from source-fresh.
-- [ ] Audit each registered source family by opportunity type using distinct IDs; avoid summing multi-tag groups as unique counts.
-- [ ] Check written ArtConnect authorization evidence without copying sensitive terms; absent proof must be represented as `COMPLIANCE_HOLD`, not technical failure.
-- [ ] Add fail-closed effective-source handling for unlicensed automated collection/public copying while retaining source identity, historical records and follow-up links.
-- [ ] Verify official evidence and application deadline semantics; conflicts become date-unknown and never feed precise reminder/sort outputs.
-- [ ] Run existing source, deadline, encoding, procurement and coverage regressions; commit M2.
+- [x] Add failing tests distinguishing zero-result success from parser failure and scheduler-active from source-fresh.
+- [x] Audit each registered source family by opportunity type using distinct IDs; avoid summing multi-tag groups as unique counts.
+- [x] Check ArtConnect's official terms; absent written permission is `COMPLIANCE_HOLD` (audit stores a public terms link, not copied/private terms).
+- [x] Add fail-closed effective-source handling for unlicensed automated collection/public copying while retaining source identity/history.
+- [x] Verify official evidence/deadline semantics; unsafe conflict precision is redacted from public views/reminders.
+- [x] Run source/deadline/encoding/procurement/coverage regressions; commit M2 `6a6e59f`.
 
 ### Task 4: M3 Protected follow-up and semantic changes
 
@@ -102,13 +102,13 @@
 - Consumes: M0 inventory of actual application authentication and existing workbench/storage.
 - Produces: follow-up records keyed only by authenticated server-side identity; idempotent semantic change events with old/new values and evidence; internal due-task and important-change summary; public exports with no private fields.
 
-- [ ] Add red tests showing anonymous and forged `x-business-user` cannot list/read/write notes or exports; identity cannot come from query/body/header supplied by an untrusted client.
-- [ ] Add red tests preserving status/note/date when title/hash/canonical grouping changes.
-- [ ] Add red tests that `last_seen`, translation wording or reordering alone creates no change event, while one verified deadline correction creates exactly one sourced event across repeated processing.
-- [ ] Implement only against an existing verified server identity. If the codebase has no such identity, fail closed and record the smallest required auth blocker; do not create a client-token workaround or expose a shared token in browser JS.
-- [ ] Provide at most ten deterministic current/early tasks; allow fewer and preserve qualification/deadline conflict gates.
-- [ ] Exercise discovery→evidence review→follow-up→refresh→change/task flow with isolated synthetic records, clearly labeled synthetic.
-- [ ] Commit M3 independently.
+- [x] Add red tests showing anonymous/forged identity cannot read/write candidate notes; owner never comes from an untrusted query/body/header.
+- [x] Add tests preserving status/note/date when title/hash/canonical grouping changes.
+- [x] Add idempotent semantic-change tests; generic `last_seen`/translation-only changes do not create events.
+- [x] No verified identity adapter exists: candidate fails closed and records the blocker; no client-token workaround was added. Production audit separately observed a forged-header HTTP 200.
+- [x] Provide a deterministic maximum-10 current/early list with no minimum and preserve qualification/deadline gates.
+- [x] Exercise the flow with isolated synthetic records; label as synthetic and do not write production opportunities.
+- [x] Commit M3 independently (`5e103c1`).
 
 ### Task 5: M4 End-to-end business acceptance and controlled release
 
@@ -120,10 +120,10 @@
 - Consumes: completed M0–M3 artifacts and the exact protected production commit/ref.
 - Produces: production business checks for all specified routes/IDs, same-data parity, authenticated follow-up flow, cost/request ledger, release/rollback evidence and observation close conditions.
 
-- [ ] Run `npm run typecheck`, `npm run verify:v15:e2e`, `npm run verify:all`, and available V1.3/Procurement/Memo/encoding/deadline tests; record each command/result.
-- [ ] Capture actual 360/390/430px and 200% zoom screenshots; inspect visible Hero/card clipping, not only document overflow.
-- [ ] Verify live competition, overseas, procurement, aggregate opportunities, detail, Memo/API/export and protected follow-up routes with real IDs and redaction checks.
-- [ ] Re-check exact current `origin/main`, PR status and protected deployment eligibility. Never deploy a feature SHA that bypasses protected main.
+- [x] Run typecheck, V1.5 E2E, verify:all, V1.3, V2/Memo/Procurement/source-governance regressions and deployment integrity verification.
+- [x] Capture 360/390/430px and a documented 200%-equivalent viewport; inspect hero, categories, procurement controls and actual PNGs.
+- [x] Read-only production public routes/IDs, Memo parity and a real detail sample verified; production authenticated follow-up remains blocked by missing resolver and unsafe live identity handling.
+- [ ] Re-check live `origin/main`, existing PR and protected deployment eligibility before push/PR. Never deploy a feature SHA that bypasses protected main.
 - [ ] If authorized runtime execution, PR approval, protected merge or production approval is missing, stop only that external action and report the consolidated permission request; do not call shadow output production success.
 - [ ] If production release is authorized and all business gates pass, publish through the established protected workflow, back up touched runtime files first, verify rollback integrity, and set status `DELIVERED_OBSERVING` until seven days/two real scheduled runs are evidenced.
-- [ ] Complete final report and whole-branch review; commit and push only the scoped branch/artifacts. No direct main write or force push.
+- [ ] Complete final report/whole-branch review; commit and push only the scoped feature branch/artifacts. No direct main write or force push. (M4 package drafted; publish pending.)

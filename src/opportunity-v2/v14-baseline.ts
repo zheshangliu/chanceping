@@ -8,6 +8,16 @@ export function sameStringSet(left: string[], right: string[]): boolean {
   return leftSet.size === rightSet.size && [...leftSet].every((value) => rightSet.has(value));
 }
 
+export function extractProductionHealthVersion(value: unknown): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const response = value as Record<string, unknown>;
+  const data = response.data;
+  if (data && typeof data === "object" && !Array.isArray(data) && typeof (data as Record<string, unknown>).version === "string") {
+    return (data as Record<string, unknown>).version as string;
+  }
+  return typeof response.version === "string" ? response.version : null;
+}
+
 export function extractOpportunityIds(content: string): string[] {
   const ids: string[] = [];
   const patterns = [

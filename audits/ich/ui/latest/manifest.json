@@ -1,0 +1,21 @@
+{
+  "schema_version": "chanceping.ich.v14.ui-audit-manifest.v1",
+  "generated_at": "2026-10-05T17:32:21Z",
+  "status": "CANDIDATE_VISUAL_REVIEWED_PRODUCTION_UNCHANGED",
+  "candidate_commit": "5e103c1952d348418d4ef1cab0179540240bef4b",
+  "production_commit": "0174f78f323a739bd430f755988159575e660347",
+  "checks": "checks.json",
+  "screenshots": [
+    "screenshots/ich-v14/20261006/production-before-ich-desktop.png",
+    "screenshots/ich-v14/20261006/candidate-home-desktop.png",
+    "screenshots/ich-v14/20261006/candidate-home-mobile-390.png",
+    "screenshots/ich-v14/20261006/candidate-home-360.png",
+    "screenshots/ich-v14/20261006/candidate-home-430.png",
+    "screenshots/ich-v14/20261006/candidate-home-200pct-equivalent.png",
+    "screenshots/ich-v14/20261006/candidate-procurement-desktop.png",
+    "screenshots/ich-v14/20261006/candidate-procurement-mobile-390.png"
+  ],
+  "production_deployment": false,
+  "data_refresh": false,
+  "dns_change": false
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "chanceping.ich.v14.translation-failures.v1",
+  "generated_at": "2026-10-05T17:22:02.088Z",
+  "status": "PRIVATE_SIDECAR_UNAVAILABLE",
+  "current_api_foreign_title_candidates_radar": 89,
+  "current_api_foreign_title_candidates_memo": 54,
+  "current_rendered_status_counts": {
+    "public_competition_and_overseas": {
+      "visible_foreign_title_candidates": 5,
+      "translated": 5,
+      "pending": 0,
+      "failed": 0,
+      "unlabeled_or_unverified": 0,
+      "no_rendered_card": 0
+    },
+    "public_procurement": {
+      "visible_foreign_title_candidates": 8,
+      "translated": 3,
+      "pending": 5,
+      "failed": 0,
+      "unlabeled_or_unverified": 0,
+      "no_rendered_card": 0
+    },
+    "memo_json_visible": {
+      "visible_foreign_title_candidates": 54,
+      "translated": 54,
+      "pending": 0,
+      "failed": 0,
+      "unlabeled_or_unverified": 0,
+      "no_rendered_card": 0
+    },
+    "raw_foreign_title_candidates_radar": 89,
+    "raw_foreign_title_candidates_memo": 54,
+    "per_id_failure_codes": "NOT_PUBLICLY_EXPOSED"
+  },
+  "per_id_failures": null,
+  "historical_477_id_baseline": "BASELINE_IDS_UNAVAILABLE; public endpoints do not expose the historical IDs or private translation cache"
+}

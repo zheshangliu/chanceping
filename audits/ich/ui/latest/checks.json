@@ -1,0 +1,43 @@
+{
+  "schema_version": "chanceping.ich.v14.ui-checks.v1",
+  "generated_at": "2026-10-05T17:32:21Z",
+  "candidate_commit": "5e103c1952d348418d4ef1cab0179540240bef4b",
+  "preview_origin": "http://127.0.0.1:3188",
+  "production_origin": "https://ich.chanceping.com",
+  "screenshots_are_candidate_preview_not_production": true,
+  "production_before_screenshot": "screenshots/ich-v14/20261006/production-before-ich-desktop.png",
+  "desktop_1440": {
+    "home_http": 200,
+    "procurement_http": 200,
+    "home_scroll_width": 1425,
+    "home_client_width": 1425,
+    "procurement_scroll_width": 1440,
+    "procurement_client_width": 1440,
+    "horizontal_overflow": false
+  },
+  "mobile_viewports": [
+    { "css_width": 360, "device_scale_factor": 1, "document_scroll_width": 360, "hero_right": 342, "category_grid_right": 342, "horizontal_overflow": false, "screenshot": "screenshots/ich-v14/20261006/candidate-home-360.png" },
+    { "css_width": 390, "device_scale_factor": 1, "document_scroll_width": 390, "hero_right": 372, "category_grid_right": 372, "horizontal_overflow": false, "screenshot": "screenshots/ich-v14/20261006/candidate-home-mobile-390.png" },
+    { "css_width": 430, "device_scale_factor": 1, "document_scroll_width": 430, "hero_right": 412, "category_grid_right": 412, "horizontal_overflow": false, "screenshot": "screenshots/ich-v14/20261006/candidate-home-430.png" },
+    { "css_width": 195, "device_scale_factor": 2, "physical_width": 390, "document_scroll_width": 195, "horizontal_overflow": false, "screenshot": "screenshots/ich-v14/20261006/candidate-home-200pct-equivalent.png", "note": "200%-equivalent viewport emulation (195 CSS px at DPR 2), not a browser zoom control capture." }
+  ],
+  "procurement_mobile_390": {
+    "document_scroll_width": 390,
+    "filter_container_width": 346,
+    "search_input_width": 346,
+    "lane_select_right": 307.328125,
+    "filter_button_right": 368,
+    "all_controls_within_viewport": true,
+    "screenshot": "screenshots/ich-v14/20261006/candidate-procurement-mobile-390.png"
+  },
+  "visual_checks": {
+    "brand_logo": "盯非遗",
+    "chanceping_header_primary_logo": false,
+    "home_hero_text_visible": true,
+    "navigation_horizontal_scroll_intentional": true,
+    "filter_index_horizontal_scroll_intentional": true,
+    "public_card_viewport_clipping_observed": false,
+    "candidate_procurement_current_and_early_sections": "empty in the local preview dataset; no opportunity was fabricated"
+  },
+  "known_boundary": "Home and procurement screenshots use the candidate code with the isolated worktree's local runtime data, not production data. The production screenshot is a read-only before image."
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "chanceping.ich.v14.capability-inventory.v1",
+  "generated_at": "2026-10-05T17:30:07.706Z",
+  "candidate_head": "5e103c1952d348418d4ef1cab0179540240bef4b",
+  "known_existing": [
+    "OpportunityV2 public APIs",
+    "V2 source overview and scheduler timestamp",
+    "DeepSeek display translation CLI",
+    "translation sidecar support in code",
+    "procurement and coverage workbench",
+    "follow-up sidecar and change feed",
+    "protected GitHub production workflow"
+  ],
+  "production_observed": {
+    "health_version": "1.3.0",
+    "source_count": 44,
+    "pool_count": 260,
+    "memo_count": 491,
+    "page_sets": {
+      "competition": 167,
+      "overseas": 3,
+      "procurement": 9,
+      "exhibition_market": 16,
+      "channel_collaboration": 2,
+      "policy_funding": 43,
+      "international": 19,
+      "procurement_workbench": 19,
+      "coverage_workbench": 90,
+      "memo_html": 491
+    }
+  },
+  "not_publicly_observable": [
+    "private translation sidecar contents and per-ID quality failure codes",
+    "actual systemd timer enabled/active state",
+    "production runtime files and file hashes",
+    "server-side authenticated end-user identity",
+    "ArtConnect written automation/redistribution authorization"
+  ],
+  "endpoints_with_non_200": []
+}

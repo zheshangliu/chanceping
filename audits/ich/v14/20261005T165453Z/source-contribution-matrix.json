@@ -1,0 +1,948 @@
+{
+  "schema_version": "chanceping.ich.v14.source-contribution-matrix.v1",
+  "generated_at": "2026-10-05T16:54:53.934Z",
+  "additive": false,
+  "dimensions": [
+    "source host family",
+    "view type",
+    "lane"
+  ],
+  "view_types": [
+    "competition_award",
+    "procurement_order",
+    "grant_funding",
+    "exhibition_showcase",
+    "market_channel",
+    "residency_learning",
+    "partnership_commission",
+    "recognition_incubation"
+  ],
+  "rows": [
+    {
+      "source_family": "1zj.com",
+      "source_ids": [
+        "1zj-cultural-competition"
+      ],
+      "source_names": [
+        "第一征集网｜全球征集网"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 62,
+      "current": 25,
+      "early": 0,
+      "review_or_unknown": 36,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 62,
+      "opportunity_ids": [
+        "oppv2_0a09ae7bae8b832c03ccca33",
+        "oppv2_0dbb549c33d7e42da90af25b",
+        "oppv2_10a40e134c0b279cc9adc616",
+        "oppv2_1312acc5c1e68cba7a9988b2",
+        "oppv2_13bafbda3d2bd19cc5370ab0",
+        "oppv2_14240c614527d43866a1f28f",
+        "oppv2_14d3137baac0d48ce54860bd",
+        "oppv2_1b51b7d4208d707073a82551",
+        "oppv2_1be460b3ae1327123edbcad8",
+        "oppv2_1f12cc273e1eb261d5a2ec25",
+        "oppv2_1fa2a515e12eb365097c83a9",
+        "oppv2_2252dd63d28caca097c0ff15",
+        "oppv2_22dc46e915740c83f68e927f",
+        "oppv2_235f3c1451cac9141f44a24a",
+        "oppv2_2c891df1fd9bfacc3de1de9b",
+        "oppv2_3561d1f694447e9140ec8706",
+        "oppv2_4112af76b6a184778241c2c4",
+        "oppv2_46e8f3727c8af3372ed2c65e",
+        "oppv2_49ad909c55a7b243e559afbf",
+        "oppv2_4a4e65f01e9c4b0c7db6c07f",
+        "oppv2_500bcf75c3951aa8cd141a36",
+        "oppv2_54aee5e7ca32e51e133c5822",
+        "oppv2_54ba1b23beacd891a3e34cfe",
+        "oppv2_635cdbf0b3707e554a03e619",
+        "oppv2_63725bcbb27639b6364a5751",
+        "oppv2_64545f778ab5a41a5f04d973",
+        "oppv2_652e7bfc9f7d952b2af7cc99",
+        "oppv2_6876ce3075d620838828ad48",
+        "oppv2_73eefc26be94bad0603eb332",
+        "oppv2_760c56acdee53fe07887a173",
+        "oppv2_778594c46a3497c3cb8bae11",
+        "oppv2_7826426ab7de1ee463ae1564",
+        "oppv2_788812dc168f42ae743f7add",
+        "oppv2_8264834a3cc40c9120b5c2ae",
+        "oppv2_88d00b9bd0be17e010a7e9a7",
+        "oppv2_916d708490f7fa87de348439",
+        "oppv2_9223725244b8eba7f7341eac",
+        "oppv2_9343aedb8afdd2b1f7ac9536",
+        "oppv2_955c442dc2cc3545a45c9bf4",
+        "oppv2_9b38a2fd8eaf1e051ef01e4f",
+        "oppv2_9bbede3d1c3ba939bf8a3f16",
+        "oppv2_a08c6a229272ca0c1b7f2a42",
+        "oppv2_a40338a4f4c53bd8aebd259b",
+        "oppv2_a5c54abfcd118f90d59a3a19",
+        "oppv2_b812d127074182e81b7f8303",
+        "oppv2_b8ba3eace5770913f7e7adc5",
+        "oppv2_ba595b254e79df448fc42b2f",
+        "oppv2_ba6e2c2518b0f104e1063d44",
+        "oppv2_be3f79dd7962b8b03be9ccaf",
+        "oppv2_c08fcccc7770dd6e1b6cd8df",
+        "oppv2_d0e08d8c7b89f6e19edf8058",
+        "oppv2_d5441e702f5e3a69d3bf02a6",
+        "oppv2_d8a9183db1c4401c27227e4f",
+        "oppv2_dd91b46889f9da3459f7cfcf",
+        "oppv2_de1f534bf12a2b25d89a7142",
+        "oppv2_e3113808a692f22742908398",
+        "oppv2_e786620c4ccea00e78a1608c",
+        "oppv2_e94fd3f927ee39a1f65d6309",
+        "oppv2_ebac9b13ac1fc6105777dbc3",
+        "oppv2_f0a59d17a65bb3b6d40a15d3",
+        "oppv2_f291ed6b8fcd40add2675fdd",
+        "oppv2_fbc108df16069fe17164b4a2"
+      ]
+    },
+    {
+      "source_family": "artconnect.com",
+      "source_ids": [
+        "artconnect-opportunities"
+      ],
+      "source_names": [
+        "ArtConnect"
+      ],
+      "permission_states": [
+        "COMPLIANCE_HOLD"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_bc16b10f36e8b6d74926c947"
+      ]
+    },
+    {
+      "source_family": "artconnect.com",
+      "source_ids": [
+        "artconnect-opportunities"
+      ],
+      "source_names": [
+        "ArtConnect"
+      ],
+      "permission_states": [
+        "COMPLIANCE_HOLD"
+      ],
+      "view_type": "market_channel",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_bc16b10f36e8b6d74926c947"
+      ]
+    },
+    {
+      "source_family": "artshub.com.au",
+      "source_ids": [
+        "artshub-craft-opportunities"
+      ],
+      "source_names": [
+        "ArtsHub Craft Opportunities"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_50619bfde89b3621243f5e62"
+      ]
+    },
+    {
+      "source_family": "callforentry.org",
+      "source_ids": [
+        "cafe-call-for-entry"
+      ],
+      "source_names": [
+        "CaFÉ CallForEntry"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 4,
+      "current": 4,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 4,
+      "with_official_or_source_evidence_link": 4,
+      "opportunity_ids": [
+        "oppv2_3018a300f62af6c3f6b8098b",
+        "oppv2_6982d84a76f0829037344773",
+        "oppv2_dc416d8f9f62da62cadeca5d",
+        "oppv2_ddb8f74460d60a153a3e9ed4"
+      ]
+    },
+    {
+      "source_family": "callforentry.org",
+      "source_ids": [
+        "cafe-call-for-entry"
+      ],
+      "source_names": [
+        "CaFÉ CallForEntry"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "market_channel",
+      "unique_opportunities": 2,
+      "current": 2,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_55ec3b2851b6820701c3044c",
+        "oppv2_dc416d8f9f62da62cadeca5d"
+      ]
+    },
+    {
+      "source_family": "cfw.cn",
+      "source_ids": [
+        "cfw-cultural-ip"
+      ],
+      "source_names": [
+        "CFW设计大赛｜文创IP"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 12,
+      "current": 10,
+      "early": 0,
+      "review_or_unknown": 1,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 12,
+      "opportunity_ids": [
+        "oppv2_0a2243ca139381880241282e",
+        "oppv2_531bbbfed1173727da2b04b1",
+        "oppv2_6876ce3075d620838828ad48",
+        "oppv2_6c7b3372092b7b64c79bac0a",
+        "oppv2_73624aa87c430537661a12ed",
+        "oppv2_762c890479aa8a9c66a885d9",
+        "oppv2_7849f1c7ca1bcdae7970da4e",
+        "oppv2_9cb583484f7e37cd0b0ae11c",
+        "oppv2_d769ba06890752c2a07bcce5",
+        "oppv2_dfe1d829f792e4c8121f42ec",
+        "oppv2_e335719777f0d36931b2eabc",
+        "oppv2_fd4bf17716f4ac47696dcfb4"
+      ]
+    },
+    {
+      "source_family": "cib.com.cn",
+      "source_ids": [
+        "proc-cn-cib"
+      ],
+      "source_names": [
+        "兴业银行集中采购管理平台"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "procurement_order",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_85e91670c4f0bc608fca77e3"
+      ]
+    },
+    {
+      "source_family": "cnyisai.com",
+      "source_ids": [
+        "cnyisai-competition"
+      ],
+      "source_names": [
+        "艺赛中国"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 7,
+      "current": 6,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 7,
+      "opportunity_ids": [
+        "oppv2_104372cb7b000d41171695d9",
+        "oppv2_1a57983b4a5f0b532159beaf",
+        "oppv2_6876ce3075d620838828ad48",
+        "oppv2_6c7b3372092b7b64c79bac0a",
+        "oppv2_9b2d6df86fe82664be8daaa4",
+        "oppv2_baa9e3a36afe4d1be09f5460",
+        "oppv2_df998ef33e1e4b29c921cc5c"
+      ]
+    },
+    {
+      "source_family": "craftcouncil.org",
+      "source_ids": [
+        "american-craft-council-opportunities"
+      ],
+      "source_names": [
+        "American Craft Council Opportunities Board"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 4,
+      "current": 0,
+      "early": 0,
+      "review_or_unknown": 4,
+      "research": 0,
+      "foreign_title_candidates": 4,
+      "with_official_or_source_evidence_link": 4,
+      "opportunity_ids": [
+        "oppv2_171615442e8593c142b2f2e2",
+        "oppv2_4213cbfda17e1568c5737c51",
+        "oppv2_62fa70b96b2d11df306b5ec7",
+        "oppv2_68d312c9e8c4b9c70a5fdb94"
+      ]
+    },
+    {
+      "source_family": "craftcouncil.org",
+      "source_ids": [
+        "american-craft-council-opportunities"
+      ],
+      "source_names": [
+        "American Craft Council Opportunities Board"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 2,
+      "current": 2,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_9f6080dd10aaffbd0a4c131e",
+        "oppv2_ff3dbe6221b6b22de9d5abb1"
+      ]
+    },
+    {
+      "source_family": "craftcouncil.org",
+      "source_ids": [
+        "american-craft-council-opportunities"
+      ],
+      "source_names": [
+        "American Craft Council Opportunities Board"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "market_channel",
+      "unique_opportunities": 5,
+      "current": 5,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 5,
+      "with_official_or_source_evidence_link": 5,
+      "opportunity_ids": [
+        "oppv2_0e43ee64c2ea4a979bc8046f",
+        "oppv2_8c6e7803b90fb93900adf47e",
+        "oppv2_94896dc7a1af2b9d83e8fa05",
+        "oppv2_ca9d64041f01bdb952df6da0",
+        "oppv2_d207588a081cb87b98a88f67"
+      ]
+    },
+    {
+      "source_family": "craftcouncil.org",
+      "source_ids": [
+        "american-craft-council-opportunities"
+      ],
+      "source_names": [
+        "American Craft Council Opportunities Board"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "residency_learning",
+      "unique_opportunities": 3,
+      "current": 3,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 3,
+      "with_official_or_source_evidence_link": 3,
+      "opportunity_ids": [
+        "oppv2_0e43ee64c2ea4a979bc8046f",
+        "oppv2_94896dc7a1af2b9d83e8fa05",
+        "oppv2_ca9d64041f01bdb952df6da0"
+      ]
+    },
+    {
+      "source_family": "craftscotland.org",
+      "source_ids": [
+        "craft-scotland-opportunities"
+      ],
+      "source_names": [
+        "Craft Scotland"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_05e60c41c6ebabae19e84fbc"
+      ]
+    },
+    {
+      "source_family": "craftscotland.org",
+      "source_ids": [
+        "craft-scotland-opportunities"
+      ],
+      "source_names": [
+        "Craft Scotland"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "market_channel",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_05e60c41c6ebabae19e84fbc"
+      ]
+    },
+    {
+      "source_family": "craftscouncil.org.uk",
+      "source_ids": [
+        "crafts-council-opportunities"
+      ],
+      "source_names": [
+        "Crafts Council"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 2,
+      "current": 2,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_394521cdf44bb7b5474ce03a",
+        "oppv2_dbebcb07c3142f1ee8eb6016"
+      ]
+    },
+    {
+      "source_family": "craftscouncil.org.uk",
+      "source_ids": [
+        "crafts-council-opportunities"
+      ],
+      "source_names": [
+        "Crafts Council"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "partnership_commission",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_dbebcb07c3142f1ee8eb6016"
+      ]
+    },
+    {
+      "source_family": "culture360.org",
+      "source_ids": [
+        "asef-culture360-opportunities"
+      ],
+      "source_names": [
+        "ASEF culture360 Opportunities"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_ffd0150901943a85c55a91ca"
+      ]
+    },
+    {
+      "source_family": "europa.eu",
+      "source_ids": [
+        "een-partnering",
+        "proc-eu-ted"
+      ],
+      "source_names": [
+        "EEN合作机会",
+        "TED 欧盟招标公告"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "procurement_order",
+      "unique_opportunities": 6,
+      "current": 6,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 6,
+      "with_official_or_source_evidence_link": 6,
+      "opportunity_ids": [
+        "oppv2_0b2f7fc6d5d31ca0e80180cd",
+        "oppv2_37be2aa5b37a8f99f13076d7",
+        "oppv2_5ad37a7122c772085c5aaf3e",
+        "oppv2_99cf696a05551b2d4c3ba8c4",
+        "oppv2_f899c3a089f370bb2cdd7ab7",
+        "oppv2_fd6c3349f1da25f113b99489"
+      ]
+    },
+    {
+      "source_family": "heritagecrafts.org.uk",
+      "source_ids": [
+        "heritage-crafts-opportunities"
+      ],
+      "source_names": [
+        "Heritage Crafts"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 2,
+      "current": 0,
+      "early": 0,
+      "review_or_unknown": 2,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_07373bdcd4705b6299f92186",
+        "oppv2_28f152b415a16784fd5ccb63"
+      ]
+    },
+    {
+      "source_family": "iuben.cn",
+      "source_ids": [
+        "iuben-cultural-competition"
+      ],
+      "source_names": [
+        "优本视觉"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 14,
+      "current": 13,
+      "early": 0,
+      "review_or_unknown": 1,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 14,
+      "opportunity_ids": [
+        "oppv2_1518d074651f3fd96d328d73",
+        "oppv2_24d68a2de9b390978f46aedc",
+        "oppv2_2bacc6879161db63cc6a4182",
+        "oppv2_2c1129d42431a80b4dff4349",
+        "oppv2_470be6b69a28c8f2cb0a8098",
+        "oppv2_4a9d3e5b91df7a7b633ac36e",
+        "oppv2_746772c094121f8337b663c4",
+        "oppv2_897b0da1c29440e4af858da5",
+        "oppv2_97ac226eb5dfecdc0daa6b3c",
+        "oppv2_b91c04c7ce4f5fa7e9423b98",
+        "oppv2_ea165d02978361d0200a027b",
+        "oppv2_eaa8e948d67be206fd20695b",
+        "oppv2_f9347b4fcbeab5c2018b6fd8",
+        "oppv2_fd4bf17716f4ac47696dcfb4"
+      ]
+    },
+    {
+      "source_family": "loewe.com",
+      "source_ids": [
+        "loewe-craft-prize"
+      ],
+      "source_names": [
+        "LOEWE FOUNDATION Craft Prize"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_ffd0150901943a85c55a91ca"
+      ]
+    },
+    {
+      "source_family": "open-contracting.org",
+      "source_ids": [
+        "proc-global-ocp"
+      ],
+      "source_names": [
+        "Open Contracting Data Registry｜Wales Sell2Wales"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "procurement_order",
+      "unique_opportunities": 2,
+      "current": 2,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_674df7c4a452f7353f9288b3",
+        "oppv2_aa11866264ec5fc5e4097e58"
+      ]
+    },
+    {
+      "source_family": "opencalls.ai",
+      "source_ids": [
+        "opencalls-ai"
+      ],
+      "source_names": [
+        "opencalls.ai"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "exhibition_showcase",
+      "unique_opportunities": 2,
+      "current": 2,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_92cd1e00b9f706b9631d4886",
+        "oppv2_bd2646770a7fb362ba929529"
+      ]
+    },
+    {
+      "source_family": "opencalls.ai",
+      "source_ids": [
+        "opencalls-ai"
+      ],
+      "source_names": [
+        "opencalls.ai"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "grant_funding",
+      "unique_opportunities": 3,
+      "current": 3,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 3,
+      "with_official_or_source_evidence_link": 3,
+      "opportunity_ids": [
+        "oppv2_92cd1e00b9f706b9631d4886",
+        "oppv2_b285a24a47a322d7fdf53802",
+        "oppv2_bd2646770a7fb362ba929529"
+      ]
+    },
+    {
+      "source_family": "opencalls.ai",
+      "source_ids": [
+        "opencalls-ai"
+      ],
+      "source_names": [
+        "opencalls.ai"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "partnership_commission",
+      "unique_opportunities": 1,
+      "current": 1,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 1,
+      "with_official_or_source_evidence_link": 1,
+      "opportunity_ids": [
+        "oppv2_b285a24a47a322d7fdf53802"
+      ]
+    },
+    {
+      "source_family": "opencalls.ai",
+      "source_ids": [
+        "opencalls-ai"
+      ],
+      "source_names": [
+        "opencalls.ai"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "residency_learning",
+      "unique_opportunities": 2,
+      "current": 2,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 2,
+      "opportunity_ids": [
+        "oppv2_92cd1e00b9f706b9631d4886",
+        "oppv2_bd2646770a7fb362ba929529"
+      ]
+    },
+    {
+      "source_family": "shejijingsai.com",
+      "source_ids": [
+        "shejijingsai-list"
+      ],
+      "source_names": [
+        "设计竞赛网"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 59,
+      "current": 58,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 59,
+      "opportunity_ids": [
+        "oppv2_0b51e69ee445f0ddd589b2e1",
+        "oppv2_0cf33b083de10b1dc6028e19",
+        "oppv2_104372cb7b000d41171695d9",
+        "oppv2_14d3137baac0d48ce54860bd",
+        "oppv2_1a57983b4a5f0b532159beaf",
+        "oppv2_24efbf02fdb640a792a86b5f",
+        "oppv2_2bacc6879161db63cc6a4182",
+        "oppv2_2d8180d1caa0a85a0e4e760d",
+        "oppv2_3fc0f9839f83a21b49c13a34",
+        "oppv2_470be6b69a28c8f2cb0a8098",
+        "oppv2_481f094e154becc6721a2edc",
+        "oppv2_4a9d3e5b91df7a7b633ac36e",
+        "oppv2_4b967fd308ce820fd86648b5",
+        "oppv2_4cb09fb26e296fc0fd7a5c32",
+        "oppv2_531bbbfed1173727da2b04b1",
+        "oppv2_539b396911c00156158e64e6",
+        "oppv2_5723c4936cf58d1b962e7ddc",
+        "oppv2_58f01e5e75103b7b675ac830",
+        "oppv2_5c267f5ca7839b018caf3b4f",
+        "oppv2_635cdbf0b3707e554a03e619",
+        "oppv2_6876ce3075d620838828ad48",
+        "oppv2_6c7b3372092b7b64c79bac0a",
+        "oppv2_73624aa87c430537661a12ed",
+        "oppv2_746772c094121f8337b663c4",
+        "oppv2_75dba78a2090bf043a21a07b",
+        "oppv2_762c890479aa8a9c66a885d9",
+        "oppv2_7849f1c7ca1bcdae7970da4e",
+        "oppv2_7d10cdbcf7c4de14941c3ffd",
+        "oppv2_8619d86aca499c529abf2c93",
+        "oppv2_8a3fc27fff73b062c171bc59",
+        "oppv2_8cbf8cf6bb04e24387e71707",
+        "oppv2_908eb79e9803696f0793b3a7",
+        "oppv2_916e75a4cd9c4eae808c776c",
+        "oppv2_95f310b0059ed3675bc23b4d",
+        "oppv2_97ac226eb5dfecdc0daa6b3c",
+        "oppv2_986f0f2605142a2a5ac07cf0",
+        "oppv2_9b2d6df86fe82664be8daaa4",
+        "oppv2_a08c6a229272ca0c1b7f2a42",
+        "oppv2_a37e06fe6c3ebe8181e4498c",
+        "oppv2_a4f75a13a8e701dbc77b52e0",
+        "oppv2_a9365736bed8b30a83848844",
+        "oppv2_b08fbf7636ea57f4896407d8",
+        "oppv2_b75f76767e6aed8051da7aad",
+        "oppv2_ba6e2c2518b0f104e1063d44",
+        "oppv2_baa9e3a36afe4d1be09f5460",
+        "oppv2_bd01fbc4ef25cd70c4df46ec",
+        "oppv2_cf14d11298ea610b9ed21044",
+        "oppv2_d769ba06890752c2a07bcce5",
+        "oppv2_dd4be65b131d32dc20eaac18",
+        "oppv2_df998ef33e1e4b29c921cc5c",
+        "oppv2_e3113808a692f22742908398",
+        "oppv2_edefe90f9ead641670cab67c",
+        "oppv2_efb8cb95042c5fb220146865",
+        "oppv2_f5da2eea466753468d7dfd4b",
+        "oppv2_f620690f36dffd5ca926fa86",
+        "oppv2_f9347b4fcbeab5c2018b6fd8",
+        "oppv2_f9698b681cfc32112e63fa16",
+        "oppv2_f98de143e0b91384b02e65a3",
+        "oppv2_fd4bf17716f4ac47696dcfb4"
+      ]
+    },
+    {
+      "source_family": "whaleideas.com",
+      "source_ids": [
+        "whaleideas-competition"
+      ],
+      "source_names": [
+        "文创赛网｜鲸创意"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 50,
+      "current": 42,
+      "early": 0,
+      "review_or_unknown": 8,
+      "research": 0,
+      "foreign_title_candidates": 2,
+      "with_official_or_source_evidence_link": 50,
+      "opportunity_ids": [
+        "oppv2_01d36739f735585940b36b94",
+        "oppv2_0778474010b89428e231e5fa",
+        "oppv2_14d3137baac0d48ce54860bd",
+        "oppv2_1a510c0da7debeb89e69dd3a",
+        "oppv2_2d8180d1caa0a85a0e4e760d",
+        "oppv2_34e9199681cf33b264786eac",
+        "oppv2_3a7d52262acfd4438476b994",
+        "oppv2_3bd3f227fae5c3e91ad4bb90",
+        "oppv2_4ab24176f08fa00a4898ab02",
+        "oppv2_4bdc90b1b8de971ae8844488",
+        "oppv2_539b396911c00156158e64e6",
+        "oppv2_54ee6fc72fde310c12aaba7f",
+        "oppv2_56557e5485cf810005c8ea6b",
+        "oppv2_5913218073a6b440e9bfdcbb",
+        "oppv2_62114dfbba9b7288055185bf",
+        "oppv2_63e844211776d62265289512",
+        "oppv2_69cf5cfccb050fa0699c25e2",
+        "oppv2_6aa766bb9a87b394fe05c4e2",
+        "oppv2_6b3405bcf2beb6a1962c27ef",
+        "oppv2_6d6ba5523b7640a88423d167",
+        "oppv2_7733ae7e630dfc1fdc60c26e",
+        "oppv2_7849f1c7ca1bcdae7970da4e",
+        "oppv2_8619d86aca499c529abf2c93",
+        "oppv2_88fe8c5fe1d16faaa1f73e80",
+        "oppv2_916e75a4cd9c4eae808c776c",
+        "oppv2_9269f6c185403a666ad5ad10",
+        "oppv2_955c442dc2cc3545a45c9bf4",
+        "oppv2_97ac226eb5dfecdc0daa6b3c",
+        "oppv2_9d4010325a64b0d3aa9add75",
+        "oppv2_9fe00f9b54d0b0ccf94c8f5c",
+        "oppv2_acb21c31d321a1efb388e1cd",
+        "oppv2_ad4fab0a7d893a345afe935d",
+        "oppv2_b60b9f328831af11e8ec7a6a",
+        "oppv2_b6d927995f41b06c12a9772b",
+        "oppv2_b959d01f297ee26219533c6e",
+        "oppv2_ba56bcb819b74e2e38854577",
+        "oppv2_ba6e2c2518b0f104e1063d44",
+        "oppv2_bc4fd3c05027e395a6bd95a7",
+        "oppv2_bd0490933a53765e0e5c4a9c",
+        "oppv2_bf6cc543cdabd8f44f70168a",
+        "oppv2_c133f76c18a27ff7e55811ba",
+        "oppv2_c98ee4626ef25c6387011e66",
+        "oppv2_d769ba06890752c2a07bcce5",
+        "oppv2_d8e6aa69580653b3cd55953b",
+        "oppv2_dbc1f1f2699495313a9c6250",
+        "oppv2_dbc40f64893f9a8b139b0b6e",
+        "oppv2_e335719777f0d36931b2eabc",
+        "oppv2_e360ff424633a256d03c02fc",
+        "oppv2_ea728a917080db2ffd856f3e",
+        "oppv2_fd4bf17716f4ac47696dcfb4"
+      ]
+    },
+    {
+      "source_family": "xiacansai.com",
+      "source_ids": [
+        "chuangsaiyun-competition-list"
+      ],
+      "source_names": [
+        "创赛云"
+      ],
+      "permission_states": [
+        "NOT_REVIEWED"
+      ],
+      "view_type": "competition_award",
+      "unique_opportunities": 11,
+      "current": 11,
+      "early": 0,
+      "review_or_unknown": 0,
+      "research": 0,
+      "foreign_title_candidates": 0,
+      "with_official_or_source_evidence_link": 11,
+      "opportunity_ids": [
+        "oppv2_24efbf02fdb640a792a86b5f",
+        "oppv2_635cdbf0b3707e554a03e619",
+        "oppv2_6c7b3372092b7b64c79bac0a",
+        "oppv2_73624aa87c430537661a12ed",
+        "oppv2_762c890479aa8a9c66a885d9",
+        "oppv2_8cbf8cf6bb04e24387e71707",
+        "oppv2_a4f75a13a8e701dbc77b52e0",
+        "oppv2_a9365736bed8b30a83848844",
+        "oppv2_ba6e2c2518b0f104e1063d44",
+        "oppv2_baa9e3a36afe4d1be09f5460",
+        "oppv2_df998ef33e1e4b29c921cc5c"
+      ]
+    }
+  ]
+}

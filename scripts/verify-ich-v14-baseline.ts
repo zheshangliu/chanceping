@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { extractCardTranslationStatuses, extractMemoTranslationStatuses, extractOpportunityIds, sameStringSet, uniqueSortedIds } from "../src/opportunity-v2/v14-baseline";
+import { extractCardTranslationStatuses, extractMemoTranslationStatuses, extractOpportunityIds, extractProductionHealthVersion, sameStringSet, uniqueSortedIds } from "../src/opportunity-v2/v14-baseline";
 
 const html = `
   <article data-opportunity-id="oppv2_bbbbbbbbbbbbbbbbbbbbbbbb"></article>
@@ -17,4 +17,7 @@ assert.deepEqual(extractMemoTranslationStatuses('<tr data-opportunity-id="oppv2_
 assert.deepEqual(extractCardTranslationStatuses('<article class="ich-card"><a href="/ich/opportunities/oppv2_eeeeeeeeeeeeeeeeeeeeeeee"></a><span>中文待补</span></article>'), [{ id: "oppv2_eeeeeeeeeeeeeeeeeeeeeeee", status: "pending" }]);
 assert.equal(sameStringSet(["b", "a", "a"], ["a", "b"]), true);
 assert.equal(sameStringSet(["a", "b"], ["a"]), false);
+assert.equal(extractProductionHealthVersion({ success: true, data: { status: "ok", version: "1.3.0" } }), "1.3.0");
+assert.equal(extractProductionHealthVersion({ version: "1.2.3" }), "1.2.3");
+assert.equal(extractProductionHealthVersion({ data: { status: "ok" } }), null);
 console.log("V1.4 production baseline parsing fixtures: PASS");
