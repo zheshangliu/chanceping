@@ -4,7 +4,7 @@ import path from "node:path";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import type { OpportunityV2, OpportunityV2SourceHealth } from "./types";
 
-export type ProcurementChangeEventType = "new" | "deadline_changed" | "budget_changed" | "stage_changed" | "cancelled" | "source_degraded";
+export type ProcurementChangeEventType = "new" | "deadline_changed" | "application_link_changed" | "eligibility_changed" | "budget_changed" | "stage_changed" | "cancelled" | "source_degraded";
 export interface ChangeEvent {
   event_id: string;
   opportunity_id: string;
@@ -51,7 +51,12 @@ export function readProcurementChangeFeed(filePath?: string): ProcurementChangeF
 }
 
 function semanticSnapshot(item: OpportunityV2): Record<string, unknown> {
-  return { title: item.title, summary: item.summary, deadline: item.deadline, deadline_kind: item.deadline_kind ?? null, budget_amount: item.procurement?.budget_amount ?? null, budget_currency: item.procurement?.budget_currency ?? null, stage: item.procurement?.stage ?? null, direction: item.procurement?.direction ?? null, detail_url: item.detail_url, source_url: item.source_url };
+  return { title: item.title, summary: item.summary, deadline: item.deadline, deadline_kind: item.deadline_kind ?? null, application_url: item.application_url ?? null, official_url: item.official_url ?? null, participation_scope: item.participation_scope ?? null, budget_amount: item.procurement?.budget_amount ?? null, budget_currency: item.procurement?.budget_currency ?? null, stage: item.procurement?.stage ?? null, direction: item.procurement?.direction ?? null, detail_url: item.detail_url, source_url: item.source_url };
+}
+function qualificationEvidence(item: OpportunityV2): string[] {
+  const text = item.summary ?? "";
+  const clauses = text.split(/(?<=[。.!?；;\n])/u).map((part) => part.trim()).filter((part) => /(?:eligib(?:le|ility)|applicant(?:s)? must|only (?:open|accept|for)|must be (?:a|an)|residents? of|申请对象|申报条件|资格要求|仅限|须为|必须为|参赛对象|报名对象|地区限制)/iu.test(part));
+  return [...new Set(clauses)].slice(0, 6);
 }
 function hash(value: unknown): string { return crypto.createHash("sha256").update(JSON.stringify(value), "utf8").digest("hex"); }
 function event(opportunityId: string, eventType: ChangeEvent["event_type"], before: unknown, after: unknown, evidenceUrl: string | null, detectedAt: string): ChangeEvent {
@@ -66,6 +71,12 @@ export function buildProcurementChangeEvents(previous: OpportunityV2[], current:
     const old = before.get(item.id);
     if (!old) { events.push(event(item.id, "new", null, semanticSnapshot(item), item.detail_url || item.source_url, detectedAt)); continue; }
     if (old.deadline !== item.deadline || old.deadline_kind !== item.deadline_kind) events.push(event(item.id, "deadline_changed", { deadline: old.deadline, deadline_kind: old.deadline_kind ?? null }, { deadline: item.deadline, deadline_kind: item.deadline_kind ?? null }, item.deadline_source_url || item.detail_url, detectedAt));
+    const oldLinks = { application_url: old.application_url ?? null, official_url: old.official_url ?? null, detail_url: old.detail_url ?? null };
+    const newLinks = { application_url: item.application_url ?? null, official_url: item.official_url ?? null, detail_url: item.detail_url ?? null };
+    if (JSON.stringify(oldLinks) !== JSON.stringify(newLinks)) events.push(event(item.id, "application_link_changed", oldLinks, newLinks, item.official_url || item.application_url || item.detail_url, detectedAt));
+    const oldEligibility = { participation_scope: old.participation_scope ?? null, evidence: qualificationEvidence(old) };
+    const newEligibility = { participation_scope: item.participation_scope ?? null, evidence: qualificationEvidence(item) };
+    if (JSON.stringify(oldEligibility) !== JSON.stringify(newEligibility)) events.push(event(item.id, "eligibility_changed", oldEligibility, newEligibility, item.detail_url || item.source_url, detectedAt));
     if (old.procurement?.budget_amount !== item.procurement?.budget_amount || old.procurement?.budget_currency !== item.procurement?.budget_currency) events.push(event(item.id, "budget_changed", { amount: old.procurement?.budget_amount ?? null, currency: old.procurement?.budget_currency ?? null }, { amount: item.procurement?.budget_amount ?? null, currency: item.procurement?.budget_currency ?? null }, item.detail_url, detectedAt));
     if (old.procurement?.stage !== item.procurement?.stage) {
       const type: ChangeEvent["event_type"] = item.procurement?.stage === "cancelled" ? "cancelled" : "stage_changed";
