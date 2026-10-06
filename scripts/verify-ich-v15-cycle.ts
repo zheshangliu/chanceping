@@ -132,6 +132,24 @@ async function main(): Promise<void> {
     });
     assert.equal(backlog.status, "COMPLETED_WITH_BACKLOG", "low-priority translation failures with passing P0/P1 and safety gates are visible backlog, not perpetual DEGRADED");
 
+    const p1BacklogAudit: IchProductionCycleAudit = {
+      ...passAudit,
+      status: "FAIL",
+      translation: {
+        ...passAudit.translation,
+        p1: { ...passAudit.translation.p1, coverage_percent: 79, meets_80_percent: false, meets_95_percent: false },
+      },
+    };
+    const lowPriorityBacklog = await runIchProductionCycle({
+      now: new Date(NOW.getTime() + 1750), paths: first.paths,
+      fetch: async (now) => fetchSummary(now),
+      translate: async () => translationSummary(),
+      audit: () => p1BacklogAudit,
+      releaseManifestPath: path.join(first.dir, "missing-release.json"),
+    });
+    assert.equal(lowPriorityBacklog.status, "COMPLETED_WITH_BACKLOG", "a P1 coverage shortfall alone is backlog when P0 and public safety gates pass");
+    assert.equal(lowPriorityBacklog.failure_code, "TRANSLATION_BACKLOG");
+
     const beforeCrash = new Map([first.paths.sources, first.paths.pool, first.paths.health, first.paths.translations, first.paths.changeFeed].map((file) => [file, fs.readFileSync(file, "utf8")]));
     const lastSuccessBeforeCrash = JSON.parse(fs.readFileSync(first.paths.scheduler, "utf8")).last_successful_cycle_at;
     const failed = await runIchProductionCycle({

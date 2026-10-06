@@ -563,13 +563,22 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
     const fetchComplete = fetchResult.successful_sources === fetchResult.fetched_sources;
     const translationComplete = (translationResult?.status === "COMPLETED" || (translationResult?.status === "ACCESS_BLOCKED" && translationResult.selected_unique_ids.length === 0))
       && translationResult.failed_records === 0 && translationResult.unattempted_selected === 0;
-    const meetsPriorityCoverage = auditResult?.translation.p0.meets_98_percent === true && auditResult.translation.p1.meets_80_percent === true;
+    const p0CoveragePass = auditResult?.translation.p0.meets_98_percent === true;
+    const p1CoveragePass = auditResult?.translation.p1.meets_80_percent === true;
+    const publicSafetyPass = auditResult?.public_encoding_errors === 0
+      && auditResult.public_unsafe_exact_deadlines === 0
+      && auditResult.weekly_limit_pass
+      && auditResult.translation.all_untranslated_p0_p1_dispositioned;
+    const p1OnlyBacklog = auditResult?.status === "FAIL"
+      && p0CoveragePass
+      && publicSafetyPass
+      && !p1CoveragePass;
     if (!auditResult) status = "FAILED";
-    else if (auditResult.status !== "PASS" || !meetsPriorityCoverage || !translationResult) status = "DEGRADED";
-    else if (fetchComplete && translationComplete) status = "COMPLETED";
+    else if ((!p0CoveragePass || !publicSafetyPass || !translationResult || (auditResult.status !== "PASS" && !p1OnlyBacklog))) status = "DEGRADED";
+    else if (fetchComplete && translationComplete && p1CoveragePass) status = "COMPLETED";
     else status = "COMPLETED_WITH_BACKLOG";
     if (!failureCode && status === "FAILED") failureCode = "QUALITY_AUDIT_FAILED";
-    if (!failureCode && status === "DEGRADED" && (auditResult?.status !== "PASS" || !meetsPriorityCoverage)) failureCode = "QUALITY_AUDIT_FAILED";
+    if (!failureCode && status === "DEGRADED") failureCode = "QUALITY_AUDIT_FAILED";
     if (!failureCode && status === "DEGRADED") failureCode = "TRANSLATION_DEGRADED";
     if (!failureCode && status === "COMPLETED_WITH_BACKLOG" && !fetchComplete) failureCode = "FETCH_BACKLOG";
     if (!failureCode && status === "COMPLETED_WITH_BACKLOG") failureCode = "TRANSLATION_BACKLOG";
