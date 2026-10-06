@@ -19,7 +19,7 @@ async function main(): Promise<void> {
     freshness: result.freshness,
     failure_code: result.failure_code,
   }, null, 2));
-  if (result.status !== "COMPLETED") process.exitCode = 1;
+  if (result.status !== "COMPLETED" && result.status !== "COMPLETED_WITH_BACKLOG") process.exitCode = 1;
 }
 
 main().catch(() => {

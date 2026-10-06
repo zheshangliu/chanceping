@@ -10,8 +10,9 @@ async function main(): Promise<void> {
   const result = await runOpportunityV2({ now });
   const schedulePath = resolveOpportunityV2SchedulerPath();
   fs.mkdirSync(path.dirname(schedulePath), { recursive: true });
-  atomicWriteJson(schedulePath, { schema_version: "chanceping-opportunity-v2.scheduler.v1", timezone: "Asia/Shanghai", interval_hours: 72, last_run_at: result.finished_at, next_run_at: opportunityV2NextRunAt(result.finished_at, now) });
-  console.log(JSON.stringify({ run_id: result.run_id, fetched_sources: result.fetched_sources, successful_sources: result.successful_sources, raw_items: result.raw_items, pool_items: result.pool_items, radar_items: result.radar_items, next_run_at: opportunityV2NextRunAt(result.finished_at, now) }, null, 2));
+  const nextRunAt = opportunityV2NextRunAt(result.started_at, now);
+  atomicWriteJson(schedulePath, { schema_version: "chanceping-opportunity-v2.scheduler.v1", timezone: "Asia/Shanghai", interval_hours: 72, last_run_at: result.finished_at, last_run_started_at: result.started_at, next_run_basis: "systemd_service_activation", next_run_at: nextRunAt });
+  console.log(JSON.stringify({ run_id: result.run_id, fetched_sources: result.fetched_sources, successful_sources: result.successful_sources, raw_items: result.raw_items, pool_items: result.pool_items, radar_items: result.radar_items, next_run_at: nextRunAt }, null, 2));
 }
 
 void main();

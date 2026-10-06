@@ -1,8 +1,8 @@
-import { buildOpportunityV2Display, readOpportunityV2Translations, resolveOpportunityV2TranslationPath, writeOpportunityV2Translations, type OpportunityV2Translation } from "./display";
+import { buildOpportunityV2Display, cleanOpportunityDisplayText, createTranslatedOpportunityV2Translation, readOpportunityV2Translations, resolveOpportunityV2TranslationPath, writeOpportunityV2Translations, type OpportunityV2Translation } from "./display";
 import { readOpportunityV2Pool, resolveOpportunityV2PoolPath } from "./opportunity-pool";
 import { readOpportunityV2Sources, resolveOpportunityV2SourcesPath } from "./source-pool";
 import { collectOpportunityV2TranslationTargets } from "./translation-targets";
-import { translateWithProviderChain } from "./translation-provider";
+import { translateWithProviderChain, type OpportunityTranslationProvider } from "./translation-provider";
 import { TranslationRequestBudget } from "./translation-budget";
 import { selectOpportunityV2TranslationQueue } from "./translation-queue";
 import { configuredTranslationProviders } from "./translation-provider";
@@ -35,6 +35,10 @@ export interface OpportunityV2TranslationRunSummary {
   translated_records: number;
   failed_records: number;
   failure_counts: Record<string, number>;
+  p0_title_repair_attempted: number;
+  p0_title_repair_succeeded: number;
+  p0_title_repair_failed: number;
+  quality_rejection_clusters: Record<string, number>;
   write_result: { written_count: number; skipped_stale_count: number; preserved_success_count: number };
   budget_after: { max_requests: number; actual_requests: number; reserved_requests: number };
   visible_with_chinese: number;
@@ -50,6 +54,22 @@ export interface OpportunityV2TranslationRunOptions {
   translationPath?: string;
   maxItems?: number;
   maxRequests?: number;
+  /** Narrow test seam; production remains pinned to the configured DeepSeek adapter. */
+  translationProvider?: OpportunityTranslationProvider;
+}
+
+function qualityFailureClusters(errors: string[]): string[] {
+  const clusters = new Set<string>();
+  for (const error of errors) {
+    if (/missing factual token/iu.test(error)) clusters.add("MISSING_FACT");
+    else if (/title is unchanged/iu.test(error)) clusters.add("TITLE_UNCHANGED");
+    else if (/title remains untranslated/iu.test(error)) clusters.add("TITLE_REMAINS_ENGLISH");
+    else if (/english residue/iu.test(error)) clusters.add("ENGLISH_RESIDUE");
+    else if (/currency|fee|deadline|post-selection/iu.test(error)) clusters.add("STRUCTURED_FACT_MISMATCH");
+    else if (/template summary/iu.test(error)) clusters.add("UNSUPPORTED_SUMMARY_TEMPLATE");
+    else clusters.add("OTHER_VALIDATION");
+  }
+  return [...clusters];
 }
 
 /** Reusable, bounded DeepSeek-only step shared by manual and protected cycle entrypoints. */
@@ -72,7 +92,9 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
     recoveryMode: process.env.CHANCEPING_TRANSLATION_RECOVERY === "targeted" ? "targeted" : "all",
     maxItems,
   });
-  const deepseek = configuredTranslationProviders(process.env).providers.find((provider) => provider.id === "deepseek");
+  const deepseek = options.translationProvider?.id === "deepseek"
+    ? options.translationProvider
+    : configuredTranslationProviders(process.env).providers.find((provider) => provider.id === "deepseek");
   const budget = new TranslationRequestBudget(maxRequests);
   const common = {
     provider: "deepseek" as const,
@@ -88,11 +110,16 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
     selected_unique_ids: queue.selected.map((entry) => entry.item.id),
     selected_surfaces: Object.fromEntries(queue.selected.map((entry) => [entry.item.id, entry.surfaces])),
   };
-  if (options.execute === false) return { ...common, status: "DRY_RUN_ONLY", actual_requests: 0, attempted_records: 0, translated_records: 0, failed_records: 0, failure_counts: {}, write_result: { written_count: 0, skipped_stale_count: 0, preserved_success_count: 0 }, budget_after: budget.summary(), visible_with_chinese: 0, unattempted_selected: queue.selected.length };
-  if (!deepseek) return { ...common, status: "ACCESS_BLOCKED", actual_requests: 0, attempted_records: 0, translated_records: 0, failed_records: 0, failure_counts: { CREDENTIAL_NOT_CONFIGURED: queue.selected.length }, write_result: { written_count: 0, skipped_stale_count: 0, preserved_success_count: 0 }, budget_after: budget.summary(), visible_with_chinese: 0, unattempted_selected: queue.selected.length };
+  const emptyQuality = { p0_title_repair_attempted: 0, p0_title_repair_succeeded: 0, p0_title_repair_failed: 0, quality_rejection_clusters: {} };
+  if (options.execute === false) return { ...common, ...emptyQuality, status: "DRY_RUN_ONLY", actual_requests: 0, attempted_records: 0, translated_records: 0, failed_records: 0, failure_counts: {}, write_result: { written_count: 0, skipped_stale_count: 0, preserved_success_count: 0 }, budget_after: budget.summary(), visible_with_chinese: 0, unattempted_selected: queue.selected.length };
+  if (!deepseek) return { ...common, ...emptyQuality, status: "ACCESS_BLOCKED", actual_requests: 0, attempted_records: 0, translated_records: 0, failed_records: 0, failure_counts: { CREDENTIAL_NOT_CONFIGURED: queue.selected.length }, write_result: { written_count: 0, skipped_stale_count: 0, preserved_success_count: 0 }, budget_after: budget.summary(), visible_with_chinese: 0, unattempted_selected: queue.selected.length };
 
   const results: OpportunityV2Translation[] = [];
   const failureCounts: Record<string, number> = {};
+  const qualityRejectionClusters: Record<string, number> = {};
+  let p0TitleRepairAttempted = 0;
+  let p0TitleRepairSucceeded = 0;
+  let p0TitleRepairFailed = 0;
   let cursor = 0;
   let inFlight = 0;
   let attemptedRecords = 0;
@@ -117,9 +144,29 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
         const safeTranslation = result.translation.status === "failed"
           ? { ...result.translation, error: "翻译未通过，已按失败状态冷却并等待后续重试" }
           : result.translation;
-        results.push(safeTranslation);
-        if (safeTranslation.status === "failed") {
-          const reason = safeTranslation.failure_code ?? "UNKNOWN";
+        if (safeTranslation.status === "failed" && safeTranslation.failure_code === "QUALITY_REJECTED") {
+          for (const cluster of qualityFailureClusters(safeTranslation.validation_errors ?? [])) qualityRejectionClusters[cluster] = (qualityRejectionClusters[cluster] ?? 0) + 1;
+          if (entry.priority === 0 && !entry.existing?.p0_title_repair_attempted) {
+            p0TitleRepairAttempted += 1;
+            try {
+              const repaired = await deepseek.translate({ title: cleanOpportunityDisplayText(entry.item.title), summary: "", targetLanguage: "zh-CN" }, { includeSummary: false, onRequestStart: () => ticket.requestStarted() });
+              const checkedRepair = createTranslatedOpportunityV2Translation(entry.item, { title_zh: repaired.title_zh, summary_zh: "" }, now);
+              if (checkedRepair.status === "translated") {
+                results.push({ ...checkedRepair, provider: "deepseek", attempt_count: (safeTranslation.attempt_count ?? 1) + 1, last_attempt_at: now.toISOString(), retryable: false, p0_title_repair_attempted: true });
+                p0TitleRepairSucceeded += 1;
+              } else {
+                for (const cluster of qualityFailureClusters(checkedRepair.validation_errors ?? [])) qualityRejectionClusters[cluster] = (qualityRejectionClusters[cluster] ?? 0) + 1;
+                results.push({ ...safeTranslation, retryable: false, p0_title_repair_attempted: true });
+                p0TitleRepairFailed += 1;
+              }
+            } catch {
+              results.push({ ...safeTranslation, retryable: false, p0_title_repair_attempted: true });
+              p0TitleRepairFailed += 1;
+            }
+          } else results.push(safeTranslation);
+        } else results.push(safeTranslation);
+        if (results.at(-1)?.status === "failed") {
+          const reason = results.at(-1)?.failure_code ?? "UNKNOWN";
           failureCounts[reason] = (failureCounts[reason] ?? 0) + 1;
         }
       } catch {
@@ -143,5 +190,5 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
   const budgetAfter = budget.summary();
   const translatedRecords = results.filter((entry) => entry.status === "translated").length;
   const failedRecords = results.filter((entry) => entry.status === "failed").length;
-  return { ...common, status: "COMPLETED", actual_requests: budgetAfter.actual_requests, attempted_records: attemptedRecords, translated_records: translatedRecords, failed_records: failedRecords, failure_counts: failureCounts, write_result: writes, budget_after: budgetAfter, visible_with_chinese: visibleWithChinese, unattempted_selected: Math.max(0, queue.selected.length - attemptedRecords) };
+  return { ...common, status: "COMPLETED", actual_requests: budgetAfter.actual_requests, attempted_records: attemptedRecords, translated_records: translatedRecords, failed_records: failedRecords, failure_counts: failureCounts, p0_title_repair_attempted: p0TitleRepairAttempted, p0_title_repair_succeeded: p0TitleRepairSucceeded, p0_title_repair_failed: p0TitleRepairFailed, quality_rejection_clusters: qualityRejectionClusters, write_result: writes, budget_after: budgetAfter, visible_with_chinese: visibleWithChinese, unattempted_selected: Math.max(0, queue.selected.length - attemptedRecords) };
 }

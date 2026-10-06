@@ -195,6 +195,8 @@ export interface WeeklyOpportunityAction {
   application_url: string | null;
   evidence_url: string;
   evidence_label: string;
+  evidence_grade: "A" | "B" | "C" | "UNAVAILABLE";
+  evidence_grade_text: string;
   evidence_state: "OFFICIAL_LINK_PRESENT" | "DISCOVERY_ONLY" | "UNAVAILABLE";
   evidence_state_text: string;
   evidence_excerpt: string;
@@ -252,6 +254,22 @@ function weeklyFreshness(lastFetchAt: string | null, now: Date): "FRESH" | "STAL
   if (!lastFetchAt) return "NEVER_SUCCEEDED";
   const seen = Date.parse(lastFetchAt);
   return Number.isFinite(seen) && seen <= now.getTime() && now.getTime() - seen <= 78 * 60 * 60 * 1000 ? "FRESH" : "STALE";
+}
+
+function weeklyDomainPriority(item: OpportunityV2, labels: string[]): number {
+  const value = `${item.title} ${item.summary} ${item.tags.join(" ")}`;
+  const strongDomain = (item.directions ?? []).some((direction) => ["ich_innovation", "cultural_creative", "craft_arts", "museum_tourism", "integrated_cultural_design"].includes(direction))
+    || (item.work_formats ?? []).some((format) => ["material_craft", "product_design", "mixed_media"].includes(format))
+    || /非遗|手工艺|工艺美术|传统工艺|文创|文化采购|cultural heritage|intangible cultural|traditional craft|craft arts/iu.test(value);
+  if (labels.includes("采购 / 订单")) return 0;
+  if (!labels.includes("赛事 / 征集")) return strongDomain ? 0 : 1;
+  if (strongDomain) return 2;
+  if (/(?:logo|logotype|visual identity|brand identity|吉祥物|品牌形象|标识设计)/iu.test(value)) return 5;
+  return 4;
+}
+
+function isWeeklyCompetition(action: WeeklyOpportunityAction): boolean {
+  return action.type_labels.includes("赛事 / 征集");
 }
 
 function isWeeklyHardBlockedNotice(item: OpportunityV2): boolean {
@@ -321,12 +339,14 @@ export function buildWeeklyOpportunityActions(options: ProcurementWorkbenchRoute
     const deadline = publicOpportunityV2Deadline(item);
     const display = buildOpportunityV2Display(item, translations);
     const officialUrl = safePublicHttpUrl(item.official_url);
-    const sourceUrl = safePublicHttpUrl(item.detail_url || item.source_url);
-    const evidenceUrl = officialUrl ?? sourceUrl ?? "";
-    const evidenceState: WeeklyOpportunityAction["evidence_state"] = officialUrl ? "OFFICIAL_LINK_PRESENT" : sourceUrl ? "DISCOVERY_ONLY" : "UNAVAILABLE";
+    const detailUrl = safePublicHttpUrl(item.detail_url);
+    const sourceUrl = safePublicHttpUrl(item.source_url);
+    const evidenceUrl = officialUrl ?? detailUrl ?? sourceUrl ?? "";
+    const evidenceGrade: WeeklyOpportunityAction["evidence_grade"] = officialUrl ? "A" : detailUrl ? "B" : sourceUrl ? "C" : "UNAVAILABLE";
+    const evidenceGradeText = evidenceGrade === "A" ? "主办方 / 官方公告" : evidenceGrade === "B" ? "机会详情页" : evidenceGrade === "C" ? "来源目录页" : "来源链接缺失";
+    const evidenceState: WeeklyOpportunityAction["evidence_state"] = officialUrl ? "OFFICIAL_LINK_PRESENT" : detailUrl || sourceUrl ? "DISCOVERY_ONLY" : "UNAVAILABLE";
     const sourceLastFetchAt = sources.find((source) => source.id === item.source_id)?.last_fetch_at ?? null;
-    const sourceNames = item.discovered_by_sources
-      .filter((id) => id !== "artconnect-opportunities")
+    const sourceNames = publicOpportunityV2DiscoverySources(item.discovered_by_sources)
       .map((id) => sources.find((source) => source.id === id)?.name)
       .filter((name): name is string => Boolean(name));
     const riskFlags: string[] = [];
@@ -351,7 +371,9 @@ export function buildWeeklyOpportunityActions(options: ProcurementWorkbenchRoute
       deadline_text: item.is_long_term && !deadline.unsafe ? "长期征集（仍需确认本期开放）" : deadline.deadline_text ?? "截止时间待确认",
       application_url: safePublicHttpUrl(item.application_url),
       evidence_url: evidenceUrl,
-      evidence_label: officialUrl ? "来源记录的主办方/官方链接" : "来源发现页（官方条件待核）",
+      evidence_label: evidenceGrade === "A" ? "主办方 / 官方公告" : evidenceGrade === "B" ? "机会详情页（官方条件待核）" : evidenceGrade === "C" ? "来源目录页（官方条件待核）" : "来源链接不可用",
+      evidence_grade: evidenceGrade,
+      evidence_grade_text: evidenceGradeText,
       evidence_state: evidenceState,
       evidence_state_text: evidenceState === "OFFICIAL_LINK_PRESENT" ? "已记录主办方/官方链接（仍应核验当前条款）" : evidenceState === "DISCOVERY_ONLY" ? "仅有发现来源链接；官方条件待核" : "没有可用来源链接",
       evidence_excerpt: display.summary || cleanOpportunityDisplayText(item.title).slice(0, 240),
@@ -368,8 +390,23 @@ export function buildWeeklyOpportunityActions(options: ProcurementWorkbenchRoute
     } satisfies WeeklyOpportunityAction;
   });
   const laneOrder = { current: 0, early: 1, review: 2 };
-  result.sort((a, b) => laneOrder[a.lane] - laneOrder[b.lane] || (a.deadline ?? "9999").localeCompare(b.deadline ?? "9999") || a.opportunity_id.localeCompare(b.opportunity_id));
-  return result.slice(0, Math.max(0, Math.min(10, Math.floor(limit))));
+  result.sort((a, b) => laneOrder[a.lane] - laneOrder[b.lane]
+    || weeklyDomainPriority(candidates.get(a.opportunity_id)!.item, a.type_labels) - weeklyDomainPriority(candidates.get(b.opportunity_id)!.item, b.type_labels)
+    || ({ A: 0, B: 1, C: 2, UNAVAILABLE: 3 }[a.evidence_grade] - { A: 0, B: 1, C: 2, UNAVAILABLE: 3 }[b.evidence_grade])
+    || (a.deadline ?? "9999").localeCompare(b.deadline ?? "9999")
+    || a.opportunity_id.localeCompare(b.opportunity_id));
+  const maxItems = Math.max(0, Math.min(10, Math.floor(limit)));
+  const hasHighQualityNonContest = result.some((action) => !isWeeklyCompetition(action) && action.lane === "current" && (action.evidence_grade === "A" || action.evidence_grade === "B"));
+  if (!hasHighQualityNonContest) return result.slice(0, maxItems);
+  const selected: WeeklyOpportunityAction[] = [];
+  let competitions = 0;
+  for (const action of result) {
+    if (isWeeklyCompetition(action) && competitions >= 6) continue;
+    if (isWeeklyCompetition(action)) competitions += 1;
+    selected.push(action);
+    if (selected.length >= maxItems) break;
+  }
+  return selected;
 }
 
 export function weeklyOpportunityActionsContent(options: ProcurementWorkbenchRouteOptions = {}): string {
@@ -390,7 +427,7 @@ export function weeklyOpportunityActionsContent(options: ProcurementWorkbenchRou
     const freshness = action.freshness === "FRESH" ? "78小时内" : action.freshness === "STALE" ? "超过78小时，待刷新" : "暂无成功抓取记录";
     const sourceFetchedAt = action.source_last_fetch_at ? dateText(action.source_last_fetch_at) : "无成功抓取记录";
     const moneyFact = action.money_fact ? `<section><h3>${escapeHtml(action.money_fact.kind === "prize" ? "奖项金额" : action.money_fact.kind === "grant" ? "资助金额" : "采购预算")}</h3><p>${escapeHtml(action.money_fact.label)}；证据：${escapeHtml(action.money_fact.evidence_excerpt)}</p></section>` : "";
-    return `<article class="weekly-card"><div class="weekly-heading"><span class="ich-category">${escapeHtml(action.lane === "current" ? "当前可行动" : action.lane === "early" ? "提前关注" : "待核验")} · ${escapeHtml(action.type_labels.join("、"))}</span><span class="weekly-title-status">${escapeHtml(action.title_translation_status === "translated" ? "中文标题" : action.title_translation_status === "failed" ? "翻译失败 · 暂显原文" : action.title_translation_status === "pending" ? "中文待补 · 暂显原文" : "中文标题")}</span></div><h2><a href="${detail}">${escapeHtml(action.title)}</a></h2>${original}${summary}<p><strong>为什么值得看：</strong>${escapeHtml(action.match_reason)}</p><div class="ich-card-meta"><span>来源：${escapeHtml(action.source_name)}${sources}</span><span>截止：${escapeHtml(action.deadline_text)}</span><span>来源最近抓取：${escapeHtml(sourceFetchedAt)} · ${freshness}</span></div><section><h3>适用资格</h3><p>${escapeHtml(action.eligibility_summary)}</p></section>${moneyFact}<section><h3>来源证据 · ${escapeHtml(action.evidence_state_text)}</h3><p>${escapeHtml(action.evidence_excerpt)}</p><p>${evidence ? `<a rel="nofollow noopener" href="${escapeHtml(evidence)}">查看来源原文</a>` : "来源链接不可用"}${application ? ` · <a rel="nofollow noopener" href="${escapeHtml(application)}">申请 / 响应入口</a>` : ""}</p></section><section class="weekly-risks"><h3>风险与待核</h3>${action.risk_flags.length ? `<ul>${action.risk_flags.map((risk) => `<li>${escapeHtml(risk)}</li>`).join("")}</ul>` : "<p>当前结构化字段未发现额外提示；申请前仍应复核原文。</p>"}</section><p><strong>先核对：</strong>${escapeHtml(action.first_check)}</p><p class="ich-next"><strong>下一步：</strong>${escapeHtml(action.next_action)}</p></article>`;
+    return `<article class="weekly-card"><div class="weekly-heading"><span class="ich-category">${escapeHtml(action.lane === "current" ? "当前可行动" : action.lane === "early" ? "提前关注" : "待核验")} · ${escapeHtml(action.type_labels.join("、"))}</span><span class="weekly-title-status">${escapeHtml(action.title_translation_status === "translated" ? "中文标题" : action.title_translation_status === "failed" ? "翻译失败 · 暂显原文" : action.title_translation_status === "pending" ? "中文待补 · 暂显原文" : "中文标题")}</span></div><h2><a href="${detail}">${escapeHtml(action.title)}</a></h2>${original}${summary}<p><strong>为什么值得看：</strong>${escapeHtml(action.match_reason)}</p><div class="ich-card-meta"><span>来源：${escapeHtml(action.source_name)}${sources}</span><span>截止：${escapeHtml(action.deadline_text)}</span><span>来源最近抓取：${escapeHtml(sourceFetchedAt)} · ${freshness}</span></div><section><h3>适用资格</h3><p>${escapeHtml(action.eligibility_summary)}</p></section>${moneyFact}<section><h3>来源证据 · ${escapeHtml(action.evidence_grade)}级 · ${escapeHtml(action.evidence_grade_text)} · ${escapeHtml(action.evidence_state_text)}</h3><p>${escapeHtml(action.evidence_excerpt)}</p><p>${evidence ? `<a rel="nofollow noopener" href="${escapeHtml(evidence)}">查看来源原文</a>` : "来源链接不可用"}${application ? ` · <a rel="nofollow noopener" href="${escapeHtml(application)}">申请 / 响应入口</a>` : ""}</p></section><section class="weekly-risks"><h3>风险与待核</h3>${action.risk_flags.length ? `<ul>${action.risk_flags.map((risk) => `<li>${escapeHtml(risk)}</li>`).join("")}</ul>` : "<p>当前结构化字段未发现额外提示；申请前仍应复核原文。</p>"}</section><p><strong>先核对：</strong>${escapeHtml(action.first_check)}</p><p class="ich-next"><strong>下一步：</strong>${escapeHtml(action.next_action)}</p></article>`;
   }).join("");
   return `<main class="ich-weekly"><section class="ich-hero"><div class="ich-hero-copy"><p class="ich-kicker">盯非遗 · 每周行动清单</p><h1>本周值得看</h1><p>按当前开放与可行动线索整理，最多10条；每条都保留来源证据、待核风险与下一步。没有足够证据时明确标注，不补造资格、金额或状态。</p><div class="ich-meta"><span>本周行动：${actions.length} 条</span><span>未满10条时不补位</span></div></div></section>${cards || `<section class="ich-notice"><h2>本周暂无可行动线索</h2><p>不会以过期赛事、结果公示或来源待适配内容补足数量。</p></section>`}</main>`;
 }

@@ -71,7 +71,11 @@ export interface IchProductionCycleAudit {
     failed_titles: number;
     pending_titles: number;
     p0: { foreign_titles: number; chinese_titles: number; coverage_percent: number; meets_98_percent: boolean };
-    p1: { foreign_titles: number; chinese_titles: number; coverage_percent: number; meets_95_percent: boolean };
+    p1: { foreign_titles: number; chinese_titles: number; coverage_percent: number; meets_80_percent: boolean; meets_95_percent: boolean };
+    quality_rejection_clusters: Record<string, number>;
+    p0_title_repair_attempted: number;
+    p0_title_repair_succeeded: number;
+    p0_title_repair_failed: number;
     unresolved: Record<IchTranslationDisposition, IchTranslationDispositionBucket>;
     all_untranslated_p0_p1_dispositioned: boolean;
   };
@@ -89,6 +93,7 @@ export interface IchProductionCycleAudit {
     not_reviewed_count: number;
     compliance_hold_count: number;
     weekly_contributing_source_ids: string[];
+    weekly_contributing_sources: Array<{ source_id: string; source_name: string; permission: string; permission_basis: string; permission_evidence_url: string | null; weekly_actions: number }>;
     top_public_contributors: Array<{ source_id: string; source_name: string; permission: string; permission_basis: string; permission_evidence_url: string | null; direct_pool_records: number; public_records: number }>;
   };
   source_health: {
@@ -104,16 +109,16 @@ export interface IchProductionCycleAudit {
 export interface IchProductionCycleManifest {
   schema_version: "chanceping.ich.v15.production-cycle.v1";
   run_id: string;
-  status: "COMPLETED" | "DEGRADED" | "FAILED";
+  status: "COMPLETED" | "COMPLETED_WITH_BACKLOG" | "DEGRADED" | "FAILED";
   started_at: string;
   finished_at: string;
   production_commit: string | null;
   fetch: IchProductionCycleFetchSummary | null;
-  translation: Pick<OpportunityV2TranslationRunSummary, "status" | "provider" | "provider_configured" | "visible_target_count" | "foreign_count" | "cache_reused" | "eligible_pending" | "attempted_records" | "translated_records" | "failed_records" | "failure_counts" | "unattempted_selected" | "actual_requests"> | null;
+  translation: Pick<OpportunityV2TranslationRunSummary, "status" | "provider" | "provider_configured" | "visible_target_count" | "foreign_count" | "cache_reused" | "eligible_pending" | "attempted_records" | "translated_records" | "failed_records" | "failure_counts" | "unattempted_selected" | "actual_requests" | "p0_title_repair_attempted" | "p0_title_repair_succeeded" | "p0_title_repair_failed" | "quality_rejection_clusters"> | null;
   audit: IchProductionCycleAudit | null;
   next_run_at: string | null;
   freshness: "FRESH" | "STALE" | "NEVER_SUCCEEDED";
-  failure_code: "FETCH_FAILED" | "TRANSLATION_DEGRADED" | "QUALITY_AUDIT_FAILED" | null;
+  failure_code: "FETCH_FAILED" | "FETCH_BACKLOG" | "TRANSLATION_DEGRADED" | "TRANSLATION_BACKLOG" | "QUALITY_AUDIT_FAILED" | null;
 }
 
 export interface IchProductionCycleOptions {
@@ -121,7 +126,7 @@ export interface IchProductionCycleOptions {
   paths?: Partial<IchProductionCyclePaths>;
   fetch?: (now: Date, paths: IchProductionCyclePaths) => Promise<IchProductionCycleFetchSummary>;
   translate?: (now: Date, paths: IchProductionCyclePaths) => Promise<OpportunityV2TranslationRunSummary>;
-  audit?: (now: Date, paths: IchProductionCyclePaths) => Promise<IchProductionCycleAudit> | IchProductionCycleAudit;
+  audit?: (now: Date, paths: IchProductionCyclePaths, translation?: OpportunityV2TranslationRunSummary | null) => Promise<IchProductionCycleAudit> | IchProductionCycleAudit;
   releaseManifestPath?: string;
   snapshotRetention?: number;
 }
@@ -252,19 +257,25 @@ async function defaultFetch(now: Date, paths: IchProductionCyclePaths): Promise<
   };
 }
 
-function writeScheduler(paths: IchProductionCyclePaths, runId: string, finishedAt: string, status: IchProductionCycleManifest["status"]): string {
+function writeScheduler(paths: IchProductionCyclePaths, runId: string, startedAt: string, finishedAt: string, status: IchProductionCycleManifest["status"]): string {
   let previous: Record<string, unknown> = {};
   try { previous = JSON.parse(fs.readFileSync(paths.scheduler, "utf8")) as Record<string, unknown>; } catch { /* first run */ }
-  const nextRunAt = opportunityV2NextRunAt(finishedAt, new Date(finishedAt));
-  const lastSuccess = status === "COMPLETED" ? finishedAt : (typeof previous.last_successful_cycle_at === "string" ? previous.last_successful_cycle_at : null);
+  // The installed timer uses OnUnitActiveSec=72h: its interval starts when
+  // systemd activates the service. Keep runtime next_run_at on that same
+  // start anchor instead of drifting later by the fetch/translation duration.
+  const nextRunAt = opportunityV2NextRunAt(startedAt, new Date(startedAt));
+  const successfulStatuses = ["COMPLETED", "COMPLETED_WITH_BACKLOG"];
+  const lastSuccess = successfulStatuses.includes(status) ? finishedAt : (typeof previous.last_successful_cycle_at === "string" ? previous.last_successful_cycle_at : null);
   atomicWriteJson(paths.scheduler, {
     ...previous,
     schema_version: "chanceping-opportunity-v2.scheduler.v1",
     timezone: "Asia/Shanghai",
     interval_hours: OPPORTUNITY_V2_INTERVAL_HOURS,
     last_run_at: finishedAt,
+    last_run_started_at: startedAt,
     last_cycle_run_id: runId,
     last_cycle_status: status,
+    next_run_basis: "systemd_service_activation",
     last_successful_cycle_at: lastSuccess,
     next_run_at: nextRunAt,
   });
@@ -291,12 +302,16 @@ function safeTranslationSummary(summary: OpportunityV2TranslationRunSummary): Ic
     translated_records: summary.translated_records,
     failed_records: summary.failed_records,
     failure_counts: summary.failure_counts,
+    p0_title_repair_attempted: summary.p0_title_repair_attempted,
+    p0_title_repair_succeeded: summary.p0_title_repair_succeeded,
+    p0_title_repair_failed: summary.p0_title_repair_failed,
+    quality_rejection_clusters: summary.quality_rejection_clusters,
     unattempted_selected: summary.unattempted_selected,
     actual_requests: summary.actual_requests,
   };
 }
 
-function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionCycleAudit {
+function auditRuntime(now: Date, paths: IchProductionCyclePaths, translationRun: OpportunityV2TranslationRunSummary | null = null): IchProductionCycleAudit {
   const poolFile = readOpportunityV2Pool(paths.pool);
   const pool = poolFile.opportunities;
   const sources = readOpportunityV2Sources(paths.sources);
@@ -324,7 +339,8 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
     return { foreign_titles: foreign, chinese_titles: members.length - foreign + translated, coverage_percent: percent, meets: percent >= threshold };
   };
   const p0 = titleCoverage(p0Targets, 98);
-  const p1 = titleCoverage(p1Targets, 95);
+  const p1RoundTarget = titleCoverage(p1Targets, 80);
+  const p1LongTermTarget = titleCoverage(p1Targets, 95);
   const dispositions: IchTranslationDisposition[] = ["PROVIDER_UNAVAILABLE", "QUALITY_REJECTED", "SOURCE_TEXT_BROKEN", "INSUFFICIENT_EVIDENCE", "COOLING", "NON_RETRYABLE", "BUDGET_DEFERRED"];
   const unresolved = Object.fromEntries(dispositions.map((code) => [code, { count: 0, opportunity_ids: [] as string[], by_source: {} as Record<string, number> }])) as unknown as Record<IchTranslationDisposition, IchTranslationDispositionBucket>;
   const p0p1Foreign = [...p0Targets, ...p1Targets].filter((target) => isForeignLanguageTitle(target.item));
@@ -333,6 +349,7 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
     if (entry && isReusableOpportunityV2Translation(target.item, entry)) continue;
     let code: IchTranslationDisposition;
     if (target.item.encoding_error === true || target.item.encoding_error_fields?.includes("title") || hasEncodingCorruption(target.item.title)) code = "SOURCE_TEXT_BROKEN";
+    else if (entry?.p0_title_repair_attempted) code = "NON_RETRYABLE";
     else if (entry?.status === "failed" && isOpportunityV2TranslationRetryCooling(entry, now)) code = "COOLING";
     else if (entry?.failure_code === "QUALITY_REJECTED" || entry?.failure_code === "INVALID_JSON") code = "QUALITY_REJECTED";
     else if (entry?.failure_code === "PROVIDER_UNAVAILABLE" || entry?.failure_code === "TIMEOUT" || entry?.failure_code === "CREDENTIAL_NOT_CONFIGURED" || (!entry && !deepseekConfigured)) code = "PROVIDER_UNAVAILABLE";
@@ -385,6 +402,8 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
     };
   });
   const weeklyContributingIds = [...new Set(weekly.flatMap((action) => action.discovered_by_sources).filter(isOpportunityV2SourceCollectionAllowed))].sort();
+  const weeklyActionCounts = new Map<string, number>();
+  for (const action of weekly) for (const sourceId of new Set(action.discovered_by_sources)) weeklyActionCounts.set(sourceId, (weeklyActionCounts.get(sourceId) ?? 0) + 1);
   const notReviewedCount = sources.filter((source) => getOpportunityV2SourcePermission(source.id) === "NOT_REVIEWED").length;
   const complianceHoldCount = sources.filter((source) => getOpportunityV2SourcePermission(source.id) === "COMPLIANCE_HOLD").length;
   const reviewedOkCount = sources.filter((source) => getOpportunityV2SourcePermission(source.id) === "REVIEWED_OK").length;
@@ -415,7 +434,21 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
     failed: sourceHealthRows.filter((row) => row.registry_status === "FAILED" || row.latest_attempt_ok === false).length,
     sources: sourceHealthRows,
   };
-  const status = publicEncodingErrors === 0 && unsafePublicExactDeadlines === 0 && weekly.length <= 10 && dispositioned ? "PASS" : "FAIL";
+  const rejectedTranslations = translations.filter((entry) => entry.failure_code === "QUALITY_REJECTED");
+  const qualityRejectionClusters = rejectedTranslations.reduce<Record<string, number>>((clusters, entry) => {
+    const errors = entry.validation_errors ?? [];
+    for (const error of errors) {
+      const cluster = /missing factual token/iu.test(error) ? "MISSING_FACT"
+        : /title is unchanged/iu.test(error) ? "TITLE_UNCHANGED"
+          : /title remains untranslated/iu.test(error) ? "TITLE_REMAINS_ENGLISH"
+            : /english residue/iu.test(error) ? "ENGLISH_RESIDUE"
+              : /currency|fee|deadline|post-selection/iu.test(error) ? "STRUCTURED_FACT_MISMATCH"
+                : /template summary/iu.test(error) ? "UNSUPPORTED_SUMMARY_TEMPLATE" : "OTHER_VALIDATION";
+      clusters[cluster] = (clusters[cluster] ?? 0) + 1;
+    }
+    return clusters;
+  }, {});
+  const status = publicEncodingErrors === 0 && unsafePublicExactDeadlines === 0 && weekly.length <= 10 && dispositioned && p0.meets && p1RoundTarget.meets ? "PASS" : "FAIL";
   return {
     status,
     source_count: sources.length,
@@ -430,7 +463,11 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
       failed_titles: translations.filter((item) => item.status === "failed" && visibleById.has(item.opportunity_id)).length,
       pending_titles: translations.filter((item) => item.status === "pending" && visibleById.has(item.opportunity_id)).length,
       p0: { foreign_titles: p0.foreign_titles, chinese_titles: p0.chinese_titles, coverage_percent: p0.coverage_percent, meets_98_percent: p0.meets },
-      p1: { foreign_titles: p1.foreign_titles, chinese_titles: p1.chinese_titles, coverage_percent: p1.coverage_percent, meets_95_percent: p1.meets },
+      p1: { foreign_titles: p1LongTermTarget.foreign_titles, chinese_titles: p1LongTermTarget.chinese_titles, coverage_percent: p1LongTermTarget.coverage_percent, meets_80_percent: p1RoundTarget.meets, meets_95_percent: p1LongTermTarget.meets },
+      quality_rejection_clusters: qualityRejectionClusters,
+      p0_title_repair_attempted: translationRun?.p0_title_repair_attempted ?? 0,
+      p0_title_repair_succeeded: translationRun?.p0_title_repair_succeeded ?? 0,
+      p0_title_repair_failed: translationRun?.p0_title_repair_failed ?? 0,
       unresolved,
       all_untranslated_p0_p1_dispositioned: dispositioned,
     },
@@ -448,6 +485,14 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
       not_reviewed_count: notReviewedCount,
       compliance_hold_count: complianceHoldCount,
       weekly_contributing_source_ids: weeklyContributingIds,
+      weekly_contributing_sources: sources.filter((source) => weeklyActionCounts.has(source.id)).map((source) => ({
+        source_id: source.id,
+        source_name: source.name,
+        permission: getOpportunityV2SourcePermission(source.id),
+        permission_basis: getOpportunityV2SourcePermissionEvidence(source.id).basis,
+        permission_evidence_url: getOpportunityV2SourcePermissionEvidence(source.id).url,
+        weekly_actions: weeklyActionCounts.get(source.id) ?? 0,
+      })).sort((a, b) => b.weekly_actions - a.weekly_actions || a.source_id.localeCompare(b.source_id)),
       top_public_contributors: topPublicContributors,
     },
     source_health: sourceHealthSummary,
@@ -494,35 +539,45 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
     } catch {
       try { await restoreSnapshot(snapshot.entries); } catch { failureCode = "FETCH_FAILED"; }
       failureCode ??= "FETCH_FAILED";
-      const scheduler: Record<string, unknown> = (() => { try { return JSON.parse(fs.readFileSync(paths.scheduler, "utf8")) as Record<string, unknown>; } catch { return {}; } })();
       const finishedAt = stageTime();
+      try { nextRunAt = writeScheduler(paths, runId, startedAt, finishedAt.toISOString(), "FAILED"); }
+      catch { failureCode = "FETCH_FAILED"; }
+      const scheduler: Record<string, unknown> = (() => { try { return JSON.parse(fs.readFileSync(paths.scheduler, "utf8")) as Record<string, unknown>; } catch { return {}; } })();
       freshnessState = productionCycleFreshness(typeof scheduler.last_successful_cycle_at === "string" ? scheduler.last_successful_cycle_at : null, finishedAt);
       status = "FAILED";
-      const manifest: IchProductionCycleManifest = { schema_version: "chanceping.ich.v15.production-cycle.v1", run_id: runId, status, started_at: startedAt, finished_at: finishedAt.toISOString(), production_commit: readProductionCommit(options.releaseManifestPath), fetch: null, translation: null, audit: null, next_run_at: null, freshness: freshnessState, failure_code: failureCode };
+      const manifest: IchProductionCycleManifest = { schema_version: "chanceping.ich.v15.production-cycle.v1", run_id: runId, status, started_at: startedAt, finished_at: finishedAt.toISOString(), production_commit: readProductionCommit(options.releaseManifestPath), fetch: null, translation: null, audit: null, next_run_at: nextRunAt, freshness: freshnessState, failure_code: failureCode };
       await persistManifest(paths, manifest);
       return manifest;
     }
 
     const finishedFetchAt = fetchResult.finished_at;
-    nextRunAt = writeScheduler(paths, runId, finishedFetchAt, "DEGRADED");
+    nextRunAt = writeScheduler(paths, runId, startedAt, finishedFetchAt, "DEGRADED");
     try {
       translationResult = await (options.translate ?? ((time, runtime) => runOpportunityV2DisplayTranslation({ now: time, execute: true, poolPath: runtime.pool, sourcesPath: runtime.sources, translationPath: runtime.translations })))(stageTime(), paths);
     } catch {
       failureCode = "TRANSLATION_DEGRADED";
     }
-    try { auditResult = await (options.audit ?? auditRuntime)(stageTime(), paths); }
+    try { auditResult = options.audit ? await options.audit(stageTime(), paths, translationResult) : auditRuntime(stageTime(), paths, translationResult); }
     catch { failureCode = "QUALITY_AUDIT_FAILED"; }
 
     const fetchComplete = fetchResult.successful_sources === fetchResult.fetched_sources;
-    const translationComplete = translationResult?.status === "COMPLETED" && translationResult.failed_records === 0 && translationResult.unattempted_selected === 0;
-    status = fetchComplete && translationComplete && auditResult?.status === "PASS" ? "COMPLETED" : "DEGRADED";
-    if (!failureCode && !translationComplete) failureCode = "TRANSLATION_DEGRADED";
-    if (!failureCode && auditResult?.status !== "PASS") failureCode = "QUALITY_AUDIT_FAILED";
-    nextRunAt = writeScheduler(paths, runId, fetchResult.finished_at, status);
+    const translationComplete = (translationResult?.status === "COMPLETED" || (translationResult?.status === "ACCESS_BLOCKED" && translationResult.selected_unique_ids.length === 0))
+      && translationResult.failed_records === 0 && translationResult.unattempted_selected === 0;
+    const meetsPriorityCoverage = auditResult?.translation.p0.meets_98_percent === true && auditResult.translation.p1.meets_80_percent === true;
+    if (!auditResult) status = "FAILED";
+    else if (auditResult.status !== "PASS" || !meetsPriorityCoverage || !translationResult) status = "DEGRADED";
+    else if (fetchComplete && translationComplete) status = "COMPLETED";
+    else status = "COMPLETED_WITH_BACKLOG";
+    if (!failureCode && status === "FAILED") failureCode = "QUALITY_AUDIT_FAILED";
+    if (!failureCode && status === "DEGRADED" && (auditResult?.status !== "PASS" || !meetsPriorityCoverage)) failureCode = "QUALITY_AUDIT_FAILED";
+    if (!failureCode && status === "DEGRADED") failureCode = "TRANSLATION_DEGRADED";
+    if (!failureCode && status === "COMPLETED_WITH_BACKLOG" && !fetchComplete) failureCode = "FETCH_BACKLOG";
+    if (!failureCode && status === "COMPLETED_WITH_BACKLOG") failureCode = "TRANSLATION_BACKLOG";
+    nextRunAt = writeScheduler(paths, runId, startedAt, fetchResult.finished_at, status);
     const priorScheduler: Record<string, unknown> = (() => { try { return JSON.parse(fs.readFileSync(paths.scheduler, "utf8")) as Record<string, unknown>; } catch { return {}; } })();
     const finishedAt = stageTime();
     freshnessState = productionCycleFreshness(typeof priorScheduler.last_successful_cycle_at === "string" ? priorScheduler.last_successful_cycle_at : null, finishedAt);
-    if (status === "COMPLETED") freshnessState = "FRESH";
+    if (status === "COMPLETED" || status === "COMPLETED_WITH_BACKLOG") freshnessState = "FRESH";
     const manifest: IchProductionCycleManifest = {
       schema_version: "chanceping.ich.v15.production-cycle.v1",
       run_id: runId,

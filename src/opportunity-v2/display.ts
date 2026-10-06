@@ -35,6 +35,7 @@ export interface OpportunityV2Translation {
   provider?: string;
   attempt_count?: number;
   retryable?: boolean;
+  p0_title_repair_attempted?: boolean;
   next_retry_at?: string | null;
   last_attempt_at?: string;
   error?: string;
