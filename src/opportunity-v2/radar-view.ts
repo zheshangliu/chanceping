@@ -1,10 +1,10 @@
 import { deduplicateOpportunityV2, opportunityStatus } from "./opportunity-pool";
 import { readOpportunityV2Translations } from "./display";
-import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import { isLikelySourceListingNoise } from "../ich/aggregation/adapters/generic-listing";
 import { hasProcurementDomainTag } from "./procurement";
 import { isPublicProcurementText } from "./procurement-sources";
 import { hasPublicOpportunityV2DiscoverySource, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed } from "./source-governance";
+import { isOpportunityV2PublicTitleSafe } from "./public-text";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
 export type OpportunityV2StatusFilter = "browse" | "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history";
@@ -85,7 +85,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => enabled.has(item.source_id))
     .filter(isOpportunityV2PublicCopyAllowed)
     .filter((item) => !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
-    .filter((item) => !hasEncodingCorruption(item.title))
+    .filter(isOpportunityV2PublicTitleSafe)
     // A legacy row classified as procurement without structured procurement
     // metadata is not safe to publish: it could be a supplier page, an award,
     // or an unrelated notice. Keep it in the Pool for later reconciliation,

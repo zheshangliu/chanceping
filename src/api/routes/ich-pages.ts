@@ -11,6 +11,8 @@ import { defaultIchStore, parseIchQuery, type IchReadRouteOptions } from "./publ
 import { buildOpportunityV2Display, cleanOpportunityDisplayText, filterOpportunityV2Radar, formatOpportunityV2Date, isOpportunityV2PublicCopyAllowed, isOpportunityV2PublicSummaryAllowed, isRealCompetitionMemoItem, opportunityV2LiveStatus, publicOpportunityV2Deadline, publicOpportunityV2DiscoverySources, readOpportunityV2Pool, readOpportunityV2Sources, readOpportunityV2Translations, sortOpportunityV2Memo, type OpportunityV2, type OpportunityV2Translation } from "../../opportunity-v2";
 import { assessOpportunityCoverage } from "../../opportunity-v2/opportunity-coverage";
 import { weeklyOpportunityActionsContent } from "../../opportunity-v2/procurement-workbench";
+import { isOpportunityV2PublicSummarySafe, isOpportunityV2PublicTitleSafe } from "../../opportunity-v2/public-text";
+import { hasEncodingCorruption } from "../../ich/aggregation/adapters/common";
 
 const ICH_ORIGIN = "https://ich.chanceping.com";
 
@@ -574,8 +576,9 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
   app.get("/opportunities/:slug", (c) => {
     if (options.opportunityV2) {
       const item = readOpportunityV2Pool(options.opportunityV2PoolPath).opportunities.find((candidate) => candidate.id === c.req.param("slug"));
-      if (!item || !isOpportunityV2PublicCopyAllowed(item)) return c.html(shell("机会未找到｜盯非遗", "该机会不存在或已不在当前机会池。", c.req.path, "<main><h1>机会未找到</h1><p>该机会不存在或已不在当前机会池。</p></main>", { noindex: true }), 404);
+      if (!item || !isOpportunityV2PublicCopyAllowed(item) || !isOpportunityV2PublicTitleSafe(item)) return c.html(shell("机会未找到｜盯非遗", "该机会不存在或已不在当前机会池。", c.req.path, "<main><h1>机会未找到</h1><p>该机会不存在或已不在当前机会池。</p></main>", { noindex: true }), 404);
       const display = buildOpportunityV2Display(item, readOpportunityV2Translations());
+      if (hasEncodingCorruption(display.title)) return c.html(shell("机会未找到｜盯非遗", "该机会不存在或已不在当前机会池。", c.req.path, "<main><h1>机会未找到</h1><p>该机会不存在或已不在当前机会池。</p></main>", { noindex: true }), 404);
       const sources = readOpportunityV2Sources(options.opportunityV2SourcesPath).filter((source) => item.discovered_by_sources.includes(source.id) && source.id !== "artconnect-opportunities");
       const categoryLabels: Record<string, string> = { competition: "赛事 / 征集", exhibition_market: "市集 / 展销", procurement_project: "采购 / 订单", channel_collaboration: "渠道 / 合作", policy_funding: "资助 / 扶持", international: "研修 / 交流" };
       const directions: Record<string, string> = { ich_innovation: "非遗创新", cultural_creative: "文创设计", craft_arts: "工艺美术", museum_tourism: "文博文旅", integrated_cultural_design: "综合文化设计", aigc_digital: "AIGC / 数字创作" };
@@ -596,7 +599,7 @@ export function ichPagesRoutes(options: IchReadRouteOptions = {}): Hono {
       const factsHeading = item.category === "procurement_project" ? "采购信息" : "赛事信息";
       const translationLabel = display.translation_status === "pending" ? `<span class="ich-translation-status">当前显示来源原文</span>` : display.translation_status === "failed" ? `<span class="ich-translation-status">中文翻译暂不可用，当前显示来源原文</span>` : "";
       const deadlineWarning = deadlineInfo.conflict ? `<p class="ich-data-warning">来源页面中的截止日期与结构化日期不一致，当前不显示不安全的精确日期，请打开来源原文核对。</p>` : "";
-      const originalSourceSummary = isOpportunityV2PublicSummaryAllowed(item.source_id) && item.summary.trim() ? `<details class="ich-original"><summary>查看来源原文摘要</summary><p>${escapeHtml(item.summary)}</p></details>` : "";
+      const originalSourceSummary = isOpportunityV2PublicSummaryAllowed(item.source_id) && isOpportunityV2PublicSummarySafe(item) && item.summary.trim() ? `<details class="ich-original"><summary>查看来源原文摘要</summary><p>${escapeHtml(item.summary)}</p></details>` : "";
       const deadlineKindLabels: Record<string, string> = { submission_deadline: "作品提交截止", application_deadline: "申请截止", registration_deadline: "报名截止", deadline: "来源截止时间" };
       const deadlineRaw = deadlineUnsafe ? "存在日期冲突；精确原文仅供内部核对" : item.deadline_raw_text || item.deadline_text || "来源未给出明确截止原文";
       const deadlineEvidence = !deadlineUnsafe && item.deadline_source_url ? `<a rel="nofollow noopener" href="${escapeHtml(item.deadline_source_url)}">查看截止日期出处</a>` : "截止日期出处尚未公开核验";
