@@ -11,6 +11,7 @@ const {
 } = require("@alicloud/swas-open20200601");
 const { Config } = require("@alicloud/openapi-client");
 const { RuntimeOptions } = require("@alicloud/tea-util");
+const { buildIchProductionCycleRemoteCommand } = require("./ich-production-cycle-remote-command.cjs");
 
 function requiredEnv(name) {
   const value = process.env[name];
@@ -38,34 +39,9 @@ if (action === "cycle") {
   commandTimeout = 2400;
   // Fixed server-local operation: no user-provided command, URL, path, or token.
   // The existing systemd service retains the server-side DeepSeek credentials.
-  command = [
-    "set -eu",
-    "cd /opt/chanceping/current",
-    "timer_unit=$(systemctl cat chanceping-opportunity-v2.timer)",
-    "if ! printf '%s\\n' \"$timer_unit\" | grep -Eq '^[[:space:]]*OnUnitActiveSec=72h([[:space:]]|$)'; then echo '[chanceping] existing OpportunityV2 timer is not configured for 72h' >&2; exit 1; fi",
-    "service_exec=$(systemctl show chanceping-opportunity-v2.service --property=ExecStart --value)",
-    "case \"$service_exec\" in *'npm run opportunity:v2:run'*|*'npm run opportunity:v2:cycle'*|*'run-ich-production-cycle'*) ;; *) echo '[chanceping] existing OpportunityV2 service does not point at the protected cycle runner' >&2; exit 1 ;; esac",
-    "systemctl enable --now chanceping-opportunity-v2.timer",
-    "timer_next=$(systemctl show chanceping-opportunity-v2.timer --property=NextElapseUSecRealtime --value)",
-    "echo \"[chanceping] timer enabled and active; next trigger: $timer_next\"",
-    "before=$(node -e 'try{const m=require(\"/var/lib/chanceping/opportunity-v2/production-cycle-latest.json\");process.stdout.write(String(m.run_id||\"\"))}catch{}')",
-    "systemctl start chanceping-opportunity-v2.service",
-    "i=0",
-    "while [ $i -lt 420 ]; do",
-    "  terminal=$(node -e 'try{const m=require(\"/var/lib/chanceping/opportunity-v2/production-cycle-latest.json\");if(m.run_id&&m.run_id!==process.argv[1]&&[\"COMPLETED\",\"DEGRADED\",\"FAILED\"].includes(m.status)){const out={run_id:m.run_id,status:m.status,started_at:m.started_at,finished_at:m.finished_at,production_commit:m.production_commit,fetch:m.fetch,translation:m.translation,audit:m.audit,next_run_at:m.next_run_at,freshness:m.freshness,failure_code:m.failure_code};console.log(m.status);console.log(JSON.stringify(out))}}catch{}' \"$before\")",
-    "  if [ -n \"$terminal\" ]; then",
-    "    status=$(printf '%s\\n' \"$terminal\" | sed -n '1p')",
-    "    printf '%s\\n' \"$terminal\" | sed -n '2p'",
-    "    if [ \"$status\" = COMPLETED ]; then exit 0; else exit 2; fi",
-    "  fi",
-    "  state=$(systemctl show chanceping-opportunity-v2.service -p ActiveState --value)",
-    "  if [ \"$state\" = failed ]; then systemctl --no-pager --full status chanceping-opportunity-v2.service; exit 1; fi",
-    "  sleep 5",
-    "  i=$((i+1))",
-    "done",
-    "echo '[chanceping] production cycle did not publish a fresh terminal manifest' >&2",
-    "exit 1",
-  ].join("\n");
+  // Fixed server-local operation: no user-provided command, URL, path, or token.
+  // The existing systemd service retains the server-side DeepSeek credentials.
+  command = buildIchProductionCycleRemoteCommand();
 } else {
   const deployRef = process.env.CHANCEPING_DEPLOY_REF || "rescue/mvp-codex";
   if (

@@ -196,6 +196,7 @@
     "verify:ich:v15:identity": "tsx scripts/verify-ich-v15-identity.ts",
     "verify:ich:v15:admin-cycle-route": "tsx scripts/verify-ich-v15-admin-cycle-route.ts",
     "verify:ich:v15:protected-runner": "tsx scripts/verify-ich-v15-protected-runner.ts",
+    "verify:ich:v15:cycle-invoker": "tsx scripts/verify-ich-v15-cycle-invoker.ts",
     "verify:ich:v15:async-lock": "tsx scripts/verify-ich-v15-async-lock.ts",
     "verify:ich:v15:cycle": "tsx scripts/verify-ich-v15-cycle.ts",
     "verify:ich:v15:weekly": "tsx scripts/verify-ich-v15-weekly.ts",
@@ -213,7 +214,7 @@
     "verify:opportunity:coverage": "tsx scripts/verify-opportunity-coverage.ts",
     "verify:opportunity:coverage:sources": "tsx scripts/verify-opportunity-coverage-sources.ts",
     "audit:opportunity:coverage": "tsx scripts/run-opportunity-coverage-audit.ts",
-    "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:ich:stage3 && node --run verify:ich:stage4 && node --run verify:ich:stage5 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:ich:v15:identity && node --run verify:ich:v15:admin-cycle-route && node --run verify:ich:v15:protected-runner && node --run verify:ich:v15:async-lock && node --run verify:ich:v15:cycle && node --run verify:ich:v15:weekly && node --run verify:opportunity:v12 && node --run verify:opportunity:coverage && node --run verify:opportunity:coverage:sources && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
+    "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:ich:stage3 && node --run verify:ich:stage4 && node --run verify:ich:stage5 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:ich:v15:identity && node --run verify:ich:v15:admin-cycle-route && node --run verify:ich:v15:protected-runner && node --run verify:ich:v15:cycle-invoker && node --run verify:ich:v15:async-lock && node --run verify:ich:v15:cycle && node --run verify:ich:v15:weekly && node --run verify:opportunity:v12 && node --run verify:opportunity:coverage && node --run verify:opportunity:coverage:sources && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
     "precheck": "tsx scripts/precheck.ts"
   },
   "dependencies": {
