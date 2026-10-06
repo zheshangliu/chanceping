@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { productionCycleFreshness, runIchProductionCycle, runIchProductionCycleAudit, type IchProductionCycleAudit, type IchProductionCycleFetchSummary, type IchProductionCyclePaths } from "../src/opportunity-v2/production-cycle";
 import type { OpportunityV2TranslationRunSummary } from "../src/opportunity-v2/translation-runner";
+import type { OpportunityV2 } from "../src/opportunity-v2/types";
 
 const NOW = new Date("2026-10-06T07:00:00.000Z");
 const SECRET = "v15-cycle-test-secret-never-log";
@@ -64,7 +65,7 @@ const passAudit: IchProductionCycleAudit = {
     },
     all_untranslated_p0_p1_dispositioned: true,
   },
-  public_encoding_errors: 0, public_unsafe_exact_deadlines: 0, artconnect_collection_allowed: false, weekly_limit_pass: true,
+  public_encoding_errors: 0, public_encoding_error_items: [], public_unsafe_exact_deadlines: 0, artconnect_collection_allowed: false, weekly_limit_pass: true,
   source_governance: { reviewed_ok_count: 0, reviewed_metadata_only_count: 0, official_open_data_count: 0, not_reviewed_count: 2, compliance_hold_count: 0, weekly_contributing_source_ids: [], top_public_contributors: [] },
   source_health: { fresh: 2, stale: 0, never_succeeded: 0, unknown: 0, failed: 0, sources: [] },
 };
@@ -89,6 +90,23 @@ async function main(): Promise<void> {
     assert.equal(JSON.parse(fs.readFileSync(first.paths.scheduler, "utf8")).interval_hours, 72);
     assert.equal(fs.readFileSync(first.paths.pool, "utf8"), fetchedPool, "successful fetch data is retained");
     assert.equal(completed.freshness, "FRESH");
+
+    const timing = makePaths();
+    try {
+      let fetchFinishedAt = 0;
+      let auditAt = 0;
+      const timed = await runIchProductionCycle({
+        paths: timing.paths,
+        fetch: async (stageNow) => { fetchFinishedAt = stageNow.getTime(); return fetchSummary(stageNow); },
+        translate: async () => translationSummary(),
+        audit: (stageNow) => { auditAt = stageNow.getTime(); return passAudit; },
+        releaseManifestPath: path.join(timing.dir, "missing-release.json"),
+      });
+      assert.ok(auditAt >= fetchFinishedAt, "production audit uses its actual stage time after the live fetch finishes");
+      assert.equal(timed.freshness, "FRESH");
+    } finally {
+      fs.rmSync(timing.dir, { recursive: true, force: true });
+    }
 
     const partial = await runIchProductionCycle({
       now: new Date(NOW.getTime() + 1000),
@@ -141,14 +159,23 @@ async function main(): Promise<void> {
         { id: "stale-failed", name: "Stale failed", url: "https://example.invalid", region: "GLOBAL", priority: "P1", types: [], radars: ["ich"], enabled: true, status: "FAILED", last_fetch_at: new Date(NOW.getTime() - 79 * 60 * 60 * 1000).toISOString() },
         { id: "never-run", name: "Never run", url: "https://example.invalid", region: "CN", priority: "P1", types: [], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
       ] }));
-      fs.writeFileSync(auditPoolPath, JSON.stringify({ updated_at: NOW.toISOString(), opportunities: [] }));
+      const encodingFixture: OpportunityV2 = {
+        id: "opp-encoding-broken", title: "Broken � title", summary: "",
+        source_id: "stale-failed", source_name: "Stale failed", source_url: "https://example.invalid/list",
+        detail_url: "https://example.invalid/item/1", category: "competition", region: "GLOBAL", tags: [],
+        deadline: null, status: "UNKNOWN_DEADLINE", first_seen_at: NOW.toISOString(), last_seen_at: NOW.toISOString(),
+        discovered_by_sources: ["stale-failed"], radar_relevance: "IRRELEVANT",
+      };
+      fs.writeFileSync(auditPoolPath, JSON.stringify({ updated_at: NOW.toISOString(), opportunities: [encodingFixture] }));
       fs.writeFileSync(auditHealthPath, JSON.stringify({ sources: [{ source_id: "stale-failed", fetched_at: NOW.toISOString(), ok: false, http_status: 503, items_seen: 0, error: "safe fixture" }] }));
       fs.writeFileSync(auditTranslationsPath, JSON.stringify({ translations: [] }));
       const audit = await runIchProductionCycleAudit({ now: NOW, paths: { sources: auditSourcesPath, pool: auditPoolPath, health: auditHealthPath, translations: auditTranslationsPath } });
       assert.equal(audit.source_health.stale, 1, "source audit reports stale based on last successful fetch");
       assert.equal(audit.source_health.never_succeeded, 1, "source audit identifies never-successful sources");
       assert.equal(audit.source_health.failed, 1, "source audit separates latest fetch failure from freshness");
-      assert.equal(audit.status, "PASS");
+      assert.equal(audit.public_encoding_errors, 1);
+      assert.deepEqual(audit.public_encoding_error_items, [{ id: "opp-encoding-broken", source_id: "stale-failed", title_error: true, summary_error: false }], "encoding audit identifies every affected public record without copying content");
+      assert.equal(audit.status, "FAIL");
     } finally {
       fs.rmSync(auditDir, { recursive: true, force: true });
     }
