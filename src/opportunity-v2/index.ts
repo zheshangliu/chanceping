@@ -20,6 +20,7 @@ export * from "./procurement";
 export * from "./procurement-sources";
 export * from "./procurement-registry";
 export * from "./public-deadline";
+export * from "./public-text";
 export * from "./procurement-workbench";
 export * from "./procurement-followup-store";
 export * from "./procurement-change-feed";

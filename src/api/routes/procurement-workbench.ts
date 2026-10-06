@@ -8,6 +8,7 @@ import { readProcurementChangeFeed, serializePublicProcurementChangeFeed } from 
 import { renderOpportunityCoverageCsv, renderOpportunityCoverageMarkdown, renderProcurementCsv, renderProcurementMarkdown } from "../../opportunity-v2/procurement-export";
 import { filterOpportunityCoverage, publicOpportunityCoverageAssessment, type OpportunityCoverageAssessment, type OpportunityCoverageQuery } from "../../opportunity-v2/opportunity-coverage";
 import { isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed } from "../../opportunity-v2/source-governance";
+import { isOpportunityV2PublicTitleSafe } from "../../opportunity-v2/public-text";
 import { buildCanonicalOpportunityDisplayGroups } from "../../opportunity-v2/canonical-display-groups";
 import type { OpportunityV2, OpportunityV2Source } from "../../opportunity-v2/types";
 
@@ -26,7 +27,7 @@ export interface ProcurementWorkbenchRouteOptions {
 function bodyOf(c: { req: { json: () => Promise<unknown> } }): Promise<Record<string, unknown>> { return c.req.json().catch(() => ({})) as Promise<Record<string, unknown>>; }
 function publicProcurementItems(opportunities: OpportunityV2[], sources: OpportunityV2Source[]): OpportunityV2[] {
   const sourceIds = new Set(sources.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id) && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
-  return opportunities.filter((item) => sourceIds.has(item.source_id) && isOpportunityV2PublicCopyAllowed(item)).filter((item) => item.category === "procurement_project").filter((item) => !item.encoding_error && item.procurement?.direction !== "seller_offer").filter((item) => hasProcurementDomainTag(item.tags) && isCraftRelevantProcurement(`${item.title} ${item.summary}`));
+  return opportunities.filter((item) => sourceIds.has(item.source_id) && isOpportunityV2PublicCopyAllowed(item) && isOpportunityV2PublicTitleSafe(item)).filter((item) => item.category === "procurement_project").filter((item) => item.procurement?.direction !== "seller_offer").filter((item) => hasProcurementDomainTag(item.tags) && isCraftRelevantProcurement(`${item.title} ${item.summary}`));
 }
 
 function queryFilter(items: WorkbenchAssessment[], query: Record<string, string>): WorkbenchAssessment[] {
@@ -55,7 +56,7 @@ function buildAssessments(options: ProcurementWorkbenchRouteOptions): WorkbenchA
 
 function activeCoverageItems(opportunities: OpportunityV2[], sources: OpportunityV2Source[]): OpportunityV2[] {
   const sourceIds = new Set(sources.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id) && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
-  return opportunities.filter((item) => sourceIds.has(item.source_id) && isOpportunityV2PublicCopyAllowed(item));
+  return opportunities.filter((item) => sourceIds.has(item.source_id) && isOpportunityV2PublicCopyAllowed(item) && isOpportunityV2PublicTitleSafe(item));
 }
 
 function coverageQuery(raw: Record<string, string>): OpportunityCoverageQuery {

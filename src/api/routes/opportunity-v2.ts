@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, getOpportunityV2SourcePermission, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, serializePublicProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 import { runIchProductionCycle, withIchProductionCycleLock, type IchProductionCycleManifest, type IchProductionCycleOptions, type IchProductionCyclePaths } from "../../opportunity-v2/production-cycle";
+import { isOpportunityV2PublicTitleSafe } from "../../opportunity-v2/public-text";
 
 export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; runProductionCycle?: (options?: IchProductionCycleOptions) => Promise<IchProductionCycleManifest>; }
 
@@ -128,7 +129,7 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   });
   app.get("/opportunities/:id", (c) => {
     const item = pool().opportunities.find((candidate) => candidate.id === c.req.param("id"));
-    if (!item || !isOpportunityV2PublicCopyAllowed(item)) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
+    if (!item || !isOpportunityV2PublicCopyAllowed(item) || !isOpportunityV2PublicTitleSafe(item)) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
     return c.json(serializeOpportunityV2Public(item));
   });
   app.post("/run", async (c) => {

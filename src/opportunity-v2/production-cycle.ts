@@ -20,6 +20,7 @@ import { withAsyncFileLock } from "./async-file-lock";
 import { runOpportunityV2DisplayTranslation, type OpportunityV2TranslationRunSummary } from "./translation-runner";
 import { runOpportunityV2 } from "./pipeline";
 import { publicOpportunityV2Deadline } from "./public-deadline";
+import { isOpportunityV2PublicSummarySafe, isOpportunityV2PublicTitleSafe } from "./public-text";
 import type { OpportunityV2 } from "./types";
 import type { OpportunityV2RunResult } from "./types";
 
@@ -76,6 +77,8 @@ export interface IchProductionCycleAudit {
   };
   public_encoding_errors: number;
   public_encoding_error_items: Array<{ id: string; source_id: string; title_error: boolean; summary_error: boolean }>;
+  pool_encoding_errors: number;
+  pool_encoding_error_items: Array<{ id: string; source_id: string; title_error: boolean; summary_error: boolean }>;
   public_unsafe_exact_deadlines: number;
   artconnect_collection_allowed: boolean;
   weekly_limit_pass: boolean;
@@ -352,7 +355,12 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
   const visibleById = new Map<string, OpportunityV2>();
   for (const item of [...radar, ...memo.items]) visibleById.set(item.id, item);
   const publicCopyItems = pool.filter(isOpportunityV2PublicCopyAllowed);
-  const publicEncodingErrorItems = publicCopyItems.flatMap((item) => {
+  const poolEncodingErrorItems = publicCopyItems.flatMap((item) => {
+    const titleError = !isOpportunityV2PublicTitleSafe(item);
+    const summaryError = !isOpportunityV2PublicSummarySafe(item);
+    return titleError || summaryError ? [{ id: item.id, source_id: item.source_id, title_error: titleError, summary_error: summaryError }] : [];
+  });
+  const publicEncodingErrorItems = publicCopyItems.filter(isOpportunityV2PublicTitleSafe).flatMap((item) => {
     const rendered = buildOpportunityV2Display(item, translations);
     const titleError = hasEncodingCorruption(rendered.title);
     const summaryError = hasEncodingCorruption(rendered.summary);
@@ -428,6 +436,8 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
     },
     public_encoding_errors: publicEncodingErrors,
     public_encoding_error_items: publicEncodingErrorItems,
+    pool_encoding_errors: poolEncodingErrorItems.length,
+    pool_encoding_error_items: poolEncodingErrorItems,
     public_unsafe_exact_deadlines: unsafePublicExactDeadlines,
     artconnect_collection_allowed: isOpportunityV2SourceCollectionAllowed("artconnect-opportunities"),
     weekly_limit_pass: weekly.length <= 10,

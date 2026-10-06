@@ -1,5 +1,6 @@
 import type { OpportunityV2, V2OpportunityStatus } from "./types";
 import { isOpportunityV2PublicSummaryAllowed, publicOpportunityV2DiscoverySources } from "./source-governance";
+import { isOpportunityV2PublicSummarySafe } from "./public-text";
 
 export const UNSAFE_DEADLINE_TEXT = "截止时间待核实";
 
@@ -25,7 +26,7 @@ export function publicOpportunityV2Deadline(item: Pick<OpportunityV2, "deadline"
 export function serializeOpportunityV2Public(item: OpportunityV2): Record<string, unknown> {
   const deadline = publicOpportunityV2Deadline(item);
   const reuseAllowed = isOpportunityV2PublicSummaryAllowed(item.source_id);
-  const publicSummary = reuseAllowed ? item.summary : "";
+  const publicSummary = reuseAllowed && isOpportunityV2PublicSummarySafe(item) ? item.summary : "";
   if (!deadline.unsafe) return {
     ...item,
     summary: publicSummary,

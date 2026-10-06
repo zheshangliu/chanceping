@@ -65,7 +65,7 @@ const passAudit: IchProductionCycleAudit = {
     },
     all_untranslated_p0_p1_dispositioned: true,
   },
-  public_encoding_errors: 0, public_encoding_error_items: [], public_unsafe_exact_deadlines: 0, artconnect_collection_allowed: false, weekly_limit_pass: true,
+  public_encoding_errors: 0, public_encoding_error_items: [], pool_encoding_errors: 0, pool_encoding_error_items: [], public_unsafe_exact_deadlines: 0, artconnect_collection_allowed: false, weekly_limit_pass: true,
   source_governance: { reviewed_ok_count: 0, reviewed_metadata_only_count: 0, official_open_data_count: 0, not_reviewed_count: 2, compliance_hold_count: 0, weekly_contributing_source_ids: [], top_public_contributors: [] },
   source_health: { fresh: 2, stale: 0, never_succeeded: 0, unknown: 0, failed: 0, sources: [] },
 };
@@ -173,9 +173,11 @@ async function main(): Promise<void> {
       assert.equal(audit.source_health.stale, 1, "source audit reports stale based on last successful fetch");
       assert.equal(audit.source_health.never_succeeded, 1, "source audit identifies never-successful sources");
       assert.equal(audit.source_health.failed, 1, "source audit separates latest fetch failure from freshness");
-      assert.equal(audit.public_encoding_errors, 1);
-      assert.deepEqual(audit.public_encoding_error_items, [{ id: "opp-encoding-broken", source_id: "stale-failed", title_error: true, summary_error: false }], "encoding audit identifies every affected public record without copying content");
-      assert.equal(audit.status, "FAIL");
+      assert.equal(audit.pool_encoding_errors, 1);
+      assert.deepEqual(audit.pool_encoding_error_items, [{ id: "opp-encoding-broken", source_id: "stale-failed", title_error: true, summary_error: false }], "internal pool audit identifies every affected record without copying content");
+      assert.equal(audit.public_encoding_errors, 0, "a title withheld by all public projections is not counted as a public leak");
+      assert.deepEqual(audit.public_encoding_error_items, []);
+      assert.equal(audit.status, "PASS");
     } finally {
       fs.rmSync(auditDir, { recursive: true, force: true });
     }

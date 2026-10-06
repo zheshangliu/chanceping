@@ -6,6 +6,7 @@ import { hasEncodingCorruption, htmlToText } from "../ich/aggregation/adapters/c
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import { resolveOpportunityV2PoolPath } from "./opportunity-pool";
 import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
+import { isOpportunityV2PublicSummarySafe } from "./public-text";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
 export type OpportunityV2TranslationStatus = "translated" | "pending" | "failed";
@@ -80,7 +81,7 @@ export function cleanOpportunityDisplayText(value: string | null | undefined): s
 }
 
 function displaySummary(item: Pick<OpportunityV2, "summary" | "encoding_error_fields">): string {
-  return item.encoding_error_fields?.includes("summary") || hasEncodingCorruption(item.summary) ? "" : cleanOpportunityDisplayText(item.summary);
+  return !isOpportunityV2PublicSummarySafe(item) ? "" : cleanOpportunityDisplayText(item.summary);
 }
 
 export function resolveOpportunityV2TranslationPath(filePath?: string): string {

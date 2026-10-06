@@ -3,6 +3,7 @@ import { opportunityV2LiveStatus } from "./radar-view";
 import { filterOpportunityV2Radar } from "./radar-view";
 import { buildOpportunityV2Display, cleanOpportunityDisplayText, readOpportunityV2Translations } from "./display";
 import { publicOpportunityV2Deadline, serializeOpportunityV2Public } from "./public-deadline";
+import { isOpportunityV2PublicTitleSafe } from "./public-text";
 import { readOpportunityV2Pool } from "./opportunity-pool";
 import { readOpportunityV2Sources } from "./source-pool";
 import { isOpportunityV2PublicCopyAllowed, isOpportunityV2PublicSummaryAllowed, isOpportunityV2SourceCollectionAllowed, publicOpportunityV2DiscoverySources } from "./source-governance";
@@ -174,7 +175,7 @@ function coverageItems(options: ProcurementWorkbenchRouteOptions, query: Opportu
   const opportunities = options.opportunities ?? readOpportunityV2Pool().opportunities;
   const sources = options.sources ?? readOpportunityV2Sources();
   const activeSourceIds = new Set(sources.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id) && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
-  return filterOpportunityCoverage(opportunities.filter((item) => activeSourceIds.has(item.source_id) && isOpportunityV2PublicCopyAllowed(item)), query, { now: options.now });
+  return filterOpportunityCoverage(opportunities.filter((item) => activeSourceIds.has(item.source_id) && isOpportunityV2PublicCopyAllowed(item) && isOpportunityV2PublicTitleSafe(item)), query, { now: options.now });
 }
 
 export interface WeeklyOpportunityAction {
@@ -266,7 +267,7 @@ export function buildWeeklyOpportunityActions(options: ProcurementWorkbenchRoute
   const now = options.now ?? new Date();
   const pool = options.opportunities ?? readOpportunityV2Pool().opportunities;
   const sources = options.sources ?? readOpportunityV2Sources();
-  const publicItems = pool.filter(isOpportunityV2PublicCopyAllowed);
+  const publicItems = pool.filter((item) => isOpportunityV2PublicCopyAllowed(item) && isOpportunityV2PublicTitleSafe(item));
   const activeSourceIds = new Set(sources.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id) && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
   const activePublicItems = publicItems.filter((item) => activeSourceIds.has(item.source_id));
   const candidates = new Map<string, { item: OpportunityV2; lane: "current" | "early" | "review"; types: string[]; whyRelevant: string; firstCheck: string; nextAction: string }>();
