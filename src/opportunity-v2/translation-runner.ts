@@ -4,7 +4,7 @@ import { readOpportunityV2Sources, resolveOpportunityV2SourcesPath } from "./sou
 import { collectOpportunityV2TranslationTargets } from "./translation-targets";
 import { translateWithProviderChain, type OpportunityTranslationProvider } from "./translation-provider";
 import { TranslationRequestBudget } from "./translation-budget";
-import { selectOpportunityV2TranslationQueue } from "./translation-queue";
+import { selectOpportunityV2TranslationQueue, type OpportunityV2TranslationQueueEntry } from "./translation-queue";
 import { configuredTranslationProviders } from "./translation-provider";
 import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 
@@ -124,6 +124,25 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
   let inFlight = 0;
   let attemptedRecords = 0;
   let waiters: Array<() => void> = [];
+  const applyRetryDisposition = (entry: OpportunityV2TranslationQueueEntry, resultIndex: number): void => {
+    const current = results[resultIndex];
+    if (!current) return;
+    const currentAttemptCount = Math.max(1, current.attempt_count ?? 0);
+    const cumulativeAttemptCount = (entry.existing?.attempt_count ?? 0) + currentAttemptCount;
+    if (current.status !== "failed") {
+      results[resultIndex] = { ...current, attempt_count: cumulativeAttemptCount };
+      return;
+    }
+    const attemptLimit = current.failure_code === "QUALITY_REJECTED" ? 2 : 3;
+    const repairAlreadySpent = entry.priority === 0 && current.p0_title_repair_attempted === true;
+    const retryable = !repairAlreadySpent && cumulativeAttemptCount < attemptLimit;
+    results[resultIndex] = {
+      ...current,
+      attempt_count: cumulativeAttemptCount,
+      retryable,
+      next_retry_at: retryable ? current.next_retry_at ?? new Date(now.getTime() + 60 * 60 * 1000).toISOString() : null,
+    };
+  };
   const worker = async (): Promise<void> => {
     while (true) {
       const ticket = budget.reserve(2);
@@ -156,15 +175,16 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
                 p0TitleRepairSucceeded += 1;
               } else {
                 for (const cluster of qualityFailureClusters(checkedRepair.validation_errors ?? [])) qualityRejectionClusters[cluster] = (qualityRejectionClusters[cluster] ?? 0) + 1;
-                results.push({ ...safeTranslation, retryable: false, p0_title_repair_attempted: true });
+                results.push({ ...safeTranslation, attempt_count: (safeTranslation.attempt_count ?? 1) + 1, retryable: false, p0_title_repair_attempted: true });
                 p0TitleRepairFailed += 1;
               }
             } catch {
-              results.push({ ...safeTranslation, retryable: false, p0_title_repair_attempted: true });
+              results.push({ ...safeTranslation, attempt_count: (safeTranslation.attempt_count ?? 1) + 1, retryable: false, p0_title_repair_attempted: true });
               p0TitleRepairFailed += 1;
             }
           } else results.push(safeTranslation);
         } else results.push(safeTranslation);
+        applyRetryDisposition(entry, results.length - 1);
         if (results.at(-1)?.status === "failed") {
           const reason = results.at(-1)?.failure_code ?? "UNKNOWN";
           failureCounts[reason] = (failureCounts[reason] ?? 0) + 1;
@@ -173,6 +193,7 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
         const failed = await translateWithProviderChain(entry.item, [], now);
         const safeFailure = { ...failed.translation, failure_code: "PROVIDER_UNAVAILABLE" as const, error: "翻译服务暂不可用，等待后续重试" };
         results.push(safeFailure);
+        applyRetryDisposition(entry, results.length - 1);
         failureCounts.PROVIDER_UNAVAILABLE = (failureCounts.PROVIDER_UNAVAILABLE ?? 0) + 1;
       } finally {
         ticket.finish();

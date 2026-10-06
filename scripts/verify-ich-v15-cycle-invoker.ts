@@ -10,6 +10,7 @@ const binDir = path.join(tempDir, "bin");
 const manifestPath = path.join(tempDir, "production-cycle-latest.json");
 const manifestNextPath = path.join(tempDir, "manifest-next.json");
 const systemctlPath = path.join(binDir, "systemctl");
+const busctlPath = path.join(binDir, "busctl");
 
 try {
   fs.mkdirSync(binDir);
@@ -17,24 +18,33 @@ try {
   fs.writeFileSync(systemctlPath, `#!/bin/sh
 set -eu
 case "$*" in
-  "cat chanceping-opportunity-v2.timer") printf '[Timer]\\nOnUnitActiveSec=72h\\n' ;;
+  "cat chanceping-opportunity-v2.timer") printf '[Timer]\\nOnUnitActiveSec=72h\\n%s\\n' "\${TIMER_ADDITIONAL_DIRECTIVE:-}" ;;
   "show chanceping-opportunity-v2.service --property=ExecStart --value") printf '/usr/bin/npm run opportunity:v2:run' ;;
   "enable --now chanceping-opportunity-v2.timer") exit 0 ;;
   "is-enabled --quiet chanceping-opportunity-v2.timer") exit 0 ;;
   "is-active --quiet chanceping-opportunity-v2.timer") exit 0 ;;
   "list-timers --all --no-legend chanceping-opportunity-v2.timer") printf 'Fri 2026-10-09 00:12:00 UTC 3 days left chanceping-opportunity-v2.timer chanceping-opportunity-v2.service\\n' ;;
-  "show chanceping-opportunity-v2.timer --property=NextElapseUSecRealtime --value") printf '%s' "$TIMER_NEXT_USEC" ;;
+  "show chanceping-opportunity-v2.timer --property=NextElapseUSecRealtime --value") printf 'Fri 2026-10-09 00:12:00 UTC' ;;
   "start chanceping-opportunity-v2.service") cp "$CYCLE_MANIFEST_NEXT" "$CYCLE_MANIFEST_PATH"; exit "\${CYCLE_START_EXIT:-0}" ;;
   "show chanceping-opportunity-v2.service --property=ActiveState,SubState,Result,ExecMainCode,ExecMainStatus --value") printf 'failed\\n' ;;
   *) echo "unexpected systemctl invocation: $*" >&2; exit 99 ;;
 esac
 `);
+  fs.writeFileSync(busctlPath, `#!/bin/sh
+set -eu
+case "$*" in
+  "get-property org.freedesktop.systemd1 /org/freedesktop/systemd1/unit/chanceping_2dopportunity_2dv2_2etimer org.freedesktop.systemd1.Timer NextElapseUSecRealtime") printf 't %s' "$TIMER_NEXT_USEC" ;;
+  *) echo "unexpected busctl invocation: $*" >&2; exit 99 ;;
+esac
+`);
   fs.chmodSync(systemctlPath, 0o700);
+  fs.chmodSync(busctlPath, 0o700);
 
   const command = buildIchProductionCycleRemoteCommand({ manifestPath, workingDirectory: tempDir });
   assert.match(command, /systemctl is-enabled --quiet chanceping-opportunity-v2\.timer/u);
   assert.match(command, /systemctl is-active --quiet chanceping-opportunity-v2\.timer/u);
   assert.match(command, /systemctl list-timers --all --no-legend chanceping-opportunity-v2\.timer/u);
+  assert.match(command, /busctl get-property org\.freedesktop\.systemd1/u, "the exact timer instant is read as a typed D-Bus integer, not a locale-formatted systemctl string");
 
   const failedManifest = {
     run_id: "new-failed-run",
@@ -82,6 +92,21 @@ esac
   });
   assert.equal(completedRun.status, 0, "a completed cycle with a successful service exit passes");
   assert.match(completedRun.stdout, /"run_id":"new-completed-run"/u);
+
+  fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
+  const duplicateSchedule = spawnSync("bash", ["-c", command], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      PATH: `${binDir}:${process.env.PATH ?? ""}`,
+      CYCLE_MANIFEST_PATH: manifestPath,
+      CYCLE_MANIFEST_NEXT: manifestNextPath,
+      TIMER_ADDITIONAL_DIRECTIVE: "OnCalendar=*-*-* 03:00:00",
+      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
+    },
+  });
+  assert.notEqual(duplicateSchedule.status, 0, "an additional calendar trigger cannot silently diverge from the runtime 72h next_run_at");
+  assert.match(duplicateSchedule.stderr, /exactly one 72h OnUnitActiveSec/u);
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
   fs.writeFileSync(manifestNextPath, JSON.stringify({ ...failedManifest, run_id: "new-misaligned-run", status: "COMPLETED", failure_code: null }));

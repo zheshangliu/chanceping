@@ -1,4 +1,5 @@
 import { hasProcurementDomainTag, isCraftRelevantProcurement } from "./procurement";
+import { isPublicProcurementText } from "./procurement-sources";
 import { opportunityV2LiveStatus } from "./radar-view";
 import { filterOpportunityV2Radar } from "./radar-view";
 import { buildOpportunityV2Display, cleanOpportunityDisplayText, readOpportunityV2Translations } from "./display";
@@ -316,6 +317,7 @@ export function buildWeeklyOpportunityActions(options: ProcurementWorkbenchRoute
     && !item.encoding_error
     && item.procurement?.direction !== "seller_offer"
     && !["awarded", "closed", "cancelled"].includes(item.procurement?.stage ?? "")
+    && isPublicProcurementText(`${item.title} ${item.summary}`, item.procurement, item.deadline, now)
     && hasProcurementDomainTag(item.tags)
     && isCraftRelevantProcurement(`${item.title} ${item.summary}`));
   for (const item of procurementActions) {

@@ -5,7 +5,9 @@ import path from "node:path";
 import { Hono } from "hono";
 import { ichPagesRoutes } from "../src/api/routes/ich-pages";
 import { buildWeeklyOpportunityActions } from "../src/opportunity-v2/procurement-workbench";
+import { isCraftRelevantProcurement } from "../src/opportunity-v2/procurement";
 import { buildOpportunityV2Display, isForeignLanguageOpportunity, isForeignLanguageTitle } from "../src/opportunity-v2/display";
+import { filterOpportunityV2Radar } from "../src/opportunity-v2/radar-view";
 import { serializeOpportunityV2Public } from "../src/opportunity-v2/public-deadline";
 import { getOpportunityV2SourcePermission, getOpportunityV2SourcePermissionEvidence, isOpportunityV2PublicSummaryAllowed, isOpportunityV2SourceCollectionAllowed } from "../src/opportunity-v2/source-governance";
 import { collectOpportunityV2TranslationTargets } from "../src/opportunity-v2/translation-targets";
@@ -54,7 +56,23 @@ async function main(): Promise<void> {
   assert.equal(getOpportunityV2SourcePermission("proc-ca-canadabuys"), "OFFICIAL_OPEN_DATA", "CanadaBuys has dataset-specific official open-data evidence");
   assert.match(getOpportunityV2SourcePermissionEvidence("proc-ca-canadabuys").url ?? "", /open\.canada\.ca\/data/u);
   assert.equal(isOpportunityV2PublicSummaryAllowed("proc-ca-canadabuys"), true);
+  assert.equal(getOpportunityV2SourcePermission("proc-global-ocp"), "OFFICIAL_OPEN_DATA", "the OCP adapter is pinned to Sell2Wales OCDS data with an official OGL reuse policy");
+  assert.match(getOpportunityV2SourcePermissionEvidence("proc-global-ocp").url ?? "", /sell2wales\.gov\.wales\/helpandresources\/ocds\/publicationpolicy/u);
+  assert.match(getOpportunityV2SourcePermissionEvidence("proc-global-ocp").basis, /third-party attachments.*personal data/u);
+  assert.equal(isOpportunityV2PublicSummaryAllowed("proc-global-ocp"), true);
   assert.equal(getOpportunityV2SourcePermission("1zj-cultural-competition"), "NOT_REVIEWED", "aggregator use terms are not inferred from public availability");
+  const reviewedButUnlicensedSources = [
+    "crafts-council-opportunities", "everyart-competition", "proc-cn-cib", "proc-cn-ccgp",
+    "shejijingsai-list", "whaleideas-competition", "1zj-cultural-competition", "iuben-cultural-competition",
+    "chuangsaiyun-competition-list", "cnyisai-competition", "contest-watchers-open", "competitions-archi", "cfw-cultural-ip",
+  ];
+  for (const sourceId of reviewedButUnlicensedSources) {
+    const evidence = getOpportunityV2SourcePermissionEvidence(sourceId);
+    assert.equal(getOpportunityV2SourcePermission(sourceId), "NOT_REVIEWED", `${sourceId} must not gain inferred permission`);
+    assert.ok(evidence.url, `${sourceId} governance record links to reviewed official/source evidence`);
+    assert.notEqual(evidence.basis, "NOT_REVIEWED; no permission/license conclusion is made. Public display is limited to necessary metadata and source link.", `${sourceId} has an explicit scope note`);
+    assert.equal(isOpportunityV2PublicSummaryAllowed(sourceId), false, `${sourceId} remains metadata-only until a reuse grant is verified`);
+  }
   assert.equal(getOpportunityV2SourcePermission("opencalls-ai"), "COMPLIANCE_HOLD", "official opencalls.ai terms prohibit automated catalogue extraction");
   assert.equal(isOpportunityV2SourceCollectionAllowed("opencalls-ai"), false);
   const complianceHoldFixtures: Array<{ id: string; name: string; url: string; title: string }> = [
@@ -101,6 +119,30 @@ async function main(): Promise<void> {
   assert.equal(weighted[0]?.opportunity_id, craftGrant.id, "a high-quality craft funding action ranks ahead of generic logo contests");
   assert.equal(weighted.filter((action) => action.type_labels.includes("赛事 / 征集")).length <= 6, true, "high-quality non-contest actions cap contest recommendations at six");
   assert.equal(weighted.find((action) => action.opportunity_id === craftGrant.id)?.evidence_grade, "A", "official opportunity evidence is grade A");
+
+  const procurementSource: OpportunityV2Source = {
+    ...source, id: "proc-ca-canadabuys", name: "CanadaBuys", types: ["procurement"], radars: ["ich"],
+  };
+  const procurementItem = (id: string, title: string, summary: string): OpportunityV2 => item({
+    id, source_id: procurementSource.id, source_name: procurementSource.name, source_url: procurementSource.url,
+    detail_url: `https://example.org/procurement/${id}`, category: "procurement_project", tags: ["procurement", "文化服务"],
+    title, summary, deadline: "2026-11-10", status: "CURRENT",
+    discovered_by_sources: [procurementSource.id],
+    procurement: { direction: "buyer_demand", stage: "open", notice_type: "other", project_id: id, milestones: [] },
+  });
+  const dutyOfCare = procurementItem("weekly-generic-duty-of-care", "Duty of Care Services", "Travel risk management, digital training, medical and security advice, and cultural guidance for employee travel.");
+  const museumSecurity = procurementItem("weekly-generic-museum-security", "Security Service - National Coal Museum", "Security services for the museum and its premises.");
+  const realCraftSupply = procurementItem("weekly-museum-craft-supply", "Museum Craft Shop seeks ceramic gifts", "The museum shop invites ceramic craft makers to apply as suppliers for handmade cultural gifts.");
+  assert.equal(isCraftRelevantProcurement(`${dutyOfCare.title} ${dutyOfCare.summary}`), false, "incidental cultural guidance does not make travel-risk procurement an ICH opportunity");
+  assert.equal(isCraftRelevantProcurement(`${museumSecurity.title} ${museumSecurity.summary}`), false, "a cultural buyer name does not make a security contract craft-relevant");
+  const procurementWeekly = buildWeeklyOpportunityActions({
+    opportunities: [dutyOfCare, museumSecurity, realCraftSupply], sources: [procurementSource], now,
+  });
+  assert.equal(procurementWeekly.some((action) => action.opportunity_id === dutyOfCare.id), false);
+  assert.equal(procurementWeekly.some((action) => action.opportunity_id === museumSecurity.id), false);
+  assert.equal(procurementWeekly.some((action) => action.opportunity_id === realCraftSupply.id), true, "specific museum craft supply opportunities remain eligible");
+  assert.equal(filterOpportunityV2Radar([dutyOfCare, museumSecurity], [procurementSource], { now, status: "browse" }).length, 0, "generic service contracts are also excluded from the public Radar despite incidental cultural tags");
+  assert.equal(filterOpportunityV2Radar([realCraftSupply], [procurementSource], { now, status: "browse" }).length, 1, "specific craft-supply procurement remains visible on Radar");
 
   const sourceFile = path.join(os.tmpdir(), `ich-v15-weekly-sources-${process.pid}.json`);
   const poolFile = path.join(os.tmpdir(), `ich-v15-weekly-pool-${process.pid}.json`);

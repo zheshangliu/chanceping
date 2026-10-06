@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { runOpportunityV2DisplayTranslation } from "../src/opportunity-v2/translation-runner";
+import { translationPrompt } from "../src/opportunity-v2/translation-provider";
 import type { OpportunityV2 } from "../src/opportunity-v2/types";
 
 const now = new Date("2026-10-06T07:00:00.000Z");
@@ -48,10 +49,31 @@ async function main(): Promise<void> {
     assert.equal(calls.filter((call) => call.id === p0.id).length, 2, "P0 has one initial request plus no more than one repair");
     assert.equal(calls.filter((call) => call.id === p1.id).length, 1, "P1 receives no repair retry");
     assert.equal(result.quality_rejection_clusters.ENGLISH_RESIDUE, 2, "quality failures are clustered without logging source text");
-    const saved = JSON.parse(fs.readFileSync(translationsPath, "utf8")) as { translations: Array<{ opportunity_id: string; status: string; title_zh?: string }> };
+    assert.ok((result.quality_rejection_clusters.MISSING_FACT ?? 0) >= 1, "dropping the source-title year is classified as a factual omission");
+    const titleRepairPrompt = translationPrompt({ title: p0.title, summary: "", targetLanguage: "zh-CN" }).system;
+    assert.match(titleRepairPrompt, /只处理标题/u);
+    assert.match(titleRepairPrompt, /年份、金额、币种符号、型号和机构缩写/u, "title-only repair explicitly preserves structured title facts");
+    assert.match(titleRepairPrompt, /summary_zh 必须为空/u);
+    const saved = JSON.parse(fs.readFileSync(translationsPath, "utf8")) as { translations: Array<{ opportunity_id: string; status: string; title_zh?: string; attempt_count?: number; retryable?: boolean }> };
     assert.equal(saved.translations.find((entry) => entry.opportunity_id === p0.id)?.title_zh, "2026年国际手工艺驻留计划");
     assert.equal(saved.translations.find((entry) => entry.opportunity_id === p0.id)?.status, "translated");
     assert.equal(saved.translations.find((entry) => entry.opportunity_id === p1.id)?.status, "failed");
+    fs.writeFileSync(poolPath, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: now.toISOString(), opportunities: [p1] }));
+    let p1RetryRequests = 0;
+    const p1RejectingProvider = {
+      id: "deepseek", free: false,
+      async translate() { p1RetryRequests += 1; return { title_zh: "无关标题", summary_zh: "" }; },
+    };
+    const p1SecondAttempt = await runOpportunityV2DisplayTranslation({ now: new Date(now.getTime() + 2 * 60 * 60 * 1000), execute: true, allSurfaces: true, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: p1RejectingProvider });
+    assert.equal(p1SecondAttempt.attempted_records, 1, "P1 may receive one bounded retry after the cooling window");
+    const cappedP1Cache = JSON.parse(fs.readFileSync(translationsPath, "utf8")) as { translations: Array<{ opportunity_id: string; attempt_count?: number; retryable?: boolean; next_retry_at?: string | null }> };
+    const cappedP1 = cappedP1Cache.translations.find((entry) => entry.opportunity_id === p1.id)!;
+    assert.equal(cappedP1.attempt_count, 2, "P1 attempt count accumulates across cycles");
+    assert.equal(cappedP1.retryable, false, "repeated quality rejection is permanently dispositioned after two attempts");
+    assert.equal(cappedP1.next_retry_at, null);
+    const p1ThirdAttempt = await runOpportunityV2DisplayTranslation({ now: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), execute: true, allSurfaces: true, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: p1RejectingProvider });
+    assert.equal(p1ThirdAttempt.selected_unique_ids.includes(p1.id), false, "the all-surfaces mode honors the exhausted retry cap");
+    assert.equal(p1RetryRequests, 1, "P1 is not retried indefinitely after its one bounded retry");
     fs.writeFileSync(poolPath, JSON.stringify({ schema_version: "chanceping-opportunity-v2.v1", updated_at: now.toISOString(), opportunities: [p0] }));
     fs.writeFileSync(translationsPath, JSON.stringify({ translations: [] }));
     let failedRepairRequests = 0;

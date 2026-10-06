@@ -1,7 +1,7 @@
 import { deduplicateOpportunityV2, opportunityStatus } from "./opportunity-pool";
 import { readOpportunityV2Translations } from "./display";
 import { isLikelySourceListingNoise } from "../ich/aggregation/adapters/generic-listing";
-import { hasProcurementDomainTag } from "./procurement";
+import { hasProcurementDomainTag, isCraftRelevantProcurement } from "./procurement";
 import { isPublicProcurementText } from "./procurement-sources";
 import { hasPublicOpportunityV2DiscoverySource, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed } from "./source-governance";
 import { isOpportunityV2PublicTitleSafe } from "./public-text";
@@ -93,7 +93,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => item.category !== "procurement_project" || isPublicProcurementText(`${item.title} ${item.summary}`, item.procurement, item.deadline, now))
     // `procurement` is only a category marker. Public procurement cards must
     // also carry at least one approved business-domain tag.
-    .filter((item) => item.category !== "procurement_project" || hasProcurementDomainTag(item.tags))
+    .filter((item) => item.category !== "procurement_project" || (hasProcurementDomainTag(item.tags) && isCraftRelevantProcurement(`${item.title} ${item.summary}`)))
     .filter((item) => query.include_irrelevant === true || item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
     .filter((item) => statusMatches(item, query.status, now))
     .filter((item) => !query.region || item.region === query.region)
