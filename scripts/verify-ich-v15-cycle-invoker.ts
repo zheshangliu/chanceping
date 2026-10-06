@@ -15,6 +15,9 @@ const timerOverridePath = path.join(tempDir, "systemd", "chanceping-opportunity-
 const timerBackupDirectory = path.join(tempDir, "timer-backups");
 const systemctlCallsPath = path.join(tempDir, "systemctl-calls.log");
 const timerOverrideSource = "docs/deployment/chanceping-opportunity-v2.timer.d/zzzz-runtime-alignment.conf";
+const expectedNextRunMs = Date.now() + 72 * 60 * 60 * 1000;
+const expectedNextRunAt = new Date(expectedNextRunMs).toISOString();
+const expectedNextMonotonicUsec = (process.hrtime.bigint() / 1000n) + 72n * 60n * 60n * 1_000_000n;
 
 try {
   fs.mkdirSync(binDir);
@@ -33,7 +36,6 @@ case "$*" in
   "is-enabled --quiet chanceping-opportunity-v2.timer") exit 0 ;;
   "is-active --quiet chanceping-opportunity-v2.timer") exit 0 ;;
   "list-timers --all --no-legend chanceping-opportunity-v2.timer") printf 'Fri 2026-10-09 00:12:00 UTC 3 days left chanceping-opportunity-v2.timer chanceping-opportunity-v2.service\\n' ;;
-  "show chanceping-opportunity-v2.timer --property=NextElapseUSecRealtime --value") printf 'Fri 2026-10-09 00:12:00 UTC' ;;
   "start chanceping-opportunity-v2.service") cp "$CYCLE_MANIFEST_NEXT" "$CYCLE_MANIFEST_PATH"; exit "\${CYCLE_START_EXIT:-0}" ;;
   "show chanceping-opportunity-v2.service --property=ActiveState,SubState,Result,ExecMainCode,ExecMainStatus --value") printf 'failed\\n' ;;
   *) echo "unexpected systemctl invocation: $*" >&2; exit 99 ;;
@@ -42,7 +44,7 @@ esac
   fs.writeFileSync(busctlPath, `#!/bin/sh
 set -eu
 case "$*" in
-  "get-property org.freedesktop.systemd1 /org/freedesktop/systemd1/unit/chanceping_2dopportunity_2dv2_2etimer org.freedesktop.systemd1.Timer NextElapseUSecRealtime") printf 't %s' "$TIMER_NEXT_USEC" ;;
+  "get-property org.freedesktop.systemd1 /org/freedesktop/systemd1/unit/chanceping_2dopportunity_2dv2_2etimer org.freedesktop.systemd1.Timer NextElapseUSecMonotonic") printf 't %s' "$TIMER_NEXT_MONOTONIC_USEC" ;;
   *) echo "unexpected busctl invocation: $*" >&2; exit 99 ;;
 esac
 `);
@@ -53,7 +55,7 @@ esac
   assert.match(command, /systemctl is-enabled --quiet chanceping-opportunity-v2\.timer/u);
   assert.match(command, /systemctl is-active --quiet chanceping-opportunity-v2\.timer/u);
   assert.match(command, /systemctl list-timers --all --no-legend chanceping-opportunity-v2\.timer/u);
-  assert.match(command, /busctl get-property org\.freedesktop\.systemd1/u, "the exact timer instant is read as a typed D-Bus integer, not a locale-formatted systemctl string");
+  assert.match(command, /NextElapseUSecMonotonic/u, "the timer's monotonic next-elapse property is used for an OnUnitActiveSec cadence");
 
   const failedManifest = {
     run_id: "new-failed-run",
@@ -64,7 +66,7 @@ esac
     fetch: { fetched_sources: 39, successful_sources: 37, raw_items: 400, pool_items: 510, radar_items: 250 },
     translation: { status: "COMPLETED", translated: 12, reused: 110, failed_records: 0 },
     audit: { status: "PASS" },
-    next_run_at: "2026-10-09T00:12:00.000Z",
+    next_run_at: expectedNextRunAt,
     freshness: "STALE",
     failure_code: "FETCH_FAILED",
     private_provider_error: "DO_NOT_PRINT_THIS_SENTINEL",
@@ -78,7 +80,7 @@ esac
       CYCLE_MANIFEST_PATH: manifestPath,
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       CYCLE_START_EXIT: "1",
-      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
+      TIMER_NEXT_MONOTONIC_USEC: String(expectedNextMonotonicUsec),
     },
   });
   assert.equal(failedRun.status, 2, `failed/degraded cycles remain a non-zero workflow outcome; stdout=${failedRun.stdout}; stderr=${failedRun.stderr}`);
@@ -98,7 +100,7 @@ esac
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       CYCLE_START_EXIT: "0",
       SYSTEMCTL_CALLS_PATH: systemctlCallsPath,
-      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
+      TIMER_NEXT_MONOTONIC_USEC: String(expectedNextMonotonicUsec),
     },
   });
   assert.equal(completedRun.status, 0, "a completed cycle with a successful service exit passes");
@@ -119,7 +121,7 @@ esac
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       CYCLE_START_EXIT: "0",
       TIMER_ADDITIONAL_DIRECTIVE: "OnBootSec=5min",
-      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
+      TIMER_NEXT_MONOTONIC_USEC: String(expectedNextMonotonicUsec),
     },
   });
   assert.equal(bootCatchupRun.status, 0, "a one-shot boot catch-up trigger can coexist with the single 72h cadence");
@@ -134,11 +136,11 @@ esac
       CYCLE_MANIFEST_PATH: manifestPath,
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       TIMER_ADDITIONAL_DIRECTIVE: "OnCalendar=*-*-* 03:00:00",
-      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:42:00.000Z") * 1000),
+      TIMER_NEXT_MONOTONIC_USEC: String(expectedNextMonotonicUsec + 30n * 60n * 1_000_000n),
     },
   });
   assert.notEqual(duplicateSchedule.status, 0, "an additional calendar trigger cannot silently diverge from the runtime 72h next_run_at");
-  assert.match(duplicateSchedule.stderr, /runtime next_run_at does not match systemd timer/u);
+  assert.match(duplicateSchedule.stderr, /runtime next_run_at does not match systemd monotonic timer/u);
   assert.match(duplicateSchedule.stderr, /OnCalendar=\*-\*-\* 03:00:00/u, "a rejected cadence prints only the relevant timer trigger for diagnosis");
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
@@ -151,7 +153,7 @@ esac
       CYCLE_MANIFEST_PATH: manifestPath,
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       CYCLE_START_EXIT: "0",
-      TIMER_NEXT_USEC: String(Date.parse("2026-10-10T00:12:00.000Z") * 1000),
+      TIMER_NEXT_MONOTONIC_USEC: String(expectedNextMonotonicUsec + 30n * 60n * 1_000_000n),
     },
   });
   assert.notEqual(misalignedRun.status, 0, "a runtime next_run_at that drifts from systemd fails closed");
