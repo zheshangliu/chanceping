@@ -94,6 +94,22 @@ esac
   assert.match(completedRun.stdout, /"run_id":"new-completed-run"/u);
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
+  const bootCatchupRun = spawnSync("bash", ["-c", command], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      PATH: `${binDir}:${process.env.PATH ?? ""}`,
+      CYCLE_MANIFEST_PATH: manifestPath,
+      CYCLE_MANIFEST_NEXT: manifestNextPath,
+      CYCLE_START_EXIT: "0",
+      TIMER_ADDITIONAL_DIRECTIVE: "OnBootSec=5min",
+      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
+    },
+  });
+  assert.equal(bootCatchupRun.status, 0, "a one-shot boot catch-up trigger can coexist with the single 72h cadence");
+  assert.match(bootCatchupRun.stdout, /new-completed-run/u);
+
+  fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
   const duplicateSchedule = spawnSync("bash", ["-c", command], {
     encoding: "utf8",
     env: {
@@ -107,6 +123,7 @@ esac
   });
   assert.notEqual(duplicateSchedule.status, 0, "an additional calendar trigger cannot silently diverge from the runtime 72h next_run_at");
   assert.match(duplicateSchedule.stderr, /exactly one 72h OnUnitActiveSec/u);
+  assert.match(duplicateSchedule.stderr, /OnCalendar=\*-\*-\* 03:00:00/u, "a rejected cadence prints only the relevant timer trigger for diagnosis");
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
   fs.writeFileSync(manifestNextPath, JSON.stringify({ ...failedManifest, run_id: "new-misaligned-run", status: "COMPLETED", failure_code: null }));
