@@ -49,6 +49,7 @@ const PROCUREMENT_DOMAIN_TAG_SET: ReadonlySet<string> = new Set(PROCUREMENT_DOMA
 // manual operations and manufacturing processes, so they must not publish a
 // generic procurement notice as an ICH opportunity.
 const CREATIVE_PRODUCT_SIGNAL_PATTERN = /文创|cultural[ -]+creative|gift[ -]+design|souvenir|craft|handmade|textile|ceramic|pottery|jewell?ery|fashion|product[ -]+design|packaging[ -]+design|graphic[ -]+design|brand[ -]+design|ip[ -]+(?:design|development)|手工艺|手工艺品|手工制作|手工作品|手工产品|手作(?:产品|体验)?|传统手工艺?|传统工艺|民间工艺|工艺美术|工艺品|传统技艺|非遗技艺|包装设计|产品设计|공예|전통공예/iu;
+const GENERIC_NON_CRAFT_PROCUREMENT_PATTERN = /\b(?:duty of care|travel risk management|security services?|guarding contract|medical and security advice)\b/iu;
 
 const PROCUREMENT_DOMAIN_TAG_PATTERNS: ReadonlyArray<readonly [string, RegExp]> = [
   ["文创产品", CREATIVE_PRODUCT_SIGNAL_PATTERN],
@@ -204,5 +205,6 @@ export function isCurrentProcurement(item: ParsedAggregationItem): boolean {
 
 /** Narrow ICH domain guard; generic public procurement remains auditable in the pool but is not presented as an ICH opportunity. */
 export function isCraftRelevantProcurement(text: string): boolean {
+  if (GENERIC_NON_CRAFT_PROCUREMENT_PATTERN.test(text)) return false;
   return CREATIVE_PRODUCT_SIGNAL_PATTERN.test(text) || /\b(?:heritage|cultural|museum|gallery|gift|exhibition|tourism|floral|flowers|flower\s+arrangement|plants|plant\s+rental|indoor\s+plants|event\s+management|event\s+production)\b|\b(?:product|packaging|graphic|brand|ip)\s+(?:design|development)\b|非遗|博物馆|美术馆|礼品|伴手礼|包装|艺术|展览|展演|文化服务|文旅|市集|纪念品|鲜花|花艺|绿植|植物布置|绿植租赁|节庆花卉|文化행사|무형유산|전통공예|공예|기념품|홍보물|관광상품|전시|행사운영|文化콘텐츠|화훼|꽃장식|식물임대/iu.test(text);
 }

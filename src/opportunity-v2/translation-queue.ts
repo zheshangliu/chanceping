@@ -39,7 +39,7 @@ export function selectOpportunityV2TranslationQueue(
       reused += 1;
       continue;
     }
-    if (existing?.p0_title_repair_attempted) {
+    if (existing?.p0_title_repair_attempted || existing?.retryable === false) {
       skippedNotRetryable += 1;
       continue;
     }
