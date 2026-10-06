@@ -39,6 +39,10 @@ export function selectOpportunityV2TranslationQueue(
       reused += 1;
       continue;
     }
+    if (existing?.p0_title_repair_attempted) {
+      skippedNotRetryable += 1;
+      continue;
+    }
     if (existing && options.recoveryMode === "targeted" && !shouldRecoverOpportunityV2Translation(existing)) {
       skippedNotRetryable += 1;
       continue;

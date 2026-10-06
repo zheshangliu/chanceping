@@ -7,7 +7,7 @@ import { ichPagesRoutes } from "../src/api/routes/ich-pages";
 import { buildWeeklyOpportunityActions } from "../src/opportunity-v2/procurement-workbench";
 import { buildOpportunityV2Display, isForeignLanguageOpportunity, isForeignLanguageTitle } from "../src/opportunity-v2/display";
 import { serializeOpportunityV2Public } from "../src/opportunity-v2/public-deadline";
-import { getOpportunityV2SourcePermission, getOpportunityV2SourcePermissionEvidence, isOpportunityV2PublicSummaryAllowed } from "../src/opportunity-v2/source-governance";
+import { getOpportunityV2SourcePermission, getOpportunityV2SourcePermissionEvidence, isOpportunityV2PublicSummaryAllowed, isOpportunityV2SourceCollectionAllowed } from "../src/opportunity-v2/source-governance";
 import { collectOpportunityV2TranslationTargets } from "../src/opportunity-v2/translation-targets";
 import { selectOpportunityV2TranslationQueue } from "../src/opportunity-v2/translation-queue";
 import type { OpportunityV2, OpportunityV2Source } from "../src/opportunity-v2/types";
@@ -55,6 +55,20 @@ async function main(): Promise<void> {
   assert.match(getOpportunityV2SourcePermissionEvidence("proc-ca-canadabuys").url ?? "", /open\.canada\.ca\/data/u);
   assert.equal(isOpportunityV2PublicSummaryAllowed("proc-ca-canadabuys"), true);
   assert.equal(getOpportunityV2SourcePermission("1zj-cultural-competition"), "NOT_REVIEWED", "aggregator use terms are not inferred from public availability");
+  assert.equal(getOpportunityV2SourcePermission("opencalls-ai"), "COMPLIANCE_HOLD", "official opencalls.ai terms prohibit automated catalogue extraction");
+  assert.equal(isOpportunityV2SourceCollectionAllowed("opencalls-ai"), false);
+  const complianceHoldFixtures: Array<{ id: string; name: string; url: string; title: string }> = [
+    { id: "curatorspace-opportunities", name: "CuratorSpace Opportunities", url: "https://www.curatorspace.com/opportunities?orderBy=latest", title: "CuratorSpace Craft Open Call" },
+    { id: "american-craft-council-opportunities", name: "American Craft Council Opportunities Board", url: "https://craftcouncil.org/opportunities-board/", title: "American Craft Council Maker Fellowship" },
+    { id: "cafe-call-for-entry", name: "CaFÉ CallForEntry", url: "https://artist.callforentry.org/festivals.php/calendar.phtml", title: "CaFÉ Craft Exhibition Call for Entry" },
+  ];
+  for (const [index, held] of complianceHoldFixtures.entries()) {
+    assert.equal(getOpportunityV2SourcePermission(held.id), "COMPLIANCE_HOLD");
+    assert.equal(isOpportunityV2SourceCollectionAllowed(held.id), false);
+    const heldSource: OpportunityV2Source = { ...source, id: held.id, name: held.name, url: held.url };
+    const heldItem = item({ id: `weekly-held-${index}`, title: held.title, source_id: held.id, source_name: held.name, source_url: held.url, discovered_by_sources: [held.id], detail_url: `${held.url.replace(/\/$/u, "")}/detail` });
+    assert.equal(buildWeeklyOpportunityActions({ opportunities: [heldItem], sources: [heldSource], now }).length, 0, `held source ${held.id} does not appear in public Weekly Actions`);
+  }
 
   const conflictOnly = buildWeeklyOpportunityActions({ opportunities: [conflict], sources: [source], now });
   assert.equal(conflictOnly.length, 1);
@@ -65,12 +79,28 @@ async function main(): Promise<void> {
   const four = buildWeeklyOpportunityActions({ opportunities: current.slice(0, 4), sources: [source], now });
   assert.equal(four.length, 4, "short lists show their real size; the system never fills a quota");
   assert.equal(four[0].evidence_state, "DISCOVERY_ONLY");
+  assert.equal(four[0].evidence_grade, "B", "an opportunity-specific listing URL is explicitly evidence grade B");
   assert.match(four[0].evidence_state_text, /官方条件待核/u);
   assert.match(four[0].eligibility_summary, /尚未结构化/u);
   assert.match(four[0].risk_flags.join(" "), /官方条件待核/u);
   assert.equal(four[0].title_translation_status, "pending");
   assert.equal(four[0].freshness, "FRESH");
   assert.equal(four[0].evidence_excerpt, current[0].title, "weekly evidence falls back to the minimum necessary title metadata");
+
+  const craftGrant = item({
+    id: "weekly-craft-grant", source_item_id: "grant-01", category: "policy_funding", directions: ["craft_arts"],
+    title: "International Craft Fellowship Grant 2026 Open Call", summary: "The grant supports traditional craft makers; applications are open until 2026-11-01.",
+    deadline: "2026-11-01", deadline_text: "Applications close 2026-11-01", official_url: "https://example.org/official/grant-01",
+  });
+  const broadDesignContests = Array.from({ length: 9 }, (_, index) => item({
+    id: `weekly-logo-${index}`, source_item_id: `logo-${index}`, title: `International Logo Design Contest 2026 ${index}`,
+    summary: "Open call for a generic brand logo contest; deadline 2026-11-01.",
+    deadline: "2026-11-01", deadline_text: "Closing 2026-11-01", tags: ["design"],
+  }));
+  const weighted = buildWeeklyOpportunityActions({ opportunities: [...broadDesignContests, craftGrant], sources: [source], now });
+  assert.equal(weighted[0]?.opportunity_id, craftGrant.id, "a high-quality craft funding action ranks ahead of generic logo contests");
+  assert.equal(weighted.filter((action) => action.type_labels.includes("赛事 / 征集")).length <= 6, true, "high-quality non-contest actions cap contest recommendations at six");
+  assert.equal(weighted.find((action) => action.opportunity_id === craftGrant.id)?.evidence_grade, "A", "official opportunity evidence is grade A");
 
   const sourceFile = path.join(os.tmpdir(), `ich-v15-weekly-sources-${process.pid}.json`);
   const poolFile = path.join(os.tmpdir(), `ich-v15-weekly-pool-${process.pid}.json`);
