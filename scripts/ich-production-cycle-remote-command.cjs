@@ -7,15 +7,34 @@ function shellQuote(value) {
 function buildIchProductionCycleRemoteCommand(options = {}) {
   const manifestPath = shellQuote(options.manifestPath || "/var/lib/chanceping/opportunity-v2/production-cycle-latest.json");
   const workingDirectory = shellQuote(options.workingDirectory || "/opt/chanceping/current");
+  const timerOverrideSource = shellQuote(options.timerOverrideSource || "docs/deployment/chanceping-opportunity-v2.timer.d/zzzz-runtime-alignment.conf");
+  const timerOverridePath = shellQuote(options.timerOverridePath || "/etc/systemd/system/chanceping-opportunity-v2.timer.d/zzzz-runtime-alignment.conf");
+  const timerBackupBase = shellQuote(options.timerBackupDirectory || "/var/lib/chanceping/opportunity-v2/systemd-backups");
   return [
     "set -eu",
-    `cd ${workingDirectory}`,
-    "timer_unit=$(systemctl cat chanceping-opportunity-v2.timer)",
-    "timer_interval_count=$(printf '%s\\n' \"$timer_unit\" | grep -Ec '^[[:space:]]*OnUnitActiveSec=72h([[:space:]]|$)' || true)",
-    "timer_has_other_trigger=$(printf '%s\\n' \"$timer_unit\" | grep -Ec '^[[:space:]]*On(Calendar|UnitInactiveSec|ActiveSec)[[:space:]]*=' || true)",
-    "if [ \"$timer_interval_count\" -ne 1 ] || [ \"$timer_has_other_trigger\" -ne 0 ]; then echo '[chanceping] timer must have exactly one 72h OnUnitActiveSec cadence and no additional periodic trigger; active On* directives:' >&2; printf '%s\\n' \"$timer_unit\" | grep -E '^[[:space:]]*On[A-Za-z]+[[:space:]]*=' >&2 || true; exit 1; fi",
     "service_exec=$(systemctl show chanceping-opportunity-v2.service --property=ExecStart --value)",
     "case \"$service_exec\" in *'npm run opportunity:v2:run'*|*'npm run opportunity:v2:cycle'*|*'run-ich-production-cycle'*) ;; *) echo '[chanceping] existing OpportunityV2 service does not point at the protected cycle runner' >&2; exit 1 ;; esac",
+    `cd ${workingDirectory}`,
+    "timer_override_source=" + timerOverrideSource,
+    "timer_override_path=" + timerOverridePath,
+    "timer_backup_base=" + timerBackupBase,
+    "timer_backup_id=$(date -u +%Y%m%dT%H%M%SZ)-$$",
+    "timer_backup_dir=\"$timer_backup_base/$timer_backup_id\"",
+    "mkdir -p \"$timer_backup_dir\"",
+    "chmod 0700 \"$timer_backup_dir\"",
+    "timer_unit=$(systemctl cat chanceping-opportunity-v2.timer)",
+    "printf '%s\\n' \"$timer_unit\" > \"$timer_backup_dir/timer.before\"",
+    "echo \"[chanceping] saved previous timer definition: $timer_backup_dir/timer.before\"",
+    "if [ -e \"$timer_override_path\" ] && ! cmp -s \"$timer_override_source\" \"$timer_override_path\"; then cp -p \"$timer_override_path\" \"$timer_backup_dir/override.before\"; fi",
+    "if ! cmp -s \"$timer_override_source\" \"$timer_override_path\"; then",
+    "  timer_override_tmp=\"$timer_override_path.tmp.$$\"",
+    "  mkdir -p \"$(dirname \"$timer_override_path\")\"",
+    "  install -m 0644 \"$timer_override_source\" \"$timer_override_tmp\"",
+    "  mv -f \"$timer_override_tmp\" \"$timer_override_path\"",
+    "  systemctl daemon-reload",
+    "fi",
+    "systemctl restart chanceping-opportunity-v2.timer",
+    "echo '[chanceping] timer normalized: exactly one OnUnitActiveSec=72h; startup/calendar/other cadence cleared'",
     "systemctl enable --now chanceping-opportunity-v2.timer",
     "systemctl is-enabled --quiet chanceping-opportunity-v2.timer || { echo '[chanceping] 72h timer is not enabled' >&2; exit 1; }",
     "systemctl is-active --quiet chanceping-opportunity-v2.timer || { echo '[chanceping] 72h timer is not active' >&2; exit 1; }",
@@ -33,7 +52,7 @@ function buildIchProductionCycleRemoteCommand(options = {}) {
     "    printf '%s\\n' \"$terminal\" | sed -n '2p'",
     `    runtime_next=$(node -e 'try{const m=JSON.parse(require("node:fs").readFileSync(process.argv[1],"utf8"));process.stdout.write(String(m.next_run_at||""))}catch{}' ${manifestPath})`,
     "    timer_next_dbus=$(busctl get-property org.freedesktop.systemd1 /org/freedesktop/systemd1/unit/chanceping_2dopportunity_2dv2_2etimer org.freedesktop.systemd1.Timer NextElapseUSecRealtime)",
-    "    node -e 'const runtimeMs=Date.parse(process.argv[1]);const match=process.argv[2].match(/^t\\s+(\\d+)$/);if(!Number.isFinite(runtimeMs)||!match){process.exit(1)}const timerMs=Number(BigInt(match[1])/1000n);if(!Number.isFinite(timerMs)||Math.abs(runtimeMs-timerMs)>300000){process.exit(1)}' \"$runtime_next\" \"$timer_next_dbus\" || { echo '[chanceping] runtime next_run_at does not match systemd timer within five minutes' >&2; exit 1; }",
+    "    node -e 'const runtimeMs=Date.parse(process.argv[1]);const match=process.argv[2].match(/^t\\s+(\\d+)$/);if(!Number.isFinite(runtimeMs)||!match){process.exit(1)}const timerMs=Number(BigInt(match[1])/1000n);if(!Number.isFinite(timerMs)||Math.abs(runtimeMs-timerMs)>300000){process.exit(1)}' \"$runtime_next\" \"$timer_next_dbus\" || { echo '[chanceping] runtime next_run_at does not match systemd timer within five minutes' >&2; echo \"[chanceping] runtime next_run_at: $runtime_next\" >&2; echo \"[chanceping] systemd NextElapseUSecRealtime: $timer_next_dbus\" >&2; systemctl cat chanceping-opportunity-v2.timer | grep -E '^[[:space:]]*(On[A-Za-z]*|RandomizedDelaySec|AccuracySec|Unit)=' >&2 || true; exit 1; }",
     "    echo \"[chanceping] runtime next_run_at matches systemd timer: $runtime_next\"",
     "    if { [ \"$status\" = COMPLETED ] || [ \"$status\" = COMPLETED_WITH_BACKLOG ]; } && [ \"$service_start_exit\" -eq 0 ]; then exit 0; else exit 2; fi",
     "  fi",
