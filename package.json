@@ -191,6 +191,7 @@
     "opportunity:v2:display:execute": "tsx scripts/run-opportunity-v2-display.ts --execute --all",
     "verify:ich:v14:translation-operations": "tsx scripts/verify-ich-v14-translation-operations.ts",
     "verify:ich:v14:source-governance": "tsx scripts/verify-ich-v14-source-governance.ts",
+    "verify:ich:v15:identity": "tsx scripts/verify-ich-v15-identity.ts",
     "verify:opportunity:v13:display": "tsx scripts/verify-opportunity-v13-display.ts",
     "verify:opportunity:v13:closeout": "tsx scripts/verify-opportunity-v13-closeout.ts",
     "verify:opportunity:v13:artconnect-mobile": "tsx scripts/verify-v13-artconnect-mobile.ts",
@@ -204,7 +205,7 @@
     "verify:opportunity:coverage": "tsx scripts/verify-opportunity-coverage.ts",
     "verify:opportunity:coverage:sources": "tsx scripts/verify-opportunity-coverage-sources.ts",
     "audit:opportunity:coverage": "tsx scripts/run-opportunity-coverage-audit.ts",
-    "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:ich:stage3 && node --run verify:ich:stage4 && node --run verify:ich:stage5 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:opportunity:v12 && node --run verify:opportunity:coverage && node --run verify:opportunity:coverage:sources && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
+    "verify:all": "node --run typecheck && node --run verify:ich:stage1 && node --run verify:ich:stage2 && node --run verify:ich:stage3 && node --run verify:ich:stage4 && node --run verify:ich:stage5 && node --run verify:api-env && node --run verify:v15 && node --run verify:v15:e2e && node --run verify:v16 && node --run verify:ich:v15:identity && node --run verify:opportunity:v12 && node --run verify:opportunity:coverage && node --run verify:opportunity:coverage:sources && node --run verify:q7:ai-events-public-safety && node --run verify:q7:ai-events-detail-bridge && node --run verify:mvp-ux && node --run verify:source-hints && node --run verify:report-template && node --run verify:chat-mvp:contract && node --run verify:chat-mvp:api && node --run verify:llm-retry && node --run verify:search-cost-guard && node --run verify:q3 && node --run verify:q5 && node --run verify:q6",
     "precheck": "tsx scripts/precheck.ts"
   },
   "dependencies": {
