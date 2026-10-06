@@ -88,11 +88,18 @@ export interface OpportunityV2SourceHealth {
   source_id: string;
   fetched_at: string;
   ok: boolean;
+  /** HTTP transport success is separate from parser recognition / item count. */
+  transport_ok?: boolean;
+  parser_status?: "recognized" | "unrecognized";
+  /** Only set when the source provides a verifiable content timestamp; never guessed from fetch time. */
+  verified_content_at?: string | null;
   http_status: number | null;
   items_seen: number;
   error: string | null;
   format?: "DEDICATED" | "RSS" | "HTML_LISTING" | null;
   partial?: boolean;
+  listing_pages?: number;
+  request_count?: number;
   next_page?: number | string | null;
   source_item_ids?: string[];
   canonical_records?: number;
@@ -132,6 +139,8 @@ export interface OpportunityV2FetchOptions {
   headers?: Record<string, string>;
   body?: string | Buffer;
   decompress?: "auto" | "gzip" | "none";
+  /** Internal per-host gate. Called for every HTTP hop, including redirects. */
+  requestGate?: <T>(hostname: string, request: () => Promise<T>) => Promise<T>;
 }
 
 /** Safe, secret-free transport facts retained for isolated audits. */

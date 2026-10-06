@@ -81,8 +81,8 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/public", publicAiEventsRoutes(ctx));
   app.route("/api/public/welfare", publicWelfareOpportunityRoutes());
   app.route("/api/business", businessRadarRoutes());
-  app.route("/api/business/workflows", businessWorkflowRoutes());
-  app.route("/api/business/profiles", businessProfileRoutes());
+  app.route("/api/business/workflows", businessWorkflowRoutes({ resolveAuthenticatedUser: ctx.resolveAuthenticatedUser }));
+  app.route("/api/business/profiles", businessProfileRoutes({ resolveAuthenticatedUser: ctx.resolveAuthenticatedUser }));
   app.route("/api/business/operations", businessOperationsRoutes());
   app.route("/api/public/ich", publicIchRoutes());
   app.route("/api/public/ich", ichSubmissionRoutes());

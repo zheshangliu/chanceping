@@ -1,4 +1,5 @@
 import type { OpportunityV2, V2OpportunityStatus } from "./types";
+import { isOpportunityV2PublicSummaryAllowed, publicOpportunityV2DiscoverySources } from "./source-governance";
 
 export const UNSAFE_DEADLINE_TEXT = "截止时间待核实";
 
@@ -23,10 +24,19 @@ export function publicOpportunityV2Deadline(item: Pick<OpportunityV2, "deadline"
 /** Serialize a V2 opportunity for public JSON without leaking unsafe evidence. */
 export function serializeOpportunityV2Public(item: OpportunityV2): Record<string, unknown> {
   const deadline = publicOpportunityV2Deadline(item);
-  if (!deadline.unsafe) return { ...item };
+  const reuseAllowed = isOpportunityV2PublicSummaryAllowed(item.source_id);
+  const publicSummary = reuseAllowed ? item.summary : "";
+  if (!deadline.unsafe) return {
+    ...item,
+    summary: publicSummary,
+    ...(!reuseAllowed ? { deadline_conflicts: [] } : {}),
+    discovered_by_sources: publicOpportunityV2DiscoverySources(item.discovered_by_sources),
+  };
   const { deadline_conflicts: _conflicts, deadline_source_url: _sourceUrl, deadline_raw_text: _rawText, deadline_checked_at: _checkedAt, ...publicItem } = item;
   return {
     ...publicItem,
+    summary: publicSummary,
+    discovered_by_sources: publicOpportunityV2DiscoverySources(item.discovered_by_sources),
     deadline: null,
     deadline_text: UNSAFE_DEADLINE_TEXT,
     status: "UNKNOWN_DEADLINE",

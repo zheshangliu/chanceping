@@ -1,7 +1,8 @@
 import { Hono } from "hono";
-import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, getOpportunityV2SourcePermission, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, serializePublicProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { runIchProductionCycle, withIchProductionCycleLock, type IchProductionCycleManifest, type IchProductionCycleOptions, type IchProductionCyclePaths } from "../../opportunity-v2/production-cycle";
 
-export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
+export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; runProductionCycle?: (options?: IchProductionCycleOptions) => Promise<IchProductionCycleManifest>; }
 
 function queryOf(raw: Record<string, string>): OpportunityV2RadarQuery {
   const region = raw.region === "CN" || raw.region === "GLOBAL" ? raw.region : undefined;
@@ -28,6 +29,8 @@ async function bodyOf(c: { req: { json: () => Promise<unknown> } }): Promise<Rec
 
 export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Hono {
   const app = new Hono();
+  const runtimePathOverrides = (): Partial<IchProductionCyclePaths> => ({ sources: options.sourcesPath, pool: options.poolPath, health: options.healthPath, changeFeed: options.changeFeedPath });
+  const withRuntimeLock = <T>(operation: () => Promise<T> | T) => withIchProductionCycleLock(operation, runtimePathOverrides());
   const sources = () => readOpportunityV2Sources(options.sourcesPath);
   const pool = () => readOpportunityV2Pool(options.poolPath);
   const sourceOr404 = (sourceId: string) => findOpportunityV2Source(sourceId, options.sourcesPath);
@@ -40,62 +43,79 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
 
   app.get("/sources", (c) => c.json({ sources: sources() }));
   app.get("/sources/overview", (c) => c.json(buildOpportunityV2SourceOverview({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath })));
-  app.get("/procurement/changes", (c) => c.json(readProcurementChangeFeed(options.changeFeedPath)));
+  app.get("/procurement/changes", (c) => c.json(serializePublicProcurementChangeFeed(readProcurementChangeFeed(options.changeFeedPath))));
   app.post("/sources", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    try {
-      const source = createOpportunityV2Source(sourceInput(await bodyOf(c)));
-      appendOpportunityV2Source(source, options.sourcesPath);
-      const test = await testOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath });
-      const run = test.ok ? await runOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }) : null;
-      return c.json({ source: findOpportunityV2Source(source.id, options.sourcesPath), test, run });
-    } catch (error) {
-      return c.json({ error: { code: "INVALID_SOURCE", message: error instanceof Error ? error.message : String(error) } }, 400);
-    }
+    return withRuntimeLock(async () => {
+      try {
+        const source = createOpportunityV2Source(sourceInput(await bodyOf(c)));
+        appendOpportunityV2Source(source, options.sourcesPath);
+        const test = await testOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath });
+        const run = test.ok ? await runOpportunityV2Source({ sourceId: source.id, fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }) : null;
+        return c.json({ source: findOpportunityV2Source(source.id, options.sourcesPath), test, run });
+      } catch (error) {
+        return c.json({ error: { code: "INVALID_SOURCE", message: error instanceof Error ? error.message : String(error) } }, 400);
+      }
+    });
   });
   app.put("/sources/:id", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    try {
-      const body = await bodyOf(c);
-      const patch: Partial<OpportunityV2Source> = {};
-      if ("name" in body) patch.name = String(body.name ?? "");
-      if ("url" in body) patch.url = String(body.url ?? "");
-      if (body.region === "CN" || body.region === "GLOBAL") patch.region = body.region;
-      if (body.priority === "P0" || body.priority === "P1") patch.priority = body.priority;
-      if ("types" in body) patch.types = listValue(body.types);
-      if ("radars" in body) patch.radars = listValue(body.radars);
-      if (typeof body.enabled === "boolean") patch.enabled = body.enabled;
-      const source = updateOpportunityV2Source(c.req.param("id"), patch, options.sourcesPath);
-      return c.json({ source });
-    } catch (error) {
-      return c.json({ error: { code: "INVALID_SOURCE", message: error instanceof Error ? error.message : String(error) } }, 400);
-    }
+    return withRuntimeLock(async () => {
+      if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+      try {
+        const body = await bodyOf(c);
+        const patch: Partial<OpportunityV2Source> = {};
+        if ("name" in body) patch.name = String(body.name ?? "");
+        if ("url" in body) patch.url = String(body.url ?? "");
+        if (body.region === "CN" || body.region === "GLOBAL") patch.region = body.region;
+        if (body.priority === "P0" || body.priority === "P1") patch.priority = body.priority;
+        if ("types" in body) patch.types = listValue(body.types);
+        if ("radars" in body) patch.radars = listValue(body.radars);
+        if (typeof body.enabled === "boolean") patch.enabled = body.enabled;
+        const source = updateOpportunityV2Source(c.req.param("id"), patch, options.sourcesPath);
+        return c.json({ source });
+      } catch (error) {
+        return c.json({ error: { code: "INVALID_SOURCE", message: error instanceof Error ? error.message : String(error) } }, 400);
+      }
+    });
   });
   app.post("/sources/:id/enable", (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: true, status: "ACTIVE" }, options.sourcesPath) });
+    return withRuntimeLock(() => {
+      if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+      if (getOpportunityV2SourcePermission(c.req.param("id")) === "COMPLIANCE_HOLD") return c.json({ error: { code: "COMPLIANCE_HOLD", message: "该来源尚无自动采集与公开转载授权，暂不能启用抓取" } }, 409);
+      return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: true, status: "ACTIVE" }, options.sourcesPath) });
+    });
   });
   app.post("/sources/:id/pause", (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: false, status: "PAUSED" }, options.sourcesPath) });
+    return withRuntimeLock(() => {
+      if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+      return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: false, status: "PAUSED" }, options.sourcesPath) });
+    });
   });
   app.delete("/sources/:id", (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: false, status: "PAUSED" }, options.sourcesPath) });
+    return withRuntimeLock(() => {
+      if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+      return c.json({ source: setOpportunityV2SourceState(c.req.param("id"), { enabled: false, status: "PAUSED" }, options.sourcesPath) });
+    });
   });
   app.post("/sources/:id/test", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    return c.json(await testOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath }));
+    return withRuntimeLock(async () => {
+      if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+      if (getOpportunityV2SourcePermission(c.req.param("id")) === "COMPLIANCE_HOLD") return c.json({ error: { code: "COMPLIANCE_HOLD", message: "该来源尚无自动采集与公开转载授权，暂不能测试" } }, 409);
+      return c.json(await testOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, healthPath: options.healthPath }));
+    });
   });
   app.post("/sources/:id/run", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
-    if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
-    return c.json(await runOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }));
+    return withRuntimeLock(async () => {
+      if (!sourceOr404(c.req.param("id"))) return c.json({ error: { code: "NOT_FOUND", message: "Source 不存在" } }, 404);
+      if (getOpportunityV2SourcePermission(c.req.param("id")) === "COMPLIANCE_HOLD") return c.json({ error: { code: "COMPLIANCE_HOLD", message: "该来源尚无自动采集与公开转载授权，暂不能抓取" } }, 409);
+      return c.json(await runOpportunityV2Source({ sourceId: c.req.param("id"), fetcher: options.fetcher, sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath }));
+    });
   });
   app.get("/opportunities", (c) => {
     const items = filterOpportunityV2Radar(pool().opportunities, sources(), queryOf(c.req.query()));
@@ -104,13 +124,24 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
   app.get("/radar", (c) => {
     const sourcePool = sources();
     const items = filterOpportunityV2Radar(pool().opportunities, sourcePool, queryOf(c.req.query()));
-    return c.json({ radar_id: "ich", name: "非遗机会雷达", source_pool: sourcePool.filter((source) => source.enabled), total: items.length, opportunities: items.map(serializeOpportunityV2Public) });
+    return c.json({ radar_id: "ich", name: "非遗机会雷达", source_pool: sourcePool.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id)), total: items.length, opportunities: items.map(serializeOpportunityV2Public) });
   });
   app.get("/opportunities/:id", (c) => {
     const item = pool().opportunities.find((candidate) => candidate.id === c.req.param("id"));
-    if (!item) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
+    if (!item || !isOpportunityV2PublicCopyAllowed(item)) return c.json({ error: { code: "NOT_FOUND", message: "机会不存在" } }, 404);
     return c.json(serializeOpportunityV2Public(item));
   });
-  app.post("/run", async (c) => { const denied = requireAdmin(c); if (denied) return denied; return c.json(await runOpportunityV2({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath, changeFeedPath: options.changeFeedPath, fetcher: options.fetcher })); });
+  app.post("/run", async (c) => {
+    const denied = requireAdmin(c); if (denied) return denied;
+    const paths = runtimePathOverrides();
+    const cycleOptions: IchProductionCycleOptions = { paths };
+    if (options.fetcher) {
+      cycleOptions.fetch = async (now, runtime) => {
+        const result = await runOpportunityV2({ now, sourcesPath: runtime.sources, poolPath: runtime.pool, healthPath: runtime.health, changeFeedPath: runtime.changeFeed, fetcher: options.fetcher });
+        return { run_id: result.run_id, started_at: result.started_at, finished_at: result.finished_at, fetched_sources: result.fetched_sources, successful_sources: result.successful_sources, raw_items: result.raw_items, pool_items: result.pool_items, radar_items: result.radar_items };
+      };
+    }
+    return c.json(await (options.runProductionCycle ?? runIchProductionCycle)(cycleOptions));
+  });
   return app;
 }

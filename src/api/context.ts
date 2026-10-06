@@ -32,6 +32,8 @@ interface ConversationEntry {
 
 /** 应用上下文 */
 export interface AppContext {
+  /** Optional server-owned identity resolver. It must never derive identity from caller-supplied owner IDs or headers. */
+  resolveAuthenticatedUser?: (request: Request) => string | null | undefined | Promise<string | null | undefined>;
   /** LLM 适配器（Mock 或真实，由 LLM_MODE 环境变量控制） */
   llmAdapter: LLMAdapter;
   /** 机会库（按 STORE_TYPE 切换 local/meili） */

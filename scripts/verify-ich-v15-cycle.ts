@@ -1,0 +1,161 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { productionCycleFreshness, runIchProductionCycle, runIchProductionCycleAudit, type IchProductionCycleAudit, type IchProductionCycleFetchSummary, type IchProductionCyclePaths } from "../src/opportunity-v2/production-cycle";
+import type { OpportunityV2TranslationRunSummary } from "../src/opportunity-v2/translation-runner";
+
+const NOW = new Date("2026-10-06T07:00:00.000Z");
+const SECRET = "v15-cycle-test-secret-never-log";
+
+function makePaths(): { dir: string; paths: IchProductionCyclePaths; initial: Map<string, string> } {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-v15-cycle-"));
+  const paths: IchProductionCyclePaths = {
+    runtimeRoot: dir,
+    sources: path.join(dir, "sources.json"),
+    pool: path.join(dir, "opportunities.json"),
+    health: path.join(dir, "source-health.json"),
+    translations: path.join(dir, "translations.json"),
+    scheduler: path.join(dir, "scheduler.json"),
+    changeFeed: path.join(dir, "procurement-change-feed.json"),
+    lock: path.join(dir, "cycle.lock"),
+    backupRoot: path.join(dir, "backups"),
+    manifest: path.join(dir, "cycle-latest.json"),
+    runManifests: path.join(dir, "runs"),
+  };
+  const initial = new Map<string, string>();
+  for (const [index, file] of [paths.sources, paths.pool, paths.health, paths.translations, paths.scheduler, paths.changeFeed].entries()) {
+    const value = JSON.stringify({ fixture: index, keep: true });
+    fs.writeFileSync(file, value);
+    initial.set(file, value);
+  }
+  return { dir, paths, initial };
+}
+
+function fetchSummary(now: Date, overrides: Partial<IchProductionCycleFetchSummary> = {}): IchProductionCycleFetchSummary {
+  const at = now.toISOString();
+  return { run_id: "fixture-fetch-run", started_at: at, finished_at: at, fetched_sources: 2, successful_sources: 2, raw_items: 3, pool_items: 4, radar_items: 2, ...overrides };
+}
+
+function translationSummary(overrides: Partial<OpportunityV2TranslationRunSummary> = {}): OpportunityV2TranslationRunSummary {
+  return {
+    status: "COMPLETED", provider: "deepseek", provider_configured: true, source_count: 2, pool_count: 4, visible_target_count: 3, foreign_count: 2,
+    cache_reused: 1, cooling: 0, skipped_not_retryable: 0, eligible_pending: 1, selected_unique_ids: ["opp-1"], selected_surfaces: { "opp-1": ["main"] },
+    actual_requests: 1, attempted_records: 1, translated_records: 1, failed_records: 0, failure_counts: {},
+    write_result: { written_count: 1, skipped_stale_count: 0, preserved_success_count: 0 },
+    budget_after: { max_requests: 250, actual_requests: 1, reserved_requests: 0 }, visible_with_chinese: 2, unattempted_selected: 0, ...overrides,
+  };
+}
+
+const passAudit: IchProductionCycleAudit = {
+  status: "PASS", source_count: 2, successful_sources: 2, pool_items: 4, radar_items: 2, memo_items: 3, weekly_items: 2,
+  translation: {
+    foreign_public_titles: 0, translated_titles: 4, failed_titles: 0, pending_titles: 0,
+    p0: { foreign_titles: 0, chinese_titles: 0, coverage_percent: 100, meets_98_percent: true },
+    p1: { foreign_titles: 0, chinese_titles: 0, coverage_percent: 100, meets_95_percent: true },
+    unresolved: {
+      PROVIDER_UNAVAILABLE: { count: 0, opportunity_ids: [], by_source: {} },
+      QUALITY_REJECTED: { count: 0, opportunity_ids: [], by_source: {} },
+      SOURCE_TEXT_BROKEN: { count: 0, opportunity_ids: [], by_source: {} },
+      INSUFFICIENT_EVIDENCE: { count: 0, opportunity_ids: [], by_source: {} },
+      COOLING: { count: 0, opportunity_ids: [], by_source: {} },
+      NON_RETRYABLE: { count: 0, opportunity_ids: [], by_source: {} },
+      BUDGET_DEFERRED: { count: 0, opportunity_ids: [], by_source: {} },
+    },
+    all_untranslated_p0_p1_dispositioned: true,
+  },
+  public_encoding_errors: 0, public_unsafe_exact_deadlines: 0, artconnect_collection_allowed: false, weekly_limit_pass: true,
+  source_governance: { reviewed_ok_count: 0, reviewed_metadata_only_count: 0, official_open_data_count: 0, not_reviewed_count: 2, compliance_hold_count: 0, weekly_contributing_source_ids: [], top_public_contributors: [] },
+  source_health: { fresh: 2, stale: 0, never_succeeded: 0, unknown: 0, failed: 0, sources: [] },
+};
+
+async function main(): Promise<void> {
+  const first = makePaths();
+  try {
+    const order: string[] = [];
+    const fetchedPool = "pool-after-fetch";
+    fs.writeFileSync(first.paths.pool, fetchedPool);
+    const completed = await runIchProductionCycle({
+      now: NOW,
+      paths: first.paths,
+      fetch: async (now) => { order.push("fetch"); return fetchSummary(now); },
+      translate: async () => { order.push("translate"); return translationSummary(); },
+      audit: () => { order.push("audit"); return passAudit; },
+      releaseManifestPath: path.join(first.dir, "missing-release.json"),
+    });
+    assert.deepEqual(order, ["fetch", "translate", "audit"], "the protected cycle order is fetch → translate → audit");
+    assert.equal(completed.status, "COMPLETED");
+    assert.equal(completed.next_run_at, new Date(Date.parse(NOW.toISOString()) + 72 * 60 * 60 * 1000).toISOString());
+    assert.equal(JSON.parse(fs.readFileSync(first.paths.scheduler, "utf8")).interval_hours, 72);
+    assert.equal(fs.readFileSync(first.paths.pool, "utf8"), fetchedPool, "successful fetch data is retained");
+    assert.equal(completed.freshness, "FRESH");
+
+    const partial = await runIchProductionCycle({
+      now: new Date(NOW.getTime() + 1000),
+      paths: first.paths,
+      fetch: async (now) => { fs.writeFileSync(first.paths.pool, "pool-partial-success"); return fetchSummary(now, { successful_sources: 1 }); },
+      translate: async () => { throw new Error(SECRET); },
+      audit: () => passAudit,
+      releaseManifestPath: path.join(first.dir, "missing-release.json"),
+    });
+    assert.equal(partial.status, "DEGRADED", "one failed source and translation failure must not discard fetch results");
+    assert.equal(partial.failure_code, "TRANSLATION_DEGRADED");
+    assert.equal(fs.readFileSync(first.paths.pool, "utf8"), "pool-partial-success");
+    assert.doesNotMatch(fs.readFileSync(first.paths.manifest, "utf8"), new RegExp(SECRET, "u"));
+
+    const beforeCrash = new Map([first.paths.sources, first.paths.pool, first.paths.health, first.paths.translations, first.paths.scheduler, first.paths.changeFeed].map((file) => [file, fs.readFileSync(file, "utf8")]));
+    const failed = await runIchProductionCycle({
+      now: new Date(NOW.getTime() + 2000), paths: first.paths,
+      fetch: async () => { fs.writeFileSync(first.paths.pool, "corrupt partial write"); fs.writeFileSync(first.paths.sources, "corrupt sources"); throw new Error(SECRET); },
+      releaseManifestPath: path.join(first.dir, "missing-release.json"),
+    });
+    assert.equal(failed.status, "FAILED");
+    assert.equal(failed.failure_code, "FETCH_FAILED");
+    for (const [file, contents] of beforeCrash) assert.equal(fs.readFileSync(file, "utf8"), contents, `catastrophic failure restores ${path.basename(file)}`);
+    assert.doesNotMatch(fs.readFileSync(first.paths.manifest, "utf8"), new RegExp(SECRET, "u"));
+
+    let active = 0;
+    let maxActive = 0;
+    const concurrent = (offset: number) => runIchProductionCycle({
+      now: new Date(NOW.getTime() + offset), paths: first.paths,
+      fetch: async (now) => { active += 1; maxActive = Math.max(maxActive, active); await new Promise((resolve) => setTimeout(resolve, 40)); active -= 1; return fetchSummary(now); },
+      translate: async () => translationSummary(), audit: () => passAudit,
+      releaseManifestPath: path.join(first.dir, "missing-release.json"),
+    });
+    await Promise.all([concurrent(3000), concurrent(4000)]);
+    assert.equal(maxActive, 1, "timer/manual cycles using the same runtime never overlap");
+    const backups = fs.readdirSync(first.paths.backupRoot).filter((name) => fs.statSync(path.join(first.paths.backupRoot, name)).isDirectory());
+    assert.ok(backups.length <= 3, "runtime snapshot retention is bounded");
+
+    assert.equal(productionCycleFreshness(null, NOW), "NEVER_SUCCEEDED");
+    assert.equal(productionCycleFreshness(new Date(NOW.getTime() - 79 * 60 * 60 * 1000).toISOString(), NOW), "STALE");
+    assert.equal(productionCycleFreshness(new Date(NOW.getTime() - 77 * 60 * 60 * 1000).toISOString(), NOW), "FRESH");
+
+    const auditDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-v15-audit-"));
+    try {
+      const auditSourcesPath = path.join(auditDir, "sources.json");
+      const auditPoolPath = path.join(auditDir, "opportunities.json");
+      const auditHealthPath = path.join(auditDir, "source-health.json");
+      const auditTranslationsPath = path.join(auditDir, "translations.json");
+      fs.writeFileSync(auditSourcesPath, JSON.stringify({ sources: [
+        { id: "stale-failed", name: "Stale failed", url: "https://example.invalid", region: "GLOBAL", priority: "P1", types: [], radars: ["ich"], enabled: true, status: "FAILED", last_fetch_at: new Date(NOW.getTime() - 79 * 60 * 60 * 1000).toISOString() },
+        { id: "never-run", name: "Never run", url: "https://example.invalid", region: "CN", priority: "P1", types: [], radars: ["ich"], enabled: true, status: "PENDING", last_fetch_at: null },
+      ] }));
+      fs.writeFileSync(auditPoolPath, JSON.stringify({ updated_at: NOW.toISOString(), opportunities: [] }));
+      fs.writeFileSync(auditHealthPath, JSON.stringify({ sources: [{ source_id: "stale-failed", fetched_at: NOW.toISOString(), ok: false, http_status: 503, items_seen: 0, error: "safe fixture" }] }));
+      fs.writeFileSync(auditTranslationsPath, JSON.stringify({ translations: [] }));
+      const audit = await runIchProductionCycleAudit({ now: NOW, paths: { sources: auditSourcesPath, pool: auditPoolPath, health: auditHealthPath, translations: auditTranslationsPath } });
+      assert.equal(audit.source_health.stale, 1, "source audit reports stale based on last successful fetch");
+      assert.equal(audit.source_health.never_succeeded, 1, "source audit identifies never-successful sources");
+      assert.equal(audit.source_health.failed, 1, "source audit separates latest fetch failure from freshness");
+      assert.equal(audit.status, "PASS");
+    } finally {
+      fs.rmSync(auditDir, { recursive: true, force: true });
+    }
+    console.log("ICH_V15_CYCLE: PASS (ordered fetch/translate/audit; partial keeps data; catastrophic restores; serialized; bounded snapshots; 78h freshness)");
+  } finally {
+    fs.rmSync(first.dir, { recursive: true, force: true });
+  }
+}
+
+main().catch((error) => { console.error(error); process.exitCode = 1; });

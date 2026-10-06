@@ -4,6 +4,7 @@ import { hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import { isLikelySourceListingNoise } from "../ich/aggregation/adapters/generic-listing";
 import { hasProcurementDomainTag } from "./procurement";
 import { isPublicProcurementText } from "./procurement-sources";
+import { hasPublicOpportunityV2DiscoverySource, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed } from "./source-governance";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
 export type OpportunityV2StatusFilter = "browse" | "current" | "closing_soon" | "opening_soon" | "long_term" | "deadline_tbd" | "history";
@@ -76,12 +77,13 @@ function eventRegionMatches(item: OpportunityV2, region: OpportunityV2RadarQuery
 
 export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources: OpportunityV2Source[], query: OpportunityV2RadarQuery = {}): OpportunityV2[] {
   const now = query.now ?? new Date();
-  const enabled = new Set(sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
+  const enabled = new Set(sources.filter((source) => source.enabled && isOpportunityV2SourceCollectionAllowed(source.id) && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status)).map((source) => source.id));
   const q = query.q?.trim().toLowerCase();
   const tag = query.tag?.trim().toLowerCase();
   const translations = q ? new Map(readOpportunityV2Translations().map((entry) => [entry.opportunity_id, entry])) : new Map();
   const filtered = opportunities
     .filter((item) => enabled.has(item.source_id))
+    .filter(isOpportunityV2PublicCopyAllowed)
     .filter((item) => !isLikelySourceListingNoise(item.source_id, item.title, item.detail_url))
     .filter((item) => !hasEncodingCorruption(item.title))
     // A legacy row classified as procurement without structured procurement
@@ -95,7 +97,7 @@ export function filterOpportunityV2Radar(opportunities: OpportunityV2[], sources
     .filter((item) => query.include_irrelevant === true || item.radar_relevance === "RELEVANT" || (query.include_uncertain === true && item.radar_relevance === "UNCERTAIN"))
     .filter((item) => statusMatches(item, query.status, now))
     .filter((item) => !query.region || item.region === query.region)
-    .filter((item) => !query.source_id || item.source_id === query.source_id || item.discovered_by_sources.includes(query.source_id))
+    .filter((item) => !query.source_id || item.source_id === query.source_id || hasPublicOpportunityV2DiscoverySource(item.discovered_by_sources, query.source_id))
     .filter((item) => !tag || item.tags.some((value) => value.toLowerCase() === tag || value.toLowerCase().includes(tag)))
     .filter((item) => values(query.category).length === 0 || values(query.category).includes(item.category))
     .filter((item) => values(query.direction).length === 0 || values(query.direction).some((value) => (item.directions ?? []).includes(value as never)))

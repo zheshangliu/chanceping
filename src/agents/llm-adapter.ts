@@ -23,6 +23,8 @@ export interface LLMRequest {
   response_format?: "json" | "text";
   /** 温度 */
   temperature?: number;
+  /** Internal accounting hook; never serialized to the model provider. */
+  onRequestStart?: () => void;
 }
 
 /** LLM 调用响应 */

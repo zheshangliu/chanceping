@@ -1,0 +1,1577 @@
+{
+  "schema_version": "chanceping-ich-v14-translation-run.v1",
+  "created_at": "2026-10-05T15:42:09.193Z",
+  "mode": "dry_run",
+  "scope": "primary_visible_surfaces",
+  "runtime_paths": {
+    "pool": "/Users/1sunflower/.codex/worktrees/ich-v14-trusted-ops/chanceping/data/opportunity-v2/opportunities.json",
+    "sources": "/Users/1sunflower/.codex/worktrees/ich-v14-trusted-ops/chanceping/data/opportunity-v2/sources.json",
+    "translations": "/Users/1sunflower/.codex/worktrees/ich-v14-trusted-ops/chanceping/data/opportunity-v2/translations.json"
+  },
+  "input_sha256": {
+    "pool": "afc578f833f69074dd660d5dd459cee8e78d0ca06dec81a12226d763e753903d",
+    "sources": "d196a8dc4a05f24c18d6d3d6ddd3da3497b7d0e2bb0184399a9fbd07e06f31e7",
+    "translations": "135aebdd042c2d388938c2ad9bd170a2b9d4adc0afa3e576eabd7878b1338507"
+  },
+  "source_count": 44,
+  "pool_count": 2255,
+  "visible_target_count": 561,
+  "foreign_count": 251,
+  "cache_reused": 11,
+  "cooling": 0,
+  "skipped_not_retryable": 0,
+  "eligible_pending": 240,
+  "selected_unique_ids": [
+    "oppv2_101538d365d8bc5cc51fc9cc",
+    "oppv2_10e1d695d3f4b81dd8c407e4",
+    "oppv2_1b445ce13a249ce9d2844ae1",
+    "oppv2_1d66a3be05ac8ef5727667fe",
+    "oppv2_1d721b00a5e11a83c4c140ba",
+    "oppv2_1ebcefd4d4cf2abd07ab2b6c",
+    "oppv2_1f9f03367a8bae16ba964b21",
+    "oppv2_4602d71f673d4e85d7d2e7ad",
+    "oppv2_53eff1eef4c6b0098933d934",
+    "oppv2_63fc1d8a60c47911b424093c",
+    "oppv2_6b9746ca3045bb150c7a9071",
+    "oppv2_6dff384b8cb200042b57ca53",
+    "oppv2_6e150970c235ac86ab7db3a0",
+    "oppv2_706f563934fe1126dab6a0fa",
+    "oppv2_746e1e79f92cf291c08ab54d",
+    "oppv2_7ee832bb5a368553bba3ec40",
+    "oppv2_9026b605b11e6e4b1a166a6e",
+    "oppv2_93643f56e3d3877820e258ef",
+    "oppv2_9d755418271a22b263cbc0d9",
+    "oppv2_9e0a8bdaa99294b83400d2f4",
+    "oppv2_a77479c0ca1f46f651cc7dc7",
+    "oppv2_a94888cc370733d98b31470d",
+    "oppv2_ad5ef71f2a4b731ac542f0b3",
+    "oppv2_c2126e91cd3cb72a46ae60a8",
+    "oppv2_c56e8c03d44c6a39fc558a56",
+    "oppv2_d6763d3484d72c7abd60f5a5",
+    "oppv2_e8f379dccf6659873ec3b0cc",
+    "oppv2_f5a52fbfcad5ac7332b5d51e",
+    "oppv2_f9e66b87115572fff743a8db",
+    "oppv2_ffd0150901943a85c55a91ca",
+    "oppv2_05e60c41c6ebabae19e84fbc",
+    "oppv2_07373bdcd4705b6299f92186",
+    "oppv2_1f7cda3ebaeb45113db4ab70",
+    "oppv2_22b1340a1abfb7667b9d0c84",
+    "oppv2_28f152b415a16784fd5ccb63",
+    "oppv2_34b6fa32542aec30e0883fec",
+    "oppv2_3cf2199ebaea23955143d2d1",
+    "oppv2_42d0af8784cafbfe9881da8d",
+    "oppv2_46e94b3e129952d1812d9b58",
+    "oppv2_5020f546e3c6e0733de55374",
+    "oppv2_570c6990e0be547ce81c5cec",
+    "oppv2_602783f8e0c802a0d33107e9",
+    "oppv2_62e50bfc81af04271ff7e3ab",
+    "oppv2_64f317a26ab3ef5133834dee",
+    "oppv2_70433021fb54cdfc900a1c06",
+    "oppv2_75bce8d0694c47e3f93693bf",
+    "oppv2_76aeeb4143cd3f4f53eb79b5",
+    "oppv2_80d95fc9d68554561a204136",
+    "oppv2_843b57010a28a24b37a2b20f",
+    "oppv2_85fde0f0ce20221662153c09",
+    "oppv2_892fb48407e40122f9627053",
+    "oppv2_89d352e5dec7b4bd4d765931",
+    "oppv2_8bb8560c951bac7415ac847d",
+    "oppv2_8cb823bc222cbf6ec1a61575",
+    "oppv2_8f6f26bee318cfab1bf86f57",
+    "oppv2_94090f5e132dd5de2b250b30",
+    "oppv2_99ceaa216b532306c6c72bbc",
+    "oppv2_9eb3948749311cacf4c92c5b",
+    "oppv2_9f26321e22b082060fd4c9c6",
+    "oppv2_a2617e0701a5ad06a956206a",
+    "oppv2_a2907a2b89b556978b0f30aa",
+    "oppv2_a5fbb35f729bfa5758c82596",
+    "oppv2_a6ebbee3217a85d9ba7254a6",
+    "oppv2_a7141f64f774768bff261f31",
+    "oppv2_aa4510dda197d9ccc3c16360",
+    "oppv2_b271f34087155a0968ca0c56",
+    "oppv2_b88811790c51a70288620df9",
+    "oppv2_b95a02734d6ead7e5d8d11e3",
+    "oppv2_ba1a624ad884f8d829f0b7ec",
+    "oppv2_bccd73d895249d63c59f09fd",
+    "oppv2_be99020daca32753b2bde801",
+    "oppv2_c2fbb755ac964ea7464bb6e7",
+    "oppv2_c36816c3c38090904224e96b",
+    "oppv2_c3fceef86ca283ac3c958cc3",
+    "oppv2_c69bbca7030ff312b54444d7",
+    "oppv2_c7e400a3beed9cfdcbc4c1da",
+    "oppv2_c816ee8243faa0bb290deb73",
+    "oppv2_d3367b71d5f79a1b6cb99e71",
+    "oppv2_d362e3d8cbae7f4649848312",
+    "oppv2_d4c6d19c3ebc1804fd7368de",
+    "oppv2_d712b0e6287fe3b2b41dd007",
+    "oppv2_df20b689f6ddca030e8b3fe2",
+    "oppv2_ec29f01eca6d22a3ddbb675e",
+    "oppv2_f51210345ed35f7b6c51bf48",
+    "oppv2_fcc6a844a21b6ba5e9b1e51d",
+    "oppv2_fd32b0a4bb6524fe52b3ea27",
+    "oppv2_2a287e008a0e6c4b0924e49e",
+    "oppv2_531ecc167f1a258922b0c6a6",
+    "oppv2_aa97022e6edc040552a5a109",
+    "oppv2_b5cafe3fe475dca3a588d2e7",
+    "oppv2_facc4bc078314f9d851188a0",
+    "oppv2_7f0aa57bde535af11d44bc6c",
+    "oppv2_41e2bbbb71357f364515e8b5",
+    "oppv2_905596f4d47e541aa374ff18",
+    "oppv2_975ff21d3f68ce757ffaa045",
+    "oppv2_fc7fd81231638fe917f18b5f",
+    "oppv2_dad863face584b0ed28f46a8",
+    "oppv2_47916e66a1dd9f2385ae1cfc",
+    "oppv2_a0051b1db6bbf341bdc8fea6",
+    "oppv2_75b602829f6a10bc26483d25",
+    "oppv2_0531a0d2b773e51b9ee9575d",
+    "oppv2_156fe4845e9d0027e48da1fc",
+    "oppv2_350a149ee39a0bd3170c28ad",
+    "oppv2_8cf22a3fa5f1dc9fbc46bd99",
+    "oppv2_9cbb692021a59762c516faff",
+    "oppv2_e37eb80c0639bb2b7f6ea637",
+    "oppv2_0676703b845d8711a2d509f8",
+    "oppv2_248c865e78fb7ca7e060ba60",
+    "oppv2_3b3a294c41559a1c5be2fe03",
+    "oppv2_3cd061b846b5ac191dcfd30b",
+    "oppv2_3de3c40fd37fad3787fae7f1",
+    "oppv2_51e8bf8851776a15c7a51e23",
+    "oppv2_682bbe9f70ba6de1697de321",
+    "oppv2_87fe6199ebd07e0e7c668b37",
+    "oppv2_a338214952bd454005fe0b2e",
+    "oppv2_b829cdb4d43f9629d7a44907",
+    "oppv2_ba910db85cabbf206491b84e",
+    "oppv2_cbfc89aa9eb1dce28963d223",
+    "oppv2_dc556f3f8895708fd3486c6c",
+    "oppv2_ecf695307a6e9d72905d9903",
+    "oppv2_01d36739f735585940b36b94",
+    "oppv2_12b7d3fffec87414f3cea723",
+    "oppv2_24140b81e0ab38aee41af92a",
+    "oppv2_322b96a365a1493cb8d2d6f9",
+    "oppv2_bf6cc543cdabd8f44f70168a",
+    "oppv2_3fb6d88b43e34f667a914500",
+    "oppv2_4fc6bad52ba27a193b72561e",
+    "oppv2_6c8feb5d8875905976bbed4d",
+    "oppv2_782a5f89b484820d41d76ae8",
+    "oppv2_7d601bd813e65b05539eb1d4",
+    "oppv2_866cff1b6856da4bd7e260ec",
+    "oppv2_f717cd8962251bfabb0a783c",
+    "oppv2_70589b86b4e9249038b4fea7",
+    "oppv2_0098640c48961b75066bc9a7",
+    "oppv2_0d09644c48c02dfba426dee9",
+    "oppv2_0e43ee64c2ea4a979bc8046f",
+    "oppv2_171615442e8593c142b2f2e2",
+    "oppv2_25f1aa371d00284ca7095c57",
+    "oppv2_2e2c22f800c8735b42fe7906",
+    "oppv2_31e9590c1159cab0455d3a97",
+    "oppv2_33c7dd02a98e60e83f40b580",
+    "oppv2_33e5b85c07f0b67b4502227c",
+    "oppv2_37d4918e5efb4613dee0aeec",
+    "oppv2_382c2a5af2fc2537a96e674f",
+    "oppv2_4213cbfda17e1568c5737c51",
+    "oppv2_4a2aaea5828575a26a579993",
+    "oppv2_4c99813ddb2745b100b55ca2",
+    "oppv2_591db31bfcc0dbf6595552be",
+    "oppv2_62fa70b96b2d11df306b5ec7",
+    "oppv2_6405e8eebe23c0ea60e7b97a",
+    "oppv2_651c355dae5cc04939071509",
+    "oppv2_68d312c9e8c4b9c70a5fdb94",
+    "oppv2_85eef9ff86fa2ee3d0578e3b",
+    "oppv2_8c6e7803b90fb93900adf47e",
+    "oppv2_94896dc7a1af2b9d83e8fa05",
+    "oppv2_9fa261374df625e43d959577",
+    "oppv2_a06bdd784cb4ff85281f3481",
+    "oppv2_a2a415f4858ef377915d1159",
+    "oppv2_afe4f82fca3a0afe34686acd",
+    "oppv2_b9aa01645d5c4d5e1989e0ff",
+    "oppv2_bb709de117b11000bd76c3da",
+    "oppv2_be14b6ea1e0a0423975d7e10",
+    "oppv2_ca9d64041f01bdb952df6da0",
+    "oppv2_cbc7e1ffe00c5c068aa57e08",
+    "oppv2_d1b45c9bc396baf34d1529bf",
+    "oppv2_d207588a081cb87b98a88f67",
+    "oppv2_d23032c260edd496d11261e5",
+    "oppv2_db0344c496a68e6e72d12e9e",
+    "oppv2_dc416d8f9f62da62cadeca5d",
+    "oppv2_deefc982817adc4e6d11ecc9",
+    "oppv2_ff6e5a58d1a174266eea6db3",
+    "oppv2_92653c77527f159a02ece32e",
+    "oppv2_00295acd0a4c2afdd3633718",
+    "oppv2_02bfa26aa52e138e0ec000b7",
+    "oppv2_08c1a39e87e4b5294a0bae88",
+    "oppv2_0c2828214af3232445a78be1",
+    "oppv2_11175907dd13148ca5876135",
+    "oppv2_12dd0f0711f2980be3e678c9",
+    "oppv2_155d56487b10c4ee34c83dc5",
+    "oppv2_1577697c7e5ab00ee3c29cd2",
+    "oppv2_17ba5281bc0251f5f660c76d",
+    "oppv2_1f7ed5bf334154e88a9ed00b",
+    "oppv2_20704f77dc4f4399279a4cc3",
+    "oppv2_22a4481a8ef3aa7cfb93cad5",
+    "oppv2_354dae821bcca082e23786af",
+    "oppv2_3b9cd7f6b26b6104916a9f25",
+    "oppv2_428d3269a2964858ef7d6acb",
+    "oppv2_43bef4548591d32599e32035",
+    "oppv2_488da5f9071708ce5d08ade5",
+    "oppv2_4ae7f61cee1ece910b367d64",
+    "oppv2_4c38e4ff685b790dd1370b65",
+    "oppv2_527b398faa8212159e49f432",
+    "oppv2_528b4246af6d6a525dee5ce5",
+    "oppv2_59bf1cd1975dad736354a336",
+    "oppv2_5f4e9a854c67b5483559c784",
+    "oppv2_6020bb6539d12b1732f8932b",
+    "oppv2_6165a6a350eb9f413025e90f",
+    "oppv2_61893a25654bb07b90c4e771",
+    "oppv2_641b87f51c0860065305625b",
+    "oppv2_66cea358ed0125d9fc73f456"
+  ],
+  "selected_surfaces": {
+    "oppv2_101538d365d8bc5cc51fc9cc": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_10e1d695d3f4b81dd8c407e4": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_1b445ce13a249ce9d2844ae1": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_1d66a3be05ac8ef5727667fe": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_1d721b00a5e11a83c4c140ba": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_1ebcefd4d4cf2abd07ab2b6c": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_1f9f03367a8bae16ba964b21": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_4602d71f673d4e85d7d2e7ad": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_53eff1eef4c6b0098933d934": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_63fc1d8a60c47911b424093c": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_6b9746ca3045bb150c7a9071": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_6dff384b8cb200042b57ca53": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_6e150970c235ac86ab7db3a0": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_706f563934fe1126dab6a0fa": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_746e1e79f92cf291c08ab54d": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_7ee832bb5a368553bba3ec40": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_9026b605b11e6e4b1a166a6e": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_93643f56e3d3877820e258ef": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_9d755418271a22b263cbc0d9": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_9e0a8bdaa99294b83400d2f4": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_a77479c0ca1f46f651cc7dc7": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_a94888cc370733d98b31470d": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_ad5ef71f2a4b731ac542f0b3": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_c2126e91cd3cb72a46ae60a8": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_c56e8c03d44c6a39fc558a56": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_d6763d3484d72c7abd60f5a5": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_e8f379dccf6659873ec3b0cc": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_f5a52fbfcad5ac7332b5d51e": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_f9e66b87115572fff743a8db": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_ffd0150901943a85c55a91ca": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_05e60c41c6ebabae19e84fbc": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_07373bdcd4705b6299f92186": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_1f7cda3ebaeb45113db4ab70": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_22b1340a1abfb7667b9d0c84": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_28f152b415a16784fd5ccb63": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_34b6fa32542aec30e0883fec": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_3cf2199ebaea23955143d2d1": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_42d0af8784cafbfe9881da8d": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_46e94b3e129952d1812d9b58": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_5020f546e3c6e0733de55374": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_570c6990e0be547ce81c5cec": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_602783f8e0c802a0d33107e9": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_62e50bfc81af04271ff7e3ab": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_64f317a26ab3ef5133834dee": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_70433021fb54cdfc900a1c06": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_75bce8d0694c47e3f93693bf": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_76aeeb4143cd3f4f53eb79b5": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_80d95fc9d68554561a204136": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_843b57010a28a24b37a2b20f": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_85fde0f0ce20221662153c09": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_892fb48407e40122f9627053": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_89d352e5dec7b4bd4d765931": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_8bb8560c951bac7415ac847d": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_8cb823bc222cbf6ec1a61575": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_8f6f26bee318cfab1bf86f57": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_94090f5e132dd5de2b250b30": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_99ceaa216b532306c6c72bbc": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_9eb3948749311cacf4c92c5b": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_9f26321e22b082060fd4c9c6": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_a2617e0701a5ad06a956206a": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_a2907a2b89b556978b0f30aa": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_a5fbb35f729bfa5758c82596": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_a6ebbee3217a85d9ba7254a6": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_a7141f64f774768bff261f31": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_aa4510dda197d9ccc3c16360": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_b271f34087155a0968ca0c56": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_b88811790c51a70288620df9": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_b95a02734d6ead7e5d8d11e3": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_ba1a624ad884f8d829f0b7ec": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_bccd73d895249d63c59f09fd": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_be99020daca32753b2bde801": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_c2fbb755ac964ea7464bb6e7": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_c36816c3c38090904224e96b": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_c3fceef86ca283ac3c958cc3": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_c69bbca7030ff312b54444d7": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_c7e400a3beed9cfdcbc4c1da": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_c816ee8243faa0bb290deb73": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_d3367b71d5f79a1b6cb99e71": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_d362e3d8cbae7f4649848312": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_d4c6d19c3ebc1804fd7368de": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_d712b0e6287fe3b2b41dd007": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_df20b689f6ddca030e8b3fe2": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_ec29f01eca6d22a3ddbb675e": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_f51210345ed35f7b6c51bf48": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_fcc6a844a21b6ba5e9b1e51d": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_fd32b0a4bb6524fe52b3ea27": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_2a287e008a0e6c4b0924e49e": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_531ecc167f1a258922b0c6a6": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_aa97022e6edc040552a5a109": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_b5cafe3fe475dca3a588d2e7": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_facc4bc078314f9d851188a0": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_7f0aa57bde535af11d44bc6c": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_41e2bbbb71357f364515e8b5": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_905596f4d47e541aa374ff18": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_975ff21d3f68ce757ffaa045": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_fc7fd81231638fe917f18b5f": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_dad863face584b0ed28f46a8": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_47916e66a1dd9f2385ae1cfc": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_a0051b1db6bbf341bdc8fea6": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_75b602829f6a10bc26483d25": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_0531a0d2b773e51b9ee9575d": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_156fe4845e9d0027e48da1fc": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_350a149ee39a0bd3170c28ad": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_8cf22a3fa5f1dc9fbc46bd99": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_9cbb692021a59762c516faff": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_e37eb80c0639bb2b7f6ea637": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_0676703b845d8711a2d509f8": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_248c865e78fb7ca7e060ba60": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_3b3a294c41559a1c5be2fe03": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_3cd061b846b5ac191dcfd30b": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_3de3c40fd37fad3787fae7f1": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_51e8bf8851776a15c7a51e23": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_682bbe9f70ba6de1697de321": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_87fe6199ebd07e0e7c668b37": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_a338214952bd454005fe0b2e": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_b829cdb4d43f9629d7a44907": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_ba910db85cabbf206491b84e": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_cbfc89aa9eb1dce28963d223": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_dc556f3f8895708fd3486c6c": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_ecf695307a6e9d72905d9903": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_01d36739f735585940b36b94": [
+      "main",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_12b7d3fffec87414f3cea723": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_24140b81e0ab38aee41af92a": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_322b96a365a1493cb8d2d6f9": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_bf6cc543cdabd8f44f70168a": [
+      "main",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_3fb6d88b43e34f667a914500": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_4fc6bad52ba27a193b72561e": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_6c8feb5d8875905976bbed4d": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_782a5f89b484820d41d76ae8": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_7d601bd813e65b05539eb1d4": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_866cff1b6856da4bd7e260ec": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_f717cd8962251bfabb0a783c": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_70589b86b4e9249038b4fea7": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_0098640c48961b75066bc9a7": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_0d09644c48c02dfba426dee9": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_0e43ee64c2ea4a979bc8046f": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_171615442e8593c142b2f2e2": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_25f1aa371d00284ca7095c57": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_2e2c22f800c8735b42fe7906": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_31e9590c1159cab0455d3a97": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_33c7dd02a98e60e83f40b580": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_33e5b85c07f0b67b4502227c": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_37d4918e5efb4613dee0aeec": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_382c2a5af2fc2537a96e674f": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_4213cbfda17e1568c5737c51": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_4a2aaea5828575a26a579993": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_4c99813ddb2745b100b55ca2": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_591db31bfcc0dbf6595552be": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_62fa70b96b2d11df306b5ec7": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_6405e8eebe23c0ea60e7b97a": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_651c355dae5cc04939071509": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_68d312c9e8c4b9c70a5fdb94": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_85eef9ff86fa2ee3d0578e3b": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_8c6e7803b90fb93900adf47e": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_94896dc7a1af2b9d83e8fa05": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_9fa261374df625e43d959577": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_a06bdd784cb4ff85281f3481": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_a2a415f4858ef377915d1159": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_afe4f82fca3a0afe34686acd": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_b9aa01645d5c4d5e1989e0ff": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_bb709de117b11000bd76c3da": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_be14b6ea1e0a0423975d7e10": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_ca9d64041f01bdb952df6da0": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_cbc7e1ffe00c5c068aa57e08": [
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_d1b45c9bc396baf34d1529bf": [
+      "main",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_d207588a081cb87b98a88f67": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_d23032c260edd496d11261e5": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_db0344c496a68e6e72d12e9e": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_dc416d8f9f62da62cadeca5d": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_deefc982817adc4e6d11ecc9": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_ff6e5a58d1a174266eea6db3": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_92653c77527f159a02ece32e": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_00295acd0a4c2afdd3633718": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_02bfa26aa52e138e0ec000b7": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_08c1a39e87e4b5294a0bae88": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_0c2828214af3232445a78be1": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_11175907dd13148ca5876135": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_12dd0f0711f2980be3e678c9": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_155d56487b10c4ee34c83dc5": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_1577697c7e5ab00ee3c29cd2": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_17ba5281bc0251f5f660c76d": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_1f7ed5bf334154e88a9ed00b": [
+      "main",
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_20704f77dc4f4399279a4cc3": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_22a4481a8ef3aa7cfb93cad5": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_354dae821bcca082e23786af": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_3b9cd7f6b26b6104916a9f25": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_428d3269a2964858ef7d6acb": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_43bef4548591d32599e32035": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_488da5f9071708ce5d08ade5": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_4ae7f61cee1ece910b367d64": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_4c38e4ff685b790dd1370b65": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_527b398faa8212159e49f432": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_528b4246af6d6a525dee5ce5": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ],
+    "oppv2_59bf1cd1975dad736354a336": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_5f4e9a854c67b5483559c784": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_6020bb6539d12b1732f8932b": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_6165a6a350eb9f413025e90f": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_61893a25654bb07b90c4e771": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_641b87f51c0860065305625b": [
+      "overseas",
+      "comprehensive",
+      "detail",
+      "export"
+    ],
+    "oppv2_66cea358ed0125d9fc73f456": [
+      "overseas",
+      "comprehensive",
+      "memo",
+      "detail",
+      "export"
+    ]
+  },
+  "limits": {
+    "max_unique_items": 200,
+    "max_requests": 250,
+    "max_attempts_per_item": 2,
+    "concurrency": 2,
+    "timeout_ms": 30000
+  },
+  "provider": "deepseek",
+  "provider_configured": false,
+  "provider_gate": "CREDENTIAL_NOT_CONFIGURED",
+  "local_env_loaded": false,
+  "local_env_load_reason": "disabled",
+  "budget_before": {
+    "max_requests": 250,
+    "actual_requests": 0,
+    "reserved_requests": 0
+  },
+  "token_usage": {
+    "available": false,
+    "reason": "current provider adapter does not expose token usage"
+  },
+  "cost": {
+    "available": false,
+    "reason": "current provider adapter does not expose billed cost"
+  },
+  "status": "DRY_RUN_ONLY",
+  "actual_requests": 0,
+  "attempted_records": 0,
+  "written_count": 0,
+  "failure_counts": {},
+  "output_sha256": {
+    "translations": "135aebdd042c2d388938c2ad9bd170a2b9d4adc0afa3e576eabd7878b1338507"
+  },
+  "production_operations": "not performed"
+}

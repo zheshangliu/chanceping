@@ -18,6 +18,8 @@ import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import { recordProcurementChangeFeed } from "./procurement-change-feed";
 import { assessOpportunityCoverage } from "./opportunity-coverage";
 import { getOpportunitySourceProfile, parseOpportunitySourceProfile } from "./source-onboarding";
+import { isOpportunityV2SourceRunnable, getOpportunityV2SourcePermission } from "./source-governance";
+import { OpportunityV2FetchBudget } from "./source-fetch-budget";
 import type { OpportunityV2FetchOptions, OpportunityV2FetchResponse, OpportunityV2FetchTrace, OpportunityV2Fetcher, OpportunityV2RunResult, OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
 const SPECIAL_SOURCE_URL: Record<string, string> = { "chuangsaiyun-competition-list": "https://www.xiacansai.com/mrjs.html" };
@@ -202,7 +204,9 @@ export async function defaultOpportunityV2Fetcher(url: string, options: Opportun
     const resolved = await resolvePublicAddress(current);
     const requestMethod = currentOptions.method ?? "GET";
     const requestBody = bodyBuffer(currentOptions.body);
-    const response = await fetchPinned(current, resolved, currentOptions);
+    const response = await (currentOptions.requestGate
+      ? currentOptions.requestGate(new URL(current).hostname, () => fetchPinned(current, resolved, currentOptions))
+      : fetchPinned(current, resolved, currentOptions));
     if (response.status >= 300 && response.status < 400) {
       const location = response.headers.location;
       if (!location) throw new Error("source redirect has no location");
@@ -248,28 +252,29 @@ function writeHealth(rows: OpportunityV2SourceHealth[], filePath?: string): void
   });
 }
 
-function parseSource(source: OpportunityV2Source, text: string, listingUrl: string): { items: ParsedAggregationItem[]; format: "DEDICATED" | "RSS" | "HTML_LISTING" | null } {
+function parseSource(source: OpportunityV2Source, text: string, listingUrl: string): { items: ParsedAggregationItem[]; format: "DEDICATED" | "RSS" | "HTML_LISTING" | null; recognized: boolean } {
   if (source.id.startsWith("proc-")) {
     const parsed = parseProcurementSource(source.id, text, listingUrl).filter(isCurrentProcurement);
-    return { items: parsed, format: parsed.length ? "DEDICATED" : null };
+    if (parsed.length) return { items: parsed, format: "DEDICATED", recognized: true };
   }
   try {
-    const dedicated = getAggregationAdapter(source.id).parseListing(text, listingUrl);
-    if (dedicated.length) return { items: dedicated, format: "DEDICATED" };
+    const adapter = getAggregationAdapter(source.id);
+    const dedicated = adapter.parseListing(text, listingUrl);
+    return { items: dedicated, format: "DEDICATED", recognized: true };
   } catch {
     // A new source has no dedicated adapter. It falls through to generic readers.
   }
   const profile = getOpportunitySourceProfile(source.id);
   if (profile) {
     const profiled = parseOpportunitySourceProfile(profile, text, listingUrl);
-    if (profiled.length) return { items: profiled, format: profile.transport === "RSS" ? "RSS" : profile.transport === "HTML" ? "HTML_LISTING" : null };
+    if (profiled.length) return { items: profiled, format: profile.transport === "RSS" ? "RSS" : profile.transport === "HTML" ? "HTML_LISTING" : null, recognized: true };
   }
   const rss = parseRssItems(text, listingUrl);
-  if (rss.length) return { items: rss, format: "RSS" };
+  if (rss.length || /<(?:rss|feed|rdf:RDF)\b/iu.test(text)) return { items: rss, format: "RSS", recognized: true };
   const html = parseGenericListing(text, listingUrl, [], source.id);
   const filtered = html.filter((item) => !isLikelySourceListingNoise(source.id, item.title, item.detail_url));
-  if (filtered.length) return { items: filtered, format: "HTML_LISTING" };
-  return { items: [], format: null };
+  if (html.length) return { items: filtered, format: "HTML_LISTING", recognized: true };
+  return { items: [], format: null, recognized: false };
 }
 
 interface PaginationPlan {
@@ -315,7 +320,10 @@ interface SourceFetchResult {
   responseStatus: number;
   fetchedAt: string;
   error: string | null;
+  parser_status: "recognized" | "unrecognized";
   partial: boolean;
+  listing_pages: number;
+  request_count?: number;
   next_page: number | null;
   request_traces: OpportunityV2FetchTrace[];
 }
@@ -331,7 +339,14 @@ const DETAIL_BUDGET_BY_SOURCE: Record<string, number> = {
 function detailBudgetForSource(sourceId: string): number {
   const configured = process.env.CHANCEPING_OPPORTUNITY_V2_DETAIL_BUDGET;
   const value = Number(configured ?? String(DETAIL_BUDGET_BY_SOURCE[sourceId] ?? 12));
-  return Number.isInteger(value) && value >= 0 ? value : 12;
+  return Math.min(20, Number.isInteger(value) && value >= 0 ? value : 12);
+}
+
+function defaultFetcherWithBudget(budget: OpportunityV2FetchBudget): OpportunityV2Fetcher {
+  return (url, options = {}) => defaultOpportunityV2Fetcher(url, {
+    ...options,
+    requestGate: (hostname, request) => budget.run(hostname, request),
+  });
 }
 
 function paginationStartPage(source: OpportunityV2Source, healthPath?: string): number {
@@ -491,12 +506,14 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
   const firstUrl = SPECIAL_SOURCE_URL[source.id] ?? source.url;
   const plan = paginationPlan(source);
   const firstPage = plan ? Math.max(1, startPage) : 1;
-  const pages = plan ? plan.pageBudget : 1;
+  const pages = plan ? Math.min(plan.pageBudget, 3) : 1;
   const parsed: ParsedAggregationItem[] = [];
+  let parserRecognized = true;
   const seen = new Set<string>();
   let responseStatus = 0;
   let format: SourceFetchResult["format"] = null;
   let partial = false;
+  let listingPages = 0;
   let nextPage: number | null = null;
   const requestTraces: OpportunityV2FetchTrace[] = [];
   for (let offset = 0; offset < pages; offset += 1) {
@@ -519,8 +536,10 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       nextPage = page;
       break;
     }
+    listingPages += 1;
     if (!responseStatus) responseStatus = response.status;
     const parsedSource = parseSource(source, response.text, source.url);
+    parserRecognized = parserRecognized && parsedSource.recognized;
     format = parsedSource.format ?? format;
     for (const item of parsedSource.items) {
       if (seen.has(item.source_item_id)) continue;
@@ -528,7 +547,7 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
       parsed.push(item);
     }
     if (!plan || !hasNextPage(source, response.text, response.final_url, plan.pageUrl(page + 1))) break;
-    if (offset + 1 >= pages || page >= plan!.pageBudget) {
+    if (offset + 1 >= pages) {
       partial = true;
       nextPage = page + 1;
       break;
@@ -540,8 +559,10 @@ async function fetchAndParseSource(source: OpportunityV2Source, fetcher: Opportu
     format,
     responseStatus,
     fetchedAt,
-    error: parsed.length ? (partial ? `Partial pagination; next page ${nextPage}` : null) : "No RSS or HTML listing items recognized",
+    error: partial ? `Partial pagination; next page ${nextPage}` : parserRecognized ? null : "No supported RSS or HTML listing format was recognized",
+    parser_status: parserRecognized ? "recognized" : "unrecognized",
     partial,
+    listing_pages: listingPages,
     next_page: nextPage,
     request_traces: requestTraces,
   };
@@ -554,17 +575,21 @@ function healthFor(source: OpportunityV2Source, result: SourceFetchResult): Oppo
   return {
     source_id: source.id,
     fetched_at: result.fetchedAt,
-    ok: result.parsed.length > 0,
+    ok: result.parser_status === "recognized",
+    transport_ok: true,
+    parser_status: result.parser_status,
     http_status: result.responseStatus,
     items_seen: result.parsed.length,
     error: result.error,
     format: result.format,
     partial: result.partial,
+    listing_pages: result.listing_pages,
+    ...(result.request_count !== undefined ? { request_count: result.request_count } : {}),
     next_page: result.next_page,
     source_item_ids: result.parsed.map((item) => item.source_item_id),
     canonical_records: result.parsed.length,
     merged_duplicates: 0,
-    reconciliation_status: result.partial ? "partial" : result.parsed.length ? "complete" : "unknown",
+    reconciliation_status: result.partial ? "partial" : result.parser_status === "recognized" ? "complete" : "failed",
     deadline_attempted: deadlineAttempted,
     deadline_resolved: deadlineResolved,
     deadline_unknown: result.parsed.length - deadlineResolved,
@@ -584,19 +609,23 @@ export interface OpportunityV2SourceTestResult {
 export async function testOpportunityV2Source(options: { sourceId: string; fetcher?: OpportunityV2Fetcher; sourcesPath?: string; healthPath?: string }): Promise<OpportunityV2SourceTestResult> {
   const source = findOpportunityV2Source(options.sourceId, options.sourcesPath);
   if (!source) throw new Error(`Source not found: ${options.sourceId}`);
-  const fetcher = options.fetcher ?? defaultOpportunityV2Fetcher;
+  if (!isOpportunityV2SourceRunnable(source) && getOpportunityV2SourcePermission(source.id) === "COMPLIANCE_HOLD") throw new Error(`Source collection blocked by COMPLIANCE_HOLD: ${source.id}`);
+  const testBudget = new OpportunityV2FetchBudget();
+  const fetcher = options.fetcher ?? defaultFetcherWithBudget(testBudget);
+  const requestCountBefore = Object.values(testBudget.summary()).reduce((sum, count) => sum + count, 0);
   try {
     const result = await fetchAndParseSource(source, fetcher);
-    source.status = result.parsed.length ? "ACTIVE" : "NEEDS_ADAPTER";
-    if (result.parsed.length) source.last_fetch_at = result.fetchedAt;
+    if (!options.fetcher) result.request_count = Object.values(testBudget.summary()).reduce((sum, count) => sum + count, 0) - requestCountBefore;
+    source.status = result.parser_status === "recognized" ? "ACTIVE" : "NEEDS_ADAPTER";
+    if (result.parser_status === "recognized") source.last_fetch_at = result.fetchedAt;
     updateOpportunityV2Source(source.id, { status: source.status, ...(source.last_fetch_at ? { last_fetch_at: source.last_fetch_at } : {}) }, options.sourcesPath);
     writeHealth([healthFor(source, result)], options.healthPath);
-    return { source, ok: result.parsed.length > 0, http_status: result.responseStatus, items_seen: result.parsed.length, format: result.format, error: result.error };
+    return { source, ok: result.parser_status === "recognized", http_status: result.responseStatus, items_seen: result.parsed.length, format: result.format, error: result.parser_status === "recognized" && result.parsed.length === 0 ? null : result.error };
   } catch (error) {
     const responseStatus = typeof error === "object" && error !== null && "responseStatus" in error ? Number(error.responseStatus) : null;
     source.status = "FAILED";
     updateOpportunityV2Source(source.id, { status: source.status }, options.sourcesPath);
-    writeHealth([{ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null }], options.healthPath);
+    writeHealth([{ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, transport_ok: false, parser_status: "unrecognized", http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null, reconciliation_status: "failed", ...(options.fetcher ? {} : { request_count: Object.values(testBudget.summary()).reduce((sum, count) => sum + count, 0) - requestCountBefore }) }], options.healthPath);
     return { source, ok: false, http_status: responseStatus, items_seen: 0, format: null, error: error instanceof Error ? error.message : String(error) };
   }
 }
@@ -604,12 +633,17 @@ export async function testOpportunityV2Source(options: { sourceId: string; fetch
 export async function runOpportunityV2(options: { now?: Date; fetcher?: OpportunityV2Fetcher; maxItems?: number; sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; sourceId?: string } = {}): Promise<OpportunityV2RunResult> {
   const now = options.now ?? new Date();
   const startedAt = now.toISOString();
-  const fetcher = options.fetcher ?? defaultOpportunityV2Fetcher;
+  const fetchBudget = new OpportunityV2FetchBudget();
+  const fetcher = options.fetcher ?? defaultFetcherWithBudget(fetchBudget);
   if (!options.sourcesPath) migrateOpportunityV2Sources();
   const sources = readOpportunityV2Sources(options.sourcesPath);
+  if (options.sourceId) {
+    const requested = sources.find((source) => source.id === options.sourceId);
+    if (requested && !isOpportunityV2SourceRunnable(requested) && getOpportunityV2SourcePermission(requested.id) === "COMPLIANCE_HOLD") throw new Error(`Source collection blocked by COMPLIANCE_HOLD: ${requested.id}`);
+  }
   const selectedSources = options.sourceId
-    ? sources.filter((source) => source.id === options.sourceId && source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status))
-    : sources.filter((source) => source.enabled && !["PAUSED", "NEEDS_ADAPTER"].includes(source.status));
+    ? sources.filter((source) => source.id === options.sourceId && isOpportunityV2SourceRunnable(source))
+    : sources.filter(isOpportunityV2SourceRunnable);
   if (options.sourceId && !selectedSources.length) throw new Error(`Source not found or paused: ${options.sourceId}`);
   const pool = readOpportunityV2Pool(options.poolPath);
   const fetched: ReturnType<typeof normalizeOpportunityV2>[] = [];
@@ -617,6 +651,7 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
   const requestTraces: OpportunityV2FetchTrace[] = [];
   let successfulSources = 0;
   for (const source of selectedSources) {
+    const requestCountBefore = Object.values(fetchBudget.summary()).reduce((sum, count) => sum + count, 0);
     try {
       const result = await fetchAndParseSource(source, fetcher, paginationStartPage(source, options.healthPath));
       requestTraces.push(...result.request_traces);
@@ -666,16 +701,17 @@ export async function runOpportunityV2(options: { now?: Date; fetcher?: Opportun
           fetched.push({ ...normalized, id: prior.id, first_seen_at: prior.first_seen_at, discovered_by_sources: prior.discovered_by_sources });
         }
       }
-      source.status = parsed.length ? "ACTIVE" : "NEEDS_ADAPTER";
-      if (parsed.length) {
+      source.status = result.parser_status === "recognized" ? "ACTIVE" : "NEEDS_ADAPTER";
+      if (result.parser_status === "recognized") {
         source.last_fetch_at = result.fetchedAt;
         successfulSources += 1;
       }
+      if (!options.fetcher) result.request_count = Object.values(fetchBudget.summary()).reduce((sum, count) => sum + count, 0) - requestCountBefore;
       health.push(healthFor(source, { ...result, parsed }));
     } catch (error) {
       const responseStatus = typeof error === "object" && error !== null && "responseStatus" in error ? Number(error.responseStatus) : null;
       source.status = "FAILED";
-      health.push({ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null, partial: false, next_page: null });
+      health.push({ source_id: source.id, fetched_at: new Date().toISOString(), ok: false, transport_ok: false, parser_status: "unrecognized", http_status: responseStatus, items_seen: 0, error: error instanceof Error ? error.message : String(error), format: null, partial: false, listing_pages: 0, ...(options.fetcher ? {} : { request_count: Object.values(fetchBudget.summary()).reduce((sum, count) => sum + count, 0) - requestCountBefore }), next_page: null, reconciliation_status: "failed" });
     }
   }
   const deduped = deduplicateOpportunityV2(fetched);

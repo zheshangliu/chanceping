@@ -99,6 +99,21 @@ check("foreign title is detected", isForeignLanguageOpportunity(realProject), "f
 const properName = item({ id: "loewe", title: "LOEWE FOUNDATION Craft Prize 2027", summary: "Open call for craft artists." });
 check("proper name remains foreign for translation", isForeignLanguageOpportunity(properName), "LOEWE was not selected");
 
+const namedInstitution = item({
+  id: "named-institution",
+  title: "John Michael Kohler Arts Center Residency",
+  summary: "Residency application for emerging artists.",
+});
+const namedInstitutionTranslation = createTranslatedOpportunityV2Translation(
+  namedInstitution,
+  { title_zh: "John Michael Kohler Arts Center 驻留项目", summary_zh: "面向新兴艺术家的驻留申请。" },
+);
+check(
+  "proper institution name with Chinese action is accepted",
+  namedInstitutionTranslation.status === "translated",
+  JSON.stringify(namedInstitutionTranslation),
+);
+
 const mixed = item({ id: "mixed", title: "年度征集 – Ferry Building Gallery", summary: "开放提交作品。" });
 check("mixed title is not treated as already Chinese", isForeignLanguageOpportunity(mixed), "mixed title was treated as Chinese");
 

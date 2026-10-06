@@ -9,8 +9,10 @@ async function main() {
   process.env.CHANCEPING_BUSINESS_OPERATIONS_TOKEN = "p2-secret";
   const { createApp } = await import("../src/api/app");
   const { createAppContext } = await import("../src/api/context");
-  const app = createApp(createAppContext());
-  const headers = { "content-type": "application/json", "x-business-user": "p2-owner" };
+  const context = createAppContext();
+  context.resolveAuthenticatedUser = () => "p2-owner";
+  const app = createApp(context);
+  const headers = { "content-type": "application/json" };
   const created = await app.request("/api/business/profiles", { method: "POST", headers, body: JSON.stringify({ name: "文创企业", businessType: "小微企业", regions: ["guangzhou"], categories: ["policy"], industries: ["文创"], keywords: ["非遗"] }) });
   assert.equal(created.status, 201);
   const profile = await created.json() as { data: { id: string; ownerId?: string } };

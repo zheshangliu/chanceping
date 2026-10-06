@@ -1,0 +1,70 @@
+name: Run protected ICH production cycle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chanceping-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify production cycle code
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run verify:v15:e2e
+      - run: npm run verify:v15
+      - run: npm run verify:v16
+      - run: npm run verify:all
+
+  cycle:
+    name: Server-local Fetch, Translate, Audit
+    needs: verify
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    environment:
+      name: production
+      url: https://www.chanceping.com/ich
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Install isolated Alibaba Cloud SDK
+        run: npm install --prefix "$RUNNER_TEMP/chanceping-swas-sdk" --no-audit --no-fund @alicloud/swas-open20200601 @alicloud/openapi-client @alicloud/tea-util
+      - name: Trigger only the existing server-local cycle service
+        env:
+          NODE_PATH: ${{ runner.temp }}/chanceping-swas-sdk/node_modules
+          ALIBABA_CLOUD_ACCESS_KEY_ID: ${{ secrets.ALIBABA_CLOUD_ACCESS_KEY_ID }}
+          ALIBABA_CLOUD_ACCESS_KEY_SECRET: ${{ secrets.ALIBABA_CLOUD_ACCESS_KEY_SECRET }}
+          CHANCEPING_SWAS_INSTANCE: ${{ secrets.CHANCEPING_SWAS_INSTANCE }}
+          CHANCEPING_SWAS_REGION: ${{ vars.CHANCEPING_SWAS_REGION }}
+          CHANCEPING_SWAS_ACTION: cycle
+        run: |
+          set -o pipefail
+          node scripts/invoke-aliyun-swas-deploy.cjs | tee "$RUNNER_TEMP/ich-v15-production-cycle.log"
+      - name: Preserve sanitized cycle evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ich-v15-production-cycle-${{ github.run_id }}
+          path: ${{ runner.temp }}/ich-v15-production-cycle.log
+          if-no-files-found: ignore
+          retention-days: 90

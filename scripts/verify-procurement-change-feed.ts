@@ -17,6 +17,14 @@ assert.equal(buildProcurementChangeEvents([base], [{ ...base, deadline: "2026-10
 assert.equal(buildProcurementChangeEvents([base], [], now).length, 0);
 const cancelled = buildProcurementChangeEvents([base], [{ ...base, procurement: { ...base.procurement!, stage: "cancelled" } }], now);
 assert.equal(cancelled[0].event_type, "cancelled");
+const applicationLink = buildProcurementChangeEvents([base], [{ ...base, application_url: "https://example.invalid/apply" }], now);
+assert.equal(applicationLink.length, 1);
+assert.equal(applicationLink[0].event_type, "application_link_changed");
+const eligibility = buildProcurementChangeEvents([{ ...base, summary: "公开采购非遗文创礼赠。申请对象为中国境内注册的文创企业。" }], [{ ...base, summary: "公开采购非遗文创礼赠。申请对象仅限中国境内注册企业。" }], now);
+assert.equal(eligibility.length, 1);
+assert.equal(eligibility[0].event_type, "eligibility_changed");
+assert.equal(buildProcurementChangeEvents([{ ...base, summary: "采购文化礼赠。" }], [{ ...base, summary: "采购文化礼赠及包装设计。" }], now).length, 0, "generic content changes do not masquerade as eligibility corrections");
+assert.equal(buildProcurementChangeEvents([base], [{ ...base, title: "2026 translated title update" }], now).length, 0, "translation/title-only updates do not create change events");
 
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "chanceping-change-feed-store-"));
 const feedPath = path.join(tempDir, "procurement-change-feed.json");
