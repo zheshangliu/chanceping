@@ -122,6 +122,11 @@ export interface IchProductionCycleOptions {
   snapshotRetention?: number;
 }
 
+export function withIchProductionCycleLock<T>(operation: () => Promise<T> | T, overrides: Partial<IchProductionCyclePaths> = {}): Promise<T> {
+  const paths = resolvePaths(overrides);
+  return withAsyncFileLock(paths.lock, operation);
+}
+
 const RUNTIME_ENV_KEYS = [
   "CHANCEPING_OPPORTUNITY_V2_POOL_PATH",
   "CHANCEPING_OPPORTUNITY_V2_SOURCES_PATH",
@@ -457,7 +462,7 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
   const paths = resolvePaths(options.paths);
   const now = options.now ?? new Date();
   const runId = `ich-cycle-${crypto.randomUUID()}`;
-  return withAsyncFileLock(paths.lock, () => withRuntimeEnvironment(paths, async () => {
+  return withIchProductionCycleLock(() => withRuntimeEnvironment(paths, async () => {
     const startedAt = now.toISOString();
     const snapshot = await createSnapshot(paths, runId);
     await pruneSnapshots(paths.backupRoot, Math.max(1, options.snapshotRetention ?? 3));
@@ -516,5 +521,5 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
     };
     await persistManifest(paths, manifest);
     return manifest;
-  }));
+  }), paths);
 }
