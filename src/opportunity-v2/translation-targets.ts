@@ -1,5 +1,6 @@
-import { filterOpportunityV2Radar } from "./radar-view";
+import { filterOpportunityV2Radar, opportunityV2LiveStatus } from "./radar-view";
 import { isRealCompetitionMemoItem } from "./memo";
+import { buildWeeklyOpportunityActions } from "./procurement-workbench";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
 export type OpportunityV2TranslationSurface =
@@ -8,6 +9,7 @@ export type OpportunityV2TranslationSurface =
   | "procurement"
   | "comprehensive"
   | "memo"
+  | "weekly"
   | "detail"
   | "export";
 
@@ -40,12 +42,35 @@ export function collectOpportunityV2TranslationTargets(
     }
   };
 
+  const currentFor = (items: OpportunityV2[]) => items.filter((item) => opportunityV2LiveStatus(item, now) === "CURRENT");
   const allBrowse = filterOpportunityV2Radar(opportunities, sources, { now, status: "browse", include_irrelevant: true });
-  add(filterOpportunityV2Radar(opportunities, sources, { now, status: "browse" }), "main", 0);
-  add(filterOpportunityV2Radar(opportunities, sources, { now, status: "browse", region: "GLOBAL", include_irrelevant: true }), "overseas", 0);
-  add(filterOpportunityV2Radar(opportunities, sources, { now, status: "browse", category: "procurement_project", include_irrelevant: true }), "procurement", 0);
-  add(allBrowse, "comprehensive", 1);
-  add(allBrowse.filter((item) => isRealCompetitionMemoItem(item)), "memo", 0);
+  const main = filterOpportunityV2Radar(opportunities, sources, { now, status: "browse" });
+  const overseas = filterOpportunityV2Radar(opportunities, sources, { now, status: "browse", region: "GLOBAL", include_irrelevant: true });
+  const procurement = filterOpportunityV2Radar(opportunities, sources, { now, status: "browse", category: "procurement_project", include_irrelevant: true });
+  // Expiring/current public actions get first access to the bounded translation
+  // budget. Unknown-deadline browse records remain visible, but follow them.
+  add(currentFor(main), "main", 0);
+  add(main.filter((item) => opportunityV2LiveStatus(item, now) !== "CURRENT"), "main", 1);
+  add(currentFor(overseas), "overseas", 0);
+  add(overseas.filter((item) => opportunityV2LiveStatus(item, now) !== "CURRENT"), "overseas", 1);
+  add(currentFor(procurement), "procurement", 0);
+  add(procurement.filter((item) => opportunityV2LiveStatus(item, now) !== "CURRENT"), "procurement", 1);
+  add(allBrowse, "comprehensive", 2);
+  const memo = allBrowse.filter((item) => isRealCompetitionMemoItem(item));
+  add(currentFor(memo), "memo", 0);
+  add(memo.filter((item) => opportunityV2LiveStatus(item, now) !== "CURRENT"), "memo", 1);
+  // Weekly actions are selected from current/long-term competitions and
+  // current/early coverage/procurement. Mark those candidates P0 before the
+  // queue applies its cap so they cannot be starved by historical rows.
+  const weeklyIds = new Set(buildWeeklyOpportunityActions({ opportunities, sources, now })
+    .flatMap((action) => [action.opportunity_id, ...action.alias_ids]));
+  for (const id of weeklyIds) {
+    const target = byId.get(id);
+    if (target) {
+      if (!target.surfaces.includes("weekly")) target.surfaces.push("weekly");
+      target.priority = 0;
+    }
+  }
   // Details and exports are rendered from the same item projection. Marking
   // them here prevents a route-specific title from falling outside coverage.
   add(allBrowse, "detail", 2);

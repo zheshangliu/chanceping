@@ -17,7 +17,11 @@ export interface OpportunityTranslationResult {
   summary_zh: string;
 }
 
-export interface OpportunityTranslationHooks { onRequestStart?: () => void; }
+export interface OpportunityTranslationHooks {
+  onRequestStart?: () => void;
+  /** Prevents sending/caching long source text when only metadata reuse is allowed. */
+  includeSummary?: boolean;
+}
 
 export interface OpportunityTranslationProvider {
   readonly id: string;
@@ -174,15 +178,18 @@ export async function translateWithProviderChain(
   let sawFreeFailure = false;
   const validationErrors: string[] = [];
   for (const provider of providers) {
+    const sourceTitle = cleanOpportunityDisplayText(item.title);
+    const sourceSummary = hooks.includeSummary === false ? "" : cleanOpportunityDisplayText(item.summary);
     if (provider.free) {
-      characters += item.title.length + item.summary.length;
+      characters += sourceTitle.length + sourceSummary.length;
       sawFreeFailure = true;
     }
     try {
       const requestsBeforeProvider = requestCount;
-      const result = await provider.translate({ title: cleanOpportunityDisplayText(item.title), summary: cleanOpportunityDisplayText(item.summary), targetLanguage: "zh-CN" }, { onRequestStart });
+      const result = await provider.translate({ title: sourceTitle, summary: sourceSummary, targetLanguage: "zh-CN" }, { onRequestStart });
       if (requestCount === requestsBeforeProvider) onRequestStart();
-      const translation = createTranslatedOpportunityV2Translation(item, result, now);
+      const safeResult = hooks.includeSummary === false ? { ...result, summary_zh: "" } : result;
+      const translation = createTranslatedOpportunityV2Translation(item, safeResult, now);
       if (translation.status !== "translated") {
         const errors = translation.validation_errors ?? [translation.error ?? "quality rejected"];
         validationErrors.push(...errors);

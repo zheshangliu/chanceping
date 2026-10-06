@@ -82,6 +82,20 @@ assert.equal(providerCalls, 1);
 assert.equal(providerResult.request_count, 2, "provider-internal retries are included in the request ledger");
 assert.equal(providerResult.translation.attempt_count, 2);
 
+const metadataOnlyInputs: Array<{ title: string; summary: string }> = [];
+const metadataOnlyItem = { ...item("metadata-only-title", "International Craft Fellowship 2027", "Long unreviewed source text that must never leave our runtime.") };
+const metadataOnlyResult = await translateWithProviderChain(metadataOnlyItem, [{
+  id: "deepseek", free: false,
+  async translate(input, hooks) {
+    metadataOnlyInputs.push({ title: input.title, summary: input.summary });
+    hooks?.onRequestStart?.();
+    return { title_zh: "国际手工艺驻留项目 2027", summary_zh: "模型生成的摘要不得写入缓存" };
+  },
+}], now, { includeSummary: false });
+assert.equal(metadataOnlyInputs[0]?.title, metadataOnlyItem.title);
+assert.equal(metadataOnlyInputs[0]?.summary, "", "NOT_REVIEWED sources send only title metadata to the translation provider");
+assert.equal(metadataOnlyResult.translation.summary_zh, "", "metadata-only translation never persists a generated long summary");
+
 const previousFetch = globalThis.fetch;
 let physicalFetches = 0;
 let adapterHookCalls = 0;

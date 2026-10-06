@@ -5,6 +5,7 @@ import type { OpportunityV2 } from "./types";
 import { hasEncodingCorruption, htmlToText } from "../ich/aggregation/adapters/common";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import { resolveOpportunityV2PoolPath } from "./opportunity-pool";
+import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
 export type OpportunityV2TranslationStatus = "translated" | "pending" | "failed";
@@ -83,7 +84,10 @@ function displaySummary(item: Pick<OpportunityV2, "summary" | "encoding_error_fi
 }
 
 export function resolveOpportunityV2TranslationPath(filePath?: string): string {
-  return path.resolve(filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH ?? "data/opportunity-v2/translations.json");
+  const configured = filePath ?? process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH;
+  if (configured) return path.resolve(configured);
+  const runtimePath = "/var/lib/chanceping/opportunity-v2/translations.json";
+  return path.resolve(fs.existsSync(path.dirname(runtimePath)) ? runtimePath : "data/opportunity-v2/translations.json");
 }
 
 export function opportunityV2SourceHash(item: Pick<OpportunityV2, "title" | "summary">): string {
@@ -188,13 +192,18 @@ function latinCount(value: string): number { return (value.match(/[A-Za-z]/gu) ?
 
 /** Mixed CJK/Latin records are foreign when either field is substantively non-Chinese. */
 export function isForeignLanguageOpportunity(item: Pick<OpportunityV2, "title" | "summary">): boolean {
-  const title = cleanOpportunityDisplayText(item.title);
   const summary = cleanOpportunityDisplayText(item.summary);
+  if (isForeignLanguageTitle(item)) return true;
+  if (summary && !hasChinese(summary) && (hasKana(summary) || hasHangul(summary) || latinCount(summary) >= 12)) return true;
+  return false;
+}
+
+export function isForeignLanguageTitle(item: Pick<OpportunityV2, "title">): boolean {
+  const title = cleanOpportunityDisplayText(item.title);
   if (hasKana(title) || hasHangul(title)) return true;
   const titleLatin = latinCount(title);
   const titleChinese = (title.match(/[\u3400-\u9fff]/gu) ?? []).length;
   if (titleLatin >= 3 && (!hasChinese(title) || titleLatin >= 8 || titleLatin > titleChinese)) return true;
-  if (summary && !hasChinese(summary) && (hasKana(summary) || hasHangul(summary) || latinCount(summary) >= 12)) return true;
   return false;
 }
 
@@ -353,14 +362,14 @@ export function createTranslatedOpportunityV2Translation(item: OpportunityV2, va
 
 export function buildOpportunityV2Display(item: OpportunityV2, translations: OpportunityV2Translation[] = []): OpportunityV2Display {
   const title = cleanOpportunityDisplayText(item.title);
-  const summary = displaySummary(item);
+  const summary = isOpportunityV2PublicSummaryAllowed(item.source_id) ? displaySummary(item) : "";
   if (!isForeignLanguageOpportunity(item)) {
     return { title: title || item.title, original_title: null, summary, original_summary: null, translated: false, translation_status: "not_needed" };
   }
   const current = findCurrentOpportunityV2Translation(item, translations);
   const cached = current && isReusableOpportunityV2Translation(item, current) ? current : undefined;
   if (cached?.title_zh) {
-    const translatedSummary = cached.summary_status === "failed" || cached.summary_status === "unavailable" ? "" : cleanOpportunityDisplayText(cached.summary_zh);
+    const translatedSummary = !isOpportunityV2PublicSummaryAllowed(item.source_id) || cached.summary_status === "failed" || cached.summary_status === "unavailable" ? "" : cleanOpportunityDisplayText(cached.summary_zh);
     return { title: cleanOpportunityDisplayText(cached.title_zh), original_title: item.title, summary: translatedSummary, original_summary: summary || null, translated: true, translation_status: "translated" };
   }
   const safeForeignSummary = current?.summary_status === "failed" || current?.status === "failed" || current?.status === "pending" ? "" : summary;

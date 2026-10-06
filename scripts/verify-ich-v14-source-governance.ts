@@ -4,9 +4,10 @@ import os from "node:os";
 import path from "node:path";
 import { buildOpportunityV2SourceOverview, filterOpportunityV2Radar, publicOpportunityV2Deadline, readOpportunityV2Pool, readOpportunityV2Sources, runOpportunityV2, serializeOpportunityV2Public, writeOpportunityV2Pool, writeOpportunityV2Sources } from "../src/opportunity-v2";
 import { opportunityV2Routes } from "../src/api/routes/opportunity-v2";
-import { getOpportunityV2SourcePermission, getOpportunityV2SourcePermissionEvidence, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed, sourceFreshness } from "../src/opportunity-v2/source-governance";
+import { getOpportunityV2SourcePermission, getOpportunityV2SourcePermissionEvidence, isOpportunityV2PublicCopyAllowed, isOpportunityV2PublicSummaryAllowed, isOpportunityV2SourceCollectionAllowed, sourceFreshness } from "../src/opportunity-v2/source-governance";
 import { OpportunityV2FetchBudget } from "../src/opportunity-v2/source-fetch-budget";
 import { buildCanonicalOpportunityDisplayGroups } from "../src/opportunity-v2/canonical-display-groups";
+import { serializePublicProcurementChangeFeed } from "../src/opportunity-v2/procurement-change-feed";
 import type { OpportunityV2, OpportunityV2Source } from "../src/opportunity-v2/types";
 
 function source(id: string, url = `https://${id}.example.test/list`): OpportunityV2Source {
@@ -34,6 +35,10 @@ async function main(): Promise<void> {
   assert.equal(isOpportunityV2SourceCollectionAllowed("artconnect-opportunities"), false);
   assert.equal(getOpportunityV2SourcePermission("unreviewed-public-source"), "NOT_REVIEWED");
   assert.equal(isOpportunityV2SourceCollectionAllowed("unreviewed-public-source"), true, "the audit must not silently claim unreviewed sources are licensed");
+  assert.equal(isOpportunityV2PublicSummaryAllowed("unreviewed-public-source"), false, "unreviewed sources are metadata-only until reuse rights are reviewed");
+  assert.equal(getOpportunityV2SourcePermission("proc-ca-canadabuys"), "OFFICIAL_OPEN_DATA");
+  assert.equal(isOpportunityV2PublicSummaryAllowed("proc-ca-canadabuys"), true, "official open data is eligible for public summary reuse");
+  assert.match(getOpportunityV2SourcePermissionEvidence("proc-ca-canadabuys").basis, /Open Government Licence - Canada/u);
   assert.equal(sourceFreshness("2026-10-02T05:59:59.999Z", now).status, "STALE", "ACTIVE/scheduled does not mean fresh beyond 72h+6h");
   assert.equal(sourceFreshness(null, now).status, "NEVER_SUCCEEDED");
   assert.equal(sourceFreshness("not-a-date", now).status, "UNKNOWN");
@@ -88,6 +93,18 @@ async function main(): Promise<void> {
   const independentlySourced = opportunity("multi-source", "independent-source", "https://independent-source.example.test/call", ["independent-source", "artconnect-opportunities"]);
   assert.equal(isOpportunityV2PublicCopyAllowed(independentlySourced), true);
   assert.deepEqual(serializeOpportunityV2Public(independentlySourced).discovered_by_sources, ["independent-source"], "held source identity is retained internally but not advertised as a public evidence contributor");
+  const changes = serializePublicProcurementChangeFeed({
+    schema_version: "chanceping-procurement-change-feed.v1",
+    updated_at: now.toISOString(),
+    snapshot: [independentlySourced, artconnectOnly],
+    events: [
+      { event_id: "unreviewed", opportunity_id: independentlySourced.id, event_type: "new", before: null, after: { title: independentlySourced.title, summary: "long third-party text that must not be copied", deadline: "2026-10-31" }, evidence_url: independentlySourced.detail_url, occurred_at: now.toISOString(), detected_at: now.toISOString(), semantic_hash: "a" },
+      { event_id: "held", opportunity_id: artconnectOnly.id, event_type: "new", before: null, after: { title: artconnectOnly.title, summary: "held text" }, evidence_url: artconnectOnly.detail_url, occurred_at: now.toISOString(), detected_at: now.toISOString(), semantic_hash: "b" },
+      { event_id: "held-health", opportunity_id: "source:artconnect-opportunities", event_type: "source_degraded", before: null, after: { source_id: "artconnect-opportunities", error: "private transport detail" }, evidence_url: null, occurred_at: now.toISOString(), detected_at: now.toISOString(), semantic_hash: "c" },
+    ],
+  });
+  assert.equal(changes.events.length, 1, "compliance-held source changes are not public");
+  assert.doesNotMatch(JSON.stringify(changes), /long third-party text|held text|private transport detail/u, "public change feed is metadata-only and omits private error details");
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ich-v14-source-governance-"));
   const run = async (sourceRow: OpportunityV2Source, body: string, status = 200) => {

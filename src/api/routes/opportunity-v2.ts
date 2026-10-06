@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, getOpportunityV2SourcePermission, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
+import { appendOpportunityV2Source, buildOpportunityV2SourceOverview, createOpportunityV2Source, findOpportunityV2Source, filterOpportunityV2Radar, getOpportunityV2SourcePermission, isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed, readOpportunityV2Pool, readOpportunityV2Sources, readProcurementChangeFeed, serializePublicProcurementChangeFeed, runOpportunityV2, runOpportunityV2Source, serializeOpportunityV2Public, setOpportunityV2SourceState, testOpportunityV2Source, updateOpportunityV2Source, type OpportunityV2Fetcher, type OpportunityV2RadarQuery, type OpportunityV2Source, type OpportunityV2SourceInput } from "../../opportunity-v2";
 
 export interface OpportunityV2RouteOptions { sourcesPath?: string; poolPath?: string; healthPath?: string; changeFeedPath?: string; fetcher?: OpportunityV2Fetcher; adminToken?: string; adminRequired?: boolean; }
 
@@ -40,7 +40,7 @@ export function opportunityV2Routes(options: OpportunityV2RouteOptions = {}): Ho
 
   app.get("/sources", (c) => c.json({ sources: sources() }));
   app.get("/sources/overview", (c) => c.json(buildOpportunityV2SourceOverview({ sourcesPath: options.sourcesPath, poolPath: options.poolPath, healthPath: options.healthPath })));
-  app.get("/procurement/changes", (c) => c.json(readProcurementChangeFeed(options.changeFeedPath)));
+  app.get("/procurement/changes", (c) => c.json(serializePublicProcurementChangeFeed(readProcurementChangeFeed(options.changeFeedPath))));
   app.post("/sources", async (c) => {
     const denied = requireAdmin(c); if (denied) return denied;
     try {

@@ -1,5 +1,6 @@
 import { extractDeadlineEvidence, hasEncodingCorruption } from "../ich/aggregation/adapters/common";
 import { publicOpportunityV2Deadline, serializeOpportunityV2Public } from "./public-deadline";
+import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
 
 export const OPPORTUNITY_COVERAGE_RULES_VERSION = "opportunity-coverage.v1";
@@ -261,8 +262,12 @@ export function filterOpportunityCoverage(items: OpportunityV2[], query: Opportu
 export function publicOpportunityCoverageAssessment(assessment: OpportunityCoverageAssessment): Omit<OpportunityCoverageAssessment, "opportunity"> & { opportunity: Record<string, unknown> } {
   const publicOpportunity = serializeOpportunityV2Public(assessment.opportunity);
   const publicDeadline = publicOpportunityV2Deadline(assessment.opportunity);
+  const evidence = isOpportunityV2PublicSummaryAllowed(assessment.opportunity.source_id)
+    ? assessment.evidence
+    : assessment.evidence.map((entry) => ({ ...entry, raw_excerpt: "" }));
   return {
     ...assessment,
+    evidence,
     deadline: publicDeadline.deadline,
     deadline_text: publicDeadline.deadline_text,
     deadline_status: publicDeadline.status,

@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { atomicWriteJson, withJsonFileLock } from "./file-lock";
+import { getOpportunityV2SourcePermission, isOpportunityV2PublicCopyAllowed, publicOpportunityV2DiscoverySources } from "./source-governance";
 import type { OpportunityV2, OpportunityV2SourceHealth } from "./types";
 
 export type ProcurementChangeEventType = "new" | "deadline_changed" | "application_link_changed" | "eligibility_changed" | "budget_changed" | "stage_changed" | "cancelled" | "source_degraded";
@@ -15,6 +16,7 @@ export interface ChangeEvent {
   occurred_at: string;
   detected_at: string;
   semantic_hash: string;
+  discovered_by_sources?: string[];
 }
 
 export interface ProcurementChangeFeedFile {
@@ -48,6 +50,39 @@ export function readProcurementChangeFeed(filePath?: string): ProcurementChangeF
   } catch {
     return emptyChangeFeed();
   }
+}
+
+/** Public change feed is metadata-only for unreviewed sources and never includes its private pool snapshot. */
+export function serializePublicProcurementChangeFeed(feed: ProcurementChangeFeedFile): Pick<ProcurementChangeFeedFile, "schema_version" | "updated_at" | "events"> {
+  const snapshot = new Map(feed.snapshot.map((item) => [item.id, item]));
+  const events = feed.events.flatMap((item) => {
+    const sourceEventId = item.opportunity_id.startsWith("source:") ? item.opportunity_id.slice("source:".length) : null;
+    const opportunity = sourceEventId ? undefined : snapshot.get(item.opportunity_id);
+    if (opportunity && !isOpportunityV2PublicCopyAllowed(opportunity)) return [];
+    if (sourceEventId && getOpportunityV2SourcePermission(sourceEventId) === "COMPLIANCE_HOLD") return [];
+    const metadataKeys: Record<ChangeEvent["event_type"], string[]> = {
+      new: ["title", "deadline", "deadline_kind", "application_url", "official_url", "participation_scope", "budget_amount", "budget_currency", "stage", "direction", "detail_url", "source_url"],
+      deadline_changed: ["deadline", "deadline_kind"],
+      application_link_changed: ["application_url", "official_url", "detail_url"],
+      eligibility_changed: ["participation_scope"],
+      budget_changed: ["amount", "currency"],
+      stage_changed: [],
+      cancelled: [],
+      source_degraded: ["source_id", "http_status"],
+    };
+    const pick = (value: unknown): unknown => {
+      if (value === null || typeof value !== "object" || Array.isArray(value)) return value;
+      const record = value as Record<string, unknown>;
+      return Object.fromEntries(metadataKeys[item.event_type].filter((key) => key in record).map((key) => [key, record[key]]));
+    };
+    return [{
+      ...item,
+      before: pick(item.before),
+      after: item.event_type === "source_degraded" ? { source_id: sourceEventId, status: "FAILED" } : pick(item.after),
+      discovered_by_sources: opportunity ? publicOpportunityV2DiscoverySources(opportunity.discovered_by_sources) : undefined,
+    }];
+  });
+  return { schema_version: feed.schema_version, updated_at: feed.updated_at, events };
 }
 
 function semanticSnapshot(item: OpportunityV2): Record<string, unknown> {

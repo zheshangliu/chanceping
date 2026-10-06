@@ -3,6 +3,7 @@ import path from "node:path";
 import { filterOpportunityV2Radar, opportunityV2LiveStatus } from "./radar-view";
 import { readOpportunityV2Pool } from "./opportunity-pool";
 import { readOpportunityV2Sources } from "./source-pool";
+import { resolveOpportunityV2SchedulerPath } from "./scheduler";
 import { getOpportunityV2SourcePermission, getOpportunityV2SourcePermissionEvidence, isOpportunityV2SourceRunnable, sourceFreshness, type OpportunityV2FreshnessStatus, type OpportunityV2SourcePermission } from "./source-governance";
 import type { OpportunityV2Source, OpportunityV2SourceHealth } from "./types";
 
@@ -62,7 +63,6 @@ export function buildOpportunityV2SourceOverview(options: { sourcesPath?: string
   });
   const summary = { registered: sources.length, enabled: sources.filter((source) => source.enabled).length, runnable: sources.filter(isOpportunityV2SourceRunnable).length, recent_success: rows.filter((row) => row.freshness_status === "FRESH").length, stale: rows.filter((row) => row.freshness_status === "STALE").length, never_succeeded: rows.filter((row) => row.freshness_status === "NEVER_SUCCEEDED").length, compliance_hold: rows.filter((row) => row.permission_state === "COMPLIANCE_HOLD").length, failed: sources.filter((source) => source.status === "FAILED").length, needs_adapter: sources.filter((source) => source.status === "NEEDS_ADAPTER").length, current_contribution: currentPool.length };
   let next_run_at: string | null = null;
-  const schedulerPath = process.env.CHANCEPING_OPPORTUNITY_V2_SCHEDULER_PATH ?? (fs.existsSync("/var/lib/chanceping/opportunity-v2") ? "/var/lib/chanceping/opportunity-v2/scheduler.json" : "data/opportunity-v2/scheduler.json");
-  try { next_run_at = (JSON.parse(fs.readFileSync(path.resolve(schedulerPath), "utf8")) as { next_run_at?: string }).next_run_at ?? null; } catch { /* optional in a fresh local checkout */ }
+  try { next_run_at = (JSON.parse(fs.readFileSync(resolveOpportunityV2SchedulerPath(), "utf8")) as { next_run_at?: string }).next_run_at ?? null; } catch { /* optional in a fresh local checkout */ }
   return { summary, next_run_at, rows };
 }

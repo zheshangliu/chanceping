@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { readProcurementChangeFeed, renderProcurementDigestMarkdown } from "../../opportunity-v2/procurement-change-feed";
+import { readProcurementChangeFeed, renderProcurementDigestMarkdown, serializePublicProcurementChangeFeed } from "../../opportunity-v2/procurement-change-feed";
 import { createProcurementFollowupStore, type FollowupStatus } from "../../opportunity-v2/procurement-followup-store";
 import { readOpportunityV2Pool } from "../../opportunity-v2/opportunity-pool";
 import { coverageWorkbenchDetailPage, coverageWorkbenchPage, procurementWorkbenchDetailPage, procurementWorkbenchPage, resolveWorkbenchOwner, type ProcurementWorkbenchRouteOptions } from "./procurement-workbench";
@@ -8,7 +8,7 @@ function escapeHtml(value: unknown): string { return String(value ?? "").replace
 function safeExternalHref(value: string | null): string { try { const url = new URL(value ?? ""); return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : ""; } catch { return ""; } }
 
 function changeFeedPage(options: ProcurementWorkbenchRouteOptions = {}): string {
-  const feed = readProcurementChangeFeed(options.changeFeedPath);
+  const feed = serializePublicProcurementChangeFeed(readProcurementChangeFeed(options.changeFeedPath));
   const markdown = renderProcurementDigestMarkdown(feed.events);
   return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>采购变更摘要｜盯非遗</title><style>body{margin:0;background:#f5f0e7;color:#2d2925;font-family:Georgia,"Songti SC",serif}.wrap{max-width:960px;margin:0 auto;padding:32px 22px}a{color:#173f5f}pre{white-space:pre-wrap;line-height:1.6;border-top:1px solid #b9aa98;padding-top:22px}</style></head><body><main class="wrap"><p><a href="/ich/procurement">← 返回采购工作台</a></p><h1>采购机会变更摘要</h1><p>只记录语义变化；仅 last_seen 更新不会重复提醒。当前事件：${feed.events.length} 条。</p><pre>${escapeHtml(markdown)}</pre></main></body></html>`;
 }
