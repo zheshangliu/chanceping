@@ -17,7 +17,7 @@ assert.match(remoteCommand, /systemctl enable --now chanceping-opportunity-v2\.t
 assert.match(remoteCommand, /systemctl is-enabled --quiet chanceping-opportunity-v2\.timer/u, "timer enabled state is verified, not assumed");
 assert.match(remoteCommand, /systemctl is-active --quiet chanceping-opportunity-v2\.timer/u, "timer active state is verified, not assumed");
 assert.match(remoteCommand, /systemctl list-timers --all --no-legend chanceping-opportunity-v2\.timer/u, "the actual scheduled next trigger is read");
-assert.match(remoteCommand, /NextElapseUSecRealtime/u, "runtime next_run_at is checked against systemd's actual next timer instant");
+assert.match(remoteCommand, /NextElapseUSecMonotonic/u, "runtime next_run_at is checked against systemd's monotonic timer instant");
 assert.match(remoteCommand, /Math\.abs\(runtimeMs-timerMs\)/u, "runtime and systemd next-run timestamps must be within the timer accuracy window");
 assert.match(remoteCommand, /systemctl show chanceping-opportunity-v2\.service --property=ExecStart/u, "the existing service command is checked before execution");
 assert.match(remoteCommand, /run-ich-production-cycle/u, "the fixed service target is the protected Fetch → Translate → Audit runner");
