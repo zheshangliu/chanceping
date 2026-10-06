@@ -11,15 +11,24 @@ const manifestPath = path.join(tempDir, "production-cycle-latest.json");
 const manifestNextPath = path.join(tempDir, "manifest-next.json");
 const systemctlPath = path.join(binDir, "systemctl");
 const busctlPath = path.join(binDir, "busctl");
+const timerOverridePath = path.join(tempDir, "systemd", "chanceping-opportunity-v2.timer.d", "zzzz-runtime-alignment.conf");
+const timerBackupDirectory = path.join(tempDir, "timer-backups");
+const systemctlCallsPath = path.join(tempDir, "systemctl-calls.log");
+const timerOverrideSource = "docs/deployment/chanceping-opportunity-v2.timer.d/zzzz-runtime-alignment.conf";
 
 try {
   fs.mkdirSync(binDir);
+  fs.mkdirSync(path.dirname(path.join(tempDir, timerOverrideSource)), { recursive: true });
+  fs.writeFileSync(path.join(tempDir, timerOverrideSource), fs.readFileSync(timerOverrideSource, "utf8"));
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
   fs.writeFileSync(systemctlPath, `#!/bin/sh
 set -eu
+if [ -n "\${SYSTEMCTL_CALLS_PATH:-}" ]; then printf '%s\\n' "$*" >> "$SYSTEMCTL_CALLS_PATH"; fi
 case "$*" in
   "cat chanceping-opportunity-v2.timer") printf '[Timer]\\nOnUnitActiveSec=72h\\n%s\\n' "\${TIMER_ADDITIONAL_DIRECTIVE:-}" ;;
   "show chanceping-opportunity-v2.service --property=ExecStart --value") printf '/usr/bin/npm run opportunity:v2:run' ;;
+  "daemon-reload") exit 0 ;;
+  "restart chanceping-opportunity-v2.timer") exit 0 ;;
   "enable --now chanceping-opportunity-v2.timer") exit 0 ;;
   "is-enabled --quiet chanceping-opportunity-v2.timer") exit 0 ;;
   "is-active --quiet chanceping-opportunity-v2.timer") exit 0 ;;
@@ -40,7 +49,7 @@ esac
   fs.chmodSync(systemctlPath, 0o700);
   fs.chmodSync(busctlPath, 0o700);
 
-  const command = buildIchProductionCycleRemoteCommand({ manifestPath, workingDirectory: tempDir });
+  const command = buildIchProductionCycleRemoteCommand({ manifestPath, workingDirectory: tempDir, timerOverridePath, timerBackupDirectory, timerOverrideSource });
   assert.match(command, /systemctl is-enabled --quiet chanceping-opportunity-v2\.timer/u);
   assert.match(command, /systemctl is-active --quiet chanceping-opportunity-v2\.timer/u);
   assert.match(command, /systemctl list-timers --all --no-legend chanceping-opportunity-v2\.timer/u);
@@ -79,6 +88,7 @@ esac
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
   fs.writeFileSync(manifestNextPath, JSON.stringify({ ...failedManifest, run_id: "new-completed-run", status: "COMPLETED", failure_code: null }));
+  fs.rmSync(timerOverridePath, { force: true });
   const completedRun = spawnSync("bash", ["-c", command], {
     encoding: "utf8",
     env: {
@@ -87,11 +97,17 @@ esac
       CYCLE_MANIFEST_PATH: manifestPath,
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       CYCLE_START_EXIT: "0",
+      SYSTEMCTL_CALLS_PATH: systemctlCallsPath,
       TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
     },
   });
   assert.equal(completedRun.status, 0, "a completed cycle with a successful service exit passes");
   assert.match(completedRun.stdout, /"run_id":"new-completed-run"/u);
+  assert.equal(fs.readFileSync(timerOverridePath, "utf8"), fs.readFileSync(path.join(tempDir, timerOverrideSource), "utf8"), "the canonical 72h-only timer override is installed");
+  const timerBackupEntries = fs.readdirSync(timerBackupDirectory);
+  assert.ok(timerBackupEntries.length > 0, "the prior systemd timer definition is preserved before migration");
+  assert.match(fs.readFileSync(path.join(timerBackupDirectory, timerBackupEntries[0], "timer.before"), "utf8"), /\[Timer\]/u, "the exact pre-migration timer unit is saved");
+  assert.match(fs.readFileSync(systemctlCallsPath, "utf8"), /daemon-reload[\s\S]*restart chanceping-opportunity-v2\.timer[\s\S]*start chanceping-opportunity-v2\.service/u, "systemd reloads and rearms the timer before the protected cycle starts");
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
   const bootCatchupRun = spawnSync("bash", ["-c", command], {
@@ -118,11 +134,11 @@ esac
       CYCLE_MANIFEST_PATH: manifestPath,
       CYCLE_MANIFEST_NEXT: manifestNextPath,
       TIMER_ADDITIONAL_DIRECTIVE: "OnCalendar=*-*-* 03:00:00",
-      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:12:00.000Z") * 1000),
+      TIMER_NEXT_USEC: String(Date.parse("2026-10-09T00:42:00.000Z") * 1000),
     },
   });
   assert.notEqual(duplicateSchedule.status, 0, "an additional calendar trigger cannot silently diverge from the runtime 72h next_run_at");
-  assert.match(duplicateSchedule.stderr, /exactly one 72h OnUnitActiveSec/u);
+  assert.match(duplicateSchedule.stderr, /runtime next_run_at does not match systemd timer/u);
   assert.match(duplicateSchedule.stderr, /OnCalendar=\*-\*-\* 03:00:00/u, "a rejected cadence prints only the relevant timer trigger for diagnosis");
 
   fs.writeFileSync(manifestPath, JSON.stringify({ run_id: "prior-run", status: "COMPLETED" }));
