@@ -75,6 +75,7 @@ export interface IchProductionCycleAudit {
     all_untranslated_p0_p1_dispositioned: boolean;
   };
   public_encoding_errors: number;
+  public_encoding_error_items: Array<{ id: string; source_id: string; title_error: boolean; summary_error: boolean }>;
   public_unsafe_exact_deadlines: number;
   artconnect_collection_allowed: boolean;
   weekly_limit_pass: boolean;
@@ -351,10 +352,13 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
   const visibleById = new Map<string, OpportunityV2>();
   for (const item of [...radar, ...memo.items]) visibleById.set(item.id, item);
   const publicCopyItems = pool.filter(isOpportunityV2PublicCopyAllowed);
-  const publicEncodingErrors = publicCopyItems.filter((item) => {
+  const publicEncodingErrorItems = publicCopyItems.flatMap((item) => {
     const rendered = buildOpportunityV2Display(item, translations);
-    return hasEncodingCorruption(rendered.title) || hasEncodingCorruption(rendered.summary);
-  }).length;
+    const titleError = hasEncodingCorruption(rendered.title);
+    const summaryError = hasEncodingCorruption(rendered.summary);
+    return titleError || summaryError ? [{ id: item.id, source_id: item.source_id, title_error: titleError, summary_error: summaryError }] : [];
+  });
+  const publicEncodingErrors = publicEncodingErrorItems.length;
   const unsafePublicExactDeadlines = publicCopyItems.filter((item) => item.deadline_conflict_unsafe === true && publicOpportunityV2Deadline(item).deadline !== null).length;
   const translationTargets = [...visibleById.values()];
   const foreignCandidates = translationTargets.filter((item) => isForeignLanguageOpportunity(item));
@@ -423,6 +427,7 @@ function auditRuntime(now: Date, paths: IchProductionCyclePaths): IchProductionC
       all_untranslated_p0_p1_dispositioned: dispositioned,
     },
     public_encoding_errors: publicEncodingErrors,
+    public_encoding_error_items: publicEncodingErrorItems,
     public_unsafe_exact_deadlines: unsafePublicExactDeadlines,
     artconnect_collection_allowed: isOpportunityV2SourceCollectionAllowed("artconnect-opportunities"),
     weekly_limit_pass: weekly.length <= 10,
@@ -461,6 +466,7 @@ async function persistManifest(paths: IchProductionCyclePaths, manifest: IchProd
 export async function runIchProductionCycle(options: IchProductionCycleOptions = {}): Promise<IchProductionCycleManifest> {
   const paths = resolvePaths(options.paths);
   const now = options.now ?? new Date();
+  const stageTime = (): Date => options.now ? now : new Date();
   const runId = `ich-cycle-${crypto.randomUUID()}`;
   return withIchProductionCycleLock(() => withRuntimeEnvironment(paths, async () => {
     const startedAt = now.toISOString();
@@ -474,14 +480,15 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
     let failureCode: IchProductionCycleManifest["failure_code"] = null;
     let freshnessState: IchProductionCycleManifest["freshness"] = "NEVER_SUCCEEDED";
     try {
-      fetchResult = await (options.fetch ?? defaultFetch)(now, paths);
+      fetchResult = await (options.fetch ?? defaultFetch)(stageTime(), paths);
     } catch {
       try { await restoreSnapshot(snapshot.entries); } catch { failureCode = "FETCH_FAILED"; }
       failureCode ??= "FETCH_FAILED";
       const scheduler: Record<string, unknown> = (() => { try { return JSON.parse(fs.readFileSync(paths.scheduler, "utf8")) as Record<string, unknown>; } catch { return {}; } })();
-      freshnessState = productionCycleFreshness(typeof scheduler.last_successful_cycle_at === "string" ? scheduler.last_successful_cycle_at : null, now);
+      const finishedAt = stageTime();
+      freshnessState = productionCycleFreshness(typeof scheduler.last_successful_cycle_at === "string" ? scheduler.last_successful_cycle_at : null, finishedAt);
       status = "FAILED";
-      const manifest: IchProductionCycleManifest = { schema_version: "chanceping.ich.v15.production-cycle.v1", run_id: runId, status, started_at: startedAt, finished_at: new Date().toISOString(), production_commit: readProductionCommit(options.releaseManifestPath), fetch: null, translation: null, audit: null, next_run_at: null, freshness: freshnessState, failure_code: failureCode };
+      const manifest: IchProductionCycleManifest = { schema_version: "chanceping.ich.v15.production-cycle.v1", run_id: runId, status, started_at: startedAt, finished_at: finishedAt.toISOString(), production_commit: readProductionCommit(options.releaseManifestPath), fetch: null, translation: null, audit: null, next_run_at: null, freshness: freshnessState, failure_code: failureCode };
       await persistManifest(paths, manifest);
       return manifest;
     }
@@ -489,11 +496,11 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
     const finishedFetchAt = fetchResult.finished_at;
     nextRunAt = writeScheduler(paths, runId, finishedFetchAt, "DEGRADED");
     try {
-      translationResult = await (options.translate ?? ((time, runtime) => runOpportunityV2DisplayTranslation({ now: time, execute: true, poolPath: runtime.pool, sourcesPath: runtime.sources, translationPath: runtime.translations })))(now, paths);
+      translationResult = await (options.translate ?? ((time, runtime) => runOpportunityV2DisplayTranslation({ now: time, execute: true, poolPath: runtime.pool, sourcesPath: runtime.sources, translationPath: runtime.translations })))(stageTime(), paths);
     } catch {
       failureCode = "TRANSLATION_DEGRADED";
     }
-    try { auditResult = await (options.audit ?? auditRuntime)(now, paths); }
+    try { auditResult = await (options.audit ?? auditRuntime)(stageTime(), paths); }
     catch { failureCode = "QUALITY_AUDIT_FAILED"; }
 
     const fetchComplete = fetchResult.successful_sources === fetchResult.fetched_sources;
@@ -503,14 +510,15 @@ export async function runIchProductionCycle(options: IchProductionCycleOptions =
     if (!failureCode && auditResult?.status !== "PASS") failureCode = "QUALITY_AUDIT_FAILED";
     nextRunAt = writeScheduler(paths, runId, fetchResult.finished_at, status);
     const priorScheduler: Record<string, unknown> = (() => { try { return JSON.parse(fs.readFileSync(paths.scheduler, "utf8")) as Record<string, unknown>; } catch { return {}; } })();
-    freshnessState = productionCycleFreshness(typeof priorScheduler.last_successful_cycle_at === "string" ? priorScheduler.last_successful_cycle_at : null, now);
+    const finishedAt = stageTime();
+    freshnessState = productionCycleFreshness(typeof priorScheduler.last_successful_cycle_at === "string" ? priorScheduler.last_successful_cycle_at : null, finishedAt);
     if (status === "COMPLETED") freshnessState = "FRESH";
     const manifest: IchProductionCycleManifest = {
       schema_version: "chanceping.ich.v15.production-cycle.v1",
       run_id: runId,
       status,
       started_at: startedAt,
-      finished_at: new Date().toISOString(),
+      finished_at: finishedAt.toISOString(),
       production_commit: readProductionCommit(options.releaseManifestPath),
       fetch: fetchResult,
       translation: translationResult ? safeTranslationSummary(translationResult) : null,
