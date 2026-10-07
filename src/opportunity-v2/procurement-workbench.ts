@@ -443,12 +443,13 @@ export function coverageWorkbenchPage(options: ProcurementWorkbenchRouteOptions 
     ...(rawQuery.region === "CN" || rawQuery.region === "GLOBAL" ? { region: rawQuery.region } : {}),
   };
   const items = coverageItems(options, query);
+  const translations = readOpportunityV2Translations();
   const weeklyActions = buildWeeklyOpportunityActions(options);
   const exportQuery = new URLSearchParams({ ...(query.q ? { q: query.q } : {}), ...(query.view_type ? { view_type: query.view_type } : {}), ...(query.lane ? { lane: query.lane } : {}), ...(query.region ? { region: query.region } : {}), format: "markdown" }).toString();
   const filters = `<form class="pw-filter" method="get"><input name="q" value="${escapeHtml(query.q ?? "")}" placeholder="搜索机会、关键词或来源"><select name="view_type"><option value="">全部类型</option>${viewTypes.map((type) => `<option value="${type}" ${query.view_type === type ? "selected" : ""}>${COVERAGE_TYPE_LABELS[type]}</option>`).join("")}</select><select name="lane"><option value="">全部分区</option><option value="current" ${query.lane === "current" ? "selected" : ""}>当前可行动</option><option value="early" ${query.lane === "early" ? "selected" : ""}>提前关注</option><option value="review" ${query.lane === "review" ? "selected" : ""}>待复核</option><option value="research" ${query.lane === "research" ? "selected" : ""}>研究参考</option></select><select name="region"><option value="">全部地区</option><option value="CN" ${query.region === "CN" ? "selected" : ""}>国内</option><option value="GLOBAL" ${query.region === "GLOBAL" ? "selected" : ""}>海外</option></select><button>筛选</button><a class="pw-export" href="/api/opportunity-v2/workbench/coverage/export?${exportQuery}">导出 Markdown</a></form>`;
   const section = (lane: "current" | "early" | "review" | "research", heading: string, hint: string) => {
     const rows = items.filter((item) => item.lane === lane).slice(0, 30).map((assessment) => {
-      const publicAssessment = publicOpportunityCoverageAssessment(assessment);
+      const publicAssessment = publicOpportunityCoverageAssessment(assessment, translations);
       const item = publicAssessment.opportunity;
       const types = assessment.view_types.map((type) => COVERAGE_TYPE_LABELS[type] ?? type).join("、") || "待复核";
       return `<article class="pw-card"><span class="pw-lane">${escapeHtml(types)} · ${escapeHtml(assessment.money_flow)}</span><h2><a href="/ich/opportunities/${encodeURIComponent(assessment.opportunity_id)}">${escapeHtml(String(item.title ?? ""))}</a></h2><p>${escapeHtml(String(item.summary ?? "来源正文未审核复用；请打开原文查看"))}</p><div class="pw-meta"><span>地区：${escapeHtml(String(item.event_location || item.region || "待确认"))}</span><span>截止：${escapeHtml(assessment.deadline_text || assessment.deadline || "待确认")}</span><span>来源：${escapeHtml(String(item.source_name || "待确认"))}</span></div><p class="pw-next">下一步：${escapeHtml(assessment.next_action)}</p></article>`;

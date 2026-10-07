@@ -6,7 +6,7 @@ export { coverageWorkbenchDetailPage, coverageWorkbenchPage } from "../../opport
 import { createProcurementFollowupStore, type FollowupStatus } from "../../opportunity-v2/procurement-followup-store";
 import { readProcurementChangeFeed, serializePublicProcurementChangeFeed } from "../../opportunity-v2/procurement-change-feed";
 import { renderOpportunityCoverageCsv, renderOpportunityCoverageMarkdown, renderProcurementCsv, renderProcurementMarkdown } from "../../opportunity-v2/procurement-export";
-import { filterOpportunityCoverage, publicOpportunityCoverageAssessment, type OpportunityCoverageAssessment, type OpportunityCoverageQuery } from "../../opportunity-v2/opportunity-coverage";
+import { filterOpportunityCoverage, publicOpportunityCoverageAssessment, publicOpportunityCoverageAssessments, type OpportunityCoverageAssessment, type OpportunityCoverageQuery } from "../../opportunity-v2/opportunity-coverage";
 import { isOpportunityV2PublicCopyAllowed, isOpportunityV2SourceCollectionAllowed } from "../../opportunity-v2/source-governance";
 import { isOpportunityV2PublicTitleSafe } from "../../opportunity-v2/public-text";
 import { buildCanonicalOpportunityDisplayGroups } from "../../opportunity-v2/canonical-display-groups";
@@ -106,7 +106,7 @@ export function procurementWorkbenchRoutes(options: ProcurementWorkbenchRouteOpt
     const opportunities = options.opportunities ?? readOpportunityV2Pool().opportunities;
     const sources = options.sources ?? readOpportunityV2Sources();
     const items = filterOpportunityCoverage(activeCoverageItems(opportunities, sources), coverageQuery(c.req.query()), { now: options.now });
-    return c.json({ schema_version: "chanceping-opportunity-coverage.v1", total: items.length, opportunities: items.map(publicOpportunityCoverageAssessment) });
+    return c.json({ schema_version: "chanceping-opportunity-coverage.v1", total: items.length, opportunities: publicOpportunityCoverageAssessments(items) });
   });
   app.get("/coverage/:id", (c) => {
     const item = buildCoverageAssessments(options).find((candidate) => candidate.opportunity_id === c.req.param("id"));

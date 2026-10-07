@@ -1,4 +1,8 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { createTranslatedOpportunityV2Translation } from "../src/opportunity-v2/display";
 import { Hono } from "hono";
 import {
   assessOpportunityCoverage,
@@ -118,6 +122,32 @@ async function main(): Promise<void> {
   const legacyResponse = await page.request("http://localhost/ich/opportunities/legacy-competition");
   assert.equal(legacyResponse.status, 200);
   assert.equal(await legacyResponse.text(), "legacy:legacy-competition");
+  const translationDir = fs.mkdtempSync(path.join(os.tmpdir(), "coverage-cached-title-"));
+  const previousTranslationPath = process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH;
+  try {
+    process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH = path.join(translationDir, "translations.json");
+    const waverley = opportunity("oppv2_cc93864a650fb6d755e979e8", "Waverley Artist Studios applications are open", { summary: "", deadline_conflict_unsafe: true });
+    const original = JSON.stringify(waverley);
+    const translated = createTranslatedOpportunityV2Translation(waverley, { title_zh: "韦弗利艺术家工作室", summary_zh: "" }, now);
+    assert.equal(translated.status, "translated");
+    fs.writeFileSync(process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH, JSON.stringify({ translations: [translated] }));
+    const cachedPage = new Hono();
+    cachedPage.route("/ich", procurementWorkbenchPageRoutes({ opportunities: [waverley], sources: [source] }));
+    const cachedDetail = await cachedPage.request(`http://localhost/ich/opportunities/${waverley.id}`);
+    const detailHtml = await cachedDetail.text();
+    assert.match(detailHtml, /<h1>韦弗利艺术家工作室<\/h1>/u, "review-lane details must use the validated cache, not raw English");
+    assert.match(await (await cachedPage.request("http://localhost/ich/opportunities")).text(), /韦弗利艺术家工作室/u, "the list uses the same cached display projection");
+    const cachedPublic = publicOpportunityCoverageAssessment(assessOpportunityCoverage(waverley, { now }));
+    assert.equal(cachedPublic.opportunity.title, "韦弗利艺术家工作室");
+    assert.equal(cachedPublic.opportunity.original_title, "Waverley Artist Studios applications are open");
+    assert.equal(cachedPublic.opportunity.deadline, null, "cache display must preserve unsafe-date redaction");
+    assert.equal(cachedPublic.opportunity.deadline_text, "截止时间待核实");
+    assert.equal(JSON.stringify(waverley), original, "public display does not mutate original evidence");
+  } finally {
+    if (previousTranslationPath === undefined) delete process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH;
+    else process.env.CHANCEPING_OPPORTUNITY_V2_TRANSLATION_PATH = previousTranslationPath;
+    fs.rmSync(translationDir, { recursive: true, force: true });
+  }
   console.log("OPPORTUNITY_COVERAGE: PASS");
 }
 

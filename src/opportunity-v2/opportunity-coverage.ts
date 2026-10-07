@@ -2,6 +2,7 @@ import { extractDeadlineEvidence, hasEncodingCorruption } from "../ich/aggregati
 import { publicOpportunityV2Deadline, serializeOpportunityV2Public } from "./public-deadline";
 import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 import type { OpportunityV2, OpportunityV2Source } from "./types";
+import { buildOpportunityV2Display, readOpportunityV2Translations, type OpportunityV2Translation } from "./display";
 
 export const OPPORTUNITY_COVERAGE_RULES_VERSION = "opportunity-coverage.v1";
 
@@ -259,8 +260,9 @@ export function filterOpportunityCoverage(items: OpportunityV2[], query: Opportu
     .filter((assessment) => !q || `${assessment.opportunity.title} ${assessment.opportunity.summary} ${assessment.opportunity.tags.join(" ")}`.toLocaleLowerCase().includes(q));
 }
 
-export function publicOpportunityCoverageAssessment(assessment: OpportunityCoverageAssessment): Omit<OpportunityCoverageAssessment, "opportunity"> & { opportunity: Record<string, unknown> } {
+export function publicOpportunityCoverageAssessment(assessment: OpportunityCoverageAssessment, translations: OpportunityV2Translation[] = readOpportunityV2Translations()): Omit<OpportunityCoverageAssessment, "opportunity"> & { opportunity: Record<string, unknown> } {
   const publicOpportunity = serializeOpportunityV2Public(assessment.opportunity);
+  const display = buildOpportunityV2Display(assessment.opportunity, translations);
   const publicDeadline = publicOpportunityV2Deadline(assessment.opportunity);
   const evidence = isOpportunityV2PublicSummaryAllowed(assessment.opportunity.source_id)
     ? assessment.evidence
@@ -271,10 +273,11 @@ export function publicOpportunityCoverageAssessment(assessment: OpportunityCover
     deadline: publicDeadline.deadline,
     deadline_text: publicDeadline.deadline_text,
     deadline_status: publicDeadline.status,
-    opportunity: publicOpportunity,
+    opportunity: { ...publicOpportunity, title: display.title, summary: display.summary, original_title: display.original_title, translation_status: display.translation_status },
   };
 }
 
 export function publicOpportunityCoverageAssessments(assessments: OpportunityCoverageAssessment[]): Array<Omit<OpportunityCoverageAssessment, "opportunity"> & { opportunity: Record<string, unknown> }> {
-  return assessments.map(publicOpportunityCoverageAssessment);
+  const translations = readOpportunityV2Translations();
+  return assessments.map(assessment => publicOpportunityCoverageAssessment(assessment, translations));
 }
