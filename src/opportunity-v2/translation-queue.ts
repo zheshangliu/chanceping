@@ -1,13 +1,15 @@
-import { findCurrentOpportunityV2Translation, isForeignLanguageOpportunity, isOpportunityV2TranslationRetryCooling, isReusableOpportunityV2Translation, type OpportunityV2Translation } from "./display";
+import { findCurrentOpportunityV2Translation, isForeignLanguageOpportunity, isOpportunityV2TranslationRetryCooling, isReusableOpportunityV2Translation, OPPORTUNITY_V2_TITLE_PROMPT_VERSION, type OpportunityV2Translation } from "./display";
 import { shouldRecoverOpportunityV2Translation } from "./translation-recovery";
 import type { OpportunityV2TranslationSurface, OpportunityV2VisibleTarget } from "./translation-targets";
 import type { OpportunityV2 } from "./types";
+import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 
 export interface OpportunityV2TranslationQueueEntry {
   item: OpportunityV2;
   priority: number;
   surfaces: OpportunityV2TranslationSurface[];
   existing?: OpportunityV2Translation;
+  recovery?: "unspent_p0_title_repair" | "listing_fact_prompt";
 }
 
 export interface OpportunityV2TranslationQueue {
@@ -32,26 +34,34 @@ export function selectOpportunityV2TranslationQueue(
   let skippedNotRetryable = 0;
 
   for (const target of targets) {
-    if (!isForeignLanguageOpportunity(target.item)) continue;
+    if (!isForeignLanguageOpportunity({ ...target.item, summary: isOpportunityV2PublicSummaryAllowed(target.item.source_id) ? target.item.summary : "" })) continue;
     foreignCount += 1;
     const existing = findCurrentOpportunityV2Translation(target.item, translations);
     if (existing && isReusableOpportunityV2Translation(target.item, existing)) {
       reused += 1;
       continue;
     }
-    if (existing?.p0_title_repair_attempted || existing?.retryable === false) {
+    let recovery: OpportunityV2TranslationQueueEntry["recovery"];
+    if (existing?.status === "failed" && existing.failure_code === "QUALITY_REJECTED" && !existing.p0_title_repair_attempted) {
+      if (target.priority === 0) recovery = "unspent_p0_title_repair";
+      else if (existing.retryable === false && !existing.title_fact_recovery_version && existing.translation_prompt_version !== OPPORTUNITY_V2_TITLE_PROMPT_VERSION
+        && /\b(?:closing|closes)\s*:?[\s\S]*20\d{2}/iu.test(target.item.title)
+        && existing.validation_errors?.length
+        && existing.validation_errors.every((error) => /^missing factual token 20\d{2}$/u.test(error))) recovery = "listing_fact_prompt";
+    }
+    if (!recovery && (existing?.p0_title_repair_attempted || existing?.retryable === false)) {
       skippedNotRetryable += 1;
       continue;
     }
-    if (existing && options.recoveryMode === "targeted" && !shouldRecoverOpportunityV2Translation(existing)) {
+    if (!recovery && existing && options.recoveryMode === "targeted" && !shouldRecoverOpportunityV2Translation(existing)) {
       skippedNotRetryable += 1;
       continue;
     }
-    if (existing && isOpportunityV2TranslationRetryCooling(existing, now)) {
+    if (!recovery && existing && isOpportunityV2TranslationRetryCooling(existing, now)) {
       cooling += 1;
       continue;
     }
-    pending.push({ item: target.item, priority: target.priority, surfaces: target.surfaces, ...(existing ? { existing } : {}) });
+    pending.push({ item: target.item, priority: target.priority, surfaces: target.surfaces, ...(existing ? { existing } : {}), ...(recovery ? { recovery } : {}) });
   }
   pending.sort((a, b) => a.priority - b.priority || a.item.first_seen_at.localeCompare(b.item.first_seen_at) || a.item.id.localeCompare(b.item.id));
   const configuredMaxItems = options.maxItems ?? pending.length;
