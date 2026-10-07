@@ -179,7 +179,7 @@ export async function translateWithProviderChain(
 ): Promise<TranslationAttemptResult> {
   const attempts: string[] = [];
   let requestCount = 0;
-  const onRequestStart = (): void => { requestCount += 1; hooks.onRequestStart?.(); };
+  const onRequestStart = (): void => { hooks.onRequestStart?.(); requestCount += 1; };
   let characters = 0;
   let sawFreeFailure = false;
   const validationErrors: string[] = [];

@@ -1,5 +1,5 @@
 import { findCurrentOpportunityV2Translation, isForeignLanguageOpportunity, isOpportunityV2TranslationRetryCooling, isReusableOpportunityV2Translation, OPPORTUNITY_V2_TITLE_PROMPT_VERSION, type OpportunityV2Translation } from "./display";
-import { shouldRecoverOpportunityV2Translation } from "./translation-recovery";
+import { hasApprovedTitleRepair, shouldRecoverOpportunityV2Translation } from "./translation-recovery";
 import type { OpportunityV2TranslationSurface, OpportunityV2VisibleTarget } from "./translation-targets";
 import type { OpportunityV2 } from "./types";
 import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
@@ -9,7 +9,7 @@ export interface OpportunityV2TranslationQueueEntry {
   priority: number;
   surfaces: OpportunityV2TranslationSurface[];
   existing?: OpportunityV2Translation;
-  recovery?: "unspent_p0_title_repair" | "listing_fact_prompt";
+  recovery?: "unspent_p0_title_repair" | "listing_fact_prompt" | "approved_five_20261007";
 }
 
 export interface OpportunityV2TranslationQueue {
@@ -42,6 +42,8 @@ export function selectOpportunityV2TranslationQueue(
       continue;
     }
     let recovery: OpportunityV2TranslationQueueEntry["recovery"];
+    if (existing?.status === "failed" && existing.p0_title_repair_attempted && hasApprovedTitleRepair(target.item.id)
+      && !translations.some(row => row.opportunity_id === target.item.id && row.approved_title_repair_20261007_at)) recovery = "approved_five_20261007";
     if (existing?.status === "failed" && existing.failure_code === "QUALITY_REJECTED" && !existing.p0_title_repair_attempted) {
       if (target.priority === 0) recovery = "unspent_p0_title_repair";
       else if (existing.retryable === false && !existing.title_fact_recovery_version && existing.translation_prompt_version !== OPPORTUNITY_V2_TITLE_PROMPT_VERSION

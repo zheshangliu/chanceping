@@ -5,7 +5,7 @@ import path from "node:path";
 import { runOpportunityV2DisplayTranslation } from "../src/opportunity-v2/translation-runner";
 import { translationPrompt } from "../src/opportunity-v2/translation-provider";
 import type { OpportunityV2 } from "../src/opportunity-v2/types";
-import { createTranslatedOpportunityV2Translation, isForeignLanguageTitle } from "../src/opportunity-v2/display";
+import { claimApprovedOpportunityV2TitleRepair, createTranslatedOpportunityV2Translation, isForeignLanguageTitle, readOpportunityV2Translations, writeOpportunityV2Translations } from "../src/opportunity-v2/display";
 
 const now = new Date("2026-10-06T07:00:00.000Z");
 const source = {
@@ -126,6 +126,58 @@ async function main(): Promise<void> {
     assert.equal(stillRejected.attempted_records, 2);
     const noLoop = await runOpportunityV2DisplayTranslation({ now: new Date(now.getTime() + 86400000), sourcesPath, poolPath, translationPath: translationsPath, translationProvider: alwaysRejectedProvider });
     assert.equal(noLoop.attempted_records, 0, "failed historical recovery is never repeated");
+    // User-approved exception: only these five exhausted records, exactly once.
+    const approvedIds = ["oppv2_6150510674e7858292faf45c", "oppv2_6dff384b8cb200042b57ca53", "oppv2_738353f18d8c7b821e306088", "oppv2_77f08bf9e27bd4171f7494ed", "oppv2_cc93864a650fb6d755e979e8"];
+    const approvedItems = approvedIds.map((id, index) => ({ ...p0, id, title: `Craft Fellowship ${2026 + index}`, source_item_id: id, detail_url: `https://example.org/${id}` }));
+    const excluded = { ...p0, id: "not-approved", title: "Craft Fellowship 2035" };
+    const exhausted = [...approvedItems, excluded].map(item => ({ ...createTranslatedOpportunityV2Translation(item, { title_zh: "缺少年份", summary_zh: "" }, now), attempt_count: 3, retryable: false, p0_title_repair_attempted: true }));
+    fs.writeFileSync(poolPath, JSON.stringify({ opportunities: [...approvedItems, excluded] }));
+    fs.writeFileSync(translationsPath, JSON.stringify({ translations: exhausted }));
+    const approvedCalls: string[] = [];
+    const approvedProvider = { id: "deepseek", free: false, async translate(input: { title: string; summary: string }) {
+      const item = approvedItems.find(item => item.title === input.title)!;
+      assert.ok(item, "an unapproved sixth record must never reach the provider");
+      const savedEntry = readOpportunityV2Translations(translationsPath).find(entry => entry.opportunity_id === item.id) as unknown as Record<string, unknown>;
+      assert.ok(savedEntry.approved_title_repair_20261007_at, "consume the allowance durably before any provider request");
+      assert.equal(savedEntry.attempt_count, 4, "never reset the three historical attempts");
+      assert.equal(input.summary, "", "approved repair is title-only");
+      approvedCalls.push(item.id);
+      return { title_zh: item.id === approvedIds[4] ? "故意遗漏年份" : `${input.title.match(/20\d{2}/u)![0]}年手工艺研修计划`, summary_zh: "" };
+    } };
+    const approvedRun = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: approvedProvider, maxRequests: 5 });
+    assert.equal(approvedRun.attempted_records, 5, "explicit approval unblocks exactly five exhausted records");
+    assert.equal(approvedRun.translated_records, 4);
+    assert.equal(approvedRun.failed_records, 1, "fact validation still rejects a missing year");
+    assert.equal(approvedRun.approved_title_repairs?.length, 5, "production evidence records every approved outcome without source text");
+    assert.equal(approvedRun.approved_title_repairs?.filter(row => row.status === "failed").length, 1);
+    assert.deepEqual([...approvedCalls].sort(), [...approvedIds].sort());
+    const afterApproval = readOpportunityV2Translations(translationsPath);
+    assert.deepEqual(afterApproval.find(entry => entry.opportunity_id === excluded.id), exhausted.at(-1), "unapproved cache remains unchanged");
+    assert.ok(afterApproval.filter(entry => approvedIds.includes(entry.opportunity_id)).every(entry => entry.attempt_count === 4 && entry.p0_title_repair_attempted && entry.retryable === false));
+    const approvedReplay = await runOpportunityV2DisplayTranslation({ now: new Date(now.getTime() + 86400000), sourcesPath, poolPath, translationPath: translationsPath, translationProvider: approvedProvider });
+    assert.equal(approvedReplay.actual_requests, 0, "both successful and failed approved repairs are consumed permanently");
+    fs.writeFileSync(poolPath, JSON.stringify({ opportunities: [approvedItems[0]] }));
+    fs.writeFileSync(translationsPath, JSON.stringify({ translations: [exhausted[0]] }));
+    const networkRetryProvider = { id: "deepseek", free: false, async translate(_input: unknown, hooks?: { onRequestStart?: () => void }) {
+      hooks?.onRequestStart?.();
+      hooks?.onRequestStart?.(); // Adapter retry must be stopped before a second HTTP request.
+      throw new Error("unreachable second request");
+    } };
+    const networkRun = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: networkRetryProvider });
+    assert.equal(networkRun.actual_requests, 1);
+    assert.equal(networkRun.failed_records, 1);
+    assert.equal(readOpportunityV2Translations(translationsPath)[0].attempt_count, 4, "a blocked adapter retry is not a second consumed request");
+    fs.writeFileSync(translationsPath, JSON.stringify({ translations: [exhausted[0]] }));
+    assert.equal(claimApprovedOpportunityV2TitleRepair(approvedItems[0], translationsPath, now), true);
+    assert.equal(claimApprovedOpportunityV2TitleRepair(approvedItems[0], translationsPath, now), false, "concurrent claims cannot spend the approval twice");
+    const interruptedReplay = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: approvedProvider });
+    assert.equal(interruptedReplay.actual_requests, 0, "a crash after claim cannot automatically retry the provider");
+    const changedItem = { ...approvedItems[0], summary: "Updated source text" };
+    const changedFailure = { ...createTranslatedOpportunityV2Translation(changedItem, { title_zh: "遗漏年份", summary_zh: "" }, now), p0_title_repair_attempted: true, retryable: false };
+    writeOpportunityV2Translations([changedFailure], translationsPath);
+    fs.writeFileSync(poolPath, JSON.stringify({ opportunities: [changedItem] }));
+    const changedReplay = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: approvedProvider });
+    assert.equal(changedReplay.actual_requests, 0, "source-hash changes cannot renew this one-off approval");
     console.log("ICH_V16_TRANSLATION_QUALITY: PASS (one DeepSeek title repair for P0 only; validation unchanged; failure clusters retained)");
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
