@@ -5,6 +5,7 @@ import path from "node:path";
 import { runOpportunityV2DisplayTranslation } from "../src/opportunity-v2/translation-runner";
 import { translationPrompt } from "../src/opportunity-v2/translation-provider";
 import type { OpportunityV2 } from "../src/opportunity-v2/types";
+import { createTranslatedOpportunityV2Translation, isForeignLanguageTitle } from "../src/opportunity-v2/display";
 
 const now = new Date("2026-10-06T07:00:00.000Z");
 const source = {
@@ -23,6 +24,19 @@ const p1: OpportunityV2 = {
 };
 
 async function main(): Promise<void> {
+  for (const title of [
+    "2026第六届“建筑师的椅子”（The Architect's Chair）设计竞赛",
+    "国誉设计大奖2027 KOKUYO DESIGN AWARD",
+    "2026 第四届亚洲IP设计大赛 ASIA IP CONTEST in TOKYO 2026",
+    "2027第十五届美国Architizer A+奖（Architizer A+Awards）",
+    "中国教育技术协会“大学生OPC创业—AI Agent创新赛道”宣传短片征集活动",
+  ]) {
+    assert.equal(isForeignLanguageTitle({ title }), false, `already readable Chinese title: ${title}`);
+    assert.equal(createTranslatedOpportunityV2Translation({ ...p0, title }, { title_zh: title, summary_zh: "" }, now).status, "translated");
+  }
+  assert.equal(isForeignLanguageTitle({ title: "International Craft Fellowship 国际" }), true);
+  assert.equal(isForeignLanguageTitle({ title: "国际艺术征集 International Craft Fellowship Residency Application Requirements" }), true);
+  assert.equal(isForeignLanguageTitle({ title: "2026 올해의 공예상 후보자 추천 공모" }), true);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ich-v16-translation-quality-"));
   const sourcesPath = path.join(dir, "sources.json");
   const poolPath = path.join(dir, "opportunities.json");
@@ -88,6 +102,30 @@ async function main(): Promise<void> {
     const secondCycle = await runOpportunityV2DisplayTranslation({ now: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), execute: true, allSurfaces: true, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: alwaysRejectedProvider });
     assert.equal(secondCycle.selected_unique_ids.includes(p0.id), false, "a P0 record whose one repair was exhausted is not retried indefinitely");
     assert.equal(failedRepairRequests, 2, "the initial title request and its one permitted repair are the complete lifetime retry budget for this quality failure");
+    const legacyP0 = { ...p0, title: "Creative Fellowship 2027 Closing 12 Oct 2026" };
+    const legacyP1 = { ...p1, title: "Artist Residency Australia Closing 25 Oct 2026" };
+    const rejected = [legacyP0, legacyP1].map((item) => ({
+      ...createTranslatedOpportunityV2Translation(item, { title_zh: item === legacyP0 ? "2027创意研修计划" : "澳大利亚艺术家驻留", summary_zh: "" }, now),
+      attempt_count: 2, retryable: false,
+    }));
+    fs.writeFileSync(poolPath, JSON.stringify({ opportunities: [legacyP0, legacyP1] }));
+    fs.writeFileSync(translationsPath, JSON.stringify({ translations: rejected }));
+    let recoveryRequests = 0;
+    const recoveryProvider = { id: "deepseek", free: false, async translate(input: { title: string; summary: string }) {
+      recoveryRequests += 1;
+      assert.equal(input.summary, "", "historical recovery only requests a title");
+      return { title_zh: input.title === legacyP0.title ? "2027创意研修计划（截止：2026年10月12日）" : "澳大利亚艺术家驻留（截止：2026年10月25日）", summary_zh: "" };
+    } };
+    const recovered = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: recoveryProvider, maxRequests: 2 });
+    assert.equal(recovered.translated_records, 2, "legacy prompt-conflict failures can consume their bounded title recovery");
+    assert.equal(recoveryRequests, 2, "recovery uses exactly one request per record");
+    const replay = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: recoveryProvider });
+    assert.equal(replay.actual_requests, 0, "recovered titles replay from cache");
+    fs.writeFileSync(translationsPath, JSON.stringify({ translations: rejected }));
+    const stillRejected = await runOpportunityV2DisplayTranslation({ now, sourcesPath, poolPath, translationPath: translationsPath, translationProvider: alwaysRejectedProvider });
+    assert.equal(stillRejected.attempted_records, 2);
+    const noLoop = await runOpportunityV2DisplayTranslation({ now: new Date(now.getTime() + 86400000), sourcesPath, poolPath, translationPath: translationsPath, translationProvider: alwaysRejectedProvider });
+    assert.equal(noLoop.attempted_records, 0, "failed historical recovery is never repeated");
     console.log("ICH_V16_TRANSLATION_QUALITY: PASS (one DeepSeek title repair for P0 only; validation unchanged; failure clusters retained)");
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });

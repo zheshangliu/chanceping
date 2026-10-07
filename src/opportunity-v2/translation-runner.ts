@@ -145,7 +145,8 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
   };
   const worker = async (): Promise<void> => {
     while (true) {
-      const ticket = budget.reserve(2);
+      if (cursor >= queue.selected.length) return;
+      const ticket = budget.reserve(queue.selected[cursor].recovery ? 1 : 2);
       if (!ticket) {
         if (inFlight === 0) return;
         await new Promise<void>((resolve) => waiters.push(resolve));
@@ -156,6 +157,27 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
       inFlight += 1;
       attemptedRecords += 1;
       try {
+        if (entry.recovery) {
+          const isP0Repair = entry.recovery === "unspent_p0_title_repair";
+          if (isP0Repair) p0TitleRepairAttempted += 1;
+          const recovered = await translateWithProviderChain(entry.item, [deepseek], now, {
+            includeSummary: false, validationErrors: entry.existing?.validation_errors,
+            onRequestStart: () => ticket.requestStarted(),
+          });
+          const translated = recovered.translation.status === "translated";
+          results.push({ ...recovered.translation,
+            attempt_count: (entry.existing?.attempt_count ?? 0) + recovered.request_count,
+            retryable: false, next_retry_at: null,
+            ...(isP0Repair ? { p0_title_repair_attempted: true } : { title_fact_recovery_version: "listing-facts-v1" as const }),
+          });
+          if (isP0Repair) { if (translated) p0TitleRepairSucceeded += 1; else p0TitleRepairFailed += 1; }
+          if (!translated) {
+            const reason = recovered.translation.failure_code ?? "UNKNOWN";
+            failureCounts[reason] = (failureCounts[reason] ?? 0) + 1;
+            for (const cluster of qualityFailureClusters(recovered.translation.validation_errors ?? [])) qualityRejectionClusters[cluster] = (qualityRejectionClusters[cluster] ?? 0) + 1;
+          }
+          continue;
+        }
         const result = await translateWithProviderChain(entry.item, [deepseek], now, {
           includeSummary: isOpportunityV2PublicSummaryAllowed(entry.item.source_id),
           onRequestStart: () => ticket.requestStarted(),
@@ -168,7 +190,7 @@ export async function runOpportunityV2DisplayTranslation(options: OpportunityV2T
           if (entry.priority === 0 && !entry.existing?.p0_title_repair_attempted) {
             p0TitleRepairAttempted += 1;
             try {
-              const repaired = await deepseek.translate({ title: cleanOpportunityDisplayText(entry.item.title), summary: "", targetLanguage: "zh-CN" }, { includeSummary: false, onRequestStart: () => ticket.requestStarted() });
+              const repaired = await deepseek.translate({ title: cleanOpportunityDisplayText(entry.item.title), summary: "", targetLanguage: "zh-CN", validationErrors: safeTranslation.validation_errors }, { includeSummary: false, onRequestStart: () => ticket.requestStarted() });
               const checkedRepair = createTranslatedOpportunityV2Translation(entry.item, { title_zh: repaired.title_zh, summary_zh: "" }, now);
               if (checkedRepair.status === "translated") {
                 results.push({ ...checkedRepair, provider: "deepseek", attempt_count: (safeTranslation.attempt_count ?? 1) + 1, last_attempt_at: now.toISOString(), retryable: false, p0_title_repair_attempted: true });

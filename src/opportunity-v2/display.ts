@@ -9,6 +9,7 @@ import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 import { isOpportunityV2PublicSummarySafe } from "./public-text";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
+export const OPPORTUNITY_V2_TITLE_PROMPT_VERSION = "title-facts-v2";
 export type OpportunityV2TranslationStatus = "translated" | "pending" | "failed";
 export type OpportunityV2TranslationFieldStatus = "translated" | "failed" | "pending" | "unavailable" | "not_needed";
 export type OpportunityV2TranslationFailureCode =
@@ -36,6 +37,8 @@ export interface OpportunityV2Translation {
   attempt_count?: number;
   retryable?: boolean;
   p0_title_repair_attempted?: boolean;
+  title_fact_recovery_version?: "listing-facts-v1";
+  translation_prompt_version?: typeof OPPORTUNITY_V2_TITLE_PROMPT_VERSION;
   next_retry_at?: string | null;
   last_attempt_at?: string;
   error?: string;
@@ -205,6 +208,10 @@ export function isForeignLanguageTitle(item: Pick<OpportunityV2, "title">): bool
   if (hasKana(title) || hasHangul(title)) return true;
   const titleLatin = latinCount(title);
   const titleChinese = (title.match(/[\u3400-\u9fff]/gu) ?? []).length;
+  // Chinese-led bilingual names already provide a readable Chinese title.
+  // Brand names and a parenthesized English name do not make them untranslated.
+  const leadingLetter = title.match(/[A-Za-z\u3400-\u9fff]/u)?.[0] ?? "";
+  if (titleChinese >= 6 && titleChinese * 4 >= titleLatin && hasChinese(leadingLetter)) return false;
   if (titleLatin >= 3 && (!hasChinese(title) || titleLatin >= 8 || titleLatin > titleChinese)) return true;
   return false;
 }
@@ -313,7 +320,7 @@ export function validateOpportunityV2Translation(
     const normalizedToken = token.replace(/[.,]+$/u, "");
     if (!containsFactualToken(translatedFacts, normalizedToken)) errors.push(`missing factual token ${token}`);
   }
-  if (field !== "summary" && title.trim().toLocaleLowerCase() === sourceTitle.trim().toLocaleLowerCase() && !isAcceptableUnchangedProperTitle(title.trim())) errors.push("translated title is unchanged");
+  if (field !== "summary" && isForeignLanguageTitle({ title: sourceTitle }) && title.trim().toLocaleLowerCase() === sourceTitle.trim().toLocaleLowerCase() && !isAcceptableUnchangedProperTitle(title.trim())) errors.push("translated title is unchanged");
   const originalWords = new Set((sourceFacts.match(/[A-Za-z]{3,}/gu) ?? []).map((word) => word.toLocaleLowerCase()));
   const translatedText = field === "title" ? title : field === "summary" ? summary : `${title} ${summary}`;
   const residualWords = translatedText.match(/[A-Za-z]{4,}/gu) ?? [];
