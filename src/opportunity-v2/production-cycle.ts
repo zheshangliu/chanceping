@@ -114,7 +114,7 @@ export interface IchProductionCycleManifest {
   finished_at: string;
   production_commit: string | null;
   fetch: IchProductionCycleFetchSummary | null;
-  translation: Pick<OpportunityV2TranslationRunSummary, "status" | "provider" | "provider_configured" | "visible_target_count" | "foreign_count" | "cache_reused" | "eligible_pending" | "attempted_records" | "translated_records" | "failed_records" | "failure_counts" | "unattempted_selected" | "actual_requests" | "p0_title_repair_attempted" | "p0_title_repair_succeeded" | "p0_title_repair_failed" | "quality_rejection_clusters"> | null;
+  translation: Pick<OpportunityV2TranslationRunSummary, "status" | "provider" | "provider_configured" | "visible_target_count" | "foreign_count" | "cache_reused" | "eligible_pending" | "attempted_records" | "translated_records" | "failed_records" | "failure_counts" | "unattempted_selected" | "actual_requests" | "p0_title_repair_attempted" | "p0_title_repair_succeeded" | "p0_title_repair_failed" | "quality_rejection_clusters" | "approved_title_repairs"> | null;
   audit: IchProductionCycleAudit | null;
   next_run_at: string | null;
   freshness: "FRESH" | "STALE" | "NEVER_SUCCEEDED";
@@ -306,6 +306,7 @@ function safeTranslationSummary(summary: OpportunityV2TranslationRunSummary): Ic
     p0_title_repair_succeeded: summary.p0_title_repair_succeeded,
     p0_title_repair_failed: summary.p0_title_repair_failed,
     quality_rejection_clusters: summary.quality_rejection_clusters,
+    approved_title_repairs: summary.approved_title_repairs ?? [],
     unattempted_selected: summary.unattempted_selected,
     actual_requests: summary.actual_requests,
   };

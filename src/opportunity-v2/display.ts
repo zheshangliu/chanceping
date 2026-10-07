@@ -7,6 +7,7 @@ import { atomicWriteJson, withJsonFileLock } from "./file-lock";
 import { resolveOpportunityV2PoolPath } from "./opportunity-pool";
 import { isOpportunityV2PublicSummaryAllowed } from "./source-governance";
 import { isOpportunityV2PublicSummarySafe } from "./public-text";
+import { hasApprovedTitleRepair } from "./translation-recovery";
 
 export const OPPORTUNITY_V2_DISPLAY_STRATEGY = "provider-chain-zh-v1";
 export const OPPORTUNITY_V2_TITLE_PROMPT_VERSION = "title-facts-v2";
@@ -37,6 +38,7 @@ export interface OpportunityV2Translation {
   attempt_count?: number;
   retryable?: boolean;
   p0_title_repair_attempted?: boolean;
+  approved_title_repair_20261007_at?: string;
   title_fact_recovery_version?: "listing-facts-v1";
   translation_prompt_version?: typeof OPPORTUNITY_V2_TITLE_PROMPT_VERSION;
   next_retry_at?: string | null;
@@ -142,6 +144,24 @@ export function readOpportunityV2Translations(filePath?: string): OpportunityV2T
 export interface OpportunityV2TranslationWriteOptions { guardAgainstPool?: boolean; poolPath?: string; }
 export interface OpportunityV2TranslationWriteResult { written_count: number; skipped_stale_count: number; preserved_success_count: number; }
 
+/** Consume explicit one-off approval before network I/O; interruption fails closed. */
+export function claimApprovedOpportunityV2TitleRepair(item: OpportunityV2, filePath: string, now: Date): boolean {
+  if (!hasApprovedTitleRepair(item.id)) return false;
+  const target = resolveOpportunityV2TranslationPath(filePath);
+  return withJsonFileLock(target, () => {
+    const file = JSON.parse(fs.readFileSync(target, "utf8")) as OpportunityV2TranslationFile;
+    const entry = findCurrentOpportunityV2Translation(item, file.translations);
+    if (!entry || entry.status !== "failed" || !entry.p0_title_repair_attempted
+      || file.translations.some(row => row.opportunity_id === item.id && row.approved_title_repair_20261007_at)) return false;
+    entry.approved_title_repair_20261007_at = now.toISOString();
+    entry.attempt_count = (entry.attempt_count ?? 0) + 1;
+    entry.retryable = false;
+    entry.next_retry_at = null;
+    atomicWriteJson(target, { ...file, updated_at: now.toISOString() });
+    return true;
+  });
+}
+
 export function writeOpportunityV2Translations(translations: OpportunityV2Translation[], filePath?: string, options: OpportunityV2TranslationWriteOptions = {}): OpportunityV2TranslationWriteResult {
   const target = resolveOpportunityV2TranslationPath(filePath);
   const writeLocked = (currentItems?: OpportunityV2[]): OpportunityV2TranslationWriteResult => withJsonFileLock(target, () => {
@@ -170,7 +190,9 @@ export function writeOpportunityV2Translations(translations: OpportunityV2Transl
         preservedSuccessCount += 1;
         continue;
       }
-      merged.set(entry.opportunity_id, entry);
+      merged.set(entry.opportunity_id, { ...entry,
+        ...(previous?.approved_title_repair_20261007_at ? { approved_title_repair_20261007_at: previous.approved_title_repair_20261007_at } : {}),
+      });
       writtenCount += 1;
     }
     atomicWriteJson(target, {
