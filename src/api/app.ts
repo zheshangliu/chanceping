@@ -25,6 +25,7 @@ import { businessWorkflowRoutes } from "./routes/business-workflows";
 import { businessProfileRoutes } from "./routes/business-profiles";
 import { businessOperationsRoutes } from "./routes/business-operations";
 import { publicIchRoutes } from "./routes/public-ich";
+import { createIchAgentRoutes } from "./routes/ich-agent";
 import { ichPagesRoutes } from "./routes/ich-pages";
 import { internalIchRoutes } from "./routes/internal-ich";
 import { ichAdminPagesRoutes } from "./routes/ich-admin-pages";
@@ -85,6 +86,7 @@ export function createApp(context?: AppContext): Hono {
   app.route("/api/business/profiles", businessProfileRoutes({ resolveAuthenticatedUser: ctx.resolveAuthenticatedUser }));
   app.route("/api/business/operations", businessOperationsRoutes());
   app.route("/api/public/ich", publicIchRoutes());
+  app.route("/api/public/ich", createIchAgentRoutes());
   app.route("/api/public/ich", ichSubmissionRoutes());
   app.route("/api/internal/ich", internalIchRoutes());
   app.route("/api/internal/ich", internalIchSubmissionRoutes());
